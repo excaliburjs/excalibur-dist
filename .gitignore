@@ -1,0 +1,40 @@
+#Ignore compiled javascript #
+######################
+/src/engine/*.js
+/src/engine/*.map
+/sandbox/src/*.js
+/src/spec/*.js
+node_modules/
+/bower_components/
+coverage/
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# Sublime workspace settings #
+*.sublime-workspace
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Build
+.vs/
+build/
+bld/
+bin/
+obj/
+*.user
+*.suo
+*.map
+*.orig

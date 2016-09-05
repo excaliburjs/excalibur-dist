@@ -1,21 +1,31 @@
-/*! excalibur - v0.6.0 - 2016-01-19
+/*! excalibur - v0.7.0 - 2016-08-29
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2016 ; Licensed BSD-2-Clause*/
+* Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
+var EX_VERSION = "0.7.0";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+/* istanbul ignore next */
 if (typeof window === 'undefined') {
     window = { audioContext: function () { return; } };
 }
+/* istanbul ignore next */
 if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
     window.requestAnimationFrame =
         window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame ||
             function (callback) { window.setInterval(callback, 1000 / 60); };
 }
+/* istanbul ignore next */
 if (typeof window !== 'undefined' && !window.cancelAnimationFrame) {
     window.cancelAnimationFrame =
         window.webkitCancelAnimationFrame ||
             window.mozCancelAnimationFrame ||
             function (callback) { return; };
 }
+/* istanbul ignore next */
 if (typeof window !== 'undefined' && !window.AudioContext) {
     window.AudioContext = window.AudioContext ||
         window.webkitAudioContext ||
@@ -26,6 +36,7 @@ if (typeof window !== 'undefined' && !window.AudioContext) {
 // Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.io/#x15.4.4.18
+/* istanbul ignore next */
 if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback, thisArg) {
         var T, k;
@@ -70,6 +81,7 @@ if (!Array.prototype.forEach) {
     };
 }
 // Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+/* istanbul ignore next */
 if (!Array.prototype.some) {
     Array.prototype.some = function (fun /*, thisArg */) {
         'use strict';
@@ -91,6 +103,7 @@ if (!Array.prototype.some) {
     };
 }
 // Polyfill from  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
+/* istanbul ignore next */
 if (!Function.prototype.bind) {
     Function.prototype.bind = function (oThis) {
         if (typeof this !== 'function') {
@@ -139,7 +152,7 @@ var ex;
                 pixel[firstPixel + 2] = avg;
             };
             return Grayscale;
-        })();
+        }());
         Effects.Grayscale = Grayscale;
         /**
          * Applies the "Invert" effect to a sprite, inverting the pixel colors.
@@ -155,7 +168,7 @@ var ex;
                 pixel[firstPixel + 2] = 255 - pixel[firstPixel + 2];
             };
             return Invert;
-        })();
+        }());
         Effects.Invert = Invert;
         /**
          * Applies the "Opacity" effect to a sprite, setting the alpha of all pixels to a given value.
@@ -175,7 +188,7 @@ var ex;
                 }
             };
             return Opacity;
-        })();
+        }());
         Effects.Opacity = Opacity;
         /**
          * Applies the "Colorize" effect to a sprite, changing the color channels of all the pixels to an
@@ -198,7 +211,7 @@ var ex;
                 }
             };
             return Colorize;
-        })();
+        }());
         Effects.Colorize = Colorize;
         /**
          * Applies the "Lighten" effect to a sprite, changes the lightness of the color according to HSL
@@ -221,7 +234,7 @@ var ex;
                 pixel[firstPixel + 3] = color.a;
             };
             return Lighten;
-        })();
+        }());
         Effects.Lighten = Lighten;
         /**
          * Applies the "Darken" effect to a sprite, changes the darkness of the color according to HSL
@@ -244,7 +257,7 @@ var ex;
                 pixel[firstPixel + 3] = color.a;
             };
             return Darken;
-        })();
+        }());
         Effects.Darken = Darken;
         /**
          * Applies the "Saturate" effect to a sprite, saturates the color acccording to HSL
@@ -267,7 +280,7 @@ var ex;
                 pixel[firstPixel + 3] = color.a;
             };
             return Saturate;
-        })();
+        }());
         Effects.Saturate = Saturate;
         /**
          * Applies the "Desaturate" effect to a sprite, desaturates the color acccording to HSL
@@ -290,7 +303,7 @@ var ex;
                 pixel[firstPixel + 3] = color.a;
             };
             return Desaturate;
-        })();
+        }());
         Effects.Desaturate = Desaturate;
         /**
          * Applies the "Fill" effect to a sprite, changing the color channels of all non-transparent pixels to match
@@ -313,59 +326,1548 @@ var ex;
                 }
             };
             return Fill;
-        })();
+        }());
         Effects.Fill = Fill;
     })(Effects = ex.Effects || (ex.Effects = {}));
 })(ex || (ex = {}));
 /// <reference path="../Drawing/SpriteEffects.ts" />
+var ex;
+(function (ex) {
+    /**
+     * A 2D vector on a plane.
+     */
+    var Vector = (function () {
+        /**
+         * @param x  X component of the Vector
+         * @param y  Y component of the Vector
+         */
+        function Vector(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        /**
+         * Returns a vector of unit length in the direction of the specified angle in Radians.
+         * @param angle The angle to generate the vector
+         */
+        Vector.fromAngle = function (angle) {
+            return new Vector(Math.cos(angle), Math.sin(angle));
+        };
+        /**
+         * Sets the x and y components at once
+         */
+        Vector.prototype.setTo = function (x, y) {
+            this.x = x;
+            this.y = y;
+        };
+        /**
+         * Compares this point against another and tests for equality
+         * @param point  The other point to compare to
+         */
+        Vector.prototype.equals = function (vector, tolerance) {
+            if (tolerance === void 0) { tolerance = .001; }
+            return Math.abs(this.x - vector.x) <= tolerance && Math.abs(this.y - vector.y) <= tolerance;
+        };
+        /**
+         * The distance to another vector
+         * @param v  The other vector
+         */
+        Vector.prototype.distance = function (v) {
+            if (!v) {
+                v = new Vector(0.0, 0.0);
+            }
+            return Math.sqrt(Math.pow(this.x - v.x, 2) + Math.pow(this.y - v.y, 2));
+        };
+        /**
+         * Normalizes a vector to have a magnitude of 1.
+         */
+        Vector.prototype.normalize = function () {
+            var d = this.distance();
+            if (d > 0) {
+                return new Vector(this.x / d, this.y / d);
+            }
+            else {
+                return new Vector(0, 1);
+            }
+        };
+        /**
+         * Returns the average (midpoint) between the current point and the specified
+         */
+        Vector.prototype.average = function (vec) {
+            return this.add(vec).scale(.5);
+        };
+        /**
+         * Scales a vector's by a factor of size
+         * @param size  The factor to scale the magnitude by
+         */
+        Vector.prototype.scale = function (size) {
+            return new Vector(this.x * size, this.y * size);
+        };
+        /**
+         * Adds one vector to another
+         * @param v The vector to add
+         */
+        Vector.prototype.add = function (v) {
+            return new Vector(this.x + v.x, this.y + v.y);
+        };
+        /**
+         * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
+         * @param v The vector to subtract
+         */
+        Vector.prototype.sub = function (v) {
+            return new Vector(this.x - v.x, this.y - v.y);
+        };
+        /**
+         * Adds one vector to this one modifying the original
+         * @param v The vector to add
+         */
+        Vector.prototype.addEqual = function (v) {
+            this.x += v.x;
+            this.y += v.y;
+            return this;
+        };
+        /**
+         * Subtracts a vector from this one modifying the original
+         * @parallel v The vector to subtract
+         */
+        Vector.prototype.subEqual = function (v) {
+            this.x -= v.x;
+            this.y -= v.y;
+            return this;
+        };
+        /**
+         * Scales this vector by a factor of size and modifies the original
+         */
+        Vector.prototype.scaleEqual = function (size) {
+            this.x *= size;
+            this.y *= size;
+            return this;
+        };
+        /**
+         * Performs a dot product with another vector
+         * @param v  The vector to dot
+         */
+        Vector.prototype.dot = function (v) {
+            return this.x * v.x + this.y * v.y;
+        };
+        Vector.prototype.cross = function (v) {
+            if (v instanceof Vector) {
+                return this.x * v.y - this.y * v.x;
+            }
+            else if (typeof v === 'number') {
+                return new Vector(v * this.y, -v * this.x);
+            }
+        };
+        /**
+         * Returns the perpendicular vector to this one
+         */
+        Vector.prototype.perpendicular = function () {
+            return new Vector(this.y, -this.x);
+        };
+        /**
+         * Returns the normal vector to this one, same as the perpendicular of length 1
+         */
+        Vector.prototype.normal = function () {
+            return this.perpendicular().normalize();
+        };
+        /**
+         * Negate the current vector
+         */
+        Vector.prototype.negate = function () {
+            return this.scale(-1);
+        };
+        /**
+         * Returns the angle of this vector.
+         */
+        Vector.prototype.toAngle = function () {
+            return Math.atan2(this.y, this.x);
+        };
+        /**
+         * Rotates the current vector around a point by a certain number of
+         * degrees in radians
+         */
+        Vector.prototype.rotate = function (angle, anchor) {
+            if (!anchor) {
+                anchor = new ex.Vector(0, 0);
+            }
+            var sinAngle = Math.sin(angle);
+            var cosAngle = Math.cos(angle);
+            var x = cosAngle * (this.x - anchor.x) - sinAngle * (this.y - anchor.y) + anchor.x;
+            var y = sinAngle * (this.x - anchor.x) + cosAngle * (this.y - anchor.y) + anchor.y;
+            return new Vector(x, y);
+        };
+        /**
+         * Creates new vector that has the same values as the previous.
+         */
+        Vector.prototype.clone = function () {
+            return new Vector(this.x, this.y);
+        };
+        /**
+         * Returns a string repesentation of the vector.
+         */
+        Vector.prototype.toString = function () {
+            return "(" + this.x + ", " + this.y + ")";
+        };
+        /**
+         * A (0, 0) vector
+         */
+        Vector.Zero = new Vector(0, 0);
+        /**
+         * A unit vector pointing up (0, -1)
+         */
+        Vector.Up = new Vector(0, -1);
+        /**
+         * A unit vector pointing down (0, 1)
+         */
+        Vector.Down = new Vector(0, 1);
+        /**
+         * A unit vector pointing left (-1, 0)
+         */
+        Vector.Left = new Vector(-1, 0);
+        /**
+         * A unit vector pointing right (1, 0)
+         */
+        Vector.Right = new Vector(1, 0);
+        return Vector;
+    }());
+    ex.Vector = Vector;
+    /**
+     * A 2D ray that can be cast into the scene to do collision detection
+     */
+    var Ray = (function () {
+        /**
+         * @param pos The starting position for the ray
+         * @param dir The vector indicating the direction of the ray
+         */
+        function Ray(pos, dir) {
+            this.pos = pos;
+            this.dir = dir.normalize();
+        }
+        /**
+         * Tests a whether this ray intersects with a line segment. Returns a number greater than or equal to 0 on success.
+         * This number indicates the mathematical intersection time.
+         * @param line  The line to test
+         */
+        Ray.prototype.intersect = function (line) {
+            var numerator = line.begin.sub(this.pos);
+            // Test is line and ray are parallel and non intersecting
+            if (this.dir.cross(line.getSlope()) === 0 && numerator.cross(this.dir) !== 0) {
+                return -1;
+            }
+            // Lines are parallel
+            var divisor = (this.dir.cross(line.getSlope()));
+            if (divisor === 0) {
+                return -1;
+            }
+            var t = numerator.cross(line.getSlope()) / divisor;
+            if (t >= 0) {
+                var u = (numerator.cross(this.dir) / divisor) / line.getLength();
+                if (u >= 0 && u <= 1) {
+                    return t;
+                }
+            }
+            return -1;
+        };
+        /**
+         * Returns the point of intersection given the intersection time
+         */
+        Ray.prototype.getPoint = function (time) {
+            return this.pos.add(this.dir.scale(time));
+        };
+        return Ray;
+    }());
+    ex.Ray = Ray;
+    /**
+     * A 2D line segment
+     */
+    var Line = (function () {
+        /**
+         * @param begin  The starting point of the line segment
+         * @param end  The ending point of the line segment
+         */
+        function Line(begin, end) {
+            this.begin = begin;
+            this.end = end;
+        }
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        Line.prototype.getSlope = function () {
+            var begin = this.begin;
+            var end = this.end;
+            var distance = begin.distance(end);
+            return end.sub(begin).scale(1 / distance);
+        };
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        Line.prototype.getLength = function () {
+            var begin = this.begin;
+            var end = this.end;
+            var distance = begin.distance(end);
+            return distance;
+        };
+        return Line;
+    }());
+    ex.Line = Line;
+    /**
+     * A 1 dimensional projection on an axis, used to test overlaps
+     */
+    var Projection = (function () {
+        function Projection(min, max) {
+            this.min = min;
+            this.max = max;
+        }
+        Projection.prototype.overlaps = function (projection) {
+            return this.max > projection.min && projection.max > this.min;
+        };
+        Projection.prototype.getOverlap = function (projection) {
+            if (this.overlaps(projection)) {
+                if (this.max > projection.max) {
+                    return projection.max - this.min;
+                }
+                else {
+                    return this.max - projection.min;
+                }
+            }
+            return 0;
+        };
+        return Projection;
+    }());
+    ex.Projection = Projection;
+})(ex || (ex = {}));
+/// <reference path="Collision/IPhysics.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Possible collision resolution strategies
+     *
+     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physcs.
+     *
+     * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+     * simulated physical interactions.
+     */
+    (function (CollisionResolutionStrategy) {
+        CollisionResolutionStrategy[CollisionResolutionStrategy["Box"] = 0] = "Box";
+        CollisionResolutionStrategy[CollisionResolutionStrategy["RigidBody"] = 1] = "RigidBody";
+    })(ex.CollisionResolutionStrategy || (ex.CollisionResolutionStrategy = {}));
+    var CollisionResolutionStrategy = ex.CollisionResolutionStrategy;
+    /**
+     * Possible broadphase collision pair identification strategies
+     *
+     * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+     * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+     * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
+     */
+    (function (BroadphaseStrategy) {
+        BroadphaseStrategy[BroadphaseStrategy["Naive"] = 0] = "Naive";
+        BroadphaseStrategy[BroadphaseStrategy["DynamicAABBTree"] = 1] = "DynamicAABBTree";
+    })(ex.BroadphaseStrategy || (ex.BroadphaseStrategy = {}));
+    var BroadphaseStrategy = ex.BroadphaseStrategy;
+    /**
+     * Possible numerical integrators for position and velocity
+     */
+    (function (Integrator) {
+        Integrator[Integrator["Euler"] = 0] = "Euler";
+    })(ex.Integrator || (ex.Integrator = {}));
+    var Integrator = ex.Integrator;
+    /**
+     *
+     * Excalibur Physics
+     *
+     * The [[Physics]] object is the global configuration object for all Excalibur physics.
+     *
+     * Excalibur comes built in with two physics systems. The first system is [[CollisionResolutionStrategy.Box|Box physics]], and is a
+     * simple axis-aligned way of doing basic collision detection for non-rotated rectangular areas, defined by an actor's
+     * [[BoundingBox|bounding box]].
+     *
+     * ## Enabling Excalibur physics
+     *
+     * To enable physics in your game it is as simple as setting [[Physics.enabled]] to true and picking your
+     * [[CollisionResolutionStrategy]]
+     *
+     * Excalibur supports 3 different types of collision area shapes in its physics simulation: [[PolygonArea|polygons]],
+     * [[CircleArea|circles]], and [[EdgeArea|edges]]. To use any one of these areas on an actor there are convenience methods off of
+     * the [[Actor|actor]] [[Body|physics body]]: [[Body.useBoxCollision|useBoxCollision]],
+     * [[Body.usePolygonCollision|usePolygonCollision]], [[Body.useCircleCollision|useCircleCollision]], and [[Body.useEdgeCollision]]
+     *
+     * ```ts
+     * // setup game
+     * var game = new ex.Engine({
+     *     width: 600,
+     *     height: 400
+     *  });
+     *
+     * // use rigid body
+     * ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody;
+     *
+     * // set global acceleration simulating gravity pointing down
+     * ex.Physics.acc.setTo(0, 700);
+     *
+     * var block = new ex.Actor(300, 0, 20, 20, ex.Color.Blue.clone());
+     * block.body.useBoxCollision(); // useBoxCollision is the default, technically optional
+     * game.add(block);
+     *
+     * var circle = new ex.Actor(300, 100, 20, 20, ex.Color.Red.clone());
+     * circle.body.useCircleCollision(10);
+     * game.add(circle);
+     *
+     * var ground = new ex.Actor(300, 380, 600, 10, ex.Color.Black.clone());
+     * ground.collisionType = ex.CollisionType.Fixed;
+     * edge.body.useBoxCollision(); // optional
+     * game.add(ground);
+     *
+     * // start the game
+     * game.start();
+     * ```
+     *
+     * ## Limitations
+     *
+     * Currently Excalibur only supports single contact point collisions and non-sleeping physics bodies. This has some negative stability
+     * and performance implications. Single contact point collisions can have odd oscilating behavior. Non-sleeping bodies will recalculate
+     * collisions whether they need to or not. We fully intend to add these features into Excalibur in future releases.
+     *
+     */
+    /* istanbul ignore next */
+    var Physics = (function () {
+        function Physics() {
+        }
+        /**
+         * Configures Excalibur to use box physics. Box physics which performs simple axis aligned arcade style physics.
+         */
+        Physics.useBoxPhysics = function () {
+            ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.Box;
+        };
+        /**
+         * Configures Excalibur to use rigid body physics. Rigid body physics allows for complicated
+         * simulated physical interactions.
+         */
+        Physics.useRigidBodyPhysics = function () {
+            ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody;
+        };
+        /**
+         * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
+         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collison type).
+         *
+         *
+         * This is a great way to globally simulate effects like gravity.
+         */
+        Physics.acc = new ex.Vector(0, 0);
+        /**
+         * Globally switches all Excalibur physics behavior on or off.
+         */
+        Physics.enabled = true;
+        /**
+         * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
+         *
+         * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
+         *
+         * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
+         * collison resolution of fast move objects, or the stability of large numbers of objects stacked together.
+         *
+         * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
+         * cost of performance.
+         *
+         * The default is set to 5 passes which is a good start.
+         */
+        Physics.collisionPasses = 5;
+        /**
+         * Gets or sets the broadphase pair identification strategy.
+         *
+         * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+         * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+         * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
+         */
+        Physics.broadphaseStrategy = BroadphaseStrategy.DynamicAABBTree;
+        /**
+         * Globally switches the debug information for the broadphase strategy
+         */
+        Physics.broadphaseDebug = false;
+        /**
+         * Show the normals as a result of collision on the screen.
+         */
+        Physics.showCollisionNormals = false;
+        /**
+         * Show the position, velocity, and acceleration as graphical vectors.
+         */
+        Physics.showMotionVectors = false;
+        /**
+         * Show the axis-aligned bounding boxes of the collision bodies on the screen.
+         */
+        Physics.showBounds = false;
+        /**
+         * Show the bounding collision area shapes
+         */
+        Physics.showArea = false;
+        /**
+         * Show points of collision interpreted by excalibur as a result of collision.
+         */
+        Physics.showContacts = false;
+        /**
+         * Show the surface normals of the collision areas.
+         */
+        Physics.showNormals = false;
+        /**
+         * Gets or sets the global collision resolution strategy (narrowphase).
+         *
+         * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
+         *
+         * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+         * simulated physical interactions.
+         */
+        Physics.collisionResolutionStrategy = CollisionResolutionStrategy.Box;
+        /**
+         * The default mass to use if none is specified
+         */
+        Physics.defaultMass = 10;
+        /**
+         * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
+         */
+        Physics.integrator = Integrator.Euler;
+        /**
+         * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
+         * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
+         */
+        Physics.integrationSteps = 1;
+        /**
+         * Gets or sets whether rotation is allowed in a RigidBody collision resolution
+         */
+        Physics.allowRigidBodyRotation = true;
+        return Physics;
+    }());
+    ex.Physics = Physics;
+    ;
+})(ex || (ex = {}));
+/// <reference path="../Algebra.ts" />
+/// <reference path="../Actor.ts" />
+/// <reference path="../Physics.ts" />
+/// <reference path="ICollisionArea.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Collision contacts are used internally by Excalibur to resolve collision between actors. This
+     * Pair prevents collisions from being evaluated more than one time
+     */
+    var CollisionContact = (function () {
+        function CollisionContact(bodyA, bodyB, mtv, point, normal) {
+            this.bodyA = bodyA;
+            this.bodyB = bodyB;
+            this.mtv = mtv;
+            this.point = point;
+            this.normal = normal;
+        }
+        CollisionContact.prototype.resolve = function (delta, strategy) {
+            if (strategy === ex.CollisionResolutionStrategy.RigidBody) {
+                this._resolveRigidBodyCollision(delta);
+            }
+            else if (strategy === ex.CollisionResolutionStrategy.Box) {
+                this._resolveBoxCollision(delta);
+            }
+            else {
+                throw new Error('Unknown collision resolution strategy');
+            }
+        };
+        CollisionContact.prototype._applyBoxImpluse = function (bodyA, bodyB, mtv, side) {
+            if ((bodyA.collisionType === ex.CollisionType.Active ||
+                bodyA.collisionType === ex.CollisionType.Elastic) &&
+                bodyB.collisionType !== ex.CollisionType.Passive) {
+                // Resolve overlaps
+                if (bodyA.collisionType === ex.CollisionType.Active &&
+                    bodyB.collisionType === ex.CollisionType.Active) {
+                    // split overlaps if both are Active
+                    mtv = mtv.scale(.5);
+                }
+                // Apply mtv
+                bodyA.pos.y += mtv.y;
+                bodyA.pos.x += mtv.x;
+                // Naive elastic bounce
+                if (bodyA.collisionType === ex.CollisionType.Elastic) {
+                    if (side === ex.Side.Left) {
+                        bodyA.vel.x = Math.abs(bodyA.vel.x);
+                    }
+                    else if (side === ex.Side.Right) {
+                        bodyA.vel.x = -Math.abs(bodyA.vel.x);
+                    }
+                    else if (side === ex.Side.Top) {
+                        bodyA.vel.y = Math.abs(bodyA.vel.y);
+                    }
+                    else if (side === ex.Side.Bottom) {
+                        bodyA.vel.y = -Math.abs(bodyA.vel.y);
+                    }
+                }
+                else {
+                    // non-zero intersection on the y axis
+                    if (this.mtv.x !== 0) {
+                        var velX = 0;
+                        // both bodies are traveling in the same direction (negative or positve)
+                        if (bodyA.vel.x <= 0 && bodyB.vel.x <= 0) {
+                            velX = Math.min(bodyA.vel.x, bodyB.vel.x);
+                            velX = bodyA.vel.x + bodyA.vel.x;
+                        }
+                        else if (bodyA.vel.x >= 0 && bodyB.vel.x >= 0) {
+                            velX = Math.max(bodyA.vel.x, bodyB.vel.x);
+                            velX = bodyA.vel.x + bodyA.vel.x;
+                        }
+                        else {
+                            // bodies are traveling in opposite directions
+                            velX = 0;
+                        }
+                        bodyA.vel.x = velX;
+                    }
+                    if (this.mtv.y !== 0) {
+                        var velY = 0;
+                        // both bodies are traveling in the same direction (negative or positive)
+                        if (bodyA.vel.y <= 0 && bodyB.vel.y <= 0) {
+                            velY = Math.min(bodyA.vel.y, bodyB.vel.y);
+                        }
+                        else if (bodyA.vel.y >= 0 && bodyB.vel.y >= 0) {
+                            velY = Math.max(bodyA.vel.y, bodyB.vel.y);
+                        }
+                        else {
+                            // bodies are traveling in opposite directions
+                            velY = 0;
+                        }
+                        bodyA.vel.y = velY;
+                    }
+                }
+            }
+        };
+        CollisionContact.prototype._resolveBoxCollision = function (delta) {
+            var bodyA = this.bodyA.body.actor;
+            var bodyB = this.bodyB.body.actor;
+            var side = ex.Util.getSideFromVector(this.mtv);
+            var mtv = this.mtv.negate();
+            // Publish collision events on both participants
+            bodyA.emit('collision', new ex.CollisionEvent(bodyA, bodyB, side, mtv));
+            bodyB.emit('collision', new ex.CollisionEvent(bodyB, bodyA, ex.Util.getOppositeSide(side), mtv.negate()));
+            this._applyBoxImpluse(bodyA, bodyB, mtv, side);
+            this._applyBoxImpluse(bodyB, bodyA, mtv.negate(), ex.Util.getOppositeSide(side));
+        };
+        CollisionContact.prototype._resolveRigidBodyCollision = function (delta) {
+            // perform collison on bounding areas
+            var bodyA = this.bodyA.body.actor;
+            var bodyB = this.bodyB.body.actor;
+            var mtv = this.mtv; // normal pointing away from bodyA
+            var point = this.point; // world space collision point
+            var normal = this.normal; // normal pointing away from bodyA
+            if (bodyA === bodyB) {
+                return;
+            }
+            var invMassA = bodyA.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.mass;
+            var invMassB = bodyB.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.mass;
+            var invMoiA = bodyA.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.moi;
+            var invMoiB = bodyB.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.moi;
+            // average restitution more relistic
+            var coefRestitution = Math.min(bodyA.restitution, bodyB.restitution);
+            var coefFriction = Math.min(bodyA.friction, bodyB.friction);
+            normal = normal.normalize();
+            var tangent = normal.normal().normalize();
+            var ra = this.point.sub(this.bodyA.getCenter()); // point relative to bodyA position
+            var rb = this.point.sub(this.bodyB.getCenter()); /// point relative to bodyB
+            // Relative velocity in linear terms
+            // Angular to linear velocity formula -> omega = v/r
+            var rv = bodyB.vel.add(rb.cross(-bodyB.rx)).sub(bodyA.vel.sub(ra.cross(bodyA.rx)));
+            var rvNormal = rv.dot(normal);
+            var rvTangent = rv.dot(tangent);
+            var raTangent = ra.dot(tangent);
+            var raNormal = ra.dot(normal);
+            var rbTangent = rb.dot(tangent);
+            var rbNormal = rb.dot(normal);
+            // If objects are moving away ignore
+            if (rvNormal > 0) {
+                return;
+            }
+            // Publish collision events on both participants
+            var side = ex.Util.getSideFromVector(this.mtv);
+            bodyA.emit('collision', new ex.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyB.emit('collision', new ex.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, ex.Util.getOppositeSide(side), this.mtv.negate()));
+            // Collision impulse formula from Chris Hecker
+            // https://en.wikipedia.org/wiki/Collision_response
+            var impulse = -((1 + coefRestitution) * rvNormal) /
+                ((invMassA + invMassB) + invMoiA * raTangent * raTangent + invMoiB * rbTangent * rbTangent);
+            if (bodyA.collisionType === ex.CollisionType.Fixed) {
+                bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
+                if (ex.Physics.allowRigidBodyRotation) {
+                    bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
+                }
+                bodyB.addMtv(mtv);
+            }
+            else if (bodyB.collisionType === ex.CollisionType.Fixed) {
+                bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
+                if (ex.Physics.allowRigidBodyRotation) {
+                    bodyA.rx += impulse * invMoiA * -ra.cross(normal);
+                }
+                bodyA.addMtv(mtv.negate());
+            }
+            else {
+                bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
+                bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
+                if (ex.Physics.allowRigidBodyRotation) {
+                    bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
+                    bodyA.rx += impulse * invMoiA * -ra.cross(normal);
+                }
+                // Split the mtv in half for the two bodies, potentially we could do something smarter here
+                bodyB.addMtv(mtv.scale(.5));
+                bodyA.addMtv(mtv.scale(-.5));
+            }
+            // Friction portion of impulse
+            if (coefFriction && rvTangent) {
+                // Columb model of friction, formula for impulse due to friction from  
+                // https://en.wikipedia.org/wiki/Collision_response
+                // tangent force exerted by body on another in contact
+                var t = rv.sub(normal.scale(rv.dot(normal))).normalize();
+                // impulse in the direction of tangent force
+                var jt = rv.dot(t) / (invMassA + invMassB + raNormal * raNormal * invMoiA + rbNormal * rbNormal * invMoiB);
+                var frictionImpulse = new ex.Vector(0, 0);
+                if (Math.abs(jt) <= impulse * coefFriction) {
+                    frictionImpulse = t.scale(jt).negate();
+                }
+                else {
+                    frictionImpulse = t.scale(-impulse * coefFriction);
+                }
+                if (bodyA.collisionType === ex.CollisionType.Fixed) {
+                    // apply frictional impulse
+                    bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
+                    if (ex.Physics.allowRigidBodyRotation) {
+                        bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
+                    }
+                }
+                else if (bodyB.collisionType === ex.CollisionType.Fixed) {
+                    // apply frictional impulse
+                    bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
+                    if (ex.Physics.allowRigidBodyRotation) {
+                        bodyA.rx -= frictionImpulse.dot(t) * invMoiA * ra.cross(t);
+                    }
+                }
+                else {
+                    // apply frictional impulse
+                    bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
+                    bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
+                    // apply frictional impulse
+                    if (ex.Physics.allowRigidBodyRotation) {
+                        bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
+                        bodyA.rx -= frictionImpulse.dot(t) * invMoiA * ra.cross(t);
+                    }
+                }
+            }
+        };
+        return CollisionContact;
+    }());
+    ex.CollisionContact = CollisionContact;
+})(ex || (ex = {}));
+/// <reference path="CollisionContact.ts" />
+/// <reference path="../DebugFlags.ts" />
+var ex;
+(function (ex) {
+    ex.CollisionJumpTable = {
+        CollideCircleCircle: function (circleA, circleB) {
+            var radius = circleA.radius + circleB.radius;
+            var circleAPos = circleA.body.pos.add(circleA.pos);
+            var circleBPos = circleB.body.pos.add(circleB.pos);
+            if (circleAPos.distance(circleBPos) > radius) {
+                return null;
+            }
+            var axisOfCollision = circleBPos.sub(circleAPos).normalize();
+            var mvt = axisOfCollision.scale(radius - circleBPos.distance(circleAPos));
+            var pointOfCollision = circleA.getFurthestPoint(axisOfCollision).add(circleAPos);
+            return new ex.CollisionContact(circleA, circleB, mvt, pointOfCollision, axisOfCollision);
+        },
+        CollideCirclePolygon: function (circle, polygon) {
+            var axes = polygon.getAxes();
+            var cc = circle.getCenter();
+            var pc = polygon.getCenter();
+            var minAxis = circle.testSeparatingAxisTheorem(polygon);
+            if (!minAxis) {
+                return null;
+            }
+            // make sure that the minAxis is pointing away from circle
+            var samedir = minAxis.dot(polygon.getCenter().sub(circle.getCenter()));
+            minAxis = samedir < 0 ? minAxis.negate() : minAxis;
+            var verts = [];
+            var point1 = polygon.getFurthestPoint(minAxis.negate());
+            var point2 = circle.getFurthestPoint(minAxis).add(cc);
+            if (circle.contains(point1)) {
+                verts.push(point1);
+            }
+            if (polygon.contains(point2)) {
+                verts.push(point2);
+            }
+            if (verts.length === 0) {
+                verts.push(point2);
+            }
+            return new ex.CollisionContact(circle, polygon, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
+        },
+        CollideCircleEdge: function (circle, edge) {
+            // center of the circle
+            var cc = circle.body.pos;
+            // vector in the direction of the edge
+            var e = edge.end.sub(edge.begin);
+            // amount of overlap with the circle's center along the edge direction
+            var u = e.dot(edge.end.sub(cc));
+            var v = e.dot(cc.sub(edge.begin));
+            // Potential region A collision (circle is on the left side of the edge, before the beginning)
+            if (v <= 0) {
+                var da = edge.begin.sub(cc);
+                var dda = da.dot(da); // quick and dirty way of calc'n distance in r^2 terms saves some sqrts
+                // save some sqrts
+                if (dda > circle.radius * circle.radius) {
+                    return null; // no collision
+                }
+                return new ex.CollisionContact(circle, edge, da.normalize().scale(circle.radius - Math.sqrt(dda)), edge.begin, da.normalize());
+            }
+            // Potential region B collision (circle is on the right side of the edge, after the end)
+            if (u <= 0) {
+                var db = edge.end.sub(cc);
+                var ddb = db.dot(db);
+                if (ddb > circle.radius * circle.radius) {
+                    return null;
+                }
+                return new ex.CollisionContact(circle, edge, db.normalize().scale(circle.radius - Math.sqrt(ddb)), edge.end, db.normalize());
+            }
+            // Otherwise potential region AB collision (circle is in the middle of the edge between the beginning and end)
+            var den = e.dot(e);
+            var pointOnEdge = (edge.begin.scale(u).add(edge.end.scale(v))).scale(1 / den);
+            var d = cc.sub(pointOnEdge);
+            var dd = d.dot(d);
+            if (dd > circle.radius * circle.radius) {
+                return null; // no collision
+            }
+            var n = e.perpendicular();
+            // flip correct direction
+            if (n.dot(cc.sub(edge.begin)) < 0) {
+                n.x = -n.x;
+                n.y = -n.y;
+            }
+            n = n.normalize();
+            var mvt = n.scale(Math.abs(circle.radius - Math.sqrt(dd)));
+            return new ex.CollisionContact(circle, edge, mvt.negate(), pointOnEdge, n.negate());
+        },
+        CollideEdgeEdge: function (edgeA, edgeB) {
+            // Edge-edge collision doesn't make sense
+            return null;
+        },
+        CollidePolygonEdge: function (polygon, edge) {
+            var center = polygon.getCenter();
+            var e = edge.end.sub(edge.begin);
+            var edgeNormal = e.normal();
+            var u = e.dot(edge.end.sub(center));
+            var v = e.dot(center.sub(edge.begin));
+            var den = e.dot(e);
+            var pointOnEdge = (edge.begin.scale(u).add(edge.end.scale(v))).scale(1 / den);
+            var d = center.sub(pointOnEdge);
+            // build a temporary polygon from the edge to use SAT
+            var linePoly = new ex.PolygonArea({
+                points: [
+                    edge.begin,
+                    edge.end,
+                    edge.end.sub(edgeNormal.scale(10)),
+                    edge.begin.sub(edgeNormal.scale(10))]
+            });
+            var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
+            // no minAxis, no overlap, no collision
+            if (!minAxis) {
+                return null;
+            }
+            return new ex.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal.negate()), edgeNormal.negate());
+        },
+        CollidePolygonPolygon: function (polyA, polyB) {
+            // get all axes from both polys
+            var axes = polyA.getAxes().concat(polyB.getAxes());
+            // get all points from both polys
+            var points = polyA.getTransformedPoints().concat(polyB.getTransformedPoints());
+            // do a SAT test to find a min axis if it exists
+            var minAxis = polyA.testSeparatingAxisTheorem(polyB);
+            // no overlap, no collision return null
+            if (!minAxis) {
+                return null;
+            }
+            // make sure that minAxis is pointing from A -> B
+            var sameDir = minAxis.dot(polyB.getCenter().sub(polyA.getCenter()));
+            minAxis = sameDir < 0 ? minAxis.negate() : minAxis;
+            // find rough point of collision
+            // todo this could be better
+            var verts = [];
+            var pointA = polyA.getFurthestPoint(minAxis);
+            var pointB = polyB.getFurthestPoint(minAxis.negate());
+            if (polyB.contains(pointA)) {
+                verts.push(pointA);
+            }
+            if (polyA.contains(pointB)) {
+                verts.push(pointB);
+            }
+            // no candidates, pick something
+            if (verts.length === 0) {
+                verts.push(pointB);
+            }
+            var contact = verts.length === 2 ? verts[0].add(verts[1]).scale(.5) : verts[0];
+            return new ex.CollisionContact(polyA, polyB, minAxis, contact, minAxis.normalize());
+        }
+    };
+})(ex || (ex = {}));
+var ex;
+(function (ex) {
+    /**
+     * This is a circle collision area for the excalibur rigid body physics simulation
+     */
+    var CircleArea = (function () {
+        function CircleArea(options) {
+            /**
+             * This is the center position of the circle, relative to the body position
+             */
+            this.pos = ex.Vector.Zero.clone();
+            this.pos = options.pos || ex.Vector.Zero.clone();
+            this.radius = options.radius || 0;
+            this.body = options.body || null;
+        }
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        CircleArea.prototype.getCenter = function () {
+            if (this.body) {
+                return this.pos.add(this.body.pos);
+            }
+            return this.pos;
+        };
+        /**
+         * Tests if a point is contained in this collision area
+         */
+        CircleArea.prototype.contains = function (point) {
+            var distance = this.body.pos.distance(point);
+            if (distance <= this.radius) {
+                return true;
+            }
+            return false;
+        };
+        /**
+         * Casts a ray at the CircleArea and returns the nearest point of collision
+         * @param ray
+         */
+        CircleArea.prototype.castRay = function (ray) {
+            //https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
+            var c = this.getCenter();
+            var dir = ray.dir;
+            var orig = ray.pos;
+            var discriminant = Math.sqrt(Math.pow(dir.dot(orig.sub(c)), 2) -
+                Math.pow(orig.sub(c).distance(), 2) +
+                Math.pow(this.radius, 2));
+            if (discriminant < 0) {
+                // no intersection
+                return null;
+            }
+            else {
+                var toi = 0;
+                if (discriminant === 0) {
+                    toi = -dir.dot(orig.sub(c));
+                    if (toi > 0) {
+                        return ray.getPoint(toi);
+                    }
+                    return null;
+                }
+                else {
+                    var toi1 = -dir.dot(orig.sub(c)) + discriminant;
+                    var toi2 = -dir.dot(orig.sub(c)) - discriminant;
+                    return ray.getPoint(Math.min(toi1, toi2));
+                }
+            }
+        };
+        CircleArea.prototype.collide = function (area) {
+            if (area instanceof CircleArea) {
+                return ex.CollisionJumpTable.CollideCircleCircle(this, area);
+            }
+            else if (area instanceof ex.PolygonArea) {
+                return ex.CollisionJumpTable.CollideCirclePolygon(this, area);
+            }
+            else if (area instanceof ex.EdgeArea) {
+                return ex.CollisionJumpTable.CollideCircleEdge(this, area);
+            }
+            else {
+                throw new Error("Circle could not collide with unknown ICollisionArea " + typeof area);
+            }
+        };
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        CircleArea.prototype.getFurthestPoint = function (direction) {
+            return this.pos.add(direction.normalize().scale(this.radius));
+        };
+        /**
+         * Get the axis aligned bounding box for the circle area
+         */
+        CircleArea.prototype.getBounds = function () {
+            return new ex.BoundingBox(this.pos.x + this.body.pos.x - this.radius, this.pos.y + this.body.pos.y - this.radius, this.pos.x + this.body.pos.x + this.radius, this.pos.y + this.body.pos.y + this.radius);
+        };
+        /**
+         * Get axis not implemented on circles, since their are infinite axis
+         */
+        CircleArea.prototype.getAxes = function () {
+            return null;
+        };
+        /**
+         * Returns the moment of intertia of a circle given it's mass
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         * @param mass
+         */
+        CircleArea.prototype.getMomentOfInertia = function () {
+            var mass = this.body ? this.body.mass : ex.Physics.defaultMass;
+            return (mass * this.radius * this.radius) / 2;
+        };
+        CircleArea.prototype.testSeparatingAxisTheorem = function (polygon) {
+            var axes = polygon.getAxes();
+            var pc = polygon.getCenter();
+            // Special SAT with circles
+            var closestPointOnPoly = polygon.getFurthestPoint(this.pos.sub(pc));
+            axes.push(this.pos.sub(closestPointOnPoly).normalize());
+            var minOverlap = Number.MAX_VALUE;
+            var minAxis = null;
+            var minIndex = -1;
+            for (var i = 0; i < axes.length; i++) {
+                var proj1 = polygon.project(axes[i]);
+                var proj2 = this.project(axes[i]);
+                var overlap = proj1.getOverlap(proj2);
+                if (overlap <= 0) {
+                    return null;
+                }
+                else {
+                    if (overlap < minOverlap) {
+                        minOverlap = overlap;
+                        minAxis = axes[i];
+                        minIndex = i;
+                    }
+                }
+            }
+            if (minIndex < 0) {
+                return null;
+            }
+            return minAxis.normalize().scale(minOverlap);
+        };
+        /* istanbul ignore next */
+        CircleArea.prototype.recalc = function () {
+            // circles don't cache
+        };
+        /**
+         * Project the circle along a specified axis
+         */
+        CircleArea.prototype.project = function (axis) {
+            var scalars = [];
+            var point = this.getCenter();
+            var dotProduct = point.dot(axis);
+            scalars.push(dotProduct);
+            scalars.push(dotProduct + this.radius);
+            scalars.push(dotProduct - this.radius);
+            return new ex.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
+        };
+        /* istanbul ignore next */
+        CircleArea.prototype.debugDraw = function (ctx, color) {
+            if (color === void 0) { color = ex.Color.Green.clone(); }
+            var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
+            var rotation = this.body ? this.body.rotation : 0;
+            ctx.beginPath();
+            ctx.strokeStyle = color.toString();
+            ctx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            ctx.lineTo(Math.cos(rotation) * this.radius + pos.x, Math.sin(rotation) * this.radius + pos.y);
+            ctx.closePath();
+            ctx.stroke();
+        };
+        return CircleArea;
+    }());
+    ex.CircleArea = CircleArea;
+})(ex || (ex = {}));
+var ex;
+(function (ex) {
+    var EdgeArea = (function () {
+        function EdgeArea(options) {
+            this.begin = options.begin || ex.Vector.Zero.clone();
+            this.end = options.end || ex.Vector.Zero.clone();
+            this.body = options.body || null;
+            this.pos = this.getCenter();
+        }
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        EdgeArea.prototype.getCenter = function () {
+            var pos = this.begin.average(this.end).add(this._getBodyPos());
+            return pos;
+        };
+        EdgeArea.prototype._getBodyPos = function () {
+            var bodyPos = ex.Vector.Zero.clone();
+            if (this.body.pos) {
+                bodyPos = this.body.pos;
+            }
+            return bodyPos;
+        };
+        EdgeArea.prototype._getTransformedBegin = function () {
+            var angle = this.body ? this.body.rotation : 0;
+            return this.begin.rotate(angle).add(this._getBodyPos());
+        };
+        EdgeArea.prototype._getTransformedEnd = function () {
+            var angle = this.body ? this.body.rotation : 0;
+            return this.end.rotate(angle).add(this._getBodyPos());
+        };
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        EdgeArea.prototype.getSlope = function () {
+            var begin = this._getTransformedBegin();
+            var end = this._getTransformedEnd();
+            var distance = begin.distance(end);
+            return end.sub(begin).scale(1 / distance);
+        };
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        EdgeArea.prototype.getLength = function () {
+            var begin = this._getTransformedBegin();
+            var end = this._getTransformedEnd();
+            var distance = begin.distance(end);
+            return distance;
+        };
+        /**
+         * Tests if a point is contained in this collision area
+         */
+        EdgeArea.prototype.contains = function (point) {
+            return false;
+        };
+        EdgeArea.prototype.castRay = function (ray) {
+            var numerator = this._getTransformedBegin().sub(ray.pos);
+            // Test is line and ray are parallel and non intersecting
+            if (ray.dir.cross(this.getSlope()) === 0 && numerator.cross(ray.dir) !== 0) {
+                return null;
+            }
+            // Lines are parallel
+            var divisor = (ray.dir.cross(this.getSlope()));
+            if (divisor === 0) {
+                return null;
+            }
+            var t = numerator.cross(this.getSlope()) / divisor;
+            if (t >= 0) {
+                var u = (numerator.cross(ray.dir) / divisor) / this.getLength();
+                if (u >= 0 && u <= 1) {
+                    return ray.getPoint(t);
+                }
+            }
+            return null;
+        };
+        EdgeArea.prototype.collide = function (area) {
+            if (area instanceof ex.CircleArea) {
+                return ex.CollisionJumpTable.CollideCircleEdge(area, this);
+            }
+            else if (area instanceof ex.PolygonArea) {
+                return ex.CollisionJumpTable.CollidePolygonEdge(area, this);
+            }
+            else if (area instanceof EdgeArea) {
+                return ex.CollisionJumpTable.CollideEdgeEdge(this, area);
+            }
+            else {
+                throw new Error("Circle could not collide with unknown ICollisionArea " + typeof area);
+            }
+        };
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        EdgeArea.prototype.getFurthestPoint = function (direction) {
+            var transformedBegin = this._getTransformedBegin();
+            var transformedEnd = this._getTransformedEnd();
+            if (direction.dot(transformedBegin) > 0) {
+                return transformedBegin;
+            }
+            else {
+                return transformedEnd;
+            }
+        };
+        /**
+         * Get the axis aligned bounding box for the circle area
+         */
+        EdgeArea.prototype.getBounds = function () {
+            var transformedBegin = this._getTransformedBegin();
+            var transformedEnd = this._getTransformedEnd();
+            return new ex.BoundingBox(Math.min(transformedBegin.x, transformedEnd.x), Math.min(transformedBegin.y, transformedEnd.y), Math.max(transformedBegin.x, transformedEnd.x), Math.max(transformedBegin.y, transformedEnd.y));
+        };
+        /**
+         * Get the axis associated with the edge
+         */
+        EdgeArea.prototype.getAxes = function () {
+            var e = this._getTransformedEnd().sub(this._getTransformedBegin());
+            var edgeNormal = e.normal();
+            var axes = [];
+            axes.push(edgeNormal);
+            axes.push(edgeNormal.negate());
+            axes.push(edgeNormal.normal());
+            axes.push(edgeNormal.normal().negate());
+            return axes;
+        };
+        /**
+         * Get the momemnt of inertia for an edge
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        EdgeArea.prototype.getMomentOfInertia = function () {
+            var mass = this.body ? this.body.mass : ex.Physics.defaultMass;
+            var length = this.end.sub(this.begin).distance() / 2;
+            return mass * length * length;
+        };
+        EdgeArea.prototype.recalc = function () {
+            // edges don't have any cached data
+        };
+        /**
+         * Project the edge along a specified axis
+         */
+        EdgeArea.prototype.project = function (axis) {
+            var scalars = [];
+            var points = [this._getTransformedBegin(), this._getTransformedEnd()];
+            var len = points.length;
+            for (var i = 0; i < len; i++) {
+                scalars.push(points[i].dot(axis));
+            }
+            return new ex.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
+        };
+        /* istanbul ignore next */
+        EdgeArea.prototype.debugDraw = function (ctx, color) {
+            if (color === void 0) { color = ex.Color.Red.clone(); }
+            ctx.strokeStyle = color.toString();
+            ctx.beginPath();
+            ctx.moveTo(this.begin.x, this.begin.y);
+            ctx.lineTo(this.end.x, this.end.y);
+            ctx.closePath();
+            ctx.stroke();
+        };
+        return EdgeArea;
+    }());
+    ex.EdgeArea = EdgeArea;
+})(ex || (ex = {}));
+/// <reference path="CollisionJumpTable.ts" />
+/// <reference path="CircleArea.ts" />
+/// <reference path="EdgeArea.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Polygon collision area for detecting collisions for actors, or independently
+     */
+    var PolygonArea = (function () {
+        function PolygonArea(options) {
+            this._transformedPoints = [];
+            this._axes = [];
+            this._sides = [];
+            this.pos = options.pos || ex.Vector.Zero.clone();
+            var winding = !!options.clockwiseWinding;
+            this.points = (winding ? options.points.reverse() : options.points) || [];
+            this.body = options.body || null;
+            // calculate initial transformation
+            this._calculateTransformation();
+        }
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        PolygonArea.prototype.getCenter = function () {
+            if (this.body) {
+                return this.body.pos.add(this.pos);
+            }
+            return this.pos;
+        };
+        /**
+         * Calculates the underlying transformation from the body relative space to world space
+         */
+        PolygonArea.prototype._calculateTransformation = function () {
+            var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
+            var angle = this.body ? this.body.rotation : 0;
+            var len = this.points.length;
+            this._transformedPoints.length = 0; // clear out old transform
+            for (var i = 0; i < len; i++) {
+                this._transformedPoints[i] = this.points[i].rotate(angle).add(pos);
+            }
+        };
+        /**
+         * Gets the points that make up the polygon in world space, from actor relative space (if specified)
+         */
+        PolygonArea.prototype.getTransformedPoints = function () {
+            if (!this._transformedPoints.length) {
+                this._calculateTransformation();
+            }
+            ;
+            return this._transformedPoints;
+        };
+        /**
+         * Gets the sides of the polygon in world space
+         */
+        PolygonArea.prototype.getSides = function () {
+            if (this._sides.length) {
+                return this._sides;
+            }
+            var lines = [];
+            var points = this.getTransformedPoints();
+            var len = points.length;
+            for (var i = 0; i < len; i++) {
+                lines.push(new ex.Line(points[i], points[(i - 1 + len) % len]));
+            }
+            this._sides = lines;
+            return this._sides;
+        };
+        PolygonArea.prototype.recalc = function () {
+            this._sides.length = 0;
+            this._axes.length = 0;
+            this._transformedPoints.length = 0;
+            this.getTransformedPoints();
+            this.getAxes();
+            this.getSides();
+        };
+        /**
+         * Tests if a point is contained in this collision area in world space
+         */
+        PolygonArea.prototype.contains = function (point) {
+            // Always cast to the right, as long as we cast in a consitent fixed direction we
+            // will be fine
+            var testRay = new ex.Ray(point, new ex.Vector(1, 0));
+            var intersectCount = this.getSides().reduce(function (accum, side, i, arr) {
+                if (testRay.intersect(side) >= 0) {
+                    return accum + 1;
+                }
+                return accum;
+            }, 0);
+            if (intersectCount % 2 === 0) {
+                return false;
+            }
+            return true;
+        };
+        /**
+         * Returns a collision contact if the 2 collision areas collide, otherwise collide will
+         * return null.
+         * @param area
+         */
+        PolygonArea.prototype.collide = function (area) {
+            if (area instanceof ex.CircleArea) {
+                return ex.CollisionJumpTable.CollideCirclePolygon(area, this);
+            }
+            else if (area instanceof PolygonArea) {
+                return ex.CollisionJumpTable.CollidePolygonPolygon(this, area);
+            }
+            else if (area instanceof ex.EdgeArea) {
+                return ex.CollisionJumpTable.CollidePolygonEdge(this, area);
+            }
+            else {
+                throw new Error("Polygon could not collide with unknown ICollisionArea " + typeof area);
+            }
+        };
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        PolygonArea.prototype.getFurthestPoint = function (direction) {
+            var pts = this.getTransformedPoints();
+            var furthestPoint = null;
+            var maxDistance = -Number.MAX_VALUE;
+            for (var i = 0; i < pts.length; i++) {
+                var distance = direction.dot(pts[i]);
+                if (distance > maxDistance) {
+                    maxDistance = distance;
+                    furthestPoint = pts[i];
+                }
+            }
+            return furthestPoint;
+        };
+        /**
+         * Get the axis aligned bounding box for the polygon area
+         */
+        PolygonArea.prototype.getBounds = function () {
+            // todo there is a faster way to do this
+            var points = this.getTransformedPoints();
+            var minX = points.reduce(function (prev, curr) {
+                return Math.min(prev, curr.x);
+            }, 999999999);
+            var maxX = points.reduce(function (prev, curr) {
+                return Math.max(prev, curr.x);
+            }, -99999999);
+            var minY = points.reduce(function (prev, curr) {
+                return Math.min(prev, curr.y);
+            }, 9999999999);
+            var maxY = points.reduce(function (prev, curr) {
+                return Math.max(prev, curr.y);
+            }, -9999999999);
+            return new ex.BoundingBox(minX, minY, maxX, maxY);
+        };
+        /**
+         * Get the moment of inertia for an arbitrary polygon
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        PolygonArea.prototype.getMomentOfInertia = function () {
+            var mass = this.body ? this.body.mass : ex.Physics.defaultMass;
+            var numerator = 0;
+            var denominator = 0;
+            for (var i = 0; i < this.points.length; i++) {
+                var iplusone = (i + 1) % this.points.length;
+                var crossTerm = this.points[iplusone].cross(this.points[i]);
+                numerator += crossTerm * (this.points[i].dot(this.points[i]) +
+                    this.points[i].dot(this.points[iplusone]) +
+                    this.points[iplusone].dot(this.points[iplusone]));
+                denominator += crossTerm;
+            }
+            return (mass / 6) * (numerator / denominator);
+        };
+        /**
+         * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
+         */
+        PolygonArea.prototype.castRay = function (ray) {
+            // find the minimum contact time greater than 0
+            // contact times less than 0 are behind the ray and we don't want those
+            var sides = this.getSides();
+            var len = sides.length;
+            var minContactTime = Number.MAX_VALUE;
+            var contactIndex = -1;
+            for (var i = 0; i < len; i++) {
+                var contactTime = ray.intersect(sides[i]);
+                if (contactTime >= 0 && contactTime < minContactTime) {
+                    minContactTime = contactTime;
+                    contactIndex = i;
+                }
+            }
+            // contact was found
+            if (contactIndex >= 0) {
+                return ray.getPoint(minContactTime);
+            }
+            // no contact found
+            return null;
+        };
+        /**
+         * Get the axis associated with the edge
+         */
+        PolygonArea.prototype.getAxes = function () {
+            if (this._axes.length) {
+                return this._axes;
+            }
+            var axes = [];
+            var points = this.getTransformedPoints();
+            var len = points.length;
+            for (var i = 0; i < len; i++) {
+                axes.push(points[i].sub(points[(i + 1) % len]).normal());
+            }
+            this._axes = axes;
+            return this._axes;
+        };
+        /**
+         * Perform Separating Axis test against another polygon, returns null if no overlap in polys
+         * Reference http://www.dyn4j.org/2010/01/sat/
+         */
+        PolygonArea.prototype.testSeparatingAxisTheorem = function (other) {
+            var poly1 = this;
+            var poly2 = other;
+            var axes = poly1.getAxes().concat(poly2.getAxes());
+            var minOverlap = Number.MAX_VALUE;
+            var minAxis = null;
+            var minIndex = -1;
+            for (var i = 0; i < axes.length; i++) {
+                var proj1 = poly1.project(axes[i]);
+                var proj2 = poly2.project(axes[i]);
+                var overlap = proj1.getOverlap(proj2);
+                if (overlap <= 0) {
+                    return null;
+                }
+                else {
+                    if (overlap < minOverlap) {
+                        minOverlap = overlap;
+                        minAxis = axes[i];
+                        minIndex = i;
+                    }
+                }
+            }
+            // Sanity check
+            if (minIndex === -1) {
+                return null;
+            }
+            return minAxis.normalize().scale(minOverlap);
+        };
+        /**
+         * Project the edges of the polygon along a specified axis
+         */
+        PolygonArea.prototype.project = function (axis) {
+            var scalars = [];
+            var points = this.getTransformedPoints();
+            var len = points.length;
+            var min = Number.MAX_VALUE;
+            var max = -Number.MAX_VALUE;
+            for (var i = 0; i < len; i++) {
+                var scalar = points[i].dot(axis);
+                min = Math.min(min, scalar);
+                max = Math.max(max, scalar);
+            }
+            return new ex.Projection(min, max);
+        };
+        /* istanbul ignore next */
+        PolygonArea.prototype.debugDraw = function (ctx, color) {
+            if (color === void 0) { color = ex.Color.Red.clone(); }
+            ctx.beginPath();
+            ctx.strokeStyle = color.toString();
+            // Iterate through the supplied points and contruct a 'polygon'
+            var firstPoint = this.getTransformedPoints()[0];
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+            this.getTransformedPoints().forEach(function (point, i) {
+                ctx.lineTo(point.x, point.y);
+            });
+            ctx.lineTo(firstPoint.x, firstPoint.y);
+            ctx.closePath();
+            ctx.stroke();
+        };
+        return PolygonArea;
+    }());
+    ex.PolygonArea = PolygonArea;
+})(ex || (ex = {}));
+/// <reference path="../Events.ts" />
 /// <reference path="../Interfaces/IActorTrait.ts" />
 var ex;
 (function (ex) {
     var Traits;
     (function (Traits) {
-        var Movement = (function () {
-            function Movement() {
+        var EulerMovement = (function () {
+            function EulerMovement() {
             }
-            Movement.prototype.update = function (actor, engine, delta) {
+            EulerMovement.prototype.update = function (actor, engine, delta) {
                 // Update placements based on linear algebra
-                actor.x += actor.dx * delta / 1000;
-                actor.y += actor.dy * delta / 1000;
-                actor.dx += actor.ax * delta / 1000;
-                actor.dy += actor.ay * delta / 1000;
-                actor.rotation += actor.rx * delta / 1000;
+                var seconds = delta / 1000;
+                var totalAcc = actor.acc.clone();
+                // Only active vanilla actors are affected by global acceleration
+                if (actor.collisionType === ex.CollisionType.Active &&
+                    !(actor instanceof ex.UIActor) &&
+                    !(actor instanceof ex.Trigger) &&
+                    !(actor instanceof ex.Label)) {
+                    totalAcc.addEqual(ex.Physics.acc);
+                }
+                actor.oldVel = actor.vel;
+                actor.vel.addEqual(totalAcc.scale(seconds));
+                actor.pos.addEqual(actor.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
+                actor.rx += actor.torque * (1.0 / actor.moi) * seconds;
+                actor.rotation += actor.rx * seconds;
                 actor.scale.x += actor.sx * delta / 1000;
                 actor.scale.y += actor.sy * delta / 1000;
             };
-            return Movement;
-        })();
-        Traits.Movement = Movement;
+            return EulerMovement;
+        }());
+        Traits.EulerMovement = EulerMovement;
     })(Traits = ex.Traits || (ex.Traits = {}));
 })(ex || (ex = {}));
 var ex;
 (function (ex) {
     var CullingBox = (function () {
         function CullingBox() {
-            this._topLeft = new ex.Point(0, 0);
-            this._topRight = new ex.Point(0, 0);
-            this._bottomLeft = new ex.Point(0, 0);
-            this._bottomRight = new ex.Point(0, 0);
+            this._topLeft = new ex.Vector(0, 0);
+            this._topRight = new ex.Vector(0, 0);
+            this._bottomLeft = new ex.Vector(0, 0);
+            this._bottomRight = new ex.Vector(0, 0);
         }
         CullingBox.prototype.isSpriteOffScreen = function (actor, engine) {
             var drawingWidth = actor.currentDrawing.width * actor.currentDrawing.scale.x;
             var drawingHeight = actor.currentDrawing.height * actor.currentDrawing.scale.y;
             var rotation = actor.rotation;
-            var anchor = actor.getCenter().toPoint();
-            this._topLeft.x = actor.getWorldX() - (drawingWidth / 2);
-            this._topLeft.y = actor.getWorldY() - (drawingHeight / 2);
+            var anchor = actor.getCenter();
+            var worldPos = actor.getWorldPos();
+            this._topLeft.x = worldPos.x - (drawingWidth / 2);
+            this._topLeft.y = worldPos.y - (drawingHeight / 2);
             this._topLeft = this._topLeft.rotate(rotation, anchor);
-            this._topRight.x = actor.getWorldX() + (drawingWidth / 2);
-            this._topRight.y = actor.getWorldY() - (drawingHeight / 2);
+            this._topRight.x = worldPos.x + (drawingWidth / 2);
+            this._topRight.y = worldPos.y - (drawingHeight / 2);
             this._topRight = this._topRight.rotate(rotation, anchor);
-            this._bottomLeft.x = actor.getWorldX() - (drawingWidth / 2);
-            this._bottomLeft.y = actor.getWorldY() + (drawingHeight / 2);
+            this._bottomLeft.x = worldPos.x - (drawingWidth / 2);
+            this._bottomLeft.y = worldPos.y + (drawingHeight / 2);
             this._bottomLeft = this._bottomLeft.rotate(rotation, anchor);
-            this._bottomRight.x = actor.getWorldX() + (drawingWidth / 2);
-            this._bottomRight.y = actor.getWorldY() + (drawingHeight / 2);
+            this._bottomRight.x = worldPos.x + (drawingWidth / 2);
+            this._bottomRight.y = worldPos.y + (drawingHeight / 2);
             this._bottomRight = this._bottomRight.rotate(rotation, anchor);
             ///
             var topLeftScreen = engine.worldToScreenCoordinates(this._topLeft);
@@ -380,14 +1882,14 @@ var ex;
             this._yMin = Math.min.apply(null, this._yCoords);
             this._xMax = Math.max.apply(null, this._xCoords);
             this._yMax = Math.max.apply(null, this._yCoords);
-            var minWorld = engine.screenToWorldCoordinates(new ex.Point(this._xMin, this._yMin));
-            var maxWorld = engine.screenToWorldCoordinates(new ex.Point(this._xMax, this._yMax));
+            var minWorld = engine.screenToWorldCoordinates(new ex.Vector(this._xMin, this._yMin));
+            var maxWorld = engine.screenToWorldCoordinates(new ex.Vector(this._xMax, this._yMax));
             this._xMinWorld = minWorld.x;
             this._yMinWorld = minWorld.y;
             this._xMaxWorld = maxWorld.x;
             this._yMaxWorld = maxWorld.y;
             var boundingPoints = new Array();
-            boundingPoints.push(new ex.Point(this._xMin, this._yMin), new ex.Point(this._xMax, this._yMin), new ex.Point(this._xMin, this._yMax), new ex.Point(this._xMax, this._yMax));
+            boundingPoints.push(new ex.Vector(this._xMin, this._yMin), new ex.Vector(this._xMax, this._yMin), new ex.Vector(this._xMin, this._yMax), new ex.Vector(this._xMax, this._yMax));
             for (var i = 0; i < boundingPoints.length; i++) {
                 if (boundingPoints[i].x > 0 &&
                     boundingPoints[i].y > 0 &&
@@ -426,7 +1928,7 @@ var ex;
             ctx.fill();
         };
         return CullingBox;
-    })();
+    }());
     ex.CullingBox = CullingBox;
 })(ex || (ex = {}));
 /// <reference path="../Interfaces/IActorTrait.ts" />
@@ -445,7 +1947,8 @@ var ex;
                 var globalScale = actor.getGlobalScale();
                 var width = globalScale.x * actor.getWidth() / actor.scale.x;
                 var height = globalScale.y * actor.getHeight() / actor.scale.y;
-                var actorScreenCoords = engine.worldToScreenCoordinates(new ex.Point(actor.getWorldX() - anchor.x * width, actor.getWorldY() - anchor.y * height));
+                var worldPos = actor.getWorldPos();
+                var actorScreenCoords = engine.worldToScreenCoordinates(new ex.Vector(worldPos.x - anchor.x * width, worldPos.y - anchor.y * height));
                 var zoom = 1.0;
                 if (actor.scene && actor.scene.camera) {
                     zoom = actor.scene.camera.getZoom();
@@ -476,7 +1979,7 @@ var ex;
                 }
             };
             return OffscreenCulling;
-        })();
+        }());
         Traits.OffscreenCulling = OffscreenCulling;
     })(Traits = ex.Traits || (ex.Traits = {}));
 })(ex || (ex = {}));
@@ -501,7 +2004,7 @@ var ex;
                 engine.input.pointers.propogate(actor);
             };
             return CapturePointer;
-        })();
+        }());
         Traits.CapturePointer = CapturePointer;
     })(Traits = ex.Traits || (ex.Traits = {}));
 })(ex || (ex = {}));
@@ -510,10 +2013,10 @@ var ex;
 (function (ex) {
     var Traits;
     (function (Traits) {
-        var CollisionDetection = (function () {
-            function CollisionDetection() {
+        var TileMapCollisionDetection = (function () {
+            function TileMapCollisionDetection() {
             }
-            CollisionDetection.prototype.update = function (actor, engine, delta) {
+            TileMapCollisionDetection.prototype.update = function (actor, engine, delta) {
                 var eventDispatcher = actor.eventDispatcher;
                 if (actor.collisionType !== ex.CollisionType.PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
                     for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
@@ -529,22 +2032,22 @@ var ex;
                             side = actor.getSideFromIntersect(intersectMap);
                             eventDispatcher.emit('collision', new ex.CollisionEvent(actor, null, side, intersectMap));
                             if ((actor.collisionType === ex.CollisionType.Active || actor.collisionType === ex.CollisionType.Elastic)) {
-                                actor.y += intersectMap.y;
-                                actor.x += intersectMap.x;
+                                actor.pos.y += intersectMap.y;
+                                actor.pos.x += intersectMap.x;
                                 // Naive elastic bounce
                                 if (actor.collisionType === ex.CollisionType.Elastic && !hasBounced) {
                                     hasBounced = true;
                                     if (side === ex.Side.Left) {
-                                        actor.dx = Math.abs(actor.dx);
+                                        actor.vel.x = Math.abs(actor.vel.x);
                                     }
                                     else if (side === ex.Side.Right) {
-                                        actor.dx = -Math.abs(actor.dx);
+                                        actor.vel.x = -Math.abs(actor.vel.x);
                                     }
                                     else if (side === ex.Side.Top) {
-                                        actor.dy = Math.abs(actor.dy);
+                                        actor.vel.y = Math.abs(actor.vel.y);
                                     }
                                     else if (side === ex.Side.Bottom) {
-                                        actor.dy = -Math.abs(actor.dy);
+                                        actor.vel.y = -Math.abs(actor.vel.y);
                                     }
                                 }
                             }
@@ -552,9 +2055,9 @@ var ex;
                     }
                 }
             };
-            return CollisionDetection;
-        })();
-        Traits.CollisionDetection = CollisionDetection;
+            return TileMapCollisionDetection;
+        }());
+        Traits.TileMapCollisionDetection = TileMapCollisionDetection;
     })(Traits = ex.Traits || (ex.Traits = {}));
 })(ex || (ex = {}));
 var ex;
@@ -571,320 +2074,6 @@ var ex;
     })(ex.Side || (ex.Side = {}));
     var Side = ex.Side;
 })(ex || (ex = {}));
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ex;
-(function (ex) {
-    /**
-     * A simple 2D point on a plane
-     * @obsolete Use [[Vector|vector]]s instead of [[Point|points]]
-     */
-    var Point = (function () {
-        /**
-         * @param x  X coordinate of the point
-         * @param y  Y coordinate of the point
-         */
-        function Point(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-        /**
-         * Convert this point to a vector
-         */
-        Point.prototype.toVector = function () {
-            return new Vector(this.x, this.y);
-        };
-        /**
-         * Rotates the current point around another by a certain number of
-         * degrees in radians
-         * @param angle  The angle in radians
-         * @param anchor The point to rotate around
-         */
-        Point.prototype.rotate = function (angle, anchor) {
-            if (!anchor) {
-                anchor = new ex.Point(0, 0);
-            }
-            var sinAngle = Math.sin(angle);
-            var cosAngle = Math.cos(angle);
-            var x = cosAngle * (this.x - anchor.x) - sinAngle * (this.y - anchor.y) + anchor.x;
-            var y = sinAngle * (this.x - anchor.x) + cosAngle * (this.y - anchor.y) + anchor.y;
-            return new Point(x, y);
-        };
-        /**
-         * Translates the current point by a vector
-         * @param vector  The other vector to add to
-         */
-        Point.prototype.add = function (vector) {
-            return new Point(this.x + vector.x, this.y + vector.y);
-        };
-        /**
-         * Sets the x and y components at once
-         */
-        Point.prototype.setTo = function (x, y) {
-            this.x = x;
-            this.y = y;
-        };
-        /**
-         * Clones a new point that is a copy of this one.
-         */
-        Point.prototype.clone = function () {
-            return new Point(this.x, this.y);
-        };
-        /**
-         * Compares this point against another and tests for equality
-         * @param point  The other point to compare to
-         */
-        Point.prototype.equals = function (point) {
-            return this.x === point.x && this.y === point.y;
-        };
-        return Point;
-    })();
-    ex.Point = Point;
-    /**
-     * A 2D vector on a plane.
-     */
-    var Vector = (function (_super) {
-        __extends(Vector, _super);
-        /**
-         * @param x  X component of the Vector
-         * @param y  Y component of the Vector
-         */
-        function Vector(x, y) {
-            _super.call(this, x, y);
-            this.x = x;
-            this.y = y;
-        }
-        /**
-         * Returns a vector of unit length in the direction of the specified angle.
-         * @param angle The angle to generate the vector
-         */
-        Vector.fromAngle = function (angle) {
-            return new Vector(Math.cos(angle), Math.sin(angle));
-        };
-        /**
-         * The distance to another vector
-         * @param v  The other vector
-         */
-        Vector.prototype.distance = function (v) {
-            if (!v) {
-                v = new Vector(0.0, 0.0);
-            }
-            return Math.sqrt(Math.pow(this.x - v.x, 2) + Math.pow(this.y - v.y, 2));
-        };
-        /**
-         * Normalizes a vector to have a magnitude of 1.
-         */
-        Vector.prototype.normalize = function () {
-            var d = this.distance();
-            if (d > 0) {
-                return new Vector(this.x / d, this.y / d);
-            }
-            else {
-                return new Vector(0, 1);
-            }
-        };
-        /**
-         * Scales a vector's by a factor of size
-         * @param size  The factor to scale the magnitude by
-         */
-        Vector.prototype.scale = function (size) {
-            return new Vector(this.x * size, this.y * size);
-        };
-        /**
-         * Adds one vector to another, alias for add
-         * @param v  The vector to add
-         */
-        Vector.prototype.plus = function (v) {
-            return this.add(v);
-        };
-        /**
-         * Adds one vector to another
-         * @param v The vector to add
-         */
-        Vector.prototype.add = function (v) {
-            return new Vector(this.x + v.x, this.y + v.y);
-        };
-        /**
-         * Subtracts a vector from another, alias for minus
-         * @param v The vector to subtract
-         */
-        Vector.prototype.subtract = function (v) {
-            return this.minus(v);
-        };
-        /**
-         * Subtracts a vector from the current vector
-         * @param v The vector to subtract
-         */
-        Vector.prototype.minus = function (v) {
-            return new Vector(this.x - v.x, this.y - v.y);
-        };
-        /**
-         * Performs a dot product with another vector
-         * @param v  The vector to dot
-         */
-        Vector.prototype.dot = function (v) {
-            return this.x * v.x + this.y * v.y;
-        };
-        /**
-         * Performs a 2D cross product with another vector. 2D cross products return a scalar value not a vector.
-         * @param v  The vector to cross
-         */
-        Vector.prototype.cross = function (v) {
-            return this.x * v.y - this.y * v.x;
-        };
-        /**
-         * Returns the perpendicular vector to this one
-         */
-        Vector.prototype.perpendicular = function () {
-            return new Vector(this.y, -this.x);
-        };
-        /**
-         * Returns the normal vector to this one
-         */
-        Vector.prototype.normal = function () {
-            return this.perpendicular().normalize();
-        };
-        /**
-         * Returns the angle of this vector.
-         */
-        Vector.prototype.toAngle = function () {
-            return Math.atan2(this.y, this.x);
-        };
-        /**
-         * Returns the point represention of this vector
-         */
-        Vector.prototype.toPoint = function () {
-            return new Point(this.x, this.y);
-        };
-        /**
-         * Rotates the current vector around a point by a certain number of
-         * degrees in radians
-         */
-        Vector.prototype.rotate = function (angle, anchor) {
-            return _super.prototype.rotate.call(this, angle, anchor).toVector();
-        };
-        /**
-         * Creates new vector that has the same values as the previous.
-         */
-        Vector.prototype.clone = function () {
-            return new Vector(this.x, this.y);
-        };
-        /**
-         * A (0, 0) vector
-         */
-        Vector.Zero = new Vector(0, 0);
-        return Vector;
-    })(Point);
-    ex.Vector = Vector;
-    /**
-     * A 2D ray that can be cast into the scene to do collision detection
-     */
-    var Ray = (function () {
-        /**
-         * @param pos The starting position for the ray
-         * @param dir The vector indicating the direction of the ray
-         */
-        function Ray(pos, dir) {
-            this.pos = pos;
-            this.dir = dir.normalize();
-        }
-        /**
-         * Tests a whether this ray intersects with a line segment. Returns a number greater than or equal to 0 on success.
-         * This number indicates the mathematical intersection time.
-         * @param line  The line to test
-         */
-        Ray.prototype.intersect = function (line) {
-            var numerator = line.begin.toVector().minus(this.pos.toVector());
-            // Test is line and ray are parallel and non intersecting
-            if (this.dir.cross(line.getSlope()) === 0 && numerator.cross(this.dir) !== 0) {
-                return -1;
-            }
-            // Lines are parallel
-            var divisor = (this.dir.cross(line.getSlope()));
-            if (divisor === 0) {
-                return -1;
-            }
-            var t = numerator.cross(line.getSlope()) / divisor;
-            if (t >= 0) {
-                var u = (numerator.cross(this.dir) / divisor) / line.getLength();
-                if (u >= 0 && u <= 1) {
-                    return t;
-                }
-            }
-            return -1;
-        };
-        /**
-         * Returns the point of intersection given the intersection time
-         */
-        Ray.prototype.getPoint = function (time) {
-            return this.pos.toVector().add(this.dir.scale(time)).toPoint();
-        };
-        return Ray;
-    })();
-    ex.Ray = Ray;
-    /**
-     * A 2D line segment
-     */
-    var Line = (function () {
-        /**
-         * @param begin  The starting point of the line segment
-         * @param end  The ending point of the line segment
-         */
-        function Line(begin, end) {
-            this.begin = begin;
-            this.end = end;
-        }
-        /**
-         * Returns the slope of the line in the form of a vector
-         */
-        Line.prototype.getSlope = function () {
-            var begin = this.begin.toVector();
-            var end = this.end.toVector();
-            var distance = begin.distance(end);
-            return end.minus(begin).scale(1 / distance);
-        };
-        /**
-         * Returns the length of the line segment in pixels
-         */
-        Line.prototype.getLength = function () {
-            var begin = this.begin.toVector();
-            var end = this.end.toVector();
-            var distance = begin.distance(end);
-            return distance;
-        };
-        return Line;
-    })();
-    ex.Line = Line;
-    /**
-     * A projection
-     * @todo
-     */
-    var Projection = (function () {
-        function Projection(min, max) {
-            this.min = min;
-            this.max = max;
-        }
-        Projection.prototype.overlaps = function (projection) {
-            return this.max > projection.min && projection.max > this.min;
-        };
-        Projection.prototype.getOverlap = function (projection) {
-            if (this.overlaps(projection)) {
-                if (this.max > projection.max) {
-                    return projection.max - this.min;
-                }
-                else {
-                    return this.max - projection.min;
-                }
-            }
-            return 0;
-        };
-        return Projection;
-    })();
-    ex.Projection = Projection;
-})(ex || (ex = {}));
 /// <reference path="../Algebra.ts"/>
 /// <reference path="../Events.ts"/>
 /**
@@ -897,6 +2086,44 @@ var ex;
     var Util;
     (function (Util) {
         Util.TwoPI = Math.PI * 2;
+        /**
+         * Merges one or more objects into a single target object
+         *
+         * @returns Merged object with properties from other objects
+         * @credit https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
+         */
+        function extend() {
+            var extended = {};
+            var deep = false;
+            var i = 0;
+            var length = arguments.length;
+            // Check if a deep merge
+            if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+                deep = arguments[0];
+                i++;
+            }
+            // Merge the object into the extended object
+            var merge = function (obj) {
+                for (var prop in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                        // If deep merge and property is an object, merge properties
+                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+                            extended[prop] = extend(true, extended[prop], obj[prop]);
+                        }
+                        else {
+                            extended[prop] = obj[prop];
+                        }
+                    }
+                }
+            };
+            // Loop through each object and conduct a merge
+            for (; i < length; i++) {
+                var obj = arguments[i];
+                merge(obj);
+            }
+            return extended;
+        }
+        Util.extend = extend;
         function base64Encode(inputStr) {
             var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
             var outputStr = '';
@@ -931,15 +2158,6 @@ var ex;
             return val <= min ? min : (val >= max ? max : val);
         }
         Util.clamp = clamp;
-        function drawLine(ctx, color, startx, starty, endx, endy) {
-            ctx.beginPath();
-            ctx.strokeStyle = color;
-            ctx.moveTo(startx, starty);
-            ctx.lineTo(endx, endy);
-            ctx.closePath();
-            ctx.stroke();
-        }
-        Util.drawLine = drawLine;
         function randomInRange(min, max) {
             return min + Math.random() * (max - min);
         }
@@ -987,7 +2205,7 @@ var ex;
             };
             calcOffsetLeft(el);
             calcOffsetTop(el);
-            return new ex.Point(oLeft, oTop);
+            return new ex.Vector(oLeft, oTop);
         }
         Util.getPosition = getPosition;
         function addItemToArray(item, array) {
@@ -1032,6 +2250,25 @@ var ex;
             return ex.Side.None;
         }
         Util.getOppositeSide = getOppositeSide;
+        function getSideFromVector(direction) {
+            var left = direction.dot(ex.Vector.Left);
+            var right = direction.dot(ex.Vector.Right);
+            var up = direction.dot(ex.Vector.Up);
+            var down = direction.dot(ex.Vector.Down);
+            // a very fortran approach
+            var directions = [ex.Vector.Left, ex.Vector.Right, ex.Vector.Up, ex.Vector.Down];
+            var directionEnum = [ex.Side.Left, ex.Side.Right, ex.Side.Top, ex.Side.Bottom];
+            var max = -Number.MAX_VALUE;
+            var maxIndex = -1;
+            for (var i = 0; i < directions.length; i++) {
+                if (directions[i].dot(direction) > max) {
+                    max = directions[i].dot(direction);
+                    maxIndex = i;
+                }
+            }
+            return directionEnum[maxIndex];
+        }
+        Util.getSideFromVector = getSideFromVector;
         /**
          * Excaliburs dynamically resizing collection
          */
@@ -1166,7 +2403,7 @@ var ex;
              */
             Collection.DefaultSize = 200;
             return Collection;
-        })();
+        }());
         Util.Collection = Collection;
     })(Util = ex.Util || (ex.Util = {}));
 })(ex || (ex = {}));
@@ -1259,8 +2496,8 @@ var ex;
             this.swidth = swidth;
             this.sheight = sheight;
             this.rotation = 0.0;
-            this.anchor = new ex.Point(0.0, 0.0);
-            this.scale = new ex.Point(1, 1);
+            this.anchor = new ex.Vector(0.0, 0.0);
+            this.scale = new ex.Vector(1, 1);
             this.logger = ex.Logger.getInstance();
             /**
              * Draws the sprite flipped vertically
@@ -1394,12 +2631,16 @@ var ex;
             }
         };
         Sprite.prototype.removeEffect = function (param) {
-            var indexToRemove = null;
+            var indexToRemove = -1;
             if (typeof param === 'number') {
                 indexToRemove = param;
             }
             else {
                 indexToRemove = this.effects.indexOf(param);
+            }
+            // bounds check
+            if (indexToRemove < 0 || indexToRemove >= this.effects.length) {
+                return;
             }
             this.effects.splice(indexToRemove, 1);
             // We must check if the texture and the backing sprite pixels are loaded as well before 
@@ -1504,7 +2745,7 @@ var ex;
             return result;
         };
         return Sprite;
-    })();
+    }());
     ex.Sprite = Sprite;
 })(ex || (ex = {}));
 /// <reference path="Sprite.ts" />
@@ -1686,7 +2927,7 @@ var ex;
             }
         };
         return SpriteSheet;
-    })();
+    }());
     ex.SpriteSheet = SpriteSheet;
     /**
      * Sprite Fonts
@@ -1925,7 +3166,7 @@ var ex;
             };
         };
         return SpriteFont;
-    })(SpriteSheet);
+    }(SpriteSheet));
     ex.SpriteFont = SpriteFont;
 })(ex || (ex = {}));
 /// <reference path="Engine.ts" />
@@ -2115,8 +3356,8 @@ var ex;
          */
         TileMap.prototype.collides = function (actor) {
             var points = [];
-            var width = actor.x + actor.getWidth();
-            var height = actor.y + actor.getHeight();
+            var width = actor.pos.x + actor.getWidth();
+            var height = actor.pos.y + actor.getHeight();
             var actorBounds = actor.getBounds();
             var overlaps = [];
             // trace points for overlap
@@ -2125,7 +3366,7 @@ var ex;
                     var cell = this.getCellByPoint(x, y);
                     if (cell && cell.solid) {
                         var overlap = actorBounds.collides(cell.getBounds());
-                        var dir = actor.getCenter().minus(cell.getCenter());
+                        var dir = actor.getCenter().sub(cell.getCenter());
                         if (overlap && overlap.dot(dir) > 0) {
                             overlaps.push(overlap);
                         }
@@ -2178,8 +3419,8 @@ var ex;
             return null;
         };
         TileMap.prototype.update = function (engine, delta) {
-            var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new ex.Point(0, 0));
-            var worldCoordsLowerRight = engine.screenToWorldCoordinates(new ex.Point(engine.canvas.clientWidth, engine.canvas.clientHeight));
+            var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new ex.Vector(0, 0));
+            var worldCoordsLowerRight = engine.screenToWorldCoordinates(new ex.Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
             this._onScreenXStart = Math.max(Math.floor(worldCoordsUpperLeft.x / this.cellWidth) - 2, 0);
             this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
             this._onScreenXEnd = Math.max(Math.floor(worldCoordsLowerRight.x / this.cellWidth) + 2, 0);
@@ -2259,7 +3500,7 @@ var ex;
             ctx.restore();
         };
         return TileMap;
-    })();
+    }());
     ex.TileMap = TileMap;
     /**
      * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
@@ -2274,7 +3515,7 @@ var ex;
             this.spriteId = spriteId;
         }
         return TileSprite;
-    })();
+    }());
     ex.TileSprite = TileSprite;
     /**
      * TileMap Cell
@@ -2342,18 +3583,12 @@ var ex;
             this.sprites.length = 0;
         };
         return Cell;
-    })();
+    }());
     ex.Cell = Cell;
 })(ex || (ex = {}));
 /// <reference path="../Algebra.ts" />
 var ex;
 (function (ex) {
-    (function (CollisionStrategy) {
-        CollisionStrategy[CollisionStrategy["Naive"] = 0] = "Naive";
-        CollisionStrategy[CollisionStrategy["DynamicAABBTree"] = 1] = "DynamicAABBTree";
-        CollisionStrategy[CollisionStrategy["SeparatingAxis"] = 2] = "SeparatingAxis";
-    })(ex.CollisionStrategy || (ex.CollisionStrategy = {}));
-    var CollisionStrategy = ex.CollisionStrategy;
     /**
      * Axis Aligned collision primitive for Excalibur.
      */
@@ -2394,8 +3629,26 @@ var ex;
             var wy = this.getHeight();
             return 2 * (wx + wy);
         };
+        BoundingBox.prototype.getPoints = function () {
+            var results = [];
+            results.push(new ex.Vector(this.left, this.top));
+            results.push(new ex.Vector(this.right, this.top));
+            results.push(new ex.Vector(this.right, this.bottom));
+            results.push(new ex.Vector(this.left, this.bottom));
+            return results;
+        };
+        /**
+         * Creates a Polygon collision area from the points of the bounding box
+         */
+        BoundingBox.prototype.toPolygon = function (actor) {
+            return new ex.PolygonArea({
+                body: actor.body,
+                points: this.getPoints(),
+                pos: ex.Vector.Zero.clone()
+            });
+        };
         BoundingBox.prototype.contains = function (val) {
-            if (val instanceof ex.Point) {
+            if (val instanceof ex.Vector) {
                 return (this.left <= val.x && this.top <= val.y && this.bottom >= val.y && this.right >= val.x);
             }
             else if (val instanceof BoundingBox) {
@@ -2458,136 +3711,191 @@ var ex;
             }
             return null;
         };
-        BoundingBox.prototype.debugDraw = function (ctx) {
-            ctx.lineWidth = 2;
+        /* istanbul ignore next */
+        BoundingBox.prototype.debugDraw = function (ctx, color) {
+            if (color === void 0) { color = ex.Color.Yellow; }
+            ctx.strokeStyle = color.toString();
             ctx.strokeRect(this.left, this.top, this.getWidth(), this.getHeight());
         };
         return BoundingBox;
-    })();
+    }());
     ex.BoundingBox = BoundingBox;
-    var SATBoundingBox = (function () {
-        function SATBoundingBox(points) {
-            this._points = points.map(function (p) { return p.toVector(); });
+})(ex || (ex = {}));
+/// <reference path="../Algebra.ts" />
+var ex;
+(function (ex) {
+    var Body = (function () {
+        /**
+         * Constructs a new physics body associated with an actor
+         */
+        function Body(actor) {
+            this.actor = actor;
+            /**
+             * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
+             */
+            this.collisionArea = null;
+            /**
+             * The (x, y) position of the actor this will be in the middle of the actor if the [[anchor]] is set to (0.5, 0.5) which is default.
+             * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+             */
+            this.pos = new ex.Vector(0, 0);
+            /**
+             * The position of the actor last frame (x, y) in pixels
+             */
+            this.oldPos = new ex.Vector(0, 0);
+            /**
+             * The current velocity vector (vx, vy) of the actor in pixels/second
+             */
+            this.vel = new ex.Vector(0, 0);
+            /**
+             * The velocity of the actor last frame (vx, vy) in pixels/second
+             */
+            this.oldVel = new ex.Vector(0, 0);
+            /**
+             * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+             * be useful to simulate a gravitational effect.
+             */
+            this.acc = new ex.Vector(0, 0);
+            /**
+             * The current torque applied to the actor
+             */
+            this.torque = 0;
+            /**
+             * The current mass of the actor, mass can be thought of as the resistance to acceleration.
+             */
+            this.mass = 1.0;
+            /**
+             * The current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             */
+            this.moi = 1000;
+            /**
+             * The current "motion" of the actor, used to calculated sleep in the physics simulation
+             */
+            this.motion = 10;
+            /**
+             * The coefficient of friction on this actor
+             */
+            this.friction = .99;
+            /**
+             * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
+             */
+            this.restitution = .2;
+            /**
+             * The rotation of the actor in radians
+             */
+            this.rotation = 0; // radians
+            /**
+             * The rotational velocity of the actor in radians/second
+             */
+            this.rx = 0; //radions/sec
         }
-        SATBoundingBox.prototype.getSides = function () {
-            var lines = [];
-            var len = this._points.length;
-            for (var i = 0; i < len; i++) {
-                lines.push(new ex.Line(this._points[i], this._points[(i + 1) % len]));
-            }
-            return lines;
-        };
-        SATBoundingBox.prototype.getAxes = function () {
-            var axes = [];
-            var len = this._points.length;
-            for (var i = 0; i < len; i++) {
-                axes.push(this._points[i].minus(this._points[(i + 1) % len]).normal());
-            }
-            return axes;
-        };
-        SATBoundingBox.prototype.project = function (axis) {
-            var scalars = [];
-            var len = this._points.length;
-            for (var i = 0; i < len; i++) {
-                scalars.push(this._points[i].dot(axis));
-            }
-            return new ex.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
-        };
         /**
-         * Returns the calculated width of the bounding box, by generating an axis aligned box around the current
+         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
          */
-        SATBoundingBox.prototype.getWidth = function () {
-            var left = this._points.reduce(function (accum, p, i, arr) {
-                return Math.min(accum, p.x);
-            }, Infinity);
-            var right = this._points.reduce(function (accum, p, i, arr) {
-                return Math.max(accum, p.x);
-            }, -Infinity);
-            return right - left;
+        Body.prototype.getBounds = function () {
+            if (ex.Physics.collisionResolutionStrategy === ex.CollisionResolutionStrategy.Box) {
+                return this.actor.getBounds();
+            }
+            else {
+                return this.collisionArea.getBounds();
+            }
         };
         /**
-         * Returns the calculated height of the bounding box, by generating an axis aligned box around the current
+         * Returns the actor's [[BoundingBox]] relative to the actors position.
          */
-        SATBoundingBox.prototype.getHeight = function () {
-            var top = this._points.reduce(function (accum, p, i, arr) {
-                return Math.min(accum, p.y);
-            }, Infinity);
-            var bottom = this._points.reduce(function (accum, p, i, arr) {
-                return Math.max(accum, p.y);
-            }, -Infinity);
-            return top - bottom;
+        Body.prototype.getRelativeBounds = function () {
+            if (ex.Physics.collisionResolutionStrategy === ex.CollisionResolutionStrategy.Box) {
+                return this.actor.getRelativeBounds();
+            }
+            else {
+                return this.actor.getRelativeBounds();
+            }
         };
         /**
-         * Tests wether a point is contained within the bounding box,
-         * using the [PIP algorithm](http://en.wikipedia.org/wiki/Point_in_polygon)
+         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
          *
-         * @param p  The point to test
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
-        SATBoundingBox.prototype.contains = function (p) {
-            // Always cast to the right, as long as we cast in a consitent fixed direction we
-            // will be fine
-            var testRay = new ex.Ray(p, new ex.Vector(1, 0));
-            var intersectCount = this.getSides().reduce(function (accum, side, i, arr) {
-                if (testRay.intersect(side) >= 0) {
-                    return accum + 1;
-                }
-                return accum;
-            }, 0);
-            if (intersectCount % 2 === 0) {
-                return false;
-            }
-            return true;
+        Body.prototype.useBoxCollision = function (center) {
+            if (center === void 0) { center = ex.Vector.Zero.clone(); }
+            this.collisionArea = new ex.PolygonArea({
+                body: this,
+                points: this.actor.getRelativeBounds().getPoints(),
+                pos: center // position relative to actor
+            });
+            // in case of a nan moi, collesce to a safe default
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
         };
-        SATBoundingBox.prototype.collides = function (collidable) {
-            if (collidable instanceof SATBoundingBox) {
-                var other = collidable;
-                var axes = this.getAxes();
-                axes = other.getAxes().concat(axes);
-                var minOverlap = 99999;
-                var minAxis = null;
-                for (var i = 0; i < axes.length; i++) {
-                    var proj1 = this.project(axes[i]);
-                    var proj2 = other.project(axes[i]);
-                    var overlap = proj1.getOverlap(proj2);
-                    if (overlap === 0) {
-                        return null;
-                    }
-                    else {
-                        if (overlap <= minOverlap) {
-                            minOverlap = overlap;
-                            minAxis = axes[i];
-                        }
-                    }
-                }
-                if (minAxis) {
-                    return minAxis.normalize().scale(minOverlap);
-                }
-                else {
-                    return null;
-                }
-            }
-            return null;
+        /**
+         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+         *
+         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.usePolygonCollision = function (points, center) {
+            if (center === void 0) { center = ex.Vector.Zero.clone(); }
+            this.collisionArea = new ex.PolygonArea({
+                body: this,
+                points: points,
+                pos: center // position relative to actor
+            });
+            // in case of a nan moi, collesce to a safe default
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
         };
-        SATBoundingBox.prototype.debugDraw = function (ctx) {
-            ctx.beginPath();
-            ctx.lineWidth = 2;
-            // Iterate through the supplied points and contruct a 'polygon'
-            var firstPoint = this._points[0];
-            ctx.moveTo(firstPoint.x, firstPoint.y);
-            var i = 0, len = this._points.length;
-            for (i; i < len; i++) {
-                ctx.lineTo(this._points[i].x, this._points[i].y);
+        /**
+         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.useCircleCollision = function (radius, center) {
+            if (center === void 0) { center = ex.Vector.Zero.clone(); }
+            if (!radius) {
+                radius = this.actor.getWidth() / 2;
             }
-            ctx.lineTo(firstPoint.x, firstPoint.y);
-            ctx.closePath();
-            ctx.strokeStyle = ex.Color.Blue.toString();
-            ctx.stroke();
+            this.collisionArea = new ex.CircleArea({
+                body: this,
+                radius: radius,
+                pos: center
+            });
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
         };
-        return SATBoundingBox;
-    })();
-    ex.SATBoundingBox = SATBoundingBox;
+        /**
+         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+         * of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.useEdgeCollision = function (begin, end, center) {
+            if (center === void 0) { center = ex.Vector.Zero.clone(); }
+            this.collisionArea = new ex.EdgeArea({
+                begin: begin,
+                end: end,
+                body: this
+            });
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+        };
+        /* istanbul ignore next */
+        Body.prototype.debugDraw = function (ctx) {
+            // Draw motion vectors
+            if (ex.Physics.showMotionVectors) {
+                ex.Util.DrawUtil.vector(ctx, ex.Color.Yellow, this.pos, (this.acc.add(ex.Physics.acc)));
+                ex.Util.DrawUtil.vector(ctx, ex.Color.Red, this.pos, (this.vel));
+                ex.Util.DrawUtil.point(ctx, ex.Color.Red, this.pos);
+            }
+            if (ex.Physics.showBounds) {
+                this.getBounds().debugDraw(ctx, ex.Color.Yellow);
+            }
+            if (ex.Physics.showArea) {
+                this.collisionArea.debugDraw(ctx, ex.Color.Green);
+            }
+        };
+        return Body;
+    }());
+    ex.Body = Body;
 })(ex || (ex = {}));
 /// <reference path="Events.ts" />
+/// <reference path="Interfaces/IEvented.ts" />
 var ex;
 (function (ex) {
     /**
@@ -2599,35 +3907,13 @@ var ex;
             this.eventDispatcher = new ex.EventDispatcher(this);
         }
         /**
-         * Add an event listener. You can listen for a variety of
-         * events off of the engine; see the events section below for a complete list.
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
-         * @obsolete Use [[Class.on]] instead
-         */
-        Class.prototype.addEventListener = function (eventName, handler) {
-            this.eventDispatcher.subscribe(eventName, handler);
-        };
-        /**
-         * Removes an event listener. If only the eventName is specified
-         * it will remove all handlers registered for that specific event. If the eventName
-         * and the handler instance are specified just that handler will be removed.
-         *
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
-         * @obsolete Use [[Class.off]] instead
-         */
-        Class.prototype.removeEventListener = function (eventName, handler) {
-            this.eventDispatcher.unsubscribe(eventName, handler);
-        };
-        /**
          * Alias for `addEventListener`. You can listen for a variety of
          * events off of the engine; see the events section below for a complete list.
          * @param eventName  Name of the event to listen for
          * @param handler    Event handler for the thrown event
          */
         Class.prototype.on = function (eventName, handler) {
-            this.eventDispatcher.subscribe(eventName, handler);
+            this.eventDispatcher.on(eventName, handler);
         };
         /**
          * Alias for `removeEventListener`. If only the eventName is specified
@@ -2638,7 +3924,7 @@ var ex;
          * @param handler    Event handler for the thrown event
          */
         Class.prototype.off = function (eventName, handler) {
-            this.eventDispatcher.unsubscribe(eventName, handler);
+            this.eventDispatcher.off(eventName, handler);
         };
         /**
          * Emits a new event
@@ -2704,7 +3990,7 @@ var ex;
             return child;
         };
         return Class;
-    })();
+    }());
     ex.Class = Class;
 })(ex || (ex = {}));
 var ex;
@@ -2762,7 +4048,7 @@ var ex;
         };
         Timer.id = 0;
         return Timer;
-    })();
+    }());
     ex.Timer = Timer;
 })(ex || (ex = {}));
 /// <reference path="../Actor.ts"/>
@@ -2770,16 +4056,16 @@ var ex;
 /// <reference path="ICollisionResolver.ts"/> 
 var ex;
 (function (ex) {
-    var NaiveCollisionResolver = (function () {
-        function NaiveCollisionResolver() {
+    var NaiveCollisionBroadphase = (function () {
+        function NaiveCollisionBroadphase() {
         }
-        NaiveCollisionResolver.prototype.register = function (target) {
+        NaiveCollisionBroadphase.prototype.register = function (target) {
             // pass
         };
-        NaiveCollisionResolver.prototype.remove = function (tartet) {
+        NaiveCollisionBroadphase.prototype.remove = function (tartet) {
             // pass
         };
-        NaiveCollisionResolver.prototype.evaluate = function (targets) {
+        NaiveCollisionBroadphase.prototype.findCollisionContacts = function (targets, delta) {
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
@@ -2794,9 +4080,9 @@ var ex;
                     var minimumTranslationVector;
                     if (minimumTranslationVector = actor1.collides(actor2)) {
                         var side = actor1.getSideFromIntersect(minimumTranslationVector);
-                        var collisionPair = new ex.CollisionPair(actor1, actor2, minimumTranslationVector, side);
+                        var collisionPair = new ex.CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                         if (!collisionPairs.some(function (cp) {
-                            return cp.equals(collisionPair);
+                            return cp.id === collisionPair.id;
                         })) {
                             collisionPairs.push(collisionPair);
                         }
@@ -2805,19 +4091,19 @@ var ex;
             }
             var k = 0, len = collisionPairs.length;
             for (k; k < len; k++) {
-                collisionPairs[k].evaluate();
+                collisionPairs[k].resolve(delta, ex.Physics.collisionResolutionStrategy);
             }
             return collisionPairs;
         };
-        NaiveCollisionResolver.prototype.update = function (targets) {
+        NaiveCollisionBroadphase.prototype.update = function (targets) {
             return 0;
         };
-        NaiveCollisionResolver.prototype.debugDraw = function (ctx, delta) {
+        NaiveCollisionBroadphase.prototype.debugDraw = function (ctx, delta) {
             return;
         };
-        return NaiveCollisionResolver;
-    })();
-    ex.NaiveCollisionResolver = NaiveCollisionResolver;
+        return NaiveCollisionBroadphase;
+    }());
+    ex.NaiveCollisionBroadphase = NaiveCollisionBroadphase;
 })(ex || (ex = {}));
 /// <reference path="BoundingBox.ts"/>
 var ex;
@@ -2826,7 +4112,7 @@ var ex;
         function TreeNode(parent) {
             this.parent = parent;
             this.parent = parent || null;
-            this.actor = null;
+            this.body = null;
             this.bounds = new ex.BoundingBox();
             this.left = null;
             this.right = null;
@@ -2836,7 +4122,7 @@ var ex;
             return (!this.left && !this.right);
         };
         return TreeNode;
-    })();
+    }());
     ex.TreeNode = TreeNode;
     var DynamicTree = (function () {
         function DynamicTree() {
@@ -2974,23 +4260,23 @@ var ex;
                 sibling.parent = null;
             }
         };
-        DynamicTree.prototype.registerActor = function (actor) {
+        DynamicTree.prototype.registerBody = function (body) {
             var node = new TreeNode();
-            node.actor = actor;
-            node.bounds = actor.getBounds();
+            node.body = body;
+            node.bounds = body.getBounds();
             node.bounds.left -= 2;
             node.bounds.top -= 2;
             node.bounds.right += 2;
             node.bounds.bottom += 2;
-            this.nodes[actor.id] = node;
+            this.nodes[body.actor.id] = node;
             this.insert(node);
         };
-        DynamicTree.prototype.updateActor = function (actor) {
-            var node = this.nodes[actor.id];
+        DynamicTree.prototype.updateBody = function (body) {
+            var node = this.nodes[body.actor.id];
             if (!node) {
                 return;
             }
-            var b = actor.getBounds();
+            var b = body.getBounds();
             if (node.bounds.contains(b)) {
                 return false;
             }
@@ -2999,8 +4285,9 @@ var ex;
             b.top -= 5;
             b.right += 5;
             b.bottom += 5;
-            var multdx = actor.dx * 2;
-            var multdy = actor.dy * 2;
+            // todo make configurable off ex.Physics
+            var multdx = body.vel.x * 2;
+            var multdy = body.vel.y * 2;
             if (multdx < 0) {
                 b.left += multdx;
             }
@@ -3017,14 +4304,14 @@ var ex;
             this.insert(node);
             return true;
         };
-        DynamicTree.prototype.removeActor = function (actor) {
-            var node = this.nodes[actor.id];
+        DynamicTree.prototype.removeBody = function (body) {
+            var node = this.nodes[body.actor.id];
             if (!node) {
                 return;
             }
             this.remove(node);
-            this.nodes[actor.id] = null;
-            delete this.nodes[actor.id];
+            this.nodes[body.actor.id] = null;
+            delete this.nodes[body.actor.id];
         };
         DynamicTree.prototype.balance = function (node) {
             if (node === null) {
@@ -3133,12 +4420,12 @@ var ex;
             }
             return this.root.height;
         };
-        DynamicTree.prototype.query = function (actor, callback) {
-            var bounds = actor.getBounds();
+        DynamicTree.prototype.query = function (body, callback) {
+            var bounds = body.getBounds();
             var helper = function (currentNode) {
                 if (currentNode && currentNode.bounds.collides(bounds)) {
-                    if (currentNode.isLeaf() && currentNode.actor !== actor) {
-                        if (callback.call(actor, currentNode.actor)) {
+                    if (currentNode.isLeaf() && currentNode.body !== body) {
+                        if (callback.call(body, currentNode.body)) {
                             return true;
                         }
                     }
@@ -3189,207 +4476,131 @@ var ex;
             helper(this.root);
         };
         return DynamicTree;
-    })();
+    }());
     ex.DynamicTree = DynamicTree;
 })(ex || (ex = {}));
 /// <reference path="ICollisionResolver.ts"/>
 /// <reference path="DynamicTree.ts"/>
 var ex;
 (function (ex) {
-    var DynamicTreeCollisionResolver = (function () {
-        function DynamicTreeCollisionResolver() {
+    var DynamicTreeCollisionBroadphase = (function () {
+        function DynamicTreeCollisionBroadphase() {
             this._dynamicCollisionTree = new ex.DynamicTree();
+            this._collisionHash = {};
+            this._collisionContactCache = [];
         }
-        DynamicTreeCollisionResolver.prototype.register = function (target) {
-            this._dynamicCollisionTree.registerActor(target);
+        DynamicTreeCollisionBroadphase.prototype.register = function (target) {
+            this._dynamicCollisionTree.registerBody(target.body);
         };
-        DynamicTreeCollisionResolver.prototype.remove = function (target) {
-            this._dynamicCollisionTree.removeActor(target);
+        DynamicTreeCollisionBroadphase.prototype.remove = function (target) {
+            this._dynamicCollisionTree.removeBody(target.body);
         };
-        DynamicTreeCollisionResolver.prototype.evaluate = function (targets) {
+        DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
+            // if the collision pair has been calculated already short circuit
+            var hash = actorA.calculatePairHash(actorB);
+            if (this._collisionHash[hash]) {
+                return false; // pair exists easy exit return false
+            }
+            // if both are fixed short circuit
+            if (actorA.collisionType === ex.CollisionType.Fixed && actorB.collisionType === ex.CollisionType.Fixed) {
+                return false;
+            }
+            // if the other is prevent collision or is dead short circuit
+            if (actorB.collisionType === ex.CollisionType.PreventCollision || actorB.isKilled()) {
+                return false;
+            }
+            // they can collide
+            return true;
+        };
+        DynamicTreeCollisionBroadphase.prototype.findCollisionContacts = function (targets, delta) {
+            var _this = this;
+            // TODO optimization use only the actors that are moving to start 
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
             });
             var actor;
-            var collisionPairs = [];
+            // Check collison cache and re-add pairs that still are in collision
+            var newPairs = [];
+            this._collisionContactCache.forEach(function (c) {
+                var contact = c.bodyA.collide(c.bodyB);
+                // we always add this id back to the hash so we can quickly short circuit since we already checked collision
+                _this._collisionHash[c.id] = true;
+                if (contact) {
+                    contact.id = c.id;
+                    newPairs.push(contact);
+                }
+            });
+            this._collisionContactCache = newPairs;
             for (var j = 0, l = potentialColliders.length; j < l; j++) {
                 actor = potentialColliders[j];
-                this._dynamicCollisionTree.query(actor, function (other) {
-                    if (other.collisionType === ex.CollisionType.PreventCollision || other.isKilled()) {
+                // Query the colllision tree for potential colliders
+                this._dynamicCollisionTree.query(actor.body, function (other) {
+                    if (_this._canCollide(actor, other.actor)) {
+                        // generate all the collision contacts between the 2 sets of collision areas between both actors
+                        var contacts = [];
+                        var areaA = actor.collisionArea;
+                        var areaB = other.collisionArea;
+                        var contact = areaA.collide(areaB);
+                        if (contact) {
+                            contact.id = actor.calculatePairHash(other.actor);
+                            contacts.push(contact);
+                        }
+                        // if there were contacts keep track of them
+                        if (contacts.length) {
+                            _this._collisionHash[contact.id] = true;
+                            for (var _i = 0, contacts_1 = contacts; _i < contacts_1.length; _i++) {
+                                var contactHash = contacts_1[_i];
+                                _this._collisionContactCache.push(contactHash);
+                            }
+                        }
                         return false;
                     }
-                    var minimumTranslationVector;
-                    if (minimumTranslationVector = actor.collides(other)) {
-                        var side = actor.getSideFromIntersect(minimumTranslationVector);
-                        var collisionPair = new ex.CollisionPair(actor, other, minimumTranslationVector, side);
-                        if (!collisionPairs.some(function (cp) {
-                            return cp.equals(collisionPair);
-                        })) {
-                            collisionPairs.push(collisionPair);
-                        }
-                        return true;
-                    }
-                    return false;
                 });
             }
-            var i = 0, len = collisionPairs.length;
+            // evaluate collision pairs
+            var i = 0, len = this._collisionContactCache.length;
             for (i; i < len; i++) {
-                collisionPairs[i].evaluate();
+                this._collisionContactCache[i].resolve(delta, ex.Physics.collisionResolutionStrategy);
             }
-            return collisionPairs;
+            // apply total mtv
+            targets.forEach(function (a) {
+                a.applyMtv();
+            });
+            // todo this should be cleared by checking first
+            // clear lookup table 
+            this._collisionHash = {};
+            // return cache
+            return this._collisionContactCache;
         };
-        DynamicTreeCollisionResolver.prototype.update = function (targets) {
+        DynamicTreeCollisionBroadphase.prototype.update = function (targets, delta) {
             var updated = 0, i = 0, len = targets.length;
             for (i; i < len; i++) {
-                if (this._dynamicCollisionTree.updateActor(targets[i])) {
+                if (this._dynamicCollisionTree.updateBody(targets[i].body)) {
                     updated++;
                 }
             }
             return updated;
         };
-        DynamicTreeCollisionResolver.prototype.debugDraw = function (ctx, delta) {
-            this._dynamicCollisionTree.debugDraw(ctx, delta);
-        };
-        return DynamicTreeCollisionResolver;
-    })();
-    ex.DynamicTreeCollisionResolver = DynamicTreeCollisionResolver;
-})(ex || (ex = {}));
-var ex;
-(function (ex) {
-    /**
-     * Collision pairs are used internally by Excalibur to resolve collision between actors. The
-     * Pair prevents collisions from being evaluated more than one time
-     */
-    var CollisionPair = (function () {
-        /**
-         * @param left       The first actor in the collision pair
-         * @param right      The second actor in the collision pair
-         * @param intersect  The minimum translation vector to separate the actors from the perspective of the left actor
-         * @param side       The side on which the collision occured from the perspective of the left actor
-         */
-        function CollisionPair(left, right, intersect, side) {
-            this.left = left;
-            this.right = right;
-            this.intersect = intersect;
-            this.side = side;
-        }
-        /**
-         * Determines if this collision pair and another are equivalent.
-         */
-        CollisionPair.prototype.equals = function (collisionPair) {
-            return (collisionPair.left === this.left && collisionPair.right === this.right) ||
-                (collisionPair.right === this.left && collisionPair.left === this.right);
-        };
-        /**
-         * Evaluates the collision pair, performing collision resolution and event publishing appropriate to each collision type.
-         */
-        CollisionPair.prototype.evaluate = function () {
-            // todo fire collision events on left and right actor
-            // todo resolve collisions                  
-            // Publish collision events on both participants
-            this.left.eventDispatcher.emit('collision', new ex.CollisionEvent(this.left, this.right, this.side, this.intersect));
-            this.right.eventDispatcher.emit('collision', new ex.CollisionEvent(this.right, this.left, ex.Util.getOppositeSide(this.side), this.intersect.scale(-1.0)));
-            // If the actor is active push the actor out if its not passive
-            var leftSide = this.side;
-            if ((this.left.collisionType === ex.CollisionType.Active ||
-                this.left.collisionType === ex.CollisionType.Elastic) &&
-                this.right.collisionType !== ex.CollisionType.Passive) {
-                this.left.y += this.intersect.y;
-                this.left.x += this.intersect.x;
-                // Naive elastic bounce
-                if (this.left.collisionType === ex.CollisionType.Elastic) {
-                    if (leftSide === ex.Side.Left) {
-                        this.left.dx = Math.abs(this.left.dx);
-                    }
-                    else if (leftSide === ex.Side.Right) {
-                        this.left.dx = -Math.abs(this.left.dx);
-                    }
-                    else if (leftSide === ex.Side.Top) {
-                        this.left.dy = Math.abs(this.left.dy);
-                    }
-                    else if (leftSide === ex.Side.Bottom) {
-                        this.left.dy = -Math.abs(this.left.dy);
-                    }
-                }
-                else {
-                    // Cancel velocities along intersection
-                    if (this.intersect.x !== 0) {
-                        if (this.left.dx <= 0 && this.right.dx <= 0) {
-                            this.left.dx = Math.max(this.left.dx, this.right.dx);
-                        }
-                        else if (this.left.dx >= 0 && this.right.dx >= 0) {
-                            this.left.dx = Math.min(this.left.dx, this.right.dx);
-                        }
-                        else {
-                            this.left.dx = 0;
-                        }
-                    }
-                    if (this.intersect.y !== 0) {
-                        if (this.left.dy <= 0 && this.right.dy <= 0) {
-                            this.left.dy = Math.max(this.left.dy, this.right.dy);
-                        }
-                        else if (this.left.dy >= 0 && this.right.dy >= 0) {
-                            this.left.dy = Math.min(this.left.dy, this.right.dy);
-                        }
-                        else {
-                            this.left.dy = 0;
-                        }
-                    }
-                }
+        /* istanbul ignore next */
+        DynamicTreeCollisionBroadphase.prototype.debugDraw = function (ctx, delta) {
+            if (ex.Physics.broadphaseDebug) {
+                this._dynamicCollisionTree.debugDraw(ctx, delta);
             }
-            var rightSide = ex.Util.getOppositeSide(this.side);
-            var rightIntersect = this.intersect.scale(-1.0);
-            if ((this.right.collisionType === ex.CollisionType.Active ||
-                this.right.collisionType === ex.CollisionType.Elastic) &&
-                this.left.collisionType !== ex.CollisionType.Passive) {
-                this.right.y += rightIntersect.y;
-                this.right.x += rightIntersect.x;
-                // Naive elastic bounce
-                if (this.right.collisionType === ex.CollisionType.Elastic) {
-                    if (rightSide === ex.Side.Left) {
-                        this.right.dx = Math.abs(this.right.dx);
+            if (ex.Physics.showContacts || ex.Physics.showCollisionNormals) {
+                for (var i = 0; i < this._collisionContactCache.length; i++) {
+                    if (ex.Physics.showContacts) {
+                        ex.Util.DrawUtil.point(ctx, ex.Color.Red, this._collisionContactCache[i].point);
                     }
-                    else if (rightSide === ex.Side.Right) {
-                        this.right.dx = -Math.abs(this.right.dx);
-                    }
-                    else if (rightSide === ex.Side.Top) {
-                        this.right.dy = Math.abs(this.right.dy);
-                    }
-                    else if (rightSide === ex.Side.Bottom) {
-                        this.right.dy = -Math.abs(this.right.dy);
-                    }
-                }
-                else {
-                    // Cancel velocities along intersection
-                    if (rightIntersect.x !== 0) {
-                        if (this.right.dx <= 0 && this.left.dx <= 0) {
-                            this.right.dx = Math.max(this.left.dx, this.right.dx);
-                        }
-                        else if (this.left.dx >= 0 && this.right.dx >= 0) {
-                            this.right.dx = Math.min(this.left.dx, this.right.dx);
-                        }
-                        else {
-                            this.right.dx = 0;
-                        }
-                    }
-                    if (rightIntersect.y !== 0) {
-                        if (this.right.dy <= 0 && this.left.dy <= 0) {
-                            this.right.dy = Math.max(this.left.dy, this.right.dy);
-                        }
-                        else if (this.left.dy >= 0 && this.right.dy >= 0) {
-                            this.right.dy = Math.min(this.left.dy, this.right.dy);
-                        }
-                        else {
-                            this.right.dy = 0;
-                        }
+                    if (ex.Physics.showCollisionNormals) {
+                        ex.Util.DrawUtil.vector(ctx, ex.Color.Cyan, this._collisionContactCache[i].point, this._collisionContactCache[i].normal, 30);
                     }
                 }
             }
         };
-        return CollisionPair;
-    })();
-    ex.CollisionPair = CollisionPair;
+        return DynamicTreeCollisionBroadphase;
+    }());
+    ex.DynamicTreeCollisionBroadphase = DynamicTreeCollisionBroadphase;
 })(ex || (ex = {}));
 /// <reference path="Engine.ts" />
 /// <reference path="Algebra.ts" />
@@ -3411,17 +4622,18 @@ var ex;
      *
      * ## Focus
      *
-     * Cameras have a [[BaseCamera.focus|focus]] which means they center around a specific
-     * [[Point]]. This can be an [[Actor]] ([[BaseCamera.setActorToFollow]]) or a specific
-     * [[Point]] ([[BaseCamera.setFocus]]).
+     * Cameras have a position ([[x]], [[y]]) which means they center around a specific
+     * [[Vector|point]]. This can also be an [[Actor]] ([[BaseCamera.setActorToFollow]]) which
+     * the camera will follow as the actor moves, which can be useful for cutscene scenarios (using
+     * invisible actors).
      *
      * If a camera is following an [[Actor]], it will ensure the [[Actor]] is always at the
-     * center of the screen. You can use [[BaseCamera.setFocus]] instead if you wish to
+     * center of the screen. You can use [[x]] and [[y]] instead if you wish to
      * offset the focal point.
      *
      * ## Camera Shake
      *
-     * To add some fun effects to your game, the [[BaseCamera.shake]] method
+     * To add some fun effects to your game, the [[shake]] method
      * will do a random shake. This is great for explosions, damage, and other
      * in-game effects.
      *
@@ -3429,20 +4641,14 @@ var ex;
      *
      * "Lerp" is short for [Linear Interpolation](http://en.wikipedia.org/wiki/Linear_interpolation)
      * and it enables the camera focus to move smoothly between two points using timing functions.
-     * Set [[BaseCamera.lerp]] to `true` to enable "lerping".
+     * Use [[move]] to ease to a specific point using a provided [[EasingFunction]].
      *
      * ## Camera Zooming
      *
-     * To adjust the zoom for your game, use [[BaseCamera.zoom]] which will scale the
+     * To adjust the zoom for your game, use [[zoom]] which will scale the
      * game accordingly. You can pass a duration to transition between zoom levels.
      *
      * ## Known Issues
-     *
-     * **Cameras do not support [[EasingFunctions]]**
-     * [Issue #320](https://github.com/excaliburjs/Excalibur/issues/320)
-     *
-     * Currently [[BaseCamera.lerp]] only supports `easeInOutCubic` but will support
-     * [[EasingFunctions|easing functions]] soon.
      *
      * **Actors following a path will wobble when camera is moving**
      * [Issue #276](https://github.com/excaliburjs/Excalibur/issues/276)
@@ -3450,11 +4656,7 @@ var ex;
      */
     var BaseCamera = (function () {
         function BaseCamera() {
-            this.focus = new ex.Point(0, 0);
-            this.lerp = false;
             // camera physical quantities
-            this.x = 0;
-            this.y = 0;
             this.z = 1;
             this.dx = 0;
             this.dy = 0;
@@ -3464,9 +4666,11 @@ var ex;
             this.az = 0;
             this.rotation = 0;
             this.rx = 0;
+            this._x = 0;
+            this._y = 0;
             this._cameraMoving = false;
             this._currentLerpTime = 0;
-            this._lerpDuration = 1 * 1000; // 5 seconds
+            this._lerpDuration = 1000; // 1 second
             this._totalLerpTime = 0;
             this._lerpStart = null;
             this._lerpEnd = null;
@@ -3476,22 +4680,52 @@ var ex;
             this._shakeMagnitudeY = 0;
             this._shakeDuration = 0;
             this._elapsedShakeTime = 0;
+            this._xShake = 0;
+            this._yShake = 0;
             this._isZooming = false;
             this._currentZoomScale = 1;
             this._maxZoomScale = 1;
             this._zoomDuration = 0;
             this._elapsedZoomTime = 0;
             this._zoomIncrement = 0.01;
+            this._easing = ex.EasingFunctions.EaseInOutCubic;
         }
-        BaseCamera.prototype._easeInOutCubic = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration / 2;
-            if (currentTime < 1) {
-                return endValue / 2 * currentTime * currentTime * currentTime + startValue;
-            }
-            currentTime -= 2;
-            return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
-        };
+        Object.defineProperty(BaseCamera.prototype, "x", {
+            /**
+             * Get the camera's x position
+             */
+            get: function () {
+                return this._x;
+            },
+            /**
+             * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
+             */
+            set: function (value) {
+                if (!this._follow && !this._cameraMoving) {
+                    this._x = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(BaseCamera.prototype, "y", {
+            /**
+             * Get the camera's y position
+             */
+            get: function () {
+                return this._y;
+            },
+            /**
+             * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
+             */
+            set: function (value) {
+                if (!this._follow && !this._cameraMoving) {
+                    this._y = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Sets the [[Actor]] to follow with the camera
          * @param actor  The actor to follow
@@ -3503,25 +4737,38 @@ var ex;
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
         BaseCamera.prototype.getFocus = function () {
-            return new ex.Point(this.x, this.y);
+            return new ex.Vector(this.x, this.y);
         };
         /**
-         * Sets the focal point of the camera. This value can only be set if there is no actor to be followed.
-         * @param x The x coordinate of the focal point
-         * @param y The y coordinate of the focal point
-         * @deprecated
+         * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
+         *
+         * @param pos The target position to move to
+         * @param duration The duration in millseconds the move should last
+         * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
+         * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
+         *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
          */
-        BaseCamera.prototype.setFocus = function (x, y) {
-            if (!this._follow && !this.lerp) {
-                this.x = x;
-                this.y = y;
+        BaseCamera.prototype.move = function (pos, duration, easingFn) {
+            if (easingFn === void 0) { easingFn = ex.EasingFunctions.EaseInOutCubic; }
+            if (typeof easingFn !== 'function') {
+                throw 'Please specify an EasingFunction';
             }
-            if (this.lerp) {
-                this._lerpStart = this.getFocus().clone();
-                this._lerpEnd = new ex.Point(x, y);
-                this._currentLerpTime = 0;
-                this._cameraMoving = true;
+            // cannot move when following an actor
+            if (this._follow) {
+                return new ex.Promise().reject(pos);
             }
+            // resolve existing promise, if any
+            if (this._lerpPromise && this._lerpPromise.state() === ex.PromiseState.Pending) {
+                this._lerpPromise.resolve(pos);
+            }
+            this._lerpPromise = new ex.Promise();
+            this._lerpStart = this.getFocus().clone();
+            this._lerpDuration = duration;
+            this._lerpEnd = pos;
+            this._currentLerpTime = 0;
+            this._cameraMoving = true;
+            this._easing = easingFn;
+            return this._lerpPromise;
         };
         /**
          * Sets the camera to shake at the specified magnitudes for the specified duration
@@ -3574,45 +4821,35 @@ var ex;
         BaseCamera.prototype._setCurrentZoomScale = function (zoomScale) {
             this.z = zoomScale;
         };
-        /**
-         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
-         * @param delta  The number of milliseconds since the last update
-         */
-        BaseCamera.prototype.update = function (ctx, delta) {
+        BaseCamera.prototype.update = function (engine, delta) {
             // Update placements based on linear algebra
-            this.x += this.dx * delta / 1000;
-            this.y += this.dy * delta / 1000;
+            this._x += this.dx * delta / 1000;
+            this._y += this.dy * delta / 1000;
             this.z += this.dz * delta / 1000;
             this.dx += this.ax * delta / 1000;
             this.dy += this.ay * delta / 1000;
             this.dz += this.az * delta / 1000;
             this.rotation += this.rx * delta / 1000;
-            var focus = this.getFocus();
-            var xShake = 0;
-            var yShake = 0;
-            var canvasWidth = ctx.canvas.width;
-            var canvasHeight = ctx.canvas.height;
-            // if zoom is 2x then canvas is 1/2 as high
-            // if zoom is .5x then canvas is 2x as high
-            var newCanvasWidth = canvasWidth / this.getZoom();
-            var newCanvasHeight = canvasHeight / this.getZoom();
-            if (this.lerp) {
-                if (this._currentLerpTime < this._lerpDuration && this._cameraMoving) {
+            if (this._cameraMoving) {
+                if (this._currentLerpTime < this._lerpDuration) {
                     if (this._lerpEnd.x < this._lerpStart.x) {
-                        this.x = this._lerpStart.x - (this._easeInOutCubic(this._currentLerpTime, this._lerpEnd.x, this._lerpStart.x, this._lerpDuration) - this._lerpEnd.x);
+                        this._x = this._lerpStart.x - (this._easing(this._currentLerpTime, this._lerpEnd.x, this._lerpStart.x, this._lerpDuration) - this._lerpEnd.x);
                     }
                     else {
-                        this.x = this._easeInOutCubic(this._currentLerpTime, this._lerpStart.x, this._lerpEnd.x, this._lerpDuration);
+                        this._x = this._easing(this._currentLerpTime, this._lerpStart.x, this._lerpEnd.x, this._lerpDuration);
                     }
                     if (this._lerpEnd.y < this._lerpStart.y) {
-                        this.y = this._lerpStart.y - (this._easeInOutCubic(this._currentLerpTime, this._lerpEnd.y, this._lerpStart.y, this._lerpDuration) - this._lerpEnd.y);
+                        this._y = this._lerpStart.y - (this._easing(this._currentLerpTime, this._lerpEnd.y, this._lerpStart.y, this._lerpDuration) - this._lerpEnd.y);
                     }
                     else {
-                        this.y = this._easeInOutCubic(this._currentLerpTime, this._lerpStart.y, this._lerpEnd.y, this._lerpDuration);
+                        this._y = this._easing(this._currentLerpTime, this._lerpStart.y, this._lerpEnd.y, this._lerpDuration);
                     }
                     this._currentLerpTime += delta;
                 }
                 else {
+                    this._x = this._lerpEnd.x;
+                    this._y = this._lerpEnd.y;
+                    this._lerpPromise.resolve(this._lerpEnd);
                     this._lerpStart = null;
                     this._lerpEnd = null;
                     this._currentLerpTime = 0;
@@ -3625,12 +4862,27 @@ var ex;
                 this._shakeMagnitudeX = 0;
                 this._shakeMagnitudeY = 0;
                 this._shakeDuration = 0;
+                this._xShake = 0;
+                this._yShake = 0;
             }
             else {
                 this._elapsedShakeTime += delta;
-                xShake = (Math.random() * this._shakeMagnitudeX | 0) + 1;
-                yShake = (Math.random() * this._shakeMagnitudeY | 0) + 1;
+                this._xShake = (Math.random() * this._shakeMagnitudeX | 0) + 1;
+                this._yShake = (Math.random() * this._shakeMagnitudeY | 0) + 1;
             }
+        };
+        /**
+         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
+         * @param delta  The number of milliseconds since the last update
+         */
+        BaseCamera.prototype.draw = function (ctx, delta) {
+            var focus = this.getFocus();
+            var canvasWidth = ctx.canvas.width;
+            var canvasHeight = ctx.canvas.height;
+            // if zoom is 2x then canvas is 1/2 as high
+            // if zoom is .5x then canvas is 2x as high
+            var newCanvasWidth = canvasWidth / this.getZoom();
+            var newCanvasHeight = canvasHeight / this.getZoom();
             /*if (this._isDoneZooming()) {
                this._isZooming = false;
                this._elapsedZoomTime = 0;
@@ -3643,7 +4895,7 @@ var ex;
                this._setCurrentZoomScale(this.getZoom() + this._zoomIncrement * delta / 1000);
             }*/
             ctx.scale(this.getZoom(), this.getZoom());
-            ctx.translate(-focus.x + newCanvasWidth / 2 + xShake, -focus.y + newCanvasHeight / 2 + yShake);
+            ctx.translate(-focus.x + newCanvasWidth / 2 + this._xShake, -focus.y + newCanvasHeight / 2 + this._yShake);
         };
         BaseCamera.prototype.debugDraw = function (ctx) {
             var focus = this.getFocus();
@@ -3676,7 +4928,7 @@ var ex;
             }
         };
         return BaseCamera;
-    })();
+    }());
     ex.BaseCamera = BaseCamera;
     /**
      * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
@@ -3690,14 +4942,14 @@ var ex;
         }
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new ex.Point(this._follow.x + this._follow.getWidth() / 2, this.focus.y);
+                return new ex.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
             }
             else {
-                return this.focus;
+                return _super.prototype.getFocus.call(this);
             }
         };
         return SideCamera;
-    })(BaseCamera);
+    }(BaseCamera));
     ex.SideCamera = SideCamera;
     /**
      * An extension of [[BaseCamera]] that is locked to an [[Actor]] or
@@ -3713,14 +4965,14 @@ var ex;
         }
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new ex.Point(this._follow.x + this._follow.getWidth() / 2, this._follow.y + this._follow.getHeight() / 2);
+                return new ex.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
             }
             else {
-                return this.focus;
+                return _super.prototype.getFocus.call(this);
             }
         };
         return LockedCamera;
-    })(BaseCamera);
+    }(BaseCamera));
     ex.LockedCamera = LockedCamera;
 })(ex || (ex = {}));
 var ex;
@@ -3771,26 +5023,26 @@ var ex;
                     this.easingFcn = easingFcn;
                     this._currentLerpTime = 0;
                     this._lerpDuration = 1 * 1000; // 5 seconds
-                    this._lerpStart = new ex.Point(0, 0);
-                    this._lerpEnd = new ex.Point(0, 0);
+                    this._lerpStart = new ex.Vector(0, 0);
+                    this._lerpEnd = new ex.Vector(0, 0);
                     this._initialized = false;
                     this._stopped = false;
                     this._distance = 0;
                     this._lerpDuration = duration;
-                    this._lerpEnd = new ex.Point(x, y);
+                    this._lerpEnd = new ex.Vector(x, y);
                 }
                 EaseTo.prototype._initialize = function () {
-                    this._lerpStart = new ex.Point(this.actor.x, this.actor.y);
+                    this._lerpStart = new ex.Vector(this.actor.pos.x, this.actor.pos.y);
                     this._currentLerpTime = 0;
-                    this._distance = this._lerpStart.toVector().distance(this._lerpEnd.toVector());
+                    this._distance = this._lerpStart.distance(this._lerpEnd);
                 };
                 EaseTo.prototype.update = function (delta) {
                     if (!this._initialized) {
                         this._initialize();
                         this._initialized = true;
                     }
-                    var newX = this.actor.x;
-                    var newY = this.actor.y;
+                    var newX = this.actor.pos.x;
+                    var newY = this.actor.pos.y;
                     if (this._currentLerpTime < this._lerpDuration) {
                         if (this._lerpEnd.x < this._lerpStart.x) {
                             newX = this._lerpStart.x - (this.easingFcn(this._currentLerpTime, this._lerpEnd.x, this._lerpStart.x, this._lerpDuration) - this._lerpEnd.x);
@@ -3804,17 +5056,17 @@ var ex;
                         else {
                             newY = this.easingFcn(this._currentLerpTime, this._lerpStart.y, this._lerpEnd.y, this._lerpDuration);
                         }
-                        this.actor.x = newX;
-                        this.actor.y = newY;
+                        this.actor.pos.x = newX;
+                        this.actor.pos.y = newY;
                         this._currentLerpTime += delta;
                     }
                     else {
-                        this.actor.x = this._lerpEnd.x;
-                        this.actor.y = this._lerpEnd.y;
+                        this.actor.pos.x = this._lerpEnd.x;
+                        this.actor.pos.y = this._lerpEnd.y;
                     }
                 };
                 EaseTo.prototype.isComplete = function (actor) {
-                    return this._stopped || (new ex.Vector(actor.x, actor.y)).distance(this._lerpStart.toVector()) >= this._distance;
+                    return this._stopped || (new ex.Vector(actor.pos.x, actor.pos.y)).distance(this._lerpStart) >= this._distance;
                 };
                 EaseTo.prototype.reset = function () {
                     this._initialized = false;
@@ -3823,7 +5075,7 @@ var ex;
                     this._stopped = true;
                 };
                 return EaseTo;
-            })();
+            }());
             Actions.EaseTo = EaseTo;
             var MoveTo = (function () {
                 function MoveTo(actor, destx, desty, speed) {
@@ -3836,33 +5088,33 @@ var ex;
                 MoveTo.prototype.update = function (delta) {
                     if (!this._started) {
                         this._started = true;
-                        this._start = new ex.Vector(this._actor.x, this._actor.y);
+                        this._start = new ex.Vector(this._actor.pos.x, this._actor.pos.y);
                         this._distance = this._start.distance(this._end);
-                        this._dir = this._end.minus(this._start).normalize();
+                        this._dir = this._end.sub(this._start).normalize();
                     }
                     var m = this._dir.scale(this._speed);
-                    this._actor.dx = m.x;
-                    this._actor.dy = m.y;
+                    this._actor.vel.x = m.x;
+                    this._actor.vel.y = m.y;
                     if (this.isComplete(this._actor)) {
-                        this._actor.x = this._end.x;
-                        this._actor.y = this._end.y;
-                        this._actor.dy = 0;
-                        this._actor.dx = 0;
+                        this._actor.pos.x = this._end.x;
+                        this._actor.pos.y = this._end.y;
+                        this._actor.vel.y = 0;
+                        this._actor.vel.x = 0;
                     }
                 };
                 MoveTo.prototype.isComplete = function (actor) {
-                    return this._stopped || (new ex.Vector(actor.x, actor.y)).distance(this._start) >= this._distance;
+                    return this._stopped || (new ex.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
                 };
                 MoveTo.prototype.stop = function () {
-                    this._actor.dy = 0;
-                    this._actor.dx = 0;
+                    this._actor.vel.y = 0;
+                    this._actor.vel.x = 0;
                     this._stopped = true;
                 };
                 MoveTo.prototype.reset = function () {
                     this._started = false;
                 };
                 return MoveTo;
-            })();
+            }());
             Actions.MoveTo = MoveTo;
             var MoveBy = (function () {
                 function MoveBy(actor, destx, desty, time) {
@@ -3879,34 +5131,34 @@ var ex;
                 MoveBy.prototype.update = function (delta) {
                     if (!this._started) {
                         this._started = true;
-                        this._start = new ex.Vector(this._actor.x, this._actor.y);
+                        this._start = new ex.Vector(this._actor.pos.x, this._actor.pos.y);
                         this._distance = this._start.distance(this._end);
-                        this._dir = this._end.minus(this._start).normalize();
+                        this._dir = this._end.sub(this._start).normalize();
                         this._speed = this._distance / (this._time / 1000);
                     }
                     var m = this._dir.scale(this._speed);
-                    this._actor.dx = m.x;
-                    this._actor.dy = m.y;
+                    this._actor.vel.x = m.x;
+                    this._actor.vel.y = m.y;
                     if (this.isComplete(this._actor)) {
-                        this._actor.x = this._end.x;
-                        this._actor.y = this._end.y;
-                        this._actor.dy = 0;
-                        this._actor.dx = 0;
+                        this._actor.pos.x = this._end.x;
+                        this._actor.pos.y = this._end.y;
+                        this._actor.vel.y = 0;
+                        this._actor.vel.x = 0;
                     }
                 };
                 MoveBy.prototype.isComplete = function (actor) {
-                    return this._stopped || (new ex.Vector(actor.x, actor.y)).distance(this._start) >= this._distance;
+                    return this._stopped || (new ex.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
                 };
                 MoveBy.prototype.stop = function () {
-                    this._actor.dy = 0;
-                    this._actor.dx = 0;
+                    this._actor.vel.y = 0;
+                    this._actor.vel.x = 0;
                     this._stopped = true;
                 };
                 MoveBy.prototype.reset = function () {
                     this._started = false;
                 };
                 return MoveBy;
-            })();
+            }());
             Actions.MoveBy = MoveBy;
             var Follow = (function () {
                 function Follow(actor, actorToFollow, followDistance) {
@@ -3914,8 +5166,8 @@ var ex;
                     this._stopped = false;
                     this._actor = actor;
                     this._actorToFollow = actorToFollow;
-                    this._current = new ex.Vector(this._actor.x, this._actor.y);
-                    this._end = new ex.Vector(actorToFollow.x, actorToFollow.y);
+                    this._current = new ex.Vector(this._actor.pos.x, this._actor.pos.y);
+                    this._end = new ex.Vector(actorToFollow.pos.x, actorToFollow.pos.y);
                     this._maximumDistance = (followDistance !== undefined) ? followDistance : this._current.distance(this._end);
                     this._speed = 0;
                 }
@@ -3923,38 +5175,38 @@ var ex;
                     if (!this._started) {
                         this._started = true;
                         this._distanceBetween = this._current.distance(this._end);
-                        this._dir = this._end.minus(this._current).normalize();
+                        this._dir = this._end.sub(this._current).normalize();
                     }
-                    var actorToFollowSpeed = Math.sqrt(Math.pow(this._actorToFollow.dx, 2) + Math.pow(this._actorToFollow.dy, 2));
+                    var actorToFollowSpeed = Math.sqrt(Math.pow(this._actorToFollow.vel.x, 2) + Math.pow(this._actorToFollow.vel.y, 2));
                     if (actorToFollowSpeed !== 0) {
                         this._speed = actorToFollowSpeed;
                     }
-                    this._current.x = this._actor.x;
-                    this._current.y = this._actor.y;
-                    this._end.x = this._actorToFollow.x;
-                    this._end.y = this._actorToFollow.y;
+                    this._current.x = this._actor.pos.x;
+                    this._current.y = this._actor.pos.y;
+                    this._end.x = this._actorToFollow.pos.x;
+                    this._end.y = this._actorToFollow.pos.y;
                     this._distanceBetween = this._current.distance(this._end);
-                    this._dir = this._end.minus(this._current).normalize();
+                    this._dir = this._end.sub(this._current).normalize();
                     if (this._distanceBetween >= this._maximumDistance) {
                         var m = this._dir.scale(this._speed);
-                        this._actor.dx = m.x;
-                        this._actor.dy = m.y;
+                        this._actor.vel.x = m.x;
+                        this._actor.vel.y = m.y;
                     }
                     else {
-                        this._actor.dx = 0;
-                        this._actor.dy = 0;
+                        this._actor.vel.x = 0;
+                        this._actor.vel.y = 0;
                     }
                     if (this.isComplete(this._actor)) {
                         // TODO this should never occur
-                        this._actor.x = this._end.x;
-                        this._actor.y = this._end.y;
-                        this._actor.dy = 0;
-                        this._actor.dx = 0;
+                        this._actor.pos.x = this._end.x;
+                        this._actor.pos.y = this._end.y;
+                        this._actor.vel.y = 0;
+                        this._actor.vel.x = 0;
                     }
                 };
                 Follow.prototype.stop = function () {
-                    this._actor.dy = 0;
-                    this._actor.dx = 0;
+                    this._actor.vel.y = 0;
+                    this._actor.vel.x = 0;
                     this._stopped = true;
                 };
                 Follow.prototype.isComplete = function (actor) {
@@ -3965,7 +5217,7 @@ var ex;
                     this._started = false;
                 };
                 return Follow;
-            })();
+            }());
             Actions.Follow = Follow;
             var Meet = (function () {
                 function Meet(actor, actorToMeet, speed) {
@@ -3974,8 +5226,8 @@ var ex;
                     this._speedWasSpecified = false;
                     this._actor = actor;
                     this._actorToMeet = actorToMeet;
-                    this._current = new ex.Vector(this._actor.x, this._actor.y);
-                    this._end = new ex.Vector(actorToMeet.x, actorToMeet.y);
+                    this._current = new ex.Vector(this._actor.pos.x, this._actor.pos.y);
+                    this._end = new ex.Vector(actorToMeet.pos.x, actorToMeet.pos.y);
                     this._speed = speed || 0;
                     if (speed !== undefined) {
                         this._speedWasSpecified = true;
@@ -3985,41 +5237,41 @@ var ex;
                     if (!this._started) {
                         this._started = true;
                         this._distanceBetween = this._current.distance(this._end);
-                        this._dir = this._end.minus(this._current).normalize();
+                        this._dir = this._end.sub(this._current).normalize();
                     }
-                    var actorToMeetSpeed = Math.sqrt(Math.pow(this._actorToMeet.dx, 2) + Math.pow(this._actorToMeet.dy, 2));
+                    var actorToMeetSpeed = Math.sqrt(Math.pow(this._actorToMeet.vel.x, 2) + Math.pow(this._actorToMeet.vel.y, 2));
                     if ((actorToMeetSpeed !== 0) && (!this._speedWasSpecified)) {
                         this._speed = actorToMeetSpeed;
                     }
-                    this._current.x = this._actor.x;
-                    this._current.y = this._actor.y;
-                    this._end.x = this._actorToMeet.x;
-                    this._end.y = this._actorToMeet.y;
+                    this._current.x = this._actor.pos.x;
+                    this._current.y = this._actor.pos.y;
+                    this._end.x = this._actorToMeet.pos.x;
+                    this._end.y = this._actorToMeet.pos.y;
                     this._distanceBetween = this._current.distance(this._end);
-                    this._dir = this._end.minus(this._current).normalize();
+                    this._dir = this._end.sub(this._current).normalize();
                     var m = this._dir.scale(this._speed);
-                    this._actor.dx = m.x;
-                    this._actor.dy = m.y;
+                    this._actor.vel.x = m.x;
+                    this._actor.vel.y = m.y;
                     if (this.isComplete(this._actor)) {
-                        this._actor.x = this._end.x;
-                        this._actor.y = this._end.y;
-                        this._actor.dy = 0;
-                        this._actor.dx = 0;
+                        this._actor.pos.x = this._end.x;
+                        this._actor.pos.y = this._end.y;
+                        this._actor.vel.y = 0;
+                        this._actor.vel.x = 0;
                     }
                 };
                 Meet.prototype.isComplete = function (actor) {
                     return this._stopped || (this._distanceBetween <= 1);
                 };
                 Meet.prototype.stop = function () {
-                    this._actor.dy = 0;
-                    this._actor.dx = 0;
+                    this._actor.vel.y = 0;
+                    this._actor.vel.x = 0;
                     this._stopped = true;
                 };
                 Meet.prototype.reset = function () {
                     this._started = false;
                 };
                 return Meet;
-            })();
+            }());
             Actions.Meet = Meet;
             var RotateTo = (function () {
                 function RotateTo(actor, angleRadians, speed, rotationType) {
@@ -4103,7 +5355,7 @@ var ex;
                     this._started = false;
                 };
                 return RotateTo;
-            })();
+            }());
             Actions.RotateTo = RotateTo;
             var RotateBy = (function () {
                 function RotateBy(actor, angleRadians, time, rotationType) {
@@ -4188,7 +5440,7 @@ var ex;
                     this._started = false;
                 };
                 return RotateBy;
-            })();
+            }());
             Actions.RotateBy = RotateBy;
             var ScaleTo = (function () {
                 function ScaleTo(actor, scaleX, scaleY, speedX, speedY) {
@@ -4242,7 +5494,7 @@ var ex;
                     this._started = false;
                 };
                 return ScaleTo;
-            })();
+            }());
             Actions.ScaleTo = ScaleTo;
             var ScaleBy = (function () {
                 function ScaleBy(actor, scaleX, scaleY, time) {
@@ -4287,7 +5539,7 @@ var ex;
                     this._started = false;
                 };
                 return ScaleBy;
-            })();
+            }());
             Actions.ScaleBy = ScaleBy;
             var Delay = (function () {
                 function Delay(actor, delay) {
@@ -4301,8 +5553,8 @@ var ex;
                     if (!this._started) {
                         this._started = true;
                     }
-                    this.x = this._actor.x;
-                    this.y = this._actor.y;
+                    this.x = this._actor.pos.x;
+                    this.y = this._actor.pos.y;
                     this._elapsedTime += delta;
                 };
                 Delay.prototype.isComplete = function (actor) {
@@ -4316,7 +5568,7 @@ var ex;
                     this._started = false;
                 };
                 return Delay;
-            })();
+            }());
             Actions.Delay = Delay;
             var Blink = (function () {
                 function Blink(actor, timeVisible, timeNotVisible, numBlinks) {
@@ -4363,7 +5615,7 @@ var ex;
                     this._totalTime = 0;
                 };
                 return Blink;
-            })();
+            }());
             Actions.Blink = Blink;
             var Fade = (function () {
                 function Fade(actor, endOpacity, speed) {
@@ -4400,7 +5652,7 @@ var ex;
                     this._started = false;
                 };
                 return Fade;
-            })();
+            }());
             Actions.Fade = Fade;
             var Die = (function () {
                 function Die(actor) {
@@ -4419,7 +5671,7 @@ var ex;
                 Die.prototype.stop = function () { return; };
                 Die.prototype.reset = function () { return; };
                 return Die;
-            })();
+            }());
             Actions.Die = Die;
             var CallMethod = (function () {
                 function CallMethod(actor, method) {
@@ -4443,7 +5695,7 @@ var ex;
                     this._hasBeenCalled = true;
                 };
                 return CallMethod;
-            })();
+            }());
             Actions.CallMethod = CallMethod;
             var Repeat = (function () {
                 function Repeat(actor, repeat, actions) {
@@ -4460,8 +5712,8 @@ var ex;
                     ;
                 }
                 Repeat.prototype.update = function (delta) {
-                    this.x = this._actor.x;
-                    this.y = this._actor.y;
+                    this.x = this._actor.pos.x;
+                    this.y = this._actor.pos.y;
                     if (!this._actionQueue.hasNext()) {
                         this._actionQueue.reset();
                         this._repeat--;
@@ -4478,7 +5730,7 @@ var ex;
                     this._repeat = this._originalRepeat;
                 };
                 return Repeat;
-            })();
+            }());
             Actions.Repeat = Repeat;
             var RepeatForever = (function () {
                 function RepeatForever(actor, actions) {
@@ -4493,8 +5745,8 @@ var ex;
                     ;
                 }
                 RepeatForever.prototype.update = function (delta) {
-                    this.x = this._actor.x;
-                    this.y = this._actor.y;
+                    this.x = this._actor.pos.x;
+                    this.y = this._actor.pos.y;
                     if (this._stopped) {
                         return;
                     }
@@ -4512,7 +5764,7 @@ var ex;
                 };
                 RepeatForever.prototype.reset = function () { return; };
                 return RepeatForever;
-            })();
+            }());
             Actions.RepeatForever = RepeatForever;
             /**
              * Action Queues
@@ -4568,7 +5820,7 @@ var ex;
                     }
                 };
                 return ActionQueue;
-            })();
+            }());
             Actions.ActionQueue = ActionQueue;
         })(Actions = Internal.Actions || (Internal.Actions = {}));
     })(Internal = ex.Internal || (ex.Internal = {}));
@@ -4587,6 +5839,8 @@ var ex;
      * Actions can be chained together and can be set to repeat,
      * or can be interrupted to change.
      *
+     * Actor actions are available off of [[Actor.actions]].
+     *
      * ## Chaining Actions
      *
      * You can chain actions to create a script because the action
@@ -4599,7 +5853,7 @@ var ex;
      *   public patrol() {
      *
      *      // clear existing queue
-     *      this.clearActions();
+     *      this.actions.clearActions();
      *
      *      // guard a choke point
      *      // move to 100, 100 and take 1.2s
@@ -4607,7 +5861,7 @@ var ex;
      *      // move back to 0, 100 and take 1.2s
      *      // wait for 3s
      *      // repeat
-     *      this.moveTo(100, 100, 1200)
+     *      this.actions.moveTo(100, 100, 1200)
      *        .delay(3000)
      *        .moveTo(0, 100, 1200)
      *        .delay(3000)
@@ -4618,7 +5872,7 @@ var ex;
      *
      * ## Example: Follow a Path
      *
-     * You can use [[Actor.moveTo]] to move to a specific point,
+     * You can use [[Actor.actions.moveTo]] to move to a specific point,
      * allowing you to chain together actions to form a path.
      *
      * This example has a `Ship` follow a path that it guards by
@@ -4644,16 +5898,16 @@ var ex;
      *
      *     // forward path (skip first spawn point)
      *     for (var i = 1; i < path.length; i++) {
-     *       this.moveTo(path[i].x, path[i].y, 300);
+     *       this.actions.moveTo(path[i].x, path[i].y, 300);
      *     }
      *
      *     // reverse path (skip last point)
      *     for (var j = path.length - 2; j >= 0; j--) {
-     *       this.moveTo(path[j].x, path[j].y, 300);
+     *       this.actions.moveTo(path[j].x, path[j].y, 300);
      *     }
      *
      *     // repeat
-     *     this.repeatForever();
+     *     this.actions.repeatForever();
      *   }
      * }
      * ```
@@ -4768,11 +6022,12 @@ var ex;
          * method is part of the actor 'Action' fluent API allowing action chaining.
          * @param angleRadians  The angle to rotate to in radians
          * @param speed         The angular velocity of the rotation specified in radians per second
+         * @param rotationType  The [[RotationType]] to use for this rotation
          */
-        ActionContext.prototype.rotateTo = function (angleRadians, speed) {
+        ActionContext.prototype.rotateTo = function (angleRadians, speed, rotationType) {
             var i = 0, len = this._queues.length;
             for (i; i < len; i++) {
-                this._queues[i].add(new ex.Internal.Actions.RotateTo(this._actors[i], angleRadians, speed));
+                this._queues[i].add(new ex.Internal.Actions.RotateTo(this._actors[i], angleRadians, speed, rotationType));
             }
             return this;
         };
@@ -4782,11 +6037,12 @@ var ex;
          * of the actor 'Action' fluent API allowing action chaining.
          * @param angleRadians  The angle to rotate to in radians
          * @param time          The time it should take the actor to complete the rotation in milliseconds
+         * @param rotationType  The [[RotationType]] to use for this rotation
          */
-        ActionContext.prototype.rotateBy = function (angleRadians, time) {
+        ActionContext.prototype.rotateBy = function (angleRadians, time, rotationType) {
             var i = 0, len = this._queues.length;
             for (i; i < len; i++) {
-                this._queues[i].add(new ex.Internal.Actions.RotateBy(this._actors[i], angleRadians, time));
+                this._queues[i].add(new ex.Internal.Actions.RotateBy(this._actors[i], angleRadians, time, rotationType));
             }
             return this;
         };
@@ -4969,12 +6225,13 @@ var ex;
             return ex.Promise.join.apply(this, promises);
         };
         return ActionContext;
-    })();
+    }());
     ex.ActionContext = ActionContext;
 })(ex || (ex = {}));
 /// <reference path="Actions/IActionable.ts"/>
 /// <reference path="Actions/ActionContext.ts"/>
 /// <reference path="Collision/BoundingBox.ts"/>
+/// <reference path="Interfaces/IEvented.ts" />
 var ex;
 (function (ex) {
     /**
@@ -5051,16 +6308,16 @@ var ex;
             var i = 0, members = this.getMembers(), len = members.length;
             if (arguments.length === 1 && args instanceof ex.Vector) {
                 for (i; i < len; i++) {
-                    members[i].x += args.x;
-                    members[i].y += args.y;
+                    members[i].pos.x += args.x;
+                    members[i].pos.y += args.y;
                 }
             }
             else if (typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
                 var x = arguments[0];
                 var y = arguments[1];
                 for (i; i < len; i++) {
-                    members[i].x += x;
-                    members[i].y += y;
+                    members[i].pos.x += x;
+                    members[i].pos.y += y;
                 }
             }
             else {
@@ -5079,10 +6336,10 @@ var ex;
             }
         };
         Group.prototype.on = function (eventName, handler) {
-            this.eventDispatcher.subscribe(eventName, handler);
+            this.eventDispatcher.on(eventName, handler);
         };
         Group.prototype.off = function (eventName, handler) {
-            this.eventDispatcher.unsubscribe(eventName, handler);
+            this.eventDispatcher.off(eventName, handler);
         };
         Group.prototype.emit = function (topic, event) {
             this.eventDispatcher.emit(topic, event);
@@ -5102,7 +6359,7 @@ var ex;
             });
         };
         return Group;
-    })(ex.Class);
+    }(ex.Class));
     ex.Group = Group;
 })(ex || (ex = {}));
 var ex;
@@ -5160,7 +6417,6 @@ var ex;
             else {
                 return this._insert(this._root, element);
             }
-            return false;
         };
         SortedList.prototype._insert = function (node, element) {
             if (node != null) {
@@ -5295,7 +6551,7 @@ var ex;
             }
         };
         return SortedList;
-    })();
+    }());
     ex.SortedList = SortedList;
     var BinaryTreeNode = (function () {
         function BinaryTreeNode(key, data, left, right) {
@@ -5329,7 +6585,7 @@ var ex;
             this._right = right;
         };
         return BinaryTreeNode;
-    })();
+    }());
     ex.BinaryTreeNode = BinaryTreeNode;
     var MockedElement = (function () {
         function MockedElement(key) {
@@ -5343,14 +6599,13 @@ var ex;
             this._key = key;
         };
         return MockedElement;
-    })();
+    }());
     ex.MockedElement = MockedElement;
 })(ex || (ex = {}));
 /// <reference path="Class.ts" />
 /// <reference path="Timer.ts" />
-/// <reference path="Collision/NaiveCollisionResolver.ts"/>
-/// <reference path="Collision/DynamicTreeCollisionResolver.ts"/>
-/// <reference path="Collision/CollisionPair.ts" />
+/// <reference path="Collision/NaiveCollisionBroadphase.ts"/>
+/// <reference path="Collision/DynamicTreeCollisionBroadphase.ts"/>
 /// <reference path="Camera.ts" />
 /// <reference path="Group.ts"/>
 /// <reference path="Util/SortedList.ts"/>
@@ -5415,7 +6670,7 @@ var ex;
      * A [[Scene|scene]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
      * the [[Engine|engine]] it will follow this lifecycle.
      *
-     * ![Scene Lifecycle](/assets/images/docs/SceneLifeCycle.png)
+     * ![Scene Lifecycle](/assets/images/docs/SceneLifecycle.png)
      *
      * ## Extending scenes
      *
@@ -5499,14 +6754,15 @@ var ex;
              */
             this.isInitialized = false;
             this._sortedDrawingTree = new ex.SortedList(ex.Actor.prototype.getZIndex);
-            this._collisionResolver = new ex.DynamicTreeCollisionResolver();
+            this._broadphase = new ex.DynamicTreeCollisionBroadphase();
             this._killQueue = [];
             this._timers = [];
             this._cancelQueue = [];
             this._logger = ex.Logger.getInstance();
             this.camera = new ex.BaseCamera();
             if (engine) {
-                this.camera.setFocus(engine.width / 2, engine.height / 2);
+                this.camera.x = engine.width / 2;
+                this.camera.y = engine.height / 2;
             }
         }
         /**
@@ -5516,7 +6772,8 @@ var ex;
         Scene.prototype.onInitialize = function (engine) {
             // will be overridden
             if (this.camera) {
-                this.camera.setFocus(engine.width / 2, engine.height / 2);
+                this.camera.x = engine.width / 2;
+                this.camera.y = engine.height / 2;
             }
             this._logger.debug('Scene.onInitialize', this, engine);
         };
@@ -5544,6 +6801,9 @@ var ex;
         Scene.prototype.update = function (engine, delta) {
             this.emit('preupdate', new ex.PreUpdateEvent(engine, delta, this));
             var i, len;
+            if (this.camera) {
+                this.camera.update(engine, delta);
+            }
             // Cycle through actors updating UI actors
             for (i = 0, len = this.uiActors.length; i < len; i++) {
                 this.uiActors[i].update(engine, delta);
@@ -5552,14 +6812,22 @@ var ex;
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
                 this.tileMaps[i].update(engine, delta);
             }
-            // Cycle through actors updating actors
-            for (i = 0, len = this.children.length; i < len; i++) {
-                this.children[i].update(engine, delta);
-            }
-            // Run collision resolution strategy
-            if (this._collisionResolver) {
-                this._collisionResolver.update(this.children);
-                this._collisionResolver.evaluate(this.children);
+            var iter = ex.Physics.collisionPasses;
+            var collisionDelta = delta / iter;
+            while (iter > 0) {
+                // Cycle through actors updating actors
+                for (i = 0, len = this.children.length; i < len; i++) {
+                    this.children[i].update(engine, collisionDelta);
+                    this.children[i].collisionArea.recalc();
+                }
+                // TODO meh I don't like how this works... maybe find a way to make collisions
+                // a trait
+                // Run collision resolution strategy
+                if (this._broadphase && ex.Physics.enabled) {
+                    this._broadphase.update(this.children, collisionDelta);
+                    this._broadphase.findCollisionContacts(this.children, collisionDelta);
+                }
+                iter--;
             }
             // Remove actors from scene graph after being killed
             var actorIndex;
@@ -5592,7 +6860,7 @@ var ex;
             this.emit('predraw', new ex.PreDrawEvent(ctx, delta, this));
             ctx.save();
             if (this.camera) {
-                this.camera.update(ctx, delta);
+                this.camera.draw(ctx, delta);
             }
             var i, len;
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -5621,12 +6889,13 @@ var ex;
                     this.uiActors[i].debugDraw(ctx);
                 }
             }
-            this.emit('postdraw', new ex.PreDrawEvent(ctx, delta, this));
+            this.emit('postdraw', new ex.PostDrawEvent(ctx, delta, this));
         };
         /**
          * Draws all the actors' debug information in the Scene. Called by the [[Engine]].
          * @param ctx  The current rendering context
          */
+        /* istanbul ignore next */
         Scene.prototype.debugDraw = function (ctx) {
             this.emit('predebugdraw', new ex.PreDebugDrawEvent(ctx, this));
             var i, len;
@@ -5636,8 +6905,7 @@ var ex;
             for (i = 0, len = this.children.length; i < len; i++) {
                 this.children[i].debugDraw(ctx);
             }
-            // todo possibly enable this with excalibur flags features?
-            //this._collisionResolver.debugDraw(ctx, 20);
+            this._broadphase.debugDraw(ctx, 20);
             this.camera.debugDraw(ctx);
             this.emit('postdebugdraw', new ex.PostDebugDrawEvent(ctx, this));
         };
@@ -5648,6 +6916,9 @@ var ex;
             return this.children.indexOf(actor) > -1;
         };
         Scene.prototype.add = function (entity) {
+            if (entity instanceof ex.Actor) {
+                entity.unkill();
+            }
             if (entity instanceof ex.UIActor) {
                 if (!ex.Util.contains(this.uiActors, entity)) {
                     this.addUIActor(entity);
@@ -5656,7 +6927,7 @@ var ex;
             }
             if (entity instanceof ex.Actor) {
                 if (!ex.Util.contains(this.children, entity)) {
-                    this.addChild(entity);
+                    this._addChild(entity);
                     this._sortedDrawingTree.add(entity);
                 }
                 return;
@@ -5679,8 +6950,8 @@ var ex;
                 return;
             }
             if (entity instanceof ex.Actor) {
-                this._collisionResolver.remove(entity);
-                this.removeChild(entity);
+                this._broadphase.remove(entity);
+                this._removeChild(entity);
             }
             if (entity instanceof ex.Timer) {
                 this.removeTimer(entity);
@@ -5709,11 +6980,9 @@ var ex;
         };
         /**
          * Adds an actor to the scene, once this is done the actor will be drawn and updated.
-         *
-         * @obsolete Use [[add]] instead.
          */
-        Scene.prototype.addChild = function (actor) {
-            this._collisionResolver.register(actor);
+        Scene.prototype._addChild = function (actor) {
+            this._broadphase.register(actor);
             actor.scene = this;
             this.children.push(actor);
             this._sortedDrawingTree.add(actor);
@@ -5737,8 +7006,8 @@ var ex;
         /**
          * Removes an actor from the scene, it will no longer be drawn or updated.
          */
-        Scene.prototype.removeChild = function (actor) {
-            this._collisionResolver.remove(actor);
+        Scene.prototype._removeChild = function (actor) {
+            this._broadphase.remove(actor);
             this._killQueue.push(actor);
             actor.parent = null;
         };
@@ -5813,7 +7082,7 @@ var ex;
             this._sortedDrawingTree.add(actor);
         };
         return Scene;
-    })(ex.Class);
+    }(ex.Class));
     ex.Scene = Scene;
 })(ex || (ex = {}));
 var ex;
@@ -5866,11 +7135,12 @@ var ex;
             return endValue * currentTime / duration + startValue;
         };
         EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
-            //endValue = (endValue - startValue);
+            endValue = (endValue - startValue);
             currentTime /= duration;
+            return endValue * currentTime * currentTime + startValue;
         };
         EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
-            //endValue = (endValue - startValue);
+            endValue = (endValue - startValue);
             currentTime /= duration;
             return -endValue * currentTime * (currentTime - 2) + startValue;
         };
@@ -5891,6 +7161,7 @@ var ex;
         EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
             endValue = (endValue - startValue);
             currentTime /= duration;
+            currentTime--;
             return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
         };
         EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
@@ -5903,19 +7174,23 @@ var ex;
             return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
         };
         return EasingFunctions;
-    })();
+    }());
     ex.EasingFunctions = EasingFunctions;
 })(ex || (ex = {}));
 /// <reference path="Interfaces/IDrawable.ts" />
-/// <reference path="Traits/Movement.ts" />
+/// <reference path="Collision/ICollisionArea.ts" />
+/// <reference path="Collision/PolygonArea.ts" />
+/// <reference path="Interfaces/IEvented.ts" />
+/// <reference path="Traits/EulerMovement.ts" />
 /// <reference path="Traits/OffscreenCulling.ts" />
 /// <reference path="Traits/CapturePointer.ts" />
-/// <reference path="Traits/CollisionDetection.ts" />
+/// <reference path="Traits/TileMapCollisionDetection.ts" />
 /// <reference path="Collision/Side.ts" />
 /// <reference path="Algebra.ts" />
 /// <reference path="Util/Util.ts" />
 /// <reference path="TileMap.ts" />
 /// <reference path="Collision/BoundingBox.ts" />
+/// <reference path="Collision/Body.ts" />
 /// <reference path="Scene.ts" />
 /// <reference path="Actions/IActionable.ts"/>
 /// <reference path="Actions/Action.ts" />
@@ -5956,7 +7231,7 @@ var ex;
      * An [[Actor|actor]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once an actor is part of a
      * [[Scene|scene]], it will follow this lifecycle.
      *
-     * ![Actor Lifecycle](/assets/images/docs/ActorLifeCycle.png)
+     * ![Actor Lifecycle](/assets/images/docs/ActorLifecycle.png)
      *
      * ## Extending actors
      *
@@ -6204,23 +7479,17 @@ var ex;
              */
             this.id = Actor.maxId++;
             /**
-             * The x coordinate of the actor (middle if anchor is (0.5, 0.5) left edge if anchor is (0, 0))
+             * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
+             * acceleration, mass, inertia, etc.
              */
-            this.x = 0;
-            /**
-             * The y coordinate of the actor (middle if anchor is (0.5, 0.5) and top edge if anchor is (0, 0))
-             */
-            this.y = 0;
+            this.body = new ex.Body(this);
             this._height = 0;
             this._width = 0;
             /**
-             * The rotation of the actor in radians
+             * Collision maintenance
              */
-            this.rotation = 0; // radians
-            /**
-             * The rotational velocity of the actor in radians/second
-             */
-            this.rx = 0; //radions/sec
+            this._collisionContacts = [];
+            this._totalMtv = ex.Vector.Zero.clone();
             /**
              * The scale vector of the actor
              */
@@ -6233,22 +7502,6 @@ var ex;
              * The y scalar velocity of the actor in scale/second
              */
             this.sy = 0; //scale/sec
-            /**
-             * The x velocity of the actor in pixels/second
-             */
-            this.dx = 0; // pixels/sec
-            /**
-             * The x velocity of the actor in pixels/second
-             */
-            this.dy = 0;
-            /**
-             * The x acceleration of the actor in pixels/second^2
-             */
-            this.ax = 0; // pixels/sec/sec
-            /**
-             * The y acceleration of the actor in pixels/second^2
-             */
-            this.ay = 0;
             /**
              * Indicates whether the actor is physically in the viewport
              */
@@ -6263,7 +7516,6 @@ var ex;
              */
             this.opacity = 1;
             this.previousOpacity = 1;
-            this.actions = new ex.ActionContext(this);
             /**
              * Convenience reference to the global logger
              */
@@ -6290,14 +7542,13 @@ var ex;
             this._collisionHandlers = {};
             this._isInitialized = false;
             this.frames = {};
+            this._framesDirty = false;
             /**
              * Access to the current drawing for the actor, this can be
              * an [[Animation]], [[Sprite]], or [[Polygon]].
              * Set drawings with [[setDrawing]].
              */
             this.currentDrawing = null;
-            this.centerDrawingX = true;
-            this.centerDrawingY = true;
             /**
              * Modify the current actor update pipeline.
              */
@@ -6315,8 +7566,9 @@ var ex;
             };
             this._zIndex = 0;
             this._isKilled = false;
-            this.x = x || 0;
-            this.y = y || 0;
+            this._opacityFx = new ex.Effects.Opacity(this.opacity);
+            this.pos.x = x || 0;
+            this.pos.y = y || 0;
             this._width = width || 0;
             this._height = height || 0;
             if (color) {
@@ -6325,13 +7577,264 @@ var ex;
                 this.opacity = color.a;
             }
             // Build default pipeline
-            this.traits.push(new ex.Traits.Movement());
-            this.traits.push(new ex.Traits.CollisionDetection());
+            this.traits.push(new ex.Traits.EulerMovement());
+            // TODO: TileMaps should be converted to a collision area
+            this.traits.push(new ex.Traits.TileMapCollisionDetection());
             this.traits.push(new ex.Traits.OffscreenCulling());
             this.traits.push(new ex.Traits.CapturePointer());
+            // Build the action queue
             this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
-            this.anchor = new ex.Point(.5, .5);
+            this.actions = new ex.ActionContext(this);
+            // default anchor is in the middle
+            this.anchor = new ex.Vector(.5, .5);
+            // Initialize default collision area to be box
+            this.body.useBoxCollision();
         }
+        Object.defineProperty(Actor.prototype, "collisionArea", {
+            /**
+             * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
+             * [EdgeArea|edges].
+             */
+            get: function () {
+                return this.body.collisionArea;
+            },
+            /**
+             * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
+             * [EdgeArea|edges].
+             */
+            set: function (area) {
+                this.body.collisionArea = area;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "x", {
+            /**
+             * Gets the x position of the actor relative to it's parent (if any)
+             */
+            get: function () {
+                return this.body.pos.x;
+            },
+            /**
+             * Sets the x position of the actor relative to it's parent (if any)
+             */
+            set: function (theX) {
+                this.body.pos.x = theX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "y", {
+            /**
+             * Gets the y position of the actor relative to it's parent (if any)
+             */
+            get: function () {
+                return this.body.pos.y;
+            },
+            /**
+             * Sets the y position of the actor relative to it's parent (if any)
+             */
+            set: function (theY) {
+                this.body.pos.y = theY;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "pos", {
+            /**
+             * Gets the position vector of the actor in pixels
+             */
+            get: function () {
+                return this.body.pos;
+            },
+            /**
+             * Sets the position vector of the actor in pixels
+             */
+            set: function (thePos) {
+                this.body.pos = thePos;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "oldPos", {
+            /**
+             * Gets the position vector of the actor from the last frame
+             */
+            get: function () {
+                return this.body.oldPos;
+            },
+            /**
+             * Sets the position vector of the actor in the last frame
+             */
+            set: function (thePos) {
+                this.body.oldPos = thePos;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "vel", {
+            /**
+             * Gets the velocity vector of the actor in pixels/sec
+             */
+            get: function () {
+                return this.body.vel;
+            },
+            /**
+             * Sets the velocity vector of the actor in pixels/sec
+             */
+            set: function (theVel) {
+                this.body.vel = theVel;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "oldVel", {
+            /**
+             * Gets the velocity vector of the actor from the last frame
+             */
+            get: function () {
+                return this.body.oldVel;
+            },
+            /**
+             * Sets the velocity vector of the actor from the last frame
+             */
+            set: function (theVel) {
+                this.body.oldVel = theVel;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "acc", {
+            /**
+             * Gets the acceleration vector of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may be
+             * useful to simulate a gravitational effect.
+             */
+            get: function () {
+                return this.body.acc;
+            },
+            /**
+             * Sets the acceleration vector of teh actor in pixels/second/second
+             */
+            set: function (theAcc) {
+                this.body.acc = theAcc;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "rotation", {
+            /**
+             * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
+             */
+            get: function () {
+                return this.body.rotation;
+            },
+            /**
+             * Sets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
+             */
+            set: function (theAngle) {
+                this.body.rotation = theAngle;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "rx", {
+            /**
+             * Gets the rotational velocity of the actor in radians/second
+             */
+            get: function () {
+                return this.body.rx;
+            },
+            /**
+             * Sets the rotational velocity of the actor in radians/sec
+             */
+            set: function (angularVelocity) {
+                this.body.rx = angularVelocity;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "torque", {
+            /**
+             * Gets the current torque applied to the actor. Torque can be thought of as rotational force
+             */
+            get: function () {
+                return this.body.torque;
+            },
+            /**
+             * Sets the current torque applied to the actor. Torque can be thought of as rotational force
+             */
+            set: function (theTorque) {
+                this.body.torque = theTorque;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "mass", {
+            /**
+             * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
+             */
+            get: function () {
+                return this.body.mass;
+            },
+            /**
+             * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
+             */
+            set: function (theMass) {
+                this.body.mass = theMass;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "moi", {
+            /**
+             * Gets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             */
+            get: function () {
+                return this.body.moi;
+            },
+            /**
+             * Sets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             */
+            set: function (theMoi) {
+                this.body.moi = theMoi;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "friction", {
+            /**
+             * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
+             */
+            get: function () {
+                return this.body.friction;
+            },
+            /**
+             * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
+             */
+            set: function (theFriction) {
+                this.body.friction = theFriction;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "restitution", {
+            /**
+             * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
+             * as bounciness.
+             */
+            get: function () {
+                return this.body.restitution;
+            },
+            /**
+             * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
+             * as bounciness.
+             */
+            set: function (theRestitution) {
+                this.body.restitution = theRestitution;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -6350,25 +7853,14 @@ var ex;
             }
         };
         /**
-         * Add an event listener. You can listen for a variety of
-         * events off of the engine; see [[GameEvent]]
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
-         * @obsolete Use [[on]] instead.
-         */
-        Actor.prototype.addEventListener = function (eventName, handler) {
-            this._checkForPointerOptIn(eventName);
-            _super.prototype.addEventListener.call(this, eventName, handler);
-        };
-        /**
-         * Alias for `addEventListener`. You can listen for a variety of
+         * You can listen for a variety of
          * events off of the engine; see [[GameEvent]]
          * @param eventName   Name of the event to listen for
          * @param handler     Event handler for the thrown event
          */
         Actor.prototype.on = function (eventName, handler) {
             this._checkForPointerOptIn(eventName);
-            this.eventDispatcher.subscribe(eventName, handler);
+            this.eventDispatcher.on(eventName, handler);
         };
         /**
          * If the current actor is a member of the scene, this will remove
@@ -6376,12 +7868,19 @@ var ex;
          */
         Actor.prototype.kill = function () {
             if (this.scene) {
+                this.emit('kill', new ex.KillEvent(this));
                 this.scene.remove(this);
                 this._isKilled = true;
             }
             else {
                 this.logger.warn('Cannot kill actor, it was never added to the Scene');
             }
+        };
+        /**
+         * If the current actor is killed, it will now not be killed.
+         */
+        Actor.prototype.unkill = function () {
+            this._isKilled = false;
         };
         /**
          * Indicates wether the actor has been killed.
@@ -6422,12 +7921,26 @@ var ex;
                 }
             }
         };
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisons.
+         */
+        Actor.prototype.addMtv = function (mtv) {
+            this._totalMtv.addEqual(mtv);
+        };
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        Actor.prototype.applyMtv = function () {
+            this.pos.addEqual(this._totalMtv);
+            this._totalMtv.setTo(0, 0);
+        };
         Actor.prototype.addDrawing = function (args) {
             if (arguments.length === 2) {
                 this.frames[arguments[0]] = arguments[1];
                 if (!this.currentDrawing) {
                     this.currentDrawing = arguments[1];
                 }
+                this._framesDirty = true;
             }
             else {
                 if (arguments[0] instanceof ex.Sprite) {
@@ -6438,6 +7951,16 @@ var ex;
                 }
             }
         };
+        Object.defineProperty(Actor.prototype, "z", {
+            get: function () {
+                return this.getZIndex();
+            },
+            set: function (newZ) {
+                this.setZIndex(newZ);
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
          * Actors with a higher z-index are drawn on top of actors with a lower z-index
@@ -6479,10 +8002,22 @@ var ex;
             }
         };
         /**
+         * Calculates the unique pair hash between two actors
+         * @param other
+         */
+        Actor.prototype.calculatePairHash = function (other) {
+            if (this.id < other.id) {
+                return "#" + this.id + "+" + other.id;
+            }
+            else {
+                return "#" + other.id + "+" + this.id;
+            }
+        };
+        /**
          * Get the center point of an actor
          */
         Actor.prototype.getCenter = function () {
-            return new ex.Vector(this.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
+            return new ex.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
         };
         /**
          * Gets the calculated width of an actor, factoring in scale
@@ -6509,71 +8044,102 @@ var ex;
             this._height = height / this.scale.y;
         };
         /**
-         * Centers the actor's drawing around the center of the actor's bounding box
-         * @param center Indicates to center the drawing around the actor
-         */
-        Actor.prototype.setCenterDrawing = function (center) {
-            this.centerDrawingY = center;
-            this.centerDrawingX = center;
-        };
-        /**
          * Gets the left edge of the actor
          */
         Actor.prototype.getLeft = function () {
-            return this.x;
+            return this.getBounds().left;
         };
         /**
          * Gets the right edge of the actor
          */
         Actor.prototype.getRight = function () {
-            return this.x + this.getWidth();
+            return this.getBounds().right;
         };
         /**
          * Gets the top edge of the actor
          */
         Actor.prototype.getTop = function () {
-            return this.y;
+            return this.getBounds().top;
         };
         /**
          * Gets the bottom edge of the actor
          */
         Actor.prototype.getBottom = function () {
-            return this.y + this.getHeight();
+            return this.getBounds().bottom;
         };
         /**
-         * Gets the x value of the Actor in global coordinates
+         * Gets this actor's rotation taking into account any parent relationships
+         *
+         * @returns Rotation angle in radians
          */
-        Actor.prototype.getWorldX = function () {
+        Actor.prototype.getWorldRotation = function () {
             if (!this.parent) {
-                return this.x;
+                return this.rotation;
             }
-            return this.x * this.parent.scale.x + this.parent.getWorldX();
+            return this.rotation + this.parent.getWorldRotation();
         };
         /**
-         * Gets the y value of the Actor in global coordinates
+         * Gets an actor's world position taking into account parent relationships, scaling, rotation, and translation
+         *
+         * @returns Position in world coordinates
          */
-        Actor.prototype.getWorldY = function () {
+        Actor.prototype.getWorldPos = function () {
             if (!this.parent) {
-                return this.y;
+                return this.pos.clone();
             }
-            return this.y * this.parent.scale.y + this.parent.getWorldY();
+            // collect parents                  
+            var parents = [];
+            var root = this;
+            parents.push(this);
+            // find parents
+            while (root.parent) {
+                root = root.parent;
+                parents.push(root);
+            }
+            // calculate position       
+            var x = parents.reduceRight(function (px, p, i, arr) {
+                if (p.parent) {
+                    return px + (p.pos.x * p.getGlobalScale().x);
+                }
+                return px + p.pos.x;
+            }, 0);
+            var y = parents.reduceRight(function (py, p, i, arr) {
+                if (p.parent) {
+                    return py + (p.pos.y * p.getGlobalScale().y);
+                }
+                return py + p.pos.y;
+            }, 0);
+            // rotate around root anchor
+            var ra = root.getWorldPos(); // 10, 10
+            var r = this.getWorldRotation();
+            return new ex.Vector(x, y).rotate(r, ra);
         };
         /**
          * Gets the global scale of the Actor
          */
         Actor.prototype.getGlobalScale = function () {
             if (!this.parent) {
-                return new ex.Point(this.scale.x, this.scale.y);
+                return new ex.Vector(this.scale.x, this.scale.y);
             }
             var parentScale = this.parent.getGlobalScale();
-            return new ex.Point(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+            return new ex.Vector(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
         };
         /**
-         * Returns the actor's [[BoundingBox]] calculated for this instant.
+         * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
          */
         Actor.prototype.getBounds = function () {
+            // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
-            return new ex.BoundingBox(this.getWorldX() - anchor.x, this.getWorldY() - anchor.y, this.getWorldX() + this.getWidth() - anchor.x, this.getWorldY() + this.getHeight() - anchor.y);
+            var pos = this.getWorldPos();
+            return new ex.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y);
+        };
+        /**
+         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         */
+        Actor.prototype.getRelativeBounds = function () {
+            // todo cache bounding box
+            var anchor = this._getCalculatedAnchor();
+            return new ex.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y);
         };
         /**
          * Tests whether the x/y specified are contained in the actor
@@ -6583,7 +8149,7 @@ var ex;
          */
         Actor.prototype.contains = function (x, y, recurse) {
             if (recurse === void 0) { recurse = false; }
-            var containment = this.getBounds().contains(new ex.Point(x, y));
+            var containment = this.getBounds().contains(new ex.Vector(x, y));
             if (recurse) {
                 return containment || this.children.some(function (child) {
                     return child.contains(x, y, true);
@@ -6622,7 +8188,7 @@ var ex;
                 return ex.Side.None;
             }
             if (Math.abs(separationVector.x) > Math.abs(separationVector.y)) {
-                if (this.x < actor.x) {
+                if (this.pos.x < actor.pos.x) {
                     return ex.Side.Right;
                 }
                 else {
@@ -6630,14 +8196,13 @@ var ex;
                 }
             }
             else {
-                if (this.y < actor.y) {
+                if (this.pos.y < actor.pos.y) {
                     return ex.Side.Bottom;
                 }
                 else {
                     return ex.Side.Top;
                 }
             }
-            return ex.Side.None;
         };
         /**
          * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
@@ -6677,238 +8242,10 @@ var ex;
          * @param distance  Distance in pixels to test
          */
         Actor.prototype.within = function (actor, distance) {
-            return Math.sqrt(Math.pow(this.x - actor.x, 2) + Math.pow(this.y - actor.y, 2)) <= distance;
-        };
-        /**
-         * Clears all queued actions from the Actor
-         * @obsolete Use [[ActionContext.clearActions|Actor.actions.clearActions]]
-         */
-        Actor.prototype.clearActions = function () {
-            this.actionQueue.clearActions();
-        };
-        /**
-         * This method will move an actor to the specified `x` and `y` position over the
-         * specified duration using a given [[EasingFunctions]] and return back the actor. This
-         * method is part of the actor 'Action' fluent API allowing action chaining.
-         * @param x         The x location to move the actor to
-         * @param y         The y location to move the actor to
-         * @param duration  The time it should take the actor to move to the new location in milliseconds
-         * @param easingFcn Use [[EasingFunctions]] or a custom function to use to calculate position
-         * @obsolete Use [[ActionContext.easeTo|Actor.actions.easeTo]]
-         */
-        Actor.prototype.easeTo = function (x, y, duration, easingFcn) {
-            if (easingFcn === void 0) { easingFcn = ex.EasingFunctions.Linear; }
-            this.actionQueue.add(new ex.Internal.Actions.EaseTo(this, x, y, duration, easingFcn));
-            return this;
-        };
-        /**
-         * This method will move an actor to the specified `x` and `y` position at the
-         * `speed` specified (in pixels per second) and return back the actor. This
-         * method is part of the actor 'Action' fluent API allowing action chaining.
-         * @param x       The x location to move the actor to
-         * @param y       The y location to move the actor to
-         * @param speed   The speed in pixels per second to move
-         * @obsolete Use [[ActionContext.moveTo|Actor.actions.moveTo]]
-         */
-        Actor.prototype.moveTo = function (x, y, speed) {
-            this.actionQueue.add(new ex.Internal.Actions.MoveTo(this, x, y, speed));
-            return this;
-        };
-        /**
-         * This method will move an actor to the specified `x` and `y` position by a
-         * certain `duration` (in milliseconds). This method is part of the actor
-         * 'Action' fluent API allowing action chaining.
-         * @param x         The x location to move the actor to
-         * @param y         The y location to move the actor to
-         * @param duration  The time it should take the actor to move to the new location in milliseconds
-         * @obsolete Use [[ActionContext.moveBy|Actor.actions.moveBy]]
-         */
-        Actor.prototype.moveBy = function (x, y, duration) {
-            this.actionQueue.add(new ex.Internal.Actions.MoveBy(this, x, y, duration));
-            return this;
-        };
-        /**
-         * This method will rotate an actor to the specified angle (in radians) at the `speed`
-         * specified (in radians per second) and return back the actor. This
-         * method is part of the actor 'Action' fluent API allowing action chaining.
-         * @param angleRadians  The angle to rotate to in radians
-         * @param speed         The angular velocity of the rotation specified in radians per second
-         * @obsolete Use [[ActionContext.rotateTo|Actor.actions.rotateTo]]
-         */
-        Actor.prototype.rotateTo = function (angleRadians, speed, rotationType) {
-            this.actionQueue.add(new ex.Internal.Actions.RotateTo(this, angleRadians, speed, rotationType));
-            return this;
-        };
-        /**
-         * This method will rotate an actor to the specified angle by a certain
-         * `duration` (in milliseconds) and return back the actor. This method is part
-         * of the actor 'Action' fluent API allowing action chaining.
-         * @param angleRadians  The angle to rotate to in radians
-         * @param duration          The time it should take the actor to complete the rotation in milliseconds
-         * @obsolete Use [[ActionContext.rotateBy|ex.Actor.actions.rotateBy]]
-         */
-        Actor.prototype.rotateBy = function (angleRadians, duration, rotationType) {
-            this.actionQueue.add(new ex.Internal.Actions.RotateBy(this, angleRadians, duration, rotationType));
-            return this;
-        };
-        /**
-         * This method will scale an actor to the specified size at the speed
-         * specified (in magnitude increase per second) and return back the
-         * actor. This method is part of the actor 'Action' fluent API allowing
-         * action chaining.
-         * @param sizeX  The scaling factor in the x direction to apply
-         * @param sizeY  The scaling factor in the y direction to apply
-         * @param speedX The speed of scaling in the x direction specified in magnitude increase per second
-         * @param speedY The speed of scaling in the y direction specified in magnitude increase per second
-         * @obsolete Use [[ActionContext.scaleTo|Actor.actions.scaleTo]]
-         */
-        Actor.prototype.scaleTo = function (sizeX, sizeY, speedX, speedY) {
-            this.actionQueue.add(new ex.Internal.Actions.ScaleTo(this, sizeX, sizeY, speedX, speedY));
-            return this;
-        };
-        /**
-         * This method will scale an actor to the specified size by a certain duration
-         * (in milliseconds) and return back the actor. This method is part of the
-         * actor 'Action' fluent API allowing action chaining.
-         * @param sizeX     The scaling factor in the x direction to apply
-         * @param sizeY     The scaling factor in the y direction to apply
-         * @param duration  The time it should take to complete the scaling in milliseconds
-         * @obsolete Use [[ActionContext.scaleBy|Actor.actions.scaleBy]]
-         */
-        Actor.prototype.scaleBy = function (sizeX, sizeY, duration) {
-            this.actionQueue.add(new ex.Internal.Actions.ScaleBy(this, sizeX, sizeY, duration));
-            return this;
-        };
-        /**
-         * This method will cause an actor to blink (become visible and not
-         * visible). Optionally, you may specify the number of blinks. Specify the amount of time
-         * the actor should be visible per blink, and the amount of time not visible.
-         * This method is part of the actor 'Action' fluent API allowing action chaining.
-         * @param timeVisible     The amount of time to stay visible per blink in milliseconds
-         * @param timeNotVisible  The amount of time to stay not visible per blink in milliseconds
-         * @param numBlinks       The number of times to blink
-         * @obsolete Use [[ActionContext.blink|Actor.actions.blink]]
-         */
-        Actor.prototype.blink = function (timeVisible, timeNotVisible, numBlinks) {
-            if (numBlinks === void 0) { numBlinks = 1; }
-            this.actionQueue.add(new ex.Internal.Actions.Blink(this, timeVisible, timeNotVisible, numBlinks));
-            return this;
-        };
-        /**
-         * This method will cause an actor's opacity to change from its current value
-         * to the provided value by a specified `duration` (in milliseconds). This method is
-         * part of the actor 'Action' fluent API allowing action chaining.
-         * @param opacity   The ending opacity
-         * @param duration  The time it should take to fade the actor (in milliseconds)
-         * @obsolete Use [[ActionContext.fade|Actor.actions.fade]]
-         */
-        Actor.prototype.fade = function (opacity, duration) {
-            this.actionQueue.add(new ex.Internal.Actions.Fade(this, opacity, duration));
-            return this;
-        };
-        /**
-         * This method will delay the next action from executing for the specified
-         * `duration` (in milliseconds). This method is part of the actor
-         * 'Action' fluent API allowing action chaining.
-         * @param duration The amount of time to delay the next action in the queue from executing in milliseconds
-         * @obsolete Use [[ActionContext.delay|Actor.actions.delay]]
-         */
-        Actor.prototype.delay = function (duration) {
-            this.actionQueue.add(new ex.Internal.Actions.Delay(this, duration));
-            return this;
-        };
-        /**
-         * This method will add an action to the queue that will remove the actor from the
-         * scene once it has completed its previous actions. Any actions on the
-         * action queue after this action will not be executed.
-         * @obsolete Use [[ActionContext.die|Actor.actions.die]]
-         */
-        Actor.prototype.die = function () {
-            this.actionQueue.add(new ex.Internal.Actions.Die(this));
-            return this;
-        };
-        /**
-         * This method allows you to call an arbitrary method as the next action in the
-         * action queue. This is useful if you want to execute code in after a specific
-         * action, i.e An actor arrives at a destination after traversing a path
-         * @obsolete Use [[ActionContext.callMethod|Actor.actions.callMethod]]
-         */
-        Actor.prototype.callMethod = function (method) {
-            this.actionQueue.add(new ex.Internal.Actions.CallMethod(this, method));
-            return this;
-        };
-        /**
-         * This method will cause the actor to repeat all of the previously
-         * called actions a certain number of times. If the number of repeats
-         * is not specified it will repeat forever. This method is part of
-         * the actor 'Action' fluent API allowing action chaining
-         * @param times The number of times to repeat all the previous actions in the action queue. If nothing is specified the actions will
-         * repeat forever
-         * @obsolete Use [[ActionContext.repeat|Actor.actions.repeat]]
-         */
-        Actor.prototype.repeat = function (times) {
-            if (!times) {
-                this.repeatForever();
-                return this;
-            }
-            this.actionQueue.add(new ex.Internal.Actions.Repeat(this, times, this.actionQueue.getActions()));
-            return this;
-        };
-        /**
-         * This method will cause the actor to repeat all of the previously
-         * called actions forever. This method is part of the actor 'Action'
-         * fluent API allowing action chaining.
-         * @obsolete Use [[ActionContext.repeatForever|Actor.actions.repeatForever]]
-         */
-        Actor.prototype.repeatForever = function () {
-            this.actionQueue.add(new ex.Internal.Actions.RepeatForever(this, this.actionQueue.getActions()));
-            return this;
-        };
-        /**
-         * This method will cause the actor to follow another at a specified distance
-         * @param actor           The actor to follow
-         * @param followDistance  The distance to maintain when following, if not specified the actor will follow at the current distance.
-         * @obsolete Use [[ActionContext.follow|Actor.actions.follow]]
-         */
-        Actor.prototype.follow = function (actor, followDistance) {
-            if (typeof followDistance === 'undefined') {
-                this.actionQueue.add(new ex.Internal.Actions.Follow(this, actor));
-            }
-            else {
-                this.actionQueue.add(new ex.Internal.Actions.Follow(this, actor, followDistance));
-            }
-            return this;
-        };
-        /**
-         * This method will cause the actor to move towards another Actor until they
-         * collide ("meet") at a specified speed.
-         * @param actor  The actor to meet
-         * @param speed  The speed in pixels per second to move, if not specified it will match the speed of the other actor
-         * @obsolete Use [[ActionContext.meet|Actor.actions.meet]]
-         */
-        Actor.prototype.meet = function (actor, speed) {
-            if (typeof speed === 'undefined') {
-                this.actionQueue.add(new ex.Internal.Actions.Meet(this, actor));
-            }
-            else {
-                this.actionQueue.add(new ex.Internal.Actions.Meet(this, actor, speed));
-            }
-            return this;
-        };
-        /**
-         * Returns a promise that resolves when the current action queue up to now
-         * is finished.
-         * @obsolete Use [[ActionContext.asPromise|Actor.actions.asPromise]]
-         */
-        Actor.prototype.asPromise = function () {
-            var complete = new ex.Promise();
-            this.callMethod(function () {
-                complete.resolve();
-            });
-            return complete;
+            return Math.sqrt(Math.pow(this.pos.x - actor.pos.x, 2) + Math.pow(this.pos.y - actor.pos.y, 2)) <= distance;
         };
         Actor.prototype._getCalculatedAnchor = function () {
-            return new ex.Point(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
+            return new ex.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
         /**
          * Called by the Engine, updates the state of the actor
@@ -6922,18 +8259,39 @@ var ex;
                 this._isInitialized = true;
             }
             this.emit('preupdate', new ex.PreUpdateEvent(engine, delta, this));
-            var eventDispatcher = this.eventDispatcher;
             // Update action queue
             this.actionQueue.update(delta);
             // Update color only opacity
             if (this.color) {
                 this.color.a = this.opacity;
             }
-            // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)
-            for (var i = 0; i < this.traits.length; i++) {
-                this.traits[i].update(this, engine, delta);
+            // calculate changing opacity
+            if (this.previousOpacity !== this.opacity) {
+                this.previousOpacity = this.opacity;
+                this._opacityFx.opacity = this.opacity;
+                this._framesDirty = true;
             }
-            eventDispatcher.emit('update', new ex.UpdateEvent(delta));
+            // handle dirty frames and reapply any effects we are tracking
+            if (this._framesDirty) {
+                this._framesDirty = false;
+                // ensure we remove existing opacity effect we created
+                // and also ensure we do this everytime in case frames change
+                for (var drawing in this.frames) {
+                    this.frames[drawing].removeEffect(this._opacityFx);
+                    this.frames[drawing].addEffect(this._opacityFx);
+                }
+            }
+            // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)
+            for (var _i = 0, _a = this.traits; _i < _a.length; _i++) {
+                var trait = _a[_i];
+                trait.update(this, engine, delta);
+            }
+            // Update child actors
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].update(engine, delta);
+            }
+            // TODO: Obsolete `update` event on Actor
+            this.eventDispatcher.emit('update', new ex.PostUpdateEvent(engine, delta, this));
             this.emit('postupdate', new ex.PostUpdateEvent(engine, delta, this));
         };
         /**
@@ -6942,38 +8300,28 @@ var ex;
          * @param delta The time since the last draw in milliseconds
          */
         Actor.prototype.draw = function (ctx, delta) {
-            var anchorPoint = this._getCalculatedAnchor();
             ctx.save();
-            ctx.translate(this.x, this.y);
+            ctx.translate(this.pos.x, this.pos.y);
             ctx.scale(this.scale.x, this.scale.y);
             ctx.rotate(this.rotation);
+            // translate canvas by anchor offset
+            ctx.save();
+            ctx.translate(-(this._width * this.anchor.x), -(this._height * this.anchor.y));
             this.emit('predraw', new ex.PreDrawEvent(ctx, delta, this));
-            // calculate changing opacity
-            if (this.previousOpacity !== this.opacity) {
-                for (var drawing in this.frames) {
-                    this.frames[drawing].addEffect(new ex.Effects.Opacity(this.opacity));
-                }
-                this.previousOpacity = this.opacity;
-            }
             if (this.currentDrawing) {
-                var xDiff = 0;
-                var yDiff = 0;
-                if (this.centerDrawingX) {
-                    xDiff = (this.currentDrawing.naturalWidth * this.currentDrawing.scale.x - this.getWidth()) / 2 -
-                        this.currentDrawing.naturalWidth * this.currentDrawing.scale.x * this.currentDrawing.anchor.x;
-                }
-                if (this.centerDrawingY) {
-                    yDiff = (this.currentDrawing.naturalHeight * this.currentDrawing.scale.y - this.getHeight()) / 2 -
-                        this.currentDrawing.naturalHeight * this.currentDrawing.scale.y * this.currentDrawing.anchor.y;
-                }
-                this.currentDrawing.draw(ctx, -anchorPoint.x - xDiff, -anchorPoint.y - yDiff);
+                var drawing = this.currentDrawing;
+                // See https://github.com/excaliburjs/Excalibur/pull/619 for discussion on this formula          
+                var offsetX = (this._width - drawing.naturalWidth * drawing.scale.x) * this.anchor.x;
+                var offsetY = (this._height - drawing.naturalHeight * drawing.scale.y) * this.anchor.y;
+                this.currentDrawing.draw(ctx, offsetX, offsetY);
             }
             else {
                 if (this.color) {
                     ctx.fillStyle = this.color.toString();
-                    ctx.fillRect(-anchorPoint.x, -anchorPoint.y, this._width, this._height);
+                    ctx.fillRect(0, 0, this._width, this._height);
                 }
             }
+            ctx.restore();
             // Draw child actors
             for (var i = 0; i < this.children.length; i++) {
                 if (this.children[i].visible) {
@@ -6987,47 +8335,59 @@ var ex;
          * Called by the Engine, draws the actors debugging to the screen
          * @param ctx The rendering context
          */
+        /* istanbul ignore next */
         Actor.prototype.debugDraw = function (ctx) {
             this.emit('predebugdraw', new ex.PreDebugDrawEvent(ctx, this));
+            this.body.debugDraw(ctx);
+            /*
             // Draw actor bounding box
             var bb = this.getBounds();
             bb.debugDraw(ctx);
+            
             // Draw actor Id
             ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
-            // Draw actor anchor point
-            ctx.fillStyle = ex.Color.Yellow.toString();
+            
+            // Draw actor anchor Vector
+            ctx.fillStyle = Color.Yellow.toString();
             ctx.beginPath();
-            ctx.arc(this.getWorldX(), this.getWorldY(), 3, 0, Math.PI * 2);
+            ctx.arc(this.getWorldPos().x, this.getWorldPos().y, 3, 0, Math.PI * 2);
             ctx.closePath();
             ctx.fill();
+            */
+            /*
             // Culling Box debug draw
             for (var j = 0; j < this.traits.length; j++) {
-                if (this.traits[j] instanceof ex.Traits.OffscreenCulling) {
-                    this.traits[j].cullingBox.debugDraw(ctx);
-                }
+               if (this.traits[j] instanceof Traits.OffscreenCulling) {
+                  (<Traits.OffscreenCulling>this.traits[j]).cullingBox.debugDraw(ctx);
+               }
             }
+            
             // Unit Circle debug draw
-            ctx.strokeStyle = ex.Color.Yellow.toString();
+            ctx.strokeStyle = Color.Yellow.toString();
             ctx.beginPath();
             var radius = Math.min(this.getWidth(), this.getHeight());
-            ctx.arc(this.getWorldX(), this.getWorldY(), radius, 0, Math.PI * 2);
+            ctx.arc(this.getWorldPos().x, this.getWorldPos().y, radius, 0, Math.PI * 2);
             ctx.closePath();
             ctx.stroke();
             var ticks = { '0 Pi': 0,
-                'Pi/2': Math.PI / 2,
-                'Pi': Math.PI,
-                '3/2 Pi': 3 * Math.PI / 2 };
+                          'Pi/2': Math.PI / 2,
+                          'Pi': Math.PI,
+                          '3/2 Pi': 3 * Math.PI / 2 };
+            
             var oldFont = ctx.font;
             for (var tick in ticks) {
-                ctx.fillStyle = ex.Color.Yellow.toString();
-                ctx.font = '14px';
-                ctx.textAlign = 'center';
-                ctx.fillText(tick, this.getWorldX() + Math.cos(ticks[tick]) * (radius + 10), this.getWorldY() + Math.sin(ticks[tick]) * (radius + 10));
+               ctx.fillStyle = Color.Yellow.toString();
+               ctx.font = '14px';
+               ctx.textAlign = 'center';
+               ctx.fillText(tick, this.getWorldPos().x + Math.cos(ticks[tick]) * (radius + 10),
+                                  this.getWorldPos().y + Math.sin(ticks[tick]) * (radius + 10));
             }
+            
             ctx.font = oldFont;
+            */
             // Draw child actors
             ctx.save();
-            ctx.translate(this.x, this.y);
+            ctx.translate(this.pos.x, this.pos.y);
             ctx.rotate(this.rotation);
             // Draw child actors
             for (var i = 0; i < this.children.length; i++) {
@@ -7041,7 +8401,7 @@ var ex;
          */
         Actor.maxId = 0;
         return Actor;
-    })(ex.Class);
+    }(ex.Class));
     ex.Actor = Actor;
     /**
      * An enum that describes the types of collisions actors can participate in
@@ -7226,7 +8586,7 @@ var ex;
         };
         Logger._instance = null;
         return Logger;
-    })();
+    }());
     ex.Logger = Logger;
     /**
      * Console appender for browsers (i.e. `console.log`)
@@ -7279,7 +8639,7 @@ var ex;
             }
         };
         return ConsoleAppender;
-    })();
+    }());
     ex.ConsoleAppender = ConsoleAppender;
     /**
      * On-screen (canvas) appender
@@ -7318,7 +8678,7 @@ var ex;
             }
         };
         return ScreenAppender;
-    })();
+    }());
     ex.ScreenAppender = ScreenAppender;
 })(ex || (ex = {}));
 /// <reference path="Engine.ts" />
@@ -7349,8 +8709,20 @@ var ex;
         function GameEvent() {
         }
         return GameEvent;
-    })();
+    }());
     ex.GameEvent = GameEvent;
+    /**
+     * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
+     */
+    var KillEvent = (function (_super) {
+        __extends(KillEvent, _super);
+        function KillEvent(target) {
+            _super.call(this);
+            this.target = target;
+        }
+        return KillEvent;
+    }(GameEvent));
+    ex.KillEvent = KillEvent;
     /**
      * The 'predraw' event is emitted on actors, scenes, and engine before drawing starts. Actors' predraw happens inside their graphics
      * transform so that all drawing takes place with the actor as the origin.
@@ -7365,7 +8737,7 @@ var ex;
             this.target = target;
         }
         return PreDrawEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PreDrawEvent = PreDrawEvent;
     /**
      * The 'postdraw' event is emitted on actors, scenes, and engine after drawing finishes. Actors' postdraw happens inside their graphics
@@ -7381,7 +8753,7 @@ var ex;
             this.target = target;
         }
         return PostDrawEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PostDrawEvent = PostDrawEvent;
     /**
      * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
@@ -7394,7 +8766,7 @@ var ex;
             this.target = target;
         }
         return PreDebugDrawEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PreDebugDrawEvent = PreDebugDrawEvent;
     /**
      * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
@@ -7407,7 +8779,7 @@ var ex;
             this.target = target;
         }
         return PostDebugDrawEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PostDebugDrawEvent = PostDebugDrawEvent;
     /**
      * The 'preupdate' event is emitted on actors, scenes, and engine before the update starts.
@@ -7421,7 +8793,7 @@ var ex;
             this.target = target;
         }
         return PreUpdateEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PreUpdateEvent = PreUpdateEvent;
     /**
      * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends. This is equivalent to the obsolete 'update'
@@ -7436,7 +8808,7 @@ var ex;
             this.target = target;
         }
         return PostUpdateEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.PostUpdateEvent = PostUpdateEvent;
     /**
      * Event received when a gamepad is connected to Excalibur. [[Input.Gamepads|engine.input.gamepads]] receives this event.
@@ -7449,7 +8821,7 @@ var ex;
             this.gamepad = gamepad;
         }
         return GamepadConnectEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.GamepadConnectEvent = GamepadConnectEvent;
     /**
      * Event received when a gamepad is disconnected from Excalibur. [[Input.Gamepads|engine.input.gamepads]] receives this event.
@@ -7461,7 +8833,7 @@ var ex;
             this.index = index;
         }
         return GamepadDisconnectEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.GamepadDisconnectEvent = GamepadDisconnectEvent;
     /**
      * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
@@ -7478,7 +8850,7 @@ var ex;
             this.value = value;
         }
         return GamepadButtonEvent;
-    })(ex.GameEvent);
+    }(ex.GameEvent));
     ex.GamepadButtonEvent = GamepadButtonEvent;
     /**
      * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
@@ -7495,7 +8867,7 @@ var ex;
             this.value = value;
         }
         return GamepadAxisEvent;
-    })(ex.GameEvent);
+    }(ex.GameEvent));
     ex.GamepadAxisEvent = GamepadAxisEvent;
     /**
      * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
@@ -7509,7 +8881,7 @@ var ex;
             this.handler = handler;
         }
         return SubscribeEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.SubscribeEvent = SubscribeEvent;
     /**
      * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
@@ -7523,7 +8895,7 @@ var ex;
             this.handler = handler;
         }
         return UnsubscribeEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.UnsubscribeEvent = UnsubscribeEvent;
     /**
      * Event received by the [[Engine]] when the browser window is visible on a screen.
@@ -7534,7 +8906,7 @@ var ex;
             _super.call(this);
         }
         return VisibleEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.VisibleEvent = VisibleEvent;
     /**
      * Event received by the [[Engine]] when the browser window is hidden from all screens.
@@ -7545,7 +8917,7 @@ var ex;
             _super.call(this);
         }
         return HiddenEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.HiddenEvent = HiddenEvent;
     /**
      * Event thrown on an [[Actor|actor]] when a collision has occured
@@ -7565,24 +8937,8 @@ var ex;
             this.intersection = intersection;
         }
         return CollisionEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.CollisionEvent = CollisionEvent;
-    /**
-     * Event thrown on a game object on Excalibur update, this is equivalent to postupdate.
-     * @obsolete Please use [[PostUpdateEvent|postupdate]], or [[PreUpdateEvent|preupdate]].
-     */
-    var UpdateEvent = (function (_super) {
-        __extends(UpdateEvent, _super);
-        /**
-         * @param delta  The number of milliseconds since the last update
-         */
-        function UpdateEvent(delta) {
-            _super.call(this);
-            this.delta = delta;
-        }
-        return UpdateEvent;
-    })(GameEvent);
-    ex.UpdateEvent = UpdateEvent;
     /**
      * Event thrown on an [[Actor]] only once before the first update call
      */
@@ -7596,7 +8952,7 @@ var ex;
             this.engine = engine;
         }
         return InitializeEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.InitializeEvent = InitializeEvent;
     /**
      * Event thrown on a [[Scene]] on activation
@@ -7611,7 +8967,7 @@ var ex;
             this.oldScene = oldScene;
         }
         return ActivateEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.ActivateEvent = ActivateEvent;
     /**
      * Event thrown on a [[Scene]] on deactivation
@@ -7626,7 +8982,7 @@ var ex;
             this.newScene = newScene;
         }
         return DeactivateEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.DeactivateEvent = DeactivateEvent;
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
@@ -7637,7 +8993,7 @@ var ex;
             _super.call(this);
         }
         return ExitViewPortEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.ExitViewPortEvent = ExitViewPortEvent;
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
@@ -7648,10 +9004,11 @@ var ex;
             _super.call(this);
         }
         return EnterViewPortEvent;
-    })(GameEvent);
+    }(GameEvent));
     ex.EnterViewPortEvent = EnterViewPortEvent;
 })(ex || (ex = {}));
 /// <reference path="Events.ts" />
+/// <reference path="Interfaces/IEvented.ts" />
 var ex;
 (function (ex) {
     /**
@@ -7718,7 +9075,7 @@ var ex;
      * }
      *
      * // add a subscription
-     * vent.subscribe("someevent", subscription);
+     * vent.on("someevent", subscription);
      *
      * // publish an event somewhere in the game
      * vent.emit("someevent", new ex.GameEvent());
@@ -7735,13 +9092,11 @@ var ex;
             this._target = target;
         }
         /**
-         * Publish an event for target
+         * Emits an event for target
          * @param eventName  The name of the event to publish
          * @param event      Optionally pass an event data object to the handler
-         *
-         * @obsolete Use [[emit]] instead.
          */
-        EventDispatcher.prototype.publish = function (eventName, event) {
+        EventDispatcher.prototype.emit = function (eventName, event) {
             if (!eventName) {
                 // key not mapped
                 return;
@@ -7767,19 +9122,11 @@ var ex;
             }
         };
         /**
-         * Alias for [[publish]], publishes an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        EventDispatcher.prototype.emit = function (eventName, event) {
-            this.publish(eventName, event);
-        };
-        /**
          * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
          * @param eventName  The name of the event to subscribe to
          * @param handler    The handler callback to fire on this event
          */
-        EventDispatcher.prototype.subscribe = function (eventName, handler) {
+        EventDispatcher.prototype.on = function (eventName, handler) {
             eventName = eventName.toLowerCase();
             if (!this._handlers[eventName]) {
                 this._handlers[eventName] = [];
@@ -7799,7 +9146,7 @@ var ex;
          * @param handler    Optionally the specific handler to unsubscribe
          *
          */
-        EventDispatcher.prototype.unsubscribe = function (eventName, handler) {
+        EventDispatcher.prototype.off = function (eventName, handler) {
             eventName = eventName.toLowerCase();
             var eventHandlers = this._handlers[eventName];
             if (eventHandlers) {
@@ -7833,7 +9180,7 @@ var ex;
             }
         };
         return EventDispatcher;
-    })();
+    }());
     ex.EventDispatcher = EventDispatcher;
 })(ex || (ex = {}));
 var ex;
@@ -8112,7 +9459,7 @@ var ex;
          */
         Color.Transparent = Color.fromHex('#FFFFFF00');
         return Color;
-    })();
+    }());
     ex.Color = Color;
     /**
      * Internal HSL Color representation
@@ -8187,1091 +9534,245 @@ var ex;
             return new Color(r * 255, g * 255, b * 255, this.a);
         };
         return HSLColor;
-    })();
+    }());
 })(ex || (ex = {}));
-/// <reference path="Actor.ts" />
+/// <reference path="../Interfaces/IDrawable.ts" />
+/// <reference path="../Algebra.ts" />
+/// <reference path="Color.ts" />
 var ex;
 (function (ex) {
     /**
-     * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
-     * not participate in collisions. Drawn on top of all other actors.
+     * Creates a closed polygon drawing given a list of [[Point]]s.
+     *
+     * @warning Use sparingly as Polygons are performance intensive
      */
-    var UIActor = (function (_super) {
-        __extends(UIActor, _super);
+    var Polygon = (function () {
         /**
-         * @param x       The starting x coordinate of the actor
-         * @param y       The starting y coordinate of the actor
-         * @param width   The starting width of the actor
-         * @param height  The starting height of the actor
+         * @param points  The vectors to use to build the polygon in order
          */
-        function UIActor(x, y, width, height) {
-            _super.call(this, x, y, width, height);
-            this.traits = [];
-            this.traits.push(new ex.Traits.Movement());
-            this.traits.push(new ex.Traits.CapturePointer());
-            this.anchor.setTo(0, 0);
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.enableCapturePointer = true;
+        function Polygon(points) {
+            /**
+             * The width of the lines of the polygon
+             */
+            this.lineWidth = 5;
+            /**
+             * Indicates whether the polygon is filled or not.
+             */
+            this.filled = false;
+            this._points = [];
+            this.anchor = new ex.Vector(0, 0);
+            this.rotation = 0;
+            this.scale = new ex.Vector(1, 1);
+            this._points = points;
+            var minX = this._points.reduce(function (prev, curr) {
+                return Math.min(prev, curr.x);
+            }, 0);
+            var maxX = this._points.reduce(function (prev, curr) {
+                return Math.max(prev, curr.x);
+            }, 0);
+            this.width = maxX - minX;
+            var minY = this._points.reduce(function (prev, curr) {
+                return Math.min(prev, curr.y);
+            }, 0);
+            var maxY = this._points.reduce(function (prev, curr) {
+                return Math.max(prev, curr.y);
+            }, 0);
+            this.height = maxY - minY;
+            this.naturalHeight = this.height;
+            this.naturalWidth = this.width;
         }
-        UIActor.prototype.onInitialize = function (engine) {
-            this._engine = engine;
-        };
-        UIActor.prototype.contains = function (x, y, useWorld) {
-            if (useWorld === void 0) { useWorld = true; }
-            if (useWorld) {
-                return _super.prototype.contains.call(this, x, y);
-            }
-            var coords = this._engine.worldToScreenCoordinates(new ex.Point(x, y));
-            return _super.prototype.contains.call(this, coords.x, coords.y);
-        };
-        return UIActor;
-    })(ex.Actor);
-    ex.UIActor = UIActor;
-})(ex || (ex = {}));
-/// <reference path="Actor.ts" />
-/// <reference path="Engine.ts" />
-var ex;
-(function (ex) {
-    /**
-     * Triggers
-     *
-     * Triggers are a method of firing arbitrary code on collision. These are useful
-     * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
-     * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
-     *
-     * ## Creating a trigger
-     *
-     * ```js
-     * var game = new ex.Game();
-     *
-     * // create a handler
-     * function onTrigger() {
-     *
-     *   // `this` will be the Trigger instance
-     *   ex.Logger.getInstance().info("Trigger was triggered!", this);
-     * }
-     *
-     * // set a trigger at (100, 100) that is 40x40px
-     * var trigger = new ex.Trigger(100, 100, 40, 40, onTrigger, 1);
-     *
-     * // create an actor across from the trigger
-     * var actor = new ex.Actor(100, 0, 40, 40, ex.Color.Red);
-     *
-     * // tell the actor to move towards the trigger over 3 seconds
-     * actor.moveTo(100, 200, 3000);
-     *
-     * game.add(trigger);
-     * game.add(actor);
-     *
-     * game.start();
-     * ```
-     */
-    var Trigger = (function (_super) {
-        __extends(Trigger, _super);
         /**
-         * @param x       The x position of the trigger
-         * @param y       The y position of the trigger
-         * @param width   The width of the trigger
-         * @param height  The height of the trigger
-         * @param action  Callback to fire when trigger is activated, `this` will be bound to the Trigger instance
-         * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
+         * @notimplemented Effects are not supported on `Polygon`
          */
-        function Trigger(x, y, width, height, action, repeats) {
-            _super.call(this, x, y, width, height);
-            this._action = function () { return; };
-            this.repeats = 1;
-            this.target = null;
-            this.repeats = repeats || this.repeats;
-            this._action = action || this._action;
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.eventDispatcher = new ex.EventDispatcher(this);
-            this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
-        }
-        Trigger.prototype.update = function (engine, delta) {
-            // Update action queue
-            this.actionQueue.update(delta);
-            // Update placements based on linear algebra
-            this.x += this.dx * delta / 1000;
-            this.y += this.dy * delta / 1000;
-            this.rotation += this.rx * delta / 1000;
-            this.scale.x += this.sx * delta / 1000;
-            this.scale.y += this.sy * delta / 1000;
-            // check for trigger collisions
-            if (this.target) {
-                if (this.collides(this.target)) {
-                    this._dispatchAction();
-                }
-            }
-            else {
-                for (var i = 0; i < engine.currentScene.children.length; i++) {
-                    var other = engine.currentScene.children[i];
-                    if (other !== this &&
-                        other.collisionType !== ex.CollisionType.PreventCollision &&
-                        this.collides(other)) {
-                        this._dispatchAction();
-                    }
-                }
-            }
-            // remove trigger if its done, -1 repeat forever
-            if (this.repeats === 0) {
-                this.kill();
-            }
+        Polygon.prototype.addEffect = function (effect) {
+            // not supported on polygons
         };
-        Trigger.prototype._dispatchAction = function () {
-            this._action.call(this);
-            this.repeats--;
+        /**
+         * @notimplemented Effects are not supported on `Polygon`
+         */
+        Polygon.prototype.removeEffect = function (param) {
+            // not supported on polygons
         };
-        Trigger.prototype.draw = function (ctx, delta) {
-            // does not draw
-            return;
+        /**
+         * @notimplemented Effects are not supported on `Polygon`
+         */
+        Polygon.prototype.clearEffects = function () {
+            // not supported on polygons
         };
-        Trigger.prototype.debugDraw = function (ctx) {
-            _super.prototype.debugDraw.call(this, ctx);
-            // Meant to draw debug information about actors
+        Polygon.prototype.reset = function () {
+            //pass
+        };
+        Polygon.prototype.draw = function (ctx, x, y) {
             ctx.save();
-            ctx.translate(this.x, this.y);
-            var bb = this.getBounds();
-            bb.left = bb.left - this.getWorldX();
-            bb.right = bb.right - this.getWorldX();
-            bb.top = bb.top - this.getWorldY();
-            bb.bottom = bb.bottom - this.getWorldY();
-            // Currently collision primitives cannot rotate 
-            // ctx.rotate(this.rotation);
-            ctx.fillStyle = ex.Color.Violet.toString();
-            ctx.strokeStyle = ex.Color.Violet.toString();
-            ctx.fillText('Trigger', 10, 10);
-            bb.debugDraw(ctx);
+            ctx.translate(x + this.anchor.x, y + this.anchor.y);
+            ctx.scale(this.scale.x, this.scale.y);
+            ctx.rotate(this.rotation);
+            ctx.beginPath();
+            ctx.lineWidth = this.lineWidth;
+            // Iterate through the supplied points and contruct a 'polygon'
+            var firstPoint = this._points[0];
+            ctx.moveTo(firstPoint.x, firstPoint.y);
+            var i = 0, len = this._points.length;
+            for (i; i < len; i++) {
+                ctx.lineTo(this._points[i].x, this._points[i].y);
+            }
+            ctx.lineTo(firstPoint.x, firstPoint.y);
+            ctx.closePath();
+            if (this.filled) {
+                ctx.fillStyle = this.fillColor.toString();
+                ctx.fill();
+            }
+            ctx.strokeStyle = this.lineColor.toString();
+            if (this.flipHorizontal) {
+                ctx.translate(this.width, 0);
+                ctx.scale(-1, 1);
+            }
+            if (this.flipVertical) {
+                ctx.translate(0, this.height);
+                ctx.scale(1, -1);
+            }
+            ctx.stroke();
             ctx.restore();
         };
-        return Trigger;
-    })(ex.Actor);
-    ex.Trigger = Trigger;
+        return Polygon;
+    }());
+    ex.Polygon = Polygon;
 })(ex || (ex = {}));
-/// <reference path="Engine.ts" />
-/// <reference path="Algebra.ts" />
-/// <reference path="Util/Util.ts" />
-/// <reference path="Actor.ts" />
+/// <reference path="../Interfaces/ILoadable.ts" />
 var ex;
 (function (ex) {
     /**
-     * An enum that represents the types of emitter nozzles
+     * Generic Resources
+     *
+     * The [[Resource]] type allows games built in Excalibur to load generic resources.
+     * For any type of remote resource it is recommended to use [[Resource]] for preloading.
+     *
+     * [[Resource]] is an [[ILoadable]] so it can be passed to a [[Loader]] to pre-load before
+     * a level or game.
+     *
+     * Example usages: JSON, compressed files, blobs.
+     *
+     * ## Pre-loading generic resources
+     *
+     * ```js
+     * var resLevel1 = new ex.Resource("/assets/levels/1.json", "application/json");
+     * var loader = new ex.Loader(resLevel1);
+     *
+     * // attach a handler to process once loaded
+     * resLevel1.processData = function (data) {
+     *
+     *   // process JSON
+     *   var json = JSON.parse(data);
+     *
+     *   // create a new level (inherits Scene) with the JSON configuration
+     *   var level = new Level(json);
+     *
+     *   // add a new scene
+     *   game.add(level.name, level);
+     * }
+     *
+     * game.start(loader);
+     * ```
      */
-    (function (EmitterType) {
+    var Resource = (function (_super) {
+        __extends(Resource, _super);
         /**
-         * Constant for the circular emitter type
+         * @param path          Path to the remote resource
+         * @param responseType  The Content-Type to expect (e.g. `application/json`)
+         * @param bustCache     Whether or not to cache-bust requests
          */
-        EmitterType[EmitterType["Circle"] = 0] = "Circle";
-        /**
-         * Constant for the rectangular emitter type
-         */
-        EmitterType[EmitterType["Rectangle"] = 1] = "Rectangle";
-    })(ex.EmitterType || (ex.EmitterType = {}));
-    var EmitterType = ex.EmitterType;
-    /**
-     * Particle is used in a [[ParticleEmitter]]
-     */
-    var Particle = (function () {
-        function Particle(emitter, life, opacity, beginColor, endColor, position, velocity, acceleration, startSize, endSize) {
-            this.position = new ex.Vector(0, 0);
-            this.velocity = new ex.Vector(0, 0);
-            this.acceleration = new ex.Vector(0, 0);
-            this.particleRotationalVelocity = 0;
-            this.currentRotation = 0;
-            this.focus = null;
-            this.focusAccel = 0;
-            this.opacity = 1;
-            this.beginColor = ex.Color.White.clone();
-            this.endColor = ex.Color.White.clone();
-            // Life is counted in ms
-            this.life = 300;
-            this.fadeFlag = false;
-            // Color transitions
-            this._rRate = 1;
-            this._gRate = 1;
-            this._bRate = 1;
-            this._aRate = 0;
-            this._currentColor = ex.Color.White.clone();
-            this.emitter = null;
-            this.particleSize = 5;
-            this.particleSprite = null;
-            this.sizeRate = 0;
-            this.elapsedMultiplier = 0;
-            this.emitter = emitter;
-            this.life = life || this.life;
-            this.opacity = opacity || this.opacity;
-            this.endColor = endColor || this.endColor.clone();
-            this.beginColor = beginColor || this.beginColor.clone();
-            this._currentColor = this.beginColor.clone();
-            this.position = position || this.position;
-            this.velocity = velocity || this.velocity;
-            this.acceleration = acceleration || this.acceleration;
-            this._rRate = (this.endColor.r - this.beginColor.r) / this.life;
-            this._gRate = (this.endColor.g - this.beginColor.g) / this.life;
-            this._bRate = (this.endColor.b - this.beginColor.b) / this.life;
-            this._aRate = this.opacity / this.life;
-            this.startSize = startSize || 0;
-            this.endSize = endSize || 0;
-            if ((this.endSize > 0) && (this.startSize > 0)) {
-                this.sizeRate = (this.endSize - this.startSize) / this.life;
-                this.particleSize = this.startSize;
-            }
+        function Resource(path, responseType, bustCache) {
+            if (bustCache === void 0) { bustCache = true; }
+            _super.call(this);
+            this.path = path;
+            this.responseType = responseType;
+            this.bustCache = bustCache;
+            this.data = null;
+            this.logger = ex.Logger.getInstance();
+            this.onprogress = function () { return; };
+            this.oncomplete = function () { return; };
+            this.onerror = function () { return; };
         }
-        Particle.prototype.kill = function () {
-            this.emitter.removeParticle(this);
+        /**
+         * Returns true if the Resource is completely loaded and is ready
+         * to be drawn.
+         */
+        Resource.prototype.isLoaded = function () {
+            return this.data !== null;
         };
-        Particle.prototype.update = function (delta) {
-            this.life = this.life - delta;
-            this.elapsedMultiplier = this.elapsedMultiplier + delta;
-            if (this.life < 0) {
-                this.kill();
-            }
-            if (this.fadeFlag) {
-                this.opacity = ex.Util.clamp(this._aRate * this.life, 0.0001, 1);
-            }
-            if ((this.startSize > 0) && (this.endSize > 0)) {
-                this.particleSize = ex.Util.clamp(this.sizeRate * delta + this.particleSize, Math.min(this.startSize, this.endSize), Math.max(this.startSize, this.endSize));
-            }
-            this._currentColor.r = ex.Util.clamp(this._currentColor.r + this._rRate * delta, 0, 255);
-            this._currentColor.g = ex.Util.clamp(this._currentColor.g + this._gRate * delta, 0, 255);
-            this._currentColor.b = ex.Util.clamp(this._currentColor.b + this._bRate * delta, 0, 255);
-            this._currentColor.a = ex.Util.clamp(this.opacity, 0.0001, 1);
-            if (this.focus) {
-                var accel = this.focus.minus(this.position).normalize().scale(this.focusAccel).scale(delta / 1000);
-                this.velocity = this.velocity.add(accel);
+        Resource.prototype.wireEngine = function (engine) {
+            this._engine = engine;
+        };
+        Resource.prototype._cacheBust = function (uri) {
+            var query = /\?\w*=\w*/;
+            if (query.test(uri)) {
+                uri += ('&__=' + Date.now());
             }
             else {
-                this.velocity = this.velocity.add(this.acceleration.scale(delta / 1000));
+                uri += ('?__=' + Date.now());
             }
-            this.position = this.position.add(this.velocity.scale(delta / 1000));
-            if (this.particleRotationalVelocity) {
-                this.currentRotation = (this.currentRotation + this.particleRotationalVelocity * delta / 1000) % (2 * Math.PI);
-            }
+            return uri;
         };
-        Particle.prototype.draw = function (ctx) {
-            if (this.particleSprite) {
-                this.particleSprite.rotation = this.currentRotation;
-                this.particleSprite.scale.setTo(this.particleSize, this.particleSize);
-                this.particleSprite.draw(ctx, this.position.x, this.position.y);
-                return;
-            }
-            this._currentColor.a = ex.Util.clamp(this.opacity, 0.0001, 1);
-            ctx.fillStyle = this._currentColor.toString();
-            ctx.beginPath();
-            ctx.arc(this.position.x, this.position.y, this.particleSize, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.closePath();
-        };
-        return Particle;
-    })();
-    ex.Particle = Particle;
-    /**
-     * Particle Emitters
-     *
-     * Using a particle emitter is a great way to create interesting effects
-     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
-     * extend [[Actor]] allowing you to use all of the features that come with.
-     *
-     * The easiest way to create a `ParticleEmitter` is to use the
-     * [Particle Tester](http://excaliburjs.com/particle-tester/) to generate code for emitters.
-     *
-     * ## Example: Adding an emitter
-     *
-     * ```js
-     * var actor = new ex.Actor(...);
-     * var emitter = new ex.ParticleEmitter(...);
-     *
-     * emitter.emitterType = ex.EmitterType.Circle; // Shape of emitter nozzle
-     * emitter.radius = 5;
-     * emitter.minVel = 100;
-     * emitter.maxVel = 200;
-     * emitter.minAngle = 0;
-     * emitter.maxAngle = Math.PI * 2;
-     * emitter.emitRate = 300; // 300 particles/second
-     * emitter.opacity = 0.5;
-     * emitter.fadeFlag = true; // fade particles overtime
-     * emitter.particleLife = 1000; // in milliseconds = 1 sec
-     * emitter.maxSize = 10; // in pixels
-     * emitter.minSize = 1;
-     * emitter.particleColor = ex.Color.Rose;
-     *
-     * // set emitter settings
-     * emitter.isEmitting = true;  // should the emitter be emitting
-     *
-     * // add the emitter as a child actor, it will draw on top of the parent actor
-     * // and move with the parent
-     * actor.add(emitter);
-     *
-     * // or, alternatively, add it to the current scene
-     * engine.add(emitter);
-     * ```
-     */
-    var ParticleEmitter = (function (_super) {
-        __extends(ParticleEmitter, _super);
-        /**
-         * @param x       The x position of the emitter
-         * @param y       The y position of the emitter
-         * @param width   The width of the emitter
-         * @param height  The height of the emitter
-         */
-        function ParticleEmitter(x, y, width, height) {
-            _super.call(this, x, y, width, height, ex.Color.White);
-            this._particlesToEmit = 0;
-            this.numParticles = 0;
-            /**
-             * Gets or sets the isEmitting flag
-             */
-            this.isEmitting = true;
-            /**
-             * Gets or sets the backing particle collection
-             */
-            this.particles = null;
-            /**
-             * Gets or sets the backing deadParticle collection
-             */
-            this.deadParticles = null;
-            /**
-             * Gets or sets the minimum partical velocity
-             */
-            this.minVel = 0;
-            /**
-             * Gets or sets the maximum partical velocity
-             */
-            this.maxVel = 0;
-            /**
-             * Gets or sets the acceleration vector for all particles
-             */
-            this.acceleration = new ex.Vector(0, 0);
-            /**
-             * Gets or sets the minimum angle in radians
-             */
-            this.minAngle = 0;
-            /**
-             * Gets or sets the maximum angle in radians
-             */
-            this.maxAngle = 0;
-            /**
-             * Gets or sets the emission rate for particles (particles/sec)
-             */
-            this.emitRate = 1; //particles/sec
-            /**
-             * Gets or sets the life of each particle in milliseconds
-             */
-            this.particleLife = 2000;
-            /**
-             * Gets or sets the opacity of each particle from 0 to 1.0
-             */
-            this.opacity = 1;
-            /**
-             * Gets or sets the fade flag which causes particles to gradually fade out over the course of their life.
-             */
-            this.fadeFlag = false;
-            /**
-             * Gets or sets the optional focus where all particles should accelerate towards
-             */
-            this.focus = null;
-            /**
-             * Gets or sets the acceleration for focusing particles if a focus has been specified
-             */
-            this.focusAccel = 1;
-            /*
-             * Gets or sets the optional starting size for the particles
-             */
-            this.startSize = null;
-            /*
-             * Gets or sets the optional ending size for the particles
-             */
-            this.endSize = null;
-            /**
-             * Gets or sets the minimum size of all particles
-             */
-            this.minSize = 5;
-            /**
-             * Gets or sets the maximum size of all particles
-             */
-            this.maxSize = 5;
-            /**
-             * Gets or sets the beginning color of all particles
-             */
-            this.beginColor = ex.Color.White;
-            /**
-             * Gets or sets the ending color of all particles
-             */
-            this.endColor = ex.Color.White;
-            /**
-             * Gets or sets the sprite that a particle should use
-             * @warning Performance intensive
-             */
-            this.particleSprite = null;
-            /**
-             * Gets or sets the emitter type for the particle emitter
-             */
-            this.emitterType = EmitterType.Rectangle;
-            /**
-             * Gets or sets the emitter radius, only takes effect when the [[emitterType]] is [[EmitterType.Circle]]
-             */
-            this.radius = 0;
-            /**
-             * Gets or sets the particle rotational speed velocity
-             */
-            this.particleRotationalVelocity = 0;
-            /**
-             * Indicates whether particles should start with a random rotation
-             */
-            this.randomRotation = false;
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.particles = new ex.Util.Collection();
-            this.deadParticles = new ex.Util.Collection();
-            // Remove offscreen culling from particle emitters
-            for (var trait in this.traits) {
-                if (this.traits[trait] instanceof ex.Traits.OffscreenCulling) {
-                    this.traits.splice(trait, 1);
-                }
-            }
-        }
-        ParticleEmitter.prototype.removeParticle = function (particle) {
-            this.deadParticles.push(particle);
+        Resource.prototype._start = function (e) {
+            this.logger.debug('Started loading resource ' + this.path);
         };
         /**
-         * Causes the emitter to emit particles
-         * @param particleCount  Number of particles to emit right now
+         * Begin loading the resource and returns a promise to be resolved on completion
          */
-        ParticleEmitter.prototype.emitParticles = function (particleCount) {
-            for (var i = 0; i < particleCount; i++) {
-                this.particles.push(this._createParticle());
-            }
-        };
-        ParticleEmitter.prototype.clearParticles = function () {
-            this.particles.clear();
-        };
-        // Creates a new particle given the contraints of the emitter
-        ParticleEmitter.prototype._createParticle = function () {
-            // todo implement emitter contraints;
-            var ranX = 0;
-            var ranY = 0;
-            var angle = ex.Util.randomInRange(this.minAngle, this.maxAngle);
-            var vel = ex.Util.randomInRange(this.minVel, this.maxVel);
-            var size = this.startSize || ex.Util.randomInRange(this.minSize, this.maxSize);
-            var dx = vel * Math.cos(angle);
-            var dy = vel * Math.sin(angle);
-            if (this.emitterType === EmitterType.Rectangle) {
-                ranX = ex.Util.randomInRange(this.x, this.x + this.getWidth());
-                ranY = ex.Util.randomInRange(this.y, this.y + this.getHeight());
-            }
-            else if (this.emitterType === EmitterType.Circle) {
-                var radius = ex.Util.randomInRange(0, this.radius);
-                ranX = radius * Math.cos(angle) + this.x;
-                ranY = radius * Math.sin(angle) + this.y;
-            }
-            var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new ex.Vector(ranX, ranY), new ex.Vector(dx, dy), this.acceleration, this.startSize, this.endSize);
-            p.fadeFlag = this.fadeFlag;
-            p.particleSize = size;
-            if (this.particleSprite) {
-                p.particleSprite = this.particleSprite;
-            }
-            p.particleRotationalVelocity = this.particleRotationalVelocity;
-            if (this.randomRotation) {
-                p.currentRotation = ex.Util.randomInRange(0, Math.PI * 2);
-            }
-            if (this.focus) {
-                p.focus = this.focus.add(new ex.Vector(this.x, this.y));
-                p.focusAccel = this.focusAccel;
-            }
-            return p;
-        };
-        ParticleEmitter.prototype.update = function (engine, delta) {
+        Resource.prototype.load = function () {
             var _this = this;
-            _super.prototype.update.call(this, engine, delta);
-            if (this.isEmitting) {
-                this._particlesToEmit += this.emitRate * (delta / 1000);
-                //var numParticles = Math.ceil(this.emitRate * delta / 1000);
-                if (this._particlesToEmit > 1.0) {
-                    this.emitParticles(Math.floor(this._particlesToEmit));
-                    this._particlesToEmit = this._particlesToEmit - Math.floor(this._particlesToEmit);
+            var complete = new ex.Promise();
+            // Exit early if we already have data
+            if (this.data !== null) {
+                this.logger.debug('Already have data for resource', this.path);
+                complete.resolve(this.data);
+                this.oncomplete();
+                return complete;
+            }
+            var request = new XMLHttpRequest();
+            request.open('GET', this.bustCache ? this._cacheBust(this.path) : this.path, true);
+            request.responseType = this.responseType;
+            request.onloadstart = function (e) { _this._start(e); };
+            request.onprogress = this.onprogress;
+            request.onerror = this.onerror;
+            request.onload = function (e) {
+                if (request.status !== 200) {
+                    _this.logger.error('Failed to load resource ', _this.path, ' server responded with error code', request.status);
+                    _this.onerror(request.response);
+                    complete.resolve(request.response);
+                    return;
                 }
-            }
-            this.particles.forEach(function (p) { return p.update(delta); });
-            this.deadParticles.forEach(function (p) { return _this.particles.removeElement(p); });
-            this.deadParticles.clear();
-        };
-        ParticleEmitter.prototype.draw = function (ctx, delta) {
-            // todo is there a more efficient to draw 
-            // possibly use a webgl offscreen canvas and shaders to do particles?
-            this.particles.forEach(function (p) { return p.draw(ctx); });
-        };
-        ParticleEmitter.prototype.debugDraw = function (ctx) {
-            _super.prototype.debugDraw.call(this, ctx);
-            ctx.fillStyle = ex.Color.Black.toString();
-            ctx.fillText('Particles: ' + this.particles.count(), this.x, this.y + 20);
-            if (this.focus) {
-                ctx.fillRect(this.focus.x + this.x, this.focus.y + this.y, 3, 3);
-                ex.Util.drawLine(ctx, 'yellow', this.focus.x + this.x, this.focus.y + this.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
-                ctx.fillText('Focus', this.focus.x + this.x, this.focus.y + this.y);
-            }
-        };
-        return ParticleEmitter;
-    })(ex.Actor);
-    ex.ParticleEmitter = ParticleEmitter;
-})(ex || (ex = {}));
-var ex;
-(function (ex) {
-    /**
-     * Animations
-     *
-     * Animations allow you to display a series of images one after another,
-     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
-     *
-     * ## Creating an animation
-     *
-     * Create a [[Texture]] that contains the frames of your animation. Once the texture
-     * is [[Loader|loaded]], you can then generate an [[Animation]] by creating a [[SpriteSheet]]
-     * and using [[SpriteSheet.getAnimationForAll]].
-     *
-     * ```js
-     * var game = new ex.Engine();
-     * var txAnimPlayerIdle = new ex.Texture("/assets/tx/anim-player-idle.png");
-     *
-     * // load assets
-     * var loader = new ex.Loader(txAnimPlayerIdle);
-     *
-     * // start game
-     * game.start(loader).then(function () {
-     *   var player = new ex.Actor();
-     *
-     *   // create sprite sheet with 5 columns, 1 row, 80x80 frames
-     *   var playerIdleSheet = new ex.SpriteSheet(txAnimPlayerIdle, 5, 1, 80, 80);
-     *
-     *   // create animation (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(game, 125);
-     *
-     *   // add drawing to player as "idle"
-     *   player.addDrawing("idle", playerIdleAnimation);
-     *
-     *   // add player to game
-     *   game.add(player);
-     * });
-     * ```
-     *
-     * ## Sprite effects
-     *
-     * You can add [[SpriteEffect|sprite effects]] to an animation through methods
-     * like [[Animation.invert]] or [[Animation.lighten]]. Keep in mind, since this
-     * manipulates the raw pixel values of a [[Sprite]], it can have a performance impact.
-     */
-    var Animation = (function () {
-        /**
-         * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
-         *
-         * @param engine  Reference to the current game engine
-         * @param images  An array of sprites to create the frames for the animation
-         * @param speed   The number in milliseconds to display each frame in the animation
-         * @param loop    Indicates whether the animation should loop after it is completed
-         */
-        function Animation(engine, images, speed, loop) {
-            /**
-             * Current frame index being shown
-             */
-            this.currentFrame = 0;
-            this._oldTime = Date.now();
-            this.anchor = new ex.Point(0.0, 0.0);
-            this.rotation = 0.0;
-            this.scale = new ex.Point(1, 1);
-            /**
-             * Indicates whether the animation should loop after it is completed
-             */
-            this.loop = false;
-            /**
-             * Indicates the frame index the animation should freeze on for a non-looping
-             * animation. By default it is the last frame.
-             */
-            this.freezeFrame = -1;
-            /**
-             * Flip each frame vertically. Sets [[Sprite.flipVertical]].
-             */
-            this.flipVertical = false;
-            /**
-             * Flip each frame horizontally. Sets [[Sprite.flipHorizontal]].
-             */
-            this.flipHorizontal = false;
-            this.width = 0;
-            this.height = 0;
-            this.naturalWidth = 0;
-            this.naturalHeight = 0;
-            this.sprites = images;
-            this.speed = speed;
-            this._engine = engine;
-            if (loop != null) {
-                this.loop = loop;
-            }
-            if (images && images[0]) {
-                this.height = images[0] ? images[0].height : 0;
-                this.width = images[0] ? images[0].width : 0;
-                this.naturalWidth = images[0] ? images[0].naturalWidth : 0;
-                this.naturalHeight = images[0] ? images[0].naturalHeight : 0;
-                this.freezeFrame = images.length - 1;
-            }
-        }
-        /**
-         * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
-         */
-        Animation.prototype.opacity = function (value) {
-            this.addEffect(new ex.Effects.Opacity(value));
+                _this.data = _this.processData(request.response);
+                _this.oncomplete();
+                _this.logger.debug('Completed loading resource', _this.path);
+                complete.resolve(_this.data);
+            };
+            request.send();
+            return complete;
         };
         /**
-         * Applies the grayscale effect to a sprite, removing color information.
+         * Returns the loaded data once the resource is loaded
          */
-        Animation.prototype.grayscale = function () {
-            this.addEffect(new ex.Effects.Grayscale());
+        Resource.prototype.getData = function () {
+            return this.data;
         };
         /**
-         * Applies the invert effect to a sprite, inverting the pixel colors.
+         * Sets the data for this resource directly
          */
-        Animation.prototype.invert = function () {
-            this.addEffect(new ex.Effects.Invert());
+        Resource.prototype.setData = function (data) {
+            this.data = this.processData(data);
         };
         /**
-         * Applies the fill effect to a sprite, changing the color channels of all non-transparent pixels to match a given color
+         * This method is meant to be overriden to handle any additional
+         * processing. Such as decoding downloaded audio bits.
          */
-        Animation.prototype.fill = function (color) {
-            this.addEffect(new ex.Effects.Fill(color));
+        Resource.prototype.processData = function (data) {
+            // Handle any additional loading after the xhr has completed.
+            return URL.createObjectURL(data);
         };
-        /**
-         * Applies the colorize effect to a sprite, changing the color channels of all pixesl to be the average of the original color and the
-         * provided color.
-         */
-        Animation.prototype.colorize = function (color) {
-            this.addEffect(new ex.Effects.Colorize(color));
-        };
-        /**
-         * Applies the lighten effect to a sprite, changes the lightness of the color according to hsl
-         */
-        Animation.prototype.lighten = function (factor) {
-            if (factor === void 0) { factor = 0.1; }
-            this.addEffect(new ex.Effects.Lighten(factor));
-        };
-        /**
-         * Applies the darken effect to a sprite, changes the darkness of the color according to hsl
-         */
-        Animation.prototype.darken = function (factor) {
-            if (factor === void 0) { factor = 0.1; }
-            this.addEffect(new ex.Effects.Darken(factor));
-        };
-        /**
-         * Applies the saturate effect to a sprite, saturates the color acccording to hsl
-         */
-        Animation.prototype.saturate = function (factor) {
-            if (factor === void 0) { factor = 0.1; }
-            this.addEffect(new ex.Effects.Saturate(factor));
-        };
-        /**
-         * Applies the desaturate effect to a sprite, desaturates the color acccording to hsl
-         */
-        Animation.prototype.desaturate = function (factor) {
-            if (factor === void 0) { factor = 0.1; }
-            this.addEffect(new ex.Effects.Desaturate(factor));
-        };
-        /**
-         * Add a [[ISpriteEffect]] manually
-         */
-        Animation.prototype.addEffect = function (effect) {
-            for (var i in this.sprites) {
-                this.sprites[i].addEffect(effect);
-            }
-        };
-        Animation.prototype.removeEffect = function (param) {
-            for (var i in this.sprites) {
-                this.sprites[i].removeEffect(param);
-            }
-        };
-        /**
-         * Clear all sprite effects
-         */
-        Animation.prototype.clearEffects = function () {
-            for (var i in this.sprites) {
-                this.sprites[i].clearEffects();
-            }
-        };
-        Animation.prototype._setAnchor = function (point) {
-            //if (!this.anchor.equals(point)) {
-            for (var i in this.sprites) {
-                this.sprites[i].anchor.setTo(point.x, point.y);
-            }
-            //}
-        };
-        Animation.prototype._setRotation = function (radians) {
-            //if (this.rotation !== radians) {
-            for (var i in this.sprites) {
-                this.sprites[i].rotation = radians;
-            }
-            //}
-        };
-        Animation.prototype._setScale = function (scale) {
-            //if (!this.scale.equals(scale)) {
-            for (var i in this.sprites) {
-                this.sprites[i].scale = scale;
-            }
-            //}
-        };
-        /**
-         * Resets the animation to first frame.
-         */
-        Animation.prototype.reset = function () {
-            this.currentFrame = 0;
-        };
-        /**
-         * Indicates whether the animation is complete, animations that loop are never complete.
-         */
-        Animation.prototype.isDone = function () {
-            return (!this.loop && this.currentFrame >= this.sprites.length);
-        };
-        /**
-         * Not meant to be called by game developers. Ticks the animation forward internally and
-         * calculates whether to change to the frame.
-         * @internal
-         */
-        Animation.prototype.tick = function () {
-            var time = Date.now();
-            if ((time - this._oldTime) > this.speed) {
-                this.currentFrame = (this.loop ? (this.currentFrame + 1) % this.sprites.length : this.currentFrame + 1);
-                this._oldTime = time;
-            }
-        };
-        Animation.prototype._updateValues = function () {
-            this._setAnchor(this.anchor);
-            this._setRotation(this.rotation);
-            this._setScale(this.scale);
-        };
-        /**
-         * Skips ahead a specified number of frames in the animation
-         * @param frames  Frames to skip ahead
-         */
-        Animation.prototype.skip = function (frames) {
-            this.currentFrame = (this.currentFrame + frames) % this.sprites.length;
-        };
-        Animation.prototype.draw = function (ctx, x, y) {
-            this.tick();
-            this._updateValues();
-            var currSprite;
-            if (this.currentFrame < this.sprites.length) {
-                currSprite = this.sprites[this.currentFrame];
-                if (this.flipVertical) {
-                    currSprite.flipVertical = this.flipVertical;
-                }
-                if (this.flipHorizontal) {
-                    currSprite.flipHorizontal = this.flipHorizontal;
-                }
-                currSprite.draw(ctx, x, y);
-            }
-            if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
-                currSprite = this.sprites[ex.Util.clamp(this.freezeFrame, 0, this.sprites.length - 1)];
-                currSprite.draw(ctx, x, y);
-            }
-            // add the calculated width
-            if (currSprite) {
-                this.width = currSprite.width;
-                this.height = currSprite.height;
-            }
-        };
-        /**
-         * Plays an animation at an arbitrary location in the game.
-         * @param x  The x position in the game to play
-         * @param y  The y position in the game to play
-         */
-        Animation.prototype.play = function (x, y) {
-            this.reset();
-            this._engine.playAnimation(this, x, y);
-        };
-        return Animation;
-    })();
-    ex.Animation = Animation;
-})(ex || (ex = {}));
-/// <reference path="MonkeyPatch.ts" />
-/// <reference path="Util/Util.ts" />
-/// <reference path="Util/Log.ts" />
-var ex;
-(function (ex) {
-    var Internal;
-    (function (Internal) {
-        var FallbackAudio = (function () {
-            function FallbackAudio(path, volume) {
-                this._log = ex.Logger.getInstance();
-                this.onload = function () { return; };
-                this.onprogress = function () { return; };
-                this.onerror = function () { return; };
-                if (window.AudioContext) {
-                    this._log.debug('Using new Web Audio Api for ' + path);
-                    this._soundImpl = new WebAudio(path, volume);
-                }
-                else {
-                    this._log.debug('Falling back to Audio Element for ' + path);
-                    this._soundImpl = new AudioTag(path, volume);
-                }
-            }
-            FallbackAudio.prototype.setVolume = function (volume) {
-                this._soundImpl.setVolume(volume);
-            };
-            FallbackAudio.prototype.setLoop = function (loop) {
-                this._soundImpl.setLoop(loop);
-            };
-            FallbackAudio.prototype.load = function () {
-                this._soundImpl.onload = this.onload;
-                this._soundImpl.onprogress = this.onprogress;
-                this._soundImpl.onerror = this.onerror;
-                this._soundImpl.load();
-            };
-            FallbackAudio.prototype.isPlaying = function () {
-                return this._soundImpl.isPlaying();
-            };
-            FallbackAudio.prototype.play = function () {
-                return this._soundImpl.play();
-            };
-            FallbackAudio.prototype.pause = function () {
-                this._soundImpl.pause();
-            };
-            FallbackAudio.prototype.stop = function () {
-                this._soundImpl.stop();
-            };
-            return FallbackAudio;
-        })();
-        Internal.FallbackAudio = FallbackAudio;
-        var AudioTag = (function () {
-            function AudioTag(path, volume) {
-                var _this = this;
-                this.path = path;
-                this._audioElements = new Array(5);
-                this._loadedAudio = null;
-                this._isLoaded = false;
-                this._index = 0;
-                this._log = ex.Logger.getInstance();
-                this._isPlaying = false;
-                this._currentOffset = 0;
-                this.onload = function () { return; };
-                this.onprogress = function () { return; };
-                this.onerror = function () { return; };
-                for (var i = 0; i < this._audioElements.length; i++) {
-                    (function (i) {
-                        _this._audioElements[i] = new Audio();
-                    })(i);
-                }
-                if (volume) {
-                    this.setVolume(ex.Util.clamp(volume, 0, 1.0));
-                }
-                else {
-                    this.setVolume(1.0);
-                }
-            }
-            AudioTag.prototype.isPlaying = function () {
-                return this._isPlaying;
-            };
-            AudioTag.prototype._audioLoaded = function () {
-                this._isLoaded = true;
-            };
-            AudioTag.prototype.setVolume = function (volume) {
-                var i = 0, len = this._audioElements.length;
-                for (i; i < len; i++) {
-                    this._audioElements[i].volume = volume;
-                }
-            };
-            AudioTag.prototype.setLoop = function (loop) {
-                var i = 0, len = this._audioElements.length;
-                for (i; i < len; i++) {
-                    this._audioElements[i].loop = loop;
-                }
-            };
-            AudioTag.prototype.getLoop = function () {
-                this._audioElements.some(function (a) { return a.loop; });
-            };
-            AudioTag.prototype.load = function () {
-                var _this = this;
-                var request = new XMLHttpRequest();
-                request.open('GET', this.path, true);
-                request.responseType = 'blob';
-                request.onprogress = this.onprogress;
-                request.onerror = this.onerror;
-                request.onload = function (e) {
-                    if (request.status !== 200) {
-                        _this._log.error('Failed to load audio resource ', _this.path, ' server responded with error code', request.status);
-                        _this.onerror(request.response);
-                        _this._isLoaded = false;
-                        return;
-                    }
-                    _this._loadedAudio = URL.createObjectURL(request.response);
-                    _this._audioElements.forEach(function (a) {
-                        a.src = _this._loadedAudio;
-                    });
-                    _this.onload(e);
-                };
-                request.send();
-            };
-            AudioTag.prototype.play = function () {
-                var _this = this;
-                this._audioElements[this._index].load();
-                //this.audioElements[this.index].currentTime = this._currentOffset;
-                this._audioElements[this._index].play();
-                this._currentOffset = 0;
-                var done = new ex.Promise();
-                this._isPlaying = true;
-                if (!this.getLoop()) {
-                    this._audioElements[this._index].addEventListener('ended', function () {
-                        _this._isPlaying = false;
-                        done.resolve(true);
-                    });
-                }
-                this._index = (this._index + 1) % this._audioElements.length;
-                return done;
-            };
-            AudioTag.prototype.pause = function () {
-                this._index = (this._index - 1 + this._audioElements.length) % this._audioElements.length;
-                this._currentOffset = this._audioElements[this._index].currentTime;
-                this._audioElements.forEach(function (a) {
-                    a.pause();
-                });
-                this._isPlaying = false;
-            };
-            AudioTag.prototype.stop = function () {
-                this._audioElements.forEach(function (a) {
-                    a.pause();
-                    //a.currentTime = 0;
-                });
-                this._isPlaying = false;
-            };
-            return AudioTag;
-        })();
-        Internal.AudioTag = AudioTag;
-        if (window.AudioContext) {
-            var audioContext = new window.AudioContext();
-        }
-        var WebAudio = (function () {
-            function WebAudio(soundPath, volume) {
-                this._context = audioContext;
-                this._volume = this._context.createGain();
-                this._buffer = null;
-                this._sound = null;
-                this._path = '';
-                this._isLoaded = false;
-                this._loop = false;
-                this._isPlaying = false;
-                this._isPaused = false;
-                this._currentOffset = 0;
-                this._logger = ex.Logger.getInstance();
-                this.onload = function () { return; };
-                this.onprogress = function () { return; };
-                this.onerror = function () { return; };
-                this._path = soundPath;
-                if (volume) {
-                    this._volume.gain.value = ex.Util.clamp(volume, 0, 1.0);
-                }
-                else {
-                    this._volume.gain.value = 1.0; // max volume
-                }
-            }
-            WebAudio.prototype.setVolume = function (volume) {
-                this._volume.gain.value = volume;
-            };
-            WebAudio.prototype.load = function () {
-                var _this = this;
-                var request = new XMLHttpRequest();
-                request.open('GET', this._path);
-                request.responseType = 'arraybuffer';
-                request.onprogress = this.onprogress;
-                request.onerror = this.onerror;
-                request.onload = function () {
-                    if (request.status !== 200) {
-                        _this._logger.error('Failed to load audio resource ', _this._path, ' server responded with error code', request.status);
-                        _this.onerror(request.response);
-                        _this._isLoaded = false;
-                        return;
-                    }
-                    _this._context.decodeAudioData(request.response, function (buffer) {
-                        _this._buffer = buffer;
-                        _this._isLoaded = true;
-                        _this.onload(_this);
-                    }, function (e) {
-                        _this._logger.error('Unable to decode ' + _this._path +
-                            ' this browser may not fully support this format, or the file may be corrupt, ' +
-                            'if this is an mp3 try removing id3 tags and album art from the file.');
-                        _this._isLoaded = false;
-                        _this.onload(_this);
-                    });
-                };
-                try {
-                    request.send();
-                }
-                catch (e) {
-                    console.error('Error loading sound! If this is a cross origin error, you must host your sound with your html and javascript.');
-                }
-            };
-            WebAudio.prototype.setLoop = function (loop) {
-                this._loop = loop;
-            };
-            WebAudio.prototype.isPlaying = function () {
-                return this._isPlaying;
-            };
-            WebAudio.prototype.play = function () {
-                var _this = this;
-                if (this._isLoaded) {
-                    this._sound = this._context.createBufferSource();
-                    this._sound.buffer = this._buffer;
-                    this._sound.loop = this._loop;
-                    this._sound.connect(this._volume);
-                    this._volume.connect(this._context.destination);
-                    this._sound.start(0, this._currentOffset % this._buffer.duration);
-                    this._currentOffset = 0;
-                    var done;
-                    if (!this._isPaused || !this._playPromise) {
-                        done = new ex.Promise();
-                    }
-                    else {
-                        done = this._playPromise;
-                    }
-                    this._isPaused = false;
-                    this._isPlaying = true;
-                    if (!this._loop) {
-                        this._sound.onended = (function () {
-                            _this._isPlaying = false;
-                            if (!_this._isPaused) {
-                                done.resolve(true);
-                            }
-                        }).bind(this);
-                    }
-                    this._playPromise = done;
-                    return done;
-                }
-                else {
-                    return ex.Promise.wrap(true);
-                }
-            };
-            WebAudio.prototype.pause = function () {
-                if (this._isPlaying) {
-                    try {
-                        window.clearTimeout(this._playingTimer);
-                        this._sound.stop(0);
-                        this._currentOffset = this._context.currentTime;
-                        this._isPlaying = false;
-                        this._isPaused = true;
-                    }
-                    catch (e) {
-                        this._logger.warn('The sound clip', this._path, 'has already been paused!');
-                    }
-                }
-            };
-            WebAudio.prototype.stop = function () {
-                if (this._sound) {
-                    try {
-                        window.clearTimeout(this._playingTimer);
-                        this._currentOffset = 0;
-                        this._sound.stop(0);
-                        this._isPlaying = false;
-                        this._isPaused = false;
-                    }
-                    catch (e) {
-                        this._logger.warn('The sound clip', this._path, 'has already been stopped!');
-                    }
-                }
-            };
-            return WebAudio;
-        })();
-        Internal.WebAudio = WebAudio;
-    })(Internal = ex.Internal || (ex.Internal = {}));
+        return Resource;
+    }(ex.Class));
+    ex.Resource = Resource;
 })(ex || (ex = {}));
 /// <reference path="Util/Log.ts" />
 // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
@@ -9489,135 +9990,13 @@ var ex;
             }
         };
         return Promise;
-    })();
+    }());
     ex.Promise = Promise;
 })(ex || (ex = {}));
-/// <reference path="Interfaces/ILoadable.ts" />
-var ex;
-(function (ex) {
-    /**
-     * Generic Resources
-     *
-     * The [[Resource]] type allows games built in Excalibur to load generic resources.
-     * For any type of remote resource it is recommended to use [[Resource]] for preloading.
-     *
-     * [[Resource]] is an [[ILoadable]] so it can be passed to a [[Loader]] to pre-load before
-     * a level or game.
-     *
-     * Example usages: JSON, compressed files, blobs.
-     *
-     * ## Pre-loading generic resources
-     *
-     * ```js
-     * var resLevel1 = new ex.Resource("/assets/levels/1.json", "application/json");
-     * var loader = new ex.Loader(resLevel1);
-     *
-     * // attach a handler to process once loaded
-     * resLevel1.processDownload = function (data) {
-     *
-     *   // process JSON
-     *   var json = JSON.parse(data);
-     *
-     *   // create a new level (inherits Scene) with the JSON configuration
-     *   var level = new Level(json);
-     *
-     *   // add a new scene
-     *   game.add(level.name, level);
-     * }
-     *
-     * game.start(loader);
-     * ```
-     */
-    var Resource = (function () {
-        /**
-         * @param path          Path to the remote resource
-         * @param responseType  The Content-Type to expect (e.g. `application/json`)
-         * @param bustCache     Whether or not to cache-bust requests
-         */
-        function Resource(path, responseType, bustCache) {
-            if (bustCache === void 0) { bustCache = true; }
-            this.path = path;
-            this.responseType = responseType;
-            this.bustCache = bustCache;
-            this.data = null;
-            this.logger = ex.Logger.getInstance();
-            this.onprogress = function () { return; };
-            this.oncomplete = function () { return; };
-            this.onerror = function () { return; };
-        }
-        /**
-         * Returns true if the Resource is completely loaded and is ready
-         * to be drawn.
-         */
-        Resource.prototype.isLoaded = function () {
-            return !!this.data;
-        };
-        Resource.prototype.wireEngine = function (engine) {
-            this._engine = engine;
-        };
-        Resource.prototype._cacheBust = function (uri) {
-            var query = /\?\w*=\w*/;
-            if (query.test(uri)) {
-                uri += ('&__=' + Date.now());
-            }
-            else {
-                uri += ('?__=' + Date.now());
-            }
-            return uri;
-        };
-        Resource.prototype._start = function (e) {
-            this.logger.debug('Started loading resource ' + this.path);
-        };
-        /**
-         * Begin loading the resource and returns a promise to be resolved on completion
-         */
-        Resource.prototype.load = function () {
-            var _this = this;
-            var complete = new ex.Promise();
-            var request = new XMLHttpRequest();
-            request.open('GET', this.bustCache ? this._cacheBust(this.path) : this.path, true);
-            request.responseType = this.responseType;
-            request.onloadstart = function (e) { _this._start(e); };
-            request.onprogress = this.onprogress;
-            request.onerror = this.onerror;
-            request.onload = function (e) {
-                if (request.status !== 200) {
-                    _this.logger.error('Failed to load resource ', _this.path, ' server responded with error code', request.status);
-                    _this.onerror(request.response);
-                    complete.resolve(request.response);
-                    return;
-                }
-                _this.data = _this.processDownload(request.response);
-                _this.oncomplete();
-                _this.logger.debug('Completed loading resource', _this.path);
-                complete.resolve(_this.data);
-            };
-            request.send();
-            return complete;
-        };
-        /**
-         * Returns the loaded data once the resource is loaded
-         */
-        Resource.prototype.getData = function () {
-            return this.data;
-        };
-        /**
-         * This method is meant to be overriden to handle any additional
-         * processing. Such as decoding downloaded audio bits.
-         */
-        Resource.prototype.processDownload = function (data) {
-            // Handle any additional loading after the xhr has completed.
-            return URL.createObjectURL(data);
-        };
-        return Resource;
-    })();
-    ex.Resource = Resource;
-})(ex || (ex = {}));
-/// <reference path="Sound.ts" />
-/// <reference path="Util/Util.ts" />
-/// <reference path="Promises.ts" />
+/// <reference path="../Util/Util.ts" />
+/// <reference path="../Promises.ts" />
 /// <reference path="Resource.ts" />
-/// <reference path="Interfaces/ILoadable.ts" />
+/// <reference path="../Interfaces/ILoadable.ts" />
 var ex;
 (function (ex) {
     /**
@@ -9703,8 +10082,15 @@ var ex;
             return this._sprite;
         };
         return Texture;
-    })(ex.Resource);
+    }(ex.Resource));
     ex.Texture = Texture;
+})(ex || (ex = {}));
+/// <reference path="../Util/Util.ts" />
+/// <reference path="../Promises.ts" />
+/// <reference path="Resource.ts" />
+/// <reference path="../Interfaces/ILoadable.ts" />
+var ex;
+(function (ex) {
     /**
      * Sounds
      *
@@ -9744,26 +10130,25 @@ var ex;
             this.onerror = function () { return; };
             this.onload = function () { return; };
             this._isLoaded = false;
-            this._selectedFile = '';
             this._wasPlayingOnHidden = false;
             /* Chrome : MP3, WAV, Ogg
              * Firefox : WAV, Ogg,
              * IE : MP3, WAV coming soon
              * Safari MP3, WAV, Ogg
              */
-            this._selectedFile = '';
+            this.path = '';
             for (var i = 0; i < paths.length; i++) {
                 if (Sound.canPlayFile(paths[i])) {
-                    this._selectedFile = paths[i];
+                    this.path = paths[i];
                     break;
                 }
             }
-            if (!this._selectedFile) {
+            if (!this.path) {
                 this._logger.warn('This browser does not support any of the audio files specified:', paths.join(', '));
                 this._logger.warn('Attempting to use', paths[0]);
-                this._selectedFile = paths[0]; // select the first specified
+                this.path = paths[0]; // select the first specified
             }
-            this.sound = new ex.Internal.FallbackAudio(this._selectedFile, 1.0);
+            this.sound = new ex.Internal.FallbackAudio(this.path, 1.0);
         }
         /**
          * Whether or not the browser can play this file as HTML5 Audio
@@ -9865,12 +10250,17 @@ var ex;
         Sound.prototype.load = function () {
             var _this = this;
             var complete = new ex.Promise();
-            this._logger.debug('Started loading sound', this._selectedFile);
+            if (this.sound.getData() !== null) {
+                this._logger.debug('Already have data for resource', this.path);
+                complete.resolve(this.sound);
+                return complete;
+            }
+            this._logger.debug('Started loading sound', this.path);
             this.sound.onprogress = this.onprogress;
             this.sound.onload = function () {
                 _this.oncomplete();
                 _this._isLoaded = true;
-                _this._logger.debug('Completed loading sound', _this._selectedFile);
+                _this._logger.debug('Completed loading sound', _this.path);
                 complete.resolve(_this.sound);
             };
             this.sound.onerror = function (e) {
@@ -9880,9 +10270,1293 @@ var ex;
             this.sound.load();
             return complete;
         };
+        Sound.prototype.getData = function () {
+            return this.sound.getData();
+        };
+        Sound.prototype.setData = function (data) {
+            this.sound.setData(data);
+        };
+        Sound.prototype.processData = function (data) {
+            return this.sound.processData(data);
+        };
         return Sound;
-    })();
+    }());
     ex.Sound = Sound;
+})(ex || (ex = {}));
+/// <reference path="Actor.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
+     * not participate in collisions. Drawn on top of all other actors.
+     */
+    var UIActor = (function (_super) {
+        __extends(UIActor, _super);
+        /**
+         * @param x       The starting x coordinate of the actor
+         * @param y       The starting y coordinate of the actor
+         * @param width   The starting width of the actor
+         * @param height  The starting height of the actor
+         */
+        function UIActor(x, y, width, height) {
+            _super.call(this, x, y, width, height);
+            this.traits = [];
+            this.traits.push(new ex.Traits.EulerMovement());
+            this.traits.push(new ex.Traits.CapturePointer());
+            this.anchor.setTo(0, 0);
+            this.collisionType = ex.CollisionType.PreventCollision;
+            this.enableCapturePointer = true;
+        }
+        UIActor.prototype.onInitialize = function (engine) {
+            this._engine = engine;
+        };
+        UIActor.prototype.contains = function (x, y, useWorld) {
+            if (useWorld === void 0) { useWorld = true; }
+            if (useWorld) {
+                return _super.prototype.contains.call(this, x, y);
+            }
+            var coords = this._engine.worldToScreenCoordinates(new ex.Vector(x, y));
+            return _super.prototype.contains.call(this, coords.x, coords.y);
+        };
+        return UIActor;
+    }(ex.Actor));
+    ex.UIActor = UIActor;
+})(ex || (ex = {}));
+/// <reference path="Actor.ts" />
+/// <reference path="Engine.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Triggers
+     *
+     * Triggers are a method of firing arbitrary code on collision. These are useful
+     * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
+     * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
+     *
+     * ## Creating a trigger
+     *
+     * ```js
+     * var game = new ex.Game();
+     *
+     * // create a handler
+     * function onTrigger() {
+     *
+     *   // `this` will be the Trigger instance
+     *   ex.Logger.getInstance().info("Trigger was triggered!", this);
+     * }
+     *
+     * // set a trigger at (100, 100) that is 40x40px
+     * var trigger = new ex.Trigger(100, 100, 40, 40, onTrigger, 1);
+     *
+     * // create an actor across from the trigger
+     * var actor = new ex.Actor(100, 0, 40, 40, ex.Color.Red);
+     *
+     * // tell the actor to move towards the trigger over 3 seconds
+     * actor.moveTo(100, 200, 3000);
+     *
+     * game.add(trigger);
+     * game.add(actor);
+     *
+     * game.start();
+     * ```
+     */
+    var Trigger = (function (_super) {
+        __extends(Trigger, _super);
+        /**
+         * @param x       The x position of the trigger
+         * @param y       The y position of the trigger
+         * @param width   The width of the trigger
+         * @param height  The height of the trigger
+         * @param action  Callback to fire when trigger is activated, `this` will be bound to the Trigger instance
+         * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
+         */
+        function Trigger(x, y, width, height, action, repeats) {
+            _super.call(this, x, y, width, height);
+            this._action = function () { return; };
+            this.repeats = 1;
+            this.target = null;
+            this.repeats = repeats || this.repeats;
+            this._action = action || this._action;
+            this.collisionType = ex.CollisionType.PreventCollision;
+            this.eventDispatcher = new ex.EventDispatcher(this);
+            this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
+        }
+        Trigger.prototype.update = function (engine, delta) {
+            // Update action queue
+            this.actionQueue.update(delta);
+            // Update placements based on linear algebra
+            this.pos.x += this.vel.x * delta / 1000;
+            this.pos.y += this.vel.y * delta / 1000;
+            this.rotation += this.rx * delta / 1000;
+            this.scale.x += this.sx * delta / 1000;
+            this.scale.y += this.sy * delta / 1000;
+            // check for trigger collisions
+            if (this.target) {
+                if (this.collides(this.target)) {
+                    this._dispatchAction();
+                }
+            }
+            else {
+                for (var i = 0; i < engine.currentScene.children.length; i++) {
+                    var other = engine.currentScene.children[i];
+                    if (other !== this &&
+                        other.collisionType !== ex.CollisionType.PreventCollision &&
+                        this.collides(other)) {
+                        this._dispatchAction();
+                    }
+                }
+            }
+            // remove trigger if its done, -1 repeat forever
+            if (this.repeats === 0) {
+                this.kill();
+            }
+        };
+        Trigger.prototype._dispatchAction = function () {
+            this._action.call(this);
+            this.repeats--;
+        };
+        Trigger.prototype.draw = function (ctx, delta) {
+            // does not draw
+            return;
+        };
+        Trigger.prototype.debugDraw = function (ctx) {
+            _super.prototype.debugDraw.call(this, ctx);
+            // Meant to draw debug information about actors
+            ctx.save();
+            ctx.translate(this.pos.x, this.pos.y);
+            var bb = this.getBounds();
+            var wp = this.getWorldPos();
+            bb.left = bb.left - wp.x;
+            bb.right = bb.right - wp.x;
+            bb.top = bb.top - wp.y;
+            bb.bottom = bb.bottom - wp.y;
+            // Currently collision primitives cannot rotate 
+            // ctx.rotate(this.rotation);
+            ctx.fillStyle = ex.Color.Violet.toString();
+            ctx.strokeStyle = ex.Color.Violet.toString();
+            ctx.fillText('Trigger', 10, 10);
+            bb.debugDraw(ctx);
+            ctx.restore();
+        };
+        return Trigger;
+    }(ex.Actor));
+    ex.Trigger = Trigger;
+})(ex || (ex = {}));
+/// <reference path="Engine.ts" />
+/// <reference path="Algebra.ts" />
+/// <reference path="Util/Util.ts" />
+/// <reference path="Actor.ts" />
+var ex;
+(function (ex) {
+    /**
+     * An enum that represents the types of emitter nozzles
+     */
+    (function (EmitterType) {
+        /**
+         * Constant for the circular emitter type
+         */
+        EmitterType[EmitterType["Circle"] = 0] = "Circle";
+        /**
+         * Constant for the rectangular emitter type
+         */
+        EmitterType[EmitterType["Rectangle"] = 1] = "Rectangle";
+    })(ex.EmitterType || (ex.EmitterType = {}));
+    var EmitterType = ex.EmitterType;
+    /**
+     * Particle is used in a [[ParticleEmitter]]
+     */
+    var Particle = (function () {
+        function Particle(emitter, life, opacity, beginColor, endColor, position, velocity, acceleration, startSize, endSize) {
+            this.position = new ex.Vector(0, 0);
+            this.velocity = new ex.Vector(0, 0);
+            this.acceleration = new ex.Vector(0, 0);
+            this.particleRotationalVelocity = 0;
+            this.currentRotation = 0;
+            this.focus = null;
+            this.focusAccel = 0;
+            this.opacity = 1;
+            this.beginColor = ex.Color.White.clone();
+            this.endColor = ex.Color.White.clone();
+            // Life is counted in ms
+            this.life = 300;
+            this.fadeFlag = false;
+            // Color transitions
+            this._rRate = 1;
+            this._gRate = 1;
+            this._bRate = 1;
+            this._aRate = 0;
+            this._currentColor = ex.Color.White.clone();
+            this.emitter = null;
+            this.particleSize = 5;
+            this.particleSprite = null;
+            this.sizeRate = 0;
+            this.elapsedMultiplier = 0;
+            this.emitter = emitter;
+            this.life = life || this.life;
+            this.opacity = opacity || this.opacity;
+            this.endColor = endColor || this.endColor.clone();
+            this.beginColor = beginColor || this.beginColor.clone();
+            this._currentColor = this.beginColor.clone();
+            this.position = position || this.position;
+            this.velocity = velocity || this.velocity;
+            this.acceleration = acceleration || this.acceleration;
+            this._rRate = (this.endColor.r - this.beginColor.r) / this.life;
+            this._gRate = (this.endColor.g - this.beginColor.g) / this.life;
+            this._bRate = (this.endColor.b - this.beginColor.b) / this.life;
+            this._aRate = this.opacity / this.life;
+            this.startSize = startSize || 0;
+            this.endSize = endSize || 0;
+            if ((this.endSize > 0) && (this.startSize > 0)) {
+                this.sizeRate = (this.endSize - this.startSize) / this.life;
+                this.particleSize = this.startSize;
+            }
+        }
+        Particle.prototype.kill = function () {
+            this.emitter.removeParticle(this);
+        };
+        Particle.prototype.update = function (delta) {
+            this.life = this.life - delta;
+            this.elapsedMultiplier = this.elapsedMultiplier + delta;
+            if (this.life < 0) {
+                this.kill();
+            }
+            if (this.fadeFlag) {
+                this.opacity = ex.Util.clamp(this._aRate * this.life, 0.0001, 1);
+            }
+            if ((this.startSize > 0) && (this.endSize > 0)) {
+                this.particleSize = ex.Util.clamp(this.sizeRate * delta + this.particleSize, Math.min(this.startSize, this.endSize), Math.max(this.startSize, this.endSize));
+            }
+            this._currentColor.r = ex.Util.clamp(this._currentColor.r + this._rRate * delta, 0, 255);
+            this._currentColor.g = ex.Util.clamp(this._currentColor.g + this._gRate * delta, 0, 255);
+            this._currentColor.b = ex.Util.clamp(this._currentColor.b + this._bRate * delta, 0, 255);
+            this._currentColor.a = ex.Util.clamp(this.opacity, 0.0001, 1);
+            if (this.focus) {
+                var accel = this.focus.sub(this.position).normalize().scale(this.focusAccel).scale(delta / 1000);
+                this.velocity = this.velocity.add(accel);
+            }
+            else {
+                this.velocity = this.velocity.add(this.acceleration.scale(delta / 1000));
+            }
+            this.position = this.position.add(this.velocity.scale(delta / 1000));
+            if (this.particleRotationalVelocity) {
+                this.currentRotation = (this.currentRotation + this.particleRotationalVelocity * delta / 1000) % (2 * Math.PI);
+            }
+        };
+        Particle.prototype.draw = function (ctx) {
+            if (this.particleSprite) {
+                this.particleSprite.rotation = this.currentRotation;
+                this.particleSprite.scale.setTo(this.particleSize, this.particleSize);
+                this.particleSprite.draw(ctx, this.position.x, this.position.y);
+                return;
+            }
+            this._currentColor.a = ex.Util.clamp(this.opacity, 0.0001, 1);
+            ctx.fillStyle = this._currentColor.toString();
+            ctx.beginPath();
+            ctx.arc(this.position.x, this.position.y, this.particleSize, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        };
+        return Particle;
+    }());
+    ex.Particle = Particle;
+    /**
+     * Particle Emitters
+     *
+     * Using a particle emitter is a great way to create interesting effects
+     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
+     * extend [[Actor]] allowing you to use all of the features that come with.
+     *
+     * The easiest way to create a `ParticleEmitter` is to use the
+     * [Particle Tester](http://excaliburjs.com/particle-tester/) to generate code for emitters.
+     *
+     * ## Example: Adding an emitter
+     *
+     * ```js
+     * var actor = new ex.Actor(...);
+     * var emitter = new ex.ParticleEmitter(...);
+     *
+     * emitter.emitterType = ex.EmitterType.Circle; // Shape of emitter nozzle
+     * emitter.radius = 5;
+     * emitter.minVel = 100;
+     * emitter.maxVel = 200;
+     * emitter.minAngle = 0;
+     * emitter.maxAngle = Math.PI * 2;
+     * emitter.emitRate = 300; // 300 particles/second
+     * emitter.opacity = 0.5;
+     * emitter.fadeFlag = true; // fade particles overtime
+     * emitter.particleLife = 1000; // in milliseconds = 1 sec
+     * emitter.maxSize = 10; // in pixels
+     * emitter.minSize = 1;
+     * emitter.particleColor = ex.Color.Rose;
+     *
+     * // set emitter settings
+     * emitter.isEmitting = true;  // should the emitter be emitting
+     *
+     * // add the emitter as a child actor, it will draw on top of the parent actor
+     * // and move with the parent
+     * actor.add(emitter);
+     *
+     * // or, alternatively, add it to the current scene
+     * engine.add(emitter);
+     * ```
+     */
+    var ParticleEmitter = (function (_super) {
+        __extends(ParticleEmitter, _super);
+        /**
+         * @param x       The x position of the emitter
+         * @param y       The y position of the emitter
+         * @param width   The width of the emitter
+         * @param height  The height of the emitter
+         */
+        function ParticleEmitter(x, y, width, height) {
+            _super.call(this, x, y, width, height, ex.Color.White);
+            this._particlesToEmit = 0;
+            this.numParticles = 0;
+            /**
+             * Gets or sets the isEmitting flag
+             */
+            this.isEmitting = true;
+            /**
+             * Gets or sets the backing particle collection
+             */
+            this.particles = null;
+            /**
+             * Gets or sets the backing deadParticle collection
+             */
+            this.deadParticles = null;
+            /**
+             * Gets or sets the minimum partical velocity
+             */
+            this.minVel = 0;
+            /**
+             * Gets or sets the maximum partical velocity
+             */
+            this.maxVel = 0;
+            /**
+             * Gets or sets the acceleration vector for all particles
+             */
+            this.acceleration = new ex.Vector(0, 0);
+            /**
+             * Gets or sets the minimum angle in radians
+             */
+            this.minAngle = 0;
+            /**
+             * Gets or sets the maximum angle in radians
+             */
+            this.maxAngle = 0;
+            /**
+             * Gets or sets the emission rate for particles (particles/sec)
+             */
+            this.emitRate = 1; //particles/sec
+            /**
+             * Gets or sets the life of each particle in milliseconds
+             */
+            this.particleLife = 2000;
+            /**
+             * Gets or sets the opacity of each particle from 0 to 1.0
+             */
+            this.opacity = 1;
+            /**
+             * Gets or sets the fade flag which causes particles to gradually fade out over the course of their life.
+             */
+            this.fadeFlag = false;
+            /**
+             * Gets or sets the optional focus where all particles should accelerate towards
+             */
+            this.focus = null;
+            /**
+             * Gets or sets the acceleration for focusing particles if a focus has been specified
+             */
+            this.focusAccel = 1;
+            /*
+             * Gets or sets the optional starting size for the particles
+             */
+            this.startSize = null;
+            /*
+             * Gets or sets the optional ending size for the particles
+             */
+            this.endSize = null;
+            /**
+             * Gets or sets the minimum size of all particles
+             */
+            this.minSize = 5;
+            /**
+             * Gets or sets the maximum size of all particles
+             */
+            this.maxSize = 5;
+            /**
+             * Gets or sets the beginning color of all particles
+             */
+            this.beginColor = ex.Color.White;
+            /**
+             * Gets or sets the ending color of all particles
+             */
+            this.endColor = ex.Color.White;
+            /**
+             * Gets or sets the sprite that a particle should use
+             * @warning Performance intensive
+             */
+            this.particleSprite = null;
+            /**
+             * Gets or sets the emitter type for the particle emitter
+             */
+            this.emitterType = EmitterType.Rectangle;
+            /**
+             * Gets or sets the emitter radius, only takes effect when the [[emitterType]] is [[EmitterType.Circle]]
+             */
+            this.radius = 0;
+            /**
+             * Gets or sets the particle rotational speed velocity
+             */
+            this.particleRotationalVelocity = 0;
+            /**
+             * Indicates whether particles should start with a random rotation
+             */
+            this.randomRotation = false;
+            this.collisionType = ex.CollisionType.PreventCollision;
+            this.particles = new ex.Util.Collection();
+            this.deadParticles = new ex.Util.Collection();
+            // Remove offscreen culling from particle emitters
+            for (var i = 0; i < this.traits.length; i++) {
+                if (this.traits[i] instanceof ex.Traits.OffscreenCulling) {
+                    this.traits.splice(i, 1);
+                }
+            }
+        }
+        ParticleEmitter.prototype.removeParticle = function (particle) {
+            this.deadParticles.push(particle);
+        };
+        /**
+         * Causes the emitter to emit particles
+         * @param particleCount  Number of particles to emit right now
+         */
+        ParticleEmitter.prototype.emitParticles = function (particleCount) {
+            for (var i = 0; i < particleCount; i++) {
+                this.particles.push(this._createParticle());
+            }
+        };
+        ParticleEmitter.prototype.clearParticles = function () {
+            this.particles.clear();
+        };
+        // Creates a new particle given the contraints of the emitter
+        ParticleEmitter.prototype._createParticle = function () {
+            // todo implement emitter contraints;
+            var ranX = 0;
+            var ranY = 0;
+            var angle = ex.Util.randomInRange(this.minAngle, this.maxAngle);
+            var vel = ex.Util.randomInRange(this.minVel, this.maxVel);
+            var size = this.startSize || ex.Util.randomInRange(this.minSize, this.maxSize);
+            var dx = vel * Math.cos(angle);
+            var dy = vel * Math.sin(angle);
+            if (this.emitterType === EmitterType.Rectangle) {
+                ranX = ex.Util.randomInRange(this.pos.x, this.pos.x + this.getWidth());
+                ranY = ex.Util.randomInRange(this.pos.y, this.pos.y + this.getHeight());
+            }
+            else if (this.emitterType === EmitterType.Circle) {
+                var radius = ex.Util.randomInRange(0, this.radius);
+                ranX = radius * Math.cos(angle) + this.pos.x;
+                ranY = radius * Math.sin(angle) + this.pos.y;
+            }
+            var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new ex.Vector(ranX, ranY), new ex.Vector(dx, dy), this.acceleration, this.startSize, this.endSize);
+            p.fadeFlag = this.fadeFlag;
+            p.particleSize = size;
+            if (this.particleSprite) {
+                p.particleSprite = this.particleSprite;
+            }
+            p.particleRotationalVelocity = this.particleRotationalVelocity;
+            if (this.randomRotation) {
+                p.currentRotation = ex.Util.randomInRange(0, Math.PI * 2);
+            }
+            if (this.focus) {
+                p.focus = this.focus.add(new ex.Vector(this.pos.x, this.pos.y));
+                p.focusAccel = this.focusAccel;
+            }
+            return p;
+        };
+        ParticleEmitter.prototype.update = function (engine, delta) {
+            var _this = this;
+            _super.prototype.update.call(this, engine, delta);
+            if (this.isEmitting) {
+                this._particlesToEmit += this.emitRate * (delta / 1000);
+                //var numParticles = Math.ceil(this.emitRate * delta / 1000);
+                if (this._particlesToEmit > 1.0) {
+                    this.emitParticles(Math.floor(this._particlesToEmit));
+                    this._particlesToEmit = this._particlesToEmit - Math.floor(this._particlesToEmit);
+                }
+            }
+            this.particles.forEach(function (p) { return p.update(delta); });
+            this.deadParticles.forEach(function (p) { return _this.particles.removeElement(p); });
+            this.deadParticles.clear();
+        };
+        ParticleEmitter.prototype.draw = function (ctx, delta) {
+            // todo is there a more efficient to draw 
+            // possibly use a webgl offscreen canvas and shaders to do particles?
+            this.particles.forEach(function (p) { return p.draw(ctx); });
+        };
+        ParticleEmitter.prototype.debugDraw = function (ctx) {
+            _super.prototype.debugDraw.call(this, ctx);
+            ctx.fillStyle = ex.Color.Black.toString();
+            ctx.fillText('Particles: ' + this.particles.count(), this.pos.x, this.pos.y + 20);
+            if (this.focus) {
+                ctx.fillRect(this.focus.x + this.pos.x, this.focus.y + this.pos.y, 3, 3);
+                ex.Util.DrawUtil.line(ctx, ex.Color.Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
+                ctx.fillText('Focus', this.focus.x + this.pos.x, this.focus.y + this.pos.y);
+            }
+        };
+        return ParticleEmitter;
+    }(ex.Actor));
+    ex.ParticleEmitter = ParticleEmitter;
+})(ex || (ex = {}));
+var ex;
+(function (ex) {
+    /**
+     * Animations
+     *
+     * Animations allow you to display a series of images one after another,
+     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
+     *
+     * ## Creating an animation
+     *
+     * Create a [[Texture]] that contains the frames of your animation. Once the texture
+     * is [[Loader|loaded]], you can then generate an [[Animation]] by creating a [[SpriteSheet]]
+     * and using [[SpriteSheet.getAnimationForAll]].
+     *
+     * ```js
+     * var game = new ex.Engine();
+     * var txAnimPlayerIdle = new ex.Texture("/assets/tx/anim-player-idle.png");
+     *
+     * // load assets
+     * var loader = new ex.Loader(txAnimPlayerIdle);
+     *
+     * // start game
+     * game.start(loader).then(function () {
+     *   var player = new ex.Actor();
+     *
+     *   // create sprite sheet with 5 columns, 1 row, 80x80 frames
+     *   var playerIdleSheet = new ex.SpriteSheet(txAnimPlayerIdle, 5, 1, 80, 80);
+     *
+     *   // create animation (125ms frame speed)
+     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(game, 125);
+     *
+     *   // add drawing to player as "idle"
+     *   player.addDrawing("idle", playerIdleAnimation);
+     *
+     *   // add player to game
+     *   game.add(player);
+     * });
+     * ```
+     *
+     * ## Sprite effects
+     *
+     * You can add [[SpriteEffect|sprite effects]] to an animation through methods
+     * like [[Animation.invert]] or [[Animation.lighten]]. Keep in mind, since this
+     * manipulates the raw pixel values of a [[Sprite]], it can have a performance impact.
+     */
+    var Animation = (function () {
+        /**
+         * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
+         *
+         * @param engine  Reference to the current game engine
+         * @param images  An array of sprites to create the frames for the animation
+         * @param speed   The number in milliseconds to display each frame in the animation
+         * @param loop    Indicates whether the animation should loop after it is completed
+         */
+        function Animation(engine, images, speed, loop) {
+            /**
+             * Current frame index being shown
+             */
+            this.currentFrame = 0;
+            this._oldTime = Date.now();
+            this.anchor = new ex.Vector(0.0, 0.0);
+            this.rotation = 0.0;
+            this.scale = new ex.Vector(1, 1);
+            /**
+             * Indicates whether the animation should loop after it is completed
+             */
+            this.loop = false;
+            /**
+             * Indicates the frame index the animation should freeze on for a non-looping
+             * animation. By default it is the last frame.
+             */
+            this.freezeFrame = -1;
+            /**
+             * Flip each frame vertically. Sets [[Sprite.flipVertical]].
+             */
+            this.flipVertical = false;
+            /**
+             * Flip each frame horizontally. Sets [[Sprite.flipHorizontal]].
+             */
+            this.flipHorizontal = false;
+            this.width = 0;
+            this.height = 0;
+            this.naturalWidth = 0;
+            this.naturalHeight = 0;
+            this.sprites = images;
+            this.speed = speed;
+            this._engine = engine;
+            if (loop != null) {
+                this.loop = loop;
+            }
+            if (images && images[0]) {
+                this.height = images[0] ? images[0].height : 0;
+                this.width = images[0] ? images[0].width : 0;
+                this.naturalWidth = images[0] ? images[0].naturalWidth : 0;
+                this.naturalHeight = images[0] ? images[0].naturalHeight : 0;
+                this.freezeFrame = images.length - 1;
+            }
+        }
+        /**
+         * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
+         */
+        Animation.prototype.opacity = function (value) {
+            this.addEffect(new ex.Effects.Opacity(value));
+        };
+        /**
+         * Applies the grayscale effect to a sprite, removing color information.
+         */
+        Animation.prototype.grayscale = function () {
+            this.addEffect(new ex.Effects.Grayscale());
+        };
+        /**
+         * Applies the invert effect to a sprite, inverting the pixel colors.
+         */
+        Animation.prototype.invert = function () {
+            this.addEffect(new ex.Effects.Invert());
+        };
+        /**
+         * Applies the fill effect to a sprite, changing the color channels of all non-transparent pixels to match a given color
+         */
+        Animation.prototype.fill = function (color) {
+            this.addEffect(new ex.Effects.Fill(color));
+        };
+        /**
+         * Applies the colorize effect to a sprite, changing the color channels of all pixesl to be the average of the original color and the
+         * provided color.
+         */
+        Animation.prototype.colorize = function (color) {
+            this.addEffect(new ex.Effects.Colorize(color));
+        };
+        /**
+         * Applies the lighten effect to a sprite, changes the lightness of the color according to hsl
+         */
+        Animation.prototype.lighten = function (factor) {
+            if (factor === void 0) { factor = 0.1; }
+            this.addEffect(new ex.Effects.Lighten(factor));
+        };
+        /**
+         * Applies the darken effect to a sprite, changes the darkness of the color according to hsl
+         */
+        Animation.prototype.darken = function (factor) {
+            if (factor === void 0) { factor = 0.1; }
+            this.addEffect(new ex.Effects.Darken(factor));
+        };
+        /**
+         * Applies the saturate effect to a sprite, saturates the color acccording to hsl
+         */
+        Animation.prototype.saturate = function (factor) {
+            if (factor === void 0) { factor = 0.1; }
+            this.addEffect(new ex.Effects.Saturate(factor));
+        };
+        /**
+         * Applies the desaturate effect to a sprite, desaturates the color acccording to hsl
+         */
+        Animation.prototype.desaturate = function (factor) {
+            if (factor === void 0) { factor = 0.1; }
+            this.addEffect(new ex.Effects.Desaturate(factor));
+        };
+        /**
+         * Add a [[ISpriteEffect]] manually
+         */
+        Animation.prototype.addEffect = function (effect) {
+            for (var i in this.sprites) {
+                this.sprites[i].addEffect(effect);
+            }
+        };
+        Animation.prototype.removeEffect = function (param) {
+            for (var i in this.sprites) {
+                this.sprites[i].removeEffect(param);
+            }
+        };
+        /**
+         * Clear all sprite effects
+         */
+        Animation.prototype.clearEffects = function () {
+            for (var i in this.sprites) {
+                this.sprites[i].clearEffects();
+            }
+        };
+        Animation.prototype._setAnchor = function (point) {
+            //if (!this.anchor.equals(point)) {
+            for (var i in this.sprites) {
+                this.sprites[i].anchor.setTo(point.x, point.y);
+            }
+            //}
+        };
+        Animation.prototype._setRotation = function (radians) {
+            //if (this.rotation !== radians) {
+            for (var i in this.sprites) {
+                this.sprites[i].rotation = radians;
+            }
+            //}
+        };
+        Animation.prototype._setScale = function (scale) {
+            //if (!this.scale.equals(scale)) {
+            for (var i in this.sprites) {
+                this.sprites[i].scale = scale;
+            }
+            //}
+        };
+        /**
+         * Resets the animation to first frame.
+         */
+        Animation.prototype.reset = function () {
+            this.currentFrame = 0;
+        };
+        /**
+         * Indicates whether the animation is complete, animations that loop are never complete.
+         */
+        Animation.prototype.isDone = function () {
+            return (!this.loop && this.currentFrame >= this.sprites.length);
+        };
+        /**
+         * Not meant to be called by game developers. Ticks the animation forward internally and
+         * calculates whether to change to the frame.
+         * @internal
+         */
+        Animation.prototype.tick = function () {
+            var time = Date.now();
+            if ((time - this._oldTime) > this.speed) {
+                this.currentFrame = (this.loop ? (this.currentFrame + 1) % this.sprites.length : this.currentFrame + 1);
+                this._oldTime = time;
+            }
+        };
+        Animation.prototype._updateValues = function () {
+            this._setAnchor(this.anchor);
+            this._setRotation(this.rotation);
+            this._setScale(this.scale);
+        };
+        /**
+         * Skips ahead a specified number of frames in the animation
+         * @param frames  Frames to skip ahead
+         */
+        Animation.prototype.skip = function (frames) {
+            this.currentFrame = (this.currentFrame + frames) % this.sprites.length;
+        };
+        Animation.prototype.draw = function (ctx, x, y) {
+            this.tick();
+            this._updateValues();
+            var currSprite;
+            if (this.currentFrame < this.sprites.length) {
+                currSprite = this.sprites[this.currentFrame];
+                if (this.flipVertical) {
+                    currSprite.flipVertical = this.flipVertical;
+                }
+                if (this.flipHorizontal) {
+                    currSprite.flipHorizontal = this.flipHorizontal;
+                }
+                currSprite.draw(ctx, x, y);
+            }
+            if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
+                currSprite = this.sprites[ex.Util.clamp(this.freezeFrame, 0, this.sprites.length - 1)];
+                currSprite.draw(ctx, x, y);
+            }
+            // add the calculated width
+            if (currSprite) {
+                this.width = currSprite.width;
+                this.height = currSprite.height;
+            }
+        };
+        /**
+         * Plays an animation at an arbitrary location in the game.
+         * @param x  The x position in the game to play
+         * @param y  The y position in the game to play
+         */
+        Animation.prototype.play = function (x, y) {
+            this.reset();
+            this._engine.playAnimation(this, x, y);
+        };
+        return Animation;
+    }());
+    ex.Animation = Animation;
+})(ex || (ex = {}));
+/// <reference path="MonkeyPatch.ts" />
+/// <reference path="Util/Util.ts" />
+/// <reference path="Util/Log.ts" />
+var ex;
+(function (ex) {
+    var Internal;
+    (function (Internal) {
+        var FallbackAudio = (function () {
+            function FallbackAudio(path, volume) {
+                this.path = path;
+                this._log = ex.Logger.getInstance();
+                this.onload = function () { return; };
+                this.onprogress = function () { return; };
+                this.onerror = function () { return; };
+                if (window.AudioContext) {
+                    this._log.debug('Using new Web Audio Api for ' + path);
+                    this._soundImpl = new WebAudio(path, volume);
+                }
+                else {
+                    this._log.debug('Falling back to Audio Element for ' + path);
+                    this._soundImpl = new AudioTag(path, volume);
+                }
+            }
+            FallbackAudio.prototype.setVolume = function (volume) {
+                this._soundImpl.setVolume(volume);
+            };
+            FallbackAudio.prototype.setLoop = function (loop) {
+                this._soundImpl.setLoop(loop);
+            };
+            FallbackAudio.prototype.load = function () {
+                this._soundImpl.onload = this.onload;
+                this._soundImpl.onprogress = this.onprogress;
+                this._soundImpl.onerror = this.onerror;
+                this._soundImpl.load();
+            };
+            FallbackAudio.prototype.processData = function (data) {
+                return this._soundImpl.processData(data);
+            };
+            FallbackAudio.prototype.getData = function () {
+                return this._soundImpl.getData();
+            };
+            FallbackAudio.prototype.setData = function (data) {
+                this._soundImpl.setData(data);
+            };
+            FallbackAudio.prototype.isPlaying = function () {
+                return this._soundImpl.isPlaying();
+            };
+            FallbackAudio.prototype.play = function () {
+                return this._soundImpl.play();
+            };
+            FallbackAudio.prototype.pause = function () {
+                this._soundImpl.pause();
+            };
+            FallbackAudio.prototype.stop = function () {
+                this._soundImpl.stop();
+            };
+            return FallbackAudio;
+        }());
+        Internal.FallbackAudio = FallbackAudio;
+        var AudioTag = (function () {
+            function AudioTag(path, volume) {
+                var _this = this;
+                this.path = path;
+                this._audioElements = new Array(5);
+                this._loadedAudio = null;
+                this._isLoaded = false;
+                this._index = 0;
+                this._log = ex.Logger.getInstance();
+                this._isPlaying = false;
+                this._currentOffset = 0;
+                this.onload = function () { return; };
+                this.onprogress = function () { return; };
+                this.onerror = function () { return; };
+                for (var i = 0; i < this._audioElements.length; i++) {
+                    (function (i) {
+                        _this._audioElements[i] = new Audio();
+                    })(i);
+                }
+                if (volume) {
+                    this.setVolume(ex.Util.clamp(volume, 0, 1.0));
+                }
+                else {
+                    this.setVolume(1.0);
+                }
+            }
+            AudioTag.prototype.isPlaying = function () {
+                return this._isPlaying;
+            };
+            AudioTag.prototype._audioLoaded = function () {
+                this._isLoaded = true;
+            };
+            AudioTag.prototype.setVolume = function (volume) {
+                var i = 0, len = this._audioElements.length;
+                for (i; i < len; i++) {
+                    this._audioElements[i].volume = volume;
+                }
+            };
+            AudioTag.prototype.setLoop = function (loop) {
+                var i = 0, len = this._audioElements.length;
+                for (i; i < len; i++) {
+                    this._audioElements[i].loop = loop;
+                }
+            };
+            AudioTag.prototype.getLoop = function () {
+                this._audioElements.some(function (a) { return a.loop; });
+            };
+            AudioTag.prototype.load = function () {
+                var _this = this;
+                if (!!this._loadedAudio) {
+                    return;
+                }
+                var request = new XMLHttpRequest();
+                request.open('GET', this.path, true);
+                request.responseType = 'blob';
+                request.onprogress = this.onprogress;
+                request.onerror = this.onerror;
+                request.onload = function (e) {
+                    if (request.status !== 200) {
+                        _this._log.error('Failed to load audio resource ', _this.path, ' server responded with error code', request.status);
+                        _this.onerror(request.response);
+                        _this._isLoaded = false;
+                        return;
+                    }
+                    _this._isLoaded = true;
+                    _this.setData(request.response);
+                    _this.onload(e);
+                };
+                request.send();
+            };
+            AudioTag.prototype.getData = function () {
+                return this._loadedAudio;
+            };
+            AudioTag.prototype.setData = function (data) {
+                this._isLoaded = true;
+                this._loadedAudio = this.processData(data);
+            };
+            AudioTag.prototype.processData = function (data) {
+                var blobUrl = URL.createObjectURL(data);
+                this._audioElements.forEach(function (a) {
+                    a.src = blobUrl;
+                });
+                this._audioLoaded();
+                return blobUrl;
+            };
+            AudioTag.prototype.play = function () {
+                var _this = this;
+                this._audioElements[this._index].load();
+                //this.audioElements[this.index].currentTime = this._currentOffset;
+                this._audioElements[this._index].play();
+                this._currentOffset = 0;
+                var done = new ex.Promise();
+                this._isPlaying = true;
+                if (!this.getLoop()) {
+                    this._audioElements[this._index].addEventListener('ended', function () {
+                        _this._isPlaying = false;
+                        done.resolve(true);
+                    });
+                }
+                this._index = (this._index + 1) % this._audioElements.length;
+                return done;
+            };
+            AudioTag.prototype.pause = function () {
+                this._index = (this._index - 1 + this._audioElements.length) % this._audioElements.length;
+                this._currentOffset = this._audioElements[this._index].currentTime;
+                this._audioElements.forEach(function (a) {
+                    a.pause();
+                });
+                this._isPlaying = false;
+            };
+            AudioTag.prototype.stop = function () {
+                this._audioElements.forEach(function (a) {
+                    a.pause();
+                    //a.currentTime = 0;
+                });
+                this._isPlaying = false;
+            };
+            return AudioTag;
+        }());
+        Internal.AudioTag = AudioTag;
+        if (window.AudioContext) {
+            var audioContext = new window.AudioContext();
+        }
+        var WebAudio = (function () {
+            function WebAudio(path, volume) {
+                this.path = path;
+                this._context = audioContext;
+                this._volume = this._context.createGain();
+                this._buffer = null;
+                this._sound = null;
+                this._isLoaded = false;
+                this._loop = false;
+                this._isPlaying = false;
+                this._isPaused = false;
+                this._currentOffset = 0;
+                this._logger = ex.Logger.getInstance();
+                this._data = null;
+                this.onload = function () { return; };
+                this.onprogress = function () { return; };
+                this.onerror = function () { return; };
+                if (volume) {
+                    this._volume.gain.value = ex.Util.clamp(volume, 0, 1.0);
+                }
+                else {
+                    this._volume.gain.value = 1.0; // max volume
+                }
+            }
+            WebAudio.prototype.setVolume = function (volume) {
+                this._volume.gain.value = volume;
+            };
+            WebAudio.prototype.load = function () {
+                var _this = this;
+                // Exit early if we already have data
+                if (this._data !== null) {
+                    return;
+                }
+                var request = new XMLHttpRequest();
+                request.open('GET', this.path);
+                request.responseType = 'arraybuffer';
+                request.onprogress = this.onprogress;
+                request.onerror = this.onerror;
+                request.onload = function () {
+                    if (request.status !== 200) {
+                        _this._logger.error('Failed to load audio resource ', _this.path, ' server responded with error code', request.status);
+                        _this.onerror(request.response);
+                        _this._isLoaded = false;
+                        return;
+                    }
+                    _this.setData(request.response);
+                };
+                try {
+                    request.send();
+                }
+                catch (e) {
+                    console.error('Error loading sound! If this is a cross origin error, you must host your sound with your html and javascript.');
+                }
+            };
+            WebAudio.prototype.getData = function () {
+                return this._data;
+            };
+            WebAudio.prototype.setData = function (data) {
+                this._data = this.processData(data);
+            };
+            WebAudio.prototype.processData = function (data) {
+                var _this = this;
+                this._context.decodeAudioData(data, function (buffer) {
+                    _this._buffer = buffer;
+                    _this._isLoaded = true;
+                    _this.onload(_this);
+                }, function (e) {
+                    _this._logger.error('Unable to decode ' + _this.path +
+                        ' this browser may not fully support this format, or the file may be corrupt, ' +
+                        'if this is an mp3 try removing id3 tags and album art from the file.');
+                    _this._isLoaded = false;
+                    _this.onload(_this);
+                });
+                return data;
+            };
+            WebAudio.prototype.setLoop = function (loop) {
+                this._loop = loop;
+            };
+            WebAudio.prototype.isPlaying = function () {
+                return this._isPlaying;
+            };
+            WebAudio.prototype.play = function () {
+                var _this = this;
+                if (this._isLoaded) {
+                    this._sound = this._context.createBufferSource();
+                    this._sound.buffer = this._buffer;
+                    this._sound.loop = this._loop;
+                    this._sound.connect(this._volume);
+                    this._volume.connect(this._context.destination);
+                    this._sound.start(0, this._currentOffset % this._buffer.duration);
+                    this._currentOffset = 0;
+                    var done;
+                    if (!this._isPaused || !this._playPromise) {
+                        done = new ex.Promise();
+                    }
+                    else {
+                        done = this._playPromise;
+                    }
+                    this._isPaused = false;
+                    this._isPlaying = true;
+                    if (!this._loop) {
+                        this._sound.onended = (function () {
+                            _this._isPlaying = false;
+                            if (!_this._isPaused) {
+                                done.resolve(true);
+                            }
+                        }).bind(this);
+                    }
+                    this._playPromise = done;
+                    return done;
+                }
+                else {
+                    return ex.Promise.wrap(true);
+                }
+            };
+            WebAudio.prototype.pause = function () {
+                if (this._isPlaying) {
+                    try {
+                        window.clearTimeout(this._playingTimer);
+                        this._sound.stop(0);
+                        this._currentOffset = this._context.currentTime;
+                        this._isPlaying = false;
+                        this._isPaused = true;
+                    }
+                    catch (e) {
+                        this._logger.warn('The sound clip', this.path, 'has already been paused!');
+                    }
+                }
+            };
+            WebAudio.prototype.stop = function () {
+                if (this._sound) {
+                    try {
+                        window.clearTimeout(this._playingTimer);
+                        this._currentOffset = 0;
+                        this._sound.stop(0);
+                        this._isPlaying = false;
+                        this._isPaused = false;
+                    }
+                    catch (e) {
+                        this._logger.warn('The sound clip', this.path, 'has already been stopped!');
+                    }
+                }
+            };
+            /**
+             * Play an empty sound to unlock Safari WebAudio context. Call this function
+             * right after a user interaction event. Typically used by [[PauseAfterLoader]]
+             * @source https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
+             */
+            WebAudio.unlock = function () {
+                if (this._unlocked || !audioContext) {
+                    return;
+                }
+                // create empty buffer and play it
+                var buffer = audioContext.createBuffer(1, 1, 22050);
+                var source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                if (source.noteOn) {
+                    source.noteOn(0);
+                }
+                else {
+                    source.start(0);
+                }
+                // by checking the play state after some time, we know if we're really unlocked
+                setTimeout(function () {
+                    if (source.playbackState === source.PLAYING_STATE ||
+                        source.playbackState === source.FINISHED_STATE) {
+                        this._unlocked = true;
+                    }
+                }, 0);
+            };
+            WebAudio.isUnlocked = function () {
+                return this._unlocked;
+            };
+            WebAudio._unlocked = false;
+            return WebAudio;
+        }());
+        Internal.WebAudio = WebAudio;
+    })(Internal = ex.Internal || (ex.Internal = {}));
+})(ex || (ex = {}));
+/// <reference path="../Drawing/Color.ts" />
+var ex;
+(function (ex) {
+    var Util;
+    (function (Util) {
+        var DrawUtil;
+        (function (DrawUtil) {
+            /**
+             * Draw a line on canvas context
+             *
+             * @param ctx The canvas context
+             * @param color The color of the line
+             * @param x1 The start x coordinate
+             * @param y1 The start y coordinate
+             * @param x2 The ending x coordinate
+             * @param y2 The ending y coordinate
+             */
+            /* istanbul ignore next */
+            function line(ctx, color, x1, y1, x2, y2) {
+                if (color === void 0) { color = ex.Color.Red.clone(); }
+                ctx.beginPath();
+                ctx.strokeStyle = color.toString();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            DrawUtil.line = line;
+            /**
+             * Draw the vector as a point onto the canvas.
+             */
+            /* istanbul ignore next */
+            function point(ctx, color, point) {
+                if (color === void 0) { color = ex.Color.Red.clone(); }
+                ctx.beginPath();
+                ctx.strokeStyle = color.toString();
+                ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            DrawUtil.point = point;
+            /**
+             * Draw the vector as a line onto the canvas starting a origin point.
+             */
+            /* istanbul ignore next */
+            function vector(ctx, color, origin, vector, scale) {
+                if (scale === void 0) { scale = 1.0; }
+                var c = color ? color.toString() : 'blue';
+                var v = vector.scale(scale);
+                ctx.beginPath();
+                ctx.strokeStyle = c;
+                ctx.moveTo(origin.x, origin.y);
+                ctx.lineTo(origin.x + v.x, origin.y + v.y);
+                ctx.closePath();
+                ctx.stroke();
+            }
+            DrawUtil.vector = vector;
+            /**
+             * Draw a round rectange on a canvas context
+             *
+             * @param ctx The canvas context
+             * @param x The top-left x coordinate
+             * @param y The top-left y coordinate
+             * @param width The width of the rectangle
+             * @param height The height of the rectangle
+             * @param radius The border radius of the rectangle
+             * @param fill The [[ex.Color]] to fill rectangle with
+             * @param stroke The [[ex.Color]] to stroke rectangle with
+             */
+            function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
+                if (radius === void 0) { radius = 5; }
+                if (stroke === void 0) { stroke = ex.Color.White; }
+                if (fill === void 0) { fill = null; }
+                var br;
+                if (typeof radius === 'number') {
+                    br = { tl: radius, tr: radius, br: radius, bl: radius };
+                }
+                else {
+                    var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+                    for (var side in defaultRadius) {
+                        br[side] = radius[side] || defaultRadius[side];
+                    }
+                }
+                ctx.beginPath();
+                ctx.moveTo(x + br.tl, y);
+                ctx.lineTo(x + width - br.tr, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + br.tr);
+                ctx.lineTo(x + width, y + height - br.br);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - br.br, y + height);
+                ctx.lineTo(x + br.bl, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - br.bl);
+                ctx.lineTo(x, y + br.tl);
+                ctx.quadraticCurveTo(x, y, x + br.tl, y);
+                ctx.closePath();
+                if (fill) {
+                    ctx.fillStyle = fill.toString();
+                    ctx.fill();
+                }
+                if (stroke) {
+                    ctx.strokeStyle = stroke.toString();
+                    ctx.stroke();
+                }
+            }
+            DrawUtil.roundRect = roundRect;
+        })(DrawUtil = Util.DrawUtil || (Util.DrawUtil = {}));
+    })(Util = ex.Util || (ex.Util = {}));
+})(ex || (ex = {}));
+/// <reference path="ILoadable.ts" />
+/// <reference path="Util/Util.ts" />
+/// <reference path="Util/DrawUtil.ts" />
+/// <reference path="Promises.ts" />
+/// <reference path="Resources/Resource.ts" />
+/// <reference path="Interfaces/ILoadable.ts" />
+/// <reference path="Interfaces/ILoader.ts" />
+var ex;
+(function (ex) {
     /**
      * Pre-loading assets
      *
@@ -9907,7 +11581,7 @@ var ex;
      * // loop through dictionary and add to loader
      * for (var loadable in resources) {
      *   if (resources.hasOwnProperty(loadable)) {
-     *     loader.addResource(loadable);
+     *     loader.addResource(resources[loadable]);
      *   }
      * }
      *
@@ -9917,18 +11591,26 @@ var ex;
      * });
      * ```
      */
-    var Loader = (function () {
+    var Loader = (function (_super) {
+        __extends(Loader, _super);
         /**
          * @param loadables  Optionally provide the list of resources you want to load at constructor time
          */
         function Loader(loadables) {
+            _super.call(this);
             this._resourceList = [];
             this._index = 0;
             this._resourceCount = 0;
             this._numLoaded = 0;
             this._progressCounts = {};
             this._totalCounts = {};
-            this.onprogress = function () { return; };
+            this.getData = function () { return; };
+            this.setData = function (data) { return; };
+            this.processData = function (data) { return; };
+            this.onprogress = function (e) {
+                ex.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
+                return;
+            };
             this.oncomplete = function () { return; };
             this.onerror = function () { return; };
             if (loadables) {
@@ -10003,7 +11685,6 @@ var ex;
                 r.oncomplete = r.onerror = function () {
                     me._numLoaded++;
                     if (me._numLoaded === me._resourceCount) {
-                        me.onprogress.call(me, { loaded: 100, total: 100 });
                         me.oncomplete.call(me);
                         complete.resolve();
                     }
@@ -10020,9 +11701,160 @@ var ex;
             loadNext(this._resourceList, 0);
             return complete;
         };
+        /**
+         * Loader draw function. Draws the default Excalibur loading screen. Override to customize the drawing.
+         */
+        Loader.prototype.draw = function (ctx, delta) {
+            ctx.fillStyle = '#176BAA';
+            ctx.fillRect(0, 0, this._engine.width, this._engine.height);
+            var oImageWidth = 468;
+            var oImageHeight = 118;
+            var y = this._engine.canvas.height / 2;
+            var width = Math.min(oImageWidth, this._engine.canvas.width * 0.75);
+            var x = (this._engine.width / 2) - (width / 2);
+            // loading image
+            var image = new Image();
+            /* tslint:disable:max-line-length */
+            // base64 string encoding of the excalibur logo (logo-white.png)
+            image.src = 'data:image/png;base64,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';
+            /* tslint:enable:max-line-length */
+            var imageHeight = Math.floor(width * (oImageHeight / oImageWidth)); // OG height/width factor
+            var oldAntialias = this._engine.getAntialiasing();
+            this._engine.setAntialiasing(true);
+            ctx.drawImage(image, 0, 0, oImageWidth, oImageHeight, x, y - imageHeight - 20, width, imageHeight);
+            // loading box
+            ctx.lineWidth = 2;
+            ex.Util.DrawUtil.roundRect(ctx, x, y, width, 20, 10);
+            var progress = width * (this._numLoaded / this._resourceCount);
+            var margin = 5;
+            var progressWidth = progress - margin * 2;
+            var height = 20 - margin * 2;
+            ex.Util.DrawUtil.roundRect(ctx, x + margin, y + margin, progressWidth > 0 ? progressWidth : 0, height, 5, null, ex.Color.White);
+            this._engine.setAntialiasing(oldAntialias);
+        };
+        /**
+         * Perform any calculations or logic in the `update` method. The default `Loader` does not
+         * do anything in this method so it is safe to override.
+         */
+        Loader.prototype.update = function (engine, delta) {
+            // overridable update
+        };
         return Loader;
-    })();
+    }(ex.Class));
     ex.Loader = Loader;
+    /**
+     * A [[Loader]] that pauses after loading to allow user
+     * to proceed to play the game. Typically you will
+     * want to use this loader for iOS to allow sounds
+     * to play after loading (Apple Safari requires user
+     * interaction to allow sounds, even for games)
+     *
+     * **Note:** Because Loader is not part of a Scene, you must
+     * call `update` and `draw` manually on "child" objects.
+     *
+     * ## Implementing a Trigger
+     *
+     * The `PauseAfterLoader` requires an element to act as the trigger button
+     * to start the game.
+     *
+     * For example, let's create an `<a>` tag to be our trigger and call it `tap-to-play`.
+     *
+     * ```html
+     * <div id="wrapper">
+     *    <canvas id="game"></canvas>
+     *    <a id="tap-to-play" href='javascript:void(0);'>Tap to Play</a>
+     * </div>
+     * ```
+     *
+     * We've put it inside a wrapper to position it properly over the game canvas.
+     *
+     * Now let's add some CSS to style it (insert into `<head>`):
+     *
+     * ```html
+     * <style>
+     *     #wrapper {
+     *         position: relative;
+     *         width: 500px;
+     *         height: 500px;
+     *     }
+     *     #tap-to-play {
+     *         display: none;
+     *         font-size: 24px;
+     *         font-family: sans-serif;
+     *         text-align: center;
+     *         border: 3px solid white;
+     *         position: absolute;
+     *         color: white;
+     *         width: 200px;
+     *         height: 50px;
+     *         line-height: 50px;
+     *         text-decoration: none;
+     *         left: 147px;
+     *         top: 80%;
+     *     }
+     * </style>
+     * ```
+     *
+     * Now we can create a `PauseAfterLoader` with a reference to our trigger button:
+     *
+     * ```ts
+     * var loader = new ex.PauseAfterLoader('tap-to-play', [...]);
+     * ```
+     *
+     * ## Use PauseAfterLoader for iOS
+     *
+     * The primary use case for pausing before starting the game is to
+     * pass Apple's requirement of user interaction. The Web Audio context
+     * in Safari is disabled by default until user interaction.
+     *
+     * Therefore, you can use this snippet to only use PauseAfterLoader when
+     * iOS is detected (see [this thread](http://stackoverflow.com/questions/9038625/detect-if-device-is-ios)
+     * for more techniques).
+     *
+     * ```ts
+     * var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(<any>window).MSStream;
+     * var loader: ex.Loader = iOS ? new ex.PauseAfterLoader('tap-to-play') : new ex.Loader();
+     *
+     * loader.addResource(...);
+     * ```
+     */
+    var PauseAfterLoader = (function (_super) {
+        __extends(PauseAfterLoader, _super);
+        function PauseAfterLoader(triggerElementId, loadables) {
+            var _this = this;
+            _super.call(this, loadables);
+            this._handleOnTrigger = function () {
+                if (_this._waitPromise.state() !== ex.PromiseState.Pending) {
+                    return false;
+                }
+                // unlock Safari WebAudio context
+                ex.Internal.WebAudio.unlock();
+                // continue to play game
+                _this._waitPromise.resolve(_this._loadedValue);
+                // hide DOM element
+                _this._playTrigger.style.display = 'none';
+                return false;
+            };
+            this._playTrigger = document.getElementById(triggerElementId);
+            this._playTrigger.addEventListener('click', this._handleOnTrigger);
+        }
+        PauseAfterLoader.prototype.load = function () {
+            var _this = this;
+            this._waitPromise = new ex.Promise();
+            // wait until user indicates to proceed before finishing load
+            var superLoad = _super.prototype.load.call(this).then(function (value) {
+                _this._loaded = true;
+                _this._loadedValue = value;
+                // show element
+                _this._playTrigger.style.display = 'block';
+            }, function (value) {
+                _this._waitPromise.reject(value);
+            });
+            return this._waitPromise;
+        };
+        return PauseAfterLoader;
+    }(Loader));
+    ex.PauseAfterLoader = PauseAfterLoader;
 })(ex || (ex = {}));
 /// <reference path="Log.ts" />
 var ex;
@@ -10102,201 +11934,8 @@ var ex;
             return true;
         };
         return Detector;
-    })();
+    }());
     ex.Detector = Detector;
-})(ex || (ex = {}));
-/// <reference path="Promises.ts" />
-/// <reference path="Loader.ts" />
-/// <reference path="Util/Log.ts" />
-var ex;
-(function (ex) {
-    /**
-     * Excalibur's built in templating class, it is a loadable that will load
-     * and html fragment from a url. Excalibur templating is very basic only
-     * allowing bindings of the type `data-text="this.obj.someprop"`,
-     * `data-style="color:this.obj.color.toString()"`. Bindings allow all valid
-     * Javascript expressions.
-     */
-    var Template = (function () {
-        /**
-         * @param path  Location of the html template
-         */
-        function Template(path) {
-            this.path = path;
-            this._isLoaded = false;
-            this.logger = ex.Logger.getInstance();
-            this.onprogress = function () { return; };
-            this.oncomplete = function () { return; };
-            this.onerror = function () { return; };
-            this._innerElement = document.createElement('div');
-            this._innerElement.className = 'excalibur-template';
-        }
-        Template.prototype.wireEngine = function (engine) {
-            this._engine = engine;
-        };
-        /**
-         * Returns the full html template string once loaded.
-         */
-        Template.prototype.getTemplateString = function () {
-            if (!this._isLoaded) {
-                return '';
-            }
-            return this._htmlString;
-        };
-        Template.prototype._compile = function () {
-            this._innerElement.innerHTML = this._htmlString;
-            this._styleElements = this._innerElement.querySelectorAll('[data-style]');
-            this._textElements = this._innerElement.querySelectorAll('[data-text]');
-        };
-        Template.prototype._evaluateExpresion = function (expression, ctx) {
-            var func = new Function('return ' + expression + ';');
-            var val = func.call(ctx);
-            return val;
-        };
-        /**
-         * Applies any ctx object you wish and evaluates the template.
-         * Overload this method to include your favorite template library.
-         * You may return either an HTML string or a Dom node.
-         * @param ctx Any object you wish to apply to the template
-         */
-        Template.prototype.apply = function (ctx) {
-            var _this = this;
-            /* tslint:disable:no-string-literal */
-            for (var j = 0; j < this._styleElements.length; j++) {
-                (function () {
-                    // poor man's json parse for things that aren't exactly json :(
-                    // Extract style expressions
-                    var styles = {};
-                    _this._styleElements[j].dataset['style'].split(';').forEach(function (s) {
-                        if (s) {
-                            var vals = s.split(':');
-                            styles[vals[0].trim()] = vals[1].trim();
-                        }
-                    });
-                    // Evaluate parsed style expressions
-                    for (var style in styles) {
-                        (function () {
-                            var expression = styles[style];
-                            _this._styleElements[j].style[style] = _this._evaluateExpresion(expression, ctx);
-                        })();
-                    }
-                })();
-            }
-            for (var i = 0; i < this._textElements.length; i++) {
-                (function () {
-                    // Evaluate text expressions
-                    var expression = _this._textElements[i].dataset['text'];
-                    _this._textElements[i].innerText = _this._evaluateExpresion(expression, ctx);
-                })();
-            }
-            // If the template HTML has a root element return that, otherwise use constructed root
-            if (this._innerElement.children.length === 1) {
-                this._innerElement = this._innerElement.firstChild;
-            }
-            /* tslint:enable:no-string-literal */
-            return this._innerElement;
-        };
-        /**
-         * Begins loading the template. Returns a promise that resolves with the template string when loaded.
-         */
-        Template.prototype.load = function () {
-            var _this = this;
-            var complete = new ex.Promise();
-            var request = new XMLHttpRequest();
-            request.open('GET', this.path, true);
-            request.responseType = 'text';
-            request.onprogress = this.onprogress;
-            request.onerror = this.onerror;
-            request.onload = function (e) {
-                if (request.status !== 200) {
-                    _this.logger.error('Failed to load html template resource ', _this.path, ' server responded with error code', request.status);
-                    _this.onerror(request.response);
-                    _this._isLoaded = false;
-                    complete.resolve('error');
-                    return;
-                }
-                _this._htmlString = request.response;
-                _this.oncomplete();
-                _this.logger.debug('Completed loading template', _this.path);
-                _this._compile();
-                _this._isLoaded = true;
-                complete.resolve(_this._htmlString);
-            };
-            if (request.overrideMimeType) {
-                request.overrideMimeType('text/plain; charset=x-user-defined');
-            }
-            request.send();
-            return complete;
-        };
-        /**
-         * Indicates whether the template has been loaded
-         */
-        Template.prototype.isLoaded = function () {
-            return this._isLoaded;
-        };
-        return Template;
-    })();
-    ex.Template = Template;
-    /**
-     * Excalibur's binding library that allows you to bind an html
-     * template to the dom given a certain context. Excalibur bindings are only updated
-     * when the update() method is called
-     */
-    var Binding = (function () {
-        /**
-         * @param parentElementId  The id of the element in the dom to attach the template binding
-         * @param template         The template you wish to bind
-         * @param ctx              The context of the binding, which can be any object
-         */
-        function Binding(parentElementId, template, ctx) {
-            this.parent = document.getElementById(parentElementId);
-            this.template = template;
-            this._ctx = ctx;
-            this.update();
-        }
-        /**
-         * Listen to any arbitrary object's events to update this binding
-         * @param obj     Any object that supports addEventListener
-         * @param events  A list of events to listen for
-         * @param handler A optional handler to fire on any event
-         */
-        Binding.prototype.listen = function (obj, events, handler) {
-            var _this = this;
-            // todo
-            if (!handler) {
-                handler = function () {
-                    _this.update();
-                };
-            }
-            if (obj.addEventListener) {
-                events.forEach(function (e) {
-                    obj.addEventListener(e, handler);
-                });
-            }
-        };
-        /**
-         * Update this template binding with the latest values from
-         * the ctx reference passed to the constructor
-         */
-        Binding.prototype.update = function () {
-            var html = this._applyTemplate(this.template, this._ctx);
-            if (html instanceof String) {
-                this.parent.innerHTML = html;
-            }
-            if (html instanceof Node) {
-                if (this.parent.lastChild !== html) {
-                    this.parent.appendChild(html);
-                }
-            }
-        };
-        Binding.prototype._applyTemplate = function (template, ctx) {
-            if (template.isLoaded()) {
-                return template.apply(ctx);
-            }
-        };
-        return Binding;
-    })();
-    ex.Binding = Binding;
 })(ex || (ex = {}));
 /// <reference path="Actor.ts" />
 var ex;
@@ -10416,7 +12055,9 @@ var ex;
      * var label = new ex.Label();
      * label.x = 50;
      * label.y = 50;
-     * label.font = "10px Arial";
+     * label.fontFamily = "Arial";
+     * label.fontSize = 10;
+     * lable.fontUnit = ex.FontUnit.Px // pixels are the default
      * label.text = "Foo";
      * label.color = ex.Color.White;
      * label.textAlign = ex.TextAlign.Center;
@@ -10427,6 +12068,14 @@ var ex;
      * // start game
      * game.start();
      * ```
+     *
+     * ## Adjusting Fonts
+     *
+     * You can use the [[fontFamily]], [[fontSize]], [[fontUnit]], [[textAlign]], and [[baseAlign]]
+     * properties to customize how the label is drawn.
+     *
+     * You can also use [[getTextWidth]] to retrieve the measured width of the rendered text for
+     * helping in calculations.
      *
      * ## Web Fonts
      *
@@ -10457,7 +12106,9 @@ var ex;
      * var game = new ex.Engine();
      *
      * var label = new ex.Label();
-     * label.font = "12px Foobar, Arial, Sans-Serif";
+     * label.fontFamily = "Foobar, Arial, Sans-Serif";
+     * label.fontSize = 10;
+     * label.fontUnit = ex.FontUnit.Em;
      * label.text = "Hello World";
      *
      * game.add(label);
@@ -10523,13 +12174,13 @@ var ex;
             this.color = ex.Color.Black.clone();
             this.spriteFont = spriteFont;
             this.collisionType = ex.CollisionType.PreventCollision;
-            this.fontFamily = fontFamily || '10px sans-serif'; // coallesce to default canvas font
+            this.fontFamily = fontFamily || 'sans-serif'; // coallesce to default canvas font
             if (spriteFont) {
             }
         }
         /**
          * Returns the width of the text in the label (in pixels);
-         * @param ctx  Rending context to measure the string with
+         * @param ctx  Rendering context to measure the string with
          */
         Label.prototype.getTextWidth = function (ctx) {
             var oldFont = ctx.font;
@@ -10637,7 +12288,7 @@ var ex;
         };
         Label.prototype.draw = function (ctx, delta) {
             ctx.save();
-            ctx.translate(this.x, this.y);
+            ctx.translate(this.pos.x, this.pos.y);
             ctx.scale(this.scale.x, this.scale.y);
             ctx.rotate(this.rotation);
             if (this._textShadowOn) {
@@ -10685,7 +12336,7 @@ var ex;
             _super.prototype.debugDraw.call(this, ctx);
         };
         return Label;
-    })(ex.Actor);
+    }(ex.Actor));
     ex.Label = Label;
 })(ex || (ex = {}));
 /// <reference path="../Events.ts"/>
@@ -10756,7 +12407,7 @@ var ex;
                 this.ev = ev;
             }
             return PointerEvent;
-        })(ex.GameEvent);
+        }(ex.GameEvent));
         Input.PointerEvent = PointerEvent;
         ;
         /**
@@ -11013,7 +12664,7 @@ var ex;
                     e.preventDefault();
                     var x = e.pageX - ex.Util.getPosition(_this._engine.canvas).x;
                     var y = e.pageY - ex.Util.getPosition(_this._engine.canvas).y;
-                    var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Point(x, y));
+                    var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Vector(x, y));
                     var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, 0, PointerType.Mouse, e.button, e);
                     eventArr.push(pe);
                     _this.at(0).eventDispatcher.emit(eventName, pe);
@@ -11030,7 +12681,7 @@ var ex;
                         }
                         var x = e.changedTouches[i].pageX - ex.Util.getPosition(_this._engine.canvas).x;
                         var y = e.changedTouches[i].pageY - ex.Util.getPosition(_this._engine.canvas).y;
-                        var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Point(x, y));
+                        var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Vector(x, y));
                         var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, index, PointerType.Touch, PointerButton.Unknown, e);
                         eventArr.push(pe);
                         _this.at(index).eventDispatcher.emit(eventName, pe);
@@ -11059,7 +12710,7 @@ var ex;
                     }
                     var x = e.pageX - ex.Util.getPosition(_this._engine.canvas).x;
                     var y = e.pageY - ex.Util.getPosition(_this._engine.canvas).y;
-                    var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Point(x, y));
+                    var transformedPoint = _this._engine.screenToWorldCoordinates(new ex.Vector(x, y));
                     var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, index, _this._stringToPointerType(e.pointerType), e.button, e);
                     eventArr.push(pe);
                     _this.at(index).eventDispatcher.emit(eventName, pe);
@@ -11106,7 +12757,7 @@ var ex;
                 }
             };
             return Pointers;
-        })(ex.Class);
+        }(ex.Class));
         Input.Pointers = Pointers;
         /**
          * Captures and dispatches PointerEvents
@@ -11117,7 +12768,7 @@ var ex;
                 _super.apply(this, arguments);
             }
             return Pointer;
-        })(ex.Class);
+        }(ex.Class));
         Input.Pointer = Pointer;
     })(Input = ex.Input || (ex.Input = {}));
 })(ex || (ex = {}));
@@ -11191,7 +12842,7 @@ var ex;
                 this.key = key;
             }
             return KeyEvent;
-        })(ex.GameEvent);
+        }(ex.GameEvent));
         Input.KeyEvent = KeyEvent;
         /**
          * Keyboard input
@@ -11317,7 +12968,7 @@ var ex;
                 return this._keysUp.indexOf(key) > -1;
             };
             return Keyboard;
-        })(ex.Class);
+        }(ex.Class));
         Input.Keyboard = Keyboard;
     })(Input = ex.Input || (ex.Input = {}));
 })(ex || (ex = {}));
@@ -11343,8 +12994,9 @@ var ex;
          * ## Gamepad Filtering
          *
          * Different browsers/devices are sometimes loose about the devices they consider Gamepads, you can set minimum device requirements with
-         * `engine.inpute.gamepads.setMinimumGamepadConfiguration` so that undesired devices are not reported to you (Touchpads, Mice, Web
+         * `engine.input.gamepads.setMinimumGamepadConfiguration` so that undesired devices are not reported to you (Touchpads, Mice, Web
          * Cameras, etc.).
+         *
          * ```js
          * // ensures that only gamepads with at least 4 axis and 8 buttons are reported for events
          * engine.input.gamepads.setMinimumGamepadConfiguration({
@@ -11572,35 +13224,33 @@ var ex;
                     // Add reference to navigator gamepad
                     this.at(i).navigatorGamepad = gamepads[i];
                     // Buttons
-                    var b, a, value, buttonIndex, axesIndex;
+                    var b, bi, a, ai, value;
                     for (b in Buttons) {
-                        if (typeof Buttons[b] !== 'number') {
-                            continue;
-                        }
-                        buttonIndex = Buttons[b];
-                        if (gamepads[i].buttons[buttonIndex]) {
-                            value = gamepads[i].buttons[buttonIndex].value;
-                            if (value !== this._oldPads[i].getButton(buttonIndex)) {
-                                if (gamepads[i].buttons[buttonIndex].pressed) {
-                                    this.at(i).updateButton(buttonIndex, value);
-                                    this.at(i).eventDispatcher.publish('button', new ex.GamepadButtonEvent(buttonIndex, value));
-                                }
-                                else {
-                                    this.at(i).updateButton(buttonIndex, 0);
+                        bi = Buttons[b];
+                        if (typeof bi === 'number') {
+                            if (gamepads[i].buttons[bi]) {
+                                value = gamepads[i].buttons[bi].value;
+                                if (value !== this._oldPads[i].getButton(bi)) {
+                                    if (gamepads[i].buttons[bi].pressed) {
+                                        this.at(i).updateButton(bi, value);
+                                        this.at(i).eventDispatcher.emit('button', new ex.GamepadButtonEvent(bi, value));
+                                    }
+                                    else {
+                                        this.at(i).updateButton(bi, 0);
+                                    }
                                 }
                             }
                         }
                     }
                     // Axes
                     for (a in Axes) {
-                        if (typeof Axes[a] !== 'number') {
-                            continue;
-                        }
-                        axesIndex = Axes[a];
-                        value = gamepads[i].axes[axesIndex];
-                        if (value !== this._oldPads[i].getAxes(axesIndex)) {
-                            this.at(i).updateAxes(axesIndex, value);
-                            this.at(i).eventDispatcher.emit('axis', new ex.GamepadAxisEvent(axesIndex, value));
+                        ai = Axes[a];
+                        if (typeof ai === 'number') {
+                            value = gamepads[i].axes[ai];
+                            if (value !== this._oldPads[i].getAxes(ai)) {
+                                this.at(i).updateAxes(ai, value);
+                                this.at(i).eventDispatcher.emit('axis', new ex.GamepadAxisEvent(ai, value));
+                            }
                         }
                     }
                     this._oldPads[i] = this._clonePad(gamepads[i]);
@@ -11670,7 +13320,7 @@ var ex;
              */
             Gamepads.MinAxisMoveThreshold = 0.05;
             return Gamepads;
-        })(ex.Class);
+        }(ex.Class));
         Input.Gamepads = Gamepads;
         /**
          * Gamepad holds state information for a connected controller. See [[Gamepads]]
@@ -11726,7 +13376,7 @@ var ex;
                 this._axes[axesIndex] = value;
             };
             return Gamepad;
-        })(ex.Class);
+        }(ex.Class));
         Input.Gamepad = Gamepad;
         /**
          * Gamepad Buttons enumeration
@@ -11827,8 +13477,13 @@ var ex;
 /// <reference path="EventDispatcher.ts" />
 /// <reference path="Class.ts" />
 /// <reference path="Drawing/Color.ts" />
+/// <reference path="Drawing/Polygon.ts" />
 /// <reference path="Util/Log.ts" />
+/// <reference path="Resources/Resource.ts" />
+/// <reference path="Resources/Texture.ts" />
+/// <reference path="Resources/Sound.ts" />
 /// <reference path="Collision/Side.ts" />
+/// <reference path="Physics.ts" />
 /// <reference path="Scene.ts" />
 /// <reference path="Actor.ts" />
 /// <reference path="UIActor.ts" />
@@ -11841,7 +13496,6 @@ var ex;
 /// <reference path="Promises.ts" />
 /// <reference path="Util/Util.ts" />
 /// <reference path="Util/Detector.ts" />
-/// <reference path="Binding.ts" />
 /// <reference path="TileMap.ts" />
 /// <reference path="Label.ts" />
 /// <reference path="PostProcessing/IPostProcessor.ts"/>
@@ -11877,6 +13531,7 @@ var ex;
  *   - [[UIActor|UI Actors (HUD)]]
  *   - [[ActionContext|Action API]]
  *   - [[Group|Groups]]
+ * - [[Physics|Working with Physics]]
  *
  * ## Working with Resources
  *
@@ -11918,7 +13573,6 @@ var ex;
  *
  * These classes provide the basics for math & algebra operations.
  *
- * - [[Point]]
  * - [[Vector]]
  * - [[Ray]]
  * - [[Line]]
@@ -11934,6 +13588,24 @@ var ex;
  */
 var ex;
 (function (ex) {
+    /**
+     * Enum representing the different display modes available to Excalibur
+     */
+    (function (DisplayMode) {
+        /**
+         * Show the game as full screen
+         */
+        DisplayMode[DisplayMode["FullScreen"] = 0] = "FullScreen";
+        /**
+         * Scale the game to the parent DOM container
+         */
+        DisplayMode[DisplayMode["Container"] = 1] = "Container";
+        /**
+         * Show the game as a fixed size
+         */
+        DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
+    })(ex.DisplayMode || (ex.DisplayMode = {}));
+    var DisplayMode = ex.DisplayMode;
     /**
      * The Excalibur Engine
      *
@@ -11956,7 +13628,13 @@ var ex;
      * a [[Loader]] which you can use to pre-load assets.
      *
      * ```js
-     * var game = new ex.Engine({ width: 800, height: 600 });
+     * var game = new ex.Engine({
+     *   width: 800, // the width of the canvas
+     *   height: 600, // the height of the canvas
+     *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
+     *   displayMode: ex.DisplayMode.FullScreen, // the display mode
+     *   pointerScope: ex.Input.PointerScope.Document // the scope of capturing pointer (mouse/touch) events
+     * });
      *
      * // call game.start, which is a Promise
      * game.start().then(function () {
@@ -11971,7 +13649,7 @@ var ex;
      * scene. Only one [[Scene]] can be active at a time. The engine does not update/draw any other
      * scene, which means any actors will not be updated/drawn if they are part of a deactivated scene.
      *
-     * ![Engine Lifecycle](/assets/images/docs/EngineLifeCycle.png)
+     * ![Engine Lifecycle](/assets/images/docs/EngineLifecycle.png)
      *
      * **Scene Graph**
      *
@@ -12039,6 +13717,15 @@ var ex;
      * Excalibur supports multiple [[DisplayMode|display modes]] for a game. Pass in a `displayMode`
      * option when creating a game to customize the viewport.
      *
+     * The [[width]] and [[height]] are still used to represent the native width and height
+     * of the canvas, but you can leave them at 0 or `undefined` to ignore them. If width and height
+     * are not specified, the game won't be scaled and native resolution will be the physical screen
+     * width/height.
+     *
+     * If you use [[ex.DisplayMode.Container]], the canvas will automatically resize to fit inside of
+     * it's parent DOM element. This allows you maximum control over the game viewport, e.g. in case
+     * you want to provide HTML UI on top or as part of your game.
+     *
      * ## Extending the Engine
      *
      * For complex games, any entity that inherits [[Class]] can be extended to override built-in
@@ -12102,14 +13789,29 @@ var ex;
     var Engine = (function (_super) {
         __extends(Engine, _super);
         /**
-         * @internal
+         * Creates a new game using the given [[IEngineOptions]]. By default, if no options are provided,
+         * the game will be rendered full screen (taking up all available browser window space).
+         * You can customize the game rendering through [[IEngineOptions]].
+         *
+         * Example:
+         *
+         * ```js
+         * var game = new ex.Engine({
+         *   width: 0, // the width of the canvas
+         *   height: 0, // the height of the canvas
+         *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
+         *   displayMode: ex.DisplayMode.FullScreen, // the display mode
+         *   pointerScope: ex.Input.PointerScope.Document // the scope of capturing pointer (mouse/touch) events
+         * });
+         *
+         * // call game.start, which is a Promise
+         * game.start().then(function () {
+         *   // ready, set, go!
+         * });
+         * ```
          */
-        function Engine(args) {
+        function Engine(options) {
             _super.call(this);
-            /**
-             * Gets or sets the [[CollisionStrategy]] for Excalibur actors
-             */
-            this.collisionStrategy = ex.CollisionStrategy.DynamicAABBTree;
             this._hasStarted = false;
             /**
              * Current FPS
@@ -12151,26 +13853,7 @@ var ex;
             this.onFatalException = function (e) { ex.Logger.getInstance().fatal(e); };
             this._isSmoothingEnabled = true;
             this._isLoading = false;
-            this._progress = 0;
-            this._total = 1;
-            var width;
-            var height;
-            var canvasElementId;
-            var displayMode;
-            var options = null;
-            if (typeof arguments[0] === 'number') {
-                width = arguments[0];
-                height = arguments[1];
-                canvasElementId = arguments[2];
-                displayMode = arguments[3];
-            }
-            else {
-                options = arguments[0] || { width: 0, height: 0, canvasElementId: '', displayMode: DisplayMode.FullScreen };
-                width = options.width;
-                height = options.height;
-                canvasElementId = options.canvasElementId;
-                displayMode = options.displayMode;
-            }
+            options = ex.Util.extend({}, Engine._DefaultEngineOptions, options);
             // Check compatibility 
             var detector = new ex.Detector();
             if (!(this._compatible = detector.test())) {
@@ -12182,37 +13865,45 @@ var ex;
                     testMessage.innerText = 'Browser feature missing ' + test;
                     document.body.appendChild(testMessage);
                 });
-                if (canvasElementId) {
-                    var canvas = document.getElementById(canvasElementId);
+                if (options.canvasElementId) {
+                    var canvas = document.getElementById(options.canvasElementId);
                     if (canvas) {
                         canvas.parentElement.removeChild(canvas);
                     }
                 }
                 return;
             }
+            // Use native console API for color fun
+            if (console.log) {
+                console.log("%cPowered by Excalibur.js (v" + EX_VERSION + ")", 'background: #176BAA; color: white; border-radius: 5px; padding: 15px; font-size: 1.5em; line-height: 80px;');
+                console.log('\n\
+      /| ________________\n\
+O|===|* >________________>\n\
+      \\|');
+                console.log('Visit', 'http://excaliburjs.com', 'for more information');
+            }
             this._logger = ex.Logger.getInstance();
-            this._logger.info('Powered by Excalibur.js visit", "http://excaliburjs.com", "for more information.');
             this._logger.debug('Building engine...');
-            this.canvasElementId = canvasElementId;
-            if (canvasElementId) {
-                this._logger.debug('Using Canvas element specified: ' + canvasElementId);
-                this.canvas = document.getElementById(canvasElementId);
+            this.canvasElementId = options.canvasElementId;
+            if (options.canvasElementId) {
+                this._logger.debug('Using Canvas element specified: ' + options.canvasElementId);
+                this.canvas = document.getElementById(options.canvasElementId);
             }
             else {
                 this._logger.debug('Using generated canvas element');
                 this.canvas = document.createElement('canvas');
             }
-            if (width && height) {
-                if (displayMode === undefined) {
+            if (options.width && options.height) {
+                if (options.displayMode === undefined) {
                     this.displayMode = DisplayMode.Fixed;
                 }
-                this._logger.debug('Engine viewport is size ' + width + ' x ' + height);
-                this.width = width;
-                this.canvas.width = width;
-                this.height = height;
-                this.canvas.height = height;
+                this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
+                this.width = options.width;
+                this.canvas.width = options.width;
+                this.height = options.height;
+                this.canvas.height = options.height;
             }
-            else if (!displayMode) {
+            else if (!options.displayMode) {
                 this._logger.debug('Engine viewport is fullscreen');
                 this.displayMode = DisplayMode.FullScreen;
             }
@@ -12235,30 +13926,6 @@ var ex;
          */
         Engine.prototype.playAnimation = function (animation, x, y) {
             this._animations.push(new AnimationNode(animation, x, y));
-        };
-        /**
-         * Adds an actor to the [[currentScene]] of the game. This is synonymous
-         * to calling `engine.currentScene.addChild(actor)`.
-         *
-         * Actors can only be drawn if they are a member of a scene, and only
-         * the [[currentScene]] may be drawn or updated.
-         *
-         * @param actor  The actor to add to the [[currentScene]]
-         *
-         * @obsolete Use [[add]] instead.
-         */
-        Engine.prototype.addChild = function (actor) {
-            this.currentScene.addChild(actor);
-        };
-        /**
-         * Removes an actor from the [[currentScene]] of the game. This is synonymous
-         * to calling `engine.currentScene.removeChild(actor)`.
-         * Actors that are removed from a scene will no longer be drawn or updated.
-         *
-         * @param actor  The actor to remove from the [[currentScene]].
-         */
-        Engine.prototype.removeChild = function (actor) {
-            this.currentScene.removeChild(actor);
         };
         /**
          * Adds a [[TileMap]] to the [[currentScene]], once this is done the TileMap
@@ -12326,7 +13993,7 @@ var ex;
                 return;
             }
             if (entity instanceof ex.Actor) {
-                this.addChild(entity);
+                this._addChild(entity);
             }
             if (entity instanceof ex.Timer) {
                 this.addTimer(entity);
@@ -12344,7 +14011,7 @@ var ex;
                 return;
             }
             if (entity instanceof ex.Actor) {
-                this.removeChild(entity);
+                this._removeChild(entity);
             }
             if (entity instanceof ex.Timer) {
                 this.removeTimer(entity);
@@ -12358,6 +14025,28 @@ var ex;
             if (typeof entity === 'string') {
                 this.removeScene(entity);
             }
+        };
+        /**
+         * Adds an actor to the [[currentScene]] of the game. This is synonymous
+         * to calling `engine.currentScene.add(actor)`.
+         *
+         * Actors can only be drawn if they are a member of a scene, and only
+         * the [[currentScene]] may be drawn or updated.
+         *
+         * @param actor  The actor to add to the [[currentScene]]
+         */
+        Engine.prototype._addChild = function (actor) {
+            this.currentScene.add(actor);
+        };
+        /**
+         * Removes an actor from the [[currentScene]] of the game. This is synonymous
+         * to calling `engine.currentScene.remove(actor)`.
+         * Actors that are removed from a scene will no longer be drawn or updated.
+         *
+         * @param actor  The actor to remove from the [[currentScene]].
+         */
+        Engine.prototype._removeChild = function (actor) {
+            this.currentScene.remove(actor);
         };
         /**
          * Changes the currently updating and drawing scene to a different,
@@ -12425,7 +14114,7 @@ var ex;
                 newX += focus.x;
                 newY += focus.y;
             }
-            return new ex.Point(Math.floor(newX), Math.floor(newY));
+            return new ex.Vector(Math.floor(newX), Math.floor(newY));
         };
         /**
          * Transforms a world coordinate, to a screen coordinate
@@ -12446,7 +14135,7 @@ var ex;
             // transform back to screen space
             screenX = (screenX * this.canvas.clientWidth) / this.getWidth();
             screenY = (screenY * this.canvas.clientHeight) / this.getHeight();
-            return new ex.Point(Math.floor(screenX), Math.floor(screenY));
+            return new ex.Vector(Math.floor(screenX), Math.floor(screenY));
         };
         /**
          * Sets the internal canvas height based on the selected display mode.
@@ -12500,15 +14189,6 @@ var ex;
                     _this._logger.debug('Window visible');
                 }
             });
-            /*
-            // DEPRECATED in favor of visibility api
-            window.addEventListener('blur', () => {
-               this.eventDispatcher.publish(EventType[EventType.Blur], new BlurEvent());
-            });
-   
-            window.addEventListener('focus', () => {
-               this.eventDispatcher.publish(EventType[EventType.Focus], new FocusEvent());
-            });*/
             this.ctx = this.canvas.getContext('2d');
             if (!this.canvasElementId) {
                 document.body.appendChild(this.canvas);
@@ -12543,6 +14223,11 @@ var ex;
         Engine.prototype._update = function (delta) {
             if (this._isLoading) {
                 // suspend updates untill loading is finished
+                this._loader.update(this, delta);
+                // Update input listeners
+                this.input.keyboard.update(delta);
+                this.input.pointers.update(delta);
+                this.input.gamepads.update(delta);
                 return;
             }
             this.emit('preupdate', new ex.PreUpdateEvent(this, delta, this));
@@ -12557,8 +14242,9 @@ var ex;
             this.input.pointers.update(delta);
             this.input.gamepads.update(delta);
             // Publish update event
-            this.eventDispatcher.emit('update', new ex.UpdateEvent(delta));
-            this.emit('postupdate', new ex.PreUpdateEvent(this, delta, this));
+            // TODO: Obsolete `update` event on Engine
+            this.eventDispatcher.emit('update', new ex.PostUpdateEvent(this, delta, this));
+            this.emit('postupdate', new ex.PostUpdateEvent(this, delta, this));
         };
         /**
          * Draws the entire game
@@ -12568,9 +14254,7 @@ var ex;
             var ctx = this.ctx;
             this.emit('predraw', new ex.PreDrawEvent(ctx, delta, this));
             if (this._isLoading) {
-                ctx.fillStyle = 'black';
-                ctx.fillRect(0, 0, this.width, this.height);
-                this._drawLoadingBar(ctx, this._progress, this._total);
+                this._loader.draw(ctx, delta);
                 // Drawing nothing else while loading
                 return;
             }
@@ -12598,13 +14282,13 @@ var ex;
             for (var i = 0; i < this.postProcessors.length; i++) {
                 this.postProcessors[i].process(this.ctx.getImageData(0, 0, this.width, this.height), this.ctx);
             }
-            this.emit('postdraw', new ex.PreDrawEvent(ctx, delta, this));
+            this.emit('postdraw', new ex.PostDrawEvent(ctx, delta, this));
         };
         /**
          * Starts the internal game loop for Excalibur after loading
          * any provided assets.
-         * @param loader  Optional resources to load before starting the main loop. Some [[ILoadable]] such as a [[Loader]] collection,
-         * [[Sound]], or [[Texture]].
+         * @param loader  Optional [[ILoader]] to use to load resources. The default loader is [[Loader]], override to provide your own
+         * custom loader.
          */
         Engine.prototype.start = function (loader) {
             if (!this._compatible) {
@@ -12613,8 +14297,9 @@ var ex;
             }
             var loadingComplete;
             if (loader) {
-                loader.wireEngine(this);
-                loadingComplete = this.load(loader);
+                this._loader = loader;
+                this._loader.wireEngine(this);
+                loadingComplete = this.load(this._loader);
             }
             else {
                 loadingComplete = ex.Promise.wrap();
@@ -12677,50 +14362,6 @@ var ex;
             return result;
         };
         /**
-         * Draws the Excalibur loading bar
-         * @param ctx     The canvas rendering context
-         * @param loaded  Number of bytes loaded
-         * @param total   Total number of bytes to load
-         */
-        Engine.prototype._drawLoadingBar = function (ctx, loaded, total) {
-            if (this._loadingDraw) {
-                this._loadingDraw(ctx, loaded, total);
-                return;
-            }
-            var y = this.canvas.height / 2;
-            var width = this.canvas.width / 3;
-            var x = width;
-            // loading image
-            var image = new Image();
-            /* tslint:disable:max-line-length */
-            // 64 bit string encoding of the excalibur logo
-            image.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAEsCAYAAAA7Ldc6AAAACXBIWXMAAA7CAAAOwgEVKEqAAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAOBFJREFUeNrs3U9zE1fC7/GfAXvAgBE4mTg84xuReSpTtzJVI+pRNlk8ETW7WTjOK0BessLeU4Wpmj3OykubV4DCU0XNZgplFtngqihVT+6tcO+Acj0DzjiGtjHCsY24C5027UZ/TkvdUrf0/VRRWLIstfqc7j6/7nNOD71+/VoAAAAA0A1HWAUAAAAAuuWY+8PQ0BBrA0BsrKyspCRNS7os6cv/+I//KLBWAABIviG3CxYBBEBMgkde0ucmfEiSk81mz9JdFACA/nCMVQAgBqFj2hM6Ur5fF1hDAAAQQACg09CRkXS1Qejw+pK1BQBA/6ALFoBuh47LJnSkLf6knM1mL0gSXbAAAOgPXAEBEHXoSJvAcbVR6Dhy5IhGR0d14sQJvXjxQpVKxf1VgTUIAAABBABsQ8dlSZlGrzt16pROnDih0dFRSVK1WtX6+rr3JbdYmwAAEEAAoF7oSJnQ4Z3B6i3ulY7R0VEdOXL4VkTb29veh6VsNltizQIAQAABAG/wyLcKHSMjIzp9+nTd0OH14sUL70OufgAAQAABgJbT5h6EjpMnT2p0dFTHjrXe1ezv72t3d9f7VIE1DQAAAQTA4IaOjFpMm3vs2DGNjo7q9OnTVqHDyzPwXKp1vyqz1gEAIIAAGLzQ0XTaXDd0nDx5UiMjI21/1vPnz70PufcHAAAEEAADEjrSCjBtrjuDVSd2d3e1v7/vfapASQAAQAAB0P+hI9C0uWHxDT4vZLNZh1IBAIAAAqC/QkdKHU6bGxbf+I+vKB0AAAggAPoneOQV0rS5YdjZ2fF2v3JE9ysAAAggABIfOqYV8rS5YaH7FQAABBAA/RE6Mopw2tyw0P0KAAACCIBkh46uTJsbVvioVqvuQyebzRYoRQAACCAAkhE+8pKW6v0u7Glzw/Ly5UvvQ8IHAAAEEABJDh9RTZsbhmq1qu3tbe9T3HwQAAACCICkhY8jR47o7NmzXZnBqhO+sR/lbDZbojQBACCAAEhY+Hjvvfd6PrbDBt2vAAAYTEdYBQDho9uq1ar/CsgtShQAAAIIAMJHJHxjP0p0vwIAgAACgPARGd/NB7n6AQAAAQQA4SMa+/v72t3d9T5VoGQBACCAACB8RMJ39aOUzWbLlC4AAIODWbCABIaPkZERjY+PJy58SOLeHwAAEEAAJC18vPfee7G+x0cju7u72t/f9z5VoIQBABgsdMECCB9d4+t+Vchmsw6lDAAAAQQA4SMSvnt/fEUpAwBAAAFA+IgsfHi6Xzmi+xUAAAQQAISPqLx8+dL7kO5XAAAQQAAQPqJD9ysAAEAAAQgfXQsf1WrVfehks9kCJQ4AAAEEAOEjEr7Zr5YpcQAACCAACB+RqFar/u5Xtyh1AAAIIAAIH5HwhY9yNpstUfIAABBAABA+IuGf/YqSBwCAAAKA8BGJ/f19/xWQLyl9AAAIIAAIH5HwhY9SNpstUwMAACCAACB8RMI3+xWDzwEAAAEEIHxEY39/X7u7u96nCtQCAABAAAEIH5HwXf0o0v0KAAAQQADCR2S2t7e9D+l+BQAACCAA4SMau7u72t/f9z5VoDYAAAACCED4iISv+1Uhm8061AgAAEAAAQgfkfBNv/sVNQIAALiGXr9+XfthaIi1ARA+Qgkf6+vr7kMnm82eDeN93X0VAABINq6AAISPUL18+dL7sECtAAAABBCA8BEZul8BAIBm6IIFED5Cs7W1pWfPnrkPQ+t+JdEFCwCAfsEVEIDwEYrt7W1v+JCkZWoHAAAggACEj0jCx8bGhvepkqQb1BAAAEAAAQgf3Qgfl7j3BwAAIIAAhA/CBwAAIIAAhA/CBwAAIIAAIHwQPgAAAAEEIHwQPgAAAAEEIHwQPgAAAAggAOGD8AEAAAggAOGD8AEAAAggAEz4uEn4IHwAAIBwHWMVAHXDx5KkPOGD8AEAAMLFFRCA8EH4AAAABBCA8EH4AAAABBCA8EH4AAAAIIAAhA/CBwAAIIAAhA/CBwAAAAEEIHwQPgAAAAEEIHwQPgAAAAEEIHwQPgAAAAggAOGD8AEAAAggAOGD8AEAAEAAAeGD8EH4AAAABBCA8EH4AAAABBCA8EH4AAAAIIAAhA/CBwAAIIAAhA/CBwAAAAEEhA/CB+EDAAAQQADCB+EDAAAQQADCB+EDAACAAAIQPggfAACAAAIQPggfAAAABBAQPggfhA8AABArx1gFIHwk3+bmphzHIXwAAAACCED4iNbGxoa2t7cJHwAAIBHoggXCB+EDAACAAAIQPggfAACAAAIQPggfAAAABBAQPggfhA8AAEAAAQgfhA8AAAACCAgfhA8AAAACCED4IHwAAAACCED4IHwAAAAQQED4IHwAAAAkCHdCB+GD8IGEev36NSuh965bvu4G3xeAa2hoaLC/v3sAG/QVAcIH4YPGNusE7RSD7fGW7wuAAFJDFywQPggfAAAABBAQPggfhA8ATaUl3ZT0SLUrE+6/R5KWzO8BdE+KbdIOXbBA+CB8JALdjVgncS0G2+NtyJ+bNw2dVJPXOJLmJC33wfcF4i4n6bbFNjkjqcAYEAIICB99ET5ojBJAMDABJCfpXoDXfyGpQAABIpMx22TK8vUXh4aGSgQQAggIH4kOHzRGCSAYqADySMG6cpQlXSCAAJG5Z04M2CoODQ1dIoAQQED4SHT4oDFKAMHABJCMpG/b+LtLkooEECB0aXNSIKgL5uRA/4ULi0zBIHQQPvogfAAYGLk2/+4zVh0QWQDp5t/1BQIICB+EDwDJcYZVAPSFFAEEIHwQPgAkwXdt/t0mqw6IlYE+5hNAQPggfABIjlKbf1dk1QGx2iZLg7zSCCAgfBA+ACRHWcGn1C0OemMHiJCj4PfaWdaAXwFhFiwQPvokfDAj0uChzONRDLbH2xA/M6XarDspy8bRRYU32w6zYAH1t8l7qs1SZ3MS4WI/BxBmwUKswsfx48cJHxGFDwADxQ0VxRavK6k2/W6ZVQZEvk3aTHVd7PfwYR1SuAKCboSPU6dOaXx8fODWQzfDB2fDBw9lHo9isD3eRvT505I+1+EpPcuSvlJ4dz+P0/cF4i4n6XIXt8n4hQuLTEEAAeGjD8IHjVECCAY2gPB9ASQugNAFC4SPPggfAAAASUEAAeGD8AEAAEAAAeGD8AEAAEAAAQgfhA8AAAACCAgfhA8AAAACCAgfhA8AAAAQQED4IHwAAAAQQED4IHwAAAAQQADCB+EDAACgc8dYBSB8JCd8VKvVhr9r867YKUk5SX+QlDGP6ylJ+tH8X2RriIWUKbPPPD83UvSUXymm3ydj/n3Qoi4m5fsgmLTZF31g/q+nbP59bcrdYbX15X4tZ/ZrGVMv0qasS57t/yu2/baP9e469e57S90+3g+5jRab26aD8EH46O2Vj2YBJOCOKC/pcotGazMFcwAohNwI8O8Ym3EbI91oGNkuU9SNorSk6Q7LzjHldqvHYTIj6XNzUMx18D7u9/myRw0S2+Q/1KN6GfZ2Eub37bQ+F009Lqi7YaRX677V9pSyXGdhnwQJ4/PSkq6b+pAKUP6XYhai41QvwjhetHW8t8kUBBAQPhISPkIIIO4OPh/iIjmSFkzjL4z1kJb0reUByJF0oQsNj0eWB5WSpIsRLcO0pKsdNtQbHQhvSFruYiPpsvk+6Qjev2i+TzeDVa8CyHVJ8xavmzfrJE7fN2Pqc1j7orD3Q3Fd983cs9w/hFkPc+ZzO/m8lKkL821u73EKIHGpF1Ec693trGCWvdxpAGEMCAgfCQkfHUhJumka0vkI3nvevPdsSA3ihQCffT3idTcboKE8E8Hn58y6vR1B+HAPVEvmM3IRrse8aah8G3Cdttsguin7s6joHre+fRvyvsi7H5pmNSdGxmyv823+fZFVWDcERXGsd7ezvHn/pU734wQQED76O3zkPI2+boSceyE0/G7IvivNrDq7tBxWwFlQuN1/UiZ03Iuwse5vGEbRcPcerHJdrPezIdVFtH8ioZsNI/92s0QRxOoY1OxkQSf7769ZvYf24d92EOba3be3fcwggIDw0b/h43oXG7BhHlSkYFcTbkb0Xa7KvitYmJfTp9W7M7mzIZWfN3ike1T/M4SQWASQTJcbRm79+5ayj618SNtmiVV5aBvL9OCzZ9v9bAIICB/9GT6WunzAr9fw62RnWJJ9V6ycwr/Ckw6w/uYUXr/zWdXO4Pay4eSWXzsBKGcORr0MHvW+C3rb0Mz0sOwJIfFrLIdxhaokZkFzj1W9rudptdGtkgACwkd/hY+Uwu9f3e5yLHW4U2w50M3jesg7YNuuV0WFN4B7SdFdzWmn/NpZZ71qbLZq8NwUum0phH0AZZ98n9VpLIehxKqV1PsTVl6B2kfcBwSEj/4JH+5Bv50GYMk0pr+usxNJmYNILuB7Z8zOsd1ZShzVumLZHLBSpqERxkDwTIAANxNiuXUSGh01nrM9ozfz6dtaUG22kyB+DGE9FNX4zGY738M1q9o0kkX29F2R66D8ZU48pD2N1nQHy5KX9J3sr6giGY1lxn/UTvoEPd6Xzb7dPdYXfdttSrV7hUwHfO/AxwwCCAgf/RU+pgP+zbLsrjQUPI3AINNn5kzjr92Df9F8ts33yiuce1vYnjGdVzhzuc92ED6W9WZ+dptgZVN2RdW6lbWzLFcDHrRKejPHfClAQGxnCtfrBJDYcWR3T5qU3tzPoJ1wc918TplVHvvGsuM5EeENGZ/pzc0q0+IKSErBuh6X1XrK9aLneH/DrOfLZl+bbrEfD3zMoAsWCB+Nw0cxQeEjH7BBVlTtHhozAQ/KJfM3lxSse1S6g+82I/tLu512t8hZNnDKqt1zQCF8XjvLXPCUXyFg2V1o8jeOpC86+D42ByHHHAQvmn9BZj3z10EngrJFd4LHjKcOFy3rzCVTZ4IGyZSYGatXMubfvEUZz5k68YXe3M/H/XfDU2cuEECsJ0mRZ3+7HPAz3NByQY3HOrZ9zCCAED4IH/XDx3I2m01K+EgHbMTOBwwQjQLMRcuDQEqd3a/Dkf0sUxl1NiDdtpESxsDzlGpdEoKuiy/Mv3bLr+x5D/93uNTh9yo2aRw6pu65jc5OGxDFNpb3Knv9nnPrwHKbda1kyn0+4N8RQHsjZXF8WjZ1YsGyTpRZrdYnHAsKdhKvkQVPGXnNtFsedMFq050r1v1SbXZ4H/je69bUYvR3JiZ8NA0fMwn6CkEGes4ovEHTjmkI2Aw8zivYoPJ6O7/PLbendrtb5C236YKCj4/otNzchlcnwaPe9yiZEJQxoaoUwvvOqDYFr7+BEeZsYf7G6LeWr58269wRuq0UUvB03VBt3FGQKxt0w+u+TIv9XJjHpEFapzbHKkfh3iDXMfvxr8xxY7mTY+HABJA7V5RTrS9bWKEhSpEPriJ89E34mA5QX6PY0bs7OJtpAK+qvbEFzRq29aRUO+MW5LKw+ze2O+BO5RRsvI7b0A674Vw275tXeIN0y6ae5SNodDZaN/OyPyM+TYOn66IKoMuqncCbD7DdZUT3nW4ifIQvF2D7cCL4/KJqV0M6eu8jA1Zgeb25DNvsX6/9gfBB+LBk2/VqIcIdfcmy8ZoPoWEbpJEZZFu27U+7oHCuQATpkuaofnepMEPkQsjvOWfKyrabXqe+DLB+PqP90lUzCqcLSCPuWIEg2zriUS8IH+05Y/m6ryJcho63Z7pgtWl4+KjGxo63riVnfqXh4aPNC+FY7ffff79mc8aA8EH48Dbo05YBYS7iZflStbEXzepuygSDQoeNjWnZzaaypNpZmlbSshs3UlY4dzwPeqIjzG5X3eIo3LvD23xewTLk5oRulcmlLgXQOQXrhjdD8fTUAuGj42OIjWKcv8RABpDJyZQmJxu3k8bGWoeGsFUqe94AEskBkvDRV+FDsj+T143v5piDynyL132uzsdPzMnu3iBusFho8TrbmxiGtR6DXP1YEH3WbX1lGUDSYhxIN3QrfMh8zrJl+afMMZbtqjdKiv6EGBJgIGfBGh0d1vj4aMN/3Q4f7jJ5mUHuhA/CRyMZ2V0FWO5iI+CWxWvCCNdF2XcZahUucpaNluWQGizpAOvAUXevIiRdMeD2g+gbmt10K8BrP6d4eobw0T3pOC8c0/DGyPj4yUgOkISPvgsfkv3Vj242YMsWjY50SDtF2xm1Ump+xcHmaoQT4kEzSP/zBXGWPghHwW5miP4LoGXL1+ZYXT2xLK48hXWsTXw9H6QA8oH7gzvmIm58V0FCOUASPvoyfEh2MygFOSCH2Qjoxk4xSCiYbbA95SyX5UaIQWA6wPf7UminXtg4w6rqSwUCaKxxRbe7AcS2ezEBJGLpgyPPmeOxXMDx8VHvw45naiF89G34yFjuVG71YNlsppD+IMTGhm2Do95sYTb3DygpvBmi0rK/+rMsrn60o8QqGGhBZv3Jsbq6alncQLCbx1n3mHMzrl+CLlgx4gtGGcIH4aMB2/7LhR4sm02jOcwD/0yAz8x7Huctw0CYdWU6wGtvCVHVPxqf/asY4LUZVldXcfUj3Hpuu6/Lq3bTwBQBBA2NjR33DoBP3bnS3g6S8NHX4cO28VRSb86gF7v8eU6AA9tNz07YZuzHgsI9o257f5+yOJPfrjSrYODZbjt0w+uegrj6EbblAK+dVm2a6mkCCBrydcPKBfnblZWV1MrKyj3CR1+HD8nuzF0xxsufC/n9Fiy/b8oEj7xFQzVIsAmz3OJedr2WMvVn1pTlPXNgfW3+5VlFA8+2oZtjVcUuFMJe0LGJadWuhNyLS93nRoSxCyAntbb23H34uSz7n6+srKRMxcoQPvo6fKRldyn1ux4uo6PuX+6dkfTI4nWzljvtKO7cbBtAvhbcup5T7cpRRvZjn0Bjd5rVgD7nmBASdIxHzvwrm78vqEfjDbkCEjMTE6cPVZQ7V1ofcAkfAxM+3EaZjXKPGwDdVlbrmyC6Wm1TRYU/fiYT8LsMauCYVe0s3TMTKJfMcznCByxthrQfAOJuQe3fUT5t9q/PzP+5bi88V0BiZnR0WKOjw6pU9tynpptVMMLHQIWPIAHkpno3i1KmR597Q/aDy5uJos4EaewUB2izzUi6bPZzaQGdK8V8PwWEyT1e5Tt4j7z5VzbtzVvqwokwAkgMTUyc1sOHT92HnzcKIISPgQsfkv0UtoN6cJ0x20S75iPa8aYEb4i+HFJYBABCSOchxN03z5t/RRNElqNa6EHqgpVzfzhxYjjWCzo5eaitMt2kG9YS4WOgwgdaK6r9+3aUFd3N//4QYPn7eR98W7WuVfOEDwAINYSEOXYxpzddtK5Hsb8eyDEgvjuOx87Y2HH/Mk43eOmhgcZnz54lfBA+0P7sVVEMPEftwHXP/JuO6DPKJryVWd0ABtSypIsKdwxjSrUTRu6YvNCCCIPQY8o3GP1yg5cteBtMz58/J3wQPiBdbeNvimL62yhcNweuXEjv55hympf0haRLkoYkXTA/L7PKAQywsmffGPYxLW/259cVQrdiAkhMXbhwqCtV7s6Vt1NnNpt15OkysrW1pWq1SvjAIMvIfjasQ9uYGJQaprRq9+eY7/B9SqqdaPnChIyz5sDqTh9JaASAtxXNvjKKIDJv9u85AkgfGh0d1vj4Se9Tjc7qLshcBalWqwNxFYTwkXilCN/7Zgd/u0TRhBYCv+0g0BVU6w53QbXuBHPiTsoA0EkQuSBfr5kOpVXrVjvb7hswC1aMTU6e0cbGC/dh/s4V3ZhaPFx5stmss7Ky8qVql8TkOI5OnjypY8f6s2gJH9bmFN+7zzoRve+sOjsjkzHb0Q2qT0fr8J6CX54vq4vTP6Kv2dY9h1WFAVI27YI51cbiudOfd+qmapOsBG6HEUBiHUBSevBg3b0nSEq1/ncL/tdls9n5lZWVyyaR6tmzZ3r33XcJH+xsigPW6LgeUoiJohH8Y4AGfJLL4HbA8FE2gW+ZTRYhsZ1xrsSqwoAqmH9uu/KqOhtcnvfsy63RBSsBIcSj2eDaOfeHSqWinZ0dwkd/sm3I/mHA1suSwrnXRkrRdMUqB/j8JJdBkIPYgmpdrAgfCDsIA2jNMfvhMCbxmFfAHggDEUCa3Ecj9i5cOKfh4aPuw/SdK/VvNJPNZgvynPHe2NjomwHphI+2GrLpAVonOdldSp6TXbeLnDro1xqCTB+XgXvQuxSgPIAotp8Sqwo4UNSbsXftBpFAJ+8G5QrIwQ7JN7A79oaHj+rDD895n2rWzeTgPgb7+/va3NwkfAxuAMkMyPpIWe70llU707Ng+b5h33ip2OcBxLb7mxs+igJ6G0B+ZFUBddsYM6pdnQ66n04rwN3Y6YKVAHWugszXe102my3LNy1vkrtiET4a7hwcy4NwagDWh03fVUdvuijekN2Zz5Q6m1Grk/D4WQIbfDnL186IM8+Iti7a7veoh0Dz7eOSgk+lbj0WkwCSAHWuglxt1K0sm83Oe3es6+vrieyKRfgI5cCZ6/P1kLHcOS74Qtuc5ftPK9w7d/druV22fN2ywr1DL9DJtlOK2fIAcXRDwWa4SsvyKiQBJCF8V0FSsuyKVa1WtbGxQfjoL0XL133e5+vB5gpFWW/PzFGUfVessAa3B2nwWO/AE9boY3pjRO2zANuiw+oCrCzL/sSd9TGBAJIQw8NH9dFHh6bWnb1zpX4jJZvNlrwH+0qlkpjxIIQPK19bvm5a/dsNa9ZyJzfXpDFs0wBJKbyuWF8HeO3lBJWFTVgqift7IFop2V+xLLK6gEAWAmw3HxBA+syHH57T2Nhx71MNG0bZbHZBnu4OjuPEfjwI4cNaMUDjeboPv39Kdv1Mi2rc5ceR/RmdvMLpSmFbbu5nJkHa8nUlNltELMg283WXlilDsaCP3Aqz3hNAEub3v5/wPszdudJ0utBDAz7X19e1u7tL+OgPBcvXXe/D727bLapVl59l2Z/RCasrlm25pRISQmwDSJlNFhG7avk6R52PRdoMsB2nuvDdc2K8CeLT7rBCAEmY8fFR/80Jr9+5Ur8RkM1mHdUZDxKnQenValXr6+uEj+jORKT7LITkZHdVp2AZLua6vB6/CvDa6+KmaoCNfIAwHEYjqhTgtZmIv3tG0m2qALrAIYAEd7BjGh5O/lf++OP3/APSG94HwYwHOWjM7+7u6qeffopFCKlWq/rpp59UqVQIH8EVZX9WeVb9cWPCpnW9zWBRkv2A9Fl1fpaxoGA3k7xKVQ9cRzB4ZR5knNaXXW6IfR7xd1+i3iOJBi6AnDlzPPFfZnj4qDKZ896nco3uDWJCSMEfQtbX12MRPnxdwggfwdjOKpRSf5whs7054LKCdfmxHZAuhTMgfTnAa+fVH/3Ic12qH7PsFgZOkAZ4UeGMRwryHtMRho97YpxJvfberKkX98z/+T4Naekuf14mzO2DLlgJNTFx+q07pN+50vggn81ml70Nn52dnZ5Nz0v4CE2QhnZG9lcP4ihj2bh0FGy6wKB/k1HnXbG+VLAzqPe6dPBMtdFYKgVYb1Eu95KC3zAL0QeDqOUD1tkwp4K2rfvpCAI44aO+m5Iemf/zZr3nTV181GcnKHKe79rNz7TxIwGkz3300bv+WbFuN7pBoQkhM94Qsr293fUQQvgIXZDGdj7BIcR2uYNczfCHuaLla+c7PPA7su/25W1sRBlCMuZgtqRgZ9WcAN8hH8Fyp826ybMriJ28pG8V3VnaoPuzosKdfrcU4LVhjsMjfNT3bYuAkTKN9aU++K4pvenVMGvqQ7oLn3s1wLZGAOlnw8NHdfHief94kHvN/qZRCOnGmBDCRyQKCjaoMm92XKmIlyujN5e/OzVrebAtB2zY+wWph51+rxsK1k0sE2GjY9YcvFMKNs4m0MFG4Q+qnzbLTUMsvjIWDcNuhA93mwtTkAklciGtg5w5UUCdP+xmgHWS74MTFv5jeC6i7cy//7YJOWXRBWswjI0d18cfv3doh3/nSvMdc70QEvXAdMJHpA5mOgvYcMtFsCxp0zBw3z/f4cEyLfuzh53WpbLsu/FkQtjZB11eN4RMh1hW9/T2JfygjaWvAnzezZCW+3aXgjQ6lzLlHtY+p52z2AsK/+aDxTaWO9/BOryu7nXHTJJ0G/viJM8Meb3BduRuZ/ciOLbnAxwbC7ZvSgDpA5OTKf94kHyzQen1QkiUs2MRPiLntNGYdRufYe2scnrTzzZf58DbSWPD5oBbCKmBcUP2XStszwg1a8AstNEQud1huaU9ZZVr8t1sGzqFAJ+dV/vdBdxG2LeK1w02bcP/tAZbxrPPaachnld7/fjLCv/qh1vuywH/ZknBujmm9KYrW6sG4PyA1qt2tqt0QrfHnEU550I+tl8PGPitZ5kjgPSJjz+e0MTE6UOV5s6V5jv5eiHkn//8Z6g3KyR8dE1BwQdfe3dW7uXbTIAD47TeDPpr1qjItbkjnA5wkJgLcV3OBVgHSyF8VjGEcmvVoEl7Gv+PLBqAQb5bOeB3yJnltu02MW2W5Zk5+KZitu0FCawpIecpT3eGokyDOpjz7GOCjk9yfaGQ71/gcauNv3GD1G29mdo75/m+OfP87QDfe1ntj39LunanOf5Dwr5nSsFmswx6jKgXfB8FDLYLCtC1+Nig1dSff65ofLyiEyeGNTo63FffLZM5r2+++VFbWzsHZ1vuXJGmFhufpclmszMrKys/moPjQWA4e/asTp06RfhIlgWzU823U318jYCiOZiVfI1Y77+gZ1GCNFJTsr9yMq9w77RdNOty1nInn1fwM6H+BlK74zvccrtZp7y8r2mn4esGwILFa28EDJkps35nTdmVzbI7vmUOGlxL5r2mu7jdlQOU1SNfGV0a4P2V28jx76+cEIPajMKZdrfZvqLYhRMsrcLHjKf+5wQb6YQtb77N7cJ7jHD3syVJm75tIyPpjNo/YVhWwCuNgxJADpLuxsYLffPNi4NfjI+f1Jkzv9L4+EmNj496B3QnzvDwUX366Qf6298eqlLZCxJC5ldWVsrmTMvBHdN/+eUXjY+PEz6SZcazs+pEznOQDEMuQGPWDSw2B4iywrmxWL0Gte0O/6b5Xk6bn+WYhming8zbabCHdZAumnUw3eZnpBXOTR5nQmzY2fo6wPbmL6OU+u+stWPKIt9BPQ5rX7jche87p9pZ5l7whg/0pp51y4LneNPJ/jwdwf7RURtXGo8MekXb2Hihhw+f6v79Vf3lLz/o668f6vvv17S29jyxIeSTTyb9QWrJojvWsqSL3gq0vb2tJ0+eBO6SRfiIRQiJ47q+bPm6jOz7ec9F1IBzAqzDlDrviuWGkGKMGpFfKNgYlRn1rjE95zkAlrv82YUO/jaj/lMydWGuh8vQrfDhft/5mISPshCk3JJmwbTT4rbsc+0s06AEEPfgdEMt5vvf2to5CCT/9V//S/fvr2p11dHe3qvEfNmxseP69NMP2gkhJUkXvBXJHZy+tbVF+EiWZdOgjcMByfFsgzZsG/PFDht/Ng1L20Awrc7PKrkhZKHH5VU0B7lCm8vfzRBSMsu60MNGmNNBY/ezPtz3lH2NpXKXy+KLLoYP142I90X1AtZMk3U/SL5q8+++S3BwumhCr9PjZXH3+W1tbwMRQKYWVZpaVGFqUfNTi5qZWtSlqUUNmUKcMTvKuultbe25SqXH+stfflCp9DgxV0Y6CCFONps9dECvVqt69uyZfvrpJ+3v7xM+kqNYp3HWbfMm1Nouw6zszwp34wxrkLP6Swrnsv5cj8KjY75vJ59d6lIIcUNtvbOBvWiEtTvLUrqPA0ijgBh1w6zQo+89o+ivYJbNd1wWXIU212Mh4d/7Ro/rgruvb7vOD/QsWCaYLE8tam5qURclndWbsydvHcRWVx3dv7+qv/71/+jBg/XYXxVpEkJanmHOZrNvNYJ2dnb0z3/+U5ubm29N10v4iC1vQ63Yxc+cN9tTkJlZ0rKfn73hSYMIDvi2jcuUwptfvmiC23yXGvNuUAzjYFaKsL45lqG22yGkrPa6PWbUf75rsA+6FGGdcPdx5R5+b0fRXsGcV+vuN99p8JQVvAvcXB999xnPvtvpUj23qYsEkICBxDFXSmamFnVBb87cHNqpVSp7+uGHdf31r/9XpdJj74DvWIaQP/7x3zU2dtz7dP7OFd27c6X52dpsNlusl7Adx9GTJ09UqVQIH8nhnq24GOGOqujZGbYzJaTtFQRH0czrH0bYmVW4A8FvmPUZxWw+ZXMgbre8Wr33JbPcYTQKvcHDZll70RBdVns3l+zHkx6N9g+XQgwitmG028IOW8sB6r2jwXQjwMmTeSX/6kezIBLVzG9l3z64Y0OvX7+u/TA0RBOtiTtXlFNtEG2+3u8nJ1P66KN3Yzu1797eK/8UvW6jdGZqsXVlXVlZyanOfOTHjx9XtVolfHRJiDeKTJmG8ufm/3SbO6SiarMAFQb44NdNGV+5tRMSi6r1my51cbnzZpmn26hfXyWswZBR7UrYtOV3jMtYrW5Lm3V0OUAQc0xdSEqdcNsNQfexJdXuMbLMfjWQWTW+307ZhMMo68112V2NmVf0J9HSnmNFps1jfMl3jLcPFxaZggASPIikzMH0ar0CjXsQKZUea3XV8e/Q55pN0+sJISmzgV9V4zPVhI9kBJB6gSSjN3OBextT3obqj3r7ng3obWM3peaDmb/zlFlcGmXeepY2dcnxLG+pDxrlbsivd8OzTXNgL1GFD+1/PmtSh5NeJ9LmOza6Ad6mp8GHcLe777oUWOMUQOrVv3SdY7yfe4zvqB4SQKIPI24QyXifHx4+qg8/PKcLF87F8r4iDx8+1fffr/mfLqh2NaRlo3JlZSVtNrQ84SM+3G0ZlDkAoOsCBZBBb3cTQMIJIjnV6Z40Ojqsjz+e0MTE6dgt88ZGRffvr/oH0pdNCLFKvisrKxnVboqTI3zQGAVlDgAEEAIIAaT7QSSvOndwnpg4rUzmfOyuhuztvdL9+//QxsYL/6+WVeuW5dgGEXMPEdAYBWUOAAQQAggBpAdBZF6+cRLDw0eVyZyP5dWQhw+f1ptW2JHl2BDQGAVlDgAEEAKILabhjcDU4sEcyUX3udrVhtV63Z567sMPz+k///NDjY+f9D6dUu2eId+aLmYAAADozCargADSlvf/9Oe0RQgpTy3qkmo3NnTc59fWnutvf3vonw6350ZHh/Xppx/o448n/F3FMpLumfuGEEQAAADaV2IV0AWrnfAxr9plthuSFp7cvea0+hszde9t+ebtz2TOa3IyFbvvuLf3St9//5N/ul5XUdIN24Hq6B6641DmAICeuS27+/9cklRkDAgBJEj4mDYVzOVIuvHk7rUFm7+/c0Wzqs0adWByMqVM5nwsv+/W1o7++79/qjdI3Q0iX04t9t0dRWmMgjIHAAR1T3Y3iCWAEEAChY+MqVypOr8uSZp5cvdaySKEZEyISbvPjY+f1Cef/CaW9wyRalP2/vDDeqMgUpa5Y+vU4kDezZfGKChzAAABhAASevhImYqVkaQjR2pBoVp9azD5gmpXRJwWIeTQ+0nS2NhxffrpB7ENIRZBRKpdFbklqWA7hS9ojIIyB4B+2CVbvu6sJIcAQgCxCSCH+vWdn/itRkZO6Jnzkza31v0vL8n+asiSPHcTHx4+qk8//UBjY8djvT4qlT09eLCutbXnzWb0Kkr6yoSRMrWIxigocwDoUxlJ39q2vWl3E0Bswse8aoPOJUnj587rzNi7B7/f2dnWz08fa3f3pf9Pbzy5e23eIoTMyjMuJCkhRKoNVl9be66HD5+2mtWrbALJ15JKU4vMAEFjFJQ5APSNQ225JoqqdcEigBBAmoaPaXkGnZ8+dU7vvjNZ97XPnJ/0zFmrV9G+sOiSlZe0lMQQ4qpU9vTo0YbW1p6rUtmT5UZYUm0+7KIkh2BCYxSUOQAk0CN5xvY2sSBpjnY3AaRZ+MjIM+h8ZOSEzk/89mD8Rz27uy+19q+y9vd3vU+XTQgp9XsI8YaRtbXnWlt73my8SF1Ti6Ii0hgFZQ4ASTEru6sfUu3ecAXa3QSQRuEjJd+g89+c/0jHjo20/Ntq9ZU2nj7W8+2n3qcdSXNP7l5bDhpC/vjHf4/1wHQbGxsVbWy80M8/V7S1tdP0TvAEEBqjoMwBoA/Dh2QGoNPuJoA0CiBvDTo/fvxUoPfY3FrXxtPH/qfnWt0zxB9CkjA7VlCVyp62tna0tbWjzc0dra09d39VNHePB41RUOYA0MtgcVW1LuLf6e27l2ckfS67aXddy5JmDhrgBBACiC98zKvJoPMgdndf6vHa3/3T9S4/uXttJmgI+eyzD/tyfW9sVPTNN2UCCI1RUOYAEBe29/QI4pIJNLS7JR2hjh0KH9Pe8HH61Lm2w4dUGzfym/MfaWTkhPfp/Pt/+vNSs7+bWtSyzCAlqXZH8lLpMQUEAAAQrVQE4aPgDR8ggHjDR0aeqw4jIyc0fu58x+977NjIwX1DAoaQBdUu10mSVlcdra46FBQAAEB0wg4fjjwnlUEA8YaPlAkfKak26Hzi1+mmM14FWslHjur8xG91+tS5oCFkxpuYS6XHre63AQAAgPZ9FvL7zUjckJkAUt+SzIxXkjTx67TVjFdBQ8i770wGDiGqTdl2UHHv319tOosUAAAA2jYdcvgosEoJIG8xg84PKtv4ufOBZ7wKImgImVqUY0KIpNoMUowHAQAACF1adjcUbKUs6aI8XelBAPGGj2mFOOi8wxAy2ySElOTpP7i29lwPHz6l9gIAAIQnpc66S5UlzUu6oLen7gUBJLpB57bGz533D0y/+f6f/pxvEkIW5LmM9+DBuiqVvcSXw+bmjn/DBQAA6IWSCQ8XVTvxW1Dz2asc8/sF1abZvSDpBquxtWMDGj5SinDQuVXyMwPTH6/9Xbu7L70hpPTk7rVGqXlGtdkZUnt7r1QqPdann36Q6LLY3z80nuVHNknAHvdvAoDIgkjJBAtE0Q4e0O8d+aBz2xDiCz4pSbdNQHqLGQ9ycBPDjY0X3ruIAwAAAASQuOn2oPNW3PuEeKQl3W70+qlFFeTpivX992vMigUAAAACSEzDx7R6MOi8lZGRE3r3nUnvUzkTlBqZU63foSqVPT16xIB0AAAAEEDiFj4y6uGg81ZOnzrnnxnrulnmt0wtqizpS/fxDz/0x4B0AAAAEED6JXyk1ONB5zbGz533j0VpNh5kXp5Zox48WKc2AwAAgAASE7EYdN6yMEww8kjL02WsjoN7g6yuOlwFAQAAAAGk1+I26LyVkZETOpua8D4126QrVkGe+amTeBWEAfQAAAAEkH4KH9OK4aDzVs6m3vPfpHCpycsPbniTxKsgm5u/eB8W2SQBAAAIIEkNHxnFeNB5K78+PCtW5v0//Xm23uumFlVUwq+CAAAAgACS9PCRkm/Q+a/fmYzdoPNmRkZO+K+CXG80IF2eGbEYCwIAAAACSPcdGnT+7juT/sZ8rFWrr/Rk7e/a3X3p/1XdAGLGgpTdx//4h0PNBgAAAAGkG/yDzs+mJnRy9Exiln9396X+8fiBXu5se58uSbr45O61cpM/PTQWBAAAACCARB8+puUZdH5y9IzOpt5LzPI/336qx2t/1/7+rvfpZUmXWoQPSSrIc3f0tbXn1O4BMzQ0pKGhIVYEAAAggHQpfGTkG3T+7uGB3LG28fSx1n9eVbV6aFrauSd3r808uXvNafX3U4tyTAiRxFUQAAAAEECiDB8pJXTQuTveY3Pr0OxVjmpdrhYCvt3BYPS1tefcYwMAAAAEkIgkctB5k/EeF57cvVYK+n5TiyrJMxg9Cd2wtrZ2vA/LbJIAAAD97VjSv0BSB50/336qjaeP/V2ulp/cvTbT4VsXJM26AWRyMhXr9eC9SjO1SAABAADod4m+ApLUQefrP6/WG+8xE0L4kKRb7g90wwIAAAABJLzwkVHCBp1Xq6/0j8cP9Hz7qfdpR7XxHsthfIa/G9bGRoVaDgAAAAJIh+EjpYQNOt/dfan/94//7b+5YEltjvdooeD+wHS8AAAAiJOkjgFJ1KDz59tPtf7zqv/p5ZC6XNXztcw4kI2NF9RyAAAAxEbiroAkbdC5O97DZybC8KGpxTdXQCqVPVUqe9R0AAAAEEDaCB/TSsig8wbjPcoKcbxHC0X3B66CAAAAgAASPHxklJBB5w3GexRN+Ch1aTG+dn/w3WsjNpihCwAAYPAkYgxIkgadNxjvsfDk7rW5Li/KQdDZ3PwlluW6tfWLP6ABAACAABILsR90Xq2+0sbTx/Wm2J3rUperhgGELlgAAACIi9h3wXr/T3+eVcwHne/v7+rx2t/rjfe41KPw4d5V3HEfx7UbFgAAAAggcQofOUk33cdxHHS+s7Otfzx+0OvxHo0cfD4zYQEAACAOYtsF6/0//Tkt6bb7OI6Dzje31rXx9LH/6V6M92gWQHJS7YaEw8Otx8xsbu5of7/14PCff259h/W9vVdceQEAAED8A4gZdH5bMR10HsPxHg3zhPvD6qqj1VWHGg8AAICeimsXrJuK6aDzOI73aKKYkHroyNNdDAAAAP0rdldAzKDzvPs4ToPOd3a2tfavsqrVV/5G/hdP7l5z+qSRX5b0o8XrSvIMcm9kapHpdQEAAPDG0OvXr2s/DA3FIXzkJN1zH58cPaP3fp2OxYpqMN7jxpO71+apRkD03H0VAABItthcAYnroPMm4z1mnty9VqAKAQAAAAkLIHEddL6/v6u1f5X9U+yWTPgoUX0AAACABAYQxXDQ+YvKptZ/XvWP9yiY8OFQdQAAAIAEBpA4Djp/5vykZ86a/2nGewAAAAAd6ukg9LgNOq9WX2n951W9qGx6n3bEeA+g5xiEDgBAf+jZFZC4DTrf3X2pf/28yngPAAAAoN8CiH/QuSS9c+58zwadM94DAAAA6OMAIt+gc0la+1dZZ8be1Zmxd7oaRBjvAQAAAPR/ALll/p+WuQpSrb7SM2dNz7efavzc+cgHojcZ7/HFk7vXilQNAAAAIHy9HoSeUm0GrKuS0t7fnT51TuMRdctqMt7jiyd3r5WpFkD8MAgdAAACSNhBZNYEkZT7/MjICf065HuCNBjvsSxpjvEeAAEEAAAMQADxBJG0pCVJOfe5I0eO6vzEb0MJIRtPH2tza93/9NyTu9cWqAoAAQQAAAxYAPEEkXlJ18MKIdXqK/30r7Je7mx7n3bEeA+AAAIAAJIZQO5cUU617lMZXyO/JKk8tahywBCSV222rFQnIWR396XW/lXW/v6u9+mSGO8BEEAAAEByAsidK0qrNovV5/J0mWrCUe3eGl9NLapgGUIyqt0p/SCE/I/f/E/rgenPt59q4+ljxnsABBAAAJDUAGKCx3XVZq9qV1nSjalFLVuGkG/dxyMjJ/Sb8x+1/ADGewAEEAAAkOAAcueKUiZ4zNb7/ejosE6cGNGZM7/S8HDtCkWlsqdKZU8bGy+aBZGZqUUVW4SQvGqD0yVJZ1MTOpt6r+5rGe8BEEAAAEDCA8idK8qYAJDxPj82dlyTkylNTJzW6Ohw0w9aW3t+8G9v75X/1wtTi5prEUJuesPPb85/9NZ4EMZ7AAQQAACQ8ABiwsfBOAypdrUjk/k3jY+PBv7Avb1XevToqX744a3uUUVJX0wtymkQQFKqdcVKS9KJ46f0/sRvD37faLzHk7vXZihmgAACAAASEEDqhY/f/e5dffTRux1/cKWyp/v3V7W1teN9uiTpUpMQkjPLI0k6P/FbHT9+qtF4j5knd68tU8QAAQQAACQggPjDx/DwUX3yyWRbVz2aKZUea3X1UN5YnlpUw6sW7//pz0syA+BPHD+lV9VX2t196X2JI+nSk7vXShQvQAABAADxcqTek2bA+ZI3fHz66Qehhw9JymTOa3Iy5X0qf+dK/YHuxg33h5c72/7wUZJ0gfABAAAAJCiAqDbbVcZ98MknkxobOx7ZQmQy5zUxcdr71E0z3e9bzGDy5Tq/Wn5y99pF7u8BAAAAJCiAmIb/rPv4d797N5IrH/VCiG8mraUmL7/lezzDYHMAAAAggQFEtasfkmrT7IYx4NzG8PBRZTL/5n0qd+dK/Tusm/t5lFUb73GRweYAAABAAgOIufqRdx///vcTXV2Y8fFRjY+f9D51ucnL58R4DwAAACBRDs2CZQZ/35RqVz8+++zDri/QxkZF33xT9j51ttG0vAAGB7NgAQDQH/xdsA6uOPhmpuqa8fFR/1iQaYoJAAAA6M8AknF/8M1K1VW+z/4DxQQAAAD0WQDxDvgeHR32X4XoKt84kAzFBAAAAPRZAJHe3HfjxImRni6U754jOYoJAAAA6OMA8s47oz1dqF5efQEAAADQnQACAAAAAAQQAAAAAH0cQPb2XrFmAAAAAEQaQIruD5ubv/R0oTY2Kt6HZYoJAAAA6L8A4rg/bG3t9HShKpVdAggAAADQzwFkalElN4Ts7b3qaQhZW3vuffg1xQQAAAD0WQAxiu4Pq6tOTxZob++VvwtWgWICAAAA+jOAfPUmgGz2ZDD62tpz7+eWzZUZAAAAAP0WQKYWtSxPN6xHj552dWH29l7pwYN171O3KCIAAACgTwOI8aX7w8OHT1Wp7HVtYR49OvR5jqQFiggAAADo7wCyIDPz1N7eK5VKj7uyIFtbO/rhh0NXP76cWnwzMxcAAACAPgwgptE/5z7e2HgReQipVPb0zTc/ep8qTS1qnuIBAAAA+jyAmBBSkLTsPl5ddSILIZXKnu7fX/UOPHckzVA0AAAAQP8Zev36de2HoaG3fnnnir6VlHEfT06m9PHH72l4+GgoH761taNvvvnRP9vWjBkMDwAH3H0VAABItmMtfn9J0j03hKyuOtrc3NHvfz+h8fHRjj74wYN1/5gPwgcAAADQ55peAZGkO1eUknRbUs77/ORkSh9+eE5jY8etP2xv75XW1p7rwYP1erNrET4ANMQVEAAABiSAeILIvKTr/ufHxo7r/fdPa3z8pMbGfvVW96ytrR1tbu5oY6Piv8mgqyzpC244CIAAAgAAAcQfQjKSbsp3NaRNjmr3HFlgul0ABBAAAAggzYJITtJVSdMEDwAEEAAAEGkA8QSRlAkhn6k2UD3TIHCUJH0tqTi1qCKrHQABBACAAQ8gAAAAABC1I6wCAAAAAAQQAAAAAH3n/w8AmB1j3tEUq4sAAAAASUVORK5CYII=';
-            /* tslint:enable:max-line-length */
-            var imageHeight = width * 3 / 8;
-            var oldAntialias = this.getAntialiasing();
-            this.setAntialiasing(true);
-            ctx.drawImage(image, 0, 0, 800, 300, x, y - imageHeight - 20, width, imageHeight);
-            // loading box
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x, y, width, 20);
-            var progress = width * (loaded / total);
-            ctx.fillStyle = 'white';
-            var margin = 5;
-            var progressWidth = progress - margin * 2;
-            var height = 20 - margin * 2;
-            ctx.fillRect(x + margin, y + margin, progressWidth > 0 ? progressWidth : 0, height);
-            this.setAntialiasing(oldAntialias);
-        };
-        /**
-         * Sets the loading screen draw function if you want to customize the draw
-         * @param fcn  Callback to draw the loading screen which is passed a rendering context, the number of bytes loaded, and the total
-         * number of bytes to load.
-         */
-        Engine.prototype.setLoadingDrawFunction = function (fcn) {
-            this._loadingDraw = fcn;
-        };
-        /**
          * Another option available to you to load resources into the game.
          * Immediately after calling this the game will pause and the loading screen
          * will appear.
@@ -12730,41 +14371,26 @@ var ex;
             var _this = this;
             var complete = new ex.Promise();
             this._isLoading = true;
-            loader.onprogress = function (e) {
-                _this._progress = e.loaded;
-                _this._total = e.total;
-                _this._logger.debug('Loading ' + (100 * _this._progress / _this._total).toFixed(0));
-            };
-            loader.oncomplete = function () {
+            loader.load().then(function () {
                 setTimeout(function () {
                     _this._isLoading = false;
                     complete.resolve();
                 }, 500);
-            };
-            loader.load();
+            });
             return complete;
         };
+        /**
+         * Default [[IEngineOptions]]
+         */
+        Engine._DefaultEngineOptions = {
+            width: 0,
+            height: 0,
+            canvasElementId: '',
+            pointerScope: ex.Input.PointerScope.Document
+        };
         return Engine;
-    })(ex.Class);
+    }(ex.Class));
     ex.Engine = Engine;
-    /**
-     * Enum representing the different display modes available to Excalibur
-     */
-    (function (DisplayMode) {
-        /**
-         * Show the game as full screen
-         */
-        DisplayMode[DisplayMode["FullScreen"] = 0] = "FullScreen";
-        /**
-         * Scale the game to the parent DOM container
-         */
-        DisplayMode[DisplayMode["Container"] = 1] = "Container";
-        /**
-         * Show the game as a fixed size
-         */
-        DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
-    })(ex.DisplayMode || (ex.DisplayMode = {}));
-    var DisplayMode = ex.DisplayMode;
     /**
      * @internal
      */
@@ -12775,9 +14401,9 @@ var ex;
             this.y = y;
         }
         return AnimationNode;
-    })();
+    }());
 })(ex || (ex = {}));
-//# sourceMappingURL=excalibur-0.6.0.js.map
+//# sourceMappingURL=excalibur-0.7.0.js.map
 ;
 // Concatenated onto excalibur after build
 // Exports the excalibur module so it can be used with browserify

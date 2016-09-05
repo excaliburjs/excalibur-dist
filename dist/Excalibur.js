@@ -1,6 +1,6 @@
-/*! excalibur - v0.5.0 - 2015-06-03
+/*! excalibur - v0.5.1 - 2015-06-26
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2015 ; Licensed BSD*/
+* Copyright (c) 2015 ; Licensed BSD-2-Clause*/
 if (typeof window === 'undefined') {
     window = { audioContext: function () {
         return;
@@ -1208,6 +1208,8 @@ var ex;
             this.height = 0;
             this.effects = [];
             this.internalImage = new Image();
+            this.naturalWidth = 0;
+            this.naturalHeight = 0;
             this._spriteCanvas = null;
             this._spriteCtx = null;
             this._pixelData = null;
@@ -1231,6 +1233,8 @@ var ex;
             });
             this.width = swidth;
             this.height = sheight;
+            this.naturalWidth = swidth;
+            this.naturalHeight = sheight;
         }
         Sprite.prototype._loadPixels = function () {
             if (this._texture.isLoaded() && !this._pixelsLoaded) {
@@ -1414,6 +1418,9 @@ var ex;
                 ctx.drawImage(this.internalImage, 0, 0, this.swidth, this.sheight, -xpoint, -ypoint, this.swidth * this.scale.x, this.sheight * this.scale.y);
             }
             ctx.restore();
+            // calculating current dimensions
+            this.width = this.naturalWidth * this.scale.x;
+            this.height = this.naturalHeight * this.scale.y;
         };
         /**
          * Produces a copy of the current sprite
@@ -3107,6 +3114,31 @@ var ex;
                         this.left.dy = -Math.abs(this.left.dy);
                     }
                 }
+                else {
+                    // Cancel velocities along intersection
+                    if (this.intersect.x !== 0) {
+                        if (this.left.dx <= 0 && this.right.dx <= 0) {
+                            this.left.dx = Math.max(this.left.dx, this.right.dx);
+                        }
+                        else if (this.left.dx >= 0 && this.right.dx >= 0) {
+                            this.left.dx = Math.min(this.left.dx, this.right.dx);
+                        }
+                        else {
+                            this.left.dx = 0;
+                        }
+                    }
+                    if (this.intersect.y !== 0) {
+                        if (this.left.dy <= 0 && this.right.dy <= 0) {
+                            this.left.dy = Math.max(this.left.dy, this.right.dy);
+                        }
+                        else if (this.left.dy >= 0 && this.right.dy >= 0) {
+                            this.left.dy = Math.min(this.left.dy, this.right.dy);
+                        }
+                        else {
+                            this.left.dy = 0;
+                        }
+                    }
+                }
             }
             var rightSide = ex.Util.getOppositeSide(this.side);
             var rightIntersect = this.intersect.scale(-1.0);
@@ -3126,6 +3158,31 @@ var ex;
                     }
                     else if (rightSide === 2 /* Bottom */) {
                         this.right.dy = -Math.abs(this.right.dy);
+                    }
+                }
+                else {
+                    // Cancel velocities along intersection
+                    if (rightIntersect.x !== 0) {
+                        if (this.right.dx <= 0 && this.left.dx <= 0) {
+                            this.right.dx = Math.max(this.left.dx, this.right.dx);
+                        }
+                        else if (this.left.dx >= 0 && this.right.dx >= 0) {
+                            this.right.dx = Math.min(this.left.dx, this.right.dx);
+                        }
+                        else {
+                            this.right.dx = 0;
+                        }
+                    }
+                    if (rightIntersect.y !== 0) {
+                        if (this.right.dy <= 0 && this.left.dy <= 0) {
+                            this.right.dy = Math.max(this.left.dy, this.right.dy);
+                        }
+                        else if (this.left.dy >= 0 && this.right.dy >= 0) {
+                            this.right.dy = Math.min(this.left.dy, this.right.dy);
+                        }
+                        else {
+                            this.right.dy = 0;
+                        }
                     }
                 }
             }
@@ -3436,9 +3493,39 @@ var ex;
     })(BaseCamera);
     ex.LockedCamera = LockedCamera;
 })(ex || (ex = {}));
+var ex;
+(function (ex) {
+    /**
+     * An enum that describes the strategies that rotation actions can use
+     */
+    (function (RotationType) {
+        /**
+         * Rotation via `ShortestPath` will use the smallest angle
+         * between the starting and ending points. This strategy is the default behavior.
+         */
+        RotationType[RotationType["ShortestPath"] = 0] = "ShortestPath";
+        /**
+         * Rotation via `LongestPath` will use the largest angle
+         * between the starting and ending points.
+         */
+        RotationType[RotationType["LongestPath"] = 1] = "LongestPath";
+        /**
+         * Rotation via `Clockwise` will travel in a clockwise direction,
+         * regardless of the starting and ending points.
+         */
+        RotationType[RotationType["Clockwise"] = 2] = "Clockwise";
+        /**
+         * Rotation via `CounterClockwise` will travel in a counterclockwise direction,
+         * regardless of the starting and ending points.
+         */
+        RotationType[RotationType["CounterClockwise"] = 3] = "CounterClockwise";
+    })(ex.RotationType || (ex.RotationType = {}));
+    var RotationType = ex.RotationType;
+})(ex || (ex = {}));
 /// <reference path="../Algebra.ts" />
 /// <reference path="../Engine.ts" />
 /// <reference path="../Actor.ts" />
+/// <reference path="RotationType.ts" />
 /**
  * See [[ActionContext|Action API]] for more information about Actions.
  */
@@ -3705,27 +3792,78 @@ var ex;
             })();
             Actions.Meet = Meet;
             var RotateTo = (function () {
-                function RotateTo(actor, angleRadians, speed) {
+                function RotateTo(actor, angleRadians, speed, rotationType) {
                     this._started = false;
                     this._stopped = false;
                     this._actor = actor;
                     this._end = angleRadians;
                     this._speed = speed;
+                    this._rotationType = rotationType || 0 /* ShortestPath */;
                 }
                 RotateTo.prototype.update = function (delta) {
                     if (!this._started) {
                         this._started = true;
                         this._start = this._actor.rotation;
-                        this._distance = Math.abs(this._end - this._start);
+                        var distance1 = Math.abs(this._end - this._start);
+                        var distance2 = ex.Util.TwoPI - distance1;
+                        if (distance1 > distance2) {
+                            this._shortDistance = distance2;
+                            this._longDistance = distance1;
+                        }
+                        else {
+                            this._shortDistance = distance1;
+                            this._longDistance = distance2;
+                        }
+                        this._shortestPathIsPositive = (this._start - this._end + ex.Util.TwoPI) % ex.Util.TwoPI >= Math.PI;
+                        switch (this._rotationType) {
+                            case 0 /* ShortestPath */:
+                                this._distance = this._shortDistance;
+                                if (this._shortestPathIsPositive) {
+                                    this._direction = 1;
+                                }
+                                else {
+                                    this._direction = -1;
+                                }
+                                break;
+                            case 1 /* LongestPath */:
+                                this._distance = this._longDistance;
+                                if (this._shortestPathIsPositive) {
+                                    this._direction = -1;
+                                }
+                                else {
+                                    this._direction = 1;
+                                }
+                                break;
+                            case 2 /* Clockwise */:
+                                this._direction = 1;
+                                if (this._shortDistance >= 0) {
+                                    this._distance = this._shortDistance;
+                                }
+                                else {
+                                    this._distance = this._longDistance;
+                                }
+                                break;
+                            case 3 /* CounterClockwise */:
+                                this._direction = -1;
+                                if (this._shortDistance <= 0) {
+                                    this._distance = this._shortDistance;
+                                }
+                                else {
+                                    this._distance = this._longDistance;
+                                }
+                                break;
+                        }
                     }
-                    this._actor.rx = this._speed;
+                    this._actor.rx = this._direction * this._speed;
                     if (this.isComplete(this._actor)) {
                         this._actor.rotation = this._end;
                         this._actor.rx = 0;
+                        this._stopped = true;
                     }
                 };
                 RotateTo.prototype.isComplete = function (actor) {
-                    return this._stopped || (Math.abs(this._actor.rotation - this._start) >= this._distance);
+                    var distanceTravelled = Math.abs(this._actor.rotation - this._start);
+                    return this._stopped || (distanceTravelled >= Math.abs(this._distance));
                 };
                 RotateTo.prototype.stop = function () {
                     this._actor.rx = 0;
@@ -3738,28 +3876,79 @@ var ex;
             })();
             Actions.RotateTo = RotateTo;
             var RotateBy = (function () {
-                function RotateBy(actor, angleRadians, time) {
+                function RotateBy(actor, angleRadians, time, rotationType) {
                     this._started = false;
                     this._stopped = false;
                     this._actor = actor;
                     this._end = angleRadians;
                     this._time = time;
-                    this._speed = (this._end - this._actor.rotation) / time * 1000;
+                    this._rotationType = rotationType || 0 /* ShortestPath */;
                 }
                 RotateBy.prototype.update = function (delta) {
                     if (!this._started) {
                         this._started = true;
                         this._start = this._actor.rotation;
-                        this._distance = Math.abs(this._end - this._start);
+                        var distance1 = Math.abs(this._end - this._start);
+                        var distance2 = ex.Util.TwoPI - distance1;
+                        if (distance1 > distance2) {
+                            this._shortDistance = distance2;
+                            this._longDistance = distance1;
+                        }
+                        else {
+                            this._shortDistance = distance1;
+                            this._longDistance = distance2;
+                        }
+                        this._shortestPathIsPositive = (this._start - this._end + ex.Util.TwoPI) % ex.Util.TwoPI >= Math.PI;
+                        switch (this._rotationType) {
+                            case 0 /* ShortestPath */:
+                                this._distance = this._shortDistance;
+                                if (this._shortestPathIsPositive) {
+                                    this._direction = 1;
+                                }
+                                else {
+                                    this._direction = -1;
+                                }
+                                break;
+                            case 1 /* LongestPath */:
+                                this._distance = this._longDistance;
+                                if (this._shortestPathIsPositive) {
+                                    this._direction = -1;
+                                }
+                                else {
+                                    this._direction = 1;
+                                }
+                                break;
+                            case 2 /* Clockwise */:
+                                this._direction = 1;
+                                if (this._shortDistance >= 0) {
+                                    this._distance = this._shortDistance;
+                                }
+                                else {
+                                    this._distance = this._longDistance;
+                                }
+                                break;
+                            case 3 /* CounterClockwise */:
+                                this._direction = -1;
+                                if (this._shortDistance <= 0) {
+                                    this._distance = this._shortDistance;
+                                }
+                                else {
+                                    this._distance = this._longDistance;
+                                }
+                                break;
+                        }
+                        this._speed = Math.abs(this._distance / this._time * 1000);
                     }
-                    this._actor.rx = this._speed;
+                    this._actor.rx = this._direction * this._speed;
                     if (this.isComplete(this._actor)) {
                         this._actor.rotation = this._end;
                         this._actor.rx = 0;
+                        this._stopped = true;
                     }
                 };
                 RotateBy.prototype.isComplete = function (actor) {
-                    return this._stopped || (Math.abs(this._actor.rotation - this._start) >= this._distance);
+                    var distanceTravelled = Math.abs(this._actor.rotation - this._start);
+                    return this._stopped || (distanceTravelled >= Math.abs(this._distance));
                 };
                 RotateBy.prototype.stop = function () {
                     this._actor.rx = 0;
@@ -5120,6 +5309,7 @@ var ex;
             for (i = 0, len = this._killQueue.length; i < len; i++) {
                 actorIndex = this.children.indexOf(this._killQueue[i]);
                 if (actorIndex > -1) {
+                    this._sortedDrawingTree.removeByComparable(this._killQueue[i]);
                     this.children.splice(actorIndex, 1);
                 }
             }
@@ -5684,12 +5874,6 @@ var ex;
      *
      * **Setting opacity when using a color doesn't do anything**
      * [Issue #364](https://github.com/excaliburjs/Excalibur/issues/364)
-     *
-     * **Spawning an Actor next to another sometimes causes unexpected placement**
-     * [Issue #319](https://github.com/excaliburjs/Excalibur/issues/319)
-     *
-     * **[[Actor.contains]] doesn't work with child actors and relative coordinates**
-     * [Issue #147](https://github.com/excaliburjs/Excalibur/issues/147)
      */
     var Actor = (function (_super) {
         __extends(Actor, _super);
@@ -5915,9 +6099,14 @@ var ex;
         Actor.prototype.setDrawing = function (key) {
             key = key.toString();
             if (this.currentDrawing !== this.frames[key]) {
-                this.frames[key].reset();
+                if (this.frames[key] != null) {
+                    this.frames[key].reset();
+                    this.currentDrawing = this.frames[key];
+                }
+                else {
+                    ex.Logger.getInstance().error('the specified drawing key \'' + key + '\' does not exist');
+                }
             }
-            this.currentDrawing = this.frames[key];
         };
         Actor.prototype.addDrawing = function (args) {
             if (arguments.length === 2) {
@@ -6086,9 +6275,17 @@ var ex;
          * Tests whether the x/y specified are contained in the actor
          * @param x  X coordinate to test (in world coordinates)
          * @param y  Y coordinate to test (in world coordinates)
+         * @param recurse checks whether the x/y are contained in any child actors (if they exist).
          */
-        Actor.prototype.contains = function (x, y) {
-            return this.getBounds().contains(new ex.Point(x, y));
+        Actor.prototype.contains = function (x, y, recurse) {
+            if (recurse === void 0) { recurse = false; }
+            var containment = this.getBounds().contains(new ex.Point(x, y));
+            if (recurse) {
+                return containment || this.children.some(function (child) {
+                    return child.contains(x, y, true);
+                });
+            }
+            return containment;
         };
         /**
          * Returns the side of the collision based on the intersection
@@ -6229,8 +6426,8 @@ var ex;
          * @param angleRadians  The angle to rotate to in radians
          * @param speed         The angular velocity of the rotation specified in radians per second
          */
-        Actor.prototype.rotateTo = function (angleRadians, speed) {
-            this.actionQueue.add(new ex.Internal.Actions.RotateTo(this, angleRadians, speed));
+        Actor.prototype.rotateTo = function (angleRadians, speed, rotationType) {
+            this.actionQueue.add(new ex.Internal.Actions.RotateTo(this, angleRadians, speed, rotationType));
             return this;
         };
         /**
@@ -6240,8 +6437,8 @@ var ex;
          * @param angleRadians  The angle to rotate to in radians
          * @param duration          The time it should take the actor to complete the rotation in milliseconds
          */
-        Actor.prototype.rotateBy = function (angleRadians, duration) {
-            this.actionQueue.add(new ex.Internal.Actions.RotateBy(this, angleRadians, duration));
+        Actor.prototype.rotateBy = function (angleRadians, duration, rotationType) {
+            this.actionQueue.add(new ex.Internal.Actions.RotateBy(this, angleRadians, duration, rotationType));
             return this;
         };
         /**
@@ -8971,8 +9168,8 @@ var ex;
                 _this.image = new Image();
                 _this.image.addEventListener('load', function () {
                     _this._isLoaded = true;
-                    _this.width = _this._sprite.swidth = _this._sprite.width = _this.image.naturalWidth;
-                    _this.height = _this._sprite.sheight = _this._sprite.height = _this.image.naturalHeight;
+                    _this.width = _this._sprite.swidth = _this._sprite.naturalWidth = _this._sprite.width = _this.image.naturalWidth;
+                    _this.height = _this._sprite.sheight = _this._sprite.naturalHeight = _this._sprite.height = _this.image.naturalHeight;
                     _this.loaded.resolve(_this.image);
                     complete.resolve(_this.image);
                 });
@@ -11770,7 +11967,7 @@ var ex;
         return AnimationNode;
     })();
 })(ex || (ex = {}));
-//# sourceMappingURL=excalibur-0.5.0.js.map
+//# sourceMappingURL=excalibur-0.5.1.js.map
 ;
 // Concatenated onto excalibur after build
 // Exports the excalibur module so it can be used with browserify

@@ -10,10 +10,4 @@ and tags for stable versions.
 
 ## Install Excalibur
 
-**Bower:**
-
-    bower install excalibur
-
-**Nuget:**
-
-    Install-Package Excalibur
+See [Installing Excalibur](http://docs.excaliburjs.com/en/latest/installation.html) documentation.

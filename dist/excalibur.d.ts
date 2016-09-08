@@ -2602,7 +2602,7 @@ declare module ex.Internal.Actions {
         private _actor;
         private _endOpacity;
         private _speed;
-        private _multiplyer;
+        private _multiplier;
         private _started;
         private _stopped;
         constructor(actor: Actor, endOpacity: number, speed: number);
@@ -2994,6 +2994,9 @@ declare module ex {
     }
 }
 declare module ex {
+    /**
+     * A sorted list implementation. NOTE: this implementation is not self-balancing
+     */
     class SortedList<T> {
         private _getComparable;
         private _root;
@@ -3011,6 +3014,9 @@ declare module ex {
         list(): Array<T>;
         private _list(treeNode, results);
     }
+    /**
+     * A tree node part of [[SortedList]]
+     */
     class BinaryTreeNode {
         private _key;
         private _data;
@@ -3026,6 +3032,11 @@ declare module ex {
         getRight(): BinaryTreeNode;
         setRight(right: BinaryTreeNode): void;
     }
+    /**
+     * Mock element for testing
+     *
+     * @internal
+     */
     class MockedElement {
         private _key;
         constructor(key: number);
@@ -3194,6 +3205,16 @@ declare module ex {
         private _cancelQueue;
         private _logger;
         constructor(engine?: Engine);
+        on(eventName: ex.Events.initialize, handler: (event?: InitializeEvent) => void): any;
+        on(eventName: ex.Events.activate, handler: (event?: ActivateEvent) => void): any;
+        on(eventName: ex.Events.deactivate, handler: (event?: DeactivateEvent) => void): any;
+        on(eventName: ex.Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
+        on(eventName: ex.Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
+        on(eventName: ex.Events.predraw, handler: (event?: PreDrawEvent) => void): any;
+        on(eventName: ex.Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
+        on(eventName: ex.Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): any;
+        on(eventName: ex.Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -3912,13 +3933,19 @@ declare module ex {
          */
         onInitialize(engine: Engine): void;
         private _checkForPointerOptIn(eventName);
-        /**
-         * You can listen for a variety of
-         * events off of the engine; see [[GameEvent]]
-         * @param eventName   Name of the event to listen for
-         * @param handler     Event handler for the thrown event
-         */
-        on(eventName: string, handler: (event?: GameEvent) => void): void;
+        on(eventName: ex.Events.kill, handler: (event?: KillEvent) => void): any;
+        on(eventName: ex.Events.initialize, handler: (event?: InitializeEvent) => void): any;
+        on(eventName: ex.Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
+        on(eventName: ex.Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
+        on(eventName: ex.Events.predraw, handler: (event?: PreDrawEvent) => void): any;
+        on(eventName: ex.Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
+        on(eventName: ex.Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): any;
+        on(eventName: ex.Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): any;
+        on(eventName: ex.Events.pointerup, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.pointerdown, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.pointermove, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.pointercancel, handler: (event?: PointerEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.
@@ -4300,6 +4327,42 @@ declare module ex {
         log(level: LogLevel, args: any[]): void;
     }
 }
+declare module ex.Events {
+    type kill = 'kill';
+    type predraw = 'predraw';
+    type postdraw = 'postdraw';
+    type predebugdraw = 'predebugdraw';
+    type postdebugdraw = 'postdebugdraw';
+    type preupdate = 'preupdate';
+    type postupdate = 'postupdate';
+    type collision = 'collision';
+    type initialize = 'initialize';
+    type activate = 'activate';
+    type deactivate = 'deactivate';
+    type exitviewport = 'exitviewport';
+    type enterviewport = 'enterviewport';
+    type connect = 'connect';
+    type disconnect = 'disconnect';
+    type button = 'button';
+    type axis = 'axis';
+    type subscribe = 'subscribe';
+    type unsubscribe = 'unsubscribe';
+    type visible = 'visible';
+    type hidden = 'hidden';
+    type start = 'start';
+    type stop = 'stop';
+    type pointerup = 'pointerup';
+    type pointerdown = 'pointerdown';
+    type pointermove = 'pointermove';
+    type pointercancel = 'pointercancel';
+    type up = 'up';
+    type down = 'down';
+    type move = 'move';
+    type cancel = 'cancel';
+    type press = 'press';
+    type release = 'release';
+    type hold = 'hold';
+}
 declare module ex {
     /**
      * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
@@ -4330,6 +4393,20 @@ declare module ex {
      * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
      */
     class KillEvent extends GameEvent {
+        target: any;
+        constructor(target: any);
+    }
+    /**
+     * The 'start' event is emitted on engine when has started and is ready for interaction.
+     */
+    class GameStartEvent extends GameEvent {
+        target: any;
+        constructor(target: any);
+    }
+    /**
+     * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
+     */
+    class GameStopEvent extends GameEvent {
         target: any;
         constructor(target: any);
     }
@@ -4475,7 +4552,7 @@ declare module ex {
         constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
     }
     /**
-     * Event thrown on an [[Actor]] only once before the first update call
+     * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
     class InitializeEvent extends GameEvent {
         engine: Engine;
@@ -4936,7 +5013,13 @@ declare module ex {
          * Begins loading the resource and returns a promise to be resolved on completion
          */
         load(): Promise<any>;
+        /**
+         * Gets the data that was loaded
+         */
         getData(): any;
+        /**
+         * Sets the data (can be populated from remote request or in-memory data)
+         */
         setData(data: any): void;
         /**
          * Processes the downloaded data. Meant to be overridden.
@@ -5120,7 +5203,12 @@ declare module ex {
          * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
          * when at least 1 promise rejects.
          */
-        static join<T>(...promises: Promise<T>[]): Promise<T>;
+        static join<T>(promises: Promise<T>[]): any;
+        /**
+         * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
+         * when at least 1 promise rejects.
+         */
+        static join<T>(...promises: Promise<T>[]): any;
         /**
          * Chain success and reject callbacks after the promise is resovled
          * @param successCallback  Call on resolution of promise
@@ -5224,6 +5312,97 @@ declare module ex {
 }
 declare module ex {
     /**
+     * Represents an audio control implementation
+     */
+    interface IAudio {
+        /**
+         * Set the volume (between 0 and 1)
+         */
+        setVolume(volume: number): any;
+        /**
+         * Set whether the audio should loop (repeat forever)
+         */
+        setLoop(loop: boolean): any;
+        /**
+         * Whether or not any audio is playing
+         */
+        isPlaying(): boolean;
+        /**
+         * Will play the sound or resume if paused
+         */
+        play(): ex.Promise<any>;
+        /**
+         * Pause the sound
+         */
+        pause(): any;
+        /**
+         * Stop playing the sound and reset
+         */
+        stop(): any;
+    }
+}
+declare module ex {
+    /**
+     * Represents an audio implementation like [[AudioTag]] or [[WebAudio]]
+     */
+    interface IAudioImplementation {
+        /**
+         * XHR response type
+         */
+        responseType: string;
+        /**
+         * Processes raw data and transforms into sound data
+         */
+        processData(data: Blob | ArrayBuffer): ex.Promise<string | AudioBuffer>;
+        /**
+         * Factory method that returns an instance of a played audio track
+         */
+        createInstance(data: string | AudioBuffer): IAudio;
+    }
+}
+declare module ex {
+    /**
+     * An audio implementation for HTML5 audio.
+     */
+    class AudioTag implements IAudioImplementation {
+        responseType: string;
+        /**
+         * Transforms raw Blob data into a object URL for use in audio tag
+         */
+        processData(data: Blob): ex.Promise<string>;
+        /**
+         * Creates a new instance of an audio tag referencing the provided audio URL
+         */
+        createInstance(url: string): IAudio;
+    }
+    /**
+     * An audio implementation for Web Audio API.
+     */
+    class WebAudio implements IAudioImplementation {
+        private _logger;
+        responseType: string;
+        /**
+         * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
+         */
+        processData(data: ArrayBuffer): ex.Promise<AudioBuffer>;
+        /**
+         * Creates a new WebAudio AudioBufferSourceNode to play a sound instance
+         */
+        createInstance(buffer: AudioBuffer): IAudio;
+        private static _unlocked;
+        /**
+         * Play an empty sound to unlock Safari WebAudio context. Call this function
+         * right after a user interaction event. Typically used by [[PauseAfterLoader]]
+         * @source https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
+         */
+        static unlock(): void;
+        static isUnlocked(): boolean;
+    }
+    /**
+     * Factory method that gets the audio implementation to use
+     */
+    function getAudioImplementation(): IAudioImplementation;
+    /**
      * Sounds
      *
      * The [[Sound]] object allows games built in Excalibur to load audio
@@ -5247,20 +5426,24 @@ declare module ex {
      * });
      * ```
      */
-    class Sound implements ILoadable, ex.Internal.ISound {
+    class Sound implements ILoadable, IAudio {
         private _logger;
+        private _data;
+        private _tracks;
+        private _isLoaded;
+        private _isPaused;
+        private _loop;
+        private _volume;
         path: string;
         onprogress: (e: any) => void;
         oncomplete: () => void;
         onerror: (e: any) => void;
-        onload: (e: any) => void;
-        private _isLoaded;
         private _engine;
         private _wasPlayingOnHidden;
         /**
          * Populated once loading is complete
          */
-        sound: ex.Internal.FallbackAudio;
+        sound: IAudioImplementation;
         /**
          * Whether or not the browser can play this file as HTML5 Audio
          */
@@ -5270,6 +5453,10 @@ declare module ex {
          */
         constructor(...paths: string[]);
         wireEngine(engine: Engine): void;
+        /**
+         * Returns how many instances of the sound are currently playing
+         */
+        instanceCount(): number;
         /**
          * Sets the volume of the sound clip
          * @param volume  A volume value between 0-1.0
@@ -5287,7 +5474,7 @@ declare module ex {
         /**
          * Play the sound, returns a promise that resolves when the sound is done playing
          */
-        play(): ex.Promise<any>;
+        play(): ex.Promise<boolean>;
         /**
          * Stop the sound, and do not rewind
          */
@@ -5303,9 +5490,21 @@ declare module ex {
         /**
          * Begins loading the sound and returns a promise to be resolved on completion
          */
-        load(): Promise<ex.Internal.FallbackAudio>;
+        load(): Promise<IAudioImplementation>;
+        private _fetchResource(onload);
+        /**
+         * Gets the raw sound data (e.g. blob URL or AudioBuffer)
+         */
         getData(): any;
-        setData(data: any): void;
+        /**
+         * Sets raw sound data and returns a Promise that is resolved when sound data is processed
+         *
+         * @param data The XHR data for the sound implementation to process (Blob or ArrayBuffer)
+         */
+        setData(data: any): ex.Promise<any>;
+        /**
+         * Set the raw sound data (e.g. blob URL or AudioBuffer)
+         */
         processData(data: any): any;
     }
 }
@@ -5767,108 +5966,6 @@ declare module ex {
         play(x: number, y: number): void;
     }
 }
-declare module ex.Internal {
-    interface ISound {
-        setVolume(volume: number): any;
-        setLoop(loop: boolean): any;
-        isPlaying(): boolean;
-        play(): ex.Promise<any>;
-        pause(): any;
-        stop(): any;
-        load(): any;
-        setData(data: any): any;
-        getData(): any;
-        processData(data: any): any;
-        onload: (e: any) => void;
-        onprogress: (e: any) => void;
-        onerror: (e: any) => void;
-        path: string;
-    }
-    class FallbackAudio implements ISound {
-        path: string;
-        private _soundImpl;
-        private _log;
-        constructor(path: string, volume?: number);
-        setVolume(volume: number): void;
-        setLoop(loop: boolean): void;
-        onload: (e: any) => void;
-        onprogress: (e: any) => void;
-        onerror: (e: any) => void;
-        load(): void;
-        processData(data: any): any;
-        getData(): any;
-        setData(data: any): void;
-        isPlaying(): boolean;
-        play(): ex.Promise<any>;
-        pause(): void;
-        stop(): void;
-    }
-    class AudioTag implements ISound {
-        path: string;
-        private _audioElements;
-        private _loadedAudio;
-        private _isLoaded;
-        private _index;
-        private _log;
-        private _isPlaying;
-        private _playingTimer;
-        private _currentOffset;
-        constructor(path: string, volume?: number);
-        isPlaying(): boolean;
-        private _audioLoaded();
-        setVolume(volume: number): void;
-        setLoop(loop: boolean): void;
-        getLoop(): void;
-        onload: (e: any) => void;
-        onprogress: (e: any) => void;
-        onerror: (e: any) => void;
-        load(): void;
-        getData(): any;
-        setData(data: any): void;
-        processData(data: any): any;
-        play(): Promise<any>;
-        pause(): void;
-        stop(): void;
-    }
-    class WebAudio implements ISound {
-        path: string;
-        private _context;
-        private _volume;
-        private _buffer;
-        private _sound;
-        private _isLoaded;
-        private _loop;
-        private _isPlaying;
-        private _isPaused;
-        private _playingTimer;
-        private _currentOffset;
-        private _playPromise;
-        private _logger;
-        private _data;
-        constructor(path: string, volume?: number);
-        setVolume(volume: number): void;
-        onload: (e: any) => void;
-        onprogress: (e: any) => void;
-        onerror: (e: any) => void;
-        load(): void;
-        getData(): any;
-        setData(data: any): void;
-        processData(data: any): any;
-        setLoop(loop: boolean): void;
-        isPlaying(): boolean;
-        play(): Promise<any>;
-        pause(): void;
-        stop(): void;
-        private static _unlocked;
-        /**
-         * Play an empty sound to unlock Safari WebAudio context. Call this function
-         * right after a user interaction event. Typically used by [[PauseAfterLoader]]
-         * @source https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
-         */
-        static unlock(): void;
-        static isUnlocked(): boolean;
-    }
-}
 declare module ex.Util.DrawUtil {
     /**
      * Draw a line on canvas context
@@ -6101,6 +6198,9 @@ declare module ex {
     }
 }
 declare module ex {
+    /**
+     * Excalibur internal feature detection helper class
+     */
     class Detector {
         failedTests: string[];
         private _criticalTests;
@@ -6656,6 +6756,11 @@ declare module ex.Input {
         private _pointers;
         private _activePointers;
         constructor(engine: ex.Engine);
+        on(eventName: ex.Events.up, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.down, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.move, handler: (event?: PointerEvent) => void): any;
+        on(eventName: ex.Events.cancel, handler: (event?: PointerEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Primary pointer (mouse, 1 finger, stylus, etc.)
          */
@@ -6800,9 +6905,9 @@ declare module ex.Input {
      * - `hold` - Whenever a key is in the down position
      *
      * ```ts
-     * engine.input.pointers.primary.on("press", (evt: KeyEvent) => {...});
-     * engine.input.pointers.primary.on("release", (evt: KeyEvent) => {...});
-     * engine.input.pointers.primary.on("hold", (evt: KeyEvent) => {...});
+     * engine.input.keyboard.on("press", (evt: KeyEvent) => {...});
+     * engine.input.keyboard.on("release", (evt: KeyEvent) => {...});
+     * engine.input.keyboard.on("hold", (evt: KeyEvent) => {...});
      * ```
      */
     class Keyboard extends ex.Class {
@@ -6811,6 +6916,10 @@ declare module ex.Input {
         private _keysDown;
         private _engine;
         constructor(engine: ex.Engine);
+        on(eventName: ex.Events.press, handler: (event?: KeyboardEvent) => void): any;
+        on(eventName: ex.Events.release, handler: (event?: KeyboardEvent) => void): any;
+        on(eventName: ex.Events.hold, handler: (event?: KeyboardEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Initialize Keyboard event listeners
          */
@@ -7005,7 +7114,11 @@ declare module ex.Input {
          * Checks a navigator gamepad against the minimum configuration if present.
          */
         private _isGamepadValid(pad);
-        on(eventName: string, handler: (event?: GameEvent) => void): void;
+        on(eventName: ex.Events.connect, handler: (event?: GamepadConnectEvent) => void): any;
+        on(eventName: ex.Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): any;
+        on(eventName: ex.Events.button, handler: (event?: GamepadButtonEvent) => void): any;
+        on(eventName: ex.Events.axis, handler: (event?: GamepadAxisEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         off(eventName: string, handler?: (event?: GameEvent) => void): void;
         /**
          * Updates Gamepad state and publishes Gamepad events
@@ -7568,6 +7681,11 @@ declare module ex {
         private _compatible;
         private _loader;
         private _isLoading;
+        on(eventName: ex.Events.visible, handler: (event?: VisibleEvent) => void): any;
+        on(eventName: ex.Events.hidden, handler: (event?: HiddenEvent) => void): any;
+        on(eventName: ex.Events.start, handler: (event?: GameStartEvent) => void): any;
+        on(eventName: ex.Events.stop, handler: (event?: GameStopEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Default [[IEngineOptions]]
          */

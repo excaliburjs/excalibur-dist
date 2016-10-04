@@ -3,5 +3,5 @@ language: node_js
 node_js:
 - '4'
 script:
-    - echo "//registry.npmjs.org/::_authToken=${NPM_TOKEN}" > ~/.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
     - npm publish --tag next

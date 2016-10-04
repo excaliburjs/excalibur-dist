@@ -832,6 +832,10 @@ var ex;
          * Gets or sets whether rotation is allowed in a RigidBody collision resolution
          */
         Physics.allowRigidBodyRotation = true;
+        /**
+         * Small value to help collision passes settle themselves after the narrowphase.
+         */
+        Physics.collisionShift = .001;
         return Physics;
     }());
     ex.Physics = Physics;
@@ -899,32 +903,42 @@ var ex;
                     if (this.mtv.x !== 0) {
                         var velX = 0;
                         // both bodies are traveling in the same direction (negative or positve)
-                        if (bodyA.vel.x <= 0 && bodyB.vel.x <= 0) {
+                        if (bodyA.vel.x < 0 && bodyB.vel.x < 0) {
                             velX = Math.min(bodyA.vel.x, bodyB.vel.x);
-                            velX = bodyA.vel.x + bodyA.vel.x;
                         }
-                        else if (bodyA.vel.x >= 0 && bodyB.vel.x >= 0) {
+                        else if (bodyA.vel.x > 0 && bodyB.vel.x > 0) {
                             velX = Math.max(bodyA.vel.x, bodyB.vel.x);
-                            velX = bodyA.vel.x + bodyA.vel.x;
                         }
-                        else {
+                        else if (bodyB.collisionType === ex.CollisionType.Fixed) {
                             // bodies are traveling in opposite directions
-                            velX = 0;
+                            if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
+                                velX = bodyA.vel.x;
+                            }
+                            else {
+                                // bodyA is heading towards b
+                                velX = bodyB.vel.x;
+                            }
                         }
                         bodyA.vel.x = velX;
                     }
                     if (this.mtv.y !== 0) {
                         var velY = 0;
                         // both bodies are traveling in the same direction (negative or positive)
-                        if (bodyA.vel.y <= 0 && bodyB.vel.y <= 0) {
+                        if (bodyA.vel.y < 0 && bodyB.vel.y < 0) {
                             velY = Math.min(bodyA.vel.y, bodyB.vel.y);
                         }
-                        else if (bodyA.vel.y >= 0 && bodyB.vel.y >= 0) {
+                        else if (bodyA.vel.y > 0 && bodyB.vel.y > 0) {
                             velY = Math.max(bodyA.vel.y, bodyB.vel.y);
                         }
-                        else {
+                        else if (bodyB.collisionType === ex.CollisionType.Fixed) {
                             // bodies are traveling in opposite directions
-                            velY = 0;
+                            if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
+                                velY = bodyA.vel.y;
+                            }
+                            else {
+                                // bodyA is heading towards b
+                                velY = bodyB.vel.y;
+                            }
                         }
                         bodyA.vel.y = velY;
                     }
@@ -3829,6 +3843,14 @@ var ex;
             }
         };
         /**
+         * Updates the collision area geometry and internal caches
+         */
+        Body.prototype.update = function () {
+            if (this.collisionArea) {
+                this.collisionArea.recalc();
+            }
+        };
+        /**
          * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
          *
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
@@ -4076,13 +4098,13 @@ var ex;
     var NaiveCollisionBroadphase = (function () {
         function NaiveCollisionBroadphase() {
         }
-        NaiveCollisionBroadphase.prototype.register = function (target) {
+        NaiveCollisionBroadphase.prototype.track = function (target) {
             // pass
         };
-        NaiveCollisionBroadphase.prototype.remove = function (tartet) {
+        NaiveCollisionBroadphase.prototype.untrack = function (tartet) {
             // pass
         };
-        NaiveCollisionBroadphase.prototype.findCollisionContacts = function (targets, delta) {
+        NaiveCollisionBroadphase.prototype.detect = function (targets, delta) {
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
@@ -4277,7 +4299,7 @@ var ex;
                 sibling.parent = null;
             }
         };
-        DynamicTree.prototype.registerBody = function (body) {
+        DynamicTree.prototype.trackBody = function (body) {
             var node = new TreeNode();
             node.body = body;
             node.bounds = body.getBounds();
@@ -4321,7 +4343,7 @@ var ex;
             this.insert(node);
             return true;
         };
-        DynamicTree.prototype.removeBody = function (body) {
+        DynamicTree.prototype.untrackBody = function (body) {
             var node = this.nodes[body.actor.id];
             if (!node) {
                 return;
@@ -4506,11 +4528,25 @@ var ex;
             this._collisionHash = {};
             this._collisionContactCache = [];
         }
-        DynamicTreeCollisionBroadphase.prototype.register = function (target) {
-            this._dynamicCollisionTree.registerBody(target.body);
+        /**
+         * Tracks a physics body for collisions
+         */
+        DynamicTreeCollisionBroadphase.prototype.track = function (target) {
+            if (!target) {
+                ex.Logger.getInstance().warn('Cannot track null physics body');
+                return;
+            }
+            this._dynamicCollisionTree.trackBody(target);
         };
-        DynamicTreeCollisionBroadphase.prototype.remove = function (target) {
-            this._dynamicCollisionTree.removeBody(target.body);
+        /**
+         * Untracks a physics body
+         */
+        DynamicTreeCollisionBroadphase.prototype.untrack = function (target) {
+            if (!target) {
+                ex.Logger.getInstance().warn('Cannot untrack a null physics body');
+                return;
+            }
+            this._dynamicCollisionTree.untrackBody(target);
         };
         DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
             // if the collision pair has been calculated already short circuit
@@ -4529,7 +4565,7 @@ var ex;
             // they can collide
             return true;
         };
-        DynamicTreeCollisionBroadphase.prototype.findCollisionContacts = function (targets, delta) {
+        DynamicTreeCollisionBroadphase.prototype.detect = function (targets, delta) {
             var _this = this;
             // TODO optimization use only the actors that are moving to start 
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
@@ -4590,6 +4626,9 @@ var ex;
             // return cache
             return this._collisionContactCache;
         };
+        /**
+         * Update the dynamic tree positions
+         */
         DynamicTreeCollisionBroadphase.prototype.update = function (targets, delta) {
             var updated = 0, i = 0, len = targets.length;
             for (i; i < len; i++) {
@@ -6846,20 +6885,25 @@ var ex;
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
                 this.tileMaps[i].update(engine, delta);
             }
+            // Cycle through actors updating actors
+            for (i = 0, len = this.children.length; i < len; i++) {
+                this.children[i].update(engine, delta);
+            }
+            // Run the broadphase
+            if (this._broadphase) {
+                this._broadphase.update(this.children, delta);
+            }
+            // Run the narrowphase
             var iter = ex.Physics.collisionPasses;
             var collisionDelta = delta / iter;
             while (iter > 0) {
-                // Cycle through actors updating actors
-                for (i = 0, len = this.children.length; i < len; i++) {
-                    this.children[i].update(engine, collisionDelta);
-                    this.children[i].collisionArea.recalc();
-                }
-                // TODO meh I don't like how this works... maybe find a way to make collisions
-                // a trait
                 // Run collision resolution strategy
                 if (this._broadphase && ex.Physics.enabled) {
-                    this._broadphase.update(this.children, collisionDelta);
-                    this._broadphase.findCollisionContacts(this.children, collisionDelta);
+                    this._broadphase.detect(this.children, collisionDelta);
+                    for (i = 0, len = this.children.length; i < len; i++) {
+                        // helps move settle collisions, really there is a better way to do this
+                        this.children[i].integrate(collisionDelta * ex.Physics.collisionShift);
+                    }
                 }
                 iter--;
             }
@@ -6984,7 +7028,7 @@ var ex;
                 return;
             }
             if (entity instanceof ex.Actor) {
-                this._broadphase.remove(entity);
+                this._broadphase.untrack(entity.body);
                 this._removeChild(entity);
             }
             if (entity instanceof ex.Timer) {
@@ -7016,7 +7060,7 @@ var ex;
          * Adds an actor to the scene, once this is done the actor will be drawn and updated.
          */
         Scene.prototype._addChild = function (actor) {
-            this._broadphase.register(actor);
+            this._broadphase.track(actor.body);
             actor.scene = this;
             this.children.push(actor);
             this._sortedDrawingTree.add(actor);
@@ -7041,7 +7085,7 @@ var ex;
          * Removes an actor from the scene, it will no longer be drawn or updated.
          */
         Scene.prototype._removeChild = function (actor) {
-            this._broadphase.remove(actor);
+            this._broadphase.untrack(actor.body);
             this._killQueue.push(actor);
             actor.parent = null;
         };
@@ -7611,7 +7655,7 @@ var ex;
                 this.opacity = color.a;
             }
             // Build default pipeline
-            this.traits.push(new ex.Traits.EulerMovement());
+            //this.traits.push(new ex.Traits.EulerMovement());
             // TODO: TileMaps should be converted to a collision area
             this.traits.push(new ex.Traits.TileMapCollisionDetection());
             this.traits.push(new ex.Traits.OffscreenCulling());
@@ -7878,7 +7922,7 @@ var ex;
         };
         Actor.prototype._checkForPointerOptIn = function (eventName) {
             if (eventName && (eventName.toLowerCase() === 'pointerdown' ||
-                eventName.toLowerCase() === 'pointerdown' ||
+                eventName.toLowerCase() === 'pointerup' ||
                 eventName.toLowerCase() === 'pointermove')) {
                 this.enableCapturePointer = true;
                 if (eventName.toLowerCase() === 'pointermove') {
@@ -8276,6 +8320,30 @@ var ex;
             return new ex.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
         /**
+         * Perform euler integration at the specified time step
+         */
+        Actor.prototype.integrate = function (delta) {
+            // Update placements based on linear algebra
+            var seconds = delta / 1000;
+            var totalAcc = this.acc.clone();
+            // Only active vanilla actors are affected by global acceleration
+            if (this.collisionType === ex.CollisionType.Active &&
+                !(this instanceof ex.UIActor) &&
+                !(this instanceof ex.Trigger) &&
+                !(this instanceof ex.Label)) {
+                totalAcc.addEqual(ex.Physics.acc);
+            }
+            this.oldVel = this.vel;
+            this.vel.addEqual(totalAcc.scale(seconds));
+            this.pos.addEqual(this.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
+            this.rx += this.torque * (1.0 / this.moi) * seconds;
+            this.rotation += this.rx * seconds;
+            this.scale.x += this.sx * delta / 1000;
+            this.scale.y += this.sy * delta / 1000;
+            // Update physics body
+            this.body.update();
+        };
+        /**
          * Called by the Engine, updates the state of the actor
          * @param engine The reference to the current game engine
          * @param delta  The time elapsed since the last update in milliseconds
@@ -8309,6 +8377,7 @@ var ex;
                     this.frames[drawing].addEffect(this._opacityFx);
                 }
             }
+            this.integrate(delta);
             // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)
             for (var _i = 0, _a = this.traits; _i < _a.length; _i++) {
                 var trait = _a[_i];

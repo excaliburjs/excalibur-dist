@@ -607,6 +607,10 @@ declare module ex {
          * simulated physical interactions.
          */
         static useRigidBodyPhysics(): void;
+        /**
+         * Small value to help collision passes settle themselves after the narrowphase.
+         */
+        static collisionShift: number;
     }
 }
 declare module ex {
@@ -1995,6 +1999,10 @@ declare module ex {
          */
         getRelativeBounds(): BoundingBox;
         /**
+         * Updates the collision area geometry and internal caches
+         */
+        update(): void;
+        /**
          * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
          *
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
@@ -2125,18 +2133,18 @@ declare module ex {
 }
 declare module ex {
     interface ICollisionBroadphase {
-        register(target: Actor): any;
-        remove(tartet: Actor): any;
-        findCollisionContacts(targets: Actor[], delta: number): CollisionContact[];
+        track(target: Body): any;
+        untrack(tartet: Body): any;
+        detect(targets: Actor[], delta: number): CollisionContact[];
         update(targets: Actor[], delta: number): number;
         debugDraw(ctx: any, delta: any): void;
     }
 }
 declare module ex {
     class NaiveCollisionBroadphase implements ICollisionBroadphase {
-        register(target: Actor): void;
-        remove(tartet: Actor): void;
-        findCollisionContacts(targets: Actor[], delta: number): CollisionContact[];
+        track(target: Body): void;
+        untrack(tartet: Body): void;
+        detect(targets: Actor[], delta: number): CollisionContact[];
         update(targets: Actor[]): number;
         debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
     }
@@ -2160,9 +2168,9 @@ declare module ex {
         constructor();
         insert(leaf: TreeNode): void;
         remove(leaf: TreeNode): void;
-        registerBody(body: Body): void;
+        trackBody(body: Body): void;
         updateBody(body: Body): boolean;
-        removeBody(body: Body): void;
+        untrackBody(body: Body): void;
         balance(node: TreeNode): TreeNode;
         getHeight(): number;
         query(body: Body, callback: (other: Body) => boolean): void;
@@ -2176,10 +2184,19 @@ declare module ex {
         private _dynamicCollisionTree;
         private _collisionHash;
         private _collisionContactCache;
-        register(target: Actor): void;
-        remove(target: Actor): void;
+        /**
+         * Tracks a physics body for collisions
+         */
+        track(target: Body): void;
+        /**
+         * Untracks a physics body
+         */
+        untrack(target: Body): void;
         private _canCollide(actorA, actorB);
-        findCollisionContacts(targets: Actor[], delta: number): CollisionContact[];
+        detect(targets: Actor[], delta: number): CollisionContact[];
+        /**
+         * Update the dynamic tree positions
+         */
         update(targets: Actor[], delta: number): number;
         debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
     }
@@ -4144,6 +4161,10 @@ declare module ex {
          */
         within(actor: Actor, distance: number): boolean;
         private _getCalculatedAnchor();
+        /**
+         * Perform euler integration at the specified time step
+         */
+        integrate(delta: number): void;
         /**
          * Called by the Engine, updates the state of the actor
          * @param engine The reference to the current game engine

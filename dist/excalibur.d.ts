@@ -7700,6 +7700,7 @@ declare module ex {
         private _isSmoothingEnabled;
         private _requestId;
         private _compatible;
+        private _timescale;
         private _loader;
         private _isLoading;
         on(eventName: ex.Events.visible, handler: (event?: VisibleEvent) => void): any;
@@ -7734,6 +7735,14 @@ declare module ex {
          * ```
          */
         constructor(options?: IEngineOptions);
+        /**
+         * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
+         */
+        /**
+         * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
+         * when using time-based movement.
+         */
+        timescale: number;
         /**
          * Plays a sprite animation on the screen at the specified `x` and `y`
          * (in game coordinates, not screen pixels). These animations play
@@ -7927,6 +7936,7 @@ declare module ex {
          * custom loader.
          */
         start(loader?: ILoader): Promise<any>;
+        static createMainLoop(game: Engine, raf: (Function) => number, nowFn: () => number): () => void;
         /**
          * Stops Excalibur's main loop, useful for pausing the game.
          */

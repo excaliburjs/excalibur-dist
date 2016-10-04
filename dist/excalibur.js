@@ -14016,6 +14016,7 @@ var ex;
              */
             this.onFatalException = function (e) { ex.Logger.getInstance().fatal(e); };
             this._isSmoothingEnabled = true;
+            this._timescale = 1.0;
             this._isLoading = false;
             options = ex.Util.extend({}, Engine._DefaultEngineOptions, options);
             // Check compatibility 
@@ -14080,6 +14081,27 @@ O|===|* >________________>\n\
         Engine.prototype.on = function (eventName, handler) {
             _super.prototype.on.call(this, eventName, handler);
         };
+        Object.defineProperty(Engine.prototype, "timescale", {
+            /**
+             * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
+             */
+            get: function () {
+                return this._timescale;
+            },
+            /**
+             * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
+             * when using time-based movement.
+             */
+            set: function (value) {
+                if (value <= 0) {
+                    ex.Logger.getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
+                    return;
+                }
+                this._timescale = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Plays a sprite animation on the screen at the specified `x` and `y`
          * (in game coordinates, not screen pixels). These animations play
@@ -14478,40 +14500,41 @@ O|===|* >________________>\n\
             if (!this._hasStarted) {
                 this._hasStarted = true;
                 this._logger.debug('Starting game...');
-                // Mainloop
-                var lastTime = Date.now();
-                var game = this;
-                (function mainloop() {
-                    if (!game._hasStarted) {
-                        return;
-                    }
-                    try {
-                        game._requestId = window.requestAnimationFrame(mainloop);
-                        // Get the time to calculate time-elapsed
-                        var now = Date.now();
-                        var elapsed = Math.floor(now - lastTime) || 1;
-                        // Resolves issue #138 if the game has been paused, or blurred for 
-                        // more than a 200 milliseconds, reset elapsed time to 1. This improves reliability 
-                        // and provides more expected behavior when the engine comes back
-                        // into focus
-                        if (elapsed > 200) {
-                            elapsed = 1;
-                        }
-                        game._update(elapsed);
-                        game._draw(elapsed);
-                        lastTime = now;
-                    }
-                    catch (e) {
-                        window.cancelAnimationFrame(game._requestId);
-                        game.stop();
-                        game.onFatalException(e);
-                    }
-                })();
+                Engine.createMainLoop(this, window.requestAnimationFrame, Date.now)();
                 this._logger.debug('Game started');
             }
             else {
             }
             return loadingComplete;
+        };
+        Engine.createMainLoop = function (game, raf, nowFn) {
+            var lastTime = nowFn();
+            return function mainloop() {
+                if (!game._hasStarted) {
+                    return;
+                }
+                try {
+                    game._requestId = raf(mainloop);
+                    // Get the time to calculate time-elapsed
+                    var now = nowFn();
+                    var elapsed = Math.floor(now - lastTime) || 1;
+                    // Resolves issue #138 if the game has been paused, or blurred for 
+                    // more than a 200 milliseconds, reset elapsed time to 1. This improves reliability 
+                    // and provides more expected behavior when the engine comes back
+                    // into focus
+                    if (elapsed > 200) {
+                        elapsed = 1;
+                    }
+                    game._update(elapsed * game.timescale);
+                    game._draw(elapsed * game.timescale);
+                    lastTime = now;
+                }
+                catch (e) {
+                    window.cancelAnimationFrame(game._requestId);
+                    game.stop();
+                    game.onFatalException(e);
+                }
+            };
         };
         /**
          * Stops Excalibur's main loop, useful for pausing the game.

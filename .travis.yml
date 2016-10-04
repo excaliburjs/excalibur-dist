@@ -2,8 +2,6 @@ sudo: false
 language: node_js
 node_js:
 - '4'
-deploy:
-  provider: npm
-  email: excaliburjs@gmail.com
-  api_key:
-    secure: EhmIUQiS1nyidvDpPzONHss7wjj5PfiEvrFbhDupiyQOKfDbLf6g3KfAcxm/vd7qBH1aiUpkEdZcjkNSZ9jiHOCWzIhbTRs3mNdIHhaCE4VfoiD8FIWoV+dvuyrkZF1zXDAkPD2lxQ9Ahm4qM9Ugz+epR/s/WW+rC9VNPsrQ2EK4kzu6k6hpkZsfKpTSFNewAI5SsSTBd4jM2fE1i1BHFdVUPB+cWcs+/3PaL8qOmJqy/hYfT738yzSZ4Ak4bcUVw23SZ6Pi7LlSBz5X4cSubEje30aQwub+5mpZE9RyJ1ZHHMGT/0/erB3P6B55Wsp7P2E7CHw/VM7QC0t+BSpkhOErfwcrSqJkWlNOzOmGpVVbDVMnmZjxPEWEiB6R1/tZzvCFvHxQ77f6WOYZg1qCsrX/pQPtrzLz5kjuRCukpsiEiYGhGuUOtGsOIO8TLvATXsrnV9EKW04HyWmIfk/ZkWPMym/IpDAc/7KtGFCOPFxgCkHeFU5YHGFgvCKEM5o3OoFrMAOzeE8yqL1Yje7U3jNqc7vdcWC4hnlu37thx6KRA4Fk4JXXY+92kLTDI8x+Un9Ny2II/Xr4TEWM9hDlNoCltk/VO66pVanRc3kaj5BVbPD+2BucMBn2UfNXPLf/MH4H7dHBHBnruhWMZKavoSWTwngkrkWUPO+cquofvEc=
+script:
+    - echo "//registry.npmjs.org/::_authToken=${NPM_TOKEN}" > ~/.npmrc
+    - npm publish --tag next

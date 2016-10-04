@@ -5989,6 +5989,11 @@ declare module ex {
 }
 declare module ex.Util.DrawUtil {
     /**
+     * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
+     * the line, and "square" is a rectangle that is an equal width and half height cap.
+     */
+    type LineCapStyle = "butt" | "round" | "square";
+    /**
      * Draw a line on canvas context
      *
      * @param ctx The canvas context
@@ -5997,8 +6002,10 @@ declare module ex.Util.DrawUtil {
      * @param y1 The start y coordinate
      * @param x2 The ending x coordinate
      * @param y2 The ending y coordinate
+     * @param thickness The line thickness
+     * @param cap The [[LineCapStyle]] (butt, round, or square)
      */
-    function line(ctx: CanvasRenderingContext2D, color: ex.Color, x1: number, y1: number, x2: number, y2: number): void;
+    function line(ctx: CanvasRenderingContext2D, color: ex.Color, x1: number, y1: number, x2: number, y2: number, thickness?: number, cap?: LineCapStyle): void;
     /**
      * Draw the vector as a point onto the canvas.
      */

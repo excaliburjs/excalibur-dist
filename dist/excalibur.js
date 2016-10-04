@@ -11612,11 +11612,17 @@ var ex;
              * @param y1 The start y coordinate
              * @param x2 The ending x coordinate
              * @param y2 The ending y coordinate
+             * @param thickness The line thickness
+             * @param cap The [[LineCapStyle]] (butt, round, or square)
              */
             /* istanbul ignore next */
-            function line(ctx, color, x1, y1, x2, y2) {
+            function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
                 if (color === void 0) { color = ex.Color.Red.clone(); }
+                if (thickness === void 0) { thickness = 1; }
+                if (cap === void 0) { cap = 'butt'; }
                 ctx.beginPath();
+                ctx.lineWidth = thickness;
+                ctx.lineCap = cap;
                 ctx.strokeStyle = color.toString();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);

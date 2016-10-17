@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-10-11
+/*! excalibur - v0.7.1 - 2016-10-17
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -368,14 +368,20 @@ var ex;
             return Math.abs(this.x - vector.x) <= tolerance && Math.abs(this.y - vector.y) <= tolerance;
         };
         /**
-         * The distance to another vector
-         * @param v  The other vector
+         * The distance to another vector. If no other Vector is specified, this will return the [[magnitude]].
+         * @param v  The other vector. Leave blank to use origin vector.
          */
         Vector.prototype.distance = function (v) {
             if (!v) {
-                v = new Vector(0.0, 0.0);
+                v = Vector.Zero;
             }
             return Math.sqrt(Math.pow(this.x - v.x, 2) + Math.pow(this.y - v.y, 2));
+        };
+        /**
+         * The magnitude (size) of the Vector
+         */
+        Vector.prototype.magnitude = function () {
+            return this.distance();
         };
         /**
          * Normalizes a vector to have a magnitude of 1.

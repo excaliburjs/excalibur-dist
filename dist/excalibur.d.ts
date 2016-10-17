@@ -239,10 +239,14 @@ declare module ex {
          */
         equals(vector: Vector, tolerance?: number): boolean;
         /**
-         * The distance to another vector
-         * @param v  The other vector
+         * The distance to another vector. If no other Vector is specified, this will return the [[magnitude]].
+         * @param v  The other vector. Leave blank to use origin vector.
          */
         distance(v?: Vector): number;
+        /**
+         * The magnitude (size) of the Vector
+         */
+        magnitude(): number;
         /**
          * Normalizes a vector to have a magnitude of 1.
          */

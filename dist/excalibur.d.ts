@@ -363,6 +363,14 @@ declare module ex {
          */
         constructor(begin: Vector, end: Vector);
         /**
+         * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
+         */
+        slope: number;
+        /**
+         * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
+         */
+        intercept: number;
+        /**
          * Returns the slope of the line in the form of a vector
          */
         getSlope(): Vector;
@@ -370,6 +378,27 @@ declare module ex {
          * Returns the length of the line segment in pixels
          */
         getLength(): number;
+        /**
+         * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
+         * a new point with the calculated Y value and vice-versa.
+         *
+         * @param x The known X value of the target point
+         * @param y The known Y value of the target point
+         * @returns A new point with the other calculated axis value
+         */
+        findPoint(x?: number, y?: number): Vector;
+        /**
+         * Whether or not the given point lies on this line. This method is precise by default
+         * meaning the point must lie exactly on the line. Adjust threshold to
+         * loosen the strictness of the check for floating-point calculations.
+         */
+        hasPoint(x: number, y: number, threshold?: number): boolean;
+        /**
+         * Whether or not the given point lies on this line. This method is precise by default
+         * meaning the point must lie exactly on the line. Adjust threshold to
+         * loosen the strictness of the check for floating-point calculations.
+         */
+        hasPoint(v: Vector, threshold?: number): boolean;
     }
     /**
      * A 1 dimensional projection on an axis, used to test overlaps

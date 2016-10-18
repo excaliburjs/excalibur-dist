@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-10-17
+/*! excalibur - v0.7.1 - 2016-10-18
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -594,6 +594,26 @@ var ex;
             this.begin = begin;
             this.end = end;
         }
+        Object.defineProperty(Line.prototype, "slope", {
+            /**
+             * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
+             */
+            get: function () {
+                return (this.end.y - this.begin.y) / (this.end.x - this.begin.x);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Line.prototype, "intercept", {
+            /**
+             * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
+             */
+            get: function () {
+                return this.begin.y - (this.slope * this.begin.x);
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Returns the slope of the line in the form of a vector
          */
@@ -611,6 +631,65 @@ var ex;
             var end = this.end;
             var distance = begin.distance(end);
             return distance;
+        };
+        /**
+         * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
+         * a new point with the calculated Y value and vice-versa.
+         *
+         * @param x The known X value of the target point
+         * @param y The known Y value of the target point
+         * @returns A new point with the other calculated axis value
+         */
+        Line.prototype.findPoint = function (x, y) {
+            if (x === void 0) { x = null; }
+            if (y === void 0) { y = null; }
+            var m = this.slope;
+            var b = this.intercept;
+            if (x !== null) {
+                return new ex.Vector(x, (m * x) + b);
+            }
+            else if (y !== null) {
+                return new ex.Vector((y - b) / m, y);
+            }
+        };
+        /**
+         * @see http://stackoverflow.com/a/11908158/109458
+         */
+        Line.prototype.hasPoint = function () {
+            var currPoint;
+            var threshold = 0;
+            if (typeof arguments[0] === 'number' &&
+                typeof arguments[1] === 'number') {
+                currPoint = new Vector(arguments[0], arguments[1]);
+                threshold = arguments[2] || 0;
+            }
+            else if (arguments[0] instanceof Vector) {
+                currPoint = arguments[0];
+                threshold = arguments[1] || 0;
+            }
+            else {
+                throw 'Could not determine the arguments for Vector.hasPoint';
+            }
+            var dxc = currPoint.x - this.begin.x;
+            var dyc = currPoint.y - this.begin.y;
+            var dx1 = this.end.x - this.begin.x;
+            var dy1 = this.end.y - this.begin.y;
+            var cross = dxc * dy1 - dyc * dx1;
+            // check whether point lines on the line
+            if (Math.abs(cross) > threshold) {
+                return false;
+            }
+            // check whether point lies in-between start and end
+            if (Math.abs(dx1) >= Math.abs(dy1)) {
+                return dx1 > 0
+                    ? this.begin.x <= currPoint.x && currPoint.x <= this.end.x
+                    : this.end.x <= currPoint.x && currPoint.x <= this.begin.x;
+            }
+            else {
+                return dy1 > 0
+                    ? this.begin.y <= currPoint.y && currPoint.y <= this.end.y
+                    : this.end.y <= currPoint.y && currPoint.y <= this.begin.y;
+            }
         };
         return Line;
     }());

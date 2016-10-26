@@ -204,6 +204,14 @@ declare module ex {
          */
         static Zero: Vector;
         /**
+         * A (1, 1) vector
+         */
+        static One: Vector;
+        /**
+         * A (0.5, 0.5) vector
+         */
+        static Half: Vector;
+        /**
          * A unit vector pointing up (0, -1)
          */
         static Up: Vector;

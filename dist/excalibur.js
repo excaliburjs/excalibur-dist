@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-10-18
+/*! excalibur - v0.7.1 - 2016-10-26
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -517,6 +517,14 @@ var ex;
          * A (0, 0) vector
          */
         Vector.Zero = new Vector(0, 0);
+        /**
+         * A (1, 1) vector
+         */
+        Vector.One = new Vector(1, 1);
+        /**
+         * A (0.5, 0.5) vector
+         */
+        Vector.Half = new Vector(0.5, 0.5);
         /**
          * A unit vector pointing up (0, -1)
          */

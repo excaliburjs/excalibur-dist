@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-10-27
+/*! excalibur - v0.7.1 - 2016-10-31
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -8426,7 +8426,6 @@ var ex;
                 !(this instanceof ex.Label)) {
                 totalAcc.addEqual(ex.Physics.acc);
             }
-            this.oldVel = this.vel;
             this.vel.addEqual(totalAcc.scale(seconds));
             this.pos.addEqual(this.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
             this.rx += this.torque * (1.0 / this.moi) * seconds;
@@ -8470,6 +8469,10 @@ var ex;
                     this.frames[drawing].addEffect(this._opacityFx);
                 }
             }
+            // Capture old values before integration step updates them
+            this.oldVel.setTo(this.vel.x, this.vel.y);
+            this.oldPos.setTo(this.pos.x, this.pos.y);
+            // Run Euler integration
             this.integrate(delta);
             // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)
             for (var _i = 0, _a = this.traits; _i < _a.length; _i++) {

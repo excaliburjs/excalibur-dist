@@ -8014,12 +8014,13 @@ var ex;
             // Override me
         };
         Actor.prototype._checkForPointerOptIn = function (eventName) {
-            if (eventName && (eventName.toLowerCase() === 'pointerdown' ||
-                eventName.toLowerCase() === 'pointerup' ||
-                eventName.toLowerCase() === 'pointermove')) {
-                this.enableCapturePointer = true;
-                if (eventName.toLowerCase() === 'pointermove') {
-                    this.capturePointer.captureMoveEvents = true;
+            if (eventName) {
+                var normalized = eventName.toLowerCase();
+                if (normalized === 'pointerup' || normalized === 'pointerdown' || normalized === 'pointermove') {
+                    this.enableCapturePointer = true;
+                    if (normalized === 'pointermove') {
+                        this.capturePointer.captureMoveEvents = true;
+                    }
                 }
             }
         };

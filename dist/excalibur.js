@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-03
+/*! excalibur - v0.7.1 - 2016-11-04
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -260,7 +260,7 @@ var ex;
         }());
         Effects.Darken = Darken;
         /**
-         * Applies the "Saturate" effect to a sprite, saturates the color acccording to HSL
+         * Applies the "Saturate" effect to a sprite, saturates the color according to HSL
          */
         var Saturate = (function () {
             /**
@@ -283,7 +283,7 @@ var ex;
         }());
         Effects.Saturate = Saturate;
         /**
-         * Applies the "Desaturate" effect to a sprite, desaturates the color acccording to HSL
+         * Applies the "Desaturate" effect to a sprite, desaturates the color according to HSL
          */
         var Desaturate = (function () {
             /**
@@ -734,7 +734,7 @@ var ex;
     /**
      * Possible collision resolution strategies
      *
-     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physcs.
+     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
      *
      * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
      * simulated physical interactions.
@@ -816,7 +816,7 @@ var ex;
      * ## Limitations
      *
      * Currently Excalibur only supports single contact point collisions and non-sleeping physics bodies. This has some negative stability
-     * and performance implications. Single contact point collisions can have odd oscilating behavior. Non-sleeping bodies will recalculate
+     * and performance implications. Single contact point collisions can have odd oscillating behavior. Non-sleeping bodies will recalculate
      * collisions whether they need to or not. We fully intend to add these features into Excalibur in future releases.
      *
      */
@@ -839,7 +839,7 @@ var ex;
         };
         /**
          * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collison type).
+         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
          *
          *
          * This is a great way to globally simulate effects like gravity.
@@ -855,7 +855,7 @@ var ex;
          * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
          *
          * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
-         * collison resolution of fast move objects, or the stability of large numbers of objects stacked together.
+         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
          *
          * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
          * cost of performance.
@@ -995,7 +995,7 @@ var ex;
                     // non-zero intersection on the y axis
                     if (this.mtv.x !== 0) {
                         var velX = 0;
-                        // both bodies are traveling in the same direction (negative or positve)
+                        // both bodies are traveling in the same direction (negative or positive)
                         if (bodyA.vel.x < 0 && bodyB.vel.x < 0) {
                             velX = Math.min(bodyA.vel.x, bodyB.vel.x);
                         }
@@ -1409,9 +1409,8 @@ var ex;
             return null;
         };
         /**
-         * Returns the moment of intertia of a circle given it's mass
+         * Returns the moment of inertia of a circle given it's mass
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-         * @param mass
          */
         CircleArea.prototype.getMomentOfInertia = function () {
             var mass = this.body ? this.body.mass : ex.Physics.defaultMass;
@@ -1606,7 +1605,7 @@ var ex;
             return axes;
         };
         /**
-         * Get the momemnt of inertia for an edge
+         * Get the moment of inertia for an edge
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
          */
         EdgeArea.prototype.getMomentOfInertia = function () {
@@ -1902,7 +1901,7 @@ var ex;
             if (color === void 0) { color = ex.Color.Red.clone(); }
             ctx.beginPath();
             ctx.strokeStyle = color.toString();
-            // Iterate through the supplied points and contruct a 'polygon'
+            // Iterate through the supplied points and construct a 'polygon'
             var firstPoint = this.getTransformedPoints()[0];
             ctx.moveTo(firstPoint.x, firstPoint.y);
             this.getTransformedPoints().forEach(function (point, i) {
@@ -2394,7 +2393,7 @@ var ex;
         }
         Util.getSideFromVector = getSideFromVector;
         /**
-         * Excaliburs dynamically resizing collection
+         * Excalibur's dynamically resizing collection
          */
         var Collection = (function () {
             /**
@@ -2452,7 +2451,7 @@ var ex;
             };
             /**
              * Returns an element at a specific index
-             * @param index  Index of element to retreive
+             * @param index  Index of element to retrieve
              */
             Collection.prototype.elementAt = function (index) {
                 if (index >= this.count()) {
@@ -2463,6 +2462,7 @@ var ex;
             /**
              * Inserts an element at a specific index
              * @param index  Index to insert the element
+             * @param value  Element to insert
              */
             Collection.prototype.insert = function (index, value) {
                 if (index >= this.count()) {
@@ -2489,7 +2489,7 @@ var ex;
             };
             /**
              * Removes an element by reference
-             * @param element  Element to retreive
+             * @param element  Element to retrieve
              */
             Collection.prototype.removeElement = function (element) {
                 var index = this._internalArray.indexOf(element);
@@ -2705,7 +2705,7 @@ var ex;
             this.addEffect(new ex.Effects.Fill(color));
         };
         /**
-         * Applies the [[Effects.Colorize]] to a sprite, changing the color channels of all pixesl to be the average of the original color
+         * Applies the [[Effects.Colorize]] to a sprite, changing the color channels of all pixels to be the average of the original color
          * and the provided color.
          */
         Sprite.prototype.colorize = function (color) {
@@ -2726,14 +2726,14 @@ var ex;
             this.addEffect(new ex.Effects.Darken(factor));
         };
         /**
-         * Applies the [[Effects.Saturate]] to a sprite, saturates the color acccording to HSL
+         * Applies the [[Effects.Saturate]] to a sprite, saturates the color according to HSL
          */
         Sprite.prototype.saturate = function (factor) {
             if (factor === void 0) { factor = 0.1; }
             this.addEffect(new ex.Effects.Saturate(factor));
         };
         /**
-         * Applies the [[Effects.Desaturate]] to a sprite, desaturates the color acccording to HSL
+         * Applies the [[Effects.Desaturate]] to a sprite, desaturates the color according to HSL
          */
         Sprite.prototype.desaturate = function (factor) {
             if (factor === void 0) { factor = 0.1; }
@@ -3139,10 +3139,10 @@ var ex;
         /**
          * @param image           The backing image texture to build the SpriteFont
          * @param alphabet        A string representing all the characters in the image, in row major order.
-         * @param caseInsensitve  Indicate whether this font takes case into account
+         * @param caseInsensitive  Indicate whether this font takes case into account
          * @param columns         The number of columns of characters in the image
          * @param rows            The number of rows of characters in the image
-         * @param spWdith         The width of each character in pixels
+         * @param spWidth         The width of each character in pixels
          * @param spHeight        The height of each character in pixels
          */
         function SpriteFont(image, alphabet, caseInsensitive, columns, rows, spWidth, spHeight) {
@@ -3183,7 +3183,7 @@ var ex;
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow
-         * @param offsetY      The y offset in pixles to place the shadow
+         * @param offsetY      The y offset in pixels to place the shadow
          * @param shadowColor  The color of the text shadow
          */
         SpriteFont.prototype.setTextShadow = function (offsetX, offsetY, shadowColor) {
@@ -3316,7 +3316,7 @@ var ex;
      *
      * ## Creating a tile map
      *
-     * A [[TileMap]] is meant to be used in conjuction with a map editor. Creating
+     * A [[TileMap]] is meant to be used in conjunction with a map editor. Creating
      * a tile map is fairly straightforward.
      *
      * You need a tile sheet (see [[SpriteSheet]]) that holds all the available tiles to
@@ -3442,7 +3442,6 @@ var ex;
          * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
          * @param rows          The number of rows in the TileMap (should not be changed once set)
          * @param cols          The number of cols in the TileMap (should not be changed once set)
-         * @param spriteSheet   The spriteSheet to use for drawing
          */
         function TileMap(x, y, cellWidth, cellHeight, rows, cols) {
             var _this = this;
@@ -3796,7 +3795,7 @@ var ex;
         };
         /**
          * Test wether this bounding box collides with another returning,
-         * the intersection vector that can be used to resovle the collision. If there
+         * the intersection vector that can be used to resolve the collision. If there
          * is no collision null is returned.
          * @param collidable  Other collidable to test
          */
@@ -3889,7 +3888,7 @@ var ex;
              */
             this.mass = 1.0;
             /**
-             * The current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             * The current moment of inertia, moi can be thought of as the resistance to rotation.
              */
             this.moi = 1000;
             /**
@@ -3911,7 +3910,7 @@ var ex;
             /**
              * The rotational velocity of the actor in radians/second
              */
-            this.rx = 0; //radions/sec
+            this.rx = 0; //radians/sec
         }
         /**
          * Returns the body's [[BoundingBox]] calculated for this instant in world space.
@@ -3955,7 +3954,7 @@ var ex;
                 points: this.actor.getRelativeBounds().getPoints(),
                 pos: center // position relative to actor
             });
-            // in case of a nan moi, collesce to a safe default
+            // in case of a nan moi, coalesce to a safe default
             this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
         };
         /**
@@ -4069,7 +4068,7 @@ var ex;
         /**
          * You may wish to extend native Excalibur functionality in vanilla Javascript.
          * Any method on a class inheriting [[Class]] may be extended to support
-         * additional functionaliy. In the example below we create a new type called `MyActor`.
+         * additional functionality. In the example below we create a new type called `MyActor`.
          *
          *
          * ```js
@@ -4133,7 +4132,8 @@ var ex;
      */
     var Timer = (function () {
         /**
-         * @param callback   The callback to be fired after the interval is complete.
+         * @param fcn        The callback to be fired after the interval is complete.
+         * @param interval   Interval length
          * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
          */
         function Timer(fcn, interval, repeats) {
@@ -4666,7 +4666,7 @@ var ex;
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
             });
             var actor;
-            // Check collison cache and re-add pairs that still are in collision
+            // Check collision cache and re-add pairs that still are in collision
             var newPairs = [];
             this._collisionContactCache.forEach(function (c) {
                 var contact = c.bodyA.collide(c.bodyB);
@@ -4680,7 +4680,7 @@ var ex;
             this._collisionContactCache = newPairs;
             for (var j = 0, l = potentialColliders.length; j < l; j++) {
                 actor = potentialColliders[j];
-                // Query the colllision tree for potential colliders
+                // Query the collision tree for potential colliders
                 this._dynamicCollisionTree.query(actor.body, function (other) {
                     if (_this._canCollide(actor, other.actor)) {
                         // generate all the collision contacts between the 2 sets of collision areas between both actors
@@ -4892,7 +4892,7 @@ var ex;
          * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
          *
          * @param pos The target position to move to
-         * @param duration The duration in millseconds the move should last
+         * @param duration The duration in milliseconds the move should last
          * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
          * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
          *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
@@ -5022,6 +5022,7 @@ var ex;
         };
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
+         * @param ctx    Canvas context to apply transformations
          * @param delta  The number of milliseconds since the last update
          */
         BaseCamera.prototype.draw = function (ctx, delta) {
@@ -5171,7 +5172,7 @@ var ex;
                     this.actor = actor;
                     this.easingFcn = easingFcn;
                     this._currentLerpTime = 0;
-                    this._lerpDuration = 1 * 1000; // 5 seconds
+                    this._lerpDuration = 1 * 1000; // 1 second
                     this._lerpStart = new ex.Vector(0, 0);
                     this._lerpEnd = new ex.Vector(0, 0);
                     this._initialized = false;
@@ -6204,8 +6205,10 @@ var ex;
          * specified (in magnitude increase per second) and return back the
          * actor. This method is part of the actor 'Action' fluent API allowing
          * action chaining.
-         * @param size   The scaling factor to apply
-         * @param speed  The speed of scaling specified in magnitude increase per second
+         * @param sizeX   The scaling factor to apply on X axis
+         * @param sizeY   The scaling factor to apply on Y axis
+         * @param speedX  The speed of scaling specified in magnitude increase per second on X axis
+         * @param speedY  The speed of scaling specified in magnitude increase per second on Y axis
          */
         ActionContext.prototype.scaleTo = function (sizeX, sizeY, speedX, speedY) {
             var i = 0, len = this._queues.length;
@@ -6218,8 +6221,9 @@ var ex;
          * This method will scale an actor to the specified size by a certain time
          * (in milliseconds) and return back the actor. This method is part of the
          * actor 'Action' fluent API allowing action chaining.
-         * @param size   The scaling factor to apply
-         * @param time   The time it should take to complete the scaling in milliseconds
+         * @param sizeX   The scaling factor to apply on X axis
+         * @param sizeY   The scaling factor to apply on Y axis
+         * @param time    The time it should take to complete the scaling in milliseconds
          */
         ActionContext.prototype.scaleBy = function (sizeX, sizeY, time) {
             var i = 0, len = this._queues.length;
@@ -6287,7 +6291,7 @@ var ex;
         /**
          * This method allows you to call an arbitrary method as the next action in the
          * action queue. This is useful if you want to execute code in after a specific
-         * action, i.e An actor arrives at a destinatino after traversing a path
+         * action, i.e An actor arrives at a destination after traversing a path
          */
         ActionContext.prototype.callMethod = function (method) {
             var i = 0, len = this._queues.length;
@@ -6395,7 +6399,7 @@ var ex;
      *
      * ## Using Groups
      *
-     * Groups can be used to detect collisions across a large nubmer of actors. For example
+     * Groups can be used to detect collisions across a large number of actors. For example
      * perhaps a large group of "enemy" actors.
      *
      * ```typescript
@@ -6830,7 +6834,7 @@ var ex;
      *
      * ## Scene Lifecycle
      *
-     * A [[Scene|scene]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
+     * A [[Scene|scene]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
      * the [[Engine|engine]] it will follow this lifecycle.
      *
      * ![Scene Lifecycle](/assets/images/docs/SceneLifecycle.png)
@@ -7260,7 +7264,7 @@ var ex;
 (function (ex) {
     /**
      * Standard easing functions for motion in Excalibur, defined on a domain of [0, duration] and a range from [+startValue,+endValue]
-     * Given a time, the function will return a value from postive startValue to postive endValue.
+     * Given a time, the function will return a value from positive startValue to positive endValue.
      *
      * ```js
      * function Linear (t) {
@@ -7399,7 +7403,7 @@ var ex;
      *
      * ## Actor Lifecycle
      *
-     * An [[Actor|actor]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once an actor is part of a
+     * An [[Actor|actor]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once an actor is part of a
      * [[Scene|scene]], it will follow this lifecycle.
      *
      * ![Actor Lifecycle](/assets/images/docs/ActorLifecycle.png)
@@ -7725,7 +7729,7 @@ var ex;
              */
             this.traits = [];
             /**
-             * Whether or not to enable the [[CapturePointer]] trait that propogates
+             * Whether or not to enable the [[CapturePointer]] trait that propagates
              * pointer events to this actor
              */
             this.enableCapturePointer = false;
@@ -7958,13 +7962,13 @@ var ex;
         });
         Object.defineProperty(Actor.prototype, "moi", {
             /**
-             * Gets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
              */
             get: function () {
                 return this.body.moi;
             },
             /**
-             * Sets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+             * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
              */
             set: function (theMoi) {
                 this.body.moi = theMoi;
@@ -8088,7 +8092,7 @@ var ex;
             }
         };
         /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisons.
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
          */
         Actor.prototype.addMtv = function (mtv) {
             this._totalMtv.addEqual(mtv);
@@ -8138,7 +8142,7 @@ var ex;
          * Sets the z-index of an actor and updates it in the drawing list for the scene.
          * The z-index determines the relative order an actor is drawn in.
          * Actors with a higher z-index are drawn on top of actors with a lower z-index
-         * @param actor The child actor to remove
+         * @param newIndex new z-index to assign
          */
         Actor.prototype.setZIndex = function (newIndex) {
             this.scene.cleanupDrawTree(this);
@@ -9123,14 +9127,15 @@ var ex;
     }(GameEvent));
     ex.HiddenEvent = HiddenEvent;
     /**
-     * Event thrown on an [[Actor|actor]] when a collision has occured
+     * Event thrown on an [[Actor|actor]] when a collision has occurred
      */
     var CollisionEvent = (function (_super) {
         __extends(CollisionEvent, _super);
         /**
-         * @param actor  The actor the event was thrown on
-         * @param other  The actor that was collided with
-         * @param side   The side that was collided with
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that was collided with
+         * @param side          The side that was collided with
+         * @param intersection  Intersection vector
          */
         function CollisionEvent(actor, other, side, intersection) {
             _super.call(this);
@@ -9812,7 +9817,7 @@ var ex;
             ctx.rotate(this.rotation);
             ctx.beginPath();
             ctx.lineWidth = this.lineWidth;
-            // Iterate through the supplied points and contruct a 'polygon'
+            // Iterate through the supplied points and construct a 'polygon'
             var firstPoint = this._points[0];
             ctx.moveTo(firstPoint.x, firstPoint.y);
             var i = 0, len = this._points.length;
@@ -10094,7 +10099,7 @@ var ex;
             return joinedPromise;
         };
         /**
-         * Chain success and reject callbacks after the promise is resovled
+         * Chain success and reject callbacks after the promise is resolved
          * @param successCallback  Call on resolution of promise
          * @param rejectCallback   Call on rejection of promise
          */
@@ -10179,7 +10184,7 @@ var ex;
             return this;
         };
         /**
-         * Inpect the current state of a promise
+         * Inspect the current state of a promise
          */
         Promise.prototype.state = function () {
             return this._state;
@@ -11239,11 +11244,11 @@ var ex;
              */
             this.deadParticles = null;
             /**
-             * Gets or sets the minimum partical velocity
+             * Gets or sets the minimum particle velocity
              */
             this.minVel = 0;
             /**
-             * Gets or sets the maximum partical velocity
+             * Gets or sets the maximum particle velocity
              */
             this.maxVel = 0;
             /**
@@ -11352,9 +11357,9 @@ var ex;
         ParticleEmitter.prototype.clearParticles = function () {
             this.particles.clear();
         };
-        // Creates a new particle given the contraints of the emitter
+        // Creates a new particle given the constraints of the emitter
         ParticleEmitter.prototype._createParticle = function () {
-            // todo implement emitter contraints;
+            // todo implement emitter constraints;
             var ranX = 0;
             var ranY = 0;
             var angle = ex.Util.randomInRange(this.minAngle, this.maxAngle);
@@ -11544,7 +11549,7 @@ var ex;
             this.addEffect(new ex.Effects.Fill(color));
         };
         /**
-         * Applies the colorize effect to a sprite, changing the color channels of all pixesl to be the average of the original color and the
+         * Applies the colorize effect to a sprite, changing the color channels of all pixels to be the average of the original color and the
          * provided color.
          */
         Animation.prototype.colorize = function (color) {
@@ -11565,14 +11570,14 @@ var ex;
             this.addEffect(new ex.Effects.Darken(factor));
         };
         /**
-         * Applies the saturate effect to a sprite, saturates the color acccording to hsl
+         * Applies the saturate effect to a sprite, saturates the color according to hsl
          */
         Animation.prototype.saturate = function (factor) {
             if (factor === void 0) { factor = 0.1; }
             this.addEffect(new ex.Effects.Saturate(factor));
         };
         /**
-         * Applies the desaturate effect to a sprite, desaturates the color acccording to hsl
+         * Applies the desaturate effect to a sprite, desaturates the color according to hsl
          */
         Animation.prototype.desaturate = function (factor) {
             if (factor === void 0) { factor = 0.1; }
@@ -11757,7 +11762,7 @@ var ex;
             }
             DrawUtil.vector = vector;
             /**
-             * Draw a round rectange on a canvas context
+             * Draw a round rectangle on a canvas context
              *
              * @param ctx The canvas context
              * @param x The top-left x coordinate
@@ -12297,7 +12302,7 @@ var ex;
      * Labels
      *
      * Labels are the way to draw small amounts of text to the screen. They are
-     * actors and inherit all of the benifits and capabilities.
+     * actors and inherit all of the benefits and capabilities.
      *
      * ## Creating a Label
      *
@@ -12319,7 +12324,7 @@ var ex;
      * label.y = 50;
      * label.fontFamily = "Arial";
      * label.fontSize = 10;
-     * lable.fontUnit = ex.FontUnit.Px // pixels are the default
+     * label.fontUnit = ex.FontUnit.Px // pixels are the default
      * label.text = "Foo";
      * label.color = ex.Color.White;
      * label.textAlign = ex.TextAlign.Center;
@@ -12394,8 +12399,8 @@ var ex;
          * @param text        The text of the label
          * @param x           The x position of the label
          * @param y           The y position of the label
-         * @param font        Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
-         * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precendence
+         * @param fontFamily  Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
+         * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
          * over a css font.
          */
         function Label(text, x, y, fontFamily, spriteFont) {
@@ -12436,7 +12441,7 @@ var ex;
             this.color = ex.Color.Black.clone();
             this.spriteFont = spriteFont;
             this.collisionType = ex.CollisionType.PreventCollision;
-            this.fontFamily = fontFamily || 'sans-serif'; // coallesce to default canvas font
+            this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
             if (spriteFont) {
             }
         }
@@ -12505,7 +12510,7 @@ var ex;
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow
-         * @param offsetY      The y offset in pixles to place the shadow
+         * @param offsetY      The y offset in pixels to place the shadow
          * @param shadowColor  The color of the text shadow
          */
         Label.prototype.setTextShadow = function (offsetX, offsetY, shadowColor) {
@@ -12790,7 +12795,7 @@ var ex;
          * ```js
          * var player = new ex.Actor();
          *
-         * // enable propogating pointer events
+         * // enable propagating pointer events
          * player.enableCapturePointer = true;
          *
          * // enable move events, warning: performance intensive!
@@ -13216,21 +13221,21 @@ var ex;
             };
             /**
              * Tests if a certain key was just pressed this frame. This is cleared at the end of the update frame.
-             * @param key Test wether a key was just pressed
+             * @param key Test whether a key was just pressed
              */
             Keyboard.prototype.wasPressed = function (key) {
                 return this._keysDown.indexOf(key) > -1;
             };
             /**
              * Tests if a certain key is held down. This is persisted between frames.
-             * @param key  Test wether a key is held down
+             * @param key  Test whether a key is held down
              */
             Keyboard.prototype.isHeld = function (key) {
                 return this._keys.indexOf(key) > -1;
             };
             /**
              * Tests if a certain key was just released this frame. This is cleared at the end of the update frame.
-             * @param key  Test wether a key was just released
+             * @param key  Test whether a key was just released
              */
             Keyboard.prototype.wasReleased = function (key) {
                 return this._keysUp.indexOf(key) > -1;
@@ -13415,11 +13420,11 @@ var ex;
              * configuration is set all pads are valid.
              */
             Gamepads.prototype.setMinimumGamepadConfiguration = function (config) {
-                this._enableAndUpdate(); // if config is used, implicitely enable
+                this._enableAndUpdate(); // if config is used, implicitly enable
                 this._minimumConfiguration = config;
             };
             /**
-             * When implicitely enabled, set the enabled flag and run an update so information is updated
+             * When implicitly enabled, set the enabled flag and run an update so information is updated
              */
             Gamepads.prototype._enableAndUpdate = function () {
                 if (!this.enabled) {
@@ -13539,7 +13544,7 @@ var ex;
                 return this._pads[index];
             };
             /**
-             * Returns a list of all valid gamepads that meet the minimum configuration requirment.
+             * Returns a list of all valid gamepads that meet the minimum configuration requirement.
              */
             Gamepads.prototype.getValidGamepads = function () {
                 this._enableAndUpdate();
@@ -13926,8 +13931,8 @@ var ex;
      *     |_ Actor 1
      *       |_ Child Actor 1
      *     |_ Actor 2
-     *   |_ Scene 2 (deactiveated)
-     *   |_ Scene 3 (deactiveated)
+     *   |_ Scene 2 (deactivated)
+     *   |_ Scene 3 (deactivated)
      * ```
      *
      * The engine splits the game into two primary responsibilities: updating and drawing. This is
@@ -14421,7 +14426,7 @@ O|===|* >________________>\n\
                 screenX -= focus.x;
                 screenY -= focus.y;
             }
-            // transfrom back on zoom
+            // transform back on zoom
             screenX = screenX + this.getWidth() / 2;
             screenY = screenY + this.getHeight() / 2;
             // transform back to screen space
@@ -14540,7 +14545,7 @@ O|===|* >________________>\n\
         };
         /**
          * Draws the entire game
-         * @param draw  Number of milliseconds elapsed since the last draw.
+         * @param delta  Number of milliseconds elapsed since the last draw.
          */
         Engine.prototype._draw = function (delta) {
             var ctx = this.ctx;

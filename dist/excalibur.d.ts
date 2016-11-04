@@ -82,7 +82,7 @@ declare module ex {
             updatePixel(x: number, y: number, imageData: ImageData): void;
         }
         /**
-         * Applies the "Saturate" effect to a sprite, saturates the color acccording to HSL
+         * Applies the "Saturate" effect to a sprite, saturates the color according to HSL
          */
         class Saturate implements ISpriteEffect {
             factor: number;
@@ -93,7 +93,7 @@ declare module ex {
             updatePixel(x: number, y: number, imageData: ImageData): void;
         }
         /**
-         * Applies the "Desaturate" effect to a sprite, desaturates the color acccording to HSL
+         * Applies the "Desaturate" effect to a sprite, desaturates the color according to HSL
          */
         class Desaturate implements ISpriteEffect {
             factor: number;
@@ -172,7 +172,7 @@ declare module ex {
          */
         anchor: ex.Vector;
         /**
-         * Gets or sets the scale trasformation
+         * Gets or sets the scale transformation
          */
         scale: ex.Vector;
         /**
@@ -422,7 +422,7 @@ declare module ex {
 declare module ex {
     interface IEnginePhysics {
         /**
-         * Global engine acceleration, useful for defining consitent gravity on all actors
+         * Global engine acceleration, useful for defining consistent gravity on all actors
          */
         acc: Vector;
         /**
@@ -442,7 +442,7 @@ declare module ex {
          */
         integrator: string;
         /**
-         * Number of collision resultion passes
+         * Number of collision resolution passes
          */
         collisionPasses: number;
         /**
@@ -467,7 +467,7 @@ declare module ex {
     /**
      * Possible collision resolution strategies
      *
-     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physcs.
+     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
      *
      * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
      * simulated physical interactions.
@@ -546,14 +546,14 @@ declare module ex {
      * ## Limitations
      *
      * Currently Excalibur only supports single contact point collisions and non-sleeping physics bodies. This has some negative stability
-     * and performance implications. Single contact point collisions can have odd oscilating behavior. Non-sleeping bodies will recalculate
+     * and performance implications. Single contact point collisions can have odd oscillating behavior. Non-sleeping bodies will recalculate
      * collisions whether they need to or not. We fully intend to add these features into Excalibur in future releases.
      *
      */
     class Physics {
         /**
          * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collison type).
+         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
          *
          *
          * This is a great way to globally simulate effects like gravity.
@@ -569,7 +569,7 @@ declare module ex {
          * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
          *
          * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
-         * collison resolution of fast move objects, or the stability of large numbers of objects stacked together.
+         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
          *
          * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
          * cost of performance.
@@ -809,9 +809,8 @@ declare module ex {
          */
         getAxes(): Vector[];
         /**
-         * Returns the moment of intertia of a circle given it's mass
+         * Returns the moment of inertia of a circle given it's mass
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-         * @param mass
          */
         getMomentOfInertia(): number;
         testSeparatingAxisTheorem(polygon: PolygonArea): Vector;
@@ -869,7 +868,7 @@ declare module ex {
          */
         getAxes(): Vector[];
         /**
-         * Get the momemnt of inertia for an edge
+         * Get the moment of inertia for an edge
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
          */
         getMomentOfInertia(): number;
@@ -1093,7 +1092,7 @@ declare module ex.Util {
     function getOppositeSide(side: ex.Side): Side;
     function getSideFromVector(direction: Vector): Side;
     /**
-     * Excaliburs dynamically resizing collection
+     * Excalibur's dynamically resizing collection
      */
     class Collection<T> {
         /**
@@ -1129,12 +1128,13 @@ declare module ex.Util {
         internalSize(): number;
         /**
          * Returns an element at a specific index
-         * @param index  Index of element to retreive
+         * @param index  Index of element to retrieve
          */
         elementAt(index: number): T;
         /**
          * Inserts an element at a specific index
          * @param index  Index to insert the element
+         * @param value  Element to insert
          */
         insert(index: number, value: T): T;
         /**
@@ -1144,7 +1144,7 @@ declare module ex.Util {
         remove(index: number): T;
         /**
          * Removes an element by reference
-         * @param element  Element to retreive
+         * @param element  Element to retrieve
          */
         removeElement(element: T): void;
         /**
@@ -1292,7 +1292,7 @@ declare module ex {
          */
         fill(color: Color): void;
         /**
-         * Applies the [[Effects.Colorize]] to a sprite, changing the color channels of all pixesl to be the average of the original color
+         * Applies the [[Effects.Colorize]] to a sprite, changing the color channels of all pixels to be the average of the original color
          * and the provided color.
          */
         colorize(color: Color): void;
@@ -1305,11 +1305,11 @@ declare module ex {
          */
         darken(factor?: number): void;
         /**
-         * Applies the [[Effects.Saturate]] to a sprite, saturates the color acccording to HSL
+         * Applies the [[Effects.Saturate]] to a sprite, saturates the color according to HSL
          */
         saturate(factor?: number): void;
         /**
-         * Applies the [[Effects.Desaturate]] to a sprite, desaturates the color acccording to HSL
+         * Applies the [[Effects.Desaturate]] to a sprite, desaturates the color according to HSL
          */
         desaturate(factor?: number): void;
         /**
@@ -1587,10 +1587,10 @@ declare module ex {
         /**
          * @param image           The backing image texture to build the SpriteFont
          * @param alphabet        A string representing all the characters in the image, in row major order.
-         * @param caseInsensitve  Indicate whether this font takes case into account
+         * @param caseInsensitive  Indicate whether this font takes case into account
          * @param columns         The number of columns of characters in the image
          * @param rows            The number of rows of characters in the image
-         * @param spWdith         The width of each character in pixels
+         * @param spWidth         The width of each character in pixels
          * @param spHeight        The height of each character in pixels
          */
         constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
@@ -1603,7 +1603,7 @@ declare module ex {
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow
-         * @param offsetY      The y offset in pixles to place the shadow
+         * @param offsetY      The y offset in pixels to place the shadow
          * @param shadowColor  The color of the text shadow
          */
         setTextShadow(offsetX: number, offsetY: number, shadowColor: Color): void;
@@ -1650,7 +1650,7 @@ declare module ex {
      *
      * ## Creating a tile map
      *
-     * A [[TileMap]] is meant to be used in conjuction with a map editor. Creating
+     * A [[TileMap]] is meant to be used in conjunction with a map editor. Creating
      * a tile map is fairly straightforward.
      *
      * You need a tile sheet (see [[SpriteSheet]]) that holds all the available tiles to
@@ -1791,7 +1791,6 @@ declare module ex {
          * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
          * @param rows          The number of rows in the TileMap (should not be changed once set)
          * @param cols          The number of cols in the TileMap (should not be changed once set)
-         * @param spriteSheet   The spriteSheet to use for drawing
          */
         constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
         registerSpriteSheet(key: string, spriteSheet: SpriteSheet): void;
@@ -1942,7 +1941,7 @@ declare module ex {
          */
         toPolygon(actor?: Actor): PolygonArea;
         /**
-         * Tests wether a point is contained within the bounding box
+         * Tests whether a point is contained within the bounding box
          * @param p  The point to test
          */
         contains(p: Vector): boolean;
@@ -1958,7 +1957,7 @@ declare module ex {
         combine(other: BoundingBox): BoundingBox;
         /**
          * Test wether this bounding box collides with another returning,
-         * the intersection vector that can be used to resovle the collision. If there
+         * the intersection vector that can be used to resolve the collision. If there
          * is no collision null is returned.
          * @param collidable  Other collidable to test
          */
@@ -2008,7 +2007,7 @@ declare module ex {
          */
         mass: number;
         /**
-         * The current momemnt of inertia, moi can be thought of as the resistance to rotation.
+         * The current moment of inertia, moi can be thought of as the resistance to rotation.
          */
         moi: number;
         /**
@@ -2109,7 +2108,7 @@ declare module ex {
         /**
          * You may wish to extend native Excalibur functionality in vanilla Javascript.
          * Any method on a class inheriting [[Class]] may be extended to support
-         * additional functionaliy. In the example below we create a new type called `MyActor`.
+         * additional functionality. In the example below we create a new type called `MyActor`.
          *
          *
          * ```js
@@ -2156,7 +2155,8 @@ declare module ex {
         complete: boolean;
         scene: Scene;
         /**
-         * @param callback   The callback to be fired after the interval is complete.
+         * @param fcn        The callback to be fired after the interval is complete.
+         * @param interval   Interval length
          * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
          */
         constructor(fcn: () => void, interval: number, repeats?: boolean);
@@ -2352,7 +2352,7 @@ declare module ex {
          * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
          *
          * @param pos The target position to move to
-         * @param duration The duration in millseconds the move should last
+         * @param duration The duration in milliseconds the move should last
          * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
          * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
          *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
@@ -2380,6 +2380,7 @@ declare module ex {
         update(engine: Engine, delta: number): void;
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
+         * @param ctx    Canvas context to apply transformations
          * @param delta  The number of milliseconds since the last update
          */
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
@@ -2917,16 +2918,19 @@ declare module ex {
          * specified (in magnitude increase per second) and return back the
          * actor. This method is part of the actor 'Action' fluent API allowing
          * action chaining.
-         * @param size   The scaling factor to apply
-         * @param speed  The speed of scaling specified in magnitude increase per second
+         * @param sizeX   The scaling factor to apply on X axis
+         * @param sizeY   The scaling factor to apply on Y axis
+         * @param speedX  The speed of scaling specified in magnitude increase per second on X axis
+         * @param speedY  The speed of scaling specified in magnitude increase per second on Y axis
          */
         scaleTo(sizeX: number, sizeY: number, speedX: number, speedY: number): ActionContext;
         /**
          * This method will scale an actor to the specified size by a certain time
          * (in milliseconds) and return back the actor. This method is part of the
          * actor 'Action' fluent API allowing action chaining.
-         * @param size   The scaling factor to apply
-         * @param time   The time it should take to complete the scaling in milliseconds
+         * @param sizeX   The scaling factor to apply on X axis
+         * @param sizeY   The scaling factor to apply on Y axis
+         * @param time    The time it should take to complete the scaling in milliseconds
          */
         scaleBy(sizeX: number, sizeY: number, time: number): ActionContext;
         /**
@@ -2963,7 +2967,7 @@ declare module ex {
         /**
          * This method allows you to call an arbitrary method as the next action in the
          * action queue. This is useful if you want to execute code in after a specific
-         * action, i.e An actor arrives at a destinatino after traversing a path
+         * action, i.e An actor arrives at a destination after traversing a path
          */
         callMethod(method: () => any): ActionContext;
         /**
@@ -3010,7 +3014,7 @@ declare module ex {
      *
      * ## Using Groups
      *
-     * Groups can be used to detect collisions across a large nubmer of actors. For example
+     * Groups can be used to detect collisions across a large number of actors. For example
      * perhaps a large group of "enemy" actors.
      *
      * ```typescript
@@ -3159,7 +3163,7 @@ declare module ex {
      *
      * ## Scene Lifecycle
      *
-     * A [[Scene|scene]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
+     * A [[Scene|scene]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
      * the [[Engine|engine]] it will follow this lifecycle.
      *
      * ![Scene Lifecycle](/assets/images/docs/SceneLifecycle.png)
@@ -3429,7 +3433,7 @@ declare module ex {
     }
     /**
      * Standard easing functions for motion in Excalibur, defined on a domain of [0, duration] and a range from [+startValue,+endValue]
-     * Given a time, the function will return a value from postive startValue to postive endValue.
+     * Given a time, the function will return a value from positive startValue to positive endValue.
      *
      * ```js
      * function Linear (t) {
@@ -3508,7 +3512,7 @@ declare module ex {
      *
      * ## Actor Lifecycle
      *
-     * An [[Actor|actor]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once an actor is part of a
+     * An [[Actor|actor]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once an actor is part of a
      * [[Scene|scene]], it will follow this lifecycle.
      *
      * ![Actor Lifecycle](/assets/images/docs/ActorLifecycle.png)
@@ -3844,10 +3848,10 @@ declare module ex {
          */
         mass: number;
         /**
-         * Gets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+         * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
          */
         /**
-         * Sets the current momemnt of inertia, moi can be thought of as the resistance to rotation.
+         * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
          */
         moi: number;
         /**
@@ -3965,7 +3969,7 @@ declare module ex {
          */
         color: Color;
         /**
-         * Whether or not to enable the [[CapturePointer]] trait that propogates
+         * Whether or not to enable the [[CapturePointer]] trait that propagates
          * pointer events to this actor
          */
         enableCapturePointer: boolean;
@@ -4042,7 +4046,7 @@ declare module ex {
          */
         setDrawing(key: number): any;
         /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisons.
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
          */
         addMtv(mtv: Vector): void;
         /**
@@ -4073,7 +4077,7 @@ declare module ex {
          * Sets the z-index of an actor and updates it in the drawing list for the scene.
          * The z-index determines the relative order an actor is drawn in.
          * Actors with a higher z-index are drawn on top of actors with a lower z-index
-         * @param actor The child actor to remove
+         * @param newIndex new z-index to assign
          */
         setZIndex(newIndex: number): void;
         /**
@@ -4599,7 +4603,7 @@ declare module ex {
         constructor();
     }
     /**
-     * Event thrown on an [[Actor|actor]] when a collision has occured
+     * Event thrown on an [[Actor|actor]] when a collision has occurred
      */
     class CollisionEvent extends GameEvent {
         actor: Actor;
@@ -4607,9 +4611,10 @@ declare module ex {
         side: Side;
         intersection: Vector;
         /**
-         * @param actor  The actor the event was thrown on
-         * @param other  The actor that was collided with
-         * @param side   The side that was collided with
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that was collided with
+         * @param side          The side that was collided with
+         * @param intersection  Intersection vector
          */
         constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
     }
@@ -5272,7 +5277,7 @@ declare module ex {
          */
         static join<T>(...promises: Promise<T>[]): any;
         /**
-         * Chain success and reject callbacks after the promise is resovled
+         * Chain success and reject callbacks after the promise is resolved
          * @param successCallback  Call on resolution of promise
          * @param rejectCallback   Call on rejection of promise
          */
@@ -5293,7 +5298,7 @@ declare module ex {
          */
         reject(value?: any): this;
         /**
-         * Inpect the current state of a promise
+         * Inspect the current state of a promise
          */
         state(): PromiseState;
         private _handleError(e);
@@ -5746,11 +5751,11 @@ declare module ex {
          */
         deadParticles: Util.Collection<Particle>;
         /**
-         * Gets or sets the minimum partical velocity
+         * Gets or sets the minimum particle velocity
          */
         minVel: number;
         /**
-         * Gets or sets the maximum partical velocity
+         * Gets or sets the maximum particle velocity
          */
         maxVel: number;
         /**
@@ -5958,7 +5963,7 @@ declare module ex {
          */
         fill(color: Color): void;
         /**
-         * Applies the colorize effect to a sprite, changing the color channels of all pixesl to be the average of the original color and the
+         * Applies the colorize effect to a sprite, changing the color channels of all pixels to be the average of the original color and the
          * provided color.
          */
         colorize(color: Color): void;
@@ -5971,11 +5976,11 @@ declare module ex {
          */
         darken(factor?: number): void;
         /**
-         * Applies the saturate effect to a sprite, saturates the color acccording to hsl
+         * Applies the saturate effect to a sprite, saturates the color according to hsl
          */
         saturate(factor?: number): void;
         /**
-         * Applies the desaturate effect to a sprite, desaturates the color acccording to hsl
+         * Applies the desaturate effect to a sprite, desaturates the color according to hsl
          */
         desaturate(factor?: number): void;
         /**
@@ -6077,7 +6082,7 @@ declare module ex.Util.DrawUtil {
         bl: number;
     }
     /**
-     * Draw a round rectange on a canvas context
+     * Draw a round rectangle on a canvas context
      *
      * @param ctx The canvas context
      * @param x The top-left x coordinate
@@ -6370,7 +6375,7 @@ declare module ex {
      * Labels
      *
      * Labels are the way to draw small amounts of text to the screen. They are
-     * actors and inherit all of the benifits and capabilities.
+     * actors and inherit all of the benefits and capabilities.
      *
      * ## Creating a Label
      *
@@ -6392,7 +6397,7 @@ declare module ex {
      * label.y = 50;
      * label.fontFamily = "Arial";
      * label.fontSize = 10;
-     * lable.fontUnit = ex.FontUnit.Px // pixels are the default
+     * label.fontUnit = ex.FontUnit.Px // pixels are the default
      * label.text = "Foo";
      * label.color = ex.Color.White;
      * label.textAlign = ex.TextAlign.Center;
@@ -6515,8 +6520,8 @@ declare module ex {
          * @param text        The text of the label
          * @param x           The x position of the label
          * @param y           The y position of the label
-         * @param font        Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
-         * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precendence
+         * @param fontFamily  Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
+         * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
          * over a css font.
          */
         constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
@@ -6531,7 +6536,7 @@ declare module ex {
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow
-         * @param offsetY      The y offset in pixles to place the shadow
+         * @param offsetY      The y offset in pixels to place the shadow
          * @param shadowColor  The color of the text shadow
          */
         setTextShadow(offsetX: number, offsetY: number, shadowColor: Color): void;
@@ -6556,7 +6561,7 @@ declare module ex {
      * Sometimes it is necessary to apply an effect to the canvas after the engine has completed its drawing pass. A few reasons to do
      * this might be creating a blur effect, adding a lighting effect, or changing how colors and pixels look.
      *
-     * ## Basic post procesors
+     * ## Basic post processors
      *
      * To create and use a post processor you just need to implement a class that implements [[IPostProcessor]], which has one method
      * [[IPostProcessor.process]]. Set the `out` canvas parameter to the final result, using the `image` pixel data.
@@ -6591,7 +6596,7 @@ declare module ex {
      * Choosing colors that are friendly to players with color blindness is an important consideration when making a game.
      * There is a significant portion of the population that has some form of color blindness,
      * and choosing bad colors can make your game unplayable. We have built
-     * a post procesors that can shift your colors into as more visible range for the 3 most common types of
+     * a post processors that can shift your colors into as more visible range for the 3 most common types of
      * [[https://en.wikipedia.org/wiki/Color_blindness|color blindness]].
      *
      *  - [[ColorBlindness.Protanope|Protanope]]
@@ -6804,7 +6809,7 @@ declare module ex.Input {
      * ```js
      * var player = new ex.Actor();
      *
-     * // enable propogating pointer events
+     * // enable propagating pointer events
      * player.enableCapturePointer = true;
      *
      * // enable move events, warning: performance intensive!
@@ -7000,17 +7005,17 @@ declare module ex.Input {
         getKeys(): Keys[];
         /**
          * Tests if a certain key was just pressed this frame. This is cleared at the end of the update frame.
-         * @param key Test wether a key was just pressed
+         * @param key Test whether a key was just pressed
          */
         wasPressed(key: Keys): boolean;
         /**
          * Tests if a certain key is held down. This is persisted between frames.
-         * @param key  Test wether a key is held down
+         * @param key  Test whether a key is held down
          */
         isHeld(key: Keys): boolean;
         /**
          * Tests if a certain key was just released this frame. This is cleared at the end of the update frame.
-         * @param key  Test wether a key was just released
+         * @param key  Test whether a key was just released
          */
         wasReleased(key: Keys): boolean;
     }
@@ -7176,7 +7181,7 @@ declare module ex.Input {
          */
         setMinimumGamepadConfiguration(config: IGamepadConfiguration): void;
         /**
-         * When implicitely enabled, set the enabled flag and run an update so information is updated
+         * When implicitly enabled, set the enabled flag and run an update so information is updated
          */
         private _enableAndUpdate();
         /**
@@ -7198,7 +7203,7 @@ declare module ex.Input {
          */
         at(index: number): Gamepad;
         /**
-         * Returns a list of all valid gamepads that meet the minimum configuration requirment.
+         * Returns a list of all valid gamepads that meet the minimum configuration requirement.
          */
         getValidGamepads(): Gamepad[];
         /**
@@ -7543,8 +7548,8 @@ declare module ex {
      *     |_ Actor 1
      *       |_ Child Actor 1
      *     |_ Actor 2
-     *   |_ Scene 2 (deactiveated)
-     *   |_ Scene 3 (deactiveated)
+     *   |_ Scene 2 (deactivated)
+     *   |_ Scene 3 (deactivated)
      * ```
      *
      * The engine splits the game into two primary responsibilities: updating and drawing. This is
@@ -7974,7 +7979,7 @@ declare module ex {
         private _update(delta);
         /**
          * Draws the entire game
-         * @param draw  Number of milliseconds elapsed since the last draw.
+         * @param delta  Number of milliseconds elapsed since the last draw.
          */
         private _draw(delta);
         /**

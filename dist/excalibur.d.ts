@@ -6551,6 +6551,7 @@ declare module ex {
         update(engine: Engine, delta: number): void;
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
         private _fontDraw(ctx, delta, sprites);
+        protected _fontString: string;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }

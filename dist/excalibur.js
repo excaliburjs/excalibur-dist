@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-04
+/*! excalibur - v0.7.1 - 2016-11-05
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -12451,7 +12451,7 @@ var ex;
          */
         Label.prototype.getTextWidth = function (ctx) {
             var oldFont = ctx.font;
-            ctx.font = this.fontFamily;
+            ctx.font = this._fontString;
             var width = ctx.measureText(this.text).width;
             ctx.font = oldFont;
             return width;
@@ -12588,7 +12588,7 @@ var ex;
                     this.color.a = this.opacity;
                 }
                 ctx.fillStyle = this.color.toString();
-                ctx.font = "" + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
+                ctx.font = this._fontString;
                 if (this.maxWidth) {
                     ctx.fillText(this.text, 0, 0, this.maxWidth);
                 }
@@ -12599,6 +12599,13 @@ var ex;
                 ctx.textBaseline = oldTextBaseline;
             }
         };
+        Object.defineProperty(Label.prototype, "_fontString", {
+            get: function () {
+                return "" + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Label.prototype.debugDraw = function (ctx) {
             _super.prototype.debugDraw.call(this, ctx);
         };

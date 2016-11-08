@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-05
+/*! excalibur - v0.7.1 - 2016-11-08
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -10052,9 +10052,26 @@ var ex;
         /**
          * Wrap a value in a resolved promise
          * @param value  An optional value to wrap in a resolved promise
+         * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
          */
         Promise.wrap = function (value) {
+            ex.Logger.getInstance().warn('[obsolete] Promise.wrap is obsolete. Use Promise.resolve/reject instead.');
+            return Promise.resolve(value);
+        };
+        /**
+         * Create and resolve a Promise with an optional value
+         * @param value  An optional value to wrap in a resolved promise
+         */
+        Promise.resolve = function (value) {
             var promise = (new Promise()).resolve(value);
+            return promise;
+        };
+        /**
+         * Create and reject a Promise with an optional value
+         * @param value  An optional value to wrap in a rejected promise
+         */
+        Promise.reject = function (value) {
+            var promise = (new Promise()).reject(value);
             return promise;
         };
         Promise.join = function () {

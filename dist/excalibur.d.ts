@@ -5264,8 +5264,19 @@ declare module ex {
         /**
          * Wrap a value in a resolved promise
          * @param value  An optional value to wrap in a resolved promise
+         * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
          */
         static wrap<T>(value?: T): Promise<T>;
+        /**
+         * Create and resolve a Promise with an optional value
+         * @param value  An optional value to wrap in a resolved promise
+         */
+        static resolve<T>(value?: T): Promise<T>;
+        /**
+         * Create and reject a Promise with an optional value
+         * @param value  An optional value to wrap in a rejected promise
+         */
+        static reject<T>(value?: T): Promise<T>;
         /**
          * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
          * when at least 1 promise rejects.

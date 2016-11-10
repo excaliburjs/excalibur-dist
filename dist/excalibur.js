@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-08
+/*! excalibur - v0.7.1 - 2016-11-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -184,7 +184,7 @@ var ex;
                 var firstPixel = (x + y * imageData.width) * 4;
                 var pixel = imageData.data;
                 if (pixel[firstPixel + 3] !== 0) {
-                    pixel[firstPixel + 3] = Math.round(this.opacity * 255);
+                    pixel[firstPixel + 3] = Math.round(this.opacity * pixel[firstPixel + 3]);
                 }
             };
             return Opacity;

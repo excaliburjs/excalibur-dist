@@ -806,7 +806,7 @@ var ex;
      *
      * var ground = new ex.Actor(300, 380, 600, 10, ex.Color.Black.clone());
      * ground.collisionType = ex.CollisionType.Fixed;
-     * edge.body.useBoxCollision(); // optional
+     * ground.body.useBoxCollision(); // optional
      * game.add(ground);
      *
      * // start the game

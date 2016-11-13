@@ -6155,6 +6155,12 @@ declare module ex {
         private _progressCounts;
         private _totalCounts;
         private _engine;
+        logo: string;
+        logoWidth: number;
+        logoHeight: number;
+        backgroundColor: string;
+        protected _imageElement: HTMLImageElement;
+        protected _image: HTMLImageElement;
         /**
          * @param loadables  Optionally provide the list of resources you want to load at constructor time
          */
@@ -6181,7 +6187,9 @@ declare module ex {
          */
         load(): Promise<any>;
         /**
-         * Loader draw function. Draws the default Excalibur loading screen. Override to customize the drawing.
+         * Loader draw function. Draws the default Excalibur loading screen.
+         * Override `logo`, `logoWidth`, `logoHeight` and `backgroundColor` properties
+         * to customize the drawing, or just override entire method.
          */
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
         /**

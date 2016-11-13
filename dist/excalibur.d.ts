@@ -7017,7 +7017,7 @@ declare module ex.Input {
         /**
          * Initialize Keyboard event listeners
          */
-        init(): void;
+        init(global?: any): void;
         update(delta: number): void;
         /**
          * Gets list of keys being pressed down
@@ -7514,6 +7514,16 @@ declare module ex {
          * (default) scoped will fire anywhere on the page.
          */
         pointerScope?: ex.Input.PointerScope;
+        /**
+         * Suppress boot up console message, which contains the "powered by Excalibur message"
+         */
+        suppressConsoleBootMessage?: boolean;
+        /**
+         * Suppress minimum browser feature detection, it is not recommended users of excalibur switch this off. This feature ensures that
+         * the currently running browser meets the minimum requirements for running excalibur. This can be useful if running on non-standard
+         * browsers or if there is a bug in excalibur preventing execution.
+         */
+        suppressMinimumBrowserFeatureDetection?: boolean;
     }
     /**
      * The Excalibur Engine

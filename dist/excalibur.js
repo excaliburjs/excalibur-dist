@@ -12186,7 +12186,7 @@ var ex;
                 },
                 // Test object url support for loading
                 objectUrlSupport: function () {
-                    return 'URL' in window && 'revokeObjectURL' in URL && 'createObjectURL' in URL;
+                    return ('URL' in window) && ('revokeObjectURL' in URL) && ('createObjectURL' in URL);
                 },
                 // RGBA support for colors
                 rgbaSupport: function () {
@@ -12214,7 +12214,7 @@ var ex;
             // Critical test will for ex not to run
             var failedCritical = false;
             for (var test in this._criticalTests) {
-                if (!this._criticalTests[test]()) {
+                if (!this._criticalTests[test].call(this)) {
                     this.failedTests.push(test);
                     ex.Logger.getInstance().error('Critical browser feature missing, Excalibur requires:', test);
                     failedCritical = true;
@@ -13216,13 +13216,14 @@ var ex;
             /**
              * Initialize Keyboard event listeners
              */
-            Keyboard.prototype.init = function () {
+            Keyboard.prototype.init = function (global) {
                 var _this = this;
-                window.addEventListener('blur', function (ev) {
+                global = global || window;
+                global.addEventListener('blur', function (ev) {
                     _this._keys.length = 0; // empties array efficiently
                 });
                 // key up is on window because canvas cannot have focus
-                window.addEventListener('keyup', function (ev) {
+                global.addEventListener('keyup', function (ev) {
                     var key = _this._keys.indexOf(ev.keyCode);
                     _this._keys.splice(key, 1);
                     _this._keysUp.push(ev.keyCode);
@@ -13232,7 +13233,7 @@ var ex;
                     _this.eventDispatcher.emit('release', keyEvent);
                 });
                 // key down is on window because canvas cannot have focus
-                window.addEventListener('keydown', function (ev) {
+                global.addEventListener('keydown', function (ev) {
                     if (_this._keys.indexOf(ev.keyCode) === -1) {
                         _this._keys.push(ev.keyCode);
                         _this._keysDown.push(ev.keyCode);
@@ -14167,7 +14168,7 @@ var ex;
             options = ex.Util.extend({}, Engine._DefaultEngineOptions, options);
             // Check compatibility 
             var detector = new ex.Detector();
-            if (!(this._compatible = detector.test())) {
+            if (!options.suppressMinimumBrowserFeatureDetection && !(this._compatible = detector.test())) {
                 var message = document.createElement('div');
                 message.innerText = 'Sorry, your browser does not support all the features needed for Excalibur';
                 document.body.appendChild(message);
@@ -14185,7 +14186,7 @@ var ex;
                 return;
             }
             // Use native console API for color fun
-            if (console.log) {
+            if (console.log && !options.suppressConsoleBootMessage) {
                 console.log("%cPowered by Excalibur.js (v" + EX_VERSION + ")", 'background: #176BAA; color: white; border-radius: 5px; padding: 15px; font-size: 1.5em; line-height: 80px;');
                 console.log('\n\
       /| ________________\n\
@@ -14727,7 +14728,9 @@ O|===|* >________________>\n\
             width: 0,
             height: 0,
             canvasElementId: '',
-            pointerScope: ex.Input.PointerScope.Document
+            pointerScope: ex.Input.PointerScope.Document,
+            suppressConsoleBootMessage: null,
+            suppressMinimumBrowserFeatureDetection: null
         };
         return Engine;
     }(ex.Class));
@@ -14744,7 +14747,7 @@ O|===|* >________________>\n\
         return AnimationNode;
     }());
 })(ex || (ex = {}));
-
+//# sourceMappingURL=excalibur.js.map
 ;
 // Concatenated onto excalibur after build
 // Exports the excalibur module so it can be used with browserify

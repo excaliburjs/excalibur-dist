@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-13
+/*! excalibur - v0.7.1 - 2016-11-16
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -2533,6 +2533,7 @@ var ex;
 })(ex || (ex = {}));
 var ex;
 (function (ex) {
+    var clamp = ex.Util.clamp;
     /**
      * Sprites
      *
@@ -2665,7 +2666,6 @@ var ex;
         }
         Sprite.prototype._loadPixels = function () {
             if (this._texture.isLoaded() && !this._pixelsLoaded) {
-                var clamp = ex.Util.clamp;
                 var naturalWidth = this._texture.image.naturalWidth || 0;
                 var naturalHeight = this._texture.image.naturalHeight || 0;
                 if (this.swidth > naturalWidth) {
@@ -2777,7 +2777,6 @@ var ex;
             }
         };
         Sprite.prototype._applyEffects = function () {
-            var clamp = ex.Util.clamp;
             var naturalWidth = this._texture.image.naturalWidth || 0;
             var naturalHeight = this._texture.image.naturalHeight || 0;
             this._spriteCtx.clearRect(0, 0, this.swidth, this.sheight);
@@ -2796,6 +2795,7 @@ var ex;
             this._spriteCtx.clearRect(0, 0, this.swidth, this.sheight);
             this._spriteCtx.putImageData(this._pixelData, 0, 0);
             this.internalImage.src = this._spriteCanvas.toDataURL('image/png');
+            this._dirtyEffect = false;
         };
         /**
          * Clears all effects from the drawing and return it to its original state.
@@ -2814,10 +2814,12 @@ var ex;
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(this.rotation);
-            var xpoint = (this.width * this.scale.x) * this.anchor.x;
-            var ypoint = (this.height * this.scale.y) * this.anchor.y;
+            var scaledSWidth = this.width * this.scale.x;
+            var scaledSHeight = this.height * this.scale.y;
+            var xpoint = (scaledSWidth) * this.anchor.x;
+            var ypoint = (scaledSHeight) * this.anchor.y;
             ctx.strokeStyle = ex.Color.Black;
-            ctx.strokeRect(-xpoint, -ypoint, this.width * this.scale.x, this.height * this.scale.y);
+            ctx.strokeRect(-xpoint, -ypoint, scaledSWidth, scaledSHeight);
             ctx.restore();
         };
         /**
@@ -2829,7 +2831,6 @@ var ex;
         Sprite.prototype.draw = function (ctx, x, y) {
             if (this._dirtyEffect) {
                 this._applyEffects();
-                this._dirtyEffect = false;
             }
             // calculating current dimensions
             this.width = this.naturalWidth * this.scale.x;
@@ -2839,17 +2840,19 @@ var ex;
             var ypoint = this.height * this.anchor.y;
             ctx.translate(x, y);
             ctx.rotate(this.rotation);
+            var scaledSWidth = this.swidth * this.scale.x;
+            var scaledSHeight = this.sheight * this.scale.y;
             // todo cache flipped sprites
             if (this.flipHorizontal) {
-                ctx.translate(this.swidth * this.scale.x, 0);
+                ctx.translate(scaledSWidth, 0);
                 ctx.scale(-1, 1);
             }
             if (this.flipVertical) {
-                ctx.translate(0, this.sheight * this.scale.y);
+                ctx.translate(0, scaledSHeight);
                 ctx.scale(1, -1);
             }
             if (this.internalImage) {
-                ctx.drawImage(this.internalImage, 0, 0, this.swidth, this.sheight, -xpoint, -ypoint, this.swidth * this.scale.x, this.sheight * this.scale.y);
+                ctx.drawImage(this.internalImage, 0, 0, this.swidth, this.sheight, -xpoint, -ypoint, scaledSWidth, scaledSHeight);
             }
             ctx.restore();
         };
@@ -7717,7 +7720,7 @@ var ex;
             this._collisionHandlers = {};
             this._isInitialized = false;
             this.frames = {};
-            this._framesDirty = false;
+            this._effectsDirty = false;
             /**
              * Access to the current drawing for the actor, this can be
              * an [[Animation]], [[Sprite]], or [[Polygon]].
@@ -8110,7 +8113,7 @@ var ex;
                 if (!this.currentDrawing) {
                     this.currentDrawing = arguments[1];
                 }
-                this._framesDirty = true;
+                this._effectsDirty = true;
             }
             else {
                 if (arguments[0] instanceof ex.Sprite) {
@@ -8417,6 +8420,10 @@ var ex;
         Actor.prototype._getCalculatedAnchor = function () {
             return new ex.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
+        Actor.prototype._reapplyEffects = function (drawing) {
+            drawing.removeEffect(this._opacityFx);
+            drawing.addEffect(this._opacityFx);
+        };
         /**
          * Perform euler integration at the specified time step
          */
@@ -8462,17 +8469,7 @@ var ex;
             if (this.previousOpacity !== this.opacity) {
                 this.previousOpacity = this.opacity;
                 this._opacityFx.opacity = this.opacity;
-                this._framesDirty = true;
-            }
-            // handle dirty frames and reapply any effects we are tracking
-            if (this._framesDirty) {
-                this._framesDirty = false;
-                // ensure we remove existing opacity effect we created
-                // and also ensure we do this everytime in case frames change
-                for (var drawing in this.frames) {
-                    this.frames[drawing].removeEffect(this._opacityFx);
-                    this.frames[drawing].addEffect(this._opacityFx);
-                }
+                this._effectsDirty = true;
             }
             // Capture old values before integration step updates them
             this.oldVel.setTo(this.vel.x, this.vel.y);
@@ -8511,6 +8508,10 @@ var ex;
                 // See https://github.com/excaliburjs/Excalibur/pull/619 for discussion on this formula          
                 var offsetX = (this._width - drawing.naturalWidth * drawing.scale.x) * this.anchor.x;
                 var offsetY = (this._height - drawing.naturalHeight * drawing.scale.y) * this.anchor.y;
+                if (this._effectsDirty) {
+                    this._reapplyEffects(this.currentDrawing);
+                    this._effectsDirty = false;
+                }
                 this.currentDrawing.draw(ctx, offsetX, offsetY);
             }
             else {

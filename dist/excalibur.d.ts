@@ -3950,7 +3950,7 @@ declare module ex {
         frames: {
             [key: string]: IDrawable;
         };
-        private _framesDirty;
+        private _effectsDirty;
         /**
          * Access to the current drawing for the actor, this can be
          * an [[Animation]], [[Sprite]], or [[Polygon]].
@@ -4206,6 +4206,7 @@ declare module ex {
          */
         within(actor: Actor, distance: number): boolean;
         private _getCalculatedAnchor();
+        protected _reapplyEffects(drawing: IDrawable): void;
         /**
          * Perform euler integration at the specified time step
          */

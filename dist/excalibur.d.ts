@@ -1923,6 +1923,7 @@ declare module ex {
          * @param bottom  y coordinate of the bottom edge
          */
         constructor(left?: number, top?: number, right?: number, bottom?: number);
+        static fromPoints(points: Vector[]): BoundingBox;
         /**
          * Returns the calculated width of the bounding box
          */
@@ -1931,6 +1932,10 @@ declare module ex {
          * Returns the calculated height of the bounding box
          */
         getHeight(): number;
+        /**
+         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default
+         */
+        rotate(angle: number, point?: Vector): BoundingBox;
         /**
          * Returns the perimeter of the bounding box
          */

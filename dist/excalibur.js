@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-16
+/*! excalibur - v0.7.1 - 2016-11-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -3735,6 +3735,27 @@ var ex;
             this.right = right;
             this.bottom = bottom;
         }
+        BoundingBox.fromPoints = function (points) {
+            var minX = Infinity;
+            var minY = Infinity;
+            var maxX = -Infinity;
+            var maxY = -Infinity;
+            for (var i = 0; i < points.length; i++) {
+                if (points[i].x < minX) {
+                    minX = points[i].x;
+                }
+                if (points[i].x > maxX) {
+                    maxX = points[i].x;
+                }
+                if (points[i].y < minY) {
+                    minY = points[i].y;
+                }
+                if (points[i].y > maxY) {
+                    maxY = points[i].y;
+                }
+            }
+            return new BoundingBox(minX, minY, maxX, maxY);
+        };
         /**
          * Returns the calculated width of the bounding box
          */
@@ -3746,6 +3767,14 @@ var ex;
          */
         BoundingBox.prototype.getHeight = function () {
             return this.bottom - this.top;
+        };
+        /**
+         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default
+         */
+        BoundingBox.prototype.rotate = function (angle, point) {
+            if (point === void 0) { point = ex.Vector.Zero.clone(); }
+            var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
+            return BoundingBox.fromPoints(points);
         };
         /**
          * Returns the perimeter of the bounding box
@@ -8304,7 +8333,7 @@ var ex;
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
             var pos = this.getWorldPos();
-            return new ex.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y);
+            return new ex.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y).rotate(this.rotation, pos);
         };
         /**
          * Returns the actor's [[BoundingBox]] relative to the actors position.
@@ -8312,7 +8341,7 @@ var ex;
         Actor.prototype.getRelativeBounds = function () {
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
-            return new ex.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y);
+            return new ex.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y).rotate(this.rotation);
         };
         /**
          * Tests whether the x/y specified are contained in the actor

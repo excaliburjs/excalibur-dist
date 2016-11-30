@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-11-23
+/*! excalibur - v0.7.1 - 2016-11-30
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -121,6 +121,168 @@ if (!Function.prototype.bind) {
         return fBound;
     };
 }
+/// <reference path="Engine.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Debug statistics and flags for Excalibur. If polling these values, it would be
+     * best to do so on the `postupdate` event for [[Engine]], after all values have been
+     * updated during a frame.
+     */
+    var Debug = (function () {
+        function Debug(_engine) {
+            this._engine = _engine;
+            /**
+             * Performance statistics
+             */
+            this.stats = {
+                /**
+                 * Current frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
+                 * Best accessed on [Events.postframe] event. See [[IFrameStats]]
+                 */
+                currFrame: new FrameStats(),
+                /**
+                 * Previous frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
+                 * Best accessed on [Events.preframe] event. Best inspected on engine event `preframe`. See [[IFrameStats]]
+                 */
+                prevFrame: new FrameStats()
+            };
+        }
+        return Debug;
+    }());
+    ex.Debug = Debug;
+    /**
+     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
+     * creating instances of this every frame.
+     */
+    var FrameStats = (function () {
+        function FrameStats() {
+            this._id = 0;
+            this._delta = 0;
+            this._fps = 0;
+            this._actorStats = {
+                alive: 0,
+                killed: 0,
+                ui: 0,
+                get remaining() {
+                    return this.alive - this.killed;
+                },
+                get total() {
+                    return this.remaining + this.ui;
+                }
+            };
+            this._durationStats = {
+                update: 0,
+                draw: 0,
+                get total() {
+                    return this.update + this.draw;
+                }
+            };
+        }
+        /**
+         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        FrameStats.prototype.reset = function (otherStats) {
+            if (otherStats) {
+                this.id = otherStats.id;
+                this.delta = otherStats.delta;
+                this.fps = otherStats.fps;
+                this.actors.alive = otherStats.actors.alive;
+                this.actors.killed = otherStats.actors.killed;
+                this.actors.ui = otherStats.actors.ui;
+                this.duration.update = otherStats.duration.update;
+                this.duration.draw = otherStats.duration.draw;
+            }
+            else {
+                this.id = this.delta = this.fps = 0;
+                this.actors.alive = this.actors.killed = this.actors.ui = 0;
+                this.duration.update = this.duration.draw = 0;
+            }
+        };
+        /**
+         * Provides a clone of this instance.
+         */
+        FrameStats.prototype.clone = function () {
+            var fs = new FrameStats();
+            fs.reset(this);
+            return fs;
+        };
+        Object.defineProperty(FrameStats.prototype, "id", {
+            /**
+             * Gets the frame's id
+             */
+            get: function () {
+                return this._id;
+            },
+            /**
+             * Sets the frame's id
+             */
+            set: function (value) {
+                this._id = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "delta", {
+            /**
+             * Gets the frame's delta (time since last frame)
+             */
+            get: function () {
+                return this._delta;
+            },
+            /**
+             * Sets the frame's delta (time since last frame). Internal use only.
+             * @internal
+             */
+            set: function (value) {
+                this._delta = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "fps", {
+            /**
+             * Gets the frame's frames-per-second (FPS)
+             */
+            get: function () {
+                return this._fps;
+            },
+            /**
+             * Sets the frame's frames-per-second (FPS). Internal use only.
+             * @internal
+             */
+            set: function (value) {
+                this._fps = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "actors", {
+            /**
+             * Gets the frame's actor statistics
+             */
+            get: function () {
+                return this._actorStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "duration", {
+            /**
+             * Gets the frame's duration statistics
+             */
+            get: function () {
+                return this._durationStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return FrameStats;
+    }());
+    ex.FrameStats = FrameStats;
+})(ex || (ex = {}));
 var ex;
 (function (ex) {
     /**
@@ -7008,6 +7170,7 @@ var ex;
             }
             // Cycle through actors updating UI actors
             for (i = 0, len = this.uiActors.length; i < len; i++) {
+                engine.stats.currFrame.actors.ui++;
                 this.uiActors[i].update(engine, delta);
             }
             // Cycle through actors updating tile maps
@@ -7016,6 +7179,7 @@ var ex;
             }
             // Cycle through actors updating actors
             for (i = 0, len = this.children.length; i < len; i++) {
+                engine.stats.currFrame.actors.alive++;
                 this.children[i].update(engine, delta);
             }
             // Run the broadphase
@@ -7045,6 +7209,7 @@ var ex;
                     this.children.splice(actorIndex, 1);
                 }
             }
+            engine.stats.currFrame.actors.killed = this._killQueue.length;
             this._killQueue.length = 0;
             // Remove timers in the cancel queue before updating them
             for (i = 0, len = this._cancelQueue.length; i < len; i++) {
@@ -8512,6 +8677,12 @@ var ex;
             }
             // Update child actors
             for (var i = 0; i < this.children.length; i++) {
+                if (this.children[i] instanceof ex.UIActor) {
+                    engine.stats.currFrame.actors.ui++;
+                }
+                else {
+                    engine.stats.currFrame.actors.alive++;
+                }
                 this.children[i].update(engine, delta);
             }
             // TODO: Obsolete `update` event on Actor
@@ -9047,6 +9218,34 @@ var ex;
         return PostUpdateEvent;
     }(GameEvent));
     ex.PostUpdateEvent = PostUpdateEvent;
+    /**
+     * The 'preframe' event is emitted on the engine, before the frame begins.
+     */
+    var PreFrameEvent = (function (_super) {
+        __extends(PreFrameEvent, _super);
+        function PreFrameEvent(engine, prevStats, target) {
+            _super.call(this);
+            this.engine = engine;
+            this.prevStats = prevStats;
+            this.target = target;
+        }
+        return PreFrameEvent;
+    }(GameEvent));
+    ex.PreFrameEvent = PreFrameEvent;
+    /**
+     * The 'postframe' event is emitted on the engine, after a frame ends.
+     */
+    var PostFrameEvent = (function (_super) {
+        __extends(PostFrameEvent, _super);
+        function PostFrameEvent(engine, stats, target) {
+            _super.call(this);
+            this.engine = engine;
+            this.stats = stats;
+            this.target = target;
+        }
+        return PostFrameEvent;
+    }(GameEvent));
+    ex.PostFrameEvent = PostFrameEvent;
     /**
      * Event received when a gamepad is connected to Excalibur. [[Input.Gamepads|engine.input.gamepads]] receives this event.
      */
@@ -13815,6 +14014,7 @@ var ex;
     })(Input = ex.Input || (ex.Input = {}));
 })(ex || (ex = {}));
 /// <reference path="MonkeyPatch.ts" />
+/// <reference path="Debug.ts" />
 /// <reference path="Events.ts" />
 /// <reference path="EventDispatcher.ts" />
 /// <reference path="Class.ts" />
@@ -14155,9 +14355,9 @@ var ex;
             _super.call(this);
             this._hasStarted = false;
             /**
-             * Current FPS
+             * Access Excalibur debugging functionality.
              */
-            this.fps = 0;
+            this.debug = new ex.Debug(this);
             /**
              * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
              */
@@ -14215,6 +14415,9 @@ var ex;
                 }
                 return;
             }
+            else {
+                this._compatible = true;
+            }
             // Use native console API for color fun
             if (console.log && !options.suppressConsoleBootMessage) {
                 console.log("%cPowered by Excalibur.js (v" + EX_VERSION + ")", 'background: #176BAA; color: white; border-radius: 5px; padding: 15px; font-size: 1.5em; line-height: 80px;');
@@ -14255,6 +14458,27 @@ O|===|* >________________>\n\
             this.addScene('root', this.rootScene);
             this.goToScene('root');
         }
+        Object.defineProperty(Engine.prototype, "fps", {
+            /**
+             * Current FPS
+             * @obsolete Use [[stats.currFrame.fps]]. Will be deprecated in future versions.
+             */
+            get: function () {
+                return this.stats.currFrame.fps;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Engine.prototype, "stats", {
+            /**
+             * Access [[debug.stats]] that holds frame statistics.
+             */
+            get: function () {
+                return this.debug.stats;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Engine.prototype.on = function (eventName, handler) {
             _super.prototype.on.call(this, eventName, handler);
         };
@@ -14633,7 +14857,6 @@ O|===|* >________________>\n\
             for (a; a < len; a++) {
                 this._animations[a].animation.draw(ctx, this._animations[a].x, this._animations[a].y);
             }
-            this.fps = 1.0 / (delta / 1000);
             // Draw debug information
             if (this.isDebug) {
                 this.ctx.font = 'Consolas';
@@ -14692,6 +14915,7 @@ O|===|* >________________>\n\
                 }
                 try {
                     game._requestId = raf(mainloop);
+                    game.emit('preframe', new ex.PreFrameEvent(game, game.stats.prevFrame, game));
                     // Get the time to calculate time-elapsed
                     var now = nowFn();
                     var elapsed = Math.floor(now - lastTime) || 1;
@@ -14702,9 +14926,23 @@ O|===|* >________________>\n\
                     if (elapsed > 200) {
                         elapsed = 1;
                     }
-                    game._update(elapsed * game.timescale);
-                    game._draw(elapsed * game.timescale);
+                    var delta = elapsed * game.timescale;
+                    // reset frame stats (reuse existing instances)
+                    var frameId = game.stats.prevFrame.id + 1;
+                    game.stats.prevFrame.reset(game.stats.currFrame);
+                    game.stats.currFrame.reset();
+                    game.stats.currFrame.id = frameId;
+                    game.stats.currFrame.delta = delta;
+                    game.stats.currFrame.fps = 1.0 / (delta / 1000);
+                    var beforeUpdate = nowFn();
+                    game._update(delta);
+                    var afterUpdate = nowFn();
+                    game._draw(delta);
+                    var afterDraw = nowFn();
+                    game.stats.currFrame.duration.update = afterUpdate - beforeUpdate;
+                    game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                     lastTime = now;
+                    game.emit('postframe', new ex.PostFrameEvent(game, game.stats.currFrame, game));
                 }
                 catch (e) {
                     window.cancelAnimationFrame(game._requestId);

@@ -1,5 +1,142 @@
 declare module ex {
     /**
+     * Represents a frame's individual statistics
+     */
+    interface IFrameStats {
+        /**
+         * The number of the frame
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame scaled by [[Engine.timescale]]) (in ms)
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        fps: number;
+        /**
+         * Duration statistics (in ms)
+         */
+        duration: IFrameDurationStats;
+        /**
+         * Actor statistics
+         */
+        actors: IFrameActorStats;
+    }
+    /**
+     * Represents actor stats for a frame
+     */
+    interface IFrameActorStats {
+        /**
+         * Gets the frame's number of actors (alive)
+         */
+        alive: number;
+        /**
+         * Gets the frame's number of actors (killed)
+         */
+        killed: number;
+        /**
+         * Gets the frame's number of remaining actors (alive - killed)
+         */
+        remaining: number;
+        /**
+         * Gets the frame's number of UI actors
+         */
+        ui: number;
+        /**
+         * Gets the frame's number of total actors (remaining + UI)
+         */
+        total: number;
+    }
+    /**
+     * Represents duration stats for a frame
+     */
+    interface IFrameDurationStats {
+        /**
+         * Gets the frame's total time to run the update function (in ms)
+         */
+        update: number;
+        /**
+         * Gets the frame's total time to run the draw function (in ms)
+         */
+        draw: number;
+        /**
+         * Gets the frame's total render duration (update + draw duration) (in ms)
+         */
+        total: number;
+    }
+    /**
+     * Debug statistics and flags for Excalibur. If polling these values, it would be
+     * best to do so on the `postupdate` event for [[Engine]], after all values have been
+     * updated during a frame.
+     */
+    class Debug implements IDebugFlags {
+        private _engine;
+        constructor(_engine: ex.Engine);
+        /**
+         * Performance statistics
+         */
+        stats: {
+            currFrame: FrameStats;
+            prevFrame: FrameStats;
+        };
+    }
+    /**
+     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
+     * creating instances of this every frame.
+     */
+    class FrameStats implements IFrameStats {
+        private _id;
+        private _delta;
+        private _fps;
+        private _actorStats;
+        private _durationStats;
+        /**
+         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IFrameStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): FrameStats;
+        /**
+         * Gets the frame's id
+         */
+        /**
+         * Sets the frame's id
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame)
+         */
+        /**
+         * Sets the frame's delta (time since last frame). Internal use only.
+         * @internal
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        /**
+         * Sets the frame's frames-per-second (FPS). Internal use only.
+         * @internal
+         */
+        fps: number;
+        /**
+         * Gets the frame's actor statistics
+         */
+        actors: IFrameActorStats;
+        /**
+         * Gets the frame's duration statistics
+         */
+        duration: IFrameDurationStats;
+    }
+}
+declare module ex {
+    /**
      * Effects
      *
      * These effects can be applied to any bitmap image but are mainly used
@@ -4407,6 +4544,8 @@ declare module ex.Events {
     type postdebugdraw = 'postdebugdraw';
     type preupdate = 'preupdate';
     type postupdate = 'postupdate';
+    type preframe = 'preframe';
+    type postframe = 'postframe';
     type collision = 'collision';
     type initialize = 'initialize';
     type activate = 'activate';
@@ -4538,6 +4677,24 @@ declare module ex {
         delta: any;
         target: any;
         constructor(engine: Engine, delta: any, target: any);
+    }
+    /**
+     * The 'preframe' event is emitted on the engine, before the frame begins.
+     */
+    class PreFrameEvent extends GameEvent {
+        engine: Engine;
+        prevStats: FrameStats;
+        target: any;
+        constructor(engine: Engine, prevStats: FrameStats, target: any);
+    }
+    /**
+     * The 'postframe' event is emitted on the engine, after a frame ends.
+     */
+    class PostFrameEvent extends GameEvent {
+        engine: Engine;
+        stats: FrameStats;
+        target: any;
+        constructor(engine: Engine, stats: FrameStats, target: any);
     }
     /**
      * Event received when a gamepad is connected to Excalibur. [[Input.Gamepads|engine.input.gamepads]] receives this event.
@@ -7739,8 +7896,20 @@ declare module ex {
         private _hasStarted;
         /**
          * Current FPS
+         * @obsolete Use [[stats.currFrame.fps]]. Will be deprecated in future versions.
          */
         fps: number;
+        /**
+         * Access Excalibur debugging functionality.
+         */
+        debug: Debug;
+        /**
+         * Access [[debug.stats]] that holds frame statistics.
+         */
+        stats: {
+            currFrame: FrameStats;
+            prevFrame: FrameStats;
+        };
         /**
          * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
          */
@@ -7796,6 +7965,10 @@ declare module ex {
         on(eventName: ex.Events.hidden, handler: (event?: HiddenEvent) => void): any;
         on(eventName: ex.Events.start, handler: (event?: GameStartEvent) => void): any;
         on(eventName: ex.Events.stop, handler: (event?: GameStopEvent) => void): any;
+        on(eventName: ex.Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
+        on(eventName: ex.Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
+        on(eventName: ex.Events.preframe, handler: (event?: PreFrameEvent) => void): any;
+        on(eventName: ex.Events.postframe, handler: (event?: PostFrameEvent) => void): any;
         on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Default [[IEngineOptions]]

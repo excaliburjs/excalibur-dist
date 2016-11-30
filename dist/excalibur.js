@@ -286,16 +286,10 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Effects
-     *
      * These effects can be applied to any bitmap image but are mainly used
      * for [[Sprite]] effects or [[Animation]] effects.
      *
-     * Because these manipulate raw pixels, there is a performance impact to applying
-     * too many effects. Excalibur tries its best to by using caching to mitigate
-     * performance issues.
-     *
-     * Create your own effects by implementing [[ISpriteEffect]].
+     * [[include:SpriteEffects.md]]
      */
     var Effects;
     (function (Effects) {
@@ -926,61 +920,9 @@ var ex;
     })(ex.Integrator || (ex.Integrator = {}));
     var Integrator = ex.Integrator;
     /**
-     *
-     * Excalibur Physics
-     *
      * The [[Physics]] object is the global configuration object for all Excalibur physics.
      *
-     * Excalibur comes built in with two physics systems. The first system is [[CollisionResolutionStrategy.Box|Box physics]], and is a
-     * simple axis-aligned way of doing basic collision detection for non-rotated rectangular areas, defined by an actor's
-     * [[BoundingBox|bounding box]].
-     *
-     * ## Enabling Excalibur physics
-     *
-     * To enable physics in your game it is as simple as setting [[Physics.enabled]] to true and picking your
-     * [[CollisionResolutionStrategy]]
-     *
-     * Excalibur supports 3 different types of collision area shapes in its physics simulation: [[PolygonArea|polygons]],
-     * [[CircleArea|circles]], and [[EdgeArea|edges]]. To use any one of these areas on an actor there are convenience methods off of
-     * the [[Actor|actor]] [[Body|physics body]]: [[Body.useBoxCollision|useBoxCollision]],
-     * [[Body.usePolygonCollision|usePolygonCollision]], [[Body.useCircleCollision|useCircleCollision]], and [[Body.useEdgeCollision]]
-     *
-     * ```ts
-     * // setup game
-     * var game = new ex.Engine({
-     *     width: 600,
-     *     height: 400
-     *  });
-     *
-     * // use rigid body
-     * ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody;
-     *
-     * // set global acceleration simulating gravity pointing down
-     * ex.Physics.acc.setTo(0, 700);
-     *
-     * var block = new ex.Actor(300, 0, 20, 20, ex.Color.Blue.clone());
-     * block.body.useBoxCollision(); // useBoxCollision is the default, technically optional
-     * game.add(block);
-     *
-     * var circle = new ex.Actor(300, 100, 20, 20, ex.Color.Red.clone());
-     * circle.body.useCircleCollision(10);
-     * game.add(circle);
-     *
-     * var ground = new ex.Actor(300, 380, 600, 10, ex.Color.Black.clone());
-     * ground.collisionType = ex.CollisionType.Fixed;
-     * ground.body.useBoxCollision(); // optional
-     * game.add(ground);
-     *
-     * // start the game
-     * game.start();
-     * ```
-     *
-     * ## Limitations
-     *
-     * Currently Excalibur only supports single contact point collisions and non-sleeping physics bodies. This has some negative stability
-     * and performance implications. Single contact point collisions can have odd oscillating behavior. Non-sleeping bodies will recalculate
-     * collisions whether they need to or not. We fully intend to add these features into Excalibur in future releases.
-     *
+     * [[include:Physics.md]]
      */
     /* istanbul ignore next */
     var Physics = (function () {
@@ -2697,76 +2639,10 @@ var ex;
 (function (ex) {
     var clamp = ex.Util.clamp;
     /**
-     * Sprites
-     *
      * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
      * images or parts of images from a [[Texture]] resource to the screen.
      *
-     * ## Creating a sprite
-     *
-     * To create a [[Sprite]] you need to have a loaded [[Texture]] resource. You can
-     * then use [[Texture.asSprite]] to quickly create a [[Sprite]] or you can create
-     * a new instance of [[Sprite]] using the constructor. This is useful if you
-     * want to "slice" out a portion of an image or if you want to change the dimensions.
-     *
-     * ```js
-     * var game = new ex.Engine();
-     * var txPlayer = new ex.Texture("/assets/tx/player.png");
-     *
-     * // load assets
-     * var loader = new ex.Loader(txPlayer);
-     *
-     * // start game
-     * game.start(loader).then(function () {
-     *
-     *   // create a sprite (quick)
-     *   var playerSprite = txPlayer.asSprite();
-     *
-     *   // create a sprite (custom)
-     *   var playerSprite = new ex.Sprite(txPlayer, 0, 0, 80, 80);
-     *
-     * });
-     * ```
-     *
-     * You can then assign an [[Actor]] a sprite through [[Actor.addDrawing]] and
-     * [[Actor.setDrawing]].
-     *
-     * ## Sprite Effects
-     *
-     * Excalibur offers many sprite effects such as [[Effects.Colorize]] to let you manipulate
-     * sprites. Keep in mind, more effects requires more power and can lead to memory or CPU
-     * constraints and hurt performance. Each effect must be reprocessed every frame for each sprite.
-     *
-     * It's still recommended to create an [[Animation]] or build in your effects to the sprites
-     * for optimal performance.
-     *
-     * There are a number of convenience methods available to perform sprite effects. Sprite effects are
-     * side-effecting.
-     *
-     * ```typescript
-     *
-     * var playerSprite = new ex.Sprite(txPlayer, 0, 0, 80, 80);
-     *
-     * // darken a sprite by a percentage
-     * playerSprite.darken(.2); // 20%
-     *
-     * // lighten a sprite by a percentage
-     * playerSprite.lighten(.2); // 20%
-     *
-     * // saturate a sprite by a percentage
-     * playerSprite.saturate(.2); // 20%
-     *
-     * // implement a custom effect
-     * class CustomEffect implements ex.EffectsISpriteEffect {
-     *
-     *   updatePixel(x: number, y: number, imageData: ImageData) {
-     *       // modify ImageData
-     *   }
-     * }
-     *
-     * playerSprite.addEffect(new CustomEffect());
-     *
-     * ```
+     * [[include:Sprites.md]]
      */
     var Sprite = (function () {
         /**
@@ -3041,94 +2917,11 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Sprite Sheets
-     *
      * Sprite sheets are a useful mechanism for slicing up image resources into
      * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
      * in row major order in the [[SpriteSheet]].
      *
-     * You can also use a [[SpriteFont]] which is special kind of [[SpriteSheet]] for use
-     * with [[Label|Labels]].
-     *
-     * ## Creating a SpriteSheet
-     *
-     * To create a [[SpriteSheet]] you need a loaded [[Texture]] resource.
-     *
-     * ```js
-     * var game = new ex.Engine();
-     * var txAnimPlayerIdle = new ex.Texture("/assets/tx/anim-player-idle.png");
-     *
-     * // load assets
-     * var loader = new ex.Loader(txAnimPlayerIdle);
-     *
-     * // start game
-     * game.start(loader).then(function () {
-     *   var player = new ex.Actor();
-     *
-     *   // create sprite sheet with 5 columns, 1 row, 80x80 frames
-     *   var playerIdleSheet = new ex.SpriteSheet(txAnimPlayerIdle, 5, 1, 80, 80);
-     *
-     *   // create animation (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(game, 125);
-     *
-     *   // add drawing to player as "idle"
-     *   player.addDrawing("idle", playerIdleAnimation);
-     *
-     *   // add player to game
-     *   game.add(player);
-     * });
-     * ```
-     *
-     * ## Creating animations
-     *
-     * [[SpriteSheets]] provide a quick way to generate a new [[Animation]] instance.
-     * You can use *all* the frames of a [[Texture]] ([[SpriteSheet.getAnimationForAll]])
-     * or you can use a range of frames ([[SpriteSheet.getAnimationBetween]]) or you
-     * can use specific frames ([[SpriteSheet.getAnimationByIndices]]).
-     *
-     * To create an [[Animation]] these methods must be passed an instance of [[Engine]].
-     * It's recommended to generate animations for an [[Actor]] in their [[Actor.onInitialize]]
-     * event because the [[Engine]] is passed to the initialization function. However, if your
-     * [[Engine]] instance is in the global scope, you can create an [[Animation]] at any time
-     * provided the [[Texture]] has been [[Loader|loaded]].
-     *
-     * ```js
-     *   // create sprite sheet with 5 columns, 1 row, 80x80 frames
-     *   var playerIdleSheet = new ex.SpriteSheet(txAnimPlayerIdle, 5, 1, 80, 80);
-     *
-     *   // create animation for all frames (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(game, 125);
-     *
-     *   // create animation for a range of frames (2-4) (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationBetween(game, 1, 3, 125);
-     *
-     *   // create animation for specific frames 2, 4, 5 (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationByIndices(game, [1, 3, 4], 125);
-     *
-     *   // create a repeating animation (ping-pong)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationByIndices(game, [1, 3, 4, 3, 1], 125);
-     * ```
-     *
-     * ## Multiple rows
-     *
-     * Sheets are organized in "row major order" which means left-to-right, top-to-bottom.
-     * Indexes are zero-based, so while you might think to yourself the first column is
-     * column "1", to the engine it is column "0". You can easily calculate an index
-     * of a frame using this formula:
-     *
-     *     Given: col = 5, row = 3, columns = 10
-     *
-     *     index = col + row * columns
-     *     index = 4 + 2 * 10 // zero-based, subtract 1 from col & row
-     *     index = 24
-     *
-     * You can also simply count the frames of the image visually starting from the top left
-     * and beginning with zero.
-     *
-     * ```js
-     * // get a sprite for column 3, row 6
-     * var sprite = animation.getSprite(2 + 5 * 10)
-     * ```
+     * [[include:SpriteSheets.md]]
      */
     var SpriteSheet = (function () {
         /**
@@ -3219,85 +3012,11 @@ var ex;
     }());
     ex.SpriteSheet = SpriteSheet;
     /**
-     * Sprite Fonts
-     *
      * Sprite fonts are a used in conjunction with a [[Label]] to specify
      * a particular bitmap as a font. Note that some font features are not
      * supported by Sprite fonts.
      *
-     * ## Generating the font sheet
-     *
-     * You can use tools such as [Bitmap Font Builder](http://www.lmnopc.com/bitmapfontbuilder/) to
-     * generate a sprite sheet for you to load into Excalibur.
-     *
-     * ## Creating a sprite font
-     *
-     * Start with an image with a grid containing all the letters you want to support.
-     * Once you load it into Excalibur using a [[Texture]] resource, you can create
-     * a [[SpriteFont]] using the constructor.
-     *
-     * For example, here is a representation of a font sprite sheet for an uppercase alphabet
-     * with 4 columns and 7 rows:
-     *
-     * ```
-     * ABCD
-     * EFGH
-     * IJKL
-     * MNOP
-     * QRST
-     * UVWX
-     * YZ
-     * ```
-     *
-     * Each letter is 30x30 and after Z is a blank one to represent a space.
-     *
-     * Then to create the [[SpriteFont]]:
-     *
-     * ```js
-     * var game = new ex.Engine();
-     * var txFont = new ex.Texture("/assets/tx/font.png");
-     *
-     * // load assets
-     * var loader = new ex.Loader(txFont);
-     *
-     * // start game
-     * game.start(loader).then(function () {
-     *
-     *   // create a font
-     *   var font = new ex.SpriteFont(txFont, "ABCDEFGHIJKLMNOPQRSTUVWXYZ ", true, 4, 7, 30, 30);
-     *
-     *   // create a label using this font
-     *   var label = new ex.Label("Hello World", 0, 0, null, font);
-     *
-     *   // display in-game
-     *   game.add(label);
-     *
-     * });
-     * ```
-     *
-     * If you want to use a lowercase representation in the font, you can pass `false` for [[caseInsensitive]]
-     * and the matching will be case-sensitive. In our example, you would need another 7 rows of
-     * lowercase characters.
-     *
-     * ## Font colors
-     *
-     * When using sprite fonts with a [[Label]], you can set the [[Label.color]] property
-     * to use different colors.
-     *
-     * ## Known Issues
-     *
-     * **One font per Label**
-     * [Issue #172](https://github.com/excaliburjs/Excalibur/issues/172)
-     *
-     * If you intend on changing colors or applying opacity effects, you have to use
-     * a new [[SpriteFont]] instance per [[Label]].
-     *
-     * **Using opacity removes other effects**
-     * [Issue #148](https://github.com/excaliburjs/Excalibur/issues/148)
-     *
-     * If you apply any custom effects to the sprites in a SpriteFont, including trying to
-     * use [[Label.color]], they will be removed when modifying [[Label.opacity]].
-     *
+     * [[include:SpriteFonts.md]]
      */
     var SpriteFont = (function (_super) {
         __extends(SpriteFont, _super);
@@ -3463,141 +3182,10 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Tile Maps
-     *
      * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
      * without the overhead of actors.
      *
-     * Tile maps are made up of [[Cell|Cells]] which can draw [[TileSprite|TileSprites]]. Tile
-     * maps support multiple layers and work well for building tile-based games such as RPGs,
-     * adventure games, strategy games, and others. Cells can be [[Cell.solid|solid]] so
-     * that Actors can't pass through them.
-     *
-     * We recommend using the [Tiled map editor](http://www.mapeditor.org/) to build your maps
-     * and export them to JSON. You can then load them using a [[Resource|Generic Resource]]
-     * and process them to create your levels. A [[TileMap]] can then be used as part of a
-     * level or map class that adds enemies and builds game objects from the Tiled map.
-     *
-     *
-     * ## Creating a tile map
-     *
-     * A [[TileMap]] is meant to be used in conjunction with a map editor. Creating
-     * a tile map is fairly straightforward.
-     *
-     * You need a tile sheet (see [[SpriteSheet]]) that holds all the available tiles to
-     * draw. [[TileMap]] supports multiple sprite sheets, letting you organize tile sheets
-     * to your liking.
-     *
-     * Next, you need to populate each [[Cell]] with one or more [[TileSprite|TileSprites]]
-     * using [[Cell.pushSprite]].
-     * Once the [[TileMap]] is added to a [[Scene]], it will be drawn and updated.
-     *
-     * You can then add [[Actor|Actors]] to the [[Scene]] and interact with the [[TileMap]].
-     *
-     * In this example, we take in a map configuration that we designed (for example,
-     * based on the exported structure of a JSON file).
-     *
-     * ```ts
-     *
-     * // define TypeScript interfaces to make our life easier
-     *
-     * public interface IMapDefinition {
-     *   cells: IMapCellDefinition[];
-     *   tileSheets: IMapTileSheet[];
-     *   width: number;
-     *   height: number;
-     *   tileWidth: number;
-     *   tileHeight: number;
-     * }
-     *
-     * public interface IMapCellDefinition {
-     *   x: number;
-     *   y: number;
-     *   tileId: number;
-     *   sheetId: number;
-     * }
-     *
-     * public interface IMapTileSheet {
-     *   id: number;
-     *   path: string;
-     *   columns: number;
-     *   rows: number;
-     * }
-     *
-     * // create a Map class that creates a game map
-     * // based on JSON configuration
-     *
-     * public class Map extends ex.Scene {
-     *
-     *   private _mapDefinition: IMapDefinition;
-     *   private _tileMap: ex.TileMap;
-     *
-     *   constructor(mapDef: IMapDefinition) {
-     *
-     *     // store reference to definition
-     *     this._mapDefinition = mapDef;
-     *
-     *     // create a tile map
-     *     this._tileMap = new ex.TileMap(0, 0, mapDef.tileWidth, mapDef.tileHeight,
-     *       mapDef.width / mapDef.tileWidth, mapDef.height / mapDef.tileHeight);
-     *   }
-     *
-     *   public onInitialize() {
-     *     // build our map based on JSON config
-     *
-     *     // build sprite sheets
-     *     this._mapDefinition.tileSheets.forEach(sheet => {
-     *
-     *       // register sprite sheet with the tile map
-     *       // normally, you will want to ensure you load the Texture before
-     *       // creating the SpriteSheet
-     *       // this can be done outside the Map class, in a Loader
-     *       this._tileMap.registerSpriteSheet(sheet.id.toString(),
-     *         new ex.SpriteSheet(new ex.Texture(sheet.path), sheet.columns, sheet.rows,
-     *           this._mapDefinition.tileWidth, this._mapDefinition.tileHeight));
-     *
-     *     });
-     *
-     *     // fill cells with sprites
-     *     this._mapDefinition.cells.forEach(cell => {
-     *
-     *       // create a TileSprite
-     *       // assume tileId is the index of the frame in the sprite sheet
-     *       var ts = new ex.TileSprite(cell.sheetId.toString(), cell.spriteId);
-     *
-     *       // add to cell
-     *       this._tileMap.getCell(cell.x, cell.y).pushSprite(ts);
-     *     }
-     *   }
-     * }
-     *
-     * // create a game
-     * var game = new ex.Engine();
-     *
-     * // add our level (JSON from external source)
-     * var map1 = new Map({ ... });
-     *
-     * game.add("map1", map1);
-     *
-     * game.start();
-     * ```
-     *
-     * In a real game, you will want to ensure all the textures for the sprite sheets
-     * have been loaded. You could do this in the [[Resource.processDownload]] function
-     * of the generic resource when loading your JSON, before creating your `Map` object.
-     *
-     * ## Off-screen culling
-     *
-     * The [[TileMap]] takes care of only drawing the portion of the map that is on-screen.
-     * This significantly improves performance and essentially means Excalibur can support
-     * huge maps. Since Actors off-screen are not drawn, this also means maps can support
-     * many actors.
-     *
-     * ## Collision checks
-     *
-     * You can use [[TileMap.collides]] to check if a given [[Actor]] is colliding with a
-     * solid [[Cell]]. This method returns an intersection [[Vector]] that represents
-     * the smallest overlap with colliding cells.
+     * [[include:TileMaps.md]]
      */
     var TileMap = (function () {
         /**
@@ -4956,46 +4544,7 @@ var ex;
      * to move around your game and set focus. They are used to determine
      * what is "off screen" and can be used to scale the game.
      *
-     * Excalibur comes with a [[LockedCamera]] and a [[SideCamera]], depending on
-     * your game needs.
-     *
-     * Cameras are attached to [[Scene|Scenes]] and can be changed by
-     * setting [[Scene.camera]]. By default, a [[Scene]] is initialized with a
-     * [[BaseCamera]] that doesn't move and is centered on the screen.
-     *
-     * ## Focus
-     *
-     * Cameras have a position ([[x]], [[y]]) which means they center around a specific
-     * [[Vector|point]]. This can also be an [[Actor]] ([[BaseCamera.setActorToFollow]]) which
-     * the camera will follow as the actor moves, which can be useful for cutscene scenarios (using
-     * invisible actors).
-     *
-     * If a camera is following an [[Actor]], it will ensure the [[Actor]] is always at the
-     * center of the screen. You can use [[x]] and [[y]] instead if you wish to
-     * offset the focal point.
-     *
-     * ## Camera Shake
-     *
-     * To add some fun effects to your game, the [[shake]] method
-     * will do a random shake. This is great for explosions, damage, and other
-     * in-game effects.
-     *
-     * ## Camera Lerp
-     *
-     * "Lerp" is short for [Linear Interpolation](http://en.wikipedia.org/wiki/Linear_interpolation)
-     * and it enables the camera focus to move smoothly between two points using timing functions.
-     * Use [[move]] to ease to a specific point using a provided [[EasingFunction]].
-     *
-     * ## Camera Zooming
-     *
-     * To adjust the zoom for your game, use [[zoom]] which will scale the
-     * game accordingly. You can pass a duration to transition between zoom levels.
-     *
-     * ## Known Issues
-     *
-     * **Actors following a path will wobble when camera is moving**
-     * [Issue #276](https://github.com/excaliburjs/Excalibur/issues/276)
-     *
+     * [[include:Cameras.md]]
      */
     var BaseCamera = (function () {
         function BaseCamera() {
@@ -6177,113 +5726,12 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Action API
-     *
      * The fluent Action API allows you to perform "actions" on
      * [[Actor|Actors]] such as following, moving, rotating, and
      * more. You can implement your own actions by implementing
      * the [[IAction]] interface.
      *
-     * Actions can be chained together and can be set to repeat,
-     * or can be interrupted to change.
-     *
-     * Actor actions are available off of [[Actor.actions]].
-     *
-     * ## Chaining Actions
-     *
-     * You can chain actions to create a script because the action
-     * methods return the context, allowing you to build a queue of
-     * actions that get executed as part of an [[ActionQueue]].
-     *
-     * ```ts
-     * class Enemy extends ex.Actor {
-     *
-     *   public patrol() {
-     *
-     *      // clear existing queue
-     *      this.actions.clearActions();
-     *
-     *      // guard a choke point
-     *      // move to 100, 100 and take 1.2s
-     *      // wait for 3s
-     *      // move back to 0, 100 and take 1.2s
-     *      // wait for 3s
-     *      // repeat
-     *      this.actions.moveTo(100, 100, 1200)
-     *        .delay(3000)
-     *        .moveTo(0, 100, 1200)
-     *        .delay(3000)
-     *        .repeatForever();
-     *   }
-     * }
-     * ```
-     *
-     * ## Example: Follow a Path
-     *
-     * You can use [[Actor.actions.moveTo]] to move to a specific point,
-     * allowing you to chain together actions to form a path.
-     *
-     * This example has a `Ship` follow a path that it guards by
-     * spawning at the start point, moving to the end, then reversing
-     * itself and repeating that forever.
-     *
-     * ```ts
-     * public Ship extends ex.Actor {
-     *
-     *   public onInitialize() {
-     *     var path = [
-     *       new ex.Point(20, 20),
-     *       new ex.Point(50, 40),
-     *       new ex.Point(25, 30),
-     *       new ex.Point(75, 80)
-     *     ];
-     *
-     *     // spawn at start point
-     *     this.x = path[0].x;
-     *     this.y = path[0].y;
-     *
-     *     // create action queue
-     *
-     *     // forward path (skip first spawn point)
-     *     for (var i = 1; i < path.length; i++) {
-     *       this.actions.moveTo(path[i].x, path[i].y, 300);
-     *     }
-     *
-     *     // reverse path (skip last point)
-     *     for (var j = path.length - 2; j >= 0; j--) {
-     *       this.actions.moveTo(path[j].x, path[j].y, 300);
-     *     }
-     *
-     *     // repeat
-     *     this.actions.repeatForever();
-     *   }
-     * }
-     * ```
-     *
-     * While this is a trivial example, the Action API allows complex
-     * routines to be programmed for Actors. For example, using the
-     * [Tiled Map Editor](http://mapeditor.org) you can create a map that
-     * uses polylines to create paths, load in the JSON using a
-     * [[Resource|Generic Resource]], create a [[TileMap]],
-     * and spawn ships programmatically  while utilizing the polylines
-     * to automatically generate the actions needed to do pathing.
-     *
-     * ## Custom Actions
-     *
-     * The API does allow you to implement new actions by implementing the [[IAction]]
-     * interface, but this will be improved in future versions as right now it
-     * is meant for the Excalibur team and can be advanced to implement.
-     *
-     * You can manually manipulate an Actor's [[ActionQueue]] using
-     * [[Actor.actionQueue]]. For example, using [[ActionQueue.add]] for
-     * custom actions.
-     *
-     * ## Future Plans
-     *
-     * The Excalibur team is working on extending and rebuilding the Action API
-     * in future versions to support multiple timelines/scripts, better eventing,
-     * and a more robust API to allow for complex and customized actions.
-     *
+     * [[include:Actions.md]]
      */
     var ActionContext = (function () {
         function ActionContext() {
@@ -6586,31 +6034,10 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Grouping
-     *
      * Groups are used for logically grouping Actors so they can be acted upon
      * in bulk.
      *
-     * ## Using Groups
-     *
-     * Groups can be used to detect collisions across a large number of actors. For example
-     * perhaps a large group of "enemy" actors.
-     *
-     * ```typescript
-     * var enemyShips = engine.currentScene.createGroup("enemy");
-     * var enemies = [...]; // Large array of enemies;
-     * enemyShips.add(enemies);
-     *
-     * var player = new Actor();
-     * engine.currentScene.add(player);
-     *
-     * enemyShips.on('collision', function(ev: CollisionEvent){
-     *   if (e.other === player) {
-     *       //console.log("collision with player!");
-     *   }
-     * });
-     *
-     * ```
+     * [[include:Groups.md]]
      */
     var Group = (function (_super) {
         __extends(Group, _super);
@@ -6973,122 +6400,13 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Scenes
-     *
      * [[Actor|Actors]] are composed together into groupings called Scenes in
      * Excalibur. The metaphor models the same idea behind real world
      * actors in a scene. Only actors in scenes will be updated and drawn.
      *
      * Typical usages of a scene include: levels, menus, loading screens, etc.
      *
-     * ## Adding actors to the scene
-     *
-     * For an [[Actor]] to be drawn and updated, it needs to be part of the "scene graph".
-     * The [[Engine]] provides several easy ways to quickly add/remove actors from the
-     * current scene.
-     *
-     * ```js
-     * var game   = new ex.Engine(...);
-     *
-     * var player = new ex.Actor();
-     * var enemy  = new ex.Actor();
-     *
-     * // add them to the "root" scene
-     *
-     * game.add(player);
-     * game.add(enemy);
-     *
-     * // start game
-     * game.start();
-     * ```
-     *
-     * You can also add actors to a [[Scene]] instance specifically.
-     *
-     * ```js
-     * var game   = new ex.Engine();
-     * var level1 = new ex.Scene();
-     *
-     * var player = new ex.Actor();
-     * var enemy  = new ex.Actor();
-     *
-     * // add actors to level1
-     * level1.add(player);
-     * level1.add(enemy);
-     *
-     * // add level1 to the game
-     * game.add("level1", level1);
-     *
-     * // start the game
-     * game.start();
-     *
-     * // after player clicks start game, for example
-     * game.goToScene("level1");
-     *
-     * ```
-     *
-     * ## Scene Lifecycle
-     *
-     * A [[Scene|scene]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
-     * the [[Engine|engine]] it will follow this lifecycle.
-     *
-     * ![Scene Lifecycle](/assets/images/docs/SceneLifecycle.png)
-     *
-     * ## Extending scenes
-     *
-     * For more complex games, you might want more control over a scene in which
-     * case you can extend [[Scene]]. This is useful for menus, custom loaders,
-     * and levels.
-     *
-     * Just use [[Engine.add]] to add a new scene to the game. You can then use
-     * [[Engine.goToScene]] to switch scenes which calls [[Scene.onActivate]] for the
-     * new scene and [[Scene.onDeactivate]] for the old scene. Use [[Scene.onInitialize]]
-     * to perform any start-up logic, which is called once.
-     *
-     * **TypeScript**
-     *
-     * ```ts
-     * class MainMenu extends ex.Scene {
-     *
-     *   // start-up logic, called once
-     *   public onInitialize(engine: ex.Engine) { }
-     *
-     *   // each time the scene is entered (Engine.goToScene)
-     *   public onActivate() { }
-     *
-     *   // each time the scene is exited (Engine.goToScene)
-     *   public onDeactivate() { }
-     * }
-     *
-     * // add to game and activate it
-     * game.add("mainmenu", new MainMenu());
-     * game.goToScene("mainmenu");
-     * ```
-     *
-     * **Javascript**
-     *
-     * ```js
-     * var MainMenu = ex.Scene.extend({
-     *   // start-up logic, called once
-     *   onInitialize: function (engine) { },
-     *
-     *   // each time the scene is activated by Engine.goToScene
-     *   onActivate: function () { },
-     *
-     *   // each time the scene is deactivated by Engine.goToScene
-     *   onDeactivate: function () { }
-     * });
-     *
-     * game.add("mainmenu", new MainMenu());
-     * game.goToScene("mainmenu");
-     * ```
-     *
-     * ## Scene camera
-     *
-     * By default, a [[Scene]] is initialized with a [[BaseCamera]] which
-     * does not move and centers the game world.
-     *
-     * Learn more about [[BaseCamera|Cameras]] and how to modify them to suit
-     * your game.
+     * [[include:Scenes.md]]
      */
     var Scene = (function (_super) {
         __extends(Scene, _super);
@@ -7571,267 +6889,12 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Actors
-     *
      * The most important primitive in Excalibur is an `Actor`. Anything that
      * can move on the screen, collide with another `Actor`, respond to events,
      * or interact with the current scene, must be an actor. An `Actor` **must**
      * be part of a [[Scene]] for it to be drawn to the screen.
      *
-     * ## Basic actors
-     *
-     * For quick and dirty games, you can just create an instance of an `Actor`
-     * and manipulate it directly.
-     *
-     * Actors (and other entities) must be added to a [[Scene]] to be drawn
-     * and updated on-screen.
-     *
-     * ```ts
-     * var player = new ex.Actor();
-     *
-     * // move the player
-     * player.dx = 5;
-     *
-     * // add player to the current scene
-     * game.add(player);
-     *
-     * ```
-     * `game.add` is a convenience method for adding an `Actor` to the current scene. The equivalent verbose call is `game.currentScene.add`.
-     *
-     * ## Actor Lifecycle
-     *
-     * An [[Actor|actor]] has a basic lifecycle that dictates how it is initialized, updated, and drawn. Once an actor is part of a
-     * [[Scene|scene]], it will follow this lifecycle.
-     *
-     * ![Actor Lifecycle](/assets/images/docs/ActorLifecycle.png)
-     *
-     * ## Extending actors
-     *
-     * For "real-world" games, you'll want to `extend` the `Actor` class.
-     * This gives you much greater control and encapsulates logic for that
-     * actor.
-     *
-     * You can override the [[onInitialize]] method to perform any startup logic
-     * for an actor (such as configuring state). [[onInitialize]] gets called
-     * **once** before the first frame an actor is drawn/updated. It is passed
-     * an instance of [[Engine]] to access global state or perform coordinate math.
-     *
-     * **TypeScript**
-     *
-     * ```ts
-     * class Player extends ex.Actor {
-     *
-     *   public level = 1;
-     *   public endurance = 0;
-     *   public fortitude = 0;
-     *
-     *   constructor() {
-     *     super();
-     *   }
-     *
-     *   public onInitialize(engine: ex.Engine) {
-     *     this.endurance = 20;
-     *     this.fortitude = 16;
-     *   }
-     *
-     *   public getMaxHealth() {
-     *     return (0.4 * this.endurance) + (0.9 * this.fortitude) + (this.level * 1.2);
-     *   }
-     * }
-     * ```
-     *
-     * **Javascript**
-     *
-     * In Javascript you can use the [[extend]] method to override or add
-     * methods to an `Actor`.
-     *
-     * ```js
-     * var Player = ex.Actor.extend({
-     *
-     *   level: 1,
-     *   endurance: 0,
-     *   fortitude: 0,
-     *
-     *   onInitialize: function (engine) {
-     *     this.endurance = 20;
-     *     this.fortitude = 16;
-     *   },
-     *
-     *   getMaxHealth: function () {
-     *     return (0.4 * this.endurance) + (0.9 * this.fortitude) + (this.level * 1.2);
-     *   }
-     * });
-     * ```
-     *
-     * ## Updating actors
-     *
-     * Override the [[update]] method to update the state of your actor each frame.
-     * Typically things that need to be updated include state, drawing, or position.
-     *
-     * Remember to call `super.update` to ensure the base update logic is performed.
-     * You can then write your own logic for what happens after that.
-     *
-     * The [[update]] method is passed an instance of the Excalibur engine, which
-     * can be used to perform coordinate math or access global state. It is also
-     * passed `delta` which is the time in milliseconds since the last frame, which can be used
-     * to perform time-based movement or time-based math (such as a timer).
-     *
-     * **TypeScript**
-     *
-     * ```ts
-     * class Player extends Actor {
-     *   public update(engine: ex.Engine, delta: number) {
-     *     super.update(engine, delta); // call base update logic
-     *
-     *     // check if player died
-     *     if (this.health <= 0) {
-     *       this.emit("death");
-     *       this.onDeath();
-     *       return;
-     *     }
-     *   }
-     * }
-     * ```
-     *
-     * **Javascript**
-     *
-     * ```js
-     * var Player = ex.Actor.extend({
-     *   update: function (engine, delta) {
-     *     ex.Actor.prototype.update.call(this, engine, delta); // call base update logic
-     *
-     *     // check if player died
-     *     if (this.health <= 0) {
-     *       this.emit("death");
-     *       this.onDeath();
-     *       return;
-     *     }
-     *   }
-     * });
-     * ```
-     *
-     * ## Drawing actors
-     *
-     * Override the [[draw]] method to perform any custom drawing. For simple games,
-     * you don't need to override `draw`, instead you can use [[addDrawing]] and [[setDrawing]]
-     * to manipulate the [[Sprite|sprites]]/[[Animation|animations]] that the actor is using.
-     *
-     * ### Working with Textures & Sprites
-     *
-     * Think of a [[Texture|texture]] as the raw image file that will be loaded into Excalibur. In order for it to be drawn
-     * it must be converted to a [[Sprite.sprite]].
-     *
-     * A common usage is to load a [[Texture]] and convert it to a [[Sprite]] for an actor. If you are using the [[Loader]] to
-     * pre-load assets, you can simply assign an actor a [[Sprite]] to draw. You can also create a
-     * [[Texture.asSprite|sprite from a Texture]] to quickly create a [[Sprite]] instance.
-     *
-     * ```ts
-     * // assume Resources.TxPlayer is a 80x80 png image
-     *
-     * public onInitialize(engine: ex.Engine) {
-     *
-     *   // set as the "default" drawing
-     *   this.addDrawing(Resources.TxPlayer);
-     *
-     *   // you can also set a Sprite instance to draw
-     *   this.addDrawing(Resources.TxPlayer.asSprite());
-     * }
-     * ```
-     *
-     * ### Working with Animations
-     *
-     * A [[SpriteSheet]] holds a collection of sprites from a single [[Texture]].
-     * Use [[SpriteSheet.getAnimationForAll]] to easily generate an [[Animation]].
-     *
-     * ```ts
-     * // assume Resources.TxPlayerIdle is a texture containing several frames of an animation
-     *
-     * public onInitialize(engine: ex.Engine) {
-     *
-     *   // create a SpriteSheet for the animation
-     *   var playerIdleSheet = new ex.SpriteSheet(Resources.TxPlayerIdle, 5, 1, 80, 80);
-     *
-     *   // create an animation
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(engine, 120);
-     *
-     *   // the first drawing is always the current
-     *   this.addDrawing("idle", playerIdleAnimation);
-     * }
-     * ```
-     *
-     * ### Custom drawing
-     *
-     * You can always override the default drawing logic for an actor in the [[draw]] method,
-     * for example, to draw complex shapes or to use the raw
-     * [[https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D|Canvas API]].
-     *
-     * Usually you should call `super.draw` to perform the base drawing logic, but other times
-     * you may want to take over the drawing completely.
-     *
-     * ```ts
-     * public draw(ctx: Canvas2DRenderingContext, delta: number) {
-     *
-     *   super.draw(ctx, delta); // perform base drawing logic
-     *
-     *   // custom drawing
-     *   ctx.lineTo(...);
-     * }
-     * ```
-     *
-     * ## Actions
-     *
-     * You can use the [[ActionContext|Action API]] to create chains of
-     * actions and script actors into doing your bidding for your game.
-     *
-     * Actions can be simple or can be chained together to create complex
-     * AI routines. In the future, it will be easier to create timelines or
-     * scripts to run depending on the state of your actor, such as an
-     * enemy ship that is Guarding a path and then is Alerted when a Player
-     * draws near.
-     *
-     * Learn more about the [[ActionContext|Action API]].
-     *
-     * ## Collision Detection
-     *
-     * By default Actors do not participate in collisions. If you wish to make
-     * an actor participate, you need to switch from the default [[CollisionType.PreventCollision|prevent collision]]
-     * to [[CollisionType.Active|active]], [[CollisionType.Fixed|fixed]], or [[CollisionType.Passive|passive]] collision type.
-     *
-     * ```ts
-     * public Player extends ex.Actor {
-     *   constructor() {
-     *     super();
-     *     // set preferred CollisionType
-     *     this.collisionType = ex.CollisionType.Active;
-     *   }
-     * }
-     *
-     * // or set the collisionType
-     *
-     * var actor = new ex.Actor();
-     * actor.collisionType = ex.CollisionType.Active;
-     *
-     * ```
-     * ### Collision Groups
-     * TODO, needs more information.
-     *
-     * ## Traits
-     *
-     * Traits describe actor behavior that occurs every update. If you wish to build a generic behavior
-     * without needing to extend every actor you can do it with a trait, a good example of this may be
-     * plugging in an external collision detection library like [[https://github.com/kripken/box2d.js/|Box2D]] or
-     * [[http://wellcaffeinated.net/PhysicsJS/|PhysicsJS]] by wrapping it in a trait. Removing traits can also make your
-     * actors more efficient.
-     *
-     * Default traits provided by Excalibur are [[Traits.CapturePointer|pointer capture]],
-     * [[Traits.CollisionDetection|tile map collision]], [[Traits.Movement|Euler style movement]],
-     * and [[Traits.OffscreenCulling|offscreen culling]].
-     *
-     *
-     * ## Known Issues
-     *
-     * **Actor bounding boxes do not rotate**
-     * [Issue #68](https://github.com/excaliburjs/Excalibur/issues/68)
+     * [[include:Actors.md]]
      *
      */
     var Actor = (function (_super) {
@@ -8844,21 +7907,7 @@ var ex;
      * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
      * Derive from [[IAppender]] to create your own logging appenders.
      *
-     * ## Example: Logging
-     *
-     * ```js
-     * // set default log level (default: Info)
-     * ex.Logger.getInstance().defaultLevel = ex.LogLevel.Warn;
-     *
-     * // this will not be shown because it is below Warn
-     * ex.Logger.getInstance().info("This will be logged as Info");
-     * // this will show because it is Warn
-     * ex.Logger.getInstance().warn("This will be logged as Warn");
-     * // this will show because it is above Warn
-     * ex.Logger.getInstance().error("This will be logged as Error");
-     * // this will show because it is above Warn
-     * ex.Logger.getInstance().fatal("This will be logged as Fatal");
-     * ```
+     * [[include:Logger.md]]
      */
     var Logger = (function () {
         function Logger() {
@@ -9073,20 +8122,6 @@ var ex;
     /**
      * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
      * some events are unique to a type, others are not.
-     *
-     * Excalibur events follow the convention that the name of the thrown event for listening will be the same as the Event object in all
-     * lower case with the 'Event' suffix removed.
-     *
-     * For example:
-     * - PreDrawEvent event object and "predraw" as the event name
-     *
-     * ```typescript
-     *
-     * actor.on('predraw', (evtObj: PreDrawEvent) => {
-     *    // do some pre drawing
-     * })
-     *
-     * ```
      *
      */
     var GameEvent = (function () {
@@ -9455,68 +8490,7 @@ var ex;
      * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
      * yourself.
      *
-     * When working with events, be sure to keep in mind the order of subscriptions
-     * and try not to create a situation that requires specific things to happen in
-     * order. Events are best used for input events, tying together disparate objects,
-     * or for UI updates.
-     *
-     * ## Example: Actor events
-     *
-     * Actors implement an EventDispatcher ([[Actor.eventDispatcher]]) so they can
-     * send and receive events. For example, they can enable Pointer events (mouse/touch)
-     * and you can respond to them by subscribing to the event names.
-     *
-     * You can also emit any other kind of event for your game just by using a custom
-     * `string` value and implementing a class that inherits from [[GameEvent]].
-     *
-     * ```js
-     * var player = new ex.Actor(...);
-     *
-     * // Enable pointer events for this actor
-     * player.enableCapturePointer = true;
-     *
-     * // subscribe to pointerdown event
-     * player.on("pointerdown", function (evt: ex.Input.PointerEvent) {
-     *   console.log("Player was clicked!");
-     * });
-     *
-     * // turn off subscription
-     * player.off("pointerdown");
-     *
-     * // subscribe to custom event
-     * player.on("death", function (evt) {
-     *   console.log("Player died:", evt);
-     * });
-     *
-     * // trigger custom event
-     * player.emit("death", new DeathEvent());
-     *
-     * ```
-     *
-     * ## Example: Pub/Sub with Excalibur
-     *
-     * You can also create an EventDispatcher for any arbitrary object, for example
-     * a global game event aggregator (shown below as `vent`). Anything in your game can subscribe to
-     * it, if the event aggregator is in the global scope.
-     *
-     * *Warning:* This can easily get out of hand. Avoid this usage, it just serves as
-     * an example.
-     *
-     * ```js
-     * // create a publisher on an empty object
-     * var vent = new ex.EventDispatcher({});
-     *
-     * // handler for an event
-     * var subscription = function (event) {
-     *   console.log(event);
-     * }
-     *
-     * // add a subscription
-     * vent.on("someevent", subscription);
-     *
-     * // publish an event somewhere in the game
-     * vent.emit("someevent", new ex.GameEvent());
-     * ```
+     * [[include:Events.md]]
      */
     var EventDispatcher = (function () {
         /**
@@ -9627,30 +8601,7 @@ var ex;
      * but you can also create custom colors using RGB, HSL, or Hex. Also provides
      * useful color operations like [[Color.lighten]], [[Color.darken]], and more.
      *
-     * ## Creating colors
-     *
-     * ```js
-     * // RGBA
-     * new ex.Color(r, g, b, a);
-     * ex.Color.fromRGB(r, g, b, a);
-     *
-     * // HSLA
-     * ex.Color.fromHSL(h, s, l, a);
-     *
-     * // Hex, alpha optional
-     * ex.Color.fromHex("#000000");
-     * ex.Color.fromHex("#000000FF");
-     * ```
-     *
-     * ## Working with colors
-     *
-     * Since Javascript does not support structs, if you change a color "constant" like [[Color.Black]]
-     * it will change it across the entire game. You can safely use the color operations
-     * like [[Color.lighten]] and [[Color.darken]] because they `clone` the color to
-     * return a new color. However, be aware that this can use up memory if used excessively.
-     *
-     * Just be aware that if you directly alter properties (i.e. [[Color.r]], etc.) , this will change it
-     * for all the code that uses that instance of Color.
+     * [[include:Colors.md]]
      */
     var Color = (function () {
         /**
@@ -10079,37 +9030,10 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Generic Resources
-     *
      * The [[Resource]] type allows games built in Excalibur to load generic resources.
      * For any type of remote resource it is recommended to use [[Resource]] for preloading.
      *
-     * [[Resource]] is an [[ILoadable]] so it can be passed to a [[Loader]] to pre-load before
-     * a level or game.
-     *
-     * Example usages: JSON, compressed files, blobs.
-     *
-     * ## Pre-loading generic resources
-     *
-     * ```js
-     * var resLevel1 = new ex.Resource("/assets/levels/1.json", "application/json");
-     * var loader = new ex.Loader(resLevel1);
-     *
-     * // attach a handler to process once loaded
-     * resLevel1.processData = function (data) {
-     *
-     *   // process JSON
-     *   var json = JSON.parse(data);
-     *
-     *   // create a new level (inherits Scene) with the JSON configuration
-     *   var level = new Level(json);
-     *
-     *   // add a new scene
-     *   game.add(level.name, level);
-     * }
-     *
-     * game.start(loader);
-     * ```
+     * [[include:Resources.md]]
      */
     var Resource = (function (_super) {
         __extends(Resource, _super);
@@ -10225,51 +9149,11 @@ var ex;
     })(ex.PromiseState || (ex.PromiseState = {}));
     var PromiseState = ex.PromiseState;
     /**
-     * Promises/A+ spec implementation of promises
-     *
      * Promises are used to do asynchronous work and they are useful for
      * creating a chain of actions. In Excalibur they are used for loading,
      * sounds, animation, actions, and more.
      *
-     * ## A Promise Chain
-     *
-     * Promises can be chained together and can be useful for creating a queue
-     * of functions to be called when something is done.
-     *
-     * The first [[Promise]] you will encounter is probably [[Engine.start]]
-     * which resolves when the game has finished loading.
-     *
-     * ```js
-     * var game = new ex.Engine();
-     *
-     * // perform start-up logic once game is ready
-     * game.start().then(function () {
-     *
-     *   // start-up & initialization logic
-     *
-     * });
-     * ```
-     *
-     * ## Handling errors
-     *
-     * You can optionally pass an error handler to [[Promise.then]] which will handle
-     * any errors that occur during Promise execution.
-     *
-     * ```js
-     * var game = new ex.Engine();
-     *
-     * game.start().then(
-     *   // success handler
-     *   function () {
-     *   },
-     *
-     *   // error handler
-     *   function (err) {
-     *   }
-     * );
-     * ```
-     *
-     * Any errors that go unhandled will be bubbled up to the browser.
+     * [[include:Promises.md]]
      */
     var Promise = (function () {
         function Promise() {
@@ -10455,35 +9339,11 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Textures
-     *
      * The [[Texture]] object allows games built in Excalibur to load image resources.
      * [[Texture]] is an [[ILoadable]] which means it can be passed to a [[Loader]]
      * to pre-load before starting a level or game.
      *
-     * Textures are the raw image so to add a drawing to a game, you must create
-     * a [[Sprite]]. You can use [[Texture.asSprite]] to quickly generate a Sprite
-     * instance.
-     *
-     * ## Pre-loading textures
-     *
-     * Pass the [[Texture]] to a [[Loader]] to pre-load the asset. Once a [[Texture]]
-     * is loaded, you can generate a [[Sprite]] with it.
-     *
-     * ```js
-     * var txPlayer = new ex.Texture("/assets/tx/player.png");
-     *
-     * var loader = new ex.Loader(txPlayer);
-     *
-     * game.start(loader).then(function () {
-     *
-     *   var player = new ex.Actor();
-     *
-     *   player.addDrawing(txPlayer);
-     *
-     *   game.add(player);
-     * });
-     * ```
+     * [[include:Textures.md]]
      */
     var Texture = (function (_super) {
         __extends(Texture, _super);
@@ -10667,28 +9527,11 @@ var ex;
     ex.getAudioImplementation = getAudioImplementation;
     ;
     /**
-     * Sounds
-     *
      * The [[Sound]] object allows games built in Excalibur to load audio
      * components, from soundtracks to sound effects. [[Sound]] is an [[ILoadable]]
      * which means it can be passed to a [[Loader]] to pre-load before a game or level.
      *
-     * ## Pre-loading sounds
-     *
-     * Pass the [[Sound]] to a [[Loader]] to pre-load the asset. Once a [[Sound]]
-     * is loaded, you can [[Sound.play|play]] it.
-     *
-     * ```js
-     * // define multiple sources (such as mp3/wav/ogg) as a browser fallback
-     * var sndPlayerDeath = new ex.Sound("/assets/snd/player-death.mp3", "/assets/snd/player-death.wav");
-     *
-     * var loader = new ex.Loader(sndPlayerDeath);
-     *
-     * game.start(loader).then(function () {
-     *
-     *   sndPlayerDeath.play();
-     * });
-     * ```
+     * [[include:Sounds.md]]
      */
     var Sound = (function () {
         /**
@@ -11192,38 +10035,11 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Triggers
-     *
      * Triggers are a method of firing arbitrary code on collision. These are useful
      * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
      * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
      *
-     * ## Creating a trigger
-     *
-     * ```js
-     * var game = new ex.Game();
-     *
-     * // create a handler
-     * function onTrigger() {
-     *
-     *   // `this` will be the Trigger instance
-     *   ex.Logger.getInstance().info("Trigger was triggered!", this);
-     * }
-     *
-     * // set a trigger at (100, 100) that is 40x40px
-     * var trigger = new ex.Trigger(100, 100, 40, 40, onTrigger, 1);
-     *
-     * // create an actor across from the trigger
-     * var actor = new ex.Actor(100, 0, 40, 40, ex.Color.Red);
-     *
-     * // tell the actor to move towards the trigger over 3 seconds
-     * actor.moveTo(100, 200, 3000);
-     *
-     * game.add(trigger);
-     * game.add(actor);
-     *
-     * game.start();
-     * ```
+     * [[include:Triggers.md]]
      */
     var Trigger = (function (_super) {
         __extends(Trigger, _super);
@@ -11425,45 +10241,11 @@ var ex;
     }());
     ex.Particle = Particle;
     /**
-     * Particle Emitters
-     *
      * Using a particle emitter is a great way to create interesting effects
      * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
      * extend [[Actor]] allowing you to use all of the features that come with.
      *
-     * The easiest way to create a `ParticleEmitter` is to use the
-     * [Particle Tester](http://excaliburjs.com/particle-tester/) to generate code for emitters.
-     *
-     * ## Example: Adding an emitter
-     *
-     * ```js
-     * var actor = new ex.Actor(...);
-     * var emitter = new ex.ParticleEmitter(...);
-     *
-     * emitter.emitterType = ex.EmitterType.Circle; // Shape of emitter nozzle
-     * emitter.radius = 5;
-     * emitter.minVel = 100;
-     * emitter.maxVel = 200;
-     * emitter.minAngle = 0;
-     * emitter.maxAngle = Math.PI * 2;
-     * emitter.emitRate = 300; // 300 particles/second
-     * emitter.opacity = 0.5;
-     * emitter.fadeFlag = true; // fade particles overtime
-     * emitter.particleLife = 1000; // in milliseconds = 1 sec
-     * emitter.maxSize = 10; // in pixels
-     * emitter.minSize = 1;
-     * emitter.particleColor = ex.Color.Rose;
-     *
-     * // set emitter settings
-     * emitter.isEmitting = true;  // should the emitter be emitting
-     *
-     * // add the emitter as a child actor, it will draw on top of the parent actor
-     * // and move with the parent
-     * actor.add(emitter);
-     *
-     * // or, alternatively, add it to the current scene
-     * engine.add(emitter);
-     * ```
+     * [[include:Particles.md]]
      */
     var ParticleEmitter = (function (_super) {
         __extends(ParticleEmitter, _super);
@@ -11675,47 +10457,10 @@ var ex;
 var ex;
 (function (ex) {
     /**
-     * Animations
-     *
      * Animations allow you to display a series of images one after another,
      * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
      *
-     * ## Creating an animation
-     *
-     * Create a [[Texture]] that contains the frames of your animation. Once the texture
-     * is [[Loader|loaded]], you can then generate an [[Animation]] by creating a [[SpriteSheet]]
-     * and using [[SpriteSheet.getAnimationForAll]].
-     *
-     * ```js
-     * var game = new ex.Engine();
-     * var txAnimPlayerIdle = new ex.Texture("/assets/tx/anim-player-idle.png");
-     *
-     * // load assets
-     * var loader = new ex.Loader(txAnimPlayerIdle);
-     *
-     * // start game
-     * game.start(loader).then(function () {
-     *   var player = new ex.Actor();
-     *
-     *   // create sprite sheet with 5 columns, 1 row, 80x80 frames
-     *   var playerIdleSheet = new ex.SpriteSheet(txAnimPlayerIdle, 5, 1, 80, 80);
-     *
-     *   // create animation (125ms frame speed)
-     *   var playerIdleAnimation = playerIdleSheet.getAnimationForAll(game, 125);
-     *
-     *   // add drawing to player as "idle"
-     *   player.addDrawing("idle", playerIdleAnimation);
-     *
-     *   // add player to game
-     *   game.add(player);
-     * });
-     * ```
-     *
-     * ## Sprite effects
-     *
-     * You can add [[SpriteEffect|sprite effects]] to an animation through methods
-     * like [[Animation.invert]] or [[Animation.lighten]]. Keep in mind, since this
-     * manipulates the raw pixel values of a [[Sprite]], it can have a performance impact.
+     * [[include:Animations.md]]
      */
     var Animation = (function () {
         /**
@@ -12559,99 +11304,10 @@ var ex;
     })(ex.BaseAlign || (ex.BaseAlign = {}));
     var BaseAlign = ex.BaseAlign;
     /**
-     * Labels
-     *
      * Labels are the way to draw small amounts of text to the screen. They are
      * actors and inherit all of the benefits and capabilities.
      *
-     * ## Creating a Label
-     *
-     * You can pass in arguments to the [[Label.constructor]] or simply set the
-     * properties you need after creating an instance of the [[Label]].
-     *
-     * Since labels are [[Actor|Actors]], they need to be added to a [[Scene]]
-     * to be drawn and updated on-screen.
-     *
-     * ```js
-     * var game = new ex.Engine();
-     *
-     * // constructor
-     * var label = new ex.Label("Hello World", 50, 50, "10px Arial");
-     *
-     * // properties
-     * var label = new ex.Label();
-     * label.x = 50;
-     * label.y = 50;
-     * label.fontFamily = "Arial";
-     * label.fontSize = 10;
-     * label.fontUnit = ex.FontUnit.Px // pixels are the default
-     * label.text = "Foo";
-     * label.color = ex.Color.White;
-     * label.textAlign = ex.TextAlign.Center;
-     *
-     * // add to current scene
-     * game.add(label);
-     *
-     * // start game
-     * game.start();
-     * ```
-     *
-     * ## Adjusting Fonts
-     *
-     * You can use the [[fontFamily]], [[fontSize]], [[fontUnit]], [[textAlign]], and [[baseAlign]]
-     * properties to customize how the label is drawn.
-     *
-     * You can also use [[getTextWidth]] to retrieve the measured width of the rendered text for
-     * helping in calculations.
-     *
-     * ## Web Fonts
-     *
-     * The HTML5 Canvas API draws text using CSS syntax. Because of this, web fonts
-     * are fully supported. To draw a web font, follow the same procedure you use
-     * for CSS. Then simply pass in the font string to the [[Label]] constructor
-     * or set [[Label.font]].
-     *
-     * **index.html**
-     *
-     * ```html
-     * <!doctype html>
-     * <html>
-     * <head>
-     *   <!-- Include the web font per usual -->
-     *   <script src="//google.com/fonts/foobar"></script>
-     * </head>
-     * <body>
-     *   <canvas id="game"></canvas>
-     *   <script src="game.js"></script>
-     * </body>
-     * </html>
-     * ```
-     *
-     * **game.js**
-     *
-     * ```js
-     * var game = new ex.Engine();
-     *
-     * var label = new ex.Label();
-     * label.fontFamily = "Foobar, Arial, Sans-Serif";
-     * label.fontSize = 10;
-     * label.fontUnit = ex.FontUnit.Em;
-     * label.text = "Hello World";
-     *
-     * game.add(label);
-     * game.start();
-     * ```
-     *
-     * ## Performance Implications
-     *
-     * It is recommended to use a [[SpriteFont]] for labels as the raw Canvas
-     * API for drawing text is slow (`fillText`). Too many labels that
-     * do not use sprite fonts will visibly affect the frame rate of your game.
-     *
-     * Alternatively, you can always use HTML and CSS to draw UI elements, but
-     * currently Excalibur does not provide a way to easily interact with the
-     * DOM. Still, this will not affect canvas performance and is a way to
-     * lighten your game, if needed.
+     * [[include:Labels.md]]
      */
     var Label = (function (_super) {
         __extends(Label, _super);
@@ -12945,134 +11601,10 @@ var ex;
         Input.PointerEvent = PointerEvent;
         ;
         /**
-         * Mouse and Touch (Pointers)
-         *
          * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
          * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
          *
-         * There is always at least one [[Pointer]] available ([[Pointers.primary]]) and
-         * you can request multiple pointers to support multi-touch scenarios.
-         *
-         * Since [[Pointers.primary]] normalizes both mouse and touch events, your game
-         * automatically supports touch for the primary pointer by default. When
-         * you handle the events, you can customize what your game does based on the type
-         * of pointer, if applicable.
-         *
-         * Excalibur handles mouse/touch events and normalizes them to a [[PointerEvent]]
-         * that your game can subscribe to and handle (`engine.input.pointers`).
-         *
-         * ## Events
-         *
-         * You can subscribe to pointer events through `engine.input.pointers.on`. A [[PointerEvent]] object is
-         * passed to your handler which offers information about the pointer input being received.
-         *
-         * - `down` - When a pointer is pressed down (any mouse button or finger press)
-         * - `up` - When a pointer is lifted
-         * - `move` - When a pointer moves (be wary of performance issues when subscribing to this)
-         * - `cancel` - When a pointer event is canceled for some reason
-         *
-         * ```js
-         * engine.input.pointers.primary.on("down", function (evt) { });
-         * engine.input.pointers.primary.on("up", function (evt) { });
-         * engine.input.pointers.primary.on("move", function (evt) { });
-         * engine.input.pointers.primary.on("cancel", function (evt) { });
-         * ```
-         *
-         * ## Pointer scope (window vs. canvas)
-         *
-         * You have the option to handle *all* pointer events in the browser by setting
-         * [[IEngineOptions.pointerScope]] to [[PointerScope.Document]]. If this is enabled,
-         * Excalibur will handle every pointer event in the browser. This is useful for handling
-         * complex input and having control over every interaction.
-         *
-         * You can also use [[PointerScope.Canvas]] to only scope event handling to the game
-         * canvas. This is useful if you don't care about events that occur outside the game.
-         *
-         * One real-world example is dragging and gestures. Sometimes a player will drag their
-         * finger outside your game and then into it, expecting it to work. If [[PointerScope]]
-         * is set to [[PointerScope.Canvas|Canvas]] this will not work. If it is set to
-         * [[PointerScope.Document|Document]], it will.
-         *
-         * ## Responding to input
-         *
-         * The primary pointer can be a mouse, stylus, or single finger touch event. You
-         * can inspect what type of pointer it is from the [[PointerEvent]] handled.
-         *
-         * ```js
-         * engine.input.pointers.primary.on("down", function (pe) {
-         *   if (pe.pointerType === ex.Input.PointerType.Mouse) {
-         *     ex.Logger.getInstance().info("Mouse event:", pe);
-         *   } else if (pe.pointerType === ex.Input.PointerType.Touch) {
-         *     ex.Logger.getInstance().info("Touch event:", pe);
-         *   }
-         * });
-         * ```
-         *
-         * ## Multiple Pointers (Multi-Touch)
-         *
-         * When there is more than one pointer detected on the screen,
-         * this is considered multi-touch. For example, pressing one finger,
-         * then another, will create two pointers. If you lift a finger,
-         * the first one remains and the second one disappears.
-         *
-         * You can handle multi-touch by subscribing to however many pointers
-         * you would like to support. If a pointer doesn't yet exist, it will
-         * be created. You do not need to check if a pointer exists. If it does
-         * exist, it will propogate events, otherwise it will remain idle.
-         *
-         * Excalibur does not impose a limit to the amount of pointers you can
-         * subscribe to, so by all means, support all 10 fingers.
-         *
-         * *Note:* There is no way to identify touches after they happen; you can only
-         * know that there are *n* touches on the screen at once.
-         *
-         * ```js
-         * function paint(color) {
-         *
-         *   // create a handler for the event
-         *   return function (pe) {
-         *     if (pe.pointerType === ex.Input.PointerType.Touch) {
-         *       engine.canvas.fillStyle = color;
-         *       engine.canvas.fillRect(pe.x, pe.y, 5, 5);
-         *     }
-         *   }
-         * }
-         *
-         * engine.input.pointers.at(0).on("move", paint("blue"));  // 1st finger
-         * engine.input.pointers.at(1).on("move", paint("red"));   // 2nd finger
-         * engine.input.pointers.at(2).on("move", paint("green")); // 3rd finger
-         * ```
-         *
-         * ## Actor pointer events
-         *
-         * By default, [[Actor|Actors]] do not participate in pointer events. In other
-         * words, when you "click" an Actor, it will not throw an event **for that Actor**,
-         * only a generic pointer event for the game. This is to keep performance
-         * high and allow actors to "opt-in" to handling pointer events. Actors will automatically
-         * opt-in if a pointer related event handler is set on them `actor.on("pointerdown", () => {})` for example.
-         *
-         * To opt-in manually, set [[Actor.enableCapturePointer]] to `true` and the [[Actor]] will
-         * start publishing `pointerup` and `pointerdown` events. `pointermove` events
-         * will not be published by default due to performance implications. If you want
-         * an actor to receive move events, set [[ICapturePointerConfig.captureMoveEvents]] to
-         * `true`.
-         *
-         * Actor pointer events will be prefixed with `pointer`.
-         *
-         * ```js
-         * var player = new ex.Actor();
-         *
-         * // enable propagating pointer events
-         * player.enableCapturePointer = true;
-         *
-         * // enable move events, warning: performance intensive!
-         * player.capturePointer.captureMoveEvents = true;
-         *
-         * // subscribe to input
-         * player.on("pointerup", function (ev) {
-         *   player.logger.info("Player selected!", ev);
-         * });
-         * ```
+         * [[include:Pointers.md]]
          */
         var Pointers = (function (_super) {
             __extends(Pointers, _super);
@@ -13382,53 +11914,9 @@ var ex;
         }(ex.GameEvent));
         Input.KeyEvent = KeyEvent;
         /**
-         * Keyboard input
+         * Provides keyboard support for Excalibur.
          *
-         * Working with the keyboard is easy in Excalibur. You can inspect
-         * whether a button was just [[Keyboard.wasPressed|pressed]] or [[Keyboard.wasReleased|released]] this frame, or
-         * if the key is currently being [[Keyboard.isHeld|held]] down. Common keys are held in the [[Input.Keys]]
-         * enumeration but you can pass any character code to the methods.
-         *
-         * Excalibur subscribes to the browser events and keeps track of
-         * what keys are currently held, released, or pressed. A key can be held
-         * for multiple frames, but a key cannot be pressed or released for more than one subsequent
-         * update frame.
-         *
-         * ## Inspecting the keyboard
-         *
-         * You can inspect [[Engine.input]] to see what the state of the keyboard
-         * is during an update.
-         *
-         * It is recommended that keyboard actions that directly effect actors be handled like so to improve code quality:
-         * ```ts
-         * class Player extends ex.Actor {
-         *   public update(engine, delta) {
-         *
-         *     if (engine.input.keyboard.isHeld(ex.Input.Keys.W) ||
-         *         engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
-         *
-         *       player._moveForward();
-         *     }
-         *
-         *     if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
-         *       player._fire();
-         *     }
-         *   }
-         * }
-         * ```
-         * ## Events
-         * You can subscribe to keyboard events through `engine.input.keyboard.on`. A [[KeyEvent]] object is
-         * passed to your handler which offers information about the key that was part of the event.
-         *
-         * - `press` - When a key was just pressed this frame
-         * - `release` - When a key was just released this frame
-         * - `hold` - Whenever a key is in the down position
-         *
-         * ```ts
-         * engine.input.keyboard.on("press", (evt: KeyEvent) => {...});
-         * engine.input.keyboard.on("release", (evt: KeyEvent) => {...});
-         * engine.input.keyboard.on("hold", (evt: KeyEvent) => {...});
-         * ```
+         * [[include:Keyboard.md]]
          */
         var Keyboard = (function (_super) {
             __extends(Keyboard, _super);
@@ -13518,134 +12006,10 @@ var ex;
     var Input;
     (function (Input) {
         /**
-         * Controller Support (Gamepads)
-         *
          * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
          * to provide controller support for your games.
          *
-         * You can query any [[Gamepad|Gamepads]] that are connected or listen to events ("button" and "axis").
-         *
-         * You must opt-in to controller support ([[Gamepads.enabled]]) because it is a polling-based
-         * API, so we have to check it each update frame. If an gamepad related event handler is set, you will
-         * automatically opt-in to controller polling.
-         *
-         * HTML5 Gamepad API only supports a maximum of 4 gamepads. You can access them using the [[Gamepads.at]] method. If a [[Gamepad]] is
-         * not connected, it will simply not throw events.
-         *
-         * ## Gamepad Filtering
-         *
-         * Different browsers/devices are sometimes loose about the devices they consider Gamepads, you can set minimum device requirements with
-         * `engine.input.gamepads.setMinimumGamepadConfiguration` so that undesired devices are not reported to you (Touchpads, Mice, Web
-         * Cameras, etc.).
-         *
-         * ```js
-         * // ensures that only gamepads with at least 4 axis and 8 buttons are reported for events
-         * engine.input.gamepads.setMinimumGamepadConfiguration({
-         *    axis: 4,
-         *    buttons: 8
-         * });
-         * ```
-         *
-         * ## Events
-         *
-         * You can subscribe to gamepad connect and disconnect events through `engine.input.gamepads.on`.
-         * A [[GamepadConnectEvent]] or [[GamepadDisconnectEvent]] will be passed to you.
-         *
-         * - `connect` - When a gamepad connects it will fire this event and pass a [[GamepadConnectEvent]] with a reference to the gamepad.
-         * - `disconnect` - When a gamepad disconnects it will fire this event and pass a [[GamepadDisconnectEvent]]
-         *
-         * Once you have a reference to a gamepad you may listen to changes on that gamepad with `.on`. A [[GamepadButtonEvent]] or
-         * [[GamepadAxisEvent]] will be passed to you.
-         * - `button` - Whenever a button is pressed on the game
-         * - `axis` - Whenever an axis
-         *
-         * ```ts
-         *
-         * engine.input.gamepads.on('connect', (ce: ex.Input.GamepadConnectEvent) => {
-         *    var newPlayer = CreateNewPlayer(); // pseudo-code for new player logic on gamepad connection
-         *    console.log("Gamepad connected", ce);
-         *    ce.gamepad.on('button', (be: ex.GamepadButtonEvent) => {
-         *       if(be.button === ex.Input.Buttons.Face1) {
-         *          newPlayer.jump();
-         *       }
-         *    });
-         *
-         *    ce.gamepad.on('axis', (ae: ex.GamepadAxisEvent) => {
-         *      if(ae.axis === ex.Input.Axis.LeftStickX && ae.value > .5){
-         *         newPlayer.moveRight();
-         *      }
-         *    })
-         *
-         *  });
-         *
-         *
-         * ```
-         *
-         * ## Responding to button input
-         *
-         * [[Buttons|Gamepad buttons]] typically have values between 0 and 1, however depending on
-         * the sensitivity of the controller, even if a button is idle it could have a
-         * very tiny value. For this reason, you can pass in a threshold to several
-         * methods to customize how sensitive you want to be in detecting button presses.
-         *
-         * You can inspect any connected [[Gamepad]] using [[Gamepad.isButtonPressed]], [[Gamepad.getButton]],
-         * or you can subscribe to the `button` event published on the [[Gamepad]] which passes
-         * a [[GamepadButtonEvent]] to your handler.
-         *
-         * ```js
-         * // enable gamepad support
-         * engine.input.gamepads.enabled = true;
-         *
-         * // query gamepad on update
-         * engine.on("update", function (ev) {
-         *
-         *   // access any gamepad by index
-         *   if (engine.input.gamepads.at(0).isButtonPressed(ex.Input.Buttons.Face1)) {
-         *     ex.Logger.getInstance().info("Controller A button pressed");
-         *   }
-         *
-         *   // query individual button
-         *   if (engine.input.gamepads.at(0).getButton(ex.Input.Buttons.DpadLeft) > 0.2) {
-         *     ex.Logger.getInstance().info("Controller D-pad left value is > 0.2")
-         *   }
-         * });
-         *
-         * // subscribe to button events
-         * engine.input.gamepads.at(0).on("button", function (ev) {
-         *   ex.Logger.getInstance().info(ev.button, ev.value);
-         * });
-         * ```
-         *
-         * ## Responding to axis input
-         *
-         * [[Axes|Gamepad axes]] typically have values between -1 and 1, but even idle
-         * sticks can still propogate very small values depending on the quality and age
-         * of a controller. For this reason, you can set [[Gamepads.MinAxisMoveThreshold]]
-         * to set the (absolute) threshold after which Excalibur will start publishing `axis` events.
-         * By default it is set to a value that normally will not throw events if a stick is idle.
-         *
-         * You can query axes via [[Gamepad.getAxes]] or by subscribing to the `axis` event on [[Gamepad]]
-         * which passes a [[GamepadAxisEvent]] to your handler.
-         *
-         * ```js
-         * // enable gamepad support
-         * engine.input.gamepads.enabled = true;
-         *
-         * // query gamepad on update
-         * engine.on("update", function (ev) {
-         *
-         *   // access any gamepad by index
-         *   var axisValue;
-         *   if ((axisValue = engine.input.gamepads.at(0).getAxes(ex.Input.Axes.LeftStickX)) > 0.5) {
-         *     ex.Logger.getInstance().info("Move right", axisValue);
-         *   }
-         * });
-         *
-         * // subscribe to axis events
-         * engine.input.gamepads.at(0).on("axis", function (ev) {
-         *   ex.Logger.getInstance().info(ev.axis, ev.value);
-         * });
-         * ```
+         * [[include:Gamepads.md]]
          */
         var Gamepads = (function (_super) {
             __extends(Gamepads, _super);
@@ -14045,87 +12409,9 @@ var ex;
 /// <reference path="Input/Keyboard.ts"/>
 /// <reference path="Input/Gamepad.ts"/>
 /**
- * # Welcome to the Excalibur API
+ * The Excalibur API
  *
- * This documentation is automatically generated from the Excalibur
- * source code on [GitHub](http://github.com/excaliburjs/Excalibur).
- *
- * If you're just starting out, we recommend reading the tutorials and guides
- * on [Excaliburjs.com](http://excaliburjs.com/docs). If you have questions,
- * feel free to get help on the [Excalibur.js mailing list](https://groups.google.com/forum/#!forum/excaliburjs).
- *
- * If you're looking for a specific method or property, you can search the documentation
- * using the search icon at the top or just start typing.
- *
- * ## Where to Start
- *
- * These are the core concepts of Excalibur that you should become
- * familiar with.
- *
- * - [[Engine|Intro to the Engine]]
- *   - [[EventDispatcher|Eventing]]
- * - [[Scene|Working with Scenes]]
- *   - [[BaseCamera|Working with Cameras]]
- * - [[Actor|Working with Actors]]
- *   - [[Label|Labels]]
- *   - [[Trigger|Triggers]]
- *   - [[UIActor|UI Actors (HUD)]]
- *   - [[ActionContext|Action API]]
- *   - [[Group|Groups]]
- * - [[Physics|Working with Physics]]
- *
- * ## Working with Resources
- *
- * Excalibur provides easy ways of loading assets, from images to JSON files.
- *
- * - [[Loader|Working with the Loader]]
- * - [[Texture|Loading Textures]]
- * - [[Sound|Loading Sounds]]
- * - [[Resource|Loading Generic Resources]]
- *
- * ## Working with Input
- *
- * Excalibur comes built-in with support for mouse, keyboard, touch, and controllers.
- *
- * - [[Pointers|Mouse and Touch]]
- * - [[Keyboard]]
- * - [[Gamepads|Controller Support]]
- *
- * ## Working with Media
- *
- * Add sounds, images, and animations to your game.
- *
- * - [[Sprite|Working with Sprites]]
- * - [[Sound|Working with Sounds]]
- * - [[SpriteSheet|Working with SpriteSheets]]
- * - [[Animation|Working with Animations]]
- * - [[TileMap|Working with TileMaps]]
- *
- * ## Effects and Particles
- *
- * Every game needs an explosion or two. Add sprite effects such as lighten,
- * darken, and colorize.
- *
- * - [[Effects|Sprite Effects]]
- * - [[ParticleEmitter|Particle Emitters]]
- * - [[IPostProcessor|Post Processors]]
- *
- * ## Math
- *
- * These classes provide the basics for math & algebra operations.
- *
- * - [[Vector]]
- * - [[Ray]]
- * - [[Line]]
- * - [[Projection]]
- *
- * ## Utilities
- *
- * - [[Util|Utility Functions]]
- * - [[Promise|Promises and Async]]
- * - [[Logger|Logging]]
- * - [[Color|Colors]]
- * - [[Timer|Timers]]
+ * [[include:Index.md]]
  */
 var ex;
 (function (ex) {
@@ -14154,178 +12440,7 @@ var ex;
      * starting/stopping the game, maintaining state, transmitting events,
      * loading resources, and managing the scene.
      *
-     * Excalibur uses the HTML5 Canvas API for drawing your game to the screen.
-     * The canvas is available to all `draw` functions for raw manipulation,
-     * but Excalibur is meant to simplify or completely remove the need to use
-     * the canvas directly.
-     *
-     * ## Creating a Game
-     *
-     * To create a new game, create a new instance of [[Engine]] and pass in
-     * the configuration ([[IEngineOptions]]). Excalibur only supports a single
-     * instance of a game at a time, so it is safe to use globally.
-     *
-     * You can then call [[start]] which starts the game and optionally accepts
-     * a [[Loader]] which you can use to pre-load assets.
-     *
-     * ```js
-     * var game = new ex.Engine({
-     *   width: 800, // the width of the canvas
-     *   height: 600, // the height of the canvas
-     *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
-     *   displayMode: ex.DisplayMode.FullScreen, // the display mode
-     *   pointerScope: ex.Input.PointerScope.Document // the scope of capturing pointer (mouse/touch) events
-     * });
-     *
-     * // call game.start, which is a Promise
-     * game.start().then(function () {
-     *   // ready, set, go!
-     * });
-     * ```
-     *
-     * ## The Main Loop
-     *
-     * The Excalibur engine uses a simple main loop. The engine updates and renders
-     * the "scene graph" which is the [[Scene|scenes]] and the tree of [[Actor|actors]] within that
-     * scene. Only one [[Scene]] can be active at a time. The engine does not update/draw any other
-     * scene, which means any actors will not be updated/drawn if they are part of a deactivated scene.
-     *
-     * ![Engine Lifecycle](/assets/images/docs/EngineLifecycle.png)
-     *
-     * **Scene Graph**
-     *
-     * ```
-     * Engine
-     *   |_ Scene 1 (activated)
-     *     |_ Actor 1
-     *       |_ Child Actor 1
-     *     |_ Actor 2
-     *   |_ Scene 2 (deactivated)
-     *   |_ Scene 3 (deactivated)
-     * ```
-     *
-     * The engine splits the game into two primary responsibilities: updating and drawing. This is
-     * to keep your game smart about splitting duties so that you aren't drawing when doing
-     * logic or performing logic as you draw.
-     *
-     * ### Update Loop
-     *
-     * The first operation run is the [[Engine._update|update]] loop. [[Actor]] and [[Scene]] both implement
-     * an overridable/extendable `update` method. Use it to perform any logic-based operations
-     * in your game for a particular class.
-     *
-     * ### Draw Loop
-     *
-     * The next step is the [[Engine._draw|draw]] loop. A [[Scene]] loops through its child [[Actor|actors]] and
-     * draws each one. You can override the `draw` method on an actor to customize its drawing.
-     * You should **not** perform any logic in a draw call, it should only relate to drawing.
-     *
-     * ## Working with Scenes
-     *
-     * The engine automatically creates a "root" [[Scene]]. You can use this for whatever you want.
-     * You can manipulate scenes using [[Engine.add|add]], [[Engine.remove|remove]],
-     * and [[Engine.goToScene|goToScene]]. You can overwrite or remove the `root` scene if
-     * you want. There always has to be at least one scene and only **one** scene can be
-     * active at any one time.
-     *
-     * Learn more about the [[Scene|scene lifecycle]].
-     *
-     * ### Adding a scene
-     *
-     * ```js
-     * var game = new ex.Engine();
-     *
-     * // create a new level
-     * var level1 = new ex.Scene();
-     *
-     * // add level 1 to the game
-     * game.add("level1", level1);
-     *
-     * // in response to user input, go to level 1
-     * game.goToScene("level1");
-     *
-     * // go back to main menu
-     * game.goToScene("root");
-     * ```
-     *
-     * ### Accessing the current scene
-     *
-     * To add actors and other entities to the current [[Scene]], you can use [[Engine.add|add]]. Alternatively,
-     * you can use [[Engine.currentScene]] to directly access the current scene.
-     *
-     * ## Managing the Viewport
-     *
-     * Excalibur supports multiple [[DisplayMode|display modes]] for a game. Pass in a `displayMode`
-     * option when creating a game to customize the viewport.
-     *
-     * The [[width]] and [[height]] are still used to represent the native width and height
-     * of the canvas, but you can leave them at 0 or `undefined` to ignore them. If width and height
-     * are not specified, the game won't be scaled and native resolution will be the physical screen
-     * width/height.
-     *
-     * If you use [[ex.DisplayMode.Container]], the canvas will automatically resize to fit inside of
-     * it's parent DOM element. This allows you maximum control over the game viewport, e.g. in case
-     * you want to provide HTML UI on top or as part of your game.
-     *
-     * ## Extending the Engine
-     *
-     * For complex games, any entity that inherits [[Class]] can be extended to override built-in
-     * functionality. This is recommended for [[Actor|actors]] and [[Scene|scenes]], especially.
-     *
-     * You can customize the options or provide more for your game by extending [[Engine]].
-     *
-     * **TypeScript**
-     *
-     * ```ts
-     * class Game extends ex.Engine {
-     *
-     *   constructor() {
-     *     super({ width: 800, height: 600, displayMode: DisplayMode.FullScreen });
-     *   }
-     *
-     *   public start() {
-     *     // add custom scenes
-     *     this.add("mainmenu", new MainMenu());
-     *
-     *     return super.start(myLoader).then(() => {
-     *
-     *       this.goToScene("mainmenu");
-     *
-     *       // custom start-up
-     *     });
-     *   }
-     * }
-     *
-     * var game = new Game();
-     * game.start();
-     * ```
-     *
-     * **Javascript**
-     *
-     * ```js
-     * var Game = ex.Engine.extend({
-     *
-     *   constructor: function () {
-     *     Engine.call(this, { width: 800, height: 600, displayMode: DisplayMode.FullScreen });
-     *   }
-     *
-     *   start: function() {
-     *     // add custom scenes
-     *     this.add("mainmenu", new MainMenu());
-     *
-     *     var _this = this;
-     *     return Engine.prototype.start.call(this, myLoader).then(function() {
-     *
-     *       _this.goToScene("mainmenu");
-     *
-     *       // custom start-up
-     *     });
-     *   }
-     * });
-     *
-     * var game = new Game();
-     * game.start();
-     * ```
+     * [[include:Engine.md]]
      */
     var Engine = (function (_super) {
         __extends(Engine, _super);

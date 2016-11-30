@@ -9426,7 +9426,7 @@ var ex;
          */
         AudioTag.prototype.processData = function (data) {
             var url = URL.createObjectURL(data);
-            return ex.Promise.wrap(url);
+            return ex.Promise.resolve(url);
         };
         /**
          * Creates a new instance of an audio tag referencing the provided audio URL
@@ -9679,7 +9679,7 @@ var ex;
                 });
             }
             else {
-                return ex.Promise.wrap(true);
+                return ex.Promise.resolve(true);
             }
         };
         /**
@@ -13007,7 +13007,7 @@ O|===|* >________________>\n\
                 loadingComplete = this.load(this._loader);
             }
             else {
-                loadingComplete = ex.Promise.wrap();
+                loadingComplete = ex.Promise.resolve();
             }
             loadingComplete.then(function () {
                 _this.emit('start', new ex.GameStartEvent(_this));

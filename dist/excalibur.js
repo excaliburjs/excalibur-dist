@@ -1,4 +1,4 @@
-/*! excalibur - v0.7.1 - 2016-12-02
+/*! excalibur - v0.7.1 - 2016-12-04
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.7.1";
@@ -178,6 +178,7 @@ var ex;
                     return this.update + this.draw;
                 }
             };
+            this._physicsStats = new PhysicsStats();
         }
         /**
          * Zero out values or clone other IFrameStat stats. Allows instance reuse.
@@ -194,11 +195,13 @@ var ex;
                 this.actors.ui = otherStats.actors.ui;
                 this.duration.update = otherStats.duration.update;
                 this.duration.draw = otherStats.duration.draw;
+                this._physicsStats.reset(otherStats.physics);
             }
             else {
                 this.id = this.delta = this.fps = 0;
                 this.actors.alive = this.actors.killed = this.actors.ui = 0;
                 this.duration.update = this.duration.draw = 0;
+                this._physicsStats.reset();
             }
         };
         /**
@@ -279,9 +282,118 @@ var ex;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(FrameStats.prototype, "physics", {
+            /**
+             * Gets the frame's physics statistics
+             */
+            get: function () {
+                return this._physicsStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return FrameStats;
     }());
     ex.FrameStats = FrameStats;
+    var PhysicsStats = (function () {
+        function PhysicsStats() {
+            this._pairs = 0;
+            this._collisions = 0;
+            this._fastBodies = 0;
+            this._fastBodyCollisions = 0;
+            this._broadphase = 0;
+            this._narrowphase = 0;
+        }
+        /**
+         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        PhysicsStats.prototype.reset = function (otherStats) {
+            if (otherStats) {
+                this.pairs = otherStats.pairs;
+                this.collisions = otherStats.collisions;
+                this.fastBodies = otherStats.fastBodies;
+                this.fastBodyCollisions = otherStats.fastBodyCollisions;
+                this.broadphase = otherStats.broadphase;
+                this.narrowphase = otherStats.narrowphase;
+            }
+            else {
+                this.pairs = this.collisions = this.fastBodies = 0;
+                this.fastBodyCollisions = this.broadphase = this.narrowphase = 0;
+            }
+        };
+        /**
+         * Provides a clone of this instance.
+         */
+        PhysicsStats.prototype.clone = function () {
+            var ps = new PhysicsStats();
+            ps.reset(this);
+            return ps;
+        };
+        Object.defineProperty(PhysicsStats.prototype, "pairs", {
+            get: function () {
+                return this._pairs;
+            },
+            set: function (value) {
+                this._pairs = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "collisions", {
+            get: function () {
+                return this._collisions;
+            },
+            set: function (value) {
+                this._collisions = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
+            get: function () {
+                return this._fastBodies;
+            },
+            set: function (value) {
+                this._fastBodies = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
+            get: function () {
+                return this._fastBodyCollisions;
+            },
+            set: function (value) {
+                this._fastBodyCollisions = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "broadphase", {
+            get: function () {
+                return this._broadphase;
+            },
+            set: function (value) {
+                this._broadphase = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
+            get: function () {
+                return this._narrowphase;
+            },
+            set: function (value) {
+                this._narrowphase = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PhysicsStats;
+    }());
+    ex.PhysicsStats = PhysicsStats;
 })(ex || (ex = {}));
 var ex;
 (function (ex) {
@@ -507,6 +619,24 @@ var ex;
          */
         Vector.fromAngle = function (angle) {
             return new Vector(Math.cos(angle), Math.sin(angle));
+        };
+        /**
+         * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
+         */
+        Vector.isValid = function (vec) {
+            if (vec === null || vec === undefined) {
+                return false;
+            }
+            if (isNaN(vec.x) || isNaN(vec.y)) {
+                return false;
+            }
+            if (vec.x === Infinity ||
+                vec.y === Infinity ||
+                vec.x === -Infinity ||
+                vec.y === Infinity) {
+                return false;
+            }
+            return true;
         };
         /**
          * Sets the x and y components at once
@@ -1033,6 +1163,29 @@ var ex;
          * Small value to help collision passes settle themselves after the narrowphase.
          */
         Physics.collisionShift = .001;
+        /**
+         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+         */
+        Physics.dynamicTreeVelocityMultiplyer = 2;
+        /**
+         * Pad RigidBody BoundingBox by a constant amount
+         */
+        Physics.boundsPadding = 5;
+        /**
+         * Surface epsilon is used to help deal with surface penatration
+         */
+        Physics.surfaceEpsilon = .1;
+        /**
+         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
+         * bodies from tunneling through one another.
+         */
+        Physics.checkForFastBodies = true;
+        /**
+         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
+         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+         * Excalibur will always perform the fast body raycast regardless of speed.
+         */
+        Physics.disableMinimumSpeedForFastBody = false;
         return Physics;
     }());
     ex.Physics = Physics;
@@ -1155,18 +1308,18 @@ var ex;
         };
         CollisionContact.prototype._resolveRigidBodyCollision = function (delta) {
             // perform collison on bounding areas
-            var bodyA = this.bodyA.body.actor;
-            var bodyB = this.bodyB.body.actor;
+            var bodyA = this.bodyA.body;
+            var bodyB = this.bodyB.body;
             var mtv = this.mtv; // normal pointing away from bodyA
             var point = this.point; // world space collision point
             var normal = this.normal; // normal pointing away from bodyA
-            if (bodyA === bodyB) {
+            if (bodyA.actor === bodyB.actor) {
                 return;
             }
-            var invMassA = bodyA.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.mass;
-            var invMassB = bodyB.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.mass;
-            var invMoiA = bodyA.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.moi;
-            var invMoiB = bodyB.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.moi;
+            var invMassA = bodyA.actor.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.mass;
+            var invMassB = bodyB.actor.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.mass;
+            var invMoiA = bodyA.actor.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyA.moi;
+            var invMoiB = bodyB.actor.collisionType === ex.CollisionType.Fixed ? 0 : 1 / bodyB.moi;
             // average restitution more relistic
             var coefRestitution = Math.min(bodyA.restitution, bodyB.restitution);
             var coefFriction = Math.min(bodyA.friction, bodyB.friction);
@@ -1189,20 +1342,20 @@ var ex;
             }
             // Publish collision events on both participants
             var side = ex.Util.getSideFromVector(this.mtv);
-            bodyA.emit('collision', new ex.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-            bodyB.emit('collision', new ex.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, ex.Util.getOppositeSide(side), this.mtv.negate()));
+            bodyA.actor.emit('collision', new ex.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyB.actor.emit('collision', new ex.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, ex.Util.getOppositeSide(side), this.mtv.negate()));
             // Collision impulse formula from Chris Hecker
             // https://en.wikipedia.org/wiki/Collision_response
             var impulse = -((1 + coefRestitution) * rvNormal) /
                 ((invMassA + invMassB) + invMoiA * raTangent * raTangent + invMoiB * rbTangent * rbTangent);
-            if (bodyA.collisionType === ex.CollisionType.Fixed) {
+            if (bodyA.actor.collisionType === ex.CollisionType.Fixed) {
                 bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
                 if (ex.Physics.allowRigidBodyRotation) {
                     bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
                 }
                 bodyB.addMtv(mtv);
             }
-            else if (bodyB.collisionType === ex.CollisionType.Fixed) {
+            else if (bodyB.actor.collisionType === ex.CollisionType.Fixed) {
                 bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
                 if (ex.Physics.allowRigidBodyRotation) {
                     bodyA.rx += impulse * invMoiA * -ra.cross(normal);
@@ -1235,14 +1388,14 @@ var ex;
                 else {
                     frictionImpulse = t.scale(-impulse * coefFriction);
                 }
-                if (bodyA.collisionType === ex.CollisionType.Fixed) {
+                if (bodyA.actor.collisionType === ex.CollisionType.Fixed) {
                     // apply frictional impulse
                     bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
                     if (ex.Physics.allowRigidBodyRotation) {
                         bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
                     }
                 }
-                else if (bodyB.collisionType === ex.CollisionType.Fixed) {
+                else if (bodyB.actor.collisionType === ex.CollisionType.Fixed) {
                     // apply frictional impulse
                     bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
                     if (ex.Physics.allowRigidBodyRotation) {
@@ -1279,7 +1432,7 @@ var ex;
             }
             var axisOfCollision = circleBPos.sub(circleAPos).normalize();
             var mvt = axisOfCollision.scale(radius - circleBPos.distance(circleAPos));
-            var pointOfCollision = circleA.getFurthestPoint(axisOfCollision).add(circleAPos);
+            var pointOfCollision = circleA.getFurthestPoint(axisOfCollision);
             return new ex.CollisionContact(circleA, circleB, mvt, pointOfCollision, axisOfCollision);
         },
         CollideCirclePolygon: function (circle, polygon) {
@@ -1295,7 +1448,7 @@ var ex;
             minAxis = samedir < 0 ? minAxis.negate() : minAxis;
             var verts = [];
             var point1 = polygon.getFurthestPoint(minAxis.negate());
-            var point2 = circle.getFurthestPoint(minAxis).add(cc);
+            var point2 = circle.getFurthestPoint(minAxis); //.add(cc);
             if (circle.contains(point1)) {
                 verts.push(point1);
             }
@@ -1309,7 +1462,7 @@ var ex;
         },
         CollideCircleEdge: function (circle, edge) {
             // center of the circle
-            var cc = circle.body.pos;
+            var cc = circle.getCenter();
             // vector in the direction of the edge
             var e = edge.end.sub(edge.begin);
             // amount of overlap with the circle's center along the edge direction
@@ -1452,7 +1605,8 @@ var ex;
          * Casts a ray at the CircleArea and returns the nearest point of collision
          * @param ray
          */
-        CircleArea.prototype.castRay = function (ray) {
+        CircleArea.prototype.rayCast = function (ray, max) {
+            if (max === void 0) { max = Infinity; }
             //https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
             var c = this.getCenter();
             var dir = ray.dir;
@@ -1468,7 +1622,7 @@ var ex;
                 var toi = 0;
                 if (discriminant === 0) {
                     toi = -dir.dot(orig.sub(c));
-                    if (toi > 0) {
+                    if (toi > 0 && toi < max) {
                         return ray.getPoint(toi);
                     }
                     return null;
@@ -1476,10 +1630,17 @@ var ex;
                 else {
                     var toi1 = -dir.dot(orig.sub(c)) + discriminant;
                     var toi2 = -dir.dot(orig.sub(c)) - discriminant;
-                    return ray.getPoint(Math.min(toi1, toi2));
+                    var mintoi = Math.min(toi1, toi2);
+                    if (mintoi <= max) {
+                        return ray.getPoint(mintoi);
+                    }
+                    return null;
                 }
             }
         };
+        /**
+         * @inheritdoc
+         */
         CircleArea.prototype.collide = function (area) {
             if (area instanceof CircleArea) {
                 return ex.CollisionJumpTable.CollideCircleCircle(this, area);
@@ -1498,7 +1659,7 @@ var ex;
          * Find the point on the shape furthest in the direction specified
          */
         CircleArea.prototype.getFurthestPoint = function (direction) {
-            return this.pos.add(direction.normalize().scale(this.radius));
+            return this.getCenter().add(direction.normalize().scale(this.radius));
         };
         /**
          * Get the axis aligned bounding box for the circle area
@@ -1507,7 +1668,7 @@ var ex;
             return new ex.BoundingBox(this.pos.x + this.body.pos.x - this.radius, this.pos.y + this.body.pos.y - this.radius, this.pos.x + this.body.pos.x + this.radius, this.pos.y + this.body.pos.y + this.radius);
         };
         /**
-         * Get axis not implemented on circles, since their are infinite axis
+         * Get axis not implemented on circles, since there are infinite axis in a circle
          */
         CircleArea.prototype.getAxes = function () {
             return null;
@@ -1520,6 +1681,9 @@ var ex;
             var mass = this.body ? this.body.mass : ex.Physics.defaultMass;
             return (mass * this.radius * this.radius) / 2;
         };
+        /**
+         * Tests the separating axis theorem for circles against polygons
+         */
         CircleArea.prototype.testSeparatingAxisTheorem = function (polygon) {
             var axes = polygon.getAxes();
             var pc = polygon.getCenter();
@@ -1640,7 +1804,11 @@ var ex;
         EdgeArea.prototype.contains = function (point) {
             return false;
         };
-        EdgeArea.prototype.castRay = function (ray) {
+        /**
+         * @inheritdoc
+         */
+        EdgeArea.prototype.rayCast = function (ray, max) {
+            if (max === void 0) { max = Infinity; }
             var numerator = this._getTransformedBegin().sub(ray.pos);
             // Test is line and ray are parallel and non intersecting
             if (ray.dir.cross(this.getSlope()) === 0 && numerator.cross(ray.dir) !== 0) {
@@ -1652,7 +1820,7 @@ var ex;
                 return null;
             }
             var t = numerator.cross(this.getSlope()) / divisor;
-            if (t >= 0) {
+            if (t >= 0 && t <= max) {
                 var u = (numerator.cross(ray.dir) / divisor) / this.getLength();
                 if (u >= 0 && u <= 1) {
                     return ray.getPoint(t);
@@ -1660,6 +1828,9 @@ var ex;
             }
             return null;
         };
+        /**
+         * @inheritdoc
+         */
         EdgeArea.prototype.collide = function (area) {
             if (area instanceof ex.CircleArea) {
                 return ex.CollisionJumpTable.CollideCircleEdge(area, this);
@@ -1671,7 +1842,7 @@ var ex;
                 return ex.CollisionJumpTable.CollideEdgeEdge(this, area);
             }
             else {
-                throw new Error("Circle could not collide with unknown ICollisionArea " + typeof area);
+                throw new Error("Edge could not collide with unknown ICollisionArea " + typeof area);
             }
         };
         /**
@@ -1717,6 +1888,9 @@ var ex;
             var length = this.end.sub(this.begin).distance() / 2;
             return mass * length * length;
         };
+        /**
+         * @inheritdoc
+         */
         EdgeArea.prototype.recalc = function () {
             // edges don't have any cached data
         };
@@ -1915,7 +2089,8 @@ var ex;
         /**
          * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
          */
-        PolygonArea.prototype.castRay = function (ray) {
+        PolygonArea.prototype.rayCast = function (ray, max) {
+            if (max === void 0) { max = Infinity; }
             // find the minimum contact time greater than 0
             // contact times less than 0 are behind the ray and we don't want those
             var sides = this.getSides();
@@ -1924,7 +2099,7 @@ var ex;
             var contactIndex = -1;
             for (var i = 0; i < len; i++) {
                 var contactTime = ray.intersect(sides[i]);
-                if (contactTime >= 0 && contactTime < minContactTime) {
+                if (contactTime >= 0 && contactTime < minContactTime && contactTime <= max) {
                     minContactTime = contactTime;
                     contactIndex = i;
                 }
@@ -3552,6 +3727,28 @@ var ex;
                 pos: ex.Vector.Zero.clone()
             });
         };
+        /**
+         * Determines whether a ray intersects with a bounding box
+         */
+        BoundingBox.prototype.rayCast = function (ray, farClipDistance) {
+            if (farClipDistance === void 0) { farClipDistance = Infinity; }
+            // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/ 
+            var tmin = -Infinity;
+            var tmax = +Infinity;
+            if (ray.dir.x !== 0) {
+                var tx1 = (this.left - ray.pos.x) / ray.dir.x;
+                var tx2 = (this.right - ray.pos.x) / ray.dir.x;
+                tmin = Math.max(tmin, Math.min(tx1, tx2));
+                tmax = Math.min(tmax, Math.max(tx1, tx2));
+            }
+            if (ray.dir.y !== 0) {
+                var ty1 = (this.top - ray.pos.y) / ray.dir.y;
+                var ty2 = (this.bottom - ray.pos.y) / ray.dir.y;
+                tmin = Math.max(tmin, Math.min(ty1, ty2));
+                tmax = Math.min(tmax, Math.max(ty1, ty2));
+            }
+            return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
+        };
         BoundingBox.prototype.contains = function (val) {
             if (val instanceof ex.Vector) {
                 return (this.left <= val.x && this.top <= val.y && this.bottom >= val.y && this.right >= val.x);
@@ -3693,7 +3890,21 @@ var ex;
              * The rotational velocity of the actor in radians/second
              */
             this.rx = 0; //radians/sec
+            this._totalMtv = ex.Vector.Zero.clone();
         }
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
+         */
+        Body.prototype.addMtv = function (mtv) {
+            this._totalMtv.addEqual(mtv);
+        };
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        Body.prototype.applyMtv = function () {
+            this.pos.addEqual(this._totalMtv);
+            this._totalMtv.setTo(0, 0);
+        };
         /**
          * Returns the body's [[BoundingBox]] calculated for this instant in world space.
          */
@@ -3979,7 +4190,10 @@ var ex;
         NaiveCollisionBroadphase.prototype.untrack = function (tartet) {
             // pass
         };
-        NaiveCollisionBroadphase.prototype.detect = function (targets, delta) {
+        /**
+         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
+         */
+        NaiveCollisionBroadphase.prototype.broadphase = function (targets, delta) {
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
@@ -3993,12 +4207,13 @@ var ex;
                     actor2 = potentialColliders[i];
                     var minimumTranslationVector;
                     if (minimumTranslationVector = actor1.collides(actor2)) {
+                        var pair = new ex.Pair(actor1.body, actor2.body);
                         var side = actor1.getSideFromIntersect(minimumTranslationVector);
-                        var collisionPair = new ex.CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
+                        pair.collision = new ex.CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                         if (!collisionPairs.some(function (cp) {
-                            return cp.id === collisionPair.id;
+                            return cp.id === pair.id;
                         })) {
-                            collisionPairs.push(collisionPair);
+                            collisionPairs.push(pair);
                         }
                     }
                 }
@@ -4008,6 +4223,18 @@ var ex;
                 collisionPairs[k].resolve(delta, ex.Physics.collisionResolutionStrategy);
             }
             return collisionPairs;
+        };
+        /**
+         * Identify actual collisions from those pairs, and calculate collision impulse
+         */
+        NaiveCollisionBroadphase.prototype.narrowphase = function (pairs) {
+            // pass
+        };
+        /**
+         * Resolve the position and velocity of the physics bodies
+         */
+        NaiveCollisionBroadphase.prototype.resolve = function (delta, strategy) {
+            // pass
         };
         NaiveCollisionBroadphase.prototype.update = function (targets) {
             return 0;
@@ -4022,6 +4249,9 @@ var ex;
 /// <reference path="BoundingBox.ts"/>
 var ex;
 (function (ex) {
+    /**
+     * Dynamic Tree Node used for tracking bounds within the tree
+     */
     var TreeNode = (function () {
         function TreeNode(parent) {
             this.parent = parent;
@@ -4038,12 +4268,24 @@ var ex;
         return TreeNode;
     }());
     ex.TreeNode = TreeNode;
+    /**
+     * The DynamicTrees provides a spatial partiioning data structure for quickly querying for overlapping bounding boxes for
+     * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
+     *
+     * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
+     * Every non-leaf node is a bounding box that contains child bounding boxes.
+     */
     var DynamicTree = (function () {
-        function DynamicTree() {
+        function DynamicTree(worldBounds) {
+            if (worldBounds === void 0) { worldBounds = new ex.BoundingBox(-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE); }
+            this.worldBounds = worldBounds;
             this.root = null;
             this.nodes = {};
         }
-        DynamicTree.prototype.insert = function (leaf) {
+        /**
+         * Inserts a node into the dynamic tree
+         */
+        DynamicTree.prototype._insert = function (leaf) {
             // If there are no nodes in the tree, make this the root leaf
             if (this.root === null) {
                 this.root = leaf;
@@ -4127,7 +4369,7 @@ var ex;
             // Walk up the tree fixing heights and AABBs
             var currentNode = leaf.parent;
             while (currentNode) {
-                currentNode = this.balance(currentNode);
+                currentNode = this._balance(currentNode);
                 if (!currentNode.left) {
                     throw new Error('Parent of current leaf cannot have a null left child' + currentNode);
                 }
@@ -4139,7 +4381,10 @@ var ex;
                 currentNode = currentNode.parent;
             }
         };
-        DynamicTree.prototype.remove = function (leaf) {
+        /**
+         * Removes a node from the dynamic tree
+         */
+        DynamicTree.prototype._remove = function (leaf) {
             if (leaf === this.root) {
                 this.root = null;
                 return;
@@ -4163,7 +4408,7 @@ var ex;
                 sibling.parent = grandParent;
                 var currentNode = grandParent;
                 while (currentNode) {
-                    currentNode = this.balance(currentNode);
+                    currentNode = this._balance(currentNode);
                     currentNode.bounds = currentNode.left.bounds.combine(currentNode.right.bounds);
                     currentNode.height = 1 + Math.max(currentNode.left.height, currentNode.right.height);
                     currentNode = currentNode.parent;
@@ -4174,6 +4419,9 @@ var ex;
                 sibling.parent = null;
             }
         };
+        /**
+         * Tracks a body in the dynamic tree
+         */
         DynamicTree.prototype.trackBody = function (body) {
             var node = new TreeNode();
             node.body = body;
@@ -4183,25 +4431,34 @@ var ex;
             node.bounds.right += 2;
             node.bounds.bottom += 2;
             this.nodes[body.actor.id] = node;
-            this.insert(node);
+            this._insert(node);
         };
+        /**
+         * Updates the dynamic tree given the current bounds of each body being tracked
+         */
         DynamicTree.prototype.updateBody = function (body) {
             var node = this.nodes[body.actor.id];
             if (!node) {
                 return;
             }
             var b = body.getBounds();
+            // if the body is outside the world no longer update it
+            if (!this.worldBounds.contains(b)) {
+                ex.Logger.getInstance().warn('Actor with id ' + body.actor.id +
+                    ' is outside the world bounds and will no longer be tracked for physics');
+                this.untrackBody(body);
+                return false;
+            }
             if (node.bounds.contains(b)) {
                 return false;
             }
-            this.remove(node);
-            b.left -= 5;
-            b.top -= 5;
-            b.right += 5;
-            b.bottom += 5;
-            // todo make configurable off ex.Physics
-            var multdx = body.vel.x * 2;
-            var multdy = body.vel.y * 2;
+            this._remove(node);
+            b.left -= ex.Physics.boundsPadding;
+            b.top -= ex.Physics.boundsPadding;
+            b.right += ex.Physics.boundsPadding;
+            b.bottom += ex.Physics.boundsPadding;
+            var multdx = body.vel.x * ex.Physics.dynamicTreeVelocityMultiplyer;
+            var multdy = body.vel.y * ex.Physics.dynamicTreeVelocityMultiplyer;
             if (multdx < 0) {
                 b.left += multdx;
             }
@@ -4215,19 +4472,25 @@ var ex;
                 b.bottom += multdy;
             }
             node.bounds = b;
-            this.insert(node);
+            this._insert(node);
             return true;
         };
+        /**
+         * Untracks a body from the dynamic tree
+         */
         DynamicTree.prototype.untrackBody = function (body) {
             var node = this.nodes[body.actor.id];
             if (!node) {
                 return;
             }
-            this.remove(node);
+            this._remove(node);
             this.nodes[body.actor.id] = null;
             delete this.nodes[body.actor.id];
         };
-        DynamicTree.prototype.balance = function (node) {
+        /**
+         * Balances the tree about a node
+         */
+        DynamicTree.prototype._balance = function (node) {
             if (node === null) {
                 throw new Error('Cannot balance at null node');
             }
@@ -4328,12 +4591,22 @@ var ex;
             }
             return node;
         };
+        /**
+         * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
+         */
         DynamicTree.prototype.getHeight = function () {
             if (this.root === null) {
                 return 0;
             }
             return this.root.height;
         };
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be colliding with the provided body.
+         *
+         * In the query callback, it will be passed a potential collider. Returning true from this callback indicates
+         * that you are complete with your query and you do not want to continue. Returning false will continue searching
+         * the tree until all possible colliders have been returned.
+         */
         DynamicTree.prototype.query = function (body, callback) {
             var bounds = body.getBounds();
             var helper = function (currentNode) {
@@ -4353,9 +4626,34 @@ var ex;
             };
             return helper(this.root);
         };
-        DynamicTree.prototype.rayCast = function (ray, max) {
-            // todo implement
-            return null;
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
+         * long ray to test the tree specified by `max`.
+         *
+         * In the query callback, it will be passed a potential body that intersects with the racast. Returning true from this
+         * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
+         * the tree until all possible bodies that would intersect with the ray have been returned.
+         */
+        DynamicTree.prototype.rayCastQuery = function (ray, max, callback) {
+            if (max === void 0) { max = Infinity; }
+            var helper = function (currentNode) {
+                if (currentNode && currentNode.bounds.rayCast(ray, max)) {
+                    if (currentNode.isLeaf()) {
+                        if (callback.call(ray, currentNode.body)) {
+                            // ray hit a leaf! return the body
+                            return true;
+                        }
+                    }
+                    else {
+                        // ray hit but not at a leaf, recurse deeper
+                        return helper(currentNode.left) || helper(currentNode.right);
+                    }
+                }
+                else {
+                    return null; // ray missed
+                }
+            };
+            return helper(this.root);
         };
         DynamicTree.prototype.getNodes = function () {
             var helper = function (currentNode) {
@@ -4373,9 +4671,11 @@ var ex;
             var helper = function (currentNode) {
                 if (currentNode) {
                     if (currentNode.isLeaf()) {
+                        ctx.lineWidth = 1;
                         ctx.strokeStyle = 'green';
                     }
                     else {
+                        ctx.lineWidth = 1;
                         ctx.strokeStyle = 'white';
                     }
                     currentNode.bounds.debugDraw(ctx);
@@ -4393,15 +4693,71 @@ var ex;
     }());
     ex.DynamicTree = DynamicTree;
 })(ex || (ex = {}));
+/// <reference path="Body.ts" />
+/// <reference path="CollisionContact.ts" />
+var ex;
+(function (ex) {
+    /**
+     * Models a potential collision between 2 bodies
+     */
+    var Pair = (function () {
+        function Pair(bodyA, bodyB) {
+            this.bodyA = bodyA;
+            this.bodyB = bodyB;
+            this.id = null;
+            this.collision = null;
+            this.id = Pair.calculatePairHash(bodyA, bodyB);
+        }
+        /**
+         * Runs the collison intersection logic on the members of this pair
+         */
+        Pair.prototype.collide = function () {
+            this.collision = this.bodyA.collisionArea.collide(this.bodyB.collisionArea);
+        };
+        /**
+         * Resovles the collision body position and velocity if a collision occured
+         */
+        Pair.prototype.resolve = function (delta, strategy) {
+            if (this.collision) {
+                this.collision.resolve(delta, strategy);
+            }
+        };
+        /**
+         * Calculates the unique pair hash id for this collision pair
+         */
+        Pair.calculatePairHash = function (bodyA, bodyB) {
+            if (bodyA.actor.id < bodyB.actor.id) {
+                return "#" + bodyA.actor.id + "+" + bodyB.actor.id;
+            }
+            else {
+                return "#" + bodyB.actor.id + "+" + bodyA.actor.id;
+            }
+        };
+        /* istanbul ignore next */
+        Pair.prototype.debugDraw = function (ctx) {
+            if (this.collision) {
+                if (ex.Physics.showContacts) {
+                    ex.Util.DrawUtil.point(ctx, ex.Color.Red, this.collision.point);
+                }
+                if (ex.Physics.showCollisionNormals) {
+                    ex.Util.DrawUtil.vector(ctx, ex.Color.Cyan, this.collision.point, this.collision.normal, 30);
+                }
+            }
+        };
+        return Pair;
+    }());
+    ex.Pair = Pair;
+})(ex || (ex = {}));
 /// <reference path="ICollisionResolver.ts"/>
 /// <reference path="DynamicTree.ts"/>
+/// <reference path="Pair.ts" />
 var ex;
 (function (ex) {
     var DynamicTreeCollisionBroadphase = (function () {
         function DynamicTreeCollisionBroadphase() {
             this._dynamicCollisionTree = new ex.DynamicTree();
             this._collisionHash = {};
-            this._collisionContactCache = [];
+            this._collisionPairCache = [];
         }
         /**
          * Tracks a physics body for collisions
@@ -4425,7 +4781,7 @@ var ex;
         };
         DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
             // if the collision pair has been calculated already short circuit
-            var hash = actorA.calculatePairHash(actorB);
+            var hash = ex.Pair.calculatePairHash(actorA.body, actorB.body);
             if (this._collisionHash[hash]) {
                 return false; // pair exists easy exit return false
             }
@@ -4440,66 +4796,133 @@ var ex;
             // they can collide
             return true;
         };
-        DynamicTreeCollisionBroadphase.prototype.detect = function (targets, delta) {
+        /**
+         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
+         */
+        DynamicTreeCollisionBroadphase.prototype.broadphase = function (targets, delta, stats) {
             var _this = this;
+            var seconds = delta / 1000;
             // TODO optimization use only the actors that are moving to start 
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== ex.CollisionType.PreventCollision;
             });
+            // clear old list of collision pairs
+            this._collisionPairCache = [];
+            this._collisionHash = {};
+            // check for normal collision pairs
             var actor;
-            // Check collision cache and re-add pairs that still are in collision
-            var newPairs = [];
-            this._collisionContactCache.forEach(function (c) {
-                var contact = c.bodyA.collide(c.bodyB);
-                // we always add this id back to the hash so we can quickly short circuit since we already checked collision
-                _this._collisionHash[c.id] = true;
-                if (contact) {
-                    contact.id = c.id;
-                    newPairs.push(contact);
-                }
-            });
-            this._collisionContactCache = newPairs;
             for (var j = 0, l = potentialColliders.length; j < l; j++) {
                 actor = potentialColliders[j];
                 // Query the collision tree for potential colliders
                 this._dynamicCollisionTree.query(actor.body, function (other) {
                     if (_this._canCollide(actor, other.actor)) {
-                        // generate all the collision contacts between the 2 sets of collision areas between both actors
-                        var contacts = [];
-                        var areaA = actor.collisionArea;
-                        var areaB = other.collisionArea;
-                        var contact = areaA.collide(areaB);
-                        if (contact) {
-                            contact.id = actor.calculatePairHash(other.actor);
-                            contacts.push(contact);
-                        }
-                        // if there were contacts keep track of them
-                        if (contacts.length) {
-                            _this._collisionHash[contact.id] = true;
-                            for (var _i = 0, contacts_1 = contacts; _i < contacts_1.length; _i++) {
-                                var contactHash = contacts_1[_i];
-                                _this._collisionContactCache.push(contactHash);
-                            }
-                        }
-                        return false;
+                        var pair = new ex.Pair(actor.body, other);
+                        _this._collisionHash[pair.id] = true;
+                        _this._collisionPairCache.push(pair);
                     }
+                    // Always return false, to query whole tree. Returning true in the query method stops searching
+                    return false;
                 });
             }
-            // evaluate collision pairs
-            var i = 0, len = this._collisionContactCache.length;
-            for (i; i < len; i++) {
-                this._collisionContactCache[i].resolve(delta, ex.Physics.collisionResolutionStrategy);
+            if (stats) {
+                stats.physics.pairs = this._collisionPairCache.length;
             }
-            // apply total mtv
-            targets.forEach(function (a) {
-                a.applyMtv();
-            });
-            // todo this should be cleared by checking first
-            // clear lookup table 
-            this._collisionHash = {};
+            // Check dynamic tree for fast moving objects
+            // Fast moving objects are those moving at least there smallest bound per frame
+            if (ex.Physics.checkForFastBodies) {
+                for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
+                    var actor = potentialColliders_1[_i];
+                    // Skip non-active objects. Does not make sense on other collison types
+                    if (actor.collisionType !== ex.CollisionType.Active) {
+                        continue;
+                    }
+                    ;
+                    // Maximum travel distance next frame
+                    var updateDistance = (actor.vel.magnitude() * seconds) +
+                        (actor.acc.magnitude() * .5 * seconds * seconds); // acc term
+                    // Find the minimum dimension
+                    var minDimension = Math.min(actor.body.getBounds().getHeight(), actor.body.getBounds().getWidth());
+                    if (ex.Physics.disableMinimumSpeedForFastBody || updateDistance > (minDimension / 2)) {
+                        if (stats) {
+                            stats.physics.fastBodies++;
+                        }
+                        // start with the oldPos because the integration for actors has already happened
+                        // objects resting on a surface may be slightly penatrating in the current position
+                        var updateVec = actor.pos.sub(actor.oldPos);
+                        var centerPoint = actor.body.collisionArea.getCenter();
+                        var furthestPoint = actor.body.collisionArea.getFurthestPoint(actor.vel);
+                        var origin = furthestPoint.sub(updateVec);
+                        var ray = new ex.Ray(origin, actor.vel);
+                        // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface 
+                        ray.pos = ray.pos.add(ray.dir.scale(-2 * ex.Physics.surfaceEpsilon));
+                        var minBody;
+                        var minTranslate = new ex.Vector(Infinity, Infinity);
+                        this._dynamicCollisionTree.rayCastQuery(ray, updateDistance + ex.Physics.surfaceEpsilon * 2, function (other) {
+                            if (actor.body !== other && other.collisionArea) {
+                                var hitPoint = other.collisionArea.rayCast(ray, updateDistance + ex.Physics.surfaceEpsilon * 10);
+                                if (hitPoint) {
+                                    var translate = hitPoint.sub(origin);
+                                    if (translate.magnitude() < minTranslate.magnitude()) {
+                                        minTranslate = translate;
+                                        minBody = other;
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+                        if (minBody && ex.Vector.isValid(minTranslate)) {
+                            var pair = new ex.Pair(actor.body, minBody);
+                            if (!this._collisionHash[pair.id]) {
+                                this._collisionHash[pair.id] = true;
+                                this._collisionPairCache.push(pair);
+                            }
+                            // move the fast moving object to the other body
+                            // need to push into the surface by ex.Physics.surfaceEpsilon
+                            var shift = centerPoint.sub(furthestPoint);
+                            actor.pos = origin.add(shift).add(minTranslate).add(ray.dir.scale(2 * ex.Physics.surfaceEpsilon));
+                            actor.body.collisionArea.recalc();
+                            if (stats) {
+                                stats.physics.fastBodyCollisions++;
+                            }
+                        }
+                    }
+                }
+            }
             // return cache
-            return this._collisionContactCache;
+            return this._collisionPairCache;
+        };
+        /**
+         * Applies narrow phase on collision pairs to find actual area intersections
+         */
+        DynamicTreeCollisionBroadphase.prototype.narrowphase = function (pairs, stats) {
+            for (var i = 0; i < pairs.length; i++) {
+                pairs[i].collide();
+                if (stats && pairs[i].collision) {
+                    stats.physics.collisions++;
+                }
+            }
+        };
+        /**
+         * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
+         */
+        DynamicTreeCollisionBroadphase.prototype.resolve = function (delta, strategy) {
+            // resolve collision pairs
+            var i = 0, len = this._collisionPairCache.length;
+            for (i = 0; i < len; i++) {
+                this._collisionPairCache[i].resolve(delta, strategy);
+            }
+            // We must apply mtv after all pairs have been resolved for more accuracy
+            // apply integration of collision pairs
+            for (i = 0; i < len; i++) {
+                if (this._collisionPairCache[i].collision) {
+                    this._collisionPairCache[i].bodyA.applyMtv();
+                    this._collisionPairCache[i].bodyB.applyMtv();
+                    // todo still don't like this, this is a small integration step to resolve narrowphase collisions
+                    this._collisionPairCache[i].bodyA.actor.integrate(delta * ex.Physics.collisionShift);
+                    this._collisionPairCache[i].bodyB.actor.integrate(delta * ex.Physics.collisionShift);
+                }
+            }
         };
         /**
          * Update the dynamic tree positions
@@ -4519,13 +4942,9 @@ var ex;
                 this._dynamicCollisionTree.debugDraw(ctx, delta);
             }
             if (ex.Physics.showContacts || ex.Physics.showCollisionNormals) {
-                for (var i = 0; i < this._collisionContactCache.length; i++) {
-                    if (ex.Physics.showContacts) {
-                        ex.Util.DrawUtil.point(ctx, ex.Color.Red, this._collisionContactCache[i].point);
-                    }
-                    if (ex.Physics.showCollisionNormals) {
-                        ex.Util.DrawUtil.vector(ctx, ex.Color.Cyan, this._collisionContactCache[i].point, this._collisionContactCache[i].normal, 30);
-                    }
+                for (var _i = 0, _a = this._collisionPairCache; _i < _a.length; _i++) {
+                    var pair = _a[_i];
+                    pair.debugDraw(ctx);
                 }
             }
         };
@@ -6500,23 +6919,25 @@ var ex;
                 engine.stats.currFrame.actors.alive++;
                 this.children[i].update(engine, delta);
             }
-            // Run the broadphase
-            if (this._broadphase) {
+            // Run the broadphase and narrowphase
+            if (this._broadphase && ex.Physics.enabled) {
+                var beforeBroadphase = Date.now();
                 this._broadphase.update(this.children, delta);
-            }
-            // Run the narrowphase
-            var iter = ex.Physics.collisionPasses;
-            var collisionDelta = delta / iter;
-            while (iter > 0) {
-                // Run collision resolution strategy
-                if (this._broadphase && ex.Physics.enabled) {
-                    this._broadphase.detect(this.children, collisionDelta);
-                    for (i = 0, len = this.children.length; i < len; i++) {
-                        // helps move settle collisions, really there is a better way to do this
-                        this.children[i].integrate(collisionDelta * ex.Physics.collisionShift);
-                    }
+                var pairs = this._broadphase.broadphase(this.children, delta, engine.stats.currFrame);
+                var afterBroadphase = Date.now();
+                var beforeNarrowphase = Date.now();
+                var iter = ex.Physics.collisionPasses;
+                var collisionDelta = delta / iter;
+                while (iter > 0) {
+                    // Run the narrowphase
+                    this._broadphase.narrowphase(pairs, engine.stats.currFrame);
+                    // Run collision resolution strategy
+                    this._broadphase.resolve(collisionDelta, ex.Physics.collisionResolutionStrategy);
+                    iter--;
                 }
-                iter--;
+                var afterNarrowphase = Date.now();
+                engine.stats.currFrame.physics.broadphase = afterBroadphase - beforeBroadphase;
+                engine.stats.currFrame.physics.narrowphase = afterNarrowphase - beforeNarrowphase;
             }
             // Remove actors from scene graph after being killed
             var actorIndex;
@@ -6920,11 +7341,6 @@ var ex;
             this.body = new ex.Body(this);
             this._height = 0;
             this._width = 0;
-            /**
-             * Collision maintenance
-             */
-            this._collisionContacts = [];
-            this._totalMtv = ex.Vector.Zero.clone();
             /**
              * The scale vector of the actor
              */
@@ -7351,19 +7767,6 @@ var ex;
                 }
             }
         };
-        /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
-         */
-        Actor.prototype.addMtv = function (mtv) {
-            this._totalMtv.addEqual(mtv);
-        };
-        /**
-         * Applies the accumulated translation vectors to the actors position
-         */
-        Actor.prototype.applyMtv = function () {
-            this.pos.addEqual(this._totalMtv);
-            this._totalMtv.setTo(0, 0);
-        };
         Actor.prototype.addDrawing = function (args) {
             if (arguments.length === 2) {
                 this.frames[arguments[0]] = arguments[1];
@@ -7429,18 +7832,6 @@ var ex;
             var index = this.collisionGroups.indexOf(name);
             if (index !== -1) {
                 this.collisionGroups.splice(index, 1);
-            }
-        };
-        /**
-         * Calculates the unique pair hash between two actors
-         * @param other
-         */
-        Actor.prototype.calculatePairHash = function (other) {
-            if (this.id < other.id) {
-                return "#" + this.id + "+" + other.id;
-            }
-            else {
-                return "#" + other.id + "+" + this.id;
             }
         };
         /**
@@ -10799,6 +11190,22 @@ var ex;
                 }
             }
             DrawUtil.roundRect = roundRect;
+            function circle(ctx, x, y, radius, stroke, fill) {
+                if (stroke === void 0) { stroke = ex.Color.White; }
+                if (fill === void 0) { fill = null; }
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.closePath();
+                if (fill) {
+                    ctx.fillStyle = fill.toString();
+                    ctx.fill();
+                }
+                if (stroke) {
+                    ctx.strokeStyle = stroke.toString();
+                    ctx.stroke();
+                }
+            }
+            DrawUtil.circle = circle;
         })(DrawUtil = Util.DrawUtil || (Util.DrawUtil = {}));
     })(Util = ex.Util || (ex.Util = {}));
 })(ex || (ex = {}));

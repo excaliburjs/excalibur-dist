@@ -23,6 +23,10 @@ declare module ex {
          * Actor statistics
          */
         actors: IFrameActorStats;
+        /**
+         * Physics statistics
+         */
+        physics: IPhysicsStats;
     }
     /**
      * Represents actor stats for a frame
@@ -67,6 +71,35 @@ declare module ex {
         total: number;
     }
     /**
+     * Represents physics stats for the current frame
+     */
+    interface IPhysicsStats {
+        /**
+         * Gets the number of broadphase collision pairs which
+         */
+        pairs: number;
+        /**
+         * Gets the number of actural collisons
+         */
+        collisions: number;
+        /**
+         * Gets the number of fast moving bodies using raycast continuous collisions in the scene
+         */
+        fastBodies: number;
+        /**
+         * Gets the number of bodies that had a fast body collision resolution
+         */
+        fastBodyCollisions: number;
+        /**
+         * Gets the time it took to calculate the broadphase pairs
+         */
+        broadphase: number;
+        /**
+         * Gets the time it took to calculate the narrowphase
+         */
+        narrowphase: number;
+    }
+    /**
      * Debug statistics and flags for Excalibur. If polling these values, it would be
      * best to do so on the `postupdate` event for [[Engine]], after all values have been
      * updated during a frame.
@@ -92,6 +125,7 @@ declare module ex {
         private _fps;
         private _actorStats;
         private _durationStats;
+        private _physicsStats;
         /**
          * Zero out values or clone other IFrameStat stats. Allows instance reuse.
          *
@@ -133,6 +167,34 @@ declare module ex {
          * Gets the frame's duration statistics
          */
         duration: IFrameDurationStats;
+        /**
+         * Gets the frame's physics statistics
+         */
+        physics: PhysicsStats;
+    }
+    class PhysicsStats implements IPhysicsStats {
+        private _pairs;
+        private _collisions;
+        private _fastBodies;
+        private _fastBodyCollisions;
+        private _broadphase;
+        private _narrowphase;
+        /**
+         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IPhysicsStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): IPhysicsStats;
+        pairs: number;
+        collisions: number;
+        fastBodies: number;
+        fastBodyCollisions: number;
+        broadphase: number;
+        narrowphase: number;
     }
 }
 declare module ex {
@@ -363,6 +425,10 @@ declare module ex {
          * @param angle The angle to generate the vector
          */
         static fromAngle(angle: number): Vector;
+        /**
+         * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
+         */
+        static isValid(vec: Vector): boolean;
         /**
          * @param x  X component of the Vector
          * @param y  Y component of the Vector
@@ -731,6 +797,29 @@ declare module ex {
          * Small value to help collision passes settle themselves after the narrowphase.
          */
         static collisionShift: number;
+        /**
+         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+         */
+        static dynamicTreeVelocityMultiplyer: number;
+        /**
+         * Pad RigidBody BoundingBox by a constant amount
+         */
+        static boundsPadding: number;
+        /**
+         * Surface epsilon is used to help deal with surface penatration
+         */
+        static surfaceEpsilon: number;
+        /**
+         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
+         * bodies from tunneling through one another.
+         */
+        static checkForFastBodies: boolean;
+        /**
+         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
+         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+         * Excalibur will always perform the fast body raycast regardless of speed.
+         */
+        static disableMinimumSpeedForFastBody: boolean;
     }
 }
 declare module ex {
@@ -816,7 +905,7 @@ declare module ex {
         /**
          * Return the point on the border of the collision area that intersects with a ray (if any).
          */
-        castRay(ray: Ray): Vector;
+        rayCast(ray: Ray, max?: number): Vector;
         /**
          * Create a projection of this area along an axis. Think of this as casting a "shadow" along an axis
          */
@@ -873,7 +962,10 @@ declare module ex {
          * Casts a ray at the CircleArea and returns the nearest point of collision
          * @param ray
          */
-        castRay(ray: Ray): Vector;
+        rayCast(ray: Ray, max?: number): Vector;
+        /**
+         * @inheritdoc
+         */
         collide(area: ICollisionArea): CollisionContact;
         /**
          * Find the point on the shape furthest in the direction specified
@@ -884,7 +976,7 @@ declare module ex {
          */
         getBounds(): BoundingBox;
         /**
-         * Get axis not implemented on circles, since their are infinite axis
+         * Get axis not implemented on circles, since there are infinite axis in a circle
          */
         getAxes(): Vector[];
         /**
@@ -892,6 +984,9 @@ declare module ex {
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
          */
         getMomentOfInertia(): number;
+        /**
+         * Tests the separating axis theorem for circles against polygons
+         */
         testSeparatingAxisTheorem(polygon: PolygonArea): Vector;
         recalc(): void;
         /**
@@ -932,7 +1027,13 @@ declare module ex {
          * Tests if a point is contained in this collision area
          */
         contains(point: Vector): boolean;
-        castRay(ray: Ray): Vector;
+        /**
+         * @inheritdoc
+         */
+        rayCast(ray: Ray, max?: number): Vector;
+        /**
+         * @inheritdoc
+         */
         collide(area: ICollisionArea): CollisionContact;
         /**
          * Find the point on the shape furthest in the direction specified
@@ -951,6 +1052,9 @@ declare module ex {
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
          */
         getMomentOfInertia(): number;
+        /**
+         * @inheritdoc
+         */
         recalc(): void;
         /**
          * Project the edge along a specified axis
@@ -1020,7 +1124,7 @@ declare module ex {
         /**
          * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
          */
-        castRay(ray: Ray): Vector;
+        rayCast(ray: Ray, max?: number): Vector;
         /**
          * Get the axis associated with the edge
          */
@@ -1671,6 +1775,10 @@ declare module ex {
          */
         toPolygon(actor?: Actor): PolygonArea;
         /**
+         * Determines whether a ray intersects with a bounding box
+         */
+        rayCast(ray: Ray, farClipDistance?: number): boolean;
+        /**
          * Tests whether a point is contained within the bounding box
          * @param p  The point to test
          */
@@ -1760,6 +1868,15 @@ declare module ex {
          * The rotational velocity of the actor in radians/second
          */
         rx: number;
+        private _totalMtv;
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
+         */
+        addMtv(mtv: Vector): void;
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        applyMtv(): void;
         /**
          * Returns the body's [[BoundingBox]] calculated for this instant in world space.
          */
@@ -1903,10 +2020,33 @@ declare module ex {
     }
 }
 declare module ex {
+    /**
+     * Definition for collision broadphase
+     */
     interface ICollisionBroadphase {
+        /**
+         * Track a physics body
+         */
         track(target: Body): any;
+        /**
+         * Untrack a physics body
+         */
         untrack(tartet: Body): any;
-        detect(targets: Actor[], delta: number): CollisionContact[];
+        /**
+         * Detect potential collision pairs
+         */
+        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+        /**
+         * Identify actual collisions from those pairs, and calculate collision impulse
+         */
+        narrowphase(pairs: Pair[], stats?: FrameStats): any;
+        /**
+         * Resolve the position and velocity of the physics bodies
+         */
+        resolve(delta: number, strategy: CollisionResolutionStrategy): any;
+        /**
+         * Update the internal structures to track bodies
+         */
         update(targets: Actor[], delta: number): number;
         debugDraw(ctx: any, delta: any): void;
     }
@@ -1915,12 +2055,26 @@ declare module ex {
     class NaiveCollisionBroadphase implements ICollisionBroadphase {
         track(target: Body): void;
         untrack(tartet: Body): void;
-        detect(targets: Actor[], delta: number): CollisionContact[];
+        /**
+         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
+         */
+        broadphase(targets: Actor[], delta: number): Pair[];
+        /**
+         * Identify actual collisions from those pairs, and calculate collision impulse
+         */
+        narrowphase(pairs: Pair[]): void;
+        /**
+         * Resolve the position and velocity of the physics bodies
+         */
+        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
         update(targets: Actor[]): number;
         debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
     }
 }
 declare module ex {
+    /**
+     * Dynamic Tree Node used for tracking bounds within the tree
+     */
     class TreeNode {
         parent: any;
         left: TreeNode;
@@ -1931,30 +2085,99 @@ declare module ex {
         constructor(parent?: any);
         isLeaf(): boolean;
     }
+    /**
+     * The DynamicTrees provides a spatial partiioning data structure for quickly querying for overlapping bounding boxes for
+     * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
+     *
+     * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
+     * Every non-leaf node is a bounding box that contains child bounding boxes.
+     */
     class DynamicTree {
+        worldBounds: BoundingBox;
         root: TreeNode;
         nodes: {
             [key: number]: TreeNode;
         };
-        constructor();
-        insert(leaf: TreeNode): void;
-        remove(leaf: TreeNode): void;
+        constructor(worldBounds?: BoundingBox);
+        /**
+         * Inserts a node into the dynamic tree
+         */
+        private _insert(leaf);
+        /**
+         * Removes a node from the dynamic tree
+         */
+        private _remove(leaf);
+        /**
+         * Tracks a body in the dynamic tree
+         */
         trackBody(body: Body): void;
+        /**
+         * Updates the dynamic tree given the current bounds of each body being tracked
+         */
         updateBody(body: Body): boolean;
+        /**
+         * Untracks a body from the dynamic tree
+         */
         untrackBody(body: Body): void;
-        balance(node: TreeNode): TreeNode;
+        /**
+         * Balances the tree about a node
+         */
+        private _balance(node);
+        /**
+         * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
+         */
         getHeight(): number;
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be colliding with the provided body.
+         *
+         * In the query callback, it will be passed a potential collider. Returning true from this callback indicates
+         * that you are complete with your query and you do not want to continue. Returning false will continue searching
+         * the tree until all possible colliders have been returned.
+         */
         query(body: Body, callback: (other: Body) => boolean): void;
-        rayCast(ray: Ray, max: any): Actor;
+        /**
+         * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
+         * long ray to test the tree specified by `max`.
+         *
+         * In the query callback, it will be passed a potential body that intersects with the racast. Returning true from this
+         * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
+         * the tree until all possible bodies that would intersect with the ray have been returned.
+         */
+        rayCastQuery(ray: Ray, max: number, callback: (other: Body) => boolean): void;
         getNodes(): TreeNode[];
         debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
+    }
+}
+declare module ex {
+    /**
+     * Models a potential collision between 2 bodies
+     */
+    class Pair {
+        bodyA: Body;
+        bodyB: Body;
+        id: string;
+        collision: CollisionContact;
+        constructor(bodyA: Body, bodyB: Body);
+        /**
+         * Runs the collison intersection logic on the members of this pair
+         */
+        collide(): void;
+        /**
+         * Resovles the collision body position and velocity if a collision occured
+         */
+        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
+        /**
+         * Calculates the unique pair hash id for this collision pair
+         */
+        static calculatePairHash(bodyA: Body, bodyB: Body): string;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
 declare module ex {
     class DynamicTreeCollisionBroadphase implements ICollisionBroadphase {
         private _dynamicCollisionTree;
         private _collisionHash;
-        private _collisionContactCache;
+        private _collisionPairCache;
         /**
          * Tracks a physics body for collisions
          */
@@ -1964,7 +2187,18 @@ declare module ex {
          */
         untrack(target: Body): void;
         private _canCollide(actorA, actorB);
-        detect(targets: Actor[], delta: number): CollisionContact[];
+        /**
+         * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
+         */
+        broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+        /**
+         * Applies narrow phase on collision pairs to find actual area intersections
+         */
+        narrowphase(pairs: Pair[], stats?: FrameStats): void;
+        /**
+         * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
+         */
+        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
         /**
          * Update the dynamic tree positions
          */
@@ -3090,11 +3324,6 @@ declare module ex {
         private _height;
         private _width;
         /**
-         * Collision maintenance
-         */
-        private _collisionContacts;
-        private _totalMtv;
-        /**
          * The scale vector of the actor
          */
         scale: ex.Vector;
@@ -3251,14 +3480,6 @@ declare module ex {
          */
         setDrawing(key: number): any;
         /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
-         */
-        addMtv(mtv: Vector): void;
-        /**
-         * Applies the accumulated translation vectors to the actors position
-         */
-        applyMtv(): void;
-        /**
          * Adds a whole texture as the "default" drawing. Set a drawing using [[setDrawing]].
          */
         addDrawing(texture: Texture): any;
@@ -3300,11 +3521,6 @@ declare module ex {
          * @param name The name of the collision group
          */
         removeCollisionGroup(name: string): void;
-        /**
-         * Calculates the unique pair hash between two actors
-         * @param other
-         */
-        calculatePairHash(other: Actor): string;
         /**
          * Get the center point of an actor
          */
@@ -5004,6 +5220,7 @@ declare module ex.Util.DrawUtil {
      * @param stroke The [[ex.Color]] to stroke rectangle with
      */
     function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
+    function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
 }
 declare module ex {
     interface ILoader extends ILoadable {
@@ -5590,9 +5807,9 @@ declare module ex.Input {
         private _keysDown;
         private _engine;
         constructor(engine: ex.Engine);
-        on(eventName: ex.Events.press, handler: (event?: KeyboardEvent) => void): any;
-        on(eventName: ex.Events.release, handler: (event?: KeyboardEvent) => void): any;
-        on(eventName: ex.Events.hold, handler: (event?: KeyboardEvent) => void): any;
+        on(eventName: ex.Events.press, handler: (event?: KeyEvent) => void): any;
+        on(eventName: ex.Events.release, handler: (event?: KeyEvent) => void): any;
+        on(eventName: ex.Events.hold, handler: (event?: KeyEvent) => void): any;
         on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Initialize Keyboard event listeners

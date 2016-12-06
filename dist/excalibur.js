@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-04
+/*! excalibur - v0.8.0 - 2016-12-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -2556,8 +2556,11 @@ var ex;
             return outputStr;
         }
         Util.base64Encode = base64Encode;
+        /**
+         * Clamps a value between a min and max inclusive
+         */
         function clamp(val, min, max) {
-            return val <= min ? min : (val >= max ? max : val);
+            return Math.min(Math.max(min, val), max);
         }
         Util.clamp = clamp;
         function randomInRange(min, max) {

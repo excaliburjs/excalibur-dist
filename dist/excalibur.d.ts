@@ -1262,7 +1262,10 @@ declare module ex.Util {
      */
     function extend(target: any, ...objects: any[]): any;
     function base64Encode(inputStr: string): string;
-    function clamp(val: any, min: any, max: any): any;
+    /**
+     * Clamps a value between a min and max inclusive
+     */
+    function clamp(val: number, min: number, max: number): number;
     function randomInRange(min: number, max: number): number;
     function randomIntInRange(min: number, max: number): number;
     function canonicalizeAngle(angle: number): number;

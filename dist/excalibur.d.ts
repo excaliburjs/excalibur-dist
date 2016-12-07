@@ -162,15 +162,15 @@ declare module ex {
         /**
          * Gets the frame's actor statistics
          */
-        actors: IFrameActorStats;
+        readonly actors: IFrameActorStats;
         /**
          * Gets the frame's duration statistics
          */
-        duration: IFrameDurationStats;
+        readonly duration: IFrameDurationStats;
         /**
          * Gets the frame's physics statistics
          */
-        physics: PhysicsStats;
+        readonly physics: PhysicsStats;
     }
     class PhysicsStats implements IPhysicsStats {
         private _pairs;
@@ -570,11 +570,11 @@ declare module ex {
         /**
          * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
          */
-        slope: number;
+        readonly slope: number;
         /**
          * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
          */
-        intercept: number;
+        readonly intercept: number;
         /**
          * Returns the slope of the line in the form of a vector
          */
@@ -5167,7 +5167,7 @@ declare module ex.Util.DrawUtil {
      * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
      * the line, and "square" is a rectangle that is an equal width and half height cap.
      */
-    type LineCapStyle = "butt" | "round" | "square";
+    type LineCapStyle = 'butt' | 'round' | 'square';
     /**
      * Draw a line on canvas context
      *
@@ -5279,7 +5279,7 @@ declare module ex {
         logoHeight: number;
         backgroundColor: string;
         protected _imageElement: HTMLImageElement;
-        protected _image: HTMLImageElement;
+        protected readonly _image: HTMLImageElement;
         /**
          * @param loadables  Optionally provide the list of resources you want to load at constructor time
          */
@@ -5600,7 +5600,7 @@ declare module ex {
         update(engine: Engine, delta: number): void;
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
         private _fontDraw(ctx, delta, sprites);
-        protected _fontString: string;
+        protected readonly _fontString: string;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
@@ -6162,7 +6162,7 @@ declare module ex {
          * Current FPS
          * @obsolete Use [[stats.currFrame.fps]]. Will be deprecated in future versions.
          */
-        fps: number;
+        readonly fps: number;
         /**
          * Access Excalibur debugging functionality.
          */
@@ -6170,7 +6170,7 @@ declare module ex {
         /**
          * Access [[debug.stats]] that holds frame statistics.
          */
-        stats: {
+        readonly stats: {
             currFrame: FrameStats;
             prevFrame: FrameStats;
         };

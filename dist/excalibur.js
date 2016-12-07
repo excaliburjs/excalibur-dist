@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-06
+/*! excalibur - v0.8.0 - 2016-12-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -9256,6 +9256,24 @@ var ex;
             this.l = l;
             this.a = a;
         }
+        HSLColor.hue2rgb = function (p, q, t) {
+            if (t < 0) {
+                t += 1;
+            }
+            if (t > 1) {
+                t -= 1;
+            }
+            if (t < 1 / 6) {
+                return p + (q - p) * 6 * t;
+            }
+            if (t < 1 / 2) {
+                return q;
+            }
+            if (t < 2 / 3) {
+                return p + (q - p) * (2 / 3 - t) * 6;
+            }
+            return p;
+        };
         HSLColor.fromRGBA = function (r, g, b, a) {
             r /= 255;
             g /= 255;
@@ -9289,29 +9307,11 @@ var ex;
                 r = g = b = this.l; // achromatic
             }
             else {
-                function hue2rgb(p, q, t) {
-                    if (t < 0) {
-                        t += 1;
-                    }
-                    if (t > 1) {
-                        t -= 1;
-                    }
-                    if (t < 1 / 6) {
-                        return p + (q - p) * 6 * t;
-                    }
-                    if (t < 1 / 2) {
-                        return q;
-                    }
-                    if (t < 2 / 3) {
-                        return p + (q - p) * (2 / 3 - t) * 6;
-                    }
-                    return p;
-                }
                 var q = this.l < 0.5 ? this.l * (1 + this.s) : this.l + this.s - this.l * this.s;
                 var p = 2 * this.l - q;
-                r = hue2rgb(p, q, this.h + 1 / 3);
-                g = hue2rgb(p, q, this.h);
-                b = hue2rgb(p, q, this.h - 1 / 3);
+                r = HSLColor.hue2rgb(p, q, this.h + 1 / 3);
+                g = HSLColor.hue2rgb(p, q, this.h);
+                b = HSLColor.hue2rgb(p, q, this.h - 1 / 3);
             }
             return new Color(r * 255, g * 255, b * 255, this.a);
         };
@@ -13294,8 +13294,21 @@ O|===|* >________________>\n\
             this.input.gamepads.init();
             // Issue #385 make use of the visibility api
             // https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
-            document.addEventListener('visibilitychange', function () {
-                if (document.hidden || document.msHidden) {
+            var hidden, visibilityChange;
+            if (typeof document.hidden !== 'undefined') {
+                hidden = 'hidden';
+                visibilityChange = 'visibilitychange';
+            }
+            else if ('msHidden' in document) {
+                hidden = 'msHidden';
+                visibilityChange = 'msvisibilitychange';
+            }
+            else if ('webkitHidden' in document) {
+                hidden = 'webkitHidden';
+                visibilityChange = 'webkitvisibilitychange';
+            }
+            document.addEventListener(visibilityChange, function () {
+                if (document[hidden]) {
                     _this.eventDispatcher.emit('hidden', new ex.HiddenEvent());
                     _this._logger.debug('Window hidden');
                 }

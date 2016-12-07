@@ -13330,10 +13330,15 @@ O|===|* >________________>\n\
          */
         Engine.prototype.setAntialiasing = function (isSmooth) {
             this._isSmoothingEnabled = isSmooth;
-            this.ctx.imageSmoothingEnabled = isSmooth;
-            this.ctx.webkitImageSmoothingEnabled = isSmooth;
-            this.ctx.mozImageSmoothingEnabled = isSmooth;
-            this.ctx.msImageSmoothingEnabled = isSmooth;
+            var ctx = this.ctx;
+            ctx.imageSmoothingEnabled = isSmooth;
+            for (var _i = 0, _a = ['webkitImageSmoothingEnabled', 'mozImageSmoothingEnabled', 'msImageSmoothingEnabled']; _i < _a.length; _i++) {
+                var smoothing = _a[_i];
+                if (smoothing in ctx) {
+                    ctx[smoothing] = isSmooth;
+                }
+            }
+            ;
         };
         /**
          * Return the current smoothing status of the canvas

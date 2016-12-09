@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-07
+/*! excalibur - v0.8.0 - 2016-12-09
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -11536,6 +11536,15 @@ var ex;
     ex.PauseAfterLoader = PauseAfterLoader;
 })(ex || (ex = {}));
 /// <reference path="Log.ts" />
+/**
+ * This is the list of features that will be used to log the supported
+ * features to the console when Detector.logBrowserFeatures() is called.
+ */
+var REPORTED_FEATURES = {
+    webgl: 'WebGL',
+    webaudio: 'WebAudio',
+    gamepadapi: 'Gamepad API'
+};
 var ex;
 (function (ex) {
     /**
@@ -11543,6 +11552,7 @@ var ex;
      */
     var Detector = (function () {
         function Detector() {
+            this._features = null;
             this.failedTests = [];
             // critical browser features required for ex to run
             this._criticalTests = {
@@ -11593,7 +11603,89 @@ var ex;
                     return !!(elem.getContext && elem.getContext('webgl'));
                 }
             };
+            this._features = this._loadBrowserFeatures();
         }
+        /**
+         * Returns a map of currently supported browser features. This method
+         * treats the features as a singleton and will only calculate feature
+         * support if it has not previously been done.
+         */
+        Detector.prototype.getBrowserFeatures = function () {
+            if (this._features === null) {
+                this._features = this._loadBrowserFeatures();
+            }
+            return this._features;
+        };
+        /**
+         * Report on non-critical browser support for debugging purposes.
+         * Use native browser console colors for visibility.
+         */
+        Detector.prototype.logBrowserFeatures = function () {
+            var msg = '%cSUPPORTED BROWSER FEATURES\n==========================%c\n';
+            var args = [
+                'font-weight: bold; color: navy',
+                'font-weight: normal; color: inherit'
+            ];
+            var supported = this.getBrowserFeatures();
+            for (var _i = 0, _a = Object.keys(REPORTED_FEATURES); _i < _a.length; _i++) {
+                var feature = _a[_i];
+                if (supported[feature]) {
+                    msg += '(%c\u2713%c)'; // (✓)
+                    args.push('font-weight: bold; color: green');
+                    args.push('font-weight: normal; color: inherit');
+                }
+                else {
+                    msg += '(%c\u2717%c)'; // (✗)
+                    args.push('font-weight: bold; color: red');
+                    args.push('font-weight: normal; color: inherit');
+                }
+                ;
+                msg += ' ' + REPORTED_FEATURES[feature] + '\n';
+            }
+            args.unshift(msg);
+            console.log.apply(console, args);
+        };
+        /**
+         * Executes several IIFE's to get a constant reference to supported
+         * features within the current execution context.
+         */
+        Detector.prototype._loadBrowserFeatures = function () {
+            var _this = this;
+            return {
+                // IIFE to check canvas support
+                canvas: (function () {
+                    return _this._criticalTests.canvasSupport();
+                })(),
+                // IIFE to check arraybuffer support
+                arraybuffer: (function () {
+                    return _this._criticalTests.arrayBufferSupport();
+                })(),
+                // IIFE to check dataurl support
+                dataurl: (function () {
+                    return _this._criticalTests.dataUrlSupport();
+                })(),
+                // IIFE to check objecturl support
+                objecturl: (function () {
+                    return _this._criticalTests.objectUrlSupport();
+                })(),
+                // IIFE to check rgba support
+                rgba: (function () {
+                    return _this._criticalTests.rgbaSupport();
+                })(),
+                // IIFE to check webaudio support
+                webaudio: (function () {
+                    return _this._warningTest.webAudioSupport();
+                })(),
+                // IIFE to check webgl support
+                webgl: (function () {
+                    return _this._warningTest.webglSupport();
+                })(),
+                // IIFE to check gamepadapi support
+                gamepadapi: (function () {
+                    return !!navigator.getGamepads;
+                })()
+            };
+        };
         Detector.prototype.test = function () {
             // Critical test will for ex not to run
             var failedCritical = false;
@@ -12953,6 +13045,10 @@ O|===|* >________________>\n\
                 console.log('Visit', 'http://excaliburjs.com', 'for more information');
             }
             this._logger = ex.Logger.getInstance();
+            // If debug is enabled, let's log browser features to the console.
+            if (this._logger.defaultLevel === ex.LogLevel.Debug) {
+                detector.logBrowserFeatures();
+            }
             this._logger.debug('Building engine...');
             this.canvasElementId = options.canvasElementId;
             if (options.canvasElementId) {

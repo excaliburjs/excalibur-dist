@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-09
+/*! excalibur - v0.8.0 - 2016-12-18
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -6850,10 +6850,7 @@ var ex;
              * The [[UIActor]]s in a scene, if any; these are drawn last
              */
             this.uiActors = [];
-            /**
-             * Whether or the [[Scene]] has been initialized
-             */
-            this.isInitialized = false;
+            this._isInitialized = false;
             this._sortedDrawingTree = new ex.SortedList(ex.Actor.prototype.getZIndex);
             this._broadphase = new ex.DynamicTreeCollisionBroadphase();
             this._killQueue = [];
@@ -6896,6 +6893,38 @@ var ex;
         Scene.prototype.onDeactivate = function () {
             // will be overridden
             this._logger.debug('Scene.onDeactivate', this);
+        };
+        /**
+         * Initializes actors in the scene
+         */
+        Scene.prototype._initializeChildren = function () {
+            for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child._initialize(this.engine);
+            }
+        };
+        Object.defineProperty(Scene.prototype, "isInitialized", {
+            /**
+             * Gets whether or not the [[Scene]] has been initialized
+             */
+            get: function () {
+                return this._isInitialized;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Initializes the scene before the first update, meant to be called by engine not by users of
+         * Excalibur
+         * @internal
+         */
+        Scene.prototype._initialize = function (engine) {
+            if (!this.isInitialized) {
+                this.onInitialize.call(this, engine);
+                this.eventDispatcher.emit('initialize', new ex.InitializeEvent(engine));
+                this._initializeChildren();
+                this._isInitialized = true;
+            }
         };
         /**
          * Updates all the actors and timers in the scene. Called by the [[Engine]].
@@ -7696,6 +7725,31 @@ var ex;
         Actor.prototype.onInitialize = function (engine) {
             // Override me
         };
+        Object.defineProperty(Actor.prototype, "isInitialized", {
+            /**
+             * Gets wether the actor is Initialized
+             */
+            get: function () {
+                return this._isInitialized;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        /**
+         * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
+         * @internal
+         */
+        Actor.prototype._initialize = function (engine) {
+            if (!this.isInitialized) {
+                this.onInitialize(engine);
+                this.eventDispatcher.emit('initialize', new ex.InitializeEvent(engine));
+                this._isInitialized = true;
+            }
+            for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child._initialize(engine);
+            }
+        };
         Actor.prototype._checkForPointerOptIn = function (eventName) {
             if (eventName) {
                 var normalized = eventName.toLowerCase();
@@ -8104,11 +8158,7 @@ var ex;
          * @param delta  The time elapsed since the last update in milliseconds
          */
         Actor.prototype.update = function (engine, delta) {
-            if (!this._isInitialized) {
-                this.onInitialize(engine);
-                this.eventDispatcher.emit('initialize', new ex.InitializeEvent(engine));
-                this._isInitialized = true;
-            }
+            this._initialize(engine);
             this.emit('preupdate', new ex.PreUpdateEvent(engine, delta, this));
             // Update action queue
             this.actionQueue.update(delta);
@@ -13276,11 +13326,8 @@ O|===|* >________________>\n\
                 }
                 // set current scene to new one
                 this.currentScene = newScene;
-                if (!this.currentScene.isInitialized) {
-                    this.currentScene.onInitialize.call(this.currentScene, this);
-                    this.currentScene.eventDispatcher.emit('initialize', new ex.InitializeEvent(this));
-                    this.currentScene.isInitialized = true;
-                }
+                // initialize the current scene if has not been already
+                this.currentScene._initialize(this);
                 this.currentScene.onActivate.call(this.currentScene);
                 this.currentScene.eventDispatcher.emit('activate', new ex.ActivateEvent(oldScene));
             }

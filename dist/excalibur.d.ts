@@ -2953,10 +2953,7 @@ declare module ex {
          * The [[UIActor]]s in a scene, if any; these are drawn last
          */
         uiActors: Actor[];
-        /**
-         * Whether or the [[Scene]] has been initialized
-         */
-        isInitialized: boolean;
+        private _isInitialized;
         private _sortedDrawingTree;
         private _broadphase;
         private _killQueue;
@@ -2989,6 +2986,20 @@ declare module ex {
          * this is where you should cleanup any DOM UI or event handlers needed for the scene.
          */
         onDeactivate(): void;
+        /**
+         * Initializes actors in the scene
+         */
+        private _initializeChildren();
+        /**
+         * Gets whether or not the [[Scene]] has been initialized
+         */
+        readonly isInitialized: boolean;
+        /**
+         * Initializes the scene before the first update, meant to be called by engine not by users of
+         * Excalibur
+         * @internal
+         */
+        _initialize(engine: Engine): void;
         /**
          * Updates all the actors and timers in the scene. Called by the [[Engine]].
          * @param engine  Reference to the current Engine
@@ -3431,6 +3442,15 @@ declare module ex {
          * overridden. This is where initialization of child actors should take place.
          */
         onInitialize(engine: Engine): void;
+        /**
+         * Gets wether the actor is Initialized
+         */
+        readonly isInitialized: boolean;
+        /**
+         * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
+         * @internal
+         */
+        _initialize(engine: Engine): void;
         private _checkForPointerOptIn(eventName);
         on(eventName: ex.Events.kill, handler: (event?: KillEvent) => void): any;
         on(eventName: ex.Events.initialize, handler: (event?: InitializeEvent) => void): any;

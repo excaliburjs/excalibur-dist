@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-18
+/*! excalibur - v0.8.0 - 2016-12-19
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -6,6 +6,12 @@ var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 /* istanbul ignore next */
 if (typeof window === 'undefined') {
@@ -394,6 +400,48 @@ var ex;
         return PhysicsStats;
     }());
     ex.PhysicsStats = PhysicsStats;
+})(ex || (ex = {}));
+var ex;
+(function (ex) {
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    function obsolete(options) {
+        options = ex.Util.extend({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+        return function (target, property, descriptor) {
+            if (!(typeof descriptor.value === 'function' ||
+                typeof descriptor.get === 'function' ||
+                typeof descriptor.set === 'function')) {
+                throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
+            }
+            var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
+            var message = (methodSignature + " is marked obsolete: " + options.message) +
+                (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
+            var method = ex.Util.extend({}, descriptor);
+            if (descriptor.value) {
+                method.value = function () {
+                    ex.Logger.getInstance().warn(message);
+                    return descriptor.value.apply(this, arguments);
+                };
+                return method;
+            }
+            if (descriptor.get) {
+                method.get = function () {
+                    ex.Logger.getInstance().warn(message);
+                    return descriptor.get.apply(this, arguments);
+                };
+            }
+            if (descriptor.set) {
+                method.set = function () {
+                    ex.Logger.getInstance().warn(message);
+                    return descriptor.set.apply(this, arguments);
+                };
+            }
+            return method;
+        };
+    }
+    ex.obsolete = obsolete;
 })(ex || (ex = {}));
 var ex;
 (function (ex) {
@@ -9612,7 +9660,6 @@ var ex;
          * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
          */
         Promise.wrap = function (value) {
-            ex.Logger.getInstance().warn('[obsolete] Promise.wrap is obsolete. Use Promise.resolve/reject instead.');
             return Promise.resolve(value);
         };
         /**
@@ -9772,6 +9819,9 @@ var ex;
                 throw e;
             }
         };
+        __decorate([
+            ex.obsolete({ alternateMethod: 'ex.Promise.resolve/reject' })
+        ], Promise, "wrap", null);
         return Promise;
     }());
     ex.Promise = Promise;
@@ -12931,6 +12981,7 @@ var ex;
 })(ex || (ex = {}));
 /// <reference path="MonkeyPatch.ts" />
 /// <reference path="Debug.ts" />
+/// <reference path="Util/Decorators.ts" />
 /// <reference path="Events.ts" />
 /// <reference path="EventDispatcher.ts" />
 /// <reference path="Class.ts" />
@@ -13132,7 +13183,7 @@ O|===|* >________________>\n\
         Object.defineProperty(Engine.prototype, "fps", {
             /**
              * Current FPS
-             * @obsolete Use [[stats.currFrame.fps]]. Will be deprecated in future versions.
+             * @obsolete Use [[ex.FrameStats.fps|ex.Engine.stats.fps]]. Will be deprecated in future versions.
              */
             get: function () {
                 return this.stats.currFrame.fps;
@@ -13142,7 +13193,7 @@ O|===|* >________________>\n\
         });
         Object.defineProperty(Engine.prototype, "stats", {
             /**
-             * Access [[debug.stats]] that holds frame statistics.
+             * Access [[stats]] that holds frame statistics.
              */
             get: function () {
                 return this.debug.stats;
@@ -13686,6 +13737,9 @@ O|===|* >________________>\n\
             suppressConsoleBootMessage: null,
             suppressMinimumBrowserFeatureDetection: null
         };
+        __decorate([
+            ex.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })
+        ], Engine.prototype, "fps", null);
         return Engine;
     }(ex.Class));
     ex.Engine = Engine;

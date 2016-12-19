@@ -11450,7 +11450,7 @@ var ex;
             var me = this;
             if (this._resourceList.length === 0) {
                 me.oncomplete.call(me);
-                return complete;
+                return complete.resolve();
             }
             var progressArray = new Array(this._resourceList.length);
             var progressChunks = this._resourceList.length;

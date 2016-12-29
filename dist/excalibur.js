@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2016-12-19
+/*! excalibur - v0.8.0 - 2016-12-29
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 var EX_VERSION = "0.8.0";
@@ -416,7 +416,7 @@ var ex;
                 throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
             }
             var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
-            var message = (methodSignature + " is marked obsolete: " + options.message) +
+            var message = methodSignature + " is marked obsolete: " + options.message +
                 (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
             var method = ex.Util.extend({}, descriptor);
             if (descriptor.value) {
@@ -847,36 +847,36 @@ var ex;
         Vector.prototype.toString = function () {
             return "(" + this.x + ", " + this.y + ")";
         };
-        /**
-         * A (0, 0) vector
-         */
-        Vector.Zero = new Vector(0, 0);
-        /**
-         * A (1, 1) vector
-         */
-        Vector.One = new Vector(1, 1);
-        /**
-         * A (0.5, 0.5) vector
-         */
-        Vector.Half = new Vector(0.5, 0.5);
-        /**
-         * A unit vector pointing up (0, -1)
-         */
-        Vector.Up = new Vector(0, -1);
-        /**
-         * A unit vector pointing down (0, 1)
-         */
-        Vector.Down = new Vector(0, 1);
-        /**
-         * A unit vector pointing left (-1, 0)
-         */
-        Vector.Left = new Vector(-1, 0);
-        /**
-         * A unit vector pointing right (1, 0)
-         */
-        Vector.Right = new Vector(1, 0);
         return Vector;
     }());
+    /**
+     * A (0, 0) vector
+     */
+    Vector.Zero = new Vector(0, 0);
+    /**
+     * A (1, 1) vector
+     */
+    Vector.One = new Vector(1, 1);
+    /**
+     * A (0.5, 0.5) vector
+     */
+    Vector.Half = new Vector(0.5, 0.5);
+    /**
+     * A unit vector pointing up (0, -1)
+     */
+    Vector.Up = new Vector(0, -1);
+    /**
+     * A unit vector pointing down (0, 1)
+     */
+    Vector.Down = new Vector(0, 1);
+    /**
+     * A unit vector pointing left (-1, 0)
+     */
+    Vector.Left = new Vector(-1, 0);
+    /**
+     * A unit vector pointing right (1, 0)
+     */
+    Vector.Right = new Vector(1, 0);
     ex.Vector = Vector;
     /**
      * A 2D ray that can be cast into the scene to do collision detection
@@ -1073,11 +1073,11 @@ var ex;
      * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
      * simulated physical interactions.
      */
+    var CollisionResolutionStrategy;
     (function (CollisionResolutionStrategy) {
         CollisionResolutionStrategy[CollisionResolutionStrategy["Box"] = 0] = "Box";
         CollisionResolutionStrategy[CollisionResolutionStrategy["RigidBody"] = 1] = "RigidBody";
-    })(ex.CollisionResolutionStrategy || (ex.CollisionResolutionStrategy = {}));
-    var CollisionResolutionStrategy = ex.CollisionResolutionStrategy;
+    })(CollisionResolutionStrategy = ex.CollisionResolutionStrategy || (ex.CollisionResolutionStrategy = {}));
     /**
      * Possible broadphase collision pair identification strategies
      *
@@ -1085,18 +1085,18 @@ var ex;
      * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
      * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
      */
+    var BroadphaseStrategy;
     (function (BroadphaseStrategy) {
         BroadphaseStrategy[BroadphaseStrategy["Naive"] = 0] = "Naive";
         BroadphaseStrategy[BroadphaseStrategy["DynamicAABBTree"] = 1] = "DynamicAABBTree";
-    })(ex.BroadphaseStrategy || (ex.BroadphaseStrategy = {}));
-    var BroadphaseStrategy = ex.BroadphaseStrategy;
+    })(BroadphaseStrategy = ex.BroadphaseStrategy || (ex.BroadphaseStrategy = {}));
     /**
      * Possible numerical integrators for position and velocity
      */
+    var Integrator;
     (function (Integrator) {
         Integrator[Integrator["Euler"] = 0] = "Euler";
-    })(ex.Integrator || (ex.Integrator = {}));
-    var Integrator = ex.Integrator;
+    })(Integrator = ex.Integrator || (ex.Integrator = {}));
     /**
      * The [[Physics]] object is the global configuration object for all Excalibur physics.
      *
@@ -1119,123 +1119,123 @@ var ex;
         Physics.useRigidBodyPhysics = function () {
             ex.Physics.collisionResolutionStrategy = ex.CollisionResolutionStrategy.RigidBody;
         };
-        /**
-         * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
-         *
-         *
-         * This is a great way to globally simulate effects like gravity.
-         */
-        Physics.acc = new ex.Vector(0, 0);
-        /**
-         * Globally switches all Excalibur physics behavior on or off.
-         */
-        Physics.enabled = true;
-        /**
-         * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
-         *
-         * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
-         *
-         * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
-         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
-         *
-         * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
-         * cost of performance.
-         *
-         * The default is set to 5 passes which is a good start.
-         */
-        Physics.collisionPasses = 5;
-        /**
-         * Gets or sets the broadphase pair identification strategy.
-         *
-         * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
-         * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
-         * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
-         */
-        Physics.broadphaseStrategy = BroadphaseStrategy.DynamicAABBTree;
-        /**
-         * Globally switches the debug information for the broadphase strategy
-         */
-        Physics.broadphaseDebug = false;
-        /**
-         * Show the normals as a result of collision on the screen.
-         */
-        Physics.showCollisionNormals = false;
-        /**
-         * Show the position, velocity, and acceleration as graphical vectors.
-         */
-        Physics.showMotionVectors = false;
-        /**
-         * Show the axis-aligned bounding boxes of the collision bodies on the screen.
-         */
-        Physics.showBounds = false;
-        /**
-         * Show the bounding collision area shapes
-         */
-        Physics.showArea = false;
-        /**
-         * Show points of collision interpreted by excalibur as a result of collision.
-         */
-        Physics.showContacts = false;
-        /**
-         * Show the surface normals of the collision areas.
-         */
-        Physics.showNormals = false;
-        /**
-         * Gets or sets the global collision resolution strategy (narrowphase).
-         *
-         * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
-         *
-         * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
-         * simulated physical interactions.
-         */
-        Physics.collisionResolutionStrategy = CollisionResolutionStrategy.Box;
-        /**
-         * The default mass to use if none is specified
-         */
-        Physics.defaultMass = 10;
-        /**
-         * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
-         */
-        Physics.integrator = Integrator.Euler;
-        /**
-         * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
-         * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
-         */
-        Physics.integrationSteps = 1;
-        /**
-         * Gets or sets whether rotation is allowed in a RigidBody collision resolution
-         */
-        Physics.allowRigidBodyRotation = true;
-        /**
-         * Small value to help collision passes settle themselves after the narrowphase.
-         */
-        Physics.collisionShift = .001;
-        /**
-         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
-         */
-        Physics.dynamicTreeVelocityMultiplyer = 2;
-        /**
-         * Pad RigidBody BoundingBox by a constant amount
-         */
-        Physics.boundsPadding = 5;
-        /**
-         * Surface epsilon is used to help deal with surface penatration
-         */
-        Physics.surfaceEpsilon = .1;
-        /**
-         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
-         * bodies from tunneling through one another.
-         */
-        Physics.checkForFastBodies = true;
-        /**
-         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
-         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
-         * Excalibur will always perform the fast body raycast regardless of speed.
-         */
-        Physics.disableMinimumSpeedForFastBody = false;
         return Physics;
     }());
+    /**
+     * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
+     * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
+     *
+     *
+     * This is a great way to globally simulate effects like gravity.
+     */
+    Physics.acc = new ex.Vector(0, 0);
+    /**
+     * Globally switches all Excalibur physics behavior on or off.
+     */
+    Physics.enabled = true;
+    /**
+     * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
+     *
+     * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
+     *
+     * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
+     * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
+     *
+     * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
+     * cost of performance.
+     *
+     * The default is set to 5 passes which is a good start.
+     */
+    Physics.collisionPasses = 5;
+    /**
+     * Gets or sets the broadphase pair identification strategy.
+     *
+     * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+     * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+     * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
+     */
+    Physics.broadphaseStrategy = BroadphaseStrategy.DynamicAABBTree;
+    /**
+     * Globally switches the debug information for the broadphase strategy
+     */
+    Physics.broadphaseDebug = false;
+    /**
+     * Show the normals as a result of collision on the screen.
+     */
+    Physics.showCollisionNormals = false;
+    /**
+     * Show the position, velocity, and acceleration as graphical vectors.
+     */
+    Physics.showMotionVectors = false;
+    /**
+     * Show the axis-aligned bounding boxes of the collision bodies on the screen.
+     */
+    Physics.showBounds = false;
+    /**
+     * Show the bounding collision area shapes
+     */
+    Physics.showArea = false;
+    /**
+     * Show points of collision interpreted by excalibur as a result of collision.
+     */
+    Physics.showContacts = false;
+    /**
+     * Show the surface normals of the collision areas.
+     */
+    Physics.showNormals = false;
+    /**
+     * Gets or sets the global collision resolution strategy (narrowphase).
+     *
+     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
+     *
+     * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+     * simulated physical interactions.
+     */
+    Physics.collisionResolutionStrategy = CollisionResolutionStrategy.Box;
+    /**
+     * The default mass to use if none is specified
+     */
+    Physics.defaultMass = 10;
+    /**
+     * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
+     */
+    Physics.integrator = Integrator.Euler;
+    /**
+     * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
+     * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
+     */
+    Physics.integrationSteps = 1;
+    /**
+     * Gets or sets whether rotation is allowed in a RigidBody collision resolution
+     */
+    Physics.allowRigidBodyRotation = true;
+    /**
+     * Small value to help collision passes settle themselves after the narrowphase.
+     */
+    Physics.collisionShift = .001;
+    /**
+     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+     */
+    Physics.dynamicTreeVelocityMultiplyer = 2;
+    /**
+     * Pad RigidBody BoundingBox by a constant amount
+     */
+    Physics.boundsPadding = 5;
+    /**
+     * Surface epsilon is used to help deal with surface penatration
+     */
+    Physics.surfaceEpsilon = .1;
+    /**
+     * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
+     * bodies from tunneling through one another.
+     */
+    Physics.checkForFastBodies = true;
+    /**
+     * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
+     * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+     * Excalibur will always perform the fast body raycast regardless of speed.
+     */
+    Physics.disableMinimumSpeedForFastBody = false;
     ex.Physics = Physics;
     ;
 })(ex || (ex = {}));
@@ -1572,7 +1572,8 @@ var ex;
                     edge.begin,
                     edge.end,
                     edge.end.sub(edgeNormal.scale(10)),
-                    edge.begin.sub(edgeNormal.scale(10))]
+                    edge.begin.sub(edgeNormal.scale(10))
+                ]
             });
             var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
             // no minAxis, no overlap, no collision
@@ -2325,7 +2326,8 @@ var ex;
                 new ex.Vector(this._xMin, this._yMin),
                 new ex.Vector(this._xMax, this._yMin),
                 new ex.Vector(this._xMin, this._yMax),
-                new ex.Vector(this._xMax, this._yMax)]; // bottomright
+                new ex.Vector(this._xMax, this._yMax)
+            ]; // bottomright
             // sprite can be wider than canvas screen (and still visible within canvas)
             // top or bottom of sprite must be within canvas
             if (boundingPoints[0].x < 0 && boundingPoints[1].x > engine.canvas.clientWidth &&
@@ -2515,14 +2517,14 @@ var ex;
     /**
      * An enum that describes the sides of an Actor for collision
      */
+    var Side;
     (function (Side) {
         Side[Side["None"] = 0] = "None";
         Side[Side["Top"] = 1] = "Top";
         Side[Side["Bottom"] = 2] = "Bottom";
         Side[Side["Left"] = 3] = "Left";
         Side[Side["Right"] = 4] = "Right";
-    })(ex.Side || (ex.Side = {}));
-    var Side = ex.Side;
+    })(Side = ex.Side || (ex.Side = {}));
 })(ex || (ex = {}));
 /// <reference path="../Algebra.ts"/>
 /// <reference path="../Events.ts"/>
@@ -2852,12 +2854,12 @@ var ex;
                     this._internalArray[i] = func.call(this, this._internalArray[i], i);
                 }
             };
-            /**
-             * Default collection size
-             */
-            Collection.DefaultSize = 200;
             return Collection;
         }());
+        /**
+         * Default collection size
+         */
+        Collection.DefaultSize = 200;
         Util.Collection = Collection;
     })(Util = ex.Util || (ex.Util = {}));
 })(ex || (ex = {}));
@@ -3082,7 +3084,7 @@ var ex;
             var scaledSHeight = this.height * this.scale.y;
             var xpoint = (scaledSWidth) * this.anchor.x;
             var ypoint = (scaledSHeight) * this.anchor.y;
-            ctx.strokeStyle = ex.Color.Black;
+            ctx.strokeStyle = ex.Color.Black.toString();
             ctx.strokeRect(-xpoint, -ypoint, scaledSWidth, scaledSHeight);
             ctx.restore();
         };
@@ -3256,25 +3258,26 @@ var ex;
          * @param spHeight        The height of each character in pixels
          */
         function SpriteFont(image, alphabet, caseInsensitive, columns, rows, spWidth, spHeight) {
-            _super.call(this, image, columns, rows, spWidth, spHeight);
-            this.image = image;
-            this.alphabet = alphabet;
-            this.caseInsensitive = caseInsensitive;
-            this.spWidth = spWidth;
-            this.spHeight = spHeight;
-            this._spriteLookup = {};
-            this._colorLookup = {};
-            this._currentColor = ex.Color.Black.clone();
-            this._currentOpacity = 1.0;
-            this._sprites = {};
+            var _this = _super.call(this, image, columns, rows, spWidth, spHeight) || this;
+            _this.image = image;
+            _this.alphabet = alphabet;
+            _this.caseInsensitive = caseInsensitive;
+            _this.spWidth = spWidth;
+            _this.spHeight = spHeight;
+            _this._spriteLookup = {};
+            _this._colorLookup = {};
+            _this._currentColor = ex.Color.Black.clone();
+            _this._currentOpacity = 1.0;
+            _this._sprites = {};
             // text shadow
-            this._textShadowOn = false;
-            this._textShadowDirty = true;
-            this._textShadowColor = ex.Color.Black.clone();
-            this._textShadowSprites = {};
-            this._shadowOffsetX = 5;
-            this._shadowOffsetY = 5;
-            this._sprites = this.getTextSprites();
+            _this._textShadowOn = false;
+            _this._textShadowDirty = true;
+            _this._textShadowColor = ex.Color.Black.clone();
+            _this._textShadowSprites = {};
+            _this._shadowOffsetX = 5;
+            _this._shadowOffsetY = 5;
+            _this._sprites = _this.getTextSprites();
+            return _this;
         }
         /**
          * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
@@ -4222,9 +4225,9 @@ var ex;
                 this.scene.cancelTimer(this);
             }
         };
-        Timer.id = 0;
         return Timer;
     }());
+    Timer.id = 0;
     ex.Timer = Timer;
 })(ex || (ex = {}));
 /// <reference path="../Actor.ts"/>
@@ -5301,7 +5304,7 @@ var ex;
     var SideCamera = (function (_super) {
         __extends(SideCamera, _super);
         function SideCamera() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
@@ -5324,7 +5327,7 @@ var ex;
     var LockedCamera = (function (_super) {
         __extends(LockedCamera, _super);
         function LockedCamera() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
@@ -5343,6 +5346,7 @@ var ex;
     /**
      * An enum that describes the strategies that rotation actions can use
      */
+    var RotationType;
     (function (RotationType) {
         /**
          * Rotation via `ShortestPath` will use the smallest angle
@@ -5364,8 +5368,7 @@ var ex;
          * regardless of the starting and ending points.
          */
         RotationType[RotationType["CounterClockwise"] = 3] = "CounterClockwise";
-    })(ex.RotationType || (ex.RotationType = {}));
-    var RotationType = ex.RotationType;
+    })(RotationType = ex.RotationType || (ex.RotationType = {}));
 })(ex || (ex = {}));
 /// <reference path="../Algebra.ts" />
 /// <reference path="../Engine.ts" />
@@ -6512,22 +6515,23 @@ var ex;
     var Group = (function (_super) {
         __extends(Group, _super);
         function Group(name, scene) {
-            _super.call(this);
-            this.name = name;
-            this.scene = scene;
-            this._logger = ex.Logger.getInstance();
-            this._members = [];
-            this.actions = new ex.ActionContext();
+            var _this = _super.call(this) || this;
+            _this.name = name;
+            _this.scene = scene;
+            _this._logger = ex.Logger.getInstance();
+            _this._members = [];
+            _this.actions = new ex.ActionContext();
             if (scene == null) {
-                this._logger.error('Invalid constructor arguments passed to Group: ', name, ', scene must not be null!');
+                _this._logger.error('Invalid constructor arguments passed to Group: ', name, ', scene must not be null!');
             }
             else {
                 var existingGroup = scene.groups[name];
                 if (existingGroup) {
-                    this._logger.warn('Group with name', name, 'already exists. This new group will replace it.');
+                    _this._logger.warn('Group with name', name, 'already exists. This new group will replace it.');
                 }
-                scene.groups[name] = this;
+                scene.groups[name] = _this;
             }
+            return _this;
         }
         Group.prototype.add = function (actorOrActors) {
             if (actorOrActors instanceof ex.Actor) {
@@ -6881,35 +6885,36 @@ var ex;
     var Scene = (function (_super) {
         __extends(Scene, _super);
         function Scene(engine) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * The actors in the current scene
              */
-            this.children = [];
+            _this.children = [];
             /**
              * The [[TileMap]]s in the scene, if any
              */
-            this.tileMaps = [];
+            _this.tileMaps = [];
             /**
              * The [[Group]]s in the scene, if any
              */
-            this.groups = {};
+            _this.groups = {};
             /**
              * The [[UIActor]]s in a scene, if any; these are drawn last
              */
-            this.uiActors = [];
-            this._isInitialized = false;
-            this._sortedDrawingTree = new ex.SortedList(ex.Actor.prototype.getZIndex);
-            this._broadphase = new ex.DynamicTreeCollisionBroadphase();
-            this._killQueue = [];
-            this._timers = [];
-            this._cancelQueue = [];
-            this._logger = ex.Logger.getInstance();
-            this.camera = new ex.BaseCamera();
+            _this.uiActors = [];
+            _this._isInitialized = false;
+            _this._sortedDrawingTree = new ex.SortedList(ex.Actor.prototype.getZIndex);
+            _this._broadphase = new ex.DynamicTreeCollisionBroadphase();
+            _this._killQueue = [];
+            _this._timers = [];
+            _this._cancelQueue = [];
+            _this._logger = ex.Logger.getInstance();
+            _this.camera = new ex.BaseCamera();
             if (engine) {
-                this.camera.x = engine.width / 2;
-                this.camera.y = engine.height / 2;
+                _this.camera.x = engine.width / 2;
+                _this.camera.y = engine.height / 2;
             }
+            return _this;
         }
         Scene.prototype.on = function (eventName, handler) {
             _super.prototype.on.call(this, eventName, handler);
@@ -7321,51 +7326,51 @@ var ex;
     var EasingFunctions = (function () {
         function EasingFunctions() {
         }
-        EasingFunctions.Linear = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            return endValue * currentTime / duration + startValue;
-        };
-        EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration;
-            return endValue * currentTime * currentTime + startValue;
-        };
-        EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration;
-            return -endValue * currentTime * (currentTime - 2) + startValue;
-        };
-        EasingFunctions.EaseInOutQuad = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration / 2;
-            if (currentTime < 1) {
-                return endValue / 2 * currentTime * currentTime + startValue;
-            }
-            currentTime--;
-            return -endValue / 2 * (currentTime * (currentTime - 2) - 1) + startValue;
-        };
-        EasingFunctions.EaseInCubic = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration;
-            return endValue * currentTime * currentTime * currentTime + startValue;
-        };
-        EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration;
-            currentTime--;
-            return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
-        };
-        EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
-            endValue = (endValue - startValue);
-            currentTime /= duration / 2;
-            if (currentTime < 1) {
-                return endValue / 2 * currentTime * currentTime * currentTime + startValue;
-            }
-            currentTime -= 2;
-            return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
-        };
         return EasingFunctions;
     }());
+    EasingFunctions.Linear = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        return endValue * currentTime / duration + startValue;
+    };
+    EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration;
+        return endValue * currentTime * currentTime + startValue;
+    };
+    EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration;
+        return -endValue * currentTime * (currentTime - 2) + startValue;
+    };
+    EasingFunctions.EaseInOutQuad = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration / 2;
+        if (currentTime < 1) {
+            return endValue / 2 * currentTime * currentTime + startValue;
+        }
+        currentTime--;
+        return -endValue / 2 * (currentTime * (currentTime - 2) - 1) + startValue;
+    };
+    EasingFunctions.EaseInCubic = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration;
+        return endValue * currentTime * currentTime * currentTime + startValue;
+    };
+    EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration;
+        currentTime--;
+        return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
+    };
+    EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
+        endValue = (endValue - startValue);
+        currentTime /= duration / 2;
+        if (currentTime < 1) {
+            return endValue / 2 * currentTime * currentTime * currentTime + startValue;
+        }
+        currentTime -= 2;
+        return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
+    };
     ex.EasingFunctions = EasingFunctions;
 })(ex || (ex = {}));
 /// <reference path="Interfaces/IDrawable.ts" />
@@ -7409,117 +7414,118 @@ var ex;
          * initial [[opacity]].
          */
         function Actor(x, y, width, height, color) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             /**
              * The unique identifier for the actor
              */
-            this.id = Actor.maxId++;
+            _this.id = Actor.maxId++;
             /**
              * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
              * acceleration, mass, inertia, etc.
              */
-            this.body = new ex.Body(this);
-            this._height = 0;
-            this._width = 0;
+            _this.body = new ex.Body(_this);
+            _this._height = 0;
+            _this._width = 0;
             /**
              * The scale vector of the actor
              */
-            this.scale = new ex.Vector(1, 1);
+            _this.scale = new ex.Vector(1, 1);
             /**
              * The x scalar velocity of the actor in scale/second
              */
-            this.sx = 0; //scale/sec
+            _this.sx = 0; //scale/sec
             /**
              * The y scalar velocity of the actor in scale/second
              */
-            this.sy = 0; //scale/sec
+            _this.sy = 0; //scale/sec
             /**
              * Indicates whether the actor is physically in the viewport
              */
-            this.isOffScreen = false;
+            _this.isOffScreen = false;
             /**
              * The visibility of an actor
              */
-            this.visible = true;
+            _this.visible = true;
             /**
              * The opacity of an actor. Passing in a color in the [[constructor]] will use the
              * color's opacity.
              */
-            this.opacity = 1;
-            this.previousOpacity = 1;
+            _this.opacity = 1;
+            _this.previousOpacity = 1;
             /**
              * Convenience reference to the global logger
              */
-            this.logger = ex.Logger.getInstance();
+            _this.logger = ex.Logger.getInstance();
             /**
              * The scene that the actor is in
              */
-            this.scene = null;
+            _this.scene = null;
             /**
              * The parent of this actor
              */
-            this.parent = null;
+            _this.parent = null;
             // TODO: Replace this with the new actor collection once z-indexing is built
             /**
              * The children of this actor
              */
-            this.children = [];
+            _this.children = [];
             /**
              * Gets or sets the current collision type of this actor. By
              * default it is ([[CollisionType.PreventCollision]]).
              */
-            this.collisionType = CollisionType.PreventCollision;
-            this.collisionGroups = [];
-            this._collisionHandlers = {};
-            this._isInitialized = false;
-            this.frames = {};
-            this._effectsDirty = false;
+            _this.collisionType = CollisionType.PreventCollision;
+            _this.collisionGroups = [];
+            _this._collisionHandlers = {};
+            _this._isInitialized = false;
+            _this.frames = {};
+            _this._effectsDirty = false;
             /**
              * Access to the current drawing for the actor, this can be
              * an [[Animation]], [[Sprite]], or [[Polygon]].
              * Set drawings with [[setDrawing]].
              */
-            this.currentDrawing = null;
+            _this.currentDrawing = null;
             /**
              * Modify the current actor update pipeline.
              */
-            this.traits = [];
+            _this.traits = [];
             /**
              * Whether or not to enable the [[CapturePointer]] trait that propagates
              * pointer events to this actor
              */
-            this.enableCapturePointer = false;
+            _this.enableCapturePointer = false;
             /**
              * Configuration for [[CapturePointer]] trait
              */
-            this.capturePointer = {
+            _this.capturePointer = {
                 captureMoveEvents: false
             };
-            this._zIndex = 0;
-            this._isKilled = false;
-            this._opacityFx = new ex.Effects.Opacity(this.opacity);
-            this.pos.x = x || 0;
-            this.pos.y = y || 0;
-            this._width = width || 0;
-            this._height = height || 0;
+            _this._zIndex = 0;
+            _this._isKilled = false;
+            _this._opacityFx = new ex.Effects.Opacity(_this.opacity);
+            _this.pos.x = x || 0;
+            _this.pos.y = y || 0;
+            _this._width = width || 0;
+            _this._height = height || 0;
             if (color) {
-                this.color = color.clone();
+                _this.color = color.clone();
                 // set default opacity of an actor to the color
-                this.opacity = color.a;
+                _this.opacity = color.a;
             }
             // Build default pipeline
             //this.traits.push(new ex.Traits.EulerMovement());
             // TODO: TileMaps should be converted to a collision area
-            this.traits.push(new ex.Traits.TileMapCollisionDetection());
-            this.traits.push(new ex.Traits.OffscreenCulling());
-            this.traits.push(new ex.Traits.CapturePointer());
+            _this.traits.push(new ex.Traits.TileMapCollisionDetection());
+            _this.traits.push(new ex.Traits.OffscreenCulling());
+            _this.traits.push(new ex.Traits.CapturePointer());
             // Build the action queue
-            this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
-            this.actions = new ex.ActionContext(this);
+            _this.actionQueue = new ex.Internal.Actions.ActionQueue(_this);
+            _this.actions = new ex.ActionContext(_this);
             // default anchor is in the middle
-            this.anchor = new ex.Vector(.5, .5);
+            _this.anchor = new ex.Vector(.5, .5);
             // Initialize default collision area to be box
-            this.body.useBoxCollision();
+            _this.body.useBoxCollision();
+            return _this;
         }
         Object.defineProperty(Actor.prototype, "collisionArea", {
             /**
@@ -8335,16 +8341,17 @@ var ex;
             }
             this.emit('postdebugdraw', new ex.PostDebugDrawEvent(ctx, this));
         };
-        /**
-         * Indicates the next id to be set
-         */
-        Actor.maxId = 0;
         return Actor;
     }(ex.Class));
+    /**
+     * Indicates the next id to be set
+     */
+    Actor.maxId = 0;
     ex.Actor = Actor;
     /**
      * An enum that describes the types of collisions actors can participate in
      */
+    var CollisionType;
     (function (CollisionType) {
         /**
          * Actors with the `PreventCollision` setting do not participate in any
@@ -8378,22 +8385,21 @@ var ex;
          * collision events.
          */
         CollisionType[CollisionType["Fixed"] = 4] = "Fixed";
-    })(ex.CollisionType || (ex.CollisionType = {}));
-    var CollisionType = ex.CollisionType;
+    })(CollisionType = ex.CollisionType || (ex.CollisionType = {}));
 })(ex || (ex = {}));
 var ex;
 (function (ex) {
     /**
      * Logging level that Excalibur will tag
      */
+    var LogLevel;
     (function (LogLevel) {
         LogLevel[LogLevel["Debug"] = 0] = "Debug";
         LogLevel[LogLevel["Info"] = 1] = "Info";
         LogLevel[LogLevel["Warn"] = 2] = "Warn";
         LogLevel[LogLevel["Error"] = 3] = "Error";
         LogLevel[LogLevel["Fatal"] = 4] = "Fatal";
-    })(ex.LogLevel || (ex.LogLevel = {}));
-    var LogLevel = ex.LogLevel;
+    })(LogLevel = ex.LogLevel || (ex.LogLevel = {}));
     /**
      * Static singleton that represents the logging facility for Excalibur.
      * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
@@ -8461,7 +8467,7 @@ var ex;
         Logger.prototype.debug = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             this._log(LogLevel.Debug, args);
         };
@@ -8472,7 +8478,7 @@ var ex;
         Logger.prototype.info = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             this._log(LogLevel.Info, args);
         };
@@ -8483,7 +8489,7 @@ var ex;
         Logger.prototype.warn = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             this._log(LogLevel.Warn, args);
         };
@@ -8494,7 +8500,7 @@ var ex;
         Logger.prototype.error = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             this._log(LogLevel.Error, args);
         };
@@ -8505,13 +8511,13 @@ var ex;
         Logger.prototype.fatal = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             this._log(LogLevel.Fatal, args);
         };
-        Logger._instance = null;
         return Logger;
     }());
+    Logger._instance = null;
     ex.Logger = Logger;
     /**
      * Console appender for browsers (i.e. `console.log`)
@@ -8628,8 +8634,9 @@ var ex;
     var KillEvent = (function (_super) {
         __extends(KillEvent, _super);
         function KillEvent(target) {
-            _super.call(this);
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return KillEvent;
     }(GameEvent));
@@ -8640,8 +8647,9 @@ var ex;
     var GameStartEvent = (function (_super) {
         __extends(GameStartEvent, _super);
         function GameStartEvent(target) {
-            _super.call(this);
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return GameStartEvent;
     }(GameEvent));
@@ -8652,8 +8660,9 @@ var ex;
     var GameStopEvent = (function (_super) {
         __extends(GameStopEvent, _super);
         function GameStopEvent(target) {
-            _super.call(this);
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return GameStopEvent;
     }(GameEvent));
@@ -8666,10 +8675,11 @@ var ex;
     var PreDrawEvent = (function (_super) {
         __extends(PreDrawEvent, _super);
         function PreDrawEvent(ctx, delta, target) {
-            _super.call(this);
-            this.ctx = ctx;
-            this.delta = delta;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.ctx = ctx;
+            _this.delta = delta;
+            _this.target = target;
+            return _this;
         }
         return PreDrawEvent;
     }(GameEvent));
@@ -8682,10 +8692,11 @@ var ex;
     var PostDrawEvent = (function (_super) {
         __extends(PostDrawEvent, _super);
         function PostDrawEvent(ctx, delta, target) {
-            _super.call(this);
-            this.ctx = ctx;
-            this.delta = delta;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.ctx = ctx;
+            _this.delta = delta;
+            _this.target = target;
+            return _this;
         }
         return PostDrawEvent;
     }(GameEvent));
@@ -8696,9 +8707,10 @@ var ex;
     var PreDebugDrawEvent = (function (_super) {
         __extends(PreDebugDrawEvent, _super);
         function PreDebugDrawEvent(ctx, target) {
-            _super.call(this);
-            this.ctx = ctx;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.ctx = ctx;
+            _this.target = target;
+            return _this;
         }
         return PreDebugDrawEvent;
     }(GameEvent));
@@ -8709,9 +8721,10 @@ var ex;
     var PostDebugDrawEvent = (function (_super) {
         __extends(PostDebugDrawEvent, _super);
         function PostDebugDrawEvent(ctx, target) {
-            _super.call(this);
-            this.ctx = ctx;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.ctx = ctx;
+            _this.target = target;
+            return _this;
         }
         return PostDebugDrawEvent;
     }(GameEvent));
@@ -8722,10 +8735,11 @@ var ex;
     var PreUpdateEvent = (function (_super) {
         __extends(PreUpdateEvent, _super);
         function PreUpdateEvent(engine, delta, target) {
-            _super.call(this);
-            this.engine = engine;
-            this.delta = delta;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.engine = engine;
+            _this.delta = delta;
+            _this.target = target;
+            return _this;
         }
         return PreUpdateEvent;
     }(GameEvent));
@@ -8737,10 +8751,11 @@ var ex;
     var PostUpdateEvent = (function (_super) {
         __extends(PostUpdateEvent, _super);
         function PostUpdateEvent(engine, delta, target) {
-            _super.call(this);
-            this.engine = engine;
-            this.delta = delta;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.engine = engine;
+            _this.delta = delta;
+            _this.target = target;
+            return _this;
         }
         return PostUpdateEvent;
     }(GameEvent));
@@ -8751,10 +8766,11 @@ var ex;
     var PreFrameEvent = (function (_super) {
         __extends(PreFrameEvent, _super);
         function PreFrameEvent(engine, prevStats, target) {
-            _super.call(this);
-            this.engine = engine;
-            this.prevStats = prevStats;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.engine = engine;
+            _this.prevStats = prevStats;
+            _this.target = target;
+            return _this;
         }
         return PreFrameEvent;
     }(GameEvent));
@@ -8765,10 +8781,11 @@ var ex;
     var PostFrameEvent = (function (_super) {
         __extends(PostFrameEvent, _super);
         function PostFrameEvent(engine, stats, target) {
-            _super.call(this);
-            this.engine = engine;
-            this.stats = stats;
-            this.target = target;
+            var _this = _super.call(this) || this;
+            _this.engine = engine;
+            _this.stats = stats;
+            _this.target = target;
+            return _this;
         }
         return PostFrameEvent;
     }(GameEvent));
@@ -8779,9 +8796,10 @@ var ex;
     var GamepadConnectEvent = (function (_super) {
         __extends(GamepadConnectEvent, _super);
         function GamepadConnectEvent(index, gamepad) {
-            _super.call(this);
-            this.index = index;
-            this.gamepad = gamepad;
+            var _this = _super.call(this) || this;
+            _this.index = index;
+            _this.gamepad = gamepad;
+            return _this;
         }
         return GamepadConnectEvent;
     }(GameEvent));
@@ -8792,8 +8810,9 @@ var ex;
     var GamepadDisconnectEvent = (function (_super) {
         __extends(GamepadDisconnectEvent, _super);
         function GamepadDisconnectEvent(index) {
-            _super.call(this);
-            this.index = index;
+            var _this = _super.call(this) || this;
+            _this.index = index;
+            return _this;
         }
         return GamepadDisconnectEvent;
     }(GameEvent));
@@ -8808,9 +8827,10 @@ var ex;
          * @param value   A numeric value between 0 and 1
          */
         function GamepadButtonEvent(button, value) {
-            _super.call(this);
-            this.button = button;
-            this.value = value;
+            var _this = _super.call(this) || this;
+            _this.button = button;
+            _this.value = value;
+            return _this;
         }
         return GamepadButtonEvent;
     }(ex.GameEvent));
@@ -8825,9 +8845,10 @@ var ex;
          * @param value A numeric value between -1 and 1
          */
         function GamepadAxisEvent(axis, value) {
-            _super.call(this);
-            this.axis = axis;
-            this.value = value;
+            var _this = _super.call(this) || this;
+            _this.axis = axis;
+            _this.value = value;
+            return _this;
         }
         return GamepadAxisEvent;
     }(ex.GameEvent));
@@ -8839,9 +8860,10 @@ var ex;
     var SubscribeEvent = (function (_super) {
         __extends(SubscribeEvent, _super);
         function SubscribeEvent(topic, handler) {
-            _super.call(this);
-            this.topic = topic;
-            this.handler = handler;
+            var _this = _super.call(this) || this;
+            _this.topic = topic;
+            _this.handler = handler;
+            return _this;
         }
         return SubscribeEvent;
     }(GameEvent));
@@ -8853,9 +8875,10 @@ var ex;
     var UnsubscribeEvent = (function (_super) {
         __extends(UnsubscribeEvent, _super);
         function UnsubscribeEvent(topic, handler) {
-            _super.call(this);
-            this.topic = topic;
-            this.handler = handler;
+            var _this = _super.call(this) || this;
+            _this.topic = topic;
+            _this.handler = handler;
+            return _this;
         }
         return UnsubscribeEvent;
     }(GameEvent));
@@ -8866,7 +8889,7 @@ var ex;
     var VisibleEvent = (function (_super) {
         __extends(VisibleEvent, _super);
         function VisibleEvent() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         return VisibleEvent;
     }(GameEvent));
@@ -8877,7 +8900,7 @@ var ex;
     var HiddenEvent = (function (_super) {
         __extends(HiddenEvent, _super);
         function HiddenEvent() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         return HiddenEvent;
     }(GameEvent));
@@ -8894,11 +8917,12 @@ var ex;
          * @param intersection  Intersection vector
          */
         function CollisionEvent(actor, other, side, intersection) {
-            _super.call(this);
-            this.actor = actor;
-            this.other = other;
-            this.side = side;
-            this.intersection = intersection;
+            var _this = _super.call(this) || this;
+            _this.actor = actor;
+            _this.other = other;
+            _this.side = side;
+            _this.intersection = intersection;
+            return _this;
         }
         return CollisionEvent;
     }(GameEvent));
@@ -8912,8 +8936,9 @@ var ex;
          * @param engine  The reference to the current engine
          */
         function InitializeEvent(engine) {
-            _super.call(this);
-            this.engine = engine;
+            var _this = _super.call(this) || this;
+            _this.engine = engine;
+            return _this;
         }
         return InitializeEvent;
     }(GameEvent));
@@ -8927,8 +8952,9 @@ var ex;
          * @param oldScene  The reference to the old scene
          */
         function ActivateEvent(oldScene) {
-            _super.call(this);
-            this.oldScene = oldScene;
+            var _this = _super.call(this) || this;
+            _this.oldScene = oldScene;
+            return _this;
         }
         return ActivateEvent;
     }(GameEvent));
@@ -8942,8 +8968,9 @@ var ex;
          * @param newScene  The reference to the new scene
          */
         function DeactivateEvent(newScene) {
-            _super.call(this);
-            this.newScene = newScene;
+            var _this = _super.call(this) || this;
+            _this.newScene = newScene;
+            return _this;
         }
         return DeactivateEvent;
     }(GameEvent));
@@ -8954,7 +8981,7 @@ var ex;
     var ExitViewPortEvent = (function (_super) {
         __extends(ExitViewPortEvent, _super);
         function ExitViewPortEvent() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         return ExitViewPortEvent;
     }(GameEvent));
@@ -8965,7 +8992,7 @@ var ex;
     var EnterViewPortEvent = (function (_super) {
         __extends(EnterViewPortEvent, _super);
         function EnterViewPortEvent() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         return EnterViewPortEvent;
     }(GameEvent));
@@ -9262,84 +9289,84 @@ var ex;
         Color.prototype.clone = function () {
             return new Color(this.r, this.g, this.b, this.a);
         };
-        /**
-         * Black (#000000)
-         */
-        Color.Black = Color.fromHex('#000000');
-        /**
-         * White (#FFFFFF)
-         */
-        Color.White = Color.fromHex('#FFFFFF');
-        /**
-         * Gray (#808080)
-         */
-        Color.Gray = Color.fromHex('#808080');
-        /**
-         * Light gray (#D3D3D3)
-         */
-        Color.LightGray = Color.fromHex('#D3D3D3');
-        /**
-         * Dark gray (#A9A9A9)
-         */
-        Color.DarkGray = Color.fromHex('#A9A9A9');
-        /**
-         * Yellow (#FFFF00)
-         */
-        Color.Yellow = Color.fromHex('#FFFF00');
-        /**
-         * Orange (#FFA500)
-         */
-        Color.Orange = Color.fromHex('#FFA500');
-        /**
-         * Red (#FF0000)
-         */
-        Color.Red = Color.fromHex('#FF0000');
-        /**
-         * Vermillion (#FF5B31)
-         */
-        Color.Vermillion = Color.fromHex('#FF5B31');
-        /**
-         * Rose (#FF007F)
-         */
-        Color.Rose = Color.fromHex('#FF007F');
-        /**
-         * Magenta (#FF00FF)
-         */
-        Color.Magenta = Color.fromHex('#FF00FF');
-        /**
-         * Violet (#7F00FF)
-         */
-        Color.Violet = Color.fromHex('#7F00FF');
-        /**
-         * Blue (#0000FF)
-         */
-        Color.Blue = Color.fromHex('#0000FF');
-        /**
-         * Azure (#007FFF)
-         */
-        Color.Azure = Color.fromHex('#007FFF');
-        /**
-         * Cyan (#00FFFF)
-         */
-        Color.Cyan = Color.fromHex('#00FFFF');
-        /**
-         * Viridian (#59978F)
-         */
-        Color.Viridian = Color.fromHex('#59978F');
-        /**
-         * Green (#00FF00)
-         */
-        Color.Green = Color.fromHex('#00FF00');
-        /**
-         * Chartreuse (#7FFF00)
-         */
-        Color.Chartreuse = Color.fromHex('#7FFF00');
-        /**
-         * Transparent (#FFFFFF00)
-         */
-        Color.Transparent = Color.fromHex('#FFFFFF00');
         return Color;
     }());
+    /**
+     * Black (#000000)
+     */
+    Color.Black = Color.fromHex('#000000');
+    /**
+     * White (#FFFFFF)
+     */
+    Color.White = Color.fromHex('#FFFFFF');
+    /**
+     * Gray (#808080)
+     */
+    Color.Gray = Color.fromHex('#808080');
+    /**
+     * Light gray (#D3D3D3)
+     */
+    Color.LightGray = Color.fromHex('#D3D3D3');
+    /**
+     * Dark gray (#A9A9A9)
+     */
+    Color.DarkGray = Color.fromHex('#A9A9A9');
+    /**
+     * Yellow (#FFFF00)
+     */
+    Color.Yellow = Color.fromHex('#FFFF00');
+    /**
+     * Orange (#FFA500)
+     */
+    Color.Orange = Color.fromHex('#FFA500');
+    /**
+     * Red (#FF0000)
+     */
+    Color.Red = Color.fromHex('#FF0000');
+    /**
+     * Vermillion (#FF5B31)
+     */
+    Color.Vermillion = Color.fromHex('#FF5B31');
+    /**
+     * Rose (#FF007F)
+     */
+    Color.Rose = Color.fromHex('#FF007F');
+    /**
+     * Magenta (#FF00FF)
+     */
+    Color.Magenta = Color.fromHex('#FF00FF');
+    /**
+     * Violet (#7F00FF)
+     */
+    Color.Violet = Color.fromHex('#7F00FF');
+    /**
+     * Blue (#0000FF)
+     */
+    Color.Blue = Color.fromHex('#0000FF');
+    /**
+     * Azure (#007FFF)
+     */
+    Color.Azure = Color.fromHex('#007FFF');
+    /**
+     * Cyan (#00FFFF)
+     */
+    Color.Cyan = Color.fromHex('#00FFFF');
+    /**
+     * Viridian (#59978F)
+     */
+    Color.Viridian = Color.fromHex('#59978F');
+    /**
+     * Green (#00FF00)
+     */
+    Color.Green = Color.fromHex('#00FF00');
+    /**
+     * Chartreuse (#7FFF00)
+     */
+    Color.Chartreuse = Color.fromHex('#7FFF00');
+    /**
+     * Transparent (#FFFFFF00)
+     */
+    Color.Transparent = Color.fromHex('#FFFFFF00');
     ex.Color = Color;
     /**
      * Internal HSL Color representation
@@ -9536,15 +9563,16 @@ var ex;
          */
         function Resource(path, responseType, bustCache) {
             if (bustCache === void 0) { bustCache = true; }
-            _super.call(this);
-            this.path = path;
-            this.responseType = responseType;
-            this.bustCache = bustCache;
-            this.data = null;
-            this.logger = ex.Logger.getInstance();
-            this.onprogress = function () { return; };
-            this.oncomplete = function () { return; };
-            this.onerror = function () { return; };
+            var _this = _super.call(this) || this;
+            _this.path = path;
+            _this.responseType = responseType;
+            _this.bustCache = bustCache;
+            _this.data = null;
+            _this.logger = ex.Logger.getInstance();
+            _this.onprogress = function () { return; };
+            _this.oncomplete = function () { return; };
+            _this.onerror = function () { return; };
+            return _this;
         }
         /**
          * Returns true if the Resource is completely loaded and is ready
@@ -9634,12 +9662,12 @@ var ex;
     /**
      * Valid states for a promise to be in
      */
+    var PromiseState;
     (function (PromiseState) {
         PromiseState[PromiseState["Resolved"] = 0] = "Resolved";
         PromiseState[PromiseState["Rejected"] = 1] = "Rejected";
         PromiseState[PromiseState["Pending"] = 2] = "Pending";
-    })(ex.PromiseState || (ex.PromiseState = {}));
-    var PromiseState = ex.PromiseState;
+    })(PromiseState = ex.PromiseState || (ex.PromiseState = {}));
     /**
      * Promises are used to do asynchronous work and they are useful for
      * creating a chain of actions. In Excalibur they are used for loading,
@@ -9819,11 +9847,11 @@ var ex;
                 throw e;
             }
         };
-        __decorate([
-            ex.obsolete({ alternateMethod: 'ex.Promise.resolve/reject' })
-        ], Promise, "wrap", null);
         return Promise;
     }());
+    __decorate([
+        ex.obsolete({ alternateMethod: 'ex.Promise.resolve/reject' })
+    ], Promise, "wrap", null);
     ex.Promise = Promise;
 })(ex || (ex = {}));
 /// <reference path="../Util/Util.ts" />
@@ -9847,16 +9875,17 @@ var ex;
          */
         function Texture(path, bustCache) {
             if (bustCache === void 0) { bustCache = true; }
-            _super.call(this, path, 'blob', bustCache);
-            this.path = path;
-            this.bustCache = bustCache;
+            var _this = _super.call(this, path, 'blob', bustCache) || this;
+            _this.path = path;
+            _this.bustCache = bustCache;
             /**
              * A [[Promise]] that resolves when the Texture is loaded.
              */
-            this.loaded = new ex.Promise();
-            this._isLoaded = false;
-            this._sprite = null;
-            this._sprite = new ex.Sprite(this, 0, 0, 0, 0);
+            _this.loaded = new ex.Promise();
+            _this._isLoaded = false;
+            _this._sprite = null;
+            _this._sprite = new ex.Sprite(_this, 0, 0, 0, 0);
+            return _this;
         }
         /**
          * Returns true if the Texture is completely loaded and is ready
@@ -10003,9 +10032,9 @@ var ex;
         WebAudio.isUnlocked = function () {
             return this._unlocked;
         };
-        WebAudio._unlocked = false;
         return WebAudio;
     }());
+    WebAudio._unlocked = false;
     ex.WebAudio = WebAudio;
     /**
      * Factory method that gets the audio implementation to use
@@ -10034,7 +10063,7 @@ var ex;
         function Sound() {
             var paths = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                paths[_i - 0] = arguments[_i];
+                paths[_i] = arguments[_i];
             }
             this._logger = ex.Logger.getInstance();
             this._data = null;
@@ -10501,13 +10530,14 @@ var ex;
          * @param height  The starting height of the actor
          */
         function UIActor(x, y, width, height) {
-            _super.call(this, x, y, width, height);
-            this.traits = [];
-            this.traits.push(new ex.Traits.EulerMovement());
-            this.traits.push(new ex.Traits.CapturePointer());
-            this.anchor.setTo(0, 0);
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.enableCapturePointer = true;
+            var _this = _super.call(this, x, y, width, height) || this;
+            _this.traits = [];
+            _this.traits.push(new ex.Traits.EulerMovement());
+            _this.traits.push(new ex.Traits.CapturePointer());
+            _this.anchor.setTo(0, 0);
+            _this.collisionType = ex.CollisionType.PreventCollision;
+            _this.enableCapturePointer = true;
+            return _this;
         }
         UIActor.prototype.onInitialize = function (engine) {
             this._engine = engine;
@@ -10546,15 +10576,16 @@ var ex;
          * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
          */
         function Trigger(x, y, width, height, action, repeats) {
-            _super.call(this, x, y, width, height);
-            this._action = function () { return; };
-            this.repeats = 1;
-            this.target = null;
-            this.repeats = repeats || this.repeats;
-            this._action = action || this._action;
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.eventDispatcher = new ex.EventDispatcher(this);
-            this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
+            var _this = _super.call(this, x, y, width, height) || this;
+            _this._action = function () { return; };
+            _this.repeats = 1;
+            _this.target = null;
+            _this.repeats = repeats || _this.repeats;
+            _this._action = action || _this._action;
+            _this.collisionType = ex.CollisionType.PreventCollision;
+            _this.eventDispatcher = new ex.EventDispatcher(_this);
+            _this.actionQueue = new ex.Internal.Actions.ActionQueue(_this);
+            return _this;
         }
         Trigger.prototype.update = function (engine, delta) {
             // Update action queue
@@ -10626,6 +10657,7 @@ var ex;
     /**
      * An enum that represents the types of emitter nozzles
      */
+    var EmitterType;
     (function (EmitterType) {
         /**
          * Constant for the circular emitter type
@@ -10635,8 +10667,7 @@ var ex;
          * Constant for the rectangular emitter type
          */
         EmitterType[EmitterType["Rectangle"] = 1] = "Rectangle";
-    })(ex.EmitterType || (ex.EmitterType = {}));
-    var EmitterType = ex.EmitterType;
+    })(EmitterType = ex.EmitterType || (ex.EmitterType = {}));
     /**
      * Particle is used in a [[ParticleEmitter]]
      */
@@ -10750,119 +10781,120 @@ var ex;
          * @param height  The height of the emitter
          */
         function ParticleEmitter(x, y, width, height) {
-            _super.call(this, x, y, width, height, ex.Color.White);
-            this._particlesToEmit = 0;
-            this.numParticles = 0;
+            var _this = _super.call(this, x, y, width, height, ex.Color.White) || this;
+            _this._particlesToEmit = 0;
+            _this.numParticles = 0;
             /**
              * Gets or sets the isEmitting flag
              */
-            this.isEmitting = true;
+            _this.isEmitting = true;
             /**
              * Gets or sets the backing particle collection
              */
-            this.particles = null;
+            _this.particles = null;
             /**
              * Gets or sets the backing deadParticle collection
              */
-            this.deadParticles = null;
+            _this.deadParticles = null;
             /**
              * Gets or sets the minimum particle velocity
              */
-            this.minVel = 0;
+            _this.minVel = 0;
             /**
              * Gets or sets the maximum particle velocity
              */
-            this.maxVel = 0;
+            _this.maxVel = 0;
             /**
              * Gets or sets the acceleration vector for all particles
              */
-            this.acceleration = new ex.Vector(0, 0);
+            _this.acceleration = new ex.Vector(0, 0);
             /**
              * Gets or sets the minimum angle in radians
              */
-            this.minAngle = 0;
+            _this.minAngle = 0;
             /**
              * Gets or sets the maximum angle in radians
              */
-            this.maxAngle = 0;
+            _this.maxAngle = 0;
             /**
              * Gets or sets the emission rate for particles (particles/sec)
              */
-            this.emitRate = 1; //particles/sec
+            _this.emitRate = 1; //particles/sec
             /**
              * Gets or sets the life of each particle in milliseconds
              */
-            this.particleLife = 2000;
+            _this.particleLife = 2000;
             /**
              * Gets or sets the opacity of each particle from 0 to 1.0
              */
-            this.opacity = 1;
+            _this.opacity = 1;
             /**
              * Gets or sets the fade flag which causes particles to gradually fade out over the course of their life.
              */
-            this.fadeFlag = false;
+            _this.fadeFlag = false;
             /**
              * Gets or sets the optional focus where all particles should accelerate towards
              */
-            this.focus = null;
+            _this.focus = null;
             /**
              * Gets or sets the acceleration for focusing particles if a focus has been specified
              */
-            this.focusAccel = 1;
+            _this.focusAccel = 1;
             /*
              * Gets or sets the optional starting size for the particles
              */
-            this.startSize = null;
+            _this.startSize = null;
             /*
              * Gets or sets the optional ending size for the particles
              */
-            this.endSize = null;
+            _this.endSize = null;
             /**
              * Gets or sets the minimum size of all particles
              */
-            this.minSize = 5;
+            _this.minSize = 5;
             /**
              * Gets or sets the maximum size of all particles
              */
-            this.maxSize = 5;
+            _this.maxSize = 5;
             /**
              * Gets or sets the beginning color of all particles
              */
-            this.beginColor = ex.Color.White;
+            _this.beginColor = ex.Color.White;
             /**
              * Gets or sets the ending color of all particles
              */
-            this.endColor = ex.Color.White;
+            _this.endColor = ex.Color.White;
             /**
              * Gets or sets the sprite that a particle should use
              * @warning Performance intensive
              */
-            this.particleSprite = null;
+            _this.particleSprite = null;
             /**
              * Gets or sets the emitter type for the particle emitter
              */
-            this.emitterType = EmitterType.Rectangle;
+            _this.emitterType = EmitterType.Rectangle;
             /**
              * Gets or sets the emitter radius, only takes effect when the [[emitterType]] is [[EmitterType.Circle]]
              */
-            this.radius = 0;
+            _this.radius = 0;
             /**
              * Gets or sets the particle rotational speed velocity
              */
-            this.particleRotationalVelocity = 0;
+            _this.particleRotationalVelocity = 0;
             /**
              * Indicates whether particles should start with a random rotation
              */
-            this.randomRotation = false;
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.particles = new ex.Util.Collection();
-            this.deadParticles = new ex.Util.Collection();
+            _this.randomRotation = false;
+            _this.collisionType = ex.CollisionType.PreventCollision;
+            _this.particles = new ex.Util.Collection();
+            _this.deadParticles = new ex.Util.Collection();
             // Remove offscreen culling from particle emitters
-            for (var i = 0; i < this.traits.length; i++) {
-                if (this.traits[i] instanceof ex.Traits.OffscreenCulling) {
-                    this.traits.splice(i, 1);
+            for (var i = 0; i < _this.traits.length; i++) {
+                if (_this.traits[i] instanceof ex.Traits.OffscreenCulling) {
+                    _this.traits.splice(i, 1);
                 }
             }
+            return _this;
         }
         ParticleEmitter.prototype.removeParticle = function (particle) {
             this.deadParticles.push(particle);
@@ -11362,33 +11394,34 @@ var ex;
          * @param loadables  Optionally provide the list of resources you want to load at constructor time
          */
         function Loader(loadables) {
-            _super.call(this);
-            this._resourceList = [];
-            this._index = 0;
-            this._resourceCount = 0;
-            this._numLoaded = 0;
-            this._progressCounts = {};
-            this._totalCounts = {};
+            var _this = _super.call(this) || this;
+            _this._resourceList = [];
+            _this._index = 0;
+            _this._resourceCount = 0;
+            _this._numLoaded = 0;
+            _this._progressCounts = {};
+            _this._totalCounts = {};
             // logo drawing stuff
             /* tslint:disable:max-line-length */
             // base64 string encoding of the excalibur logo (logo-white.png)
-            this.logo = 'data:image/png;base64,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';
+            _this.logo = 'data:image/png;base64,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';
             /* tslint:enable:max-line-length */
-            this.logoWidth = 468;
-            this.logoHeight = 118;
-            this.backgroundColor = '#176BAA';
-            this.getData = function () { return; };
-            this.setData = function (data) { return; };
-            this.processData = function (data) { return; };
-            this.onprogress = function (e) {
+            _this.logoWidth = 468;
+            _this.logoHeight = 118;
+            _this.backgroundColor = '#176BAA';
+            _this.getData = function () { return; };
+            _this.setData = function (data) { return; };
+            _this.processData = function (data) { return; };
+            _this.onprogress = function (e) {
                 ex.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
                 return;
             };
-            this.oncomplete = function () { return; };
-            this.onerror = function () { return; };
+            _this.oncomplete = function () { return; };
+            _this.onerror = function () { return; };
             if (loadables) {
-                this.addResources(loadables);
+                _this.addResources(loadables);
             }
+            return _this;
         }
         Object.defineProperty(Loader.prototype, "_image", {
             get: function () {
@@ -11600,9 +11633,8 @@ var ex;
     var PauseAfterLoader = (function (_super) {
         __extends(PauseAfterLoader, _super);
         function PauseAfterLoader(triggerElementId, loadables) {
-            var _this = this;
-            _super.call(this, loadables);
-            this._handleOnTrigger = function () {
+            var _this = _super.call(this, loadables) || this;
+            _this._handleOnTrigger = function () {
                 if (_this._waitPromise.state() !== ex.PromiseState.Pending) {
                     return false;
                 }
@@ -11614,8 +11646,9 @@ var ex;
                 _this._playTrigger.style.display = 'none';
                 return false;
             };
-            this._playTrigger = document.getElementById(triggerElementId);
-            this._playTrigger.addEventListener('click', this._handleOnTrigger);
+            _this._playTrigger = document.getElementById(triggerElementId);
+            _this._playTrigger.addEventListener('click', _this._handleOnTrigger);
+            return _this;
         }
         PauseAfterLoader.prototype.load = function () {
             var _this = this;
@@ -11818,6 +11851,7 @@ var ex;
      * Enum representing the different font size units
      * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
      */
+    var FontUnit;
     (function (FontUnit) {
         /**
          * Em is a scalable unit, 1 em is equal to the current font size of the current element, parent elements can effect em values
@@ -11839,11 +11873,11 @@ var ex;
          * Percent is a scalable unit similar to Em, the only difference is the Em units scale faster when Text-Size stuff
          */
         FontUnit[FontUnit["Percent"] = 4] = "Percent";
-    })(ex.FontUnit || (ex.FontUnit = {}));
-    var FontUnit = ex.FontUnit;
+    })(FontUnit = ex.FontUnit || (ex.FontUnit = {}));
     /**
      * Enum representing the different horizontal text alignments
      */
+    var TextAlign;
     (function (TextAlign) {
         /**
          * The text is left-aligned.
@@ -11867,11 +11901,11 @@ var ex;
          * left-aligned for right-to-left locales).
          */
         TextAlign[TextAlign["End"] = 4] = "End";
-    })(ex.TextAlign || (ex.TextAlign = {}));
-    var TextAlign = ex.TextAlign;
+    })(TextAlign = ex.TextAlign || (ex.TextAlign = {}));
     /**
      * Enum representing the different baseline text alignments
      */
+    var BaseAlign;
     (function (BaseAlign) {
         /**
          * The text baseline is the top of the em square.
@@ -11903,8 +11937,7 @@ var ex;
          * doesn't consider descenders.
          */
         BaseAlign[BaseAlign["Bottom"] = 5] = "Bottom";
-    })(ex.BaseAlign || (ex.BaseAlign = {}));
-    var BaseAlign = ex.BaseAlign;
+    })(BaseAlign = ex.BaseAlign || (ex.BaseAlign = {}));
     /**
      * Labels are the way to draw small amounts of text to the screen. They are
      * actors and inherit all of the benefits and capabilities.
@@ -11922,46 +11955,47 @@ var ex;
          * over a css font.
          */
         function Label(text, x, y, fontFamily, spriteFont) {
-            _super.call(this, x, y);
+            var _this = _super.call(this, x, y) || this;
             /**
              * The font size in the selected units, default is 10 (default units is pixel)
              */
-            this.fontSize = 10;
+            _this.fontSize = 10;
             /**
              * The css units for a font size such as px, pt, em (SpriteFont only support px), by default is 'px';
              */
-            this.fontUnit = FontUnit.Px;
+            _this.fontUnit = FontUnit.Px;
             /**
              * Gets or sets the horizontal text alignment property for the label.
              */
-            this.textAlign = TextAlign.Left;
+            _this.textAlign = TextAlign.Left;
             /**
              * Gets or sets the baseline alignment property for the label.
              */
-            this.baseAlign = BaseAlign.Bottom;
+            _this.baseAlign = BaseAlign.Bottom;
             /**
              * Gets or sets the letter spacing on a Label. Only supported with Sprite Fonts.
              */
-            this.letterSpacing = 0; //px
+            _this.letterSpacing = 0; //px
             /**
              * Whether or not the [[SpriteFont]] will be case-sensitive when matching characters.
              */
-            this.caseInsensitive = true;
-            this._textShadowOn = false;
-            this._shadowOffsetX = 0;
-            this._shadowOffsetY = 0;
-            this._shadowColor = ex.Color.Black.clone();
-            this._shadowColorDirty = false;
-            this._textSprites = {};
-            this._shadowSprites = {};
-            this._color = ex.Color.Black.clone();
-            this.text = text || '';
-            this.color = ex.Color.Black.clone();
-            this.spriteFont = spriteFont;
-            this.collisionType = ex.CollisionType.PreventCollision;
-            this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
+            _this.caseInsensitive = true;
+            _this._textShadowOn = false;
+            _this._shadowOffsetX = 0;
+            _this._shadowOffsetY = 0;
+            _this._shadowColor = ex.Color.Black.clone();
+            _this._shadowColorDirty = false;
+            _this._textSprites = {};
+            _this._shadowSprites = {};
+            _this._color = ex.Color.Black.clone();
+            _this.text = text || '';
+            _this.color = ex.Color.Black.clone();
+            _this.spriteFont = spriteFont;
+            _this.collisionType = ex.CollisionType.PreventCollision;
+            _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
             if (spriteFont) {
             }
+            return _this;
         }
         /**
          * Returns the width of the text in the label (in pixels);
@@ -12139,26 +12173,27 @@ var ex;
         /**
          * The type of pointer for a [[PointerEvent]].
          */
+        var PointerType;
         (function (PointerType) {
             PointerType[PointerType["Touch"] = 0] = "Touch";
             PointerType[PointerType["Mouse"] = 1] = "Mouse";
             PointerType[PointerType["Pen"] = 2] = "Pen";
             PointerType[PointerType["Unknown"] = 3] = "Unknown";
-        })(Input.PointerType || (Input.PointerType = {}));
-        var PointerType = Input.PointerType;
+        })(PointerType = Input.PointerType || (Input.PointerType = {}));
         /**
          * The mouse button being pressed.
          */
+        var PointerButton;
         (function (PointerButton) {
             PointerButton[PointerButton["Left"] = 0] = "Left";
             PointerButton[PointerButton["Middle"] = 1] = "Middle";
             PointerButton[PointerButton["Right"] = 2] = "Right";
             PointerButton[PointerButton["Unknown"] = 3] = "Unknown";
-        })(Input.PointerButton || (Input.PointerButton = {}));
-        var PointerButton = Input.PointerButton;
+        })(PointerButton = Input.PointerButton || (Input.PointerButton = {}));
         /**
          * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
          */
+        var PointerScope;
         (function (PointerScope) {
             /**
              * Handle events on the `canvas` element only. Events originating outside the
@@ -12169,8 +12204,7 @@ var ex;
              * Handles events on the entire document. All events will be handled by Excalibur.
              */
             PointerScope[PointerScope["Document"] = 1] = "Document";
-        })(Input.PointerScope || (Input.PointerScope = {}));
-        var PointerScope = Input.PointerScope;
+        })(PointerScope = Input.PointerScope || (Input.PointerScope = {}));
         /**
          * Pointer events
          *
@@ -12190,13 +12224,14 @@ var ex;
              * @param ev           The raw DOM event being handled
              */
             function PointerEvent(x, y, index, pointerType, button, ev) {
-                _super.call(this);
-                this.x = x;
-                this.y = y;
-                this.index = index;
-                this.pointerType = pointerType;
-                this.button = button;
-                this.ev = ev;
+                var _this = _super.call(this) || this;
+                _this.x = x;
+                _this.y = y;
+                _this.index = index;
+                _this.pointerType = pointerType;
+                _this.button = button;
+                _this.ev = ev;
+                return _this;
             }
             return PointerEvent;
         }(ex.GameEvent));
@@ -12211,17 +12246,18 @@ var ex;
         var Pointers = (function (_super) {
             __extends(Pointers, _super);
             function Pointers(engine) {
-                _super.call(this);
-                this._pointerDown = [];
-                this._pointerUp = [];
-                this._pointerMove = [];
-                this._pointerCancel = [];
-                this._pointers = [];
-                this._activePointers = [];
-                this._engine = engine;
-                this._pointers.push(new Pointer());
-                this._activePointers = [-1];
-                this.primary = this._pointers[0];
+                var _this = _super.call(this) || this;
+                _this._pointerDown = [];
+                _this._pointerUp = [];
+                _this._pointerMove = [];
+                _this._pointerCancel = [];
+                _this._pointers = [];
+                _this._activePointers = [];
+                _this._engine = engine;
+                _this._pointers.push(new Pointer());
+                _this._activePointers = [-1];
+                _this.primary = _this._pointers[0];
+                return _this;
             }
             Pointers.prototype.on = function (eventName, handler) {
                 _super.prototype.on.call(this, eventName, handler);
@@ -12436,7 +12472,7 @@ var ex;
         var Pointer = (function (_super) {
             __extends(Pointer, _super);
             function Pointer() {
-                _super.apply(this, arguments);
+                return _super.apply(this, arguments) || this;
             }
             return Pointer;
         }(ex.Class));
@@ -12450,6 +12486,7 @@ var ex;
         /**
          * Enum representing input key codes
          */
+        var Keys;
         (function (Keys) {
             Keys[Keys["Num1"] = 97] = "Num1";
             Keys[Keys["Num2"] = 98] = "Num2";
@@ -12497,8 +12534,7 @@ var ex;
             Keys[Keys["Right"] = 39] = "Right";
             Keys[Keys["Space"] = 32] = "Space";
             Keys[Keys["Esc"] = 27] = "Esc";
-        })(Input.Keys || (Input.Keys = {}));
-        var Keys = Input.Keys;
+        })(Keys = Input.Keys || (Input.Keys = {}));
         ;
         /**
          * Event thrown on a game object for a key event
@@ -12509,8 +12545,9 @@ var ex;
              * @param key  The key responsible for throwing the event
              */
             function KeyEvent(key) {
-                _super.call(this);
-                this.key = key;
+                var _this = _super.call(this) || this;
+                _this.key = key;
+                return _this;
             }
             return KeyEvent;
         }(ex.GameEvent));
@@ -12523,11 +12560,12 @@ var ex;
         var Keyboard = (function (_super) {
             __extends(Keyboard, _super);
             function Keyboard(engine) {
-                _super.call(this);
-                this._keys = [];
-                this._keysUp = [];
-                this._keysDown = [];
-                this._engine = engine;
+                var _this = _super.call(this) || this;
+                _this._keys = [];
+                _this._keysUp = [];
+                _this._keysDown = [];
+                _this._engine = engine;
+                return _this;
             }
             Keyboard.prototype.on = function (eventName, handler) {
                 _super.prototype.on.call(this, eventName, handler);
@@ -12616,22 +12654,23 @@ var ex;
         var Gamepads = (function (_super) {
             __extends(Gamepads, _super);
             function Gamepads(engine) {
-                _super.call(this);
+                var _this = _super.call(this) || this;
                 /**
                  * Whether or not to poll for Gamepad input (default: `false`)
                  */
-                this.enabled = false;
+                _this.enabled = false;
                 /**
                  * Whether or not Gamepad API is supported
                  */
-                this.supported = !!navigator.getGamepads;
-                this._gamePadTimeStamps = [0, 0, 0, 0];
-                this._oldPads = [];
-                this._pads = [];
-                this._initSuccess = false;
-                this._navigator = navigator;
-                this._minimumConfiguration = null;
-                this._engine = engine;
+                _this.supported = !!navigator.getGamepads;
+                _this._gamePadTimeStamps = [0, 0, 0, 0];
+                _this._oldPads = [];
+                _this._pads = [];
+                _this._initSuccess = false;
+                _this._navigator = navigator;
+                _this._minimumConfiguration = null;
+                _this._engine = engine;
+                return _this;
             }
             Gamepads.prototype.init = function () {
                 if (!this.supported) {
@@ -12822,12 +12861,12 @@ var ex;
                 }
                 return clonedPad;
             };
-            /**
-             * The minimum value an axis has to move before considering it a change
-             */
-            Gamepads.MinAxisMoveThreshold = 0.05;
             return Gamepads;
         }(ex.Class));
+        /**
+         * The minimum value an axis has to move before considering it a change
+         */
+        Gamepads.MinAxisMoveThreshold = 0.05;
         Input.Gamepads = Gamepads;
         /**
          * Gamepad holds state information for a connected controller. See [[Gamepads]]
@@ -12836,17 +12875,18 @@ var ex;
         var Gamepad = (function (_super) {
             __extends(Gamepad, _super);
             function Gamepad() {
-                _super.call(this);
-                this.connected = false;
-                this._buttons = new Array(16);
-                this._axes = new Array(4);
+                var _this = _super.call(this) || this;
+                _this.connected = false;
+                _this._buttons = new Array(16);
+                _this._axes = new Array(4);
                 var i;
-                for (i = 0; i < this._buttons.length; i++) {
-                    this._buttons[i] = 0;
+                for (i = 0; i < _this._buttons.length; i++) {
+                    _this._buttons[i] = 0;
                 }
-                for (i = 0; i < this._axes.length; i++) {
-                    this._axes[i] = 0;
+                for (i = 0; i < _this._axes.length; i++) {
+                    _this._axes[i] = 0;
                 }
+                return _this;
             }
             /**
              * Whether or not the given button is pressed
@@ -12888,6 +12928,7 @@ var ex;
         /**
          * Gamepad Buttons enumeration
          */
+        var Buttons;
         (function (Buttons) {
             /**
              * Face 1 button (e.g. A)
@@ -12953,11 +12994,11 @@ var ex;
              * D-pad right
              */
             Buttons[Buttons["DpadRight"] = 15] = "DpadRight";
-        })(Input.Buttons || (Input.Buttons = {}));
-        var Buttons = Input.Buttons;
+        })(Buttons = Input.Buttons || (Input.Buttons = {}));
         /**
          * Gamepad Axes enumeration
          */
+        var Axes;
         (function (Axes) {
             /**
              * Left analogue stick X direction
@@ -12975,8 +13016,7 @@ var ex;
              * Right analogue stick Y direction
              */
             Axes[Axes["RightStickY"] = 3] = "RightStickY";
-        })(Input.Axes || (Input.Axes = {}));
-        var Axes = Input.Axes;
+        })(Axes = Input.Axes || (Input.Axes = {}));
     })(Input = ex.Input || (ex.Input = {}));
 })(ex || (ex = {}));
 /// <reference path="MonkeyPatch.ts" />
@@ -13021,6 +13061,7 @@ var ex;
     /**
      * Enum representing the different display modes available to Excalibur
      */
+    var DisplayMode;
     (function (DisplayMode) {
         /**
          * Show the game as full screen
@@ -13034,8 +13075,7 @@ var ex;
          * Show the game as a fixed size
          */
         DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
-    })(ex.DisplayMode || (ex.DisplayMode = {}));
-    var DisplayMode = ex.DisplayMode;
+    })(DisplayMode = ex.DisplayMode || (ex.DisplayMode = {}));
     /**
      * The Excalibur Engine
      *
@@ -13070,53 +13110,53 @@ var ex;
          * ```
          */
         function Engine(options) {
-            _super.call(this);
-            this._hasStarted = false;
+            var _this = _super.call(this) || this;
+            _this._hasStarted = false;
             /**
              * Access Excalibur debugging functionality.
              */
-            this.debug = new ex.Debug(this);
+            _this.debug = new ex.Debug(_this);
             /**
              * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
              */
-            this.postProcessors = [];
+            _this.postProcessors = [];
             /**
              * Contains all the scenes currently registered with Excalibur
              */
-            this.scenes = {};
-            this._animations = [];
+            _this.scenes = {};
+            _this._animations = [];
             /**
              * Indicates whether the engine is set to fullscreen or not
              */
-            this.isFullscreen = false;
+            _this.isFullscreen = false;
             /**
              * Indicates the current [[DisplayMode]] of the engine.
              */
-            this.displayMode = DisplayMode.FullScreen;
+            _this.displayMode = DisplayMode.FullScreen;
             /**
              * Indicates whether audio should be paused when the game is no longer visible.
              */
-            this.pauseAudioWhenHidden = true;
+            _this.pauseAudioWhenHidden = true;
             /**
              * Indicates whether the engine should draw with debug information
              */
-            this.isDebug = false;
-            this.debugColor = new ex.Color(255, 255, 255);
+            _this.isDebug = false;
+            _this.debugColor = new ex.Color(255, 255, 255);
             /**
              * Sets the background color for the engine.
              */
-            this.backgroundColor = new ex.Color(0, 0, 100);
+            _this.backgroundColor = new ex.Color(0, 0, 100);
             /**
              * The action to take when a fatal exception is thrown
              */
-            this.onFatalException = function (e) { ex.Logger.getInstance().fatal(e); };
-            this._isSmoothingEnabled = true;
-            this._timescale = 1.0;
-            this._isLoading = false;
+            _this.onFatalException = function (e) { ex.Logger.getInstance().fatal(e); };
+            _this._isSmoothingEnabled = true;
+            _this._timescale = 1.0;
+            _this._isLoading = false;
             options = ex.Util.extend({}, Engine._DefaultEngineOptions, options);
             // Check compatibility 
             var detector = new ex.Detector();
-            if (!options.suppressMinimumBrowserFeatureDetection && !(this._compatible = detector.test())) {
+            if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
                 var message = document.createElement('div');
                 message.innerText = 'Sorry, your browser does not support all the features needed for Excalibur';
                 document.body.appendChild(message);
@@ -13131,10 +13171,10 @@ var ex;
                         canvas.parentElement.removeChild(canvas);
                     }
                 }
-                return;
+                return _this;
             }
             else {
-                this._compatible = true;
+                _this._compatible = true;
             }
             // Use native console API for color fun
             if (console.log && !options.suppressConsoleBootMessage) {
@@ -13145,40 +13185,41 @@ O|===|* >________________>\n\
       \\|');
                 console.log('Visit', 'http://excaliburjs.com', 'for more information');
             }
-            this._logger = ex.Logger.getInstance();
+            _this._logger = ex.Logger.getInstance();
             // If debug is enabled, let's log browser features to the console.
-            if (this._logger.defaultLevel === ex.LogLevel.Debug) {
+            if (_this._logger.defaultLevel === ex.LogLevel.Debug) {
                 detector.logBrowserFeatures();
             }
-            this._logger.debug('Building engine...');
-            this.canvasElementId = options.canvasElementId;
+            _this._logger.debug('Building engine...');
+            _this.canvasElementId = options.canvasElementId;
             if (options.canvasElementId) {
-                this._logger.debug('Using Canvas element specified: ' + options.canvasElementId);
-                this.canvas = document.getElementById(options.canvasElementId);
+                _this._logger.debug('Using Canvas element specified: ' + options.canvasElementId);
+                _this.canvas = document.getElementById(options.canvasElementId);
             }
             else {
-                this._logger.debug('Using generated canvas element');
-                this.canvas = document.createElement('canvas');
+                _this._logger.debug('Using generated canvas element');
+                _this.canvas = document.createElement('canvas');
             }
             if (options.width && options.height) {
                 if (options.displayMode === undefined) {
-                    this.displayMode = DisplayMode.Fixed;
+                    _this.displayMode = DisplayMode.Fixed;
                 }
-                this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
-                this.width = options.width;
-                this.canvas.width = options.width;
-                this.height = options.height;
-                this.canvas.height = options.height;
+                _this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
+                _this.width = options.width;
+                _this.canvas.width = options.width;
+                _this.height = options.height;
+                _this.canvas.height = options.height;
             }
             else if (!options.displayMode) {
-                this._logger.debug('Engine viewport is fullscreen');
-                this.displayMode = DisplayMode.FullScreen;
+                _this._logger.debug('Engine viewport is fullscreen');
+                _this.displayMode = DisplayMode.FullScreen;
             }
-            this._loader = new ex.Loader();
-            this._initialize(options);
-            this.rootScene = this.currentScene = new ex.Scene(this);
-            this.addScene('root', this.rootScene);
-            this.goToScene('root');
+            _this._loader = new ex.Loader();
+            _this._initialize(options);
+            _this.rootScene = _this.currentScene = new ex.Scene(_this);
+            _this.addScene('root', _this.rootScene);
+            _this.goToScene('root');
+            return _this;
         }
         Object.defineProperty(Engine.prototype, "fps", {
             /**
@@ -13726,22 +13767,22 @@ O|===|* >________________>\n\
             });
             return complete;
         };
-        /**
-         * Default [[IEngineOptions]]
-         */
-        Engine._DefaultEngineOptions = {
-            width: 0,
-            height: 0,
-            canvasElementId: '',
-            pointerScope: ex.Input.PointerScope.Document,
-            suppressConsoleBootMessage: null,
-            suppressMinimumBrowserFeatureDetection: null
-        };
-        __decorate([
-            ex.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })
-        ], Engine.prototype, "fps", null);
         return Engine;
     }(ex.Class));
+    /**
+     * Default [[IEngineOptions]]
+     */
+    Engine._DefaultEngineOptions = {
+        width: 0,
+        height: 0,
+        canvasElementId: '',
+        pointerScope: ex.Input.PointerScope.Document,
+        suppressConsoleBootMessage: null,
+        suppressMinimumBrowserFeatureDetection: null
+    };
+    __decorate([
+        ex.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })
+    ], Engine.prototype, "fps", null);
     ex.Engine = Engine;
     /**
      * @internal

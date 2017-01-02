@@ -9283,8 +9283,20 @@ define("Drawing/Index", ["require", "exports", "Drawing/Animation", "Drawing/Col
 define("Interfaces/Index", ["require", "exports"], function (require, exports) {
     "use strict";
 });
+/**
+ * Pseudo-Random Utility
+ *
+ * A pseudo-random utility to add seeded random support for help in
+ * generating things like terrain or reproducible randomness. Uses the
+ * [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) algorithm.
+ *
+ * [[include:Random.md]]
+ */
 define("Math/Random", ["require", "exports"], function (require, exports) {
     "use strict";
+    /**
+     * 32-bit mask
+     */
     var BITMASK32 = 0xFFFFFFFF;
     /**
      * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence

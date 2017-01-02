@@ -36,5 +36,4 @@ bin/
 obj/
 *.user
 *.suo
-*.map
 *.orig

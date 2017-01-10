@@ -1,4 +1,4 @@
-/*! excalibur - v0.8.0 - 2017-01-02
+/*! excalibur - v0.8.0 - 2017-01-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -3847,18 +3847,20 @@ declare module "Particles" {
 }
 declare module "TileMap" {
     import { BoundingBox } from "Collision/BoundingBox";
+    import { Class } from "Class";
     import { Engine } from "Engine";
     import { Vector } from "Algebra";
     import { Actor } from "Actor";
     import { Logger } from "Util/Log";
     import { SpriteSheet } from "Drawing/SpriteSheet";
+    import * as Events from "Events";
     /**
      * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
      * without the overhead of actors.
      *
      * [[include:TileMaps.md]]
      */
-    export class TileMap {
+    export class TileMap extends Class {
         x: number;
         y: number;
         cellWidth: number;
@@ -3874,6 +3876,11 @@ declare module "TileMap" {
         private _spriteSheets;
         logger: Logger;
         data: Cell[];
+        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): any;
+        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): any;
+        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): any;
+        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): any;
+        on(eventName: string, handler: (event?: Events.GameEvent) => void): any;
         /**
          * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
          * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
@@ -4801,6 +4808,7 @@ declare module "Input/Gamepad" {
 declare module "Input/Pointer" {
     import { Engine } from "Engine";
     import { GameEvent } from "Events";
+    import { Vector } from "Algebra";
     import { Class } from "Class";
     import * as Events from "Events";
     /**
@@ -4846,6 +4854,10 @@ declare module "Input/Pointer" {
     export class PointerEvent extends GameEvent {
         x: number;
         y: number;
+        pageX: number;
+        pageY: number;
+        screenX: number;
+        screenY: number;
         index: number;
         pointerType: PointerType;
         button: PointerButton;
@@ -4853,12 +4865,16 @@ declare module "Input/Pointer" {
         /**
          * @param x            The `x` coordinate of the event (in world coordinates)
          * @param y            The `y` coordinate of the event (in world coordinates)
+         * @param pageX        The `x` coordinate of the event (in document coordinates)
+         * @param pageY        The `y` coordinate of the event (in document coordinates)
+         * @param screenX      The `x` coordinate of the event (in screen coordinates)
+         * @param screenY      The `y` coordinate of the event (in screen coordinates)
          * @param index        The index of the pointer (zero-based)
          * @param pointerType  The type of pointer
          * @param button       The button pressed (if [[PointerType.Mouse]])
          * @param ev           The raw DOM event being handled
          */
-        constructor(x: number, y: number, index: number, pointerType: PointerType, button: PointerButton, ev: any);
+        constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, pointerType: PointerType, button: PointerButton, ev: any);
     }
     /**
      * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
@@ -4916,6 +4932,20 @@ declare module "Input/Pointer" {
      * Captures and dispatches PointerEvents
      */
     export class Pointer extends Class {
+        constructor();
+        /**
+         * The last position on the document this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastPagePos: Vector;
+        /**
+         * The last position on the screen this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastScreenPos: Vector;
+        /**
+         * The last position in the game world coordinates this pointer was at. Can be `null` if pointer was never active.
+         */
+        lastWorldPos: Vector;
+        private _onPointerMove(ev);
     }
 }
 declare module "Input/Keyboard" {

@@ -2648,7 +2648,6 @@ declare module "Drawing/Sprite" {
         width: number;
         height: number;
         effects: Effects.ISpriteEffect[];
-        internalImage: HTMLImageElement;
         naturalWidth: number;
         naturalHeight: number;
         private _spriteCanvas;

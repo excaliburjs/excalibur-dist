@@ -4782,7 +4782,8 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             request.onprogress = this.onprogress;
             request.onerror = this.onerror;
             request.onload = function (e) {
-                if (request.status !== 200) {
+                // XHR on file:// success status is 0, such as with PhantomJS
+                if (request.status !== 0 && request.status !== 200) {
                     _this.logger.error('Failed to load resource ', _this.path, ' server responded with error code', request.status);
                     _this.onerror(request.response);
                     complete.resolve(request.response);
@@ -4922,7 +4923,6 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             this.width = 0;
             this.height = 0;
             this.effects = [];
-            this.internalImage = new Image();
             this.naturalWidth = 0;
             this.naturalHeight = 0;
             this._spriteCanvas = null;
@@ -4962,8 +4962,6 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
                     this.logger.warn('The sprite height', this.sheight, 'exceeds the height', naturalHeight, 'of the backing texture', this._texture.path);
                 }
                 this._spriteCtx.drawImage(this._texture.image, Util_1.clamp(this.sx, 0, naturalWidth), Util_1.clamp(this.sy, 0, naturalHeight), Util_1.clamp(this.swidth, 0, naturalWidth), Util_1.clamp(this.sheight, 0, naturalHeight), 0, 0, this.swidth, this.sheight);
-                //this.pixelData = this.spriteCtx.getImageData(0, 0, this.swidth, this.sheight);
-                this.internalImage.src = this._spriteCanvas.toDataURL('image/png');
                 this._pixelsLoaded = true;
             }
         };
@@ -5081,7 +5079,6 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             }
             this._spriteCtx.clearRect(0, 0, this.swidth, this.sheight);
             this._spriteCtx.putImageData(this._pixelData, 0, 0);
-            this.internalImage.src = this._spriteCanvas.toDataURL('image/png');
             this._dirtyEffect = false;
         };
         /**
@@ -5138,9 +5135,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
                 ctx.translate(0, scaledSHeight);
                 ctx.scale(1, -1);
             }
-            if (this.internalImage) {
-                ctx.drawImage(this.internalImage, 0, 0, this.swidth, this.sheight, -xpoint, -ypoint, scaledSWidth, scaledSHeight);
-            }
+            ctx.drawImage(this._spriteCanvas, 0, 0, this.swidth, this.sheight, -xpoint, -ypoint, scaledSWidth, scaledSHeight);
             ctx.restore();
         };
         /**

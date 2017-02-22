@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-02-10
+/*! excalibur - v0.9.0 - 2017-02-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5632,7 +5632,7 @@ declare module "Engine" {
          * custom loader.
          */
         start(loader?: ILoader): Promise<any>;
-        static createMainLoop(game: Engine, raf: (Function) => number, nowFn: () => number): () => void;
+        static createMainLoop(game: Engine, raf: (func: Function) => number, nowFn: () => number): () => void;
         /**
          * Stops Excalibur's main loop, useful for pausing the game.
          */

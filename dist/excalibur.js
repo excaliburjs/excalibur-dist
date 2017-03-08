@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-02-22
+/*! excalibur - v0.9.0 - 2017-03-08
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.9.0 - 2017-02-22
+/*! excalibur - v0.9.0 - 2017-03-08
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11814,6 +11814,12 @@ O|===|* >________________>\n\
                 this._hasStarted = false;
                 this._logger.debug('Game stopped');
             }
+        };
+        /**
+         * Returns the Engine's Running status, Useful for checking whether engine is running or paused.
+         */
+        Engine.prototype.isPaused = function () {
+            return !(this._hasStarted);
         };
         /**
          * Takes a screen shot of the current viewport and returns it as an

@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-08
+/*! excalibur - v0.9.0 - 2017-03-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -6743,10 +6743,10 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
          */
         Loader.prototype.draw = function (ctx, delta) {
             ctx.fillStyle = this.backgroundColor;
-            ctx.fillRect(0, 0, this._engine.width, this._engine.height);
+            ctx.fillRect(0, 0, this._engine.canvasWidth, this._engine.canvasHeight);
             var y = this._engine.canvas.height / 2;
             var width = Math.min(this.logoWidth, this._engine.canvas.width * 0.75);
-            var x = (this._engine.width / 2) - (width / 2);
+            var x = (this._engine.canvasWidth / 2) - (width / 2);
             var imageHeight = Math.floor(width * (this.logoHeight / this.logoWidth)); // OG height/width factor
             var oldAntialias = this._engine.getAntialiasing();
             this._engine.setAntialiasing(true);
@@ -7065,8 +7065,8 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
             if (!actor.isOffScreen) {
                 if ((actorScreenCoords.x + width * zoom < 0 ||
                     actorScreenCoords.y + height * zoom < 0 ||
-                    actorScreenCoords.x > engine.width ||
-                    actorScreenCoords.y > engine.height) &&
+                    actorScreenCoords.x > engine.canvasWidth ||
+                    actorScreenCoords.y > engine.canvasHeight) &&
                     isSpriteOffScreen) {
                     eventDispatcher.emit('exitviewport', new Events_3.ExitViewPortEvent());
                     actor.isOffScreen = true;
@@ -7075,8 +7075,8 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
             else {
                 if ((actorScreenCoords.x + width * zoom > 0 &&
                     actorScreenCoords.y + height * zoom > 0 &&
-                    actorScreenCoords.x < engine.width &&
-                    actorScreenCoords.y < engine.height) ||
+                    actorScreenCoords.x < engine.canvasWidth &&
+                    actorScreenCoords.y < engine.canvasHeight) ||
                     !isSpriteOffScreen) {
                     eventDispatcher.emit('enterviewport', new Events_3.EnterViewPortEvent());
                     actor.isOffScreen = false;
@@ -9164,8 +9164,8 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
                 '//SIMULATE//' +
                 '}';
             this._internalCanvas = document.createElement('canvas');
-            this._internalCanvas.width = engine.getWidth();
-            this._internalCanvas.height = engine.getHeight();
+            this._internalCanvas.width = engine.getDrawWidth();
+            this._internalCanvas.height = engine.getDrawHeight();
             this._gl = this._internalCanvas.getContext('webgl', { preserveDrawingBuffer: true });
             this._program = this._gl.createProgram();
             var fragmentShader = this._getShader('Fragment', this._getFragmentShaderByMode(colorMode));
@@ -10826,9 +10826,9 @@ O|===|* >________________>\n\
                     _this.displayMode = DisplayMode.Fixed;
                 }
                 _this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
-                _this.width = options.width;
+                _this.canvasWidth = options.width;
                 _this.canvas.width = options.width;
-                _this.height = options.height;
+                _this.canvasHeight = options.height;
                 _this.canvas.height = options.height;
             }
             else if (!options.displayMode) {
@@ -11051,20 +11051,20 @@ O|===|* >________________>\n\
         /**
          * Returns the width of the engine's drawing surface in pixels.
          */
-        Engine.prototype.getWidth = function () {
+        Engine.prototype.getDrawWidth = function () {
             if (this.currentScene && this.currentScene.camera) {
-                return this.width / this.currentScene.camera.getZoom();
+                return this.canvasWidth / this.currentScene.camera.getZoom();
             }
-            return this.width;
+            return this.canvasWidth;
         };
         /**
          * Returns the height of the engine's drawing surface in pixels.
          */
-        Engine.prototype.getHeight = function () {
+        Engine.prototype.getDrawHeight = function () {
             if (this.currentScene && this.currentScene.camera) {
-                return this.height / this.currentScene.camera.getZoom();
+                return this.canvasHeight / this.currentScene.camera.getZoom();
             }
-            return this.height;
+            return this.canvasHeight;
         };
         /**
          * Transforms the current x, y from screen coordinates to world coordinates
@@ -11074,11 +11074,11 @@ O|===|* >________________>\n\
             var newX = point.x;
             var newY = point.y;
             // transform back to world space
-            newX = (newX / this.canvas.clientWidth) * this.getWidth();
-            newY = (newY / this.canvas.clientHeight) * this.getHeight();
+            newX = (newX / this.canvas.clientWidth) * this.getDrawWidth();
+            newY = (newY / this.canvas.clientHeight) * this.getDrawHeight();
             // transform based on zoom
-            newX = newX - this.getWidth() / 2;
-            newY = newY - this.getHeight() / 2;
+            newX = newX - this.getDrawWidth() / 2;
+            newY = newY - this.getDrawHeight() / 2;
             // shift by focus
             if (this.currentScene && this.currentScene.camera) {
                 var focus = this.currentScene.camera.getFocus();
@@ -11101,11 +11101,11 @@ O|===|* >________________>\n\
                 screenY -= focus.y;
             }
             // transform back on zoom
-            screenX = screenX + this.getWidth() / 2;
-            screenY = screenY + this.getHeight() / 2;
+            screenX = screenX + this.getDrawWidth() / 2;
+            screenY = screenY + this.getDrawHeight() / 2;
             // transform back to screen space
-            screenX = (screenX * this.canvas.clientWidth) / this.getWidth();
-            screenY = (screenY * this.canvas.clientHeight) / this.getHeight();
+            screenX = (screenX * this.canvas.clientWidth) / this.getDrawWidth();
+            screenY = (screenY * this.canvas.clientHeight) / this.getDrawHeight();
             return new Algebra_21.Vector(Math.floor(screenX), Math.floor(screenY));
         };
         /**
@@ -11113,14 +11113,14 @@ O|===|* >________________>\n\
          */
         Engine.prototype._setHeightByDisplayMode = function (parent) {
             if (this.displayMode === DisplayMode.Container) {
-                this.width = this.canvas.width = parent.clientWidth;
-                this.height = this.canvas.height = parent.clientHeight;
+                this.canvasWidth = this.canvas.width = parent.clientWidth;
+                this.canvasHeight = this.canvas.height = parent.clientHeight;
             }
             if (this.displayMode === DisplayMode.FullScreen) {
                 document.body.style.margin = '0px';
                 document.body.style.overflow = 'hidden';
-                this.width = this.canvas.width = parent.innerWidth;
-                this.height = this.canvas.height = parent.innerHeight;
+                this.canvasWidth = this.canvas.width = parent.innerWidth;
+                this.canvasHeight = this.canvas.height = parent.innerHeight;
             }
         };
         /**
@@ -11247,9 +11247,9 @@ O|===|* >________________>\n\
                 // Drawing nothing else while loading
                 return;
             }
-            ctx.clearRect(0, 0, this.width, this.height);
+            ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
             ctx.fillStyle = this.backgroundColor.toString();
-            ctx.fillRect(0, 0, this.width, this.height);
+            ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
             this.currentScene.draw(this.ctx, delta);
             // todo needs to be a better way of doing this
             var a = 0, len = this._animations.length;
@@ -11268,7 +11268,7 @@ O|===|* >________________>\n\
             }
             // Post processing
             for (var i = 0; i < this.postProcessors.length; i++) {
-                this.postProcessors[i].process(this.ctx.getImageData(0, 0, this.width, this.height), this.ctx);
+                this.postProcessors[i].process(this.ctx.getImageData(0, 0, this.canvasWidth, this.canvasHeight), this.ctx);
             }
             this.emit('postdraw', new Events_9.PostDrawEvent(ctx, delta, this));
         };
@@ -11514,8 +11514,8 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             _this._logger = Log_17.Logger.getInstance();
             _this.camera = new Camera_2.BaseCamera();
             if (engine) {
-                _this.camera.x = engine.width / 2;
-                _this.camera.y = engine.height / 2;
+                _this.camera.x = engine.canvasWidth / 2;
+                _this.camera.y = engine.canvasHeight / 2;
             }
             return _this;
         }
@@ -11529,8 +11529,8 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype.onInitialize = function (engine) {
             // will be overridden
             if (this.camera) {
-                this.camera.x = engine.width / 2;
-                this.camera.y = engine.height / 2;
+                this.camera.x = engine.canvasWidth / 2;
+                this.camera.y = engine.canvasHeight / 2;
             }
             this._logger.debug('Scene.onInitialize', this, engine);
         };

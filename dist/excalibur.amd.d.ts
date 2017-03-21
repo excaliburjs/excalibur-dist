@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-08
+/*! excalibur - v0.9.0 - 2017-03-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5318,11 +5318,11 @@ declare module "Engine" {
         /**
          * The width of the game canvas in pixels
          */
-        width: number;
+        canvasWidth: number;
         /**
          * The height of the game canvas in pixels
          */
-        height: number;
+        canvasHeight: number;
         /**
          * Access engine input like pointer, keyboard, or gamepad
          */
@@ -5581,11 +5581,11 @@ declare module "Engine" {
         /**
          * Returns the width of the engine's drawing surface in pixels.
          */
-        getWidth(): number;
+        getDrawWidth(): number;
         /**
          * Returns the height of the engine's drawing surface in pixels.
          */
-        getHeight(): number;
+        getDrawHeight(): number;
         /**
          * Transforms the current x, y from screen coordinates to world coordinates
          * @param point  Screen coordinate to convert

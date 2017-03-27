@@ -986,23 +986,35 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
             i++;
         }
         // Merge the object into the extended object
-        var merge = function (obj) {
-            for (var prop in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                    // If deep merge and property is an object, merge properties
-                    if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-                        extended[prop] = extend(true, extended[prop], obj[prop]);
-                    }
-                    else {
-                        extended[prop] = obj[prop];
+        var assignExists = typeof Object.assign === 'function';
+        var merge = null;
+        if (!assignExists) {
+            merge = function (obj) {
+                for (var prop in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                        // If deep merge and property is an object, merge properties
+                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+                            extended[prop] = extend(true, extended[prop], obj[prop]);
+                        }
+                        else {
+                            extended[prop] = obj[prop];
+                        }
                     }
                 }
-            }
-        };
+            };
+        }
+        else {
+            merge = Object.assign;
+        }
         // Loop through each object and conduct a merge
         for (; i < length; i++) {
             var obj = arguments[i];
-            merge(obj);
+            if (!assignExists) {
+                merge(obj);
+            }
+            else {
+                merge(extended, obj);
+            }
         }
         return extended;
     }

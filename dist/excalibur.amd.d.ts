@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-21
+/*! excalibur - v0.9.0 - 2017-03-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5240,6 +5240,7 @@ declare module "Engine" {
     import { Class } from "Class";
     import * as Input from "Input/Index";
     import * as Events from "Events";
+    import { BoundingBox } from "Collision/BoundingBox";
     /**
      * Enum representing the different display modes available to Excalibur
      */
@@ -5431,6 +5432,11 @@ declare module "Engine" {
          * ```
          */
         constructor(options?: IEngineOptions);
+        /**
+         * Returns a BoundingBox of the top left corner of the screen
+         * and the bottom right corner of the screen.
+         */
+        getWorldBounds(): BoundingBox;
         /**
          * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
          */

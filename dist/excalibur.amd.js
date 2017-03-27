@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-21
+/*! excalibur - v0.9.0 - 2017-03-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -10677,7 +10677,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     __export(Log_15);
     __export(SortedList_1);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util"], function (require, exports, Index_6, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_16, Color_18, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_6, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_16, Color_18, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util, BoundingBox_7) {
     "use strict";
     /**
      * Enum representing the different display modes available to Excalibur
@@ -10865,6 +10865,17 @@ O|===|* >________________>\n\
         });
         Engine.prototype.on = function (eventName, handler) {
             _super.prototype.on.call(this, eventName, handler);
+        };
+        /**
+         * Returns a BoundingBox of the top left corner of the screen
+         * and the bottom right corner of the screen.
+         */
+        Engine.prototype.getWorldBounds = function () {
+            var left = this.screenToWorldCoordinates(Algebra_21.Vector.Zero).x;
+            var top = this.screenToWorldCoordinates(Algebra_21.Vector.Zero).y;
+            var right = left + this.getDrawWidth();
+            var bottom = top + this.getDrawHeight();
+            return new BoundingBox_7.BoundingBox(left, top, right, bottom);
         };
         Object.defineProperty(Engine.prototype, "timescale", {
             /**
@@ -12382,7 +12393,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_7, Texture_2, Events_11, Color_19, Sprite_4, Log_18, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_19, Sprite_4, Log_18, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
     "use strict";
     /**
      * The most important primitive in Excalibur is an `Actor`. Anything that
@@ -13053,7 +13064,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
             var pos = this.getWorldPos();
-            return new BoundingBox_7.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y).rotate(this.rotation, pos);
+            return new BoundingBox_8.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y).rotate(this.rotation, pos);
         };
         /**
          * Returns the actor's [[BoundingBox]] relative to the actors position.
@@ -13061,7 +13072,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype.getRelativeBounds = function () {
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
-            return new BoundingBox_7.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y).rotate(this.rotation);
+            return new BoundingBox_8.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y).rotate(this.rotation);
         };
         /**
          * Tests whether the x/y specified are contained in the actor

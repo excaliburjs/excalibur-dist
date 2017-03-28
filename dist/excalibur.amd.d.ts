@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-27
+/*! excalibur - v0.9.0 - 2017-03-28
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5231,7 +5231,7 @@ declare module "Engine" {
     import { Timer } from "Timer";
     import { TileMap } from "TileMap";
     import { Animation } from "Drawing/Animation";
-    import { VisibleEvent, HiddenEvent, GameStartEvent, GameStopEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GameEvent } from "Events";
+    import { VisibleEvent, HiddenEvent, GameStartEvent, GameStopEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GameEvent, PreDrawEvent, PostDrawEvent } from "Events";
     import { ILoader } from "Interfaces/ILoader";
     import { Color } from "Drawing/Color";
     import { Scene } from "Scene";
@@ -5404,6 +5404,8 @@ declare module "Engine" {
         on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
         on(eventName: Events.preframe, handler: (event?: PreFrameEvent) => void): any;
         on(eventName: Events.postframe, handler: (event?: PostFrameEvent) => void): any;
+        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): any;
+        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
         on(eventName: string, handler: (event?: GameEvent) => void): any;
         /**
          * Default [[IEngineOptions]]

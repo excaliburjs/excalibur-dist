@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-28
+/*! excalibur - v0.9.0 - 2017-04-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -108,7 +108,7 @@ declare module "Algebra" {
          * Scales a vector's by a factor of size
          * @param size  The factor to scale the magnitude by
          */
-        scale(size: any): Vector;
+        scale(size: number): Vector;
         /**
          * Adds one vector to another
          * @param v The vector to add
@@ -625,6 +625,23 @@ declare module "Util/Util" {
      * Merges one or more objects into a single target object
      *
      * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2>(target: T1, object2: T2): T1 & T2;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @param object3 The third object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3): T1 & T2 & T3;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
      * @param objects The objects whose properties to merge
      * @returns Merged object with properties from other objects
      */
@@ -761,7 +778,6 @@ declare module "Promises" {
         private _successCallbacks;
         private _rejectCallback;
         private _errorCallback;
-        private _logger;
         /**
          * Wrap a value in a resolved promise
          * @param value  An optional value to wrap in a resolved promise
@@ -782,12 +798,12 @@ declare module "Promises" {
          * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
          * when at least 1 promise rejects.
          */
-        static join<T>(promises: Promise<T>[]): any;
+        static join<T>(promises: Promise<T>[]): Promise<T>;
         /**
          * Returns a new promise that resolves when all the promises passed to it resolve, or rejects
          * when at least 1 promise rejects.
          */
-        static join<T>(...promises: Promise<T>[]): any;
+        static join<T>(...promises: Promise<T>[]): Promise<T>;
         /**
          * Chain success and reject callbacks after the promise is resolved
          * @param successCallback  Call on resolution of promise
@@ -847,7 +863,6 @@ declare module "Camera" {
         private _cameraMoving;
         private _currentLerpTime;
         private _lerpDuration;
-        private _totalLerpTime;
         private _lerpStart;
         private _lerpEnd;
         private _lerpPromise;
@@ -862,7 +877,6 @@ declare module "Camera" {
         private _currentZoomScale;
         private _maxZoomScale;
         private _zoomDuration;
-        private _elapsedZoomTime;
         private _zoomIncrement;
         private _easing;
         /**
@@ -917,16 +931,15 @@ declare module "Camera" {
          */
         getZoom(): number;
         private _setCurrentZoomScale(zoomScale);
-        update(engine: Engine, delta: number): void;
+        update(_engine: Engine, delta: number): void;
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
          * @param ctx    Canvas context to apply transformations
          * @param delta  The number of milliseconds since the last update
          */
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        draw(ctx: CanvasRenderingContext2D): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
         private _isDoneShaking();
-        private _isDoneZooming();
     }
     /**
      * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
@@ -952,8 +965,14 @@ declare module "DebugFlags" {
     }
 }
 declare module "Debug" {
-    import { Engine } from "Engine";
     import { IDebugFlags } from "DebugFlags";
+    /**
+     * Debug stats containing current and previous frame statistics
+     */
+    export interface IDebugStats {
+        currFrame: FrameStats;
+        prevFrame: FrameStats;
+    }
     /**
      * Represents a frame's individual statistics
      */
@@ -1060,15 +1079,10 @@ declare module "Debug" {
      * updated during a frame.
      */
     export class Debug implements IDebugFlags {
-        private _engine;
-        constructor(_engine: Engine);
         /**
          * Performance statistics
          */
-        stats: {
-            currFrame: FrameStats;
-            prevFrame: FrameStats;
-        };
+        stats: IDebugStats;
     }
     /**
      * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
@@ -1160,13 +1174,13 @@ declare module "Interfaces/IEvented" {
          * @param eventName  The name of the event to publish
          * @param event      Optionally pass an event data object to the handler
          */
-        emit(eventName: string, event?: GameEvent): any;
+        emit(eventName: string, event?: GameEvent<any>): void;
         /**
          * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
          * @param eventName  The name of the event to subscribe to
          * @param handler    The handler callback to fire on this event
          */
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Unsubscribe an event handler(s) from an event. If a specific handler
          * is specified for an event, only that handler will be unsubscribed.
@@ -1176,7 +1190,7 @@ declare module "Interfaces/IEvented" {
          * @param handler    Optionally the specific handler to unsubscribe
          *
          */
-        off(eventName: string, handler: (event?: GameEvent) => void): any;
+        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
     }
 }
 declare module "EventDispatcher" {
@@ -1195,7 +1209,6 @@ declare module "EventDispatcher" {
         private _handlers;
         private _wiredEventDispatchers;
         private _target;
-        private _log;
         /**
          * @param target  The object that will be the recipient of events from this event dispatcher
          */
@@ -1205,13 +1218,13 @@ declare module "EventDispatcher" {
          * @param eventName  The name of the event to publish
          * @param event      Optionally pass an event data object to the handler
          */
-        emit(eventName: string, event?: GameEvent): void;
+        emit(eventName: string, event?: GameEvent<any>): void;
         /**
          * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
          * @param eventName  The name of the event to subscribe to
          * @param handler    The handler callback to fire on this event
          */
-        on(eventName: string, handler: (event?: GameEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Unsubscribe an event handler(s) from an event. If a specific handler
          * is specified for an event, only that handler will be unsubscribed.
@@ -1221,7 +1234,7 @@ declare module "EventDispatcher" {
          * @param handler    Optionally the specific handler to unsubscribe
          *
          */
-        off(eventName: string, handler?: (event?: GameEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Wires this event dispatcher to also recieve events from another
          */
@@ -1472,10 +1485,10 @@ declare module "Collision/CollisionContact" {
          */
         normal: Vector;
         constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
+        resolve(strategy: CollisionResolutionStrategy): void;
         private _applyBoxImpluse(bodyA, bodyB, mtv, side);
-        private _resolveBoxCollision(delta);
-        private _resolveRigidBodyCollision(delta);
+        private _resolveBoxCollision();
+        private _resolveRigidBodyCollision();
     }
 }
 declare module "Collision/ICollisionArea" {
@@ -1534,7 +1547,10 @@ declare module "Collision/ICollisionArea" {
          * Recalculates internal caches and values
          */
         recalc(): void;
-        debugDraw(ctx: CanvasRenderingContext2D, color: Color): any;
+        /**
+         * Draw any debug information
+         */
+        debugDraw(ctx: CanvasRenderingContext2D, color: Color): void;
     }
 }
 declare module "Collision/CollisionJumpTable" {
@@ -1546,7 +1562,7 @@ declare module "Collision/CollisionJumpTable" {
         CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
         CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
         CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
-        CollideEdgeEdge(edgeA: EdgeArea, edgeB: EdgeArea): CollisionContact;
+        CollideEdgeEdge(): CollisionContact;
         CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
         CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
     };
@@ -1809,7 +1825,7 @@ declare module "Collision/Body" {
          *
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
-        useEdgeCollision(begin: Vector, end: Vector, center?: Vector): void;
+        useEdgeCollision(begin: Vector, end: Vector): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
@@ -1849,7 +1865,7 @@ declare module "Collision/EdgeArea" {
         /**
          * Tests if a point is contained in this collision area
          */
-        contains(point: Vector): boolean;
+        contains(): boolean;
         /**
          * @inheritdoc
          */
@@ -2252,15 +2268,15 @@ declare module "Group" {
         private _members;
         actions: ActionContext;
         constructor(name: string, scene: Scene);
-        add(actor: Actor): any;
-        add(actors: Actor[]): any;
+        add(actor: Actor): void;
+        add(actors: Actor[]): void;
         remove(actor: Actor): void;
         move(vector: Vector): void;
         move(dx: number, dy: number): void;
         rotate(angle: number): void;
-        on(eventName: string, handler: (event?: GameEvent) => void): void;
-        off(eventName: string, handler?: (event?: GameEvent) => void): void;
-        emit(topic: string, event?: GameEvent): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        emit(topic: string, event?: GameEvent<any>): void;
         contains(actor: Actor): boolean;
         getMembers(): Actor[];
         getRandomMember(): Actor;
@@ -2417,22 +2433,22 @@ declare module "Interfaces/IDrawable" {
          * Adds a new [[ISpriteEffect]] to this drawing.
          * @param effect  Effect to add to the this drawing
          */
-        addEffect(effect: ISpriteEffect): any;
+        addEffect(effect: ISpriteEffect): void;
         /**
          * Removes an effect [[ISpriteEffect]] from this drawing.
          * @param effect  Effect to remove from this drawing
          */
-        removeEffect(effect: ISpriteEffect): any;
+        removeEffect(effect: ISpriteEffect): void;
         /**
          * Removes an effect by index from this drawing.
          * @param index  Index of the effect to remove from this drawing
          */
-        removeEffect(index: number): any;
-        removeEffect(param: any): any;
+        removeEffect(index: number): void;
+        removeEffect(param: any): void;
         /**
          * Clears all effects from the drawing and return it to its original state.
          */
-        clearEffects(): any;
+        clearEffects(): void;
         /**
          * Gets or sets the point about which to apply transformations to the drawing relative to the
          * top left corner of the drawing.
@@ -2449,14 +2465,14 @@ declare module "Interfaces/IDrawable" {
         /**
          * Resets the internal state of the drawing (if any)
          */
-        reset(): any;
+        reset(): void;
         /**
          * Draws the sprite appropriately to the 2D rendering context.
          * @param ctx  The 2D rendering context
          * @param x    The x coordinate of where to draw
          * @param y    The y coordinate of where to draw
          */
-        draw(ctx: CanvasRenderingContext2D, x: number, y: number): any;
+        draw(ctx: CanvasRenderingContext2D, x: number, y: number): void;
     }
 }
 declare module "Interfaces/ILoadable" {
@@ -2539,7 +2555,7 @@ declare module "Resources/Resource" {
         isLoaded(): boolean;
         wireEngine(engine: Engine): void;
         private _cacheBust(uri);
-        private _start(e);
+        private _start();
         /**
          * Begin loading the resource and returns a promise to be resolved on completion
          */
@@ -2594,9 +2610,6 @@ declare module "Resources/Texture" {
          * Populated once loading is complete
          */
         image: HTMLImageElement;
-        private _progressCallback;
-        private _doneCallback;
-        private _errorCallback;
         /**
          * @param path       Path to the image resource
          * @param bustCache  Optionally load texture with cache busting
@@ -2904,8 +2917,8 @@ declare module "Drawing/SpriteSheet" {
      */
     export class SpriteSheet {
         image: Texture;
-        private columns;
-        private rows;
+        columns: number;
+        rows: number;
         sprites: Sprite[];
         private _internalImage;
         /**
@@ -2960,8 +2973,6 @@ declare module "Drawing/SpriteSheet" {
         private caseInsensitive;
         spWidth: number;
         spHeight: number;
-        private _spriteLookup;
-        private _colorLookup;
         private _currentColor;
         private _currentOpacity;
         private _sprites;
@@ -3162,10 +3173,6 @@ declare module "Label" {
         private _shadowOffsetX;
         private _shadowOffsetY;
         private _shadowColor;
-        private _shadowColorDirty;
-        private _textSprites;
-        private _shadowSprites;
-        private _color;
         /**
          * @param text        The text of the label
          * @param x           The x position of the label
@@ -3200,7 +3207,7 @@ declare module "Label" {
         clearTextShadow(): void;
         update(engine: Engine, delta: number): void;
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
-        private _fontDraw(ctx, delta, sprites);
+        private _fontDraw(ctx);
         protected readonly _fontString: string;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
@@ -3214,11 +3221,11 @@ declare module "Interfaces/IAudio" {
         /**
          * Set the volume (between 0 and 1)
          */
-        setVolume(volume: number): any;
+        setVolume(volume: number): void;
         /**
          * Set whether the audio should loop (repeat forever)
          */
-        setLoop(loop: boolean): any;
+        setLoop(loop: boolean): void;
         /**
          * Whether or not any audio is playing
          */
@@ -3230,11 +3237,11 @@ declare module "Interfaces/IAudio" {
         /**
          * Pause the sound
          */
-        pause(): any;
+        pause(): void;
         /**
          * Stop playing the sound and reset
          */
-        stop(): any;
+        stop(): void;
     }
 }
 declare module "Interfaces/IAudioImplementation" {
@@ -3398,8 +3405,8 @@ declare module "Interfaces/ILoader" {
     import { ILoadable } from "Interfaces/ILoadable";
     import { Engine } from "Engine";
     export interface ILoader extends ILoadable {
-        draw(ctx: CanvasRenderingContext2D, delta: number): any;
-        update(engine: Engine, delta: number): any;
+        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        update(engine: Engine, delta: number): void;
     }
 }
 declare module "Loader" {
@@ -3471,7 +3478,6 @@ declare module "Loader" {
          * @param loadables  The list of resources to load
          */
         addResources(loadables: ILoadable[]): void;
-        private _sumCounts(obj);
         /**
          * Returns true if the loader has completely loaded all resources
          */
@@ -3486,12 +3492,12 @@ declare module "Loader" {
          * Override `logo`, `logoWidth`, `logoHeight` and `backgroundColor` properties
          * to customize the drawing, or just override entire method.
          */
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        draw(ctx: CanvasRenderingContext2D): void;
         /**
          * Perform any calculations or logic in the `update` method. The default `Loader` does not
          * do anything in this method so it is safe to override.
          */
-        update(engine: Engine, delta: number): void;
+        update(_engine: Engine, _delta: number): void;
         getData: () => any;
         setData: (data: any) => any;
         processData: (data: any) => any;
@@ -3609,7 +3615,7 @@ declare module "Traits/CapturePointer" {
      * Propogates pointer events to the actor
      */
     export class CapturePointer implements IActorTrait {
-        update(actor: Actor, engine: Engine, delta: number): void;
+        update(actor: Actor, engine: Engine): void;
     }
 }
 declare module "Traits/EulerMovement" {
@@ -3617,7 +3623,7 @@ declare module "Traits/EulerMovement" {
     import { Actor } from "Actor";
     import { Engine } from "Engine";
     export class EulerMovement implements IActorTrait {
-        update(actor: Actor, engine: Engine, delta: number): void;
+        update(actor: Actor, _engine: Engine, delta: number): void;
     }
 }
 declare module "Util/CullingBox" {
@@ -3649,7 +3655,7 @@ declare module "Traits/OffscreenCulling" {
     import { Engine } from "Engine";
     export class OffscreenCulling implements IActorTrait {
         cullingBox: CullingBox;
-        update(actor: Actor, engine: Engine, delta: number): void;
+        update(actor: Actor, engine: Engine): void;
     }
 }
 declare module "Traits/TileMapCollisionDetection" {
@@ -3657,7 +3663,7 @@ declare module "Traits/TileMapCollisionDetection" {
     import { Actor } from "Actor";
     import { Engine } from "Engine";
     export class TileMapCollisionDetection implements IActorTrait {
-        update(actor: Actor, engine: Engine, delta: number): void;
+        update(actor: Actor, engine: Engine): void;
     }
 }
 declare module "Traits/Index" {
@@ -3840,7 +3846,7 @@ declare module "Particles" {
         clearParticles(): void;
         private _createParticle();
         update(engine: Engine, delta: number): void;
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        draw(ctx: CanvasRenderingContext2D): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
@@ -3875,11 +3881,11 @@ declare module "TileMap" {
         private _spriteSheets;
         logger: Logger;
         data: Cell[];
-        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): any;
-        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): any;
-        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): any;
-        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): any;
-        on(eventName: string, handler: (event?: Events.GameEvent) => void): any;
+        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        on(eventName: string, handler: (event?: Events.GameEvent<any>) => void): void;
         /**
          * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
          * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
@@ -4043,7 +4049,7 @@ declare module "Trigger" {
         constructor(x?: number, y?: number, width?: number, height?: number, action?: () => void, repeats?: number);
         update(engine: Engine, delta: number): void;
         private _dispatchAction();
-        draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        draw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
@@ -4065,13 +4071,13 @@ declare module "Collision/DynamicTree" {
      * Dynamic Tree Node used for tracking bounds within the tree
      */
     export class TreeNode {
-        parent: any;
+        parent: TreeNode;
         left: TreeNode;
         right: TreeNode;
         bounds: BoundingBox;
         height: number;
         body: Body;
-        constructor(parent?: any);
+        constructor(parent?: TreeNode);
         isLeaf(): boolean;
     }
     /**
@@ -4134,7 +4140,7 @@ declare module "Collision/DynamicTree" {
          */
         rayCastQuery(ray: Ray, max: number, callback: (other: Body) => boolean): void;
         getNodes(): TreeNode[];
-        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
 declare module "Collision/Pair" {
@@ -4157,7 +4163,7 @@ declare module "Collision/Pair" {
         /**
          * Resovles the collision body position and velocity if a collision occured
          */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
+        resolve(strategy: CollisionResolutionStrategy): void;
         /**
          * Calculates the unique pair hash id for this collision pair
          */
@@ -4178,11 +4184,11 @@ declare module "Collision/ICollisionResolver" {
         /**
          * Track a physics body
          */
-        track(target: Body): any;
+        track(target: Body): void;
         /**
          * Untrack a physics body
          */
-        untrack(tartet: Body): any;
+        untrack(tartet: Body): void;
         /**
          * Detect potential collision pairs
          */
@@ -4190,16 +4196,19 @@ declare module "Collision/ICollisionResolver" {
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        narrowphase(pairs: Pair[], stats?: FrameStats): any;
+        narrowphase(pairs: Pair[], stats?: FrameStats): void;
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): any;
+        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
         /**
          * Update the internal structures to track bodies
          */
         update(targets: Actor[], delta: number): number;
-        debugDraw(ctx: any, delta: any): void;
+        /**
+         * Draw any debug information
+         */
+        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
     }
 }
 declare module "Collision/DynamicTreeCollisionBroadphase" {
@@ -4237,8 +4246,8 @@ declare module "Collision/DynamicTreeCollisionBroadphase" {
         /**
          * Update the dynamic tree positions
          */
-        update(targets: Actor[], delta: number): number;
-        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        update(targets: Actor[]): number;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
 declare module "Collision/IPhysics" {
@@ -4290,26 +4299,24 @@ declare module "Collision/IPhysics" {
 declare module "Collision/NaiveCollisionBroadphase" {
     import { Pair } from "Collision/Pair";
     import { Actor } from "Actor";
-    import { Body } from "Collision/Body";
     import { ICollisionBroadphase } from "Collision/ICollisionResolver";
-    import { CollisionResolutionStrategy } from "Physics";
     export class NaiveCollisionBroadphase implements ICollisionBroadphase {
-        track(target: Body): void;
-        untrack(tartet: Body): void;
+        track(): void;
+        untrack(): void;
         /**
          * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
          */
-        broadphase(targets: Actor[], delta: number): Pair[];
+        broadphase(targets: Actor[]): Pair[];
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        narrowphase(pairs: Pair[]): void;
+        narrowphase(): void;
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
-        update(targets: Actor[]): number;
-        debugDraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        resolve(): void;
+        update(): number;
+        debugDraw(): void;
     }
 }
 declare module "Collision/Index" {
@@ -4373,15 +4380,15 @@ declare module "Drawing/Polygon" {
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
-        addEffect(effect: Effects.ISpriteEffect): void;
+        addEffect(): void;
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
-        removeEffect(index: number): any;
+        removeEffect(index: number): void;
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
-        removeEffect(effect: Effects.ISpriteEffect): any;
+        removeEffect(effect: Effects.ISpriteEffect): void;
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
@@ -4424,7 +4431,6 @@ declare module "Math/Random" {
         private _w;
         private _n;
         private _m;
-        private _r;
         private _a;
         private _u;
         private _s;
@@ -4563,7 +4569,7 @@ declare module "PostProcessing/ColorBlindCorrector" {
         private _program;
         constructor(engine: Engine, simulate?: boolean, colorMode?: ColorBlindness);
         private _getFragmentShaderByMode(colorMode);
-        private _setRectangle(gl, x, y, width, height);
+        private _setRectangle(x, y, width, height);
         private _getShader(type, program);
         process(image: ImageData, out: CanvasRenderingContext2D): void;
     }
@@ -4625,16 +4631,16 @@ declare module "Input/Gamepad" {
          * Checks a navigator gamepad against the minimum configuration if present.
          */
         private _isGamepadValid(pad);
-        on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): any;
-        on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): any;
-        on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): any;
-        on(eventName: Events.axis, handler: (event?: GamepadAxisEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
-        off(eventName: string, handler?: (event?: GameEvent) => void): void;
+        on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): void;
+        on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): void;
+        on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): void;
+        on(eventName: Events.axis, handler: (event?: GamepadAxisEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Updates Gamepad state and publishes Gamepad events
          */
-        update(delta: number): void;
+        update(): void;
         /**
          * Safely retrieves a Gamepad at a specific index and creates one if it doesn't yet exist
          */
@@ -4850,7 +4856,7 @@ declare module "Input/Pointer" {
      *
      * For mouse-based events, you can inspect [[PointerEvent.button]] to see what button was pressed.
      */
-    export class PointerEvent extends GameEvent {
+    export class PointerEvent extends GameEvent<any> {
         x: number;
         y: number;
         pageX: number;
@@ -4890,11 +4896,11 @@ declare module "Input/Pointer" {
         private _pointers;
         private _activePointers;
         constructor(engine: Engine);
-        on(eventName: Events.up, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.down, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.move, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: Events.up, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.down, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.move, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Primary pointer (mouse, 1 finger, stylus, etc.)
          */
@@ -4903,7 +4909,7 @@ declare module "Input/Pointer" {
          * Initializes pointer event listeners
          */
         init(scope?: PointerScope): void;
-        update(delta: number): void;
+        update(): void;
         /**
          * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
          * @param index  The pointer index to retrieve
@@ -5006,7 +5012,7 @@ declare module "Input/Keyboard" {
     /**
      * Event thrown on a game object for a key event
      */
-    export class KeyEvent extends GameEvent {
+    export class KeyEvent extends GameEvent<any> {
         key: Keys;
         /**
          * @param key  The key responsible for throwing the event
@@ -5024,15 +5030,15 @@ declare module "Input/Keyboard" {
         private _keysDown;
         private _engine;
         constructor(engine: Engine);
-        on(eventName: Events.press, handler: (event?: KeyEvent) => void): any;
-        on(eventName: Events.release, handler: (event?: KeyEvent) => void): any;
-        on(eventName: Events.hold, handler: (event?: KeyEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: Events.press, handler: (event?: KeyEvent) => void): void;
+        on(eventName: Events.release, handler: (event?: KeyEvent) => void): void;
+        on(eventName: Events.hold, handler: (event?: KeyEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Initialize Keyboard event listeners
          */
         init(global?: any): void;
-        update(delta: number): void;
+        update(): void;
         /**
          * Gets list of keys being pressed down
          */
@@ -5236,7 +5242,7 @@ declare module "Engine" {
     import { Color } from "Drawing/Color";
     import { Scene } from "Scene";
     import { IPostProcessor } from "PostProcessing/IPostProcessor";
-    import { Debug, FrameStats } from "Debug";
+    import { Debug, IDebugStats } from "Debug";
     import { Class } from "Class";
     import * as Input from "Input/Index";
     import * as Events from "Events";
@@ -5341,10 +5347,7 @@ declare module "Engine" {
         /**
          * Access [[stats]] that holds frame statistics.
          */
-        readonly stats: {
-            currFrame: FrameStats;
-            prevFrame: FrameStats;
-        };
+        readonly stats: IDebugStats;
         /**
          * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
          */
@@ -5396,17 +5399,17 @@ declare module "Engine" {
         private _timescale;
         private _loader;
         private _isLoading;
-        on(eventName: Events.visible, handler: (event?: VisibleEvent) => void): any;
-        on(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): any;
-        on(eventName: Events.start, handler: (event?: GameStartEvent) => void): any;
-        on(eventName: Events.stop, handler: (event?: GameStopEvent) => void): any;
-        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
-        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
-        on(eventName: Events.preframe, handler: (event?: PreFrameEvent) => void): any;
-        on(eventName: Events.postframe, handler: (event?: PostFrameEvent) => void): any;
-        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): any;
-        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: Events.visible, handler: (event?: VisibleEvent) => void): void;
+        on(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): void;
+        on(eventName: Events.start, handler: (event?: GameStartEvent) => void): void;
+        on(eventName: Events.stop, handler: (event?: GameStopEvent) => void): void;
+        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        on(eventName: Events.preframe, handler: (event?: PreFrameEvent) => void): void;
+        on(eventName: Events.postframe, handler: (event?: PostFrameEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Default [[IEngineOptions]]
          */
@@ -5747,16 +5750,16 @@ declare module "Scene" {
         private _cancelQueue;
         private _logger;
         constructor(engine?: Engine);
-        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): any;
-        on(eventName: Events.activate, handler: (event?: ActivateEvent) => void): any;
-        on(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): any;
-        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
-        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
-        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): any;
-        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
-        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): any;
-        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        on(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
+        on(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;
+        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -5925,6 +5928,7 @@ declare module "Events" {
     import { Actor } from "Actor";
     import { FrameStats } from "Debug";
     import { Engine } from "Engine";
+    import { TileMap } from "TileMap";
     import { Side } from "Collision/Side";
     import * as Input from "Input/Index";
     export type kill = 'kill';
@@ -5968,112 +5972,110 @@ declare module "Events" {
      * some events are unique to a type, others are not.
      *
      */
-    export class GameEvent {
+    export class GameEvent<T> {
         /**
          * Target object for this event.
          */
-        target: any;
+        target: T;
     }
     /**
      * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
      */
-    export class KillEvent extends GameEvent {
-        target: any;
-        constructor(target: any);
+    export class KillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
     }
     /**
      * The 'start' event is emitted on engine when has started and is ready for interaction.
      */
-    export class GameStartEvent extends GameEvent {
-        target: any;
-        constructor(target: any);
+    export class GameStartEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
     }
     /**
      * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
      */
-    export class GameStopEvent extends GameEvent {
-        target: any;
-        constructor(target: any);
+    export class GameStopEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
     }
     /**
      * The 'predraw' event is emitted on actors, scenes, and engine before drawing starts. Actors' predraw happens inside their graphics
      * transform so that all drawing takes place with the actor as the origin.
      *
      */
-    export class PreDrawEvent extends GameEvent {
+    export class PreDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
         ctx: CanvasRenderingContext2D;
-        delta: any;
-        target: any;
-        constructor(ctx: CanvasRenderingContext2D, delta: any, target: any);
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
     }
     /**
      * The 'postdraw' event is emitted on actors, scenes, and engine after drawing finishes. Actors' postdraw happens inside their graphics
      * transform so that all drawing takes place with the actor as the origin.
      *
      */
-    export class PostDrawEvent extends GameEvent {
+    export class PostDrawEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
         ctx: CanvasRenderingContext2D;
-        delta: any;
-        target: any;
-        constructor(ctx: CanvasRenderingContext2D, delta: any, target: any);
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(ctx: CanvasRenderingContext2D, delta: number, target: Actor | Scene | Engine | TileMap);
     }
     /**
      * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
      */
-    export class PreDebugDrawEvent extends GameEvent {
+    export class PreDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
         ctx: CanvasRenderingContext2D;
-        target: any;
-        constructor(ctx: CanvasRenderingContext2D, target: any);
+        target: Actor | Scene | Engine;
+        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
     }
     /**
      * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
      */
-    export class PostDebugDrawEvent extends GameEvent {
+    export class PostDebugDrawEvent extends GameEvent<Actor | Scene | Engine> {
         ctx: CanvasRenderingContext2D;
-        target: any;
-        constructor(ctx: CanvasRenderingContext2D, target: any);
+        target: Actor | Scene | Engine;
+        constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
     }
     /**
      * The 'preupdate' event is emitted on actors, scenes, and engine before the update starts.
      */
-    export class PreUpdateEvent extends GameEvent {
+    export class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
         engine: Engine;
-        delta: any;
-        target: any;
-        constructor(engine: Engine, delta: any, target: any);
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
     }
     /**
      * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends. This is equivalent to the obsolete 'update'
      * event.
      */
-    export class PostUpdateEvent extends GameEvent {
+    export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
         engine: Engine;
-        delta: any;
-        target: any;
-        constructor(engine: Engine, delta: any, target: any);
+        delta: number;
+        target: Actor | Scene | Engine | TileMap;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
     }
     /**
      * The 'preframe' event is emitted on the engine, before the frame begins.
      */
-    export class PreFrameEvent extends GameEvent {
+    export class PreFrameEvent extends GameEvent<Engine> {
         engine: Engine;
         prevStats: FrameStats;
-        target: any;
-        constructor(engine: Engine, prevStats: FrameStats, target: any);
+        constructor(engine: Engine, prevStats: FrameStats);
     }
     /**
      * The 'postframe' event is emitted on the engine, after a frame ends.
      */
-    export class PostFrameEvent extends GameEvent {
+    export class PostFrameEvent extends GameEvent<Engine> {
         engine: Engine;
         stats: FrameStats;
-        target: any;
-        constructor(engine: Engine, stats: FrameStats, target: any);
+        constructor(engine: Engine, stats: FrameStats);
     }
     /**
      * Event received when a gamepad is connected to Excalibur. [[Gamepads]] receives this event.
      */
-    export class GamepadConnectEvent extends GameEvent {
+    export class GamepadConnectEvent extends GameEvent<Input.Gamepad> {
         index: number;
         gamepad: Input.Gamepad;
         constructor(index: number, gamepad: Input.Gamepad);
@@ -6081,68 +6083,73 @@ declare module "Events" {
     /**
      * Event received when a gamepad is disconnected from Excalibur. [[Gamepads]] receives this event.
      */
-    export class GamepadDisconnectEvent extends GameEvent {
+    export class GamepadDisconnectEvent extends GameEvent<Input.Gamepad> {
         index: number;
-        constructor(index: number);
+        gamepad: Input.Gamepad;
+        constructor(index: number, gamepad: Input.Gamepad);
     }
     /**
      * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
      */
-    export class GamepadButtonEvent extends GameEvent {
+    export class GamepadButtonEvent extends GameEvent<Input.Gamepad> {
         button: Input.Buttons;
         value: number;
+        target: Input.Gamepad;
         /**
          * @param button  The Gamepad button
          * @param value   A numeric value between 0 and 1
          */
-        constructor(button: Input.Buttons, value: number);
+        constructor(button: Input.Buttons, value: number, target: Input.Gamepad);
     }
     /**
      * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
      */
-    export class GamepadAxisEvent extends GameEvent {
+    export class GamepadAxisEvent extends GameEvent<Input.Gamepad> {
         axis: Input.Axes;
         value: number;
+        target: Input.Gamepad;
         /**
          * @param axis  The Gamepad axis
          * @param value A numeric value between -1 and 1
          */
-        constructor(axis: Input.Axes, value: number);
+        constructor(axis: Input.Axes, value: number, target: Input.Gamepad);
     }
     /**
      * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
      * [[EventDispatcher|event dispatchers]].
      */
-    export class SubscribeEvent extends GameEvent {
+    export class SubscribeEvent<T> extends GameEvent<T> {
         topic: string;
-        handler: (event?: GameEvent) => void;
-        constructor(topic: string, handler: (event?: GameEvent) => void);
+        handler: (event?: GameEvent<T>) => void;
+        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
     }
     /**
      * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
      * [[EventDispatcher|event dispatchers]].
      */
-    export class UnsubscribeEvent extends GameEvent {
+    export class UnsubscribeEvent<T> extends GameEvent<T> {
         topic: string;
-        handler: (event?: GameEvent) => void;
-        constructor(topic: string, handler: (event?: GameEvent) => void);
+        handler: (event?: GameEvent<T>) => void;
+        constructor(topic: string, handler: (event?: GameEvent<T>) => void);
     }
     /**
      * Event received by the [[Engine]] when the browser window is visible on a screen.
      */
-    export class VisibleEvent extends GameEvent {
-        constructor();
+    export class VisibleEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
     }
     /**
      * Event received by the [[Engine]] when the browser window is hidden from all screens.
      */
-    export class HiddenEvent extends GameEvent {
-        constructor();
+    export class HiddenEvent extends GameEvent<Engine> {
+        target: Engine;
+        constructor(target: Engine);
     }
     /**
      * Event thrown on an [[Actor|actor]] when a collision has occurred
      */
-    export class CollisionEvent extends GameEvent {
+    export class CollisionEvent extends GameEvent<Actor> {
         actor: Actor;
         other: Actor;
         side: Side;
@@ -6158,44 +6165,49 @@ declare module "Events" {
     /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
-    export class InitializeEvent extends GameEvent {
+    export class InitializeEvent extends GameEvent<Actor | Scene> {
         engine: Engine;
+        target: Actor | Scene;
         /**
          * @param engine  The reference to the current engine
          */
-        constructor(engine: Engine);
+        constructor(engine: Engine, target: Actor | Scene);
     }
     /**
      * Event thrown on a [[Scene]] on activation
      */
-    export class ActivateEvent extends GameEvent {
+    export class ActivateEvent extends GameEvent<Scene> {
         oldScene: Scene;
+        target: Scene;
         /**
          * @param oldScene  The reference to the old scene
          */
-        constructor(oldScene: Scene);
+        constructor(oldScene: Scene, target: Scene);
     }
     /**
      * Event thrown on a [[Scene]] on deactivation
      */
-    export class DeactivateEvent extends GameEvent {
+    export class DeactivateEvent extends GameEvent<Scene> {
         newScene: Scene;
+        target: Scene;
         /**
          * @param newScene  The reference to the new scene
          */
-        constructor(newScene: Scene);
+        constructor(newScene: Scene, target: Scene);
     }
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
      */
-    export class ExitViewPortEvent extends GameEvent {
-        constructor();
+    export class ExitViewPortEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
     }
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
      */
-    export class EnterViewPortEvent extends GameEvent {
-        constructor();
+    export class EnterViewPortEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
     }
 }
 declare module "Class" {
@@ -6218,7 +6230,7 @@ declare module "Class" {
          * @param eventName  Name of the event to listen for
          * @param handler    Event handler for the thrown event
          */
-        on(eventName: string, handler: (event?: GameEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Alias for `removeEventListener`. If only the eventName is specified
          * it will remove all handlers registered for that specific event. If the eventName
@@ -6227,13 +6239,13 @@ declare module "Class" {
          * @param eventName  Name of the event to listen for
          * @param handler    Event handler for the thrown event
          */
-        off(eventName: string, handler?: (event?: GameEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Emits a new event
          * @param eventName   Name of the event to emit
          * @param eventObject Data associated with this event
          */
-        emit(eventName: string, eventObject?: GameEvent): void;
+        emit(eventName: string, eventObject?: GameEvent<any>): void;
         /**
          * You may wish to extend native Excalibur functionality in vanilla Javascript.
          * Any method on a class inheriting [[Class]] may be extended to support
@@ -6541,7 +6553,7 @@ declare module "Actor" {
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
          */
-        onInitialize(engine: Engine): void;
+        onInitialize(_engine: Engine): void;
         /**
          * Gets wether the actor is Initialized
          */
@@ -6552,19 +6564,19 @@ declare module "Actor" {
          */
         _initialize(engine: Engine): void;
         private _checkForPointerOptIn(eventName);
-        on(eventName: Events.kill, handler: (event?: KillEvent) => void): any;
-        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): any;
-        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): any;
-        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): any;
-        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): any;
-        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): any;
-        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): any;
-        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): any;
-        on(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): any;
-        on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): any;
-        on(eventName: string, handler: (event?: GameEvent) => void): any;
+        on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        on(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.
@@ -6595,27 +6607,27 @@ declare module "Actor" {
          * the key.
          * @param key The key of the drawing
          */
-        setDrawing(key: string): any;
+        setDrawing(key: string): void;
         /**
          * Sets the current drawing of the actor to the drawing corresponding to
          * an `enum` key (e.g. `Animations.Left`)
          * @param key The `enum` key of the drawing
          */
-        setDrawing(key: number): any;
+        setDrawing(key: number): void;
         /**
          * Adds a whole texture as the "default" drawing. Set a drawing using [[setDrawing]].
          */
-        addDrawing(texture: Texture): any;
+        addDrawing(texture: Texture): void;
         /**
          * Adds a whole sprite as the "default" drawing. Set a drawing using [[setDrawing]].
          */
-        addDrawing(sprite: Sprite): any;
+        addDrawing(sprite: Sprite): void;
         /**
          * Adds a drawing to the list of available drawings for an actor. Set a drawing using [[setDrawing]].
          * @param key     The key to associate with a drawing for this actor
          * @param drawing This can be an [[Animation]], [[Sprite]], or [[Polygon]].
          */
-        addDrawing(key: any, drawing: IDrawable): any;
+        addDrawing(key: any, drawing: IDrawable): void;
         z: number;
         /**
          * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
@@ -6655,7 +6667,7 @@ declare module "Actor" {
         /**
          * Sets the width of an actor, factoring in the current scale
          */
-        setWidth(width: any): void;
+        setWidth(width: number): void;
         /**
          * Gets the calculated height of an actor, factoring in scale
          */
@@ -6663,7 +6675,7 @@ declare module "Actor" {
         /**
          * Sets the height of an actor, factoring in the current scale
          */
-        setHeight(height: any): void;
+        setHeight(height: number): void;
         /**
          * Gets the left edge of the actor
          */
@@ -6852,7 +6864,7 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, destx: number, desty: number, speed: number);
-        update(delta: number): void;
+        update(_delta: number): void;
         isComplete(actor: Actor): boolean;
         stop(): void;
         reset(): void;
@@ -6870,7 +6882,7 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, destx: number, desty: number, time: number);
-        update(delta: Number): void;
+        update(_delta: number): void;
         isComplete(actor: Actor): boolean;
         stop(): void;
         reset(): void;
@@ -6889,9 +6901,9 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, actorToFollow: Actor, followDistance?: number);
-        update(delta: number): void;
+        update(_delta: number): void;
         stop(): void;
-        isComplete(actor: Actor): boolean;
+        isComplete(): boolean;
         reset(): void;
     }
     export class Meet implements IAction {
@@ -6908,8 +6920,8 @@ declare module "Actions/Action" {
         private _stopped;
         private _speedWasSpecified;
         constructor(actor: Actor, actorToMeet: Actor, speed?: number);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -6929,8 +6941,8 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, angleRadians: number, speed: number, rotationType?: RotationType);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -6951,8 +6963,8 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, angleRadians: number, time: number, rotationType?: RotationType);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -6971,8 +6983,8 @@ declare module "Actions/Action" {
         private _started;
         private _stopped;
         constructor(actor: Actor, scaleX: number, scaleY: number, speedX: number, speedY: number);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -6992,8 +7004,8 @@ declare module "Actions/Action" {
         private _speedX;
         private _speedY;
         constructor(actor: Actor, scaleX: number, scaleY: number, time: number);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -7007,7 +7019,7 @@ declare module "Actions/Action" {
         private _stopped;
         constructor(actor: Actor, delay: number);
         update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -7021,8 +7033,8 @@ declare module "Actions/Action" {
         private _stopped;
         private _started;
         constructor(actor: Actor, timeVisible: number, timeNotVisible: number, numBlinks?: number);
-        update(delta: any): void;
-        isComplete(actor: Actor): boolean;
+        update(delta: number): void;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -7037,7 +7049,7 @@ declare module "Actions/Action" {
         private _stopped;
         constructor(actor: Actor, endOpacity: number, speed: number);
         update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        isComplete(): boolean;
         stop(): void;
         reset(): void;
     }
@@ -7045,10 +7057,9 @@ declare module "Actions/Action" {
         x: number;
         y: number;
         private _actor;
-        private _started;
         private _stopped;
         constructor(actor: Actor);
-        update(delta: number): void;
+        update(_delta: number): void;
         isComplete(): boolean;
         stop(): void;
         reset(): void;
@@ -7060,8 +7071,8 @@ declare module "Actions/Action" {
         private _actor;
         private _hasBeenCalled;
         constructor(actor: Actor, method: () => any);
-        update(delta: number): void;
-        isComplete(actor: Actor): boolean;
+        update(_delta: number): void;
+        isComplete(): boolean;
         reset(): void;
         stop(): void;
     }
@@ -7074,7 +7085,7 @@ declare module "Actions/Action" {
         private _originalRepeat;
         private _stopped;
         constructor(actor: Actor, repeat: number, actions: IAction[]);
-        update(delta: any): void;
+        update(delta: number): void;
         isComplete(): boolean;
         stop(): void;
         reset(): void;
@@ -7086,7 +7097,7 @@ declare module "Actions/Action" {
         private _actionQueue;
         private _stopped;
         constructor(actor: Actor, actions: IAction[]);
-        update(delta: any): void;
+        update(delta: number): void;
         isComplete(): boolean;
         stop(): void;
         reset(): void;

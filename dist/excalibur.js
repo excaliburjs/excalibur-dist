@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-03-28
+/*! excalibur - v0.9.0 - 2017-04-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.9.0 - 2017-03-28
+/*! excalibur - v0.9.0 - 2017-04-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -842,6 +842,9 @@ define("Algebra", ["require", "exports"], function (require, exports) {
             }
             else if (y !== null) {
                 return new Vector((y - b) / m, y);
+            }
+            else {
+                throw new Error('You must provide an X or a Y value');
             }
         };
         /**
@@ -1521,14 +1524,14 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
     exports.randomIntInRange = randomIntInRange;
     function canonicalizeAngle(angle) {
         var tmpAngle = angle;
-        if (angle > this.TwoPI) {
-            while (tmpAngle > this.TwoPI) {
-                tmpAngle -= this.TwoPI;
+        if (angle > exports.TwoPI) {
+            while (tmpAngle > exports.TwoPI) {
+                tmpAngle -= exports.TwoPI;
             }
         }
         if (angle < 0) {
             while (tmpAngle < 0) {
-                tmpAngle += this.TwoPI;
+                tmpAngle += exports.TwoPI;
             }
         }
         return tmpAngle;
@@ -1604,11 +1607,6 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
     }
     exports.getOppositeSide = getOppositeSide;
     function getSideFromVector(direction) {
-        var left = direction.dot(Algebra_2.Vector.Left);
-        var right = direction.dot(Algebra_2.Vector.Right);
-        var up = direction.dot(Algebra_2.Vector.Up);
-        var down = direction.dot(Algebra_2.Vector.Down);
-        // a very fortran approach
         var directions = [Algebra_2.Vector.Left, Algebra_2.Vector.Right, Algebra_2.Vector.Up, Algebra_2.Vector.Down];
         var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
         var max = -Number.MAX_VALUE;
@@ -1685,7 +1683,8 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
          */
         Collection.prototype.elementAt = function (index) {
             if (index >= this.count()) {
-                return;
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid index ' + index);
             }
             return this._internalArray[index];
         };
@@ -1707,7 +1706,8 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
         Collection.prototype.remove = function (index) {
             var count = this.count();
             if (count === 0) {
-                return;
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid parameter ' + index);
             }
             // O(n) Shift 
             var removed = this._internalArray[index];
@@ -1802,7 +1802,7 @@ define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], funct
     }
     exports.obsolete = obsolete;
 });
-define("Promises", ["require", "exports", "Util/Log", "Util/Decorators"], function (require, exports, Log_2, Decorators_1) {
+define("Promises", ["require", "exports", "Util/Decorators"], function (require, exports, Decorators_1) {
     "use strict";
     // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
     /**
@@ -1826,7 +1826,6 @@ define("Promises", ["require", "exports", "Util/Log", "Util/Decorators"], functi
             this._state = PromiseState.Pending;
             this._successCallbacks = [];
             this._rejectCallback = function () { return; };
-            this._logger = Log_2.Logger.getInstance();
         }
         /**
          * Wrap a value in a resolved promise
@@ -2027,8 +2026,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this._y = 0;
             this._cameraMoving = false;
             this._currentLerpTime = 0;
-            this._lerpDuration = 1000; // 1 second
-            this._totalLerpTime = 0;
+            this._lerpDuration = 1000; // 1 second   
             this._lerpStart = null;
             this._lerpEnd = null;
             //camera effects
@@ -2043,7 +2041,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this._currentZoomScale = 1;
             this._maxZoomScale = 1;
             this._zoomDuration = 0;
-            this._elapsedZoomTime = 0;
             this._zoomIncrement = 0.01;
             this._easing = EasingFunctions_1.EasingFunctions.EaseInOutCubic;
         }
@@ -2178,7 +2175,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         BaseCamera.prototype._setCurrentZoomScale = function (zoomScale) {
             this.z = zoomScale;
         };
-        BaseCamera.prototype.update = function (engine, delta) {
+        BaseCamera.prototype.update = function (_engine, delta) {
             // Update placements based on linear algebra
             this._x += this.dx * delta / 1000;
             this._y += this.dy * delta / 1000;
@@ -2233,7 +2230,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
          * @param ctx    Canvas context to apply transformations
          * @param delta  The number of milliseconds since the last update
          */
-        BaseCamera.prototype.draw = function (ctx, delta) {
+        BaseCamera.prototype.draw = function (ctx) {
             var focus = this.getFocus();
             var canvasWidth = ctx.canvas.width;
             var canvasHeight = ctx.canvas.height;
@@ -2271,19 +2268,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         };
         BaseCamera.prototype._isDoneShaking = function () {
             return !(this._isShaking) || (this._elapsedShakeTime >= this._shakeDuration);
-        };
-        BaseCamera.prototype._isDoneZooming = function () {
-            if (this._zoomDuration !== 0) {
-                return (this._elapsedZoomTime >= this._zoomDuration);
-            }
-            else {
-                if (this._maxZoomScale < 1) {
-                    return (this._currentZoomScale <= this._maxZoomScale);
-                }
-                else {
-                    return (this._currentZoomScale >= this._maxZoomScale);
-                }
-            }
         };
         return BaseCamera;
     }());
@@ -2344,8 +2328,7 @@ define("Debug", ["require", "exports"], function (require, exports) {
      * updated during a frame.
      */
     var Debug = (function () {
-        function Debug(_engine) {
-            this._engine = _engine;
+        function Debug() {
             /**
              * Performance statistics
              */
@@ -2612,7 +2595,7 @@ define("Debug", ["require", "exports"], function (require, exports) {
 define("Interfaces/IEvented", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("EventDispatcher", ["require", "exports", "Util/Log", "Events"], function (require, exports, Log_3, Events_1) {
+define("EventDispatcher", ["require", "exports", "Events"], function (require, exports, Events_1) {
     "use strict";
     /**
      * Excalibur's internal event dispatcher implementation.
@@ -2630,7 +2613,6 @@ define("EventDispatcher", ["require", "exports", "Util/Log", "Events"], function
         function EventDispatcher(target) {
             this._handlers = {};
             this._wiredEventDispatchers = [];
-            this._log = Log_3.Logger.getInstance();
             this._target = target;
         }
         /**
@@ -3069,12 +3051,12 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
             this.point = point;
             this.normal = normal;
         }
-        CollisionContact.prototype.resolve = function (delta, strategy) {
+        CollisionContact.prototype.resolve = function (strategy) {
             if (strategy === Physics_1.CollisionResolutionStrategy.RigidBody) {
-                this._resolveRigidBodyCollision(delta);
+                this._resolveRigidBodyCollision();
             }
             else if (strategy === Physics_1.CollisionResolutionStrategy.Box) {
-                this._resolveBoxCollision(delta);
+                this._resolveBoxCollision();
             }
             else {
                 throw new Error('Unknown collision resolution strategy');
@@ -3155,7 +3137,7 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
                 }
             }
         };
-        CollisionContact.prototype._resolveBoxCollision = function (delta) {
+        CollisionContact.prototype._resolveBoxCollision = function () {
             var bodyA = this.bodyA.body.actor;
             var bodyB = this.bodyB.body.actor;
             var side = Util.getSideFromVector(this.mtv);
@@ -3166,12 +3148,11 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
             this._applyBoxImpluse(bodyA, bodyB, mtv, side);
             this._applyBoxImpluse(bodyB, bodyA, mtv.negate(), Util.getOppositeSide(side));
         };
-        CollisionContact.prototype._resolveRigidBodyCollision = function (delta) {
+        CollisionContact.prototype._resolveRigidBodyCollision = function () {
             // perform collison on bounding areas
             var bodyA = this.bodyA.body;
             var bodyB = this.bodyB.body;
             var mtv = this.mtv; // normal pointing away from bodyA
-            var point = this.point; // world space collision point
             var normal = this.normal; // normal pointing away from bodyA
             if (bodyA.actor === bodyB.actor) {
                 return;
@@ -3297,9 +3278,6 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
             return new CollisionContact_1.CollisionContact(circleA, circleB, mvt, pointOfCollision, axisOfCollision);
         },
         CollideCirclePolygon: function (circle, polygon) {
-            var axes = polygon.getAxes();
-            var cc = circle.getCenter();
-            var pc = polygon.getCenter();
             var minAxis = circle.testSeparatingAxisTheorem(polygon);
             if (!minAxis) {
                 return null;
@@ -3366,19 +3344,13 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
             var mvt = n.scale(Math.abs(circle.radius - Math.sqrt(dd)));
             return new CollisionContact_1.CollisionContact(circle, edge, mvt.negate(), pointOnEdge, n.negate());
         },
-        CollideEdgeEdge: function (edgeA, edgeB) {
+        CollideEdgeEdge: function () {
             // Edge-edge collision doesn't make sense
             return null;
         },
         CollidePolygonEdge: function (polygon, edge) {
-            var center = polygon.getCenter();
             var e = edge.end.sub(edge.begin);
             var edgeNormal = e.normal();
-            var u = e.dot(edge.end.sub(center));
-            var v = e.dot(center.sub(edge.begin));
-            var den = e.dot(e);
-            var pointOnEdge = (edge.begin.scale(u).add(edge.end.scale(v))).scale(1 / den);
-            var d = center.sub(pointOnEdge);
             // build a temporary polygon from the edge to use SAT
             var linePoly = new PolygonArea_1.PolygonArea({
                 points: [
@@ -3396,10 +3368,6 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
             return new CollisionContact_1.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal.negate()), edgeNormal.negate());
         },
         CollidePolygonPolygon: function (polyA, polyB) {
-            // get all axes from both polys
-            var axes = polyA.getAxes().concat(polyB.getAxes());
-            // get all points from both polys
-            var points = polyA.getTransformedPoints().concat(polyB.getTransformedPoints());
             // do a SAT test to find a min axis if it exists
             var minAxis = polyA.testSeparatingAxisTheorem(polyB);
             // no overlap, no collision return null
@@ -3691,8 +3659,11 @@ define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (requi
         }
         else {
             var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-            for (var side in defaultRadius) {
-                br[side] = radius[side] || defaultRadius[side];
+            for (var prop in defaultRadius) {
+                if (defaultRadius.hasOwnProperty(prop)) {
+                    var side = prop;
+                    br[side] = radius[side] || defaultRadius[side];
+                }
             }
         }
         ctx.beginPath();
@@ -3900,8 +3871,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          *
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
-        Body.prototype.useEdgeCollision = function (begin, end, center) {
-            if (center === void 0) { center = Algebra_6.Vector.Zero.clone(); }
+        Body.prototype.useEdgeCollision = function (begin, end) {
             this.collisionArea = new EdgeArea_2.EdgeArea({
                 begin: begin,
                 end: end,
@@ -3980,7 +3950,7 @@ define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Co
         /**
          * Tests if a point is contained in this collision area
          */
-        EdgeArea.prototype.contains = function (point) {
+        EdgeArea.prototype.contains = function () {
             return false;
         };
         /**
@@ -4018,7 +3988,7 @@ define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Co
                 return CollisionJumpTable_2.CollisionJumpTable.CollidePolygonEdge(area, this);
             }
             else if (area instanceof EdgeArea) {
-                return CollisionJumpTable_2.CollisionJumpTable.CollideEdgeEdge(this, area);
+                return CollisionJumpTable_2.CollisionJumpTable.CollideEdgeEdge();
             }
             else {
                 throw new Error("Edge could not collide with unknown ICollisionArea " + typeof area);
@@ -4178,7 +4148,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             // Always cast to the right, as long as we cast in a consitent fixed direction we
             // will be fine
             var testRay = new Algebra_8.Ray(point, new Algebra_8.Vector(1, 0));
-            var intersectCount = this.getSides().reduce(function (accum, side, i, arr) {
+            var intersectCount = this.getSides().reduce(function (accum, side) {
                 if (testRay.intersect(side) >= 0) {
                     return accum + 1;
                 }
@@ -4339,7 +4309,6 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
          * Project the edges of the polygon along a specified axis
          */
         PolygonArea.prototype.project = function (axis) {
-            var scalars = [];
             var points = this.getTransformedPoints();
             var len = points.length;
             var min = Number.MAX_VALUE;
@@ -4359,7 +4328,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             // Iterate through the supplied points and construct a 'polygon'
             var firstPoint = this.getTransformedPoints()[0];
             ctx.moveTo(firstPoint.x, firstPoint.y);
-            this.getTransformedPoints().forEach(function (point, i) {
+            this.getTransformedPoints().forEach(function (point) {
                 ctx.lineTo(point.x, point.y);
             });
             ctx.lineTo(firstPoint.x, firstPoint.y);
@@ -4862,7 +4831,7 @@ define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promis
 define("Actions/IActionable", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_4, Class_1) {
+define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_2, Class_1) {
     "use strict";
     /**
      * Groups are used for logically grouping Actors so they can be acted upon
@@ -4876,7 +4845,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
             var _this = _super.call(this) || this;
             _this.name = name;
             _this.scene = scene;
-            _this._logger = Log_4.Logger.getInstance();
+            _this._logger = Log_2.Logger.getInstance();
             _this._members = [];
             _this.actions = new ActionContext_1.ActionContext();
             if (scene == null) {
@@ -4935,14 +4904,13 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
             }
         };
         Group.prototype.rotate = function (angle) {
-            if (typeof arguments[0] === 'number') {
-                var r = arguments[0], i = 0, members = this.getMembers(), len = members.length;
-                for (i; i < len; i++) {
-                    members[i].rotation += r;
-                }
-            }
-            else {
+            if (typeof angle !== 'number') {
                 this._logger.error('Invalid arguments passed to group rotate', this.name, 'args:', arguments);
+                return;
+            }
+            for (var _i = 0, _a = this.getMembers(); _i < _a.length; _i++) {
+                var member = _a[_i];
+                member.rotation += angle;
             }
         };
         Group.prototype.on = function (eventName, handler) {
@@ -5178,7 +5146,7 @@ define("Interfaces/IDrawable", ["require", "exports"], function (require, export
 define("Interfaces/ILoadable", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_5) {
+define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_3) {
     "use strict";
     /**
      * The [[Resource]] type allows games built in Excalibur to load generic resources.
@@ -5200,7 +5168,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             _this.responseType = responseType;
             _this.bustCache = bustCache;
             _this.data = null;
-            _this.logger = Log_5.Logger.getInstance();
+            _this.logger = Log_3.Logger.getInstance();
             _this.onprogress = function () { return; };
             _this.oncomplete = function () { return; };
             _this.onerror = function () { return; };
@@ -5226,7 +5194,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             }
             return uri;
         };
-        Resource.prototype._start = function (e) {
+        Resource.prototype._start = function () {
             this.logger.debug('Started loading resource ' + this.path);
         };
         /**
@@ -5245,10 +5213,10 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             var request = new XMLHttpRequest();
             request.open('GET', this.bustCache ? this._cacheBust(this.path) : this.path, true);
             request.responseType = this.responseType;
-            request.onloadstart = function (e) { _this._start(e); };
+            request.onloadstart = function () { _this._start(); };
             request.onprogress = this.onprogress;
             request.onerror = this.onerror;
-            request.onload = function (e) {
+            request.onload = function () {
                 // XHR on file:// success status is 0, such as with PhantomJS
                 if (request.status !== 0 && request.status !== 200) {
                     _this.logger.error('Failed to load resource ', _this.path, ' server responded with error code', request.status);
@@ -5353,7 +5321,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
     }(Resource_1.Resource));
     exports.Texture = Texture;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_8, Algebra_11, Log_6, Util_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_8, Algebra_11, Log_4, Util_1) {
     "use strict";
     /**
      * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
@@ -5378,7 +5346,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             this.rotation = 0.0;
             this.anchor = new Algebra_11.Vector(0.0, 0.0);
             this.scale = new Algebra_11.Vector(1, 1);
-            this.logger = Log_6.Logger.getInstance();
+            this.logger = Log_4.Logger.getInstance();
             /**
              * Draws the sprite flipped vertically
              */
@@ -5859,7 +5827,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
     }());
     exports.Animation = Animation;
 });
-define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_9, Effects, Log_7, Label_1) {
+define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_9, Effects, Log_5, Label_1) {
     "use strict";
     /**
      * Sprite sheets are a useful mechanism for slicing up image resources into
@@ -5952,6 +5920,9 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
             if (index >= 0 && index < this.sprites.length) {
                 return this.sprites[index];
             }
+            else {
+                throw new Error('Invalid index: ' + index);
+            }
         };
         return SpriteSheet;
     }());
@@ -5981,8 +5952,6 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
             _this.caseInsensitive = caseInsensitive;
             _this.spWidth = spWidth;
             _this.spHeight = spHeight;
-            _this._spriteLookup = {};
-            _this._colorLookup = {};
             _this._currentColor = Color_9.Color.Black.clone();
             _this._currentOpacity = 1.0;
             _this._sprites = {};
@@ -6104,7 +6073,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
                     currX += (charSprite.width + options.letterSpacing);
                 }
                 catch (e) {
-                    Log_7.Logger.getInstance().error("SpriteFont Error drawing char " + character);
+                    Log_5.Logger.getInstance().error("SpriteFont Error drawing char " + character);
                 }
             }
         };
@@ -6262,10 +6231,6 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _this._shadowOffsetX = 0;
             _this._shadowOffsetY = 0;
             _this._shadowColor = Color_10.Color.Black.clone();
-            _this._shadowColorDirty = false;
-            _this._textSprites = {};
-            _this._shadowSprites = {};
-            _this._color = Color_10.Color.Black.clone();
             _this.text = text || '';
             _this.color = Color_10.Color.Black.clone();
             _this.spriteFont = spriteFont;
@@ -6391,14 +6356,14 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             if (this._textShadowOn) {
                 ctx.save();
                 ctx.translate(this._shadowOffsetX, this._shadowOffsetY);
-                this._fontDraw(ctx, delta, this._shadowSprites);
+                this._fontDraw(ctx);
                 ctx.restore();
             }
-            this._fontDraw(ctx, delta, this._textSprites);
+            this._fontDraw(ctx);
             _super.prototype.draw.call(this, ctx, delta);
             ctx.restore();
         };
-        Label.prototype._fontDraw = function (ctx, delta, sprites) {
+        Label.prototype._fontDraw = function (ctx) {
             if (this.spriteFont) {
                 this.spriteFont.draw(ctx, this.text, 0, 0, {
                     color: this.color.clone(),
@@ -6449,7 +6414,7 @@ define("Interfaces/IAudio", ["require", "exports"], function (require, exports) 
 define("Interfaces/IAudioImplementation", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_8, Util, Promises_5) {
+define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_6, Util, Promises_5) {
     "use strict";
     // set up audio context reference
     // when we introduce multi-tracking, we may need to move this to a factory method
@@ -6484,7 +6449,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      */
     var WebAudio = (function () {
         function WebAudio() {
-            this._logger = Log_8.Logger.getInstance();
+            this._logger = Log_6.Logger.getInstance();
             this.responseType = 'arraybuffer';
         }
         /**
@@ -6515,7 +6480,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
          * @source https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
          */
         WebAudio.unlock = function () {
-            if (this._unlocked || !audioContext) {
+            if (WebAudio._unlocked || !audioContext) {
                 return;
             }
             // create empty buffer and play it
@@ -6538,12 +6503,12 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
                     var legacySource = source;
                     if (legacySource.playbackState === legacySource.PLAYING_STATE ||
                         legacySource.playbackState === legacySource.FINISHED_STATE) {
-                        this._unlocked = true;
+                        WebAudio._unlocked = true;
                     }
                 }
                 else {
                     if (audioContext.currentTime > 0 || ended) {
-                        this._unlocked = true;
+                        WebAudio._unlocked = true;
                     }
                 }
             }, 0);
@@ -6584,7 +6549,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             for (var _i = 0; _i < arguments.length; _i++) {
                 paths[_i] = arguments[_i];
             }
-            this._logger = Log_8.Logger.getInstance();
+            this._logger = Log_6.Logger.getInstance();
             this._data = null;
             this._tracks = [];
             this._isLoaded = false;
@@ -6631,7 +6596,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
                 }
             }
             catch (e) {
-                Log_8.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
+                Log_6.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
                 return false;
             }
         };
@@ -6797,7 +6762,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             request.responseType = this.sound.responseType;
             request.onprogress = this.onprogress;
             request.onerror = this.onerror;
-            request.onload = function (e) { return onload(request); };
+            request.onload = function () { return onload(request); };
             request.send();
         };
         /**
@@ -6833,13 +6798,12 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      */
     /* istanbul ignore next */
     var AudioTagInstance = (function () {
-        function AudioTagInstance(_src) {
-            this._src = _src;
+        function AudioTagInstance(src) {
             this._isPlaying = false;
             this._isPaused = false;
             this._loop = false;
             this._volume = 1.0;
-            this._audioElement = new Audio(_src);
+            this._audioElement = new Audio(src);
         }
         AudioTagInstance.prototype.isPlaying = function () {
             return this._isPlaying;
@@ -7036,7 +7000,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
 define("Interfaces/ILoader", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_11, Sound_1, Log_9, Promises_6, Class_3, DrawUtil) {
+define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_11, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
     "use strict";
     /**
      * Pre-loading assets
@@ -7094,10 +7058,10 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             _this.logoHeight = 118;
             _this.backgroundColor = '#176BAA';
             _this.getData = function () { return; };
-            _this.setData = function (data) { return; };
-            _this.processData = function (data) { return; };
+            _this.setData = function () { return; };
+            _this.processData = function () { return; };
             _this.onprogress = function (e) {
-                Log_9.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
+                Log_7.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
                 return;
             };
             _this.oncomplete = function () { return; };
@@ -7142,14 +7106,6 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             for (i; i < len; i++) {
                 this.addResource(loadables[i]);
             }
-        };
-        Loader.prototype._sumCounts = function (obj) {
-            var sum = 0;
-            var prev = 0;
-            for (var i in obj) {
-                sum += obj[i] | 0;
-            }
-            return sum;
         };
         /**
          * Returns true if the loader has completely loaded all resources
@@ -7208,7 +7164,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
          * Override `logo`, `logoWidth`, `logoHeight` and `backgroundColor` properties
          * to customize the drawing, or just override entire method.
          */
-        Loader.prototype.draw = function (ctx, delta) {
+        Loader.prototype.draw = function (ctx) {
             ctx.fillStyle = this.backgroundColor;
             ctx.fillRect(0, 0, this._engine.canvasWidth, this._engine.canvasHeight);
             var y = this._engine.canvas.height / 2;
@@ -7232,7 +7188,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
          * Perform any calculations or logic in the `update` method. The default `Loader` does not
          * do anything in this method so it is safe to override.
          */
-        Loader.prototype.update = function (engine, delta) {
+        Loader.prototype.update = function (_engine, _delta) {
             // overridable update
         };
         return Loader;
@@ -7338,7 +7294,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             var _this = this;
             this._waitPromise = new Promises_6.Promise();
             // wait until user indicates to proceed before finishing load
-            var superLoad = _super.prototype.load.call(this).then(function (value) {
+            _super.prototype.load.call(this).then(function (value) {
                 _this._loaded = true;
                 _this._loadedValue = value;
                 // show element
@@ -7363,7 +7319,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
     var CapturePointer = (function () {
         function CapturePointer() {
         }
-        CapturePointer.prototype.update = function (actor, engine, delta) {
+        CapturePointer.prototype.update = function (actor, engine) {
             if (!actor.enableCapturePointer) {
                 return;
             }
@@ -7381,7 +7337,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
     var EulerMovement = (function () {
         function EulerMovement() {
         }
-        EulerMovement.prototype.update = function (actor, engine, delta) {
+        EulerMovement.prototype.update = function (actor, _engine, delta) {
             // Update placements based on linear algebra
             var seconds = delta / 1000;
             var totalAcc = actor.acc.clone();
@@ -7513,7 +7469,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
         function OffscreenCulling() {
             this.cullingBox = new CullingBox_1.CullingBox();
         }
-        OffscreenCulling.prototype.update = function (actor, engine, delta) {
+        OffscreenCulling.prototype.update = function (actor, engine) {
             var eventDispatcher = actor.eventDispatcher;
             var anchor = actor.anchor;
             var globalScale = actor.getGlobalScale();
@@ -7535,7 +7491,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
                     actorScreenCoords.x > engine.canvasWidth ||
                     actorScreenCoords.y > engine.canvasHeight) &&
                     isSpriteOffScreen) {
-                    eventDispatcher.emit('exitviewport', new Events_3.ExitViewPortEvent());
+                    eventDispatcher.emit('exitviewport', new Events_3.ExitViewPortEvent(actor));
                     actor.isOffScreen = true;
                 }
             }
@@ -7545,7 +7501,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
                     actorScreenCoords.x < engine.canvasWidth &&
                     actorScreenCoords.y < engine.canvasHeight) ||
                     !isSpriteOffScreen) {
-                    eventDispatcher.emit('enterviewport', new Events_3.EnterViewPortEvent());
+                    eventDispatcher.emit('enterviewport', new Events_3.EnterViewPortEvent(actor));
                     actor.isOffScreen = false;
                 }
             }
@@ -7559,7 +7515,7 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
     var TileMapCollisionDetection = (function () {
         function TileMapCollisionDetection() {
         }
-        TileMapCollisionDetection.prototype.update = function (actor, engine, delta) {
+        TileMapCollisionDetection.prototype.update = function (actor, engine) {
             var eventDispatcher = actor.eventDispatcher;
             if (actor.collisionType !== Actor_5.CollisionType.PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
                 for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
@@ -7921,7 +7877,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             this.deadParticles.forEach(function (p) { return _this.particles.removeElement(p); });
             this.deadParticles.clear();
         };
-        ParticleEmitter.prototype.draw = function (ctx, delta) {
+        ParticleEmitter.prototype.draw = function (ctx) {
             // todo is there a more efficient to draw 
             // possibly use a webgl offscreen canvas and shaders to do particles?
             this.particles.forEach(function (p) { return p.draw(ctx); });
@@ -7940,7 +7896,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
     }(Actor_6.Actor));
     exports.ParticleEmitter = ParticleEmitter;
 });
-define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_14, Class_4, Algebra_16, Log_10, Events) {
+define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_14, Class_4, Algebra_16, Log_8, Events) {
     "use strict";
     /**
      * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
@@ -7973,7 +7929,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
             _this._onScreenYStart = 0;
             _this._onScreenYEnd = 9999;
             _this._spriteSheets = {};
-            _this.logger = Log_10.Logger.getInstance();
+            _this.logger = Log_8.Logger.getInstance();
             _this.data = [];
             _this.data = new Array(rows * cols);
             for (var i = 0; i < cols; i++) {
@@ -7997,7 +7953,6 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
          * is no collision null is returned.
          */
         TileMap.prototype.collides = function (actor) {
-            var points = [];
             var width = actor.pos.x + actor.getWidth();
             var height = actor.pos.y + actor.getHeight();
             var actorBounds = actor.getBounds();
@@ -8356,7 +8311,7 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
             this._action.call(this);
             this.repeats--;
         };
-        Trigger.prototype.draw = function (ctx, delta) {
+        Trigger.prototype.draw = function (_ctx, _delta) {
             // does not draw
             return;
         };
@@ -8394,7 +8349,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
     // legacy Internal.Actions namespace support
     exports.Internal = { Actions: actions };
 });
-define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_7, BoundingBox_5, Log_11) {
+define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_7, BoundingBox_5, Log_9) {
     "use strict";
     /**
      * Dynamic Tree Node used for tracking bounds within the tree
@@ -8586,12 +8541,12 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
         DynamicTree.prototype.updateBody = function (body) {
             var node = this.nodes[body.actor.id];
             if (!node) {
-                return;
+                return false;
             }
             var b = body.getBounds();
             // if the body is outside the world no longer update it
             if (!this.worldBounds.contains(b)) {
-                Log_11.Logger.getInstance().warn('Actor with id ' + body.actor.id +
+                Log_9.Logger.getInstance().warn('Actor with id ' + body.actor.id +
                     ' is outside the world bounds and will no longer be tracked for physics');
                 this.untrackBody(body);
                 return false;
@@ -8767,11 +8722,9 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
                         return helper(currentNode.left) || helper(currentNode.right);
                     }
                 }
-                else {
-                    return null;
-                }
+                return false;
             };
-            return helper(this.root);
+            helper(this.root);
         };
         /**
          * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
@@ -8796,11 +8749,9 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
                         return helper(currentNode.left) || helper(currentNode.right);
                     }
                 }
-                else {
-                    return null; // ray missed
-                }
+                return false; // ray missed         
             };
-            return helper(this.root);
+            helper(this.root);
         };
         DynamicTree.prototype.getNodes = function () {
             var helper = function (currentNode) {
@@ -8813,7 +8764,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
             };
             return helper(this.root);
         };
-        DynamicTree.prototype.debugDraw = function (ctx, delta) {
+        DynamicTree.prototype.debugDraw = function (ctx) {
             // draw all the nodes in the Dynamic Tree
             var helper = function (currentNode) {
                 if (currentNode) {
@@ -8862,9 +8813,9 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Uti
         /**
          * Resovles the collision body position and velocity if a collision occured
          */
-        Pair.prototype.resolve = function (delta, strategy) {
+        Pair.prototype.resolve = function (strategy) {
             if (this.collision) {
-                this.collision.resolve(delta, strategy);
+                this.collision.resolve(strategy);
             }
         };
         /**
@@ -8896,7 +8847,7 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Uti
 define("Collision/ICollisionResolver", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_1, Algebra_17, Actor_8, Log_12) {
+define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_1, Algebra_17, Actor_8, Log_10) {
     "use strict";
     var DynamicTreeCollisionBroadphase = (function () {
         function DynamicTreeCollisionBroadphase() {
@@ -8909,7 +8860,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
          */
         DynamicTreeCollisionBroadphase.prototype.track = function (target) {
             if (!target) {
-                Log_12.Logger.getInstance().warn('Cannot track null physics body');
+                Log_10.Logger.getInstance().warn('Cannot track null physics body');
                 return;
             }
             this._dynamicCollisionTree.trackBody(target);
@@ -8919,7 +8870,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
          */
         DynamicTreeCollisionBroadphase.prototype.untrack = function (target) {
             if (!target) {
-                Log_12.Logger.getInstance().warn('Cannot untrack a null physics body');
+                Log_10.Logger.getInstance().warn('Cannot untrack a null physics body');
                 return;
             }
             this._dynamicCollisionTree.untrackBody(target);
@@ -9055,7 +9006,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
             // resolve collision pairs
             var i = 0, len = this._collisionPairCache.length;
             for (i = 0; i < len; i++) {
-                this._collisionPairCache[i].resolve(delta, strategy);
+                this._collisionPairCache[i].resolve(strategy);
             }
             // We must apply mtv after all pairs have been resolved for more accuracy
             // apply integration of collision pairs
@@ -9072,7 +9023,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
         /**
          * Update the dynamic tree positions
          */
-        DynamicTreeCollisionBroadphase.prototype.update = function (targets, delta) {
+        DynamicTreeCollisionBroadphase.prototype.update = function (targets) {
             var updated = 0, i = 0, len = targets.length;
             for (i; i < len; i++) {
                 if (this._dynamicCollisionTree.updateBody(targets[i].body)) {
@@ -9082,9 +9033,9 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
             return updated;
         };
         /* istanbul ignore next */
-        DynamicTreeCollisionBroadphase.prototype.debugDraw = function (ctx, delta) {
+        DynamicTreeCollisionBroadphase.prototype.debugDraw = function (ctx) {
             if (Physics_9.Physics.broadphaseDebug) {
-                this._dynamicCollisionTree.debugDraw(ctx, delta);
+                this._dynamicCollisionTree.debugDraw(ctx);
             }
             if (Physics_9.Physics.showContacts || Physics_9.Physics.showCollisionNormals) {
                 for (var _i = 0, _a = this._collisionPairCache; _i < _a.length; _i++) {
@@ -9105,16 +9056,16 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
     var NaiveCollisionBroadphase = (function () {
         function NaiveCollisionBroadphase() {
         }
-        NaiveCollisionBroadphase.prototype.track = function (target) {
+        NaiveCollisionBroadphase.prototype.track = function () {
             // pass
         };
-        NaiveCollisionBroadphase.prototype.untrack = function (tartet) {
+        NaiveCollisionBroadphase.prototype.untrack = function () {
             // pass
         };
         /**
          * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
          */
-        NaiveCollisionBroadphase.prototype.broadphase = function (targets, delta) {
+        NaiveCollisionBroadphase.prototype.broadphase = function (targets) {
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
                 return !other.isKilled() && other.collisionType !== Actor_9.CollisionType.PreventCollision;
@@ -9129,7 +9080,6 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
                     var minimumTranslationVector;
                     if (minimumTranslationVector = actor1.collides(actor2)) {
                         var pair = new Pair_2.Pair(actor1.body, actor2.body);
-                        var side = actor1.getSideFromIntersect(minimumTranslationVector);
                         pair.collision = new CollisionContact_2.CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                         if (!collisionPairs.some(function (cp) {
                             return cp.id === pair.id;
@@ -9141,26 +9091,26 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
             }
             var k = 0, len = collisionPairs.length;
             for (k; k < len; k++) {
-                collisionPairs[k].resolve(delta, Physics_10.Physics.collisionResolutionStrategy);
+                collisionPairs[k].resolve(Physics_10.Physics.collisionResolutionStrategy);
             }
             return collisionPairs;
         };
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        NaiveCollisionBroadphase.prototype.narrowphase = function (pairs) {
+        NaiveCollisionBroadphase.prototype.narrowphase = function () {
             // pass
         };
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        NaiveCollisionBroadphase.prototype.resolve = function (delta, strategy) {
+        NaiveCollisionBroadphase.prototype.resolve = function () {
             // pass
         };
-        NaiveCollisionBroadphase.prototype.update = function (targets) {
+        NaiveCollisionBroadphase.prototype.update = function () {
             return 0;
         };
-        NaiveCollisionBroadphase.prototype.debugDraw = function (ctx, delta) {
+        NaiveCollisionBroadphase.prototype.debugDraw = function () {
             return;
         };
         return NaiveCollisionBroadphase;
@@ -9230,13 +9180,13 @@ define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, 
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
-        Polygon.prototype.addEffect = function (effect) {
+        Polygon.prototype.addEffect = function () {
             // not supported on polygons
         };
         /**
          * @notimplemented Effects are not supported on `Polygon`
          */
-        Polygon.prototype.removeEffect = function (param) {
+        Polygon.prototype.removeEffect = function () {
             // not supported on polygons
         };
         /**
@@ -9328,6 +9278,7 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
          */
         function Random(seed) {
             this.seed = seed;
+            // Separation point of one one word, the number of bits in the lower bitmask 0 <= r <= w-1
             this._lowerMask = 0x7FFFFFFF; // 31 bits same as _r
             this._upperMask = 0x80000000; // 34 high bits
             // Word size, 64 bits
@@ -9336,8 +9287,6 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
             this._n = 624;
             // Middle word, an offset used in the recurrance defining the series x, 1<=m<n
             this._m = 397;
-            // Separation point of one one word, the number of bits in the lower bitmask 0 <= r <= w-1
-            this._r = 31;
             // coefficients of teh rational normal form twist matrix
             this._a = 0x9908B0DF;
             // tempering bit shifts and masks
@@ -9466,6 +9415,7 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
          * @param numPicks can be any positive number
          */
         Random.prototype._pickSetWithDuplicates = function (array, numPicks) {
+            // Typescript numbers are all floating point, so do we add check for int? (or floor the input?)
             if (numPicks < 0) {
                 throw new Error('Invalid number of elements to pick, must pick a value 0 <= n < MAX_INT');
             }
@@ -9546,7 +9496,7 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
 define("PostProcessing/IPostProcessor", ["require", "exports"], function (require, exports) {
     "use strict";
 });
-define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_13) {
+define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_11) {
     "use strict";
     var ColorBlindness;
     (function (ColorBlindness) {
@@ -9641,7 +9591,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
             this._gl.attachShader(this._program, fragmentShader);
             this._gl.linkProgram(this._program);
             if (!this._gl.getProgramParameter(this._program, this._gl.LINK_STATUS)) {
-                Log_13.Logger.getInstance().error('Unable to link shader program!');
+                Log_11.Logger.getInstance().error('Unable to link shader program!');
             }
             this._gl.useProgram(this._program);
         }
@@ -9673,7 +9623,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
             }
             return this._fragmentShader.replace('//MODE CODE//', code);
         };
-        ColorBlindCorrector.prototype._setRectangle = function (gl, x, y, width, height) {
+        ColorBlindCorrector.prototype._setRectangle = function (x, y, width, height) {
             var x1 = x;
             var x2 = x + width;
             var y1 = y;
@@ -9696,12 +9646,12 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
                 shader = this._gl.createShader(this._gl.VERTEX_SHADER);
             }
             else {
-                Log_13.Logger.getInstance().error('Error unknown shader type', type);
+                Log_11.Logger.getInstance().error('Error unknown shader type', type);
             }
             this._gl.shaderSource(shader, program);
             this._gl.compileShader(shader);
             if (!this._gl.getShaderParameter(shader, this._gl.COMPILE_STATUS)) {
-                Log_13.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
+                Log_11.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
                 return null;
             }
             return shader;
@@ -9744,7 +9694,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
             this._gl.enableVertexAttribArray(positionLocation);
             this._gl.vertexAttribPointer(positionLocation, 2, this._gl.FLOAT, false, 0, 0);
             // Set a rectangle the same size as the image.
-            this._setRectangle(this._gl, 0, 0, image.width, image.height);
+            this._setRectangle(0, 0, image.width, image.height);
             // Draw the rectangle.
             this._gl.drawArrays(this._gl.TRIANGLES, 0, 6);
             // Grab tranformed image from internal canvas
@@ -9832,7 +9782,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
         Gamepads.prototype._enableAndUpdate = function () {
             if (!this.enabled) {
                 this.enabled = true;
-                this.update(100);
+                this.update();
             }
         };
         /**
@@ -9847,10 +9797,10 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                 return false;
             }
             ;
-            var axesLength = pad.axes.filter(function (value, index, array) {
+            var axesLength = pad.axes.filter(function (value) {
                 return (typeof value !== undefined);
             }).length;
-            var buttonLength = pad.buttons.filter(function (value, index, array) {
+            var buttonLength = pad.buttons.filter(function (value) {
                 return (typeof value !== undefined);
             }).length;
             return axesLength >= this._minimumConfiguration.axis &&
@@ -9868,7 +9818,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
         /**
          * Updates Gamepad state and publishes Gamepad events
          */
-        Gamepads.prototype.update = function (delta) {
+        Gamepads.prototype.update = function () {
             if (!this.enabled || !this.supported) {
                 return;
             }
@@ -9876,12 +9826,13 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
             var gamepads = this._navigator.getGamepads();
             for (var i = 0; i < gamepads.length; i++) {
                 if (!gamepads[i]) {
+                    var gamepad = this.at(i);
                     // If was connected, but now isn't emit the disconnect event
-                    if (this.at(i).connected) {
-                        this.eventDispatcher.emit('disconnect', new Events_5.GamepadDisconnectEvent(i));
+                    if (gamepad.connected) {
+                        this.eventDispatcher.emit('disconnect', new Events_5.GamepadDisconnectEvent(i, gamepad));
                     }
                     // Reset connection status
-                    this.at(i).connected = false;
+                    gamepad.connected = false;
                     continue;
                 }
                 else {
@@ -9909,7 +9860,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                             if (value !== this._oldPads[i].getButton(bi)) {
                                 if (gamepads[i].buttons[bi].pressed) {
                                     this.at(i).updateButton(bi, value);
-                                    this.at(i).eventDispatcher.emit('button', new Events_5.GamepadButtonEvent(bi, value));
+                                    this.at(i).eventDispatcher.emit('button', new Events_5.GamepadButtonEvent(bi, value, this.at(i)));
                                 }
                                 else {
                                     this.at(i).updateButton(bi, 0);
@@ -9925,7 +9876,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                         value = gamepads[i].axes[ai];
                         if (value !== this._oldPads[i].getAxes(ai)) {
                             this.at(i).updateAxes(ai, value);
-                            this.at(i).eventDispatcher.emit('axis', new Events_5.GamepadAxisEvent(ai, value));
+                            this.at(i).eventDispatcher.emit('axis', new Events_5.GamepadAxisEvent(ai, value, this.at(i)));
                         }
                     }
                 }
@@ -10292,7 +10243,7 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
                 target.addEventListener('mousemove', this._handleMouseEvent('move', this._pointerMove));
             }
         };
-        Pointers.prototype.update = function (delta) {
+        Pointers.prototype.update = function () {
             this._pointerUp.length = 0;
             this._pointerDown.length = 0;
             this._pointerMove.length = 0;
@@ -10580,7 +10531,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
         Keyboard.prototype.init = function (global) {
             var _this = this;
             global = global || window;
-            global.addEventListener('blur', function (ev) {
+            global.addEventListener('blur', function () {
                 _this._keys.length = 0; // empties array efficiently
             });
             // key up is on window because canvas cannot have focus
@@ -10604,7 +10555,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
                 }
             });
         };
-        Keyboard.prototype.update = function (delta) {
+        Keyboard.prototype.update = function () {
             // Reset keysDown and keysUp after update is complete
             this._keysDown.length = 0;
             this._keysUp.length = 0;
@@ -10672,7 +10623,7 @@ define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], funct
     __export(Util_2);
     exports.DrawUtil = drawUtil;
 });
-define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_14) {
+define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_12) {
     "use strict";
     /**
      * This is the list of features that will be used to log the supported
@@ -10828,7 +10779,7 @@ define("Util/Detector", ["require", "exports", "Util/Log"], function (require, e
             for (var test in this._criticalTests) {
                 if (!this._criticalTests[test].call(this)) {
                     this.failedTests.push(test);
-                    Log_14.Logger.getInstance().error('Critical browser feature missing, Excalibur requires:', test);
+                    Log_12.Logger.getInstance().error('Critical browser feature missing, Excalibur requires:', test);
                     failedCritical = true;
                 }
             }
@@ -10838,7 +10789,7 @@ define("Util/Detector", ["require", "exports", "Util/Log"], function (require, e
             // Warning tests do not for ex to return false to compatibility
             for (var warning in this._warningTest) {
                 if (!this._warningTest[warning]()) {
-                    Log_14.Logger.getInstance().warn('Warning browser feature missing, Excalibur will have reduced performance:', warning);
+                    Log_12.Logger.getInstance().warn('Warning browser feature missing, Excalibur will have reduced performance:', warning);
                 }
             }
             return true;
@@ -10982,6 +10933,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
                 node.setRight(this._remove(node.getRight(), element));
                 return node;
             }
+            return null;
         };
         // called once we have successfully removed the element we wanted, recursively corrects the part of the tree below the removed node
         SortedList.prototype._cleanup = function (node, element) {
@@ -11097,7 +11049,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     }());
     exports.MockedElement = MockedElement;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Random", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_1, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Random_1, Index_4, Index_5, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_15, SortedList_1) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Random", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_1, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Random_1, Index_4, Index_5, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -11141,10 +11093,10 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     __export(Detector_1);
     __export(CullingBox_2);
     __export(EasingFunctions_3);
-    __export(Log_15);
+    __export(Log_13);
     __export(SortedList_1);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_6, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_16, Color_18, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util, BoundingBox_7) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_6, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_14, Color_18, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util, BoundingBox_7) {
     "use strict";
     /**
      * Enum representing the different display modes available to Excalibur
@@ -11203,7 +11155,7 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
             /**
              * Access Excalibur debugging functionality.
              */
-            _this.debug = new Debug_2.Debug(_this);
+            _this.debug = new Debug_2.Debug();
             /**
              * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
              */
@@ -11237,7 +11189,7 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
             /**
              * The action to take when a fatal exception is thrown
              */
-            _this.onFatalException = function (e) { Log_16.Logger.getInstance().fatal(e); };
+            _this.onFatalException = function (e) { Log_14.Logger.getInstance().fatal(e); };
             _this._isSmoothingEnabled = true;
             _this._timescale = 1.0;
             _this._isLoading = false;
@@ -11273,9 +11225,9 @@ O|===|* >________________>\n\
       \\|');
                 console.log('Visit', 'http://excaliburjs.com', 'for more information');
             }
-            _this._logger = Log_16.Logger.getInstance();
+            _this._logger = Log_14.Logger.getInstance();
             // If debug is enabled, let's log browser features to the console.
-            if (_this._logger.defaultLevel === Log_16.LogLevel.Debug) {
+            if (_this._logger.defaultLevel === Log_14.LogLevel.Debug) {
                 detector.logBrowserFeatures();
             }
             _this._logger.debug('Building engine...');
@@ -11357,7 +11309,7 @@ O|===|* >________________>\n\
              */
             set: function (value) {
                 if (value <= 0) {
-                    Log_16.Logger.getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
+                    Log_14.Logger.getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
                     return;
                 }
                 this._timescale = value;
@@ -11513,14 +11465,14 @@ O|===|* >________________>\n\
                 // only deactivate when initialized
                 if (this.currentScene.isInitialized) {
                     this.currentScene.onDeactivate.call(this.currentScene);
-                    this.currentScene.eventDispatcher.emit('deactivate', new Events_9.DeactivateEvent(newScene));
+                    this.currentScene.eventDispatcher.emit('deactivate', new Events_9.DeactivateEvent(newScene, this.currentScene));
                 }
                 // set current scene to new one
                 this.currentScene = newScene;
                 // initialize the current scene if has not been already
                 this.currentScene._initialize(this);
                 this.currentScene.onActivate.call(this.currentScene);
-                this.currentScene.eventDispatcher.emit('activate', new Events_9.ActivateEvent(oldScene));
+                this.currentScene.eventDispatcher.emit('activate', new Events_9.ActivateEvent(oldScene, this.currentScene));
             }
             else {
                 this._logger.error('Scene', key, 'does not exist!');
@@ -11610,7 +11562,7 @@ O|===|* >________________>\n\
                 var parent = (this.displayMode === DisplayMode.Container ?
                     (this.canvas.parentElement || document.body) : window);
                 this._setHeightByDisplayMode(parent);
-                window.addEventListener('resize', function (ev) {
+                window.addEventListener('resize', function () {
                     _this._logger.debug('View port resized');
                     _this._setHeightByDisplayMode(parent);
                     _this._logger.info('parent.clientHeight ' + parent.clientHeight);
@@ -11643,11 +11595,11 @@ O|===|* >________________>\n\
             }
             document.addEventListener(visibilityChange, function () {
                 if (document[hidden]) {
-                    _this.eventDispatcher.emit('hidden', new Events_9.HiddenEvent());
+                    _this.eventDispatcher.emit('hidden', new Events_9.HiddenEvent(_this));
                     _this._logger.debug('Window hidden');
                 }
                 else {
-                    _this.eventDispatcher.emit('visible', new Events_9.VisibleEvent());
+                    _this.eventDispatcher.emit('visible', new Events_9.VisibleEvent(_this));
                     _this._logger.debug('Window visible');
                 }
             });
@@ -11692,9 +11644,9 @@ O|===|* >________________>\n\
                 // suspend updates untill loading is finished
                 this._loader.update(this, delta);
                 // Update input listeners
-                this.input.keyboard.update(delta);
-                this.input.pointers.update(delta);
-                this.input.gamepads.update(delta);
+                this.input.keyboard.update();
+                this.input.pointers.update();
+                this.input.gamepads.update();
                 return;
             }
             this.emit('preupdate', new Events_9.PreUpdateEvent(this, delta, this));
@@ -11705,9 +11657,9 @@ O|===|* >________________>\n\
                 return !a.animation.isDone();
             });
             // Update input listeners
-            this.input.keyboard.update(delta);
-            this.input.pointers.update(delta);
-            this.input.gamepads.update(delta);
+            this.input.keyboard.update();
+            this.input.pointers.update();
+            this.input.gamepads.update();
             // Publish update event
             // TODO: Obsolete `update` event on Engine
             this.eventDispatcher.emit('update', new Events_9.PostUpdateEvent(this, delta, this));
@@ -11792,7 +11744,7 @@ O|===|* >________________>\n\
                 }
                 try {
                     game._requestId = raf(mainloop);
-                    game.emit('preframe', new Events_9.PreFrameEvent(game, game.stats.prevFrame, game));
+                    game.emit('preframe', new Events_9.PreFrameEvent(game, game.stats.prevFrame));
                     // Get the time to calculate time-elapsed
                     var now = nowFn();
                     var elapsed = Math.floor(now - lastTime) || 1;
@@ -11819,7 +11771,7 @@ O|===|* >________________>\n\
                     game.stats.currFrame.duration.update = afterUpdate - beforeUpdate;
                     game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                     lastTime = now;
-                    game.emit('postframe', new Events_9.PostFrameEvent(game, game.stats.currFrame, game));
+                    game.emit('postframe', new Events_9.PostFrameEvent(game, game.stats.currFrame));
                 }
                 catch (e) {
                     window.cancelAnimationFrame(game._requestId);
@@ -11952,7 +11904,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
     }
     exports.isUIActor = isUIActor;
 });
-define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_17, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
+define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
     "use strict";
     /**
      * [[Actor|Actors]] are composed together into groupings called Scenes in
@@ -11989,7 +11941,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             _this._killQueue = [];
             _this._timers = [];
             _this._cancelQueue = [];
-            _this._logger = Log_17.Logger.getInstance();
+            _this._logger = Log_15.Logger.getInstance();
             _this.camera = new Camera_2.BaseCamera();
             if (engine) {
                 _this.camera.x = engine.canvasWidth / 2;
@@ -12055,7 +12007,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype._initialize = function (engine) {
             if (!this.isInitialized) {
                 this.onInitialize.call(this, engine);
-                this.eventDispatcher.emit('initialize', new Events_10.InitializeEvent(engine));
+                this.eventDispatcher.emit('initialize', new Events_10.InitializeEvent(engine, this));
                 this._initializeChildren();
                 this._isInitialized = true;
             }
@@ -12136,7 +12088,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             this.emit('predraw', new Events_10.PreDrawEvent(ctx, delta, this));
             ctx.save();
             if (this.camera) {
-                this.camera.draw(ctx, delta);
+                this.camera.draw(ctx);
             }
             var i, len;
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -12359,7 +12311,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         };
         Scene.prototype._collectActorStats = function (engine) {
             for (var _i = 0, _a = this.uiActors; _i < _a.length; _i++) {
-                var ui = _a[_i];
+                var _ui = _a[_i];
                 engine.stats.currFrame.actors.ui++;
             }
             for (var _b = 0, _c = this.children; _b < _c.length; _b++) {
@@ -12530,11 +12482,11 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var PreFrameEvent = (function (_super) {
         __extends(PreFrameEvent, _super);
-        function PreFrameEvent(engine, prevStats, target) {
+        function PreFrameEvent(engine, prevStats) {
             var _this = _super.call(this) || this;
             _this.engine = engine;
             _this.prevStats = prevStats;
-            _this.target = target;
+            _this.target = engine;
             return _this;
         }
         return PreFrameEvent;
@@ -12545,11 +12497,11 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var PostFrameEvent = (function (_super) {
         __extends(PostFrameEvent, _super);
-        function PostFrameEvent(engine, stats, target) {
+        function PostFrameEvent(engine, stats) {
             var _this = _super.call(this) || this;
             _this.engine = engine;
             _this.stats = stats;
-            _this.target = target;
+            _this.target = engine;
             return _this;
         }
         return PostFrameEvent;
@@ -12564,6 +12516,7 @@ define("Events", ["require", "exports"], function (require, exports) {
             var _this = _super.call(this) || this;
             _this.index = index;
             _this.gamepad = gamepad;
+            _this.target = gamepad;
             return _this;
         }
         return GamepadConnectEvent;
@@ -12574,9 +12527,11 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var GamepadDisconnectEvent = (function (_super) {
         __extends(GamepadDisconnectEvent, _super);
-        function GamepadDisconnectEvent(index) {
+        function GamepadDisconnectEvent(index, gamepad) {
             var _this = _super.call(this) || this;
             _this.index = index;
+            _this.gamepad = gamepad;
+            _this.target = gamepad;
             return _this;
         }
         return GamepadDisconnectEvent;
@@ -12591,10 +12546,11 @@ define("Events", ["require", "exports"], function (require, exports) {
          * @param button  The Gamepad button
          * @param value   A numeric value between 0 and 1
          */
-        function GamepadButtonEvent(button, value) {
+        function GamepadButtonEvent(button, value, target) {
             var _this = _super.call(this) || this;
             _this.button = button;
             _this.value = value;
+            _this.target = target;
             return _this;
         }
         return GamepadButtonEvent;
@@ -12609,10 +12565,11 @@ define("Events", ["require", "exports"], function (require, exports) {
          * @param axis  The Gamepad axis
          * @param value A numeric value between -1 and 1
          */
-        function GamepadAxisEvent(axis, value) {
+        function GamepadAxisEvent(axis, value, target) {
             var _this = _super.call(this) || this;
             _this.axis = axis;
             _this.value = value;
+            _this.target = target;
             return _this;
         }
         return GamepadAxisEvent;
@@ -12653,8 +12610,10 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var VisibleEvent = (function (_super) {
         __extends(VisibleEvent, _super);
-        function VisibleEvent() {
-            return _super.call(this) || this;
+        function VisibleEvent(target) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return VisibleEvent;
     }(GameEvent));
@@ -12664,8 +12623,10 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var HiddenEvent = (function (_super) {
         __extends(HiddenEvent, _super);
-        function HiddenEvent() {
-            return _super.call(this) || this;
+        function HiddenEvent(target) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return HiddenEvent;
     }(GameEvent));
@@ -12687,6 +12648,7 @@ define("Events", ["require", "exports"], function (require, exports) {
             _this.other = other;
             _this.side = side;
             _this.intersection = intersection;
+            _this.target = actor;
             return _this;
         }
         return CollisionEvent;
@@ -12700,9 +12662,10 @@ define("Events", ["require", "exports"], function (require, exports) {
         /**
          * @param engine  The reference to the current engine
          */
-        function InitializeEvent(engine) {
+        function InitializeEvent(engine, target) {
             var _this = _super.call(this) || this;
             _this.engine = engine;
+            _this.target = target;
             return _this;
         }
         return InitializeEvent;
@@ -12716,9 +12679,10 @@ define("Events", ["require", "exports"], function (require, exports) {
         /**
          * @param oldScene  The reference to the old scene
          */
-        function ActivateEvent(oldScene) {
+        function ActivateEvent(oldScene, target) {
             var _this = _super.call(this) || this;
             _this.oldScene = oldScene;
+            _this.target = target;
             return _this;
         }
         return ActivateEvent;
@@ -12732,9 +12696,10 @@ define("Events", ["require", "exports"], function (require, exports) {
         /**
          * @param newScene  The reference to the new scene
          */
-        function DeactivateEvent(newScene) {
+        function DeactivateEvent(newScene, target) {
             var _this = _super.call(this) || this;
             _this.newScene = newScene;
+            _this.target = target;
             return _this;
         }
         return DeactivateEvent;
@@ -12745,8 +12710,10 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var ExitViewPortEvent = (function (_super) {
         __extends(ExitViewPortEvent, _super);
-        function ExitViewPortEvent() {
-            return _super.call(this) || this;
+        function ExitViewPortEvent(target) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return ExitViewPortEvent;
     }(GameEvent));
@@ -12756,8 +12723,10 @@ define("Events", ["require", "exports"], function (require, exports) {
      */
     var EnterViewPortEvent = (function (_super) {
         __extends(EnterViewPortEvent, _super);
-        function EnterViewPortEvent() {
-            return _super.call(this) || this;
+        function EnterViewPortEvent(target) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            return _this;
         }
         return EnterViewPortEvent;
     }(GameEvent));
@@ -12860,7 +12829,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_19, Sprite_4, Log_18, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_19, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
     "use strict";
     /**
      * The most important primitive in Excalibur is an `Actor`. Anything that
@@ -12923,7 +12892,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             /**
              * Convenience reference to the global logger
              */
-            _this.logger = Log_18.Logger.getInstance();
+            _this.logger = Log_16.Logger.getInstance();
             /**
              * The scene that the actor is in
              */
@@ -13244,7 +13213,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
          */
-        Actor.prototype.onInitialize = function (engine) {
+        Actor.prototype.onInitialize = function (_engine) {
             // Override me
         };
         Object.defineProperty(Actor.prototype, "isInitialized", {
@@ -13264,7 +13233,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype._initialize = function (engine) {
             if (!this.isInitialized) {
                 this.onInitialize(engine);
-                this.eventDispatcher.emit('initialize', new Events_11.InitializeEvent(engine));
+                this.eventDispatcher.emit('initialize', new Events_11.InitializeEvent(engine, this));
                 this._isInitialized = true;
             }
             for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
@@ -13342,11 +13311,11 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                     this.currentDrawing = this.frames[key];
                 }
                 else {
-                    Log_18.Logger.getInstance().error('the specified drawing key \'' + key + '\' does not exist');
+                    Log_16.Logger.getInstance().error('the specified drawing key \'' + key + '\' does not exist');
                 }
             }
         };
-        Actor.prototype.addDrawing = function (args) {
+        Actor.prototype.addDrawing = function () {
             if (arguments.length === 2) {
                 this.frames[arguments[0]] = arguments[1];
                 if (!this.currentDrawing) {
@@ -13497,13 +13466,13 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 parents.push(root);
             }
             // calculate position       
-            var x = parents.reduceRight(function (px, p, i, arr) {
+            var x = parents.reduceRight(function (px, p) {
                 if (p.parent) {
                     return px + (p.pos.x * p.getGlobalScale().x);
                 }
                 return px + p.pos.x;
             }, 0);
-            var y = parents.reduceRight(function (py, p, i, arr) {
+            var y = parents.reduceRight(function (py, p) {
                 if (p.parent) {
                     return py + (p.pos.y * p.getGlobalScale().y);
                 }
@@ -13848,7 +13817,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         CollisionType[CollisionType["Fixed"] = 4] = "Fixed";
     })(CollisionType = exports.CollisionType || (exports.CollisionType = {}));
 });
-define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_19, Util) {
+define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_17, Util) {
     "use strict";
     var EaseTo = (function () {
         function EaseTo(actor, x, y, duration, easingFcn) {
@@ -13918,7 +13887,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._end = new Algebra_24.Vector(destx, desty);
             this._speed = speed;
         }
-        MoveTo.prototype.update = function (delta) {
+        MoveTo.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._start = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
@@ -13956,12 +13925,12 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._actor = actor;
             this._end = new Algebra_24.Vector(destx, desty);
             if (time <= 0) {
-                Log_19.Logger.getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
+                Log_17.Logger.getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
                 throw new Error('Cannot move in time <= 0');
             }
             this._time = time;
         }
-        MoveBy.prototype.update = function (delta) {
+        MoveBy.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._start = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
@@ -14004,7 +13973,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._maximumDistance = (followDistance !== undefined) ? followDistance : this._current.distance(this._end);
             this._speed = 0;
         }
-        Follow.prototype.update = function (delta) {
+        Follow.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._distanceBetween = this._current.distance(this._end);
@@ -14029,7 +13998,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 this._actor.vel.x = 0;
                 this._actor.vel.y = 0;
             }
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 // TODO this should never occur
                 this._actor.pos.x = this._end.x;
                 this._actor.pos.y = this._end.y;
@@ -14042,7 +14011,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._actor.vel.x = 0;
             this._stopped = true;
         };
-        Follow.prototype.isComplete = function (actor) {
+        Follow.prototype.isComplete = function () {
             // the actor following should never stop unless specified to do so
             return this._stopped;
         };
@@ -14066,7 +14035,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 this._speedWasSpecified = true;
             }
         }
-        Meet.prototype.update = function (delta) {
+        Meet.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._distanceBetween = this._current.distance(this._end);
@@ -14085,14 +14054,14 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             var m = this._dir.scale(this._speed);
             this._actor.vel.x = m.x;
             this._actor.vel.y = m.y;
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.pos.x = this._end.x;
                 this._actor.pos.y = this._end.y;
                 this._actor.vel.y = 0;
                 this._actor.vel.x = 0;
             }
         };
-        Meet.prototype.isComplete = function (actor) {
+        Meet.prototype.isComplete = function () {
             return this._stopped || (this._distanceBetween <= 1);
         };
         Meet.prototype.stop = function () {
@@ -14115,7 +14084,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._speed = speed;
             this._rotationType = rotationType || RotationType_2.RotationType.ShortestPath;
         }
-        RotateTo.prototype.update = function (delta) {
+        RotateTo.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._start = this._actor.rotation;
@@ -14170,13 +14139,13 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 }
             }
             this._actor.rx = this._direction * this._speed;
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.rotation = this._end;
                 this._actor.rx = 0;
                 this._stopped = true;
             }
         };
-        RotateTo.prototype.isComplete = function (actor) {
+        RotateTo.prototype.isComplete = function () {
             var distanceTravelled = Math.abs(this._actor.rotation - this._start);
             return this._stopped || (distanceTravelled >= Math.abs(this._distance));
         };
@@ -14199,7 +14168,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._time = time;
             this._rotationType = rotationType || RotationType_2.RotationType.ShortestPath;
         }
-        RotateBy.prototype.update = function (delta) {
+        RotateBy.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._start = this._actor.rotation;
@@ -14255,13 +14224,13 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 this._speed = Math.abs(this._distance / this._time * 1000);
             }
             this._actor.rx = this._direction * this._speed;
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.rotation = this._end;
                 this._actor.rx = 0;
                 this._stopped = true;
             }
         };
-        RotateBy.prototype.isComplete = function (actor) {
+        RotateBy.prototype.isComplete = function () {
             var distanceTravelled = Math.abs(this._actor.rotation - this._start);
             return this._stopped || (distanceTravelled >= Math.abs(this._distance));
         };
@@ -14285,7 +14254,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._speedX = speedX;
             this._speedY = speedY;
         }
-        ScaleTo.prototype.update = function (delta) {
+        ScaleTo.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._startX = this._actor.scale.x;
@@ -14307,14 +14276,14 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             else {
                 this._actor.sy = 0;
             }
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.scale.x = this._endX;
                 this._actor.scale.y = this._endY;
                 this._actor.sx = 0;
                 this._actor.sy = 0;
             }
         };
-        ScaleTo.prototype.isComplete = function (actor) {
+        ScaleTo.prototype.isComplete = function () {
             return this._stopped || ((Math.abs(this._actor.scale.y - this._startX) >= this._distanceX) &&
                 (Math.abs(this._actor.scale.y - this._startY) >= this._distanceY));
         };
@@ -14340,7 +14309,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._speedX = (this._endX - this._actor.scale.x) / time * 1000;
             this._speedY = (this._endY - this._actor.scale.y) / time * 1000;
         }
-        ScaleBy.prototype.update = function (delta) {
+        ScaleBy.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
                 this._startX = this._actor.scale.x;
@@ -14352,14 +14321,14 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             var directionY = this._endY < this._startY ? -1 : 1;
             this._actor.sx = this._speedX * directionX;
             this._actor.sy = this._speedY * directionY;
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.scale.x = this._endX;
                 this._actor.scale.y = this._endY;
                 this._actor.sx = 0;
                 this._actor.sy = 0;
             }
         };
-        ScaleBy.prototype.isComplete = function (actor) {
+        ScaleBy.prototype.isComplete = function () {
             return this._stopped || ((Math.abs(this._actor.scale.x - this._startX) >= this._distanceX) &&
                 (Math.abs(this._actor.scale.y - this._startY) >= this._distanceY));
         };
@@ -14390,7 +14359,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this.y = this._actor.pos.y;
             this._elapsedTime += delta;
         };
-        Delay.prototype.isComplete = function (actor) {
+        Delay.prototype.isComplete = function () {
             return this._stopped || (this._elapsedTime >= this._delay);
         };
         Delay.prototype.stop = function () {
@@ -14431,11 +14400,11 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 this._actor.visible = true;
                 this._elapsedTime = 0;
             }
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.visible = true;
             }
         };
-        Blink.prototype.isComplete = function (actor) {
+        Blink.prototype.isComplete = function () {
             return this._stopped || (this._totalTime >= this._duration);
         };
         Blink.prototype.stop = function () {
@@ -14474,12 +14443,12 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
                 this._actor.opacity += this._multiplier * (Math.abs(this._actor.opacity - this._endOpacity) * delta) / this._speed;
             }
             this._speed -= delta;
-            if (this.isComplete(this._actor)) {
+            if (this.isComplete()) {
                 this._actor.opacity = this._endOpacity;
             }
-            Log_19.Logger.getInstance().debug('[Action fade] Actor opacity:', this._actor.opacity);
+            Log_17.Logger.getInstance().debug('[Action fade] Actor opacity:', this._actor.opacity);
         };
-        Fade.prototype.isComplete = function (actor) {
+        Fade.prototype.isComplete = function () {
             return this._stopped || (Math.abs(this._actor.opacity - this._endOpacity) < 0.05);
         };
         Fade.prototype.stop = function () {
@@ -14493,11 +14462,10 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
     exports.Fade = Fade;
     var Die = (function () {
         function Die(actor) {
-            this._started = false;
             this._stopped = false;
             this._actor = actor;
         }
-        Die.prototype.update = function (delta) {
+        Die.prototype.update = function (_delta) {
             this._actor.actionQueue.clearActions();
             this._actor.kill();
             this._stopped = true;
@@ -14518,11 +14486,11 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._actor = actor;
             this._method = method;
         }
-        CallMethod.prototype.update = function (delta) {
+        CallMethod.prototype.update = function (_delta) {
             this._method.call(this._actor);
             this._hasBeenCalled = true;
         };
-        CallMethod.prototype.isComplete = function (actor) {
+        CallMethod.prototype.isComplete = function () {
             return this._hasBeenCalled;
         };
         CallMethod.prototype.reset = function () {
@@ -14676,7 +14644,7 @@ if (typeof window !== 'undefined' && !window.cancelAnimationFrame) {
     window.cancelAnimationFrame =
         window.webkitCancelAnimationFrame ||
             window.mozCancelAnimationFrame ||
-            function (callback) { return; };
+            function () { return; };
 }
 /* istanbul ignore next */
 if (typeof window !== 'undefined' && !window.AudioContext) {
@@ -14694,7 +14662,7 @@ if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback, thisArg) {
         var T, k;
         if (this == null) {
-            throw new TypeError(' this is null or not defined');
+            throw new TypeError('this is null or not defined');
         }
         // 1. Let O be the result of calling ToObject passing the |this| value as the argument. 
         var O = Object(this);

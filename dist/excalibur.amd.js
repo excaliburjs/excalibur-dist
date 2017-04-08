@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-04-07
+/*! excalibur - v0.9.0 - 2017-04-08
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -8,13 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define("Actions/RotationType", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * An enum that describes the strategies that rotation actions can use
      */
@@ -44,6 +50,7 @@ define("Actions/RotationType", ["require", "exports"], function (require, export
 });
 define("Algebra", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A 2D vector on a plane.
      */
@@ -462,6 +469,7 @@ define("Algebra", ["require", "exports"], function (require, exports) {
 });
 define("Physics", ["require", "exports", "Algebra"], function (require, exports, Algebra_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Possible collision resolution strategies
      *
@@ -637,6 +645,7 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
 });
 define("Util/EasingFunctions", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Standard easing functions for motion in Excalibur, defined on a domain of [0, duration] and a range from [+startValue,+endValue]
      * Given a time, the function will return a value from positive startValue to positive endValue.
@@ -729,6 +738,7 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
 });
 define("Util/Log", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Logging level that Excalibur will tag
      */
@@ -954,6 +964,7 @@ define("Util/Log", ["require", "exports"], function (require, exports) {
 });
 define("Collision/Side", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * An enum that describes the sides of an Actor for collision
      */
@@ -968,6 +979,7 @@ define("Collision/Side", ["require", "exports"], function (require, exports) {
 });
 define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], function (require, exports, Algebra_2, Side_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Two PI constant
      */
@@ -1307,6 +1319,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
 });
 define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], function (require, exports, Log_1, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
      * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
@@ -1349,6 +1362,7 @@ define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], funct
 });
 define("Promises", ["require", "exports", "Util/Decorators"], function (require, exports, Decorators_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
     /**
      * Valid states for a promise to be in
@@ -1546,6 +1560,7 @@ define("Promises", ["require", "exports", "Util/Decorators"], function (require,
 });
 define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_3) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Cameras
      *
@@ -1825,7 +1840,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
     var SideCamera = (function (_super) {
         __extends(SideCamera, _super);
         function SideCamera() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
@@ -1848,7 +1863,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
     var LockedCamera = (function (_super) {
         __extends(LockedCamera, _super);
         function LockedCamera() {
-            return _super.apply(this, arguments) || this;
+            return _super !== null && _super.apply(this, arguments) || this;
         }
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
@@ -1864,9 +1879,11 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
 });
 define("DebugFlags", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Debug", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Debug statistics and flags for Excalibur. If polling these values, it would be
      * best to do so on the `postupdate` event for [[Engine]], after all values have been
@@ -2139,9 +2156,11 @@ define("Debug", ["require", "exports"], function (require, exports) {
 });
 define("Interfaces/IEvented", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("EventDispatcher", ["require", "exports", "Events"], function (require, exports, Events_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Excalibur's internal event dispatcher implementation.
      * Callbacks are fired immediately after an event is published.
@@ -2254,6 +2273,7 @@ define("EventDispatcher", ["require", "exports", "Events"], function (require, e
 });
 define("Drawing/Color", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Provides standard colors (e.g. [[Color.Black]])
      * but you can also create custom colors using RGB, HSL, or Hex. Also provides
@@ -2584,6 +2604,7 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
 });
 define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Side_2, Actor_1, Algebra_4, Physics_1, Events_2, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Collision contacts are used internally by Excalibur to resolve collision between actors. This
      * Pair prevents collisions from being evaluated more than one time
@@ -2806,9 +2827,11 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
 });
 define("Collision/ICollisionArea", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Collision/CollisionJumpTable", ["require", "exports", "Collision/CollisionContact", "Collision/PolygonArea"], function (require, exports, CollisionContact_1, PolygonArea_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     exports.CollisionJumpTable = {
         CollideCircleCircle: function (circleA, circleB) {
             var radius = circleA.radius + circleB.radius;
@@ -2944,6 +2967,7 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
 });
 define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "Collision/PolygonArea", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_1, PolygonArea_2, EdgeArea_1, CollisionJumpTable_1, Algebra_5, Physics_2, Color_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * This is a circle collision area for the excalibur rigid body physics simulation
      */
@@ -3126,6 +3150,7 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
 });
 define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (require, exports, Color_2) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Draw a line on canvas context
      *
@@ -3251,6 +3276,7 @@ define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (requi
 });
 define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_3, EdgeArea_2, CircleArea_1, PolygonArea_3, Algebra_6, Color_3, DrawUtil) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Body = (function () {
         /**
          * Constructs a new physics body associated with an actor
@@ -3445,6 +3471,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
 });
 define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_2, CollisionJumpTable_2, CircleArea_2, PolygonArea_4, Algebra_7, Physics_4, Color_4) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var EdgeArea = (function () {
         function EdgeArea(options) {
             this.begin = options.begin || Algebra_7.Vector.Zero.clone();
@@ -3616,6 +3643,7 @@ define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Co
 });
 define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics", "Collision/BoundingBox", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Collision/CircleArea", "Algebra"], function (require, exports, Color_5, Physics_5, BoundingBox_3, EdgeArea_3, CollisionJumpTable_3, CircleArea_3, Algebra_8) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Polygon collision area for detecting collisions for actors, or independently
      */
@@ -3886,6 +3914,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
 });
 define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", "Algebra", "Drawing/Color"], function (require, exports, PolygonArea_5, Algebra_9, Color_6) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Axis Aligned collision primitive for Excalibur.
      */
@@ -4071,6 +4100,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
 });
 define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promises", "Util/EasingFunctions"], function (require, exports, Actions, Promises_2, EasingFunctions_2) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The fluent Action API allows you to perform "actions" on
      * [[Actor|Actors]] such as following, moving, rotating, and
@@ -4375,9 +4405,11 @@ define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promis
 });
 define("Actions/IActionable", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_2, Class_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Groups are used for logically grouping Actors so they can be acted upon
      * in bulk.
@@ -4493,6 +4525,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
  */
 define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], function (require, exports, Color_7) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Applies the "Grayscale" effect to a sprite, removing color information.
      */
@@ -4687,12 +4720,15 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
 });
 define("Interfaces/IDrawable", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Interfaces/ILoadable", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_3) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The [[Resource]] type allows games built in Excalibur to load generic resources.
      * For any type of remote resource it is recommended to use [[Resource]] for preloading.
@@ -4803,6 +4839,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
 });
 define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promises", "Drawing/Sprite"], function (require, exports, Resource_1, Promises_4, Sprite_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The [[Texture]] object allows games built in Excalibur to load image resources.
      * [[Texture]] is an [[ILoadable]] which means it can be passed to a [[Loader]]
@@ -4868,6 +4905,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
 });
 define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_8, Algebra_11, Log_4, Util_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
      * images or parts of images from a [[Texture]] resource to the screen.
@@ -5139,6 +5177,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
 });
 define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Algebra", "Util/Util"], function (require, exports, Effects, Algebra_12, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Animations allow you to display a series of images one after another,
      * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
@@ -5374,6 +5413,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
 });
 define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_9, Effects, Log_5, Label_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Sprite sheets are a useful mechanism for slicing up image resources into
      * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
@@ -5639,6 +5679,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
 });
 define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (require, exports, Color_10, Actor_3) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Enum representing the different font size units
      * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
@@ -5782,6 +5823,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _this.collisionType = Actor_3.CollisionType.PreventCollision;
             _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
             if (spriteFont) {
+                //this._textSprites = spriteFont.getTextSprites();
             }
             return _this;
         }
@@ -5955,12 +5997,15 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
 });
 define("Interfaces/IAudio", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Interfaces/IAudioImplementation", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_6, Util, Promises_5) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     // set up audio context reference
     // when we introduce multi-tracking, we may need to move this to a factory method
     if (window.AudioContext) {
@@ -6544,9 +6589,11 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
 });
 define("Interfaces/ILoader", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_11, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Pre-loading assets
      *
@@ -6855,9 +6902,11 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
 });
 define("Interfaces/IActorTrait", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Traits/CapturePointer", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Propogates pointer events to the actor
      */
@@ -6879,6 +6928,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
 });
 define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_6, Actor_4) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var EulerMovement = (function () {
         function EulerMovement() {
         }
@@ -6904,6 +6954,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
 });
 define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_13, Color_12) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var CullingBox = (function () {
         function CullingBox() {
             this._topLeft = new Algebra_13.Vector(0, 0);
@@ -7010,6 +7061,7 @@ define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], fu
 });
 define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Algebra", "Events"], function (require, exports, CullingBox_1, Algebra_14, Events_3) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var OffscreenCulling = (function () {
         function OffscreenCulling() {
             this.cullingBox = new CullingBox_1.CullingBox();
@@ -7057,6 +7109,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
 });
 define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_5, Side_3, Events_4) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var TileMapCollisionDetection = (function () {
         function TileMapCollisionDetection() {
         }
@@ -7108,6 +7161,7 @@ define("Traits/Index", ["require", "exports", "Traits/CapturePointer", "Traits/E
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(CapturePointer_1);
     __export(EulerMovement_1);
     __export(OffscreenCulling_1);
@@ -7115,6 +7169,7 @@ define("Traits/Index", ["require", "exports", "Traits/CapturePointer", "Traits/E
 });
 define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index"], function (require, exports, Actor_6, Color_13, Algebra_15, Util, DrawUtil, Traits) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * An enum that represents the types of emitter nozzles
      */
@@ -7443,6 +7498,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
 });
 define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_14, Class_4, Algebra_16, Log_8, Events) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
      * without the overhead of actors.
@@ -7734,6 +7790,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
 });
 define("Timer", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The Excalibur timer hooks into the internal timer and fires callbacks,
      * after a certain interval, optionally repeating.
@@ -7793,6 +7850,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
 });
 define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor"], function (require, exports, Color_15, Action_1, EventDispatcher_1, Actor_7) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Triggers are a method of firing arbitrary code on collision. These are useful
      * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
@@ -7888,6 +7946,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(ActionContext_2);
     __export(RotationType_1);
     exports.Actions = actions;
@@ -7896,6 +7955,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
 });
 define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_7, BoundingBox_5, Log_9) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Dynamic Tree Node used for tracking bounds within the tree
      */
@@ -8338,6 +8398,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
 });
 define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_8, Color_16, DrawUtil) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Models a potential collision between 2 bodies
      */
@@ -8391,9 +8452,11 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Uti
 });
 define("Collision/ICollisionResolver", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_1, Algebra_17, Actor_8, Log_10) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var DynamicTreeCollisionBroadphase = (function () {
         function DynamicTreeCollisionBroadphase() {
             this._dynamicCollisionTree = new DynamicTree_1.DynamicTree();
@@ -8595,9 +8658,11 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
 });
 define("Collision/IPhysics", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor"], function (require, exports, Physics_10, CollisionContact_2, Pair_2, Actor_9) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var NaiveCollisionBroadphase = (function () {
         function NaiveCollisionBroadphase() {
         }
@@ -8667,6 +8732,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(Body_1);
     __export(BoundingBox_6);
     __export(CircleArea_4);
@@ -8682,6 +8748,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
 });
 define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_18) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Creates a closed polygon drawing given a list of [[Vector]]s.
      *
@@ -8784,6 +8851,7 @@ define("Drawing/Index", ["require", "exports", "Drawing/Animation", "Drawing/Col
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(Animation_2);
     __export(Color_17);
     __export(Polygon_1);
@@ -8793,6 +8861,7 @@ define("Drawing/Index", ["require", "exports", "Drawing/Animation", "Drawing/Col
 });
 define("Interfaces/Index", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 /**
  * Pseudo-Random Utility
@@ -8805,6 +8874,7 @@ define("Interfaces/Index", ["require", "exports"], function (require, exports) {
  */
 define("Math/Random", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * 32-bit mask
      */
@@ -9040,9 +9110,11 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
 });
 define("PostProcessing/IPostProcessor", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_11) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var ColorBlindness;
     (function (ColorBlindness) {
         ColorBlindness[ColorBlindness["Protanope"] = 0] = "Protanope";
@@ -9257,6 +9329,7 @@ define("PostProcessing/Index", ["require", "exports", "PostProcessing/ColorBlind
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(ColorBlindCorrector_1);
 });
 define("Resources/Index", ["require", "exports", "Resources/Resource", "Resources/Sound", "Resources/Texture"], function (require, exports, Resource_2, Sound_2, Texture_1) {
@@ -9264,12 +9337,14 @@ define("Resources/Index", ["require", "exports", "Resources/Resource", "Resource
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(Resource_2);
     __export(Sound_2);
     __export(Texture_1);
 });
 define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (require, exports, Class_5, Events_5) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
      * to provide controller support for your games.
@@ -9646,6 +9721,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
 });
 define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "Class", "Util/Util"], function (require, exports, Events_6, UIActor_1, Algebra_19, Class_6, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The type of pointer for a [[PointerEvent]].
      */
@@ -9983,6 +10059,7 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
 });
 define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (require, exports, Class_7, Events_7) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Enum representing input key codes
      */
@@ -10142,6 +10219,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
 });
 define("Input/IEngineInput", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 /**
  * Provides support for mice, keyboards, and controllers.
@@ -10153,6 +10231,7 @@ define("Input/Index", ["require", "exports", "Input/Gamepad", "Input/Pointer", "
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * @typedoc
      */
@@ -10165,11 +10244,13 @@ define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], funct
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     __export(Util_2);
     exports.DrawUtil = drawUtil;
 });
 define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_12) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * This is the list of features that will be used to log the supported
      * features to the console when Detector.logBrowserFeatures() is called.
@@ -10345,6 +10426,7 @@ define("Util/Detector", ["require", "exports", "Util/Log"], function (require, e
 });
 define("Util/SortedList", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * A sorted list implementation. NOTE: this implementation is not self-balancing
      */
@@ -10599,6 +10681,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The current Excalibur version string
      */
@@ -10643,6 +10726,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
 });
 define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_6, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_14, Color_18, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util, BoundingBox_7) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Enum representing the different display modes available to Excalibur
      */
@@ -11278,6 +11362,7 @@ O|===|* >________________>\n\
                 this._logger.debug('Game started');
             }
             else {
+                // Game already started;
             }
             return loadingComplete;
         };
@@ -11400,6 +11485,7 @@ O|===|* >________________>\n\
 });
 define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], function (require, exports, Algebra_22, Actor_12, Traits) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
      * not participate in collisions. Drawn on top of all other actors.
@@ -11438,6 +11524,7 @@ define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], fu
 });
 define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], function (require, exports, UIActor_4, Label_3, Trigger_2) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     function isVanillaActor(actor) {
         return !(actor instanceof UIActor_4.UIActor) &&
             !(actor instanceof Trigger_2.Trigger) &&
@@ -11451,6 +11538,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
 });
 define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * [[Actor|Actors]] are composed together into groupings called Scenes in
      * Excalibur. The metaphor models the same idea behind real world
@@ -11879,6 +11967,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
 });
 define("Events", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
      * some events are unique to a type, others are not.
@@ -12279,6 +12368,7 @@ define("Events", ["require", "exports"], function (require, exports) {
 });
 define("Class", ["require", "exports", "EventDispatcher"], function (require, exports, EventDispatcher_3) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
      * and extending abilities for vanilla Javascript projects
@@ -12376,6 +12466,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
 });
 define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_19, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * The most important primitive in Excalibur is an `Actor`. Anything that
      * can move on the screen, collide with another `Actor`, respond to events,
@@ -13364,6 +13455,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
 });
 define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_17, Util) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var EaseTo = (function () {
         function EaseTo(actor, x, y, duration, easingFcn) {
             this.actor = actor;
@@ -13410,6 +13502,9 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             else {
                 this.actor.pos.x = this._lerpEnd.x;
                 this.actor.pos.y = this._lerpEnd.y;
+                //this._lerpStart = null;
+                //this._lerpEnd = null;
+                //this._currentLerpTime = 0;
             }
         };
         EaseTo.prototype.isComplete = function (actor) {

@@ -1,4 +1,4 @@
-/*! excalibur - v0.9.0 - 2017-04-07
+/*! excalibur - v0.9.0 - 2017-04-08
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1255,82 +1255,6 @@ declare module "Drawing/Color" {
      */
     export class Color {
         /**
-         * Black (#000000)
-         */
-        static Black: Color;
-        /**
-         * White (#FFFFFF)
-         */
-        static White: Color;
-        /**
-         * Gray (#808080)
-         */
-        static Gray: Color;
-        /**
-         * Light gray (#D3D3D3)
-         */
-        static LightGray: Color;
-        /**
-         * Dark gray (#A9A9A9)
-         */
-        static DarkGray: Color;
-        /**
-         * Yellow (#FFFF00)
-         */
-        static Yellow: Color;
-        /**
-         * Orange (#FFA500)
-         */
-        static Orange: Color;
-        /**
-         * Red (#FF0000)
-         */
-        static Red: Color;
-        /**
-         * Vermillion (#FF5B31)
-         */
-        static Vermillion: Color;
-        /**
-         * Rose (#FF007F)
-         */
-        static Rose: Color;
-        /**
-         * Magenta (#FF00FF)
-         */
-        static Magenta: Color;
-        /**
-         * Violet (#7F00FF)
-         */
-        static Violet: Color;
-        /**
-         * Blue (#0000FF)
-         */
-        static Blue: Color;
-        /**
-         * Azure (#007FFF)
-         */
-        static Azure: Color;
-        /**
-         * Cyan (#00FFFF)
-         */
-        static Cyan: Color;
-        /**
-         * Viridian (#59978F)
-         */
-        static Viridian: Color;
-        /**
-         * Green (#00FF00)
-         */
-        static Green: Color;
-        /**
-         * Chartreuse (#7FFF00)
-         */
-        static Chartreuse: Color;
-        /**
-         * Transparent (#FFFFFF00)
-         */
-        static Transparent: Color;
-        /**
          * Red channel
          */
         r: number;
@@ -1449,6 +1373,82 @@ declare module "Drawing/Color" {
          * Returns a clone of the current color.
          */
         clone(): Color;
+        /**
+         * Black (#000000)
+         */
+        static Black: Color;
+        /**
+         * White (#FFFFFF)
+         */
+        static White: Color;
+        /**
+         * Gray (#808080)
+         */
+        static Gray: Color;
+        /**
+         * Light gray (#D3D3D3)
+         */
+        static LightGray: Color;
+        /**
+         * Dark gray (#A9A9A9)
+         */
+        static DarkGray: Color;
+        /**
+         * Yellow (#FFFF00)
+         */
+        static Yellow: Color;
+        /**
+         * Orange (#FFA500)
+         */
+        static Orange: Color;
+        /**
+         * Red (#FF0000)
+         */
+        static Red: Color;
+        /**
+         * Vermillion (#FF5B31)
+         */
+        static Vermillion: Color;
+        /**
+         * Rose (#FF007F)
+         */
+        static Rose: Color;
+        /**
+         * Magenta (#FF00FF)
+         */
+        static Magenta: Color;
+        /**
+         * Violet (#7F00FF)
+         */
+        static Violet: Color;
+        /**
+         * Blue (#0000FF)
+         */
+        static Blue: Color;
+        /**
+         * Azure (#007FFF)
+         */
+        static Azure: Color;
+        /**
+         * Cyan (#00FFFF)
+         */
+        static Cyan: Color;
+        /**
+         * Viridian (#59978F)
+         */
+        static Viridian: Color;
+        /**
+         * Green (#00FF00)
+         */
+        static Green: Color;
+        /**
+         * Chartreuse (#7FFF00)
+         */
+        static Chartreuse: Color;
+        /**
+         * Transparent (#FFFFFF00)
+         */
+        static Transparent: Color;
     }
 }
 declare module "Collision/CollisionContact" {

@@ -3122,6 +3122,14 @@ declare module "Label" {
         Bottom = 5,
     }
     /**
+     * Enum representing the different possible font styles
+     */
+    export enum FontStyle {
+        Normal = 0,
+        Italic = 1,
+        Oblique = 2,
+    }
+    /**
      * Labels are the way to draw small amounts of text to the screen. They are
      * actors and inherit all of the benefits and capabilities.
      *
@@ -3132,6 +3140,10 @@ declare module "Label" {
          * The text to draw.
          */
         text: string;
+        /**
+         * Sets or gets the bold property of the label's text, by default it's false
+         */
+        bold: boolean;
         /**
          * The [[SpriteFont]] to use, if any. Overrides [[fontFamily]] if present.
          */
@@ -3145,6 +3157,10 @@ declare module "Label" {
          * The font size in the selected units, default is 10 (default units is pixel)
          */
         fontSize: number;
+        /**
+         * The font style for this label, the default is [[FontStyle.Normal]]
+         */
+        fontStyle: FontStyle;
         /**
          * The css units for a font size such as px, pt, em (SpriteFont only support px), by default is 'px';
          */
@@ -3190,6 +3206,7 @@ declare module "Label" {
         private _lookupFontUnit(fontUnit);
         private _lookupTextAlign(textAlign);
         private _lookupBaseAlign(baseAlign);
+        private _lookupFontStyle(fontStyle);
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow

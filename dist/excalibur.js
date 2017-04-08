@@ -6227,6 +6227,15 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
         BaseAlign[BaseAlign["Bottom"] = 5] = "Bottom";
     })(BaseAlign = exports.BaseAlign || (exports.BaseAlign = {}));
     /**
+     * Enum representing the different possible font styles
+     */
+    var FontStyle;
+    (function (FontStyle) {
+        FontStyle[FontStyle["Normal"] = 0] = "Normal";
+        FontStyle[FontStyle["Italic"] = 1] = "Italic";
+        FontStyle[FontStyle["Oblique"] = 2] = "Oblique";
+    })(FontStyle = exports.FontStyle || (exports.FontStyle = {}));
+    /**
      * Labels are the way to draw small amounts of text to the screen. They are
      * actors and inherit all of the benefits and capabilities.
      *
@@ -6245,9 +6254,17 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
         function Label(text, x, y, fontFamily, spriteFont) {
             var _this = _super.call(this, x, y) || this;
             /**
+             * Sets or gets the bold property of the label's text, by default it's false
+             */
+            _this.bold = false;
+            /**
              * The font size in the selected units, default is 10 (default units is pixel)
              */
             _this.fontSize = 10;
+            /**
+             * The font style for this label, the default is [[FontStyle.Normal]]
+             */
+            _this.fontStyle = FontStyle.Normal;
             /**
              * The css units for a font size such as px, pt, em (SpriteFont only support px), by default is 'px';
              */
@@ -6344,6 +6361,19 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
                     return 'alphabetic';
             }
         };
+        Label.prototype._lookupFontStyle = function (fontStyle) {
+            var boldstring = this.bold ? ' bold' : '';
+            switch (fontStyle) {
+                case FontStyle.Italic:
+                    return 'italic' + boldstring;
+                case FontStyle.Normal:
+                    return 'normal' + boldstring;
+                case FontStyle.Oblique:
+                    return 'oblique' + boldstring;
+                default:
+                    return 'normal' + boldstring;
+            }
+        };
         /**
          * Sets the text shadow for sprite fonts
          * @param offsetX      The x offset in pixels to place the shadow
@@ -6438,7 +6468,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
         };
         Object.defineProperty(Label.prototype, "_fontString", {
             get: function () {
-                return "" + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
+                return this._lookupFontStyle(this.fontStyle) + " " + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
             },
             enumerable: true,
             configurable: true

@@ -13322,8 +13322,8 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype.draw = function (ctx, delta) {
             ctx.save();
             ctx.translate(this.pos.x, this.pos.y);
-            ctx.scale(this.scale.x, this.scale.y);
             ctx.rotate(this.rotation);
+            ctx.scale(this.scale.x, this.scale.y);
             // translate canvas by anchor offset
             ctx.save();
             ctx.translate(-(this._width * this.anchor.x), -(this._height * this.anchor.y));

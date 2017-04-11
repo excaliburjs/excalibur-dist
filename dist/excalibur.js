@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0 - 2017-04-08
+/*! excalibur - v0.10.0 - 2017-04-11
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0 - 2017-04-08
+/*! excalibur - v0.10.0 - 2017-04-11
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */

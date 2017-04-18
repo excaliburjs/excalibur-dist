@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1407+4de5653 - 2017-04-18
+/*! excalibur - v0.10.0-alpha.1409+32ba1da - 2017-04-18
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1407+4de5653 - 2017-04-18
+/*! excalibur - v0.10.0-alpha.1409+32ba1da - 2017-04-18
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11388,7 +11388,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1407+4de5653';
+    exports.EX_VERSION = '0.10.0-alpha.1409+32ba1da';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12026,7 +12026,7 @@ O|===|* >________________>\n\
                 for (var j = 0; j < keys.length; j++) {
                     this.ctx.fillText(keys[j].toString() + ' : ' + (Input.Keys[keys[j]] ? Input.Keys[keys[j]] : 'Not Mapped'), 100, 10 * j + 10);
                 }
-                this.ctx.fillText('FPS:' + this.fps.toFixed(2).toString(), 10, 10);
+                this.ctx.fillText('FPS:' + this.stats.currFrame.fps.toFixed(2).toString(), 10, 10);
             }
             // Post processing
             for (var i = 0; i < this.postProcessors.length; i++) {

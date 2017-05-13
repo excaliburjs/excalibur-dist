@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1429+a6f90ef - 2017-04-27
+/*! excalibur - v0.10.0-alpha.1446+0ffe0a6 - 2017-05-13
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5395,6 +5395,13 @@ declare module "Engine" {
          * Show the game as a fixed size
          */
         Fixed = 2,
+        Position = 3,
+    }
+    export interface IAbsolutePosition {
+        top?: number | string;
+        left?: number | string;
+        right?: number | string;
+        bottom?: number | string;
     }
     /**
      * Defines the available options to configure the Excalibur engine at constructor time.
@@ -5431,6 +5438,7 @@ declare module "Engine" {
          * browsers or if there is a bug in excalibur preventing execution.
          */
         suppressMinimumBrowserFeatureDetection?: boolean;
+        position?: string | IAbsolutePosition;
     }
     /**
      * The Excalibur Engine
@@ -5507,6 +5515,10 @@ declare module "Engine" {
          * Indicates the current [[DisplayMode]] of the engine.
          */
         displayMode: DisplayMode;
+        /**
+         * Indicates the current position of the engine. Valid only when DisplayMode is DisplayMode.Position
+         */
+        position: string | IAbsolutePosition;
         /**
          * Indicates whether audio should be paused when the game is no longer visible.
          */

@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1429+a6f90ef - 2017-04-27
+/*! excalibur - v0.10.0-alpha.1446+0ffe0a6 - 2017-05-13
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1429+a6f90ef - 2017-04-27
+/*! excalibur - v0.10.0-alpha.1446+0ffe0a6 - 2017-05-13
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11388,7 +11388,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1429+a6f90ef';
+    exports.EX_VERSION = '0.10.0-alpha.1446+0ffe0a6';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -11447,6 +11447,10 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
          * Show the game as a fixed size
          */
         DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
+        /*
+        * Allow the game to be positioned with the position option
+        */
+        DisplayMode[DisplayMode["Position"] = 3] = "Position";
     })(DisplayMode = exports.DisplayMode || (exports.DisplayMode = {}));
     /**
      * The Excalibur Engine
@@ -11890,6 +11894,9 @@ O|===|* >________________>\n\
          */
         Engine.prototype._initialize = function (options) {
             var _this = this;
+            if (options.displayMode) {
+                this.displayMode = options.displayMode;
+            }
             if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
                 var parent = (this.displayMode === DisplayMode.Container ?
                     (this.canvas.parentElement || document.body) : window);
@@ -11900,6 +11907,72 @@ O|===|* >________________>\n\
                     _this._logger.info('parent.clientHeight ' + parent.clientHeight);
                     _this.setAntialiasing(_this._isSmoothingEnabled);
                 });
+            }
+            else if (this.displayMode === DisplayMode.Position) {
+                if (!options.position) {
+                    throw new Error('DisplayMode of Position was selected but no position option was given');
+                }
+                else {
+                    this.canvas.style.display = 'block';
+                    this.canvas.style.position = 'absolute';
+                    if (typeof options.position === 'string') {
+                        var specifiedPosition = options.position.split(' ');
+                        switch (specifiedPosition[0]) {
+                            case 'top':
+                                this.canvas.style.top = '0px';
+                                break;
+                            case 'bottom':
+                                this.canvas.style.bottom = '0px';
+                                break;
+                            case 'middle':
+                                this.canvas.style.top = '50%';
+                                var offsetY = this.getDrawHeight() / -2;
+                                this.canvas.style.marginTop = offsetY.toString();
+                                break;
+                            default:
+                                throw new Error('Invalid Position Given');
+                        }
+                        if (specifiedPosition[1]) {
+                            switch (specifiedPosition[1]) {
+                                case 'left':
+                                    this.canvas.style.left = '0px';
+                                    break;
+                                case 'right':
+                                    this.canvas.style.right = '0px';
+                                    break;
+                                case 'center':
+                                    this.canvas.style.left = '50%';
+                                    var offsetX = this.getDrawWidth() / -2;
+                                    this.canvas.style.marginLeft = offsetX.toString();
+                                    break;
+                                default:
+                                    throw new Error('Invalid Position Given');
+                            }
+                        }
+                    }
+                    else {
+                        if (options.position.top) {
+                            typeof options.position.top === 'number' ?
+                                this.canvas.style.top = options.position.top.toString() + 'px' :
+                                this.canvas.style.top = options.position.top;
+                        }
+                        if (options.position.right) {
+                            typeof options.position.right === 'number' ?
+                                this.canvas.style.right = options.position.right.toString() + 'px' :
+                                this.canvas.style.right = options.position.right;
+                        }
+                        if (options.position.bottom) {
+                            typeof options.position.bottom === 'number' ?
+                                this.canvas.style.bottom = options.position.bottom.toString() + 'px' :
+                                this.canvas.style.bottom = options.position.bottom;
+                        }
+                        if (options.position.left) {
+                            typeof options.position.left === 'number' ?
+                                this.canvas.style.left = options.position.left.toString() + 'px' :
+                                this.canvas.style.left = options.position.left;
+                        }
+                    }
+                }
             }
             // initialize inputs
             this.input = {

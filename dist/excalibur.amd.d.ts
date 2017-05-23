@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -3437,8 +3437,9 @@ declare module "Resources/Sound" {
         isPlaying(): boolean;
         /**
          * Play the sound, returns a promise that resolves when the sound is done playing
+         * An optional volume argument can be passed in to play the sound. Max volume is 1.0
          */
-        play(): Promise<boolean>;
+        play(volume?: number): Promise<boolean>;
         /**
          * Stop the sound, and do not rewind
          */

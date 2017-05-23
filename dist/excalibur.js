@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -6826,8 +6826,9 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
         };
         /**
          * Play the sound, returns a promise that resolves when the sound is done playing
+         * An optional volume argument can be passed in to play the sound. Max volume is 1.0
          */
-        Sound.prototype.play = function () {
+        Sound.prototype.play = function (volume) {
             var _this = this;
             if (this._isLoaded) {
                 var resumed = [];
@@ -6846,7 +6847,12 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
                 // push a new track
                 var newTrack = this.sound.createInstance(this._data);
                 newTrack.setLoop(this._loop);
-                newTrack.setVolume(this._volume);
+                if (volume) {
+                    newTrack.setVolume(Util.clamp(volume, 0.0, 1.0));
+                }
+                else {
+                    newTrack.setVolume(this._volume);
+                }
                 this._tracks.push(newTrack);
                 this._logger.debug('Playing new instance for sound', this.path);
                 return newTrack.play().then(function () {
@@ -11431,7 +11437,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1467+ec75b46';
+    exports.EX_VERSION = '0.10.0-alpha.1470+6473b22';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

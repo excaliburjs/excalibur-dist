@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1454+9fa3467 - 2017-05-22
+/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -964,287 +964,6 @@ declare module "DebugFlags" {
     export interface IDebugFlags {
     }
 }
-declare module "Debug" {
-    import { IDebugFlags } from "DebugFlags";
-    /**
-     * Debug stats containing current and previous frame statistics
-     */
-    export interface IDebugStats {
-        currFrame: FrameStats;
-        prevFrame: FrameStats;
-    }
-    /**
-     * Represents a frame's individual statistics
-     */
-    export interface IFrameStats {
-        /**
-         * The number of the frame
-         */
-        id: number;
-        /**
-         * Gets the frame's delta (time since last frame scaled by [[Engine.timescale]]) (in ms)
-         */
-        delta: number;
-        /**
-         * Gets the frame's frames-per-second (FPS)
-         */
-        fps: number;
-        /**
-         * Duration statistics (in ms)
-         */
-        duration: IFrameDurationStats;
-        /**
-         * Actor statistics
-         */
-        actors: IFrameActorStats;
-        /**
-         * Physics statistics
-         */
-        physics: IPhysicsStats;
-    }
-    /**
-     * Represents actor stats for a frame
-     */
-    export interface IFrameActorStats {
-        /**
-         * Gets the frame's number of actors (alive)
-         */
-        alive: number;
-        /**
-         * Gets the frame's number of actors (killed)
-         */
-        killed: number;
-        /**
-         * Gets the frame's number of remaining actors (alive - killed)
-         */
-        remaining: number;
-        /**
-         * Gets the frame's number of UI actors
-         */
-        ui: number;
-        /**
-         * Gets the frame's number of total actors (remaining + UI)
-         */
-        total: number;
-    }
-    /**
-     * Represents duration stats for a frame
-     */
-    export interface IFrameDurationStats {
-        /**
-         * Gets the frame's total time to run the update function (in ms)
-         */
-        update: number;
-        /**
-         * Gets the frame's total time to run the draw function (in ms)
-         */
-        draw: number;
-        /**
-         * Gets the frame's total render duration (update + draw duration) (in ms)
-         */
-        total: number;
-    }
-    /**
-     * Represents physics stats for the current frame
-     */
-    export interface IPhysicsStats {
-        /**
-         * Gets the number of broadphase collision pairs which
-         */
-        pairs: number;
-        /**
-         * Gets the number of actural collisons
-         */
-        collisions: number;
-        /**
-         * Gets the number of fast moving bodies using raycast continuous collisions in the scene
-         */
-        fastBodies: number;
-        /**
-         * Gets the number of bodies that had a fast body collision resolution
-         */
-        fastBodyCollisions: number;
-        /**
-         * Gets the time it took to calculate the broadphase pairs
-         */
-        broadphase: number;
-        /**
-         * Gets the time it took to calculate the narrowphase
-         */
-        narrowphase: number;
-    }
-    /**
-     * Debug statistics and flags for Excalibur. If polling these values, it would be
-     * best to do so on the `postupdate` event for [[Engine]], after all values have been
-     * updated during a frame.
-     */
-    export class Debug implements IDebugFlags {
-        /**
-         * Performance statistics
-         */
-        stats: IDebugStats;
-    }
-    /**
-     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
-     * creating instances of this every frame.
-     */
-    export class FrameStats implements IFrameStats {
-        private _id;
-        private _delta;
-        private _fps;
-        private _actorStats;
-        private _durationStats;
-        private _physicsStats;
-        /**
-         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        reset(otherStats?: IFrameStats): void;
-        /**
-         * Provides a clone of this instance.
-         */
-        clone(): FrameStats;
-        /**
-         * Gets the frame's id
-         */
-        /**
-         * Sets the frame's id
-         */
-        id: number;
-        /**
-         * Gets the frame's delta (time since last frame)
-         */
-        /**
-         * Sets the frame's delta (time since last frame). Internal use only.
-         * @internal
-         */
-        delta: number;
-        /**
-         * Gets the frame's frames-per-second (FPS)
-         */
-        /**
-         * Sets the frame's frames-per-second (FPS). Internal use only.
-         * @internal
-         */
-        fps: number;
-        /**
-         * Gets the frame's actor statistics
-         */
-        readonly actors: IFrameActorStats;
-        /**
-         * Gets the frame's duration statistics
-         */
-        readonly duration: IFrameDurationStats;
-        /**
-         * Gets the frame's physics statistics
-         */
-        readonly physics: PhysicsStats;
-    }
-    export class PhysicsStats implements IPhysicsStats {
-        private _pairs;
-        private _collisions;
-        private _fastBodies;
-        private _fastBodyCollisions;
-        private _broadphase;
-        private _narrowphase;
-        /**
-         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        reset(otherStats?: IPhysicsStats): void;
-        /**
-         * Provides a clone of this instance.
-         */
-        clone(): IPhysicsStats;
-        pairs: number;
-        collisions: number;
-        fastBodies: number;
-        fastBodyCollisions: number;
-        broadphase: number;
-        narrowphase: number;
-    }
-}
-declare module "Interfaces/IEvented" {
-    import { GameEvent } from "Events";
-    export interface IEvented {
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        emit(eventName: string, event?: GameEvent<any>): void;
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-    }
-}
-declare module "EventDispatcher" {
-    import { GameEvent } from "Events";
-    import { IEvented } from "Interfaces/IEvented";
-    /**
-     * Excalibur's internal event dispatcher implementation.
-     * Callbacks are fired immediately after an event is published.
-     * Typically you will use [[Class.eventDispatcher]] since most classes in
-     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
-     * yourself.
-     *
-     * [[include:Events.md]]
-     */
-    export class EventDispatcher implements IEvented {
-        private _handlers;
-        private _wiredEventDispatchers;
-        private _target;
-        /**
-         * @param target  The object that will be the recipient of events from this event dispatcher
-         */
-        constructor(target: any);
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        emit(eventName: string, event?: GameEvent<any>): void;
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
-        /**
-         * Wires this event dispatcher to also recieve events from another
-         */
-        wire(eventDispatcher: EventDispatcher): void;
-        /**
-         * Unwires this event dispatcher from another
-         */
-        unwire(eventDispatcher: EventDispatcher): void;
-    }
-}
 declare module "Drawing/Color" {
     /**
      * Provides standard colors (e.g. [[Color.Black]])
@@ -1553,20 +1272,6 @@ declare module "Collision/ICollisionArea" {
         debugDraw(ctx: CanvasRenderingContext2D, color: Color): void;
     }
 }
-declare module "Collision/CollisionJumpTable" {
-    import { CircleArea } from "Collision/CircleArea";
-    import { CollisionContact } from "Collision/CollisionContact";
-    import { PolygonArea } from "Collision/PolygonArea";
-    import { EdgeArea } from "Collision/EdgeArea";
-    export var CollisionJumpTable: {
-        CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
-        CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
-        CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
-        CollideEdgeEdge(): CollisionContact;
-        CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
-        CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
-    };
-}
 declare module "Collision/CircleArea" {
     import { Body } from "Collision/Body";
     import { BoundingBox } from "Collision/BoundingBox";
@@ -1643,264 +1348,19 @@ declare module "Collision/CircleArea" {
         debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
     }
 }
-declare module "Util/DrawUtil" {
-    import { Color } from "Drawing/Color";
-    import { Vector } from "Algebra";
-    /**
-     * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
-     * the line, and "square" is a rectangle that is an equal width and half height cap.
-     */
-    export type LineCapStyle = 'butt' | 'round' | 'square';
-    /**
-     * Draw a line on canvas context
-     *
-     * @param ctx The canvas context
-     * @param color The color of the line
-     * @param x1 The start x coordinate
-     * @param y1 The start y coordinate
-     * @param x2 The ending x coordinate
-     * @param y2 The ending y coordinate
-     * @param thickness The line thickness
-     * @param cap The [[LineCapStyle]] (butt, round, or square)
-     */
-    export function line(ctx: CanvasRenderingContext2D, color: Color, x1: number, y1: number, x2: number, y2: number, thickness?: number, cap?: LineCapStyle): void;
-    /**
-     * Draw the vector as a point onto the canvas.
-     */
-    export function point(ctx: CanvasRenderingContext2D, color: Color, point: Vector): void;
-    /**
-     * Draw the vector as a line onto the canvas starting a origin point.
-     */
-    export function vector(ctx: CanvasRenderingContext2D, color: Color, origin: Vector, vector: Vector, scale?: number): void;
-    /**
-     * Represents border radius values
-     */
-    export interface IBorderRadius {
-        /**
-         * Top-left
-         */
-        tl: number;
-        /**
-         * Top-right
-         */
-        tr: number;
-        /**
-         * Bottom-right
-         */
-        br: number;
-        /**
-         * Bottom-left
-         */
-        bl: number;
-    }
-    /**
-     * Draw a round rectangle on a canvas context
-     *
-     * @param ctx The canvas context
-     * @param x The top-left x coordinate
-     * @param y The top-left y coordinate
-     * @param width The width of the rectangle
-     * @param height The height of the rectangle
-     * @param radius The border radius of the rectangle
-     * @param fill The [[Color]] to fill rectangle with
-     * @param stroke The [[Color]] to stroke rectangle with
-     */
-    export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
-    export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
-}
-declare module "Collision/Body" {
-    import { ICollisionArea } from "Collision/ICollisionArea";
-    import { BoundingBox } from "Collision/BoundingBox";
-    import { Vector } from "Algebra";
-    import { Actor } from "Actor";
-    export class Body {
-        actor: Actor;
-        /**
-         * Constructs a new physics body associated with an actor
-         */
-        constructor(actor: Actor);
-        /**
-         * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
-         */
-        collisionArea: ICollisionArea;
-        /**
-         * The (x, y) position of the actor this will be in the middle of the actor if the
-         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-         */
-        pos: Vector;
-        /**
-         * The position of the actor last frame (x, y) in pixels
-         */
-        oldPos: Vector;
-        /**
-         * The current velocity vector (vx, vy) of the actor in pixels/second
-         */
-        vel: Vector;
-        /**
-         * The velocity of the actor last frame (vx, vy) in pixels/second
-         */
-        oldVel: Vector;
-        /**
-         * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
-         * be useful to simulate a gravitational effect.
-         */
-        acc: Vector;
-        /**
-         * The current torque applied to the actor
-         */
-        torque: number;
-        /**
-         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
-         */
-        mass: number;
-        /**
-         * The current moment of inertia, moi can be thought of as the resistance to rotation.
-         */
-        moi: number;
-        /**
-         * The current "motion" of the actor, used to calculated sleep in the physics simulation
-         */
-        motion: number;
-        /**
-         * The coefficient of friction on this actor
-         */
-        friction: number;
-        /**
-         * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
-         */
-        restitution: number;
-        /**
-         * The rotation of the actor in radians
-         */
-        rotation: number;
-        /**
-         * The rotational velocity of the actor in radians/second
-         */
-        rx: number;
-        private _totalMtv;
-        /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
-         */
-        addMtv(mtv: Vector): void;
-        /**
-         * Applies the accumulated translation vectors to the actors position
-         */
-        applyMtv(): void;
-        /**
-         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
-         */
-        getBounds(): BoundingBox;
-        /**
-         * Returns the actor's [[BoundingBox]] relative to the actors position.
-         */
-        getRelativeBounds(): BoundingBox;
-        /**
-         * Updates the collision area geometry and internal caches
-         */
-        update(): void;
-        /**
-         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useBoxCollision(center?: Vector): void;
-        /**
-         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
-         *
-         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        usePolygonCollision(points: Vector[], center?: Vector): void;
-        /**
-         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useCircleCollision(radius?: number, center?: Vector): void;
-        /**
-         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
-         * of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        useEdgeCollision(begin: Vector, end: Vector): void;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
-declare module "Collision/EdgeArea" {
-    import { Body } from "Collision/Body";
-    import { BoundingBox } from "Collision/BoundingBox";
+declare module "Collision/CollisionJumpTable" {
+    import { CircleArea } from "Collision/CircleArea";
     import { CollisionContact } from "Collision/CollisionContact";
-    import { ICollisionArea } from "Collision/ICollisionArea";
-    import { Vector, Ray, Projection } from "Algebra";
-    import { Color } from "Drawing/Color";
-    export interface IEdgeAreaOptions {
-        begin?: Vector;
-        end?: Vector;
-        body?: Body;
-    }
-    export class EdgeArea implements ICollisionArea {
-        body: Body;
-        pos: Vector;
-        begin: Vector;
-        end: Vector;
-        constructor(options: IEdgeAreaOptions);
-        /**
-         * Get the center of the collision area in world coordinates
-         */
-        getCenter(): Vector;
-        private _getBodyPos();
-        private _getTransformedBegin();
-        private _getTransformedEnd();
-        /**
-         * Returns the slope of the line in the form of a vector
-         */
-        getSlope(): Vector;
-        /**
-         * Returns the length of the line segment in pixels
-         */
-        getLength(): number;
-        /**
-         * Tests if a point is contained in this collision area
-         */
-        contains(): boolean;
-        /**
-         * @inheritdoc
-         */
-        rayCast(ray: Ray, max?: number): Vector;
-        /**
-         * @inheritdoc
-         */
-        collide(area: ICollisionArea): CollisionContact;
-        /**
-         * Find the point on the shape furthest in the direction specified
-         */
-        getFurthestPoint(direction: Vector): Vector;
-        /**
-         * Get the axis aligned bounding box for the circle area
-         */
-        getBounds(): BoundingBox;
-        /**
-         * Get the axis associated with the edge
-         */
-        getAxes(): Vector[];
-        /**
-         * Get the moment of inertia for an edge
-         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-         */
-        getMomentOfInertia(): number;
-        /**
-         * @inheritdoc
-         */
-        recalc(): void;
-        /**
-         * Project the edge along a specified axis
-         */
-        project(axis: Vector): Projection;
-        debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
-    }
+    import { PolygonArea } from "Collision/PolygonArea";
+    import { EdgeArea } from "Collision/EdgeArea";
+    export var CollisionJumpTable: {
+        CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
+        CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
+        CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
+        CollideEdgeEdge(): CollisionContact;
+        CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
+        CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
+    };
 }
 declare module "Collision/PolygonArea" {
     import { Color } from "Drawing/Color";
@@ -2074,6 +1534,600 @@ declare module "Collision/BoundingBox" {
          */
         collides(collidable: ICollidable): Vector;
         debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
+    }
+}
+declare module "Collision/EdgeArea" {
+    import { Body } from "Collision/Body";
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { CollisionContact } from "Collision/CollisionContact";
+    import { ICollisionArea } from "Collision/ICollisionArea";
+    import { Vector, Ray, Projection } from "Algebra";
+    import { Color } from "Drawing/Color";
+    export interface IEdgeAreaOptions {
+        begin?: Vector;
+        end?: Vector;
+        body?: Body;
+    }
+    export class EdgeArea implements ICollisionArea {
+        body: Body;
+        pos: Vector;
+        begin: Vector;
+        end: Vector;
+        constructor(options: IEdgeAreaOptions);
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        getCenter(): Vector;
+        private _getBodyPos();
+        private _getTransformedBegin();
+        private _getTransformedEnd();
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        getSlope(): Vector;
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        getLength(): number;
+        /**
+         * Tests if a point is contained in this collision area
+         */
+        contains(): boolean;
+        /**
+         * @inheritdoc
+         */
+        rayCast(ray: Ray, max?: number): Vector;
+        /**
+         * @inheritdoc
+         */
+        collide(area: ICollisionArea): CollisionContact;
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        getFurthestPoint(direction: Vector): Vector;
+        /**
+         * Get the axis aligned bounding box for the circle area
+         */
+        getBounds(): BoundingBox;
+        /**
+         * Get the axis associated with the edge
+         */
+        getAxes(): Vector[];
+        /**
+         * Get the moment of inertia for an edge
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        getMomentOfInertia(): number;
+        /**
+         * @inheritdoc
+         */
+        recalc(): void;
+        /**
+         * Project the edge along a specified axis
+         */
+        project(axis: Vector): Projection;
+        debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
+    }
+}
+declare module "Util/DrawUtil" {
+    import { Color } from "Drawing/Color";
+    import { Vector } from "Algebra";
+    /**
+     * A canvas linecap style. "butt" is the default flush style, "round" is a semi-circle cap with a radius half the width of
+     * the line, and "square" is a rectangle that is an equal width and half height cap.
+     */
+    export type LineCapStyle = 'butt' | 'round' | 'square';
+    /**
+     * Draw a line on canvas context
+     *
+     * @param ctx The canvas context
+     * @param color The color of the line
+     * @param x1 The start x coordinate
+     * @param y1 The start y coordinate
+     * @param x2 The ending x coordinate
+     * @param y2 The ending y coordinate
+     * @param thickness The line thickness
+     * @param cap The [[LineCapStyle]] (butt, round, or square)
+     */
+    export function line(ctx: CanvasRenderingContext2D, color: Color, x1: number, y1: number, x2: number, y2: number, thickness?: number, cap?: LineCapStyle): void;
+    /**
+     * Draw the vector as a point onto the canvas.
+     */
+    export function point(ctx: CanvasRenderingContext2D, color: Color, point: Vector): void;
+    /**
+     * Draw the vector as a line onto the canvas starting a origin point.
+     */
+    export function vector(ctx: CanvasRenderingContext2D, color: Color, origin: Vector, vector: Vector, scale?: number): void;
+    /**
+     * Represents border radius values
+     */
+    export interface IBorderRadius {
+        /**
+         * Top-left
+         */
+        tl: number;
+        /**
+         * Top-right
+         */
+        tr: number;
+        /**
+         * Bottom-right
+         */
+        br: number;
+        /**
+         * Bottom-left
+         */
+        bl: number;
+    }
+    /**
+     * Draw a round rectangle on a canvas context
+     *
+     * @param ctx The canvas context
+     * @param x The top-left x coordinate
+     * @param y The top-left y coordinate
+     * @param width The width of the rectangle
+     * @param height The height of the rectangle
+     * @param radius The border radius of the rectangle
+     * @param fill The [[Color]] to fill rectangle with
+     * @param stroke The [[Color]] to stroke rectangle with
+     */
+    export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
+    export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
+}
+declare module "Collision/Body" {
+    import { Engine } from "Engine";
+    import { ICollisionArea } from "Collision/ICollisionArea";
+    import { BoundingBox } from "Collision/BoundingBox";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    export class Body {
+        actor: Actor;
+        /**
+         * Constructs a new physics body associated with an actor
+         */
+        constructor(actor: Actor);
+        /**
+         * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
+         */
+        collisionArea: ICollisionArea;
+        /**
+         * The (x, y) position of the actor this will be in the middle of the actor if the
+         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+         */
+        pos: Vector;
+        /**
+         * The position of the actor last frame (x, y) in pixels
+         */
+        oldPos: Vector;
+        /**
+         * The current velocity vector (vx, vy) of the actor in pixels/second
+         */
+        vel: Vector;
+        /**
+         * The velocity of the actor last frame (vx, vy) in pixels/second
+         */
+        oldVel: Vector;
+        /**
+         * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+         * be useful to simulate a gravitational effect.
+         */
+        acc: Vector;
+        /**
+         * The current torque applied to the actor
+         */
+        torque: number;
+        /**
+         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
+         */
+        mass: number;
+        /**
+         * The current moment of inertia, moi can be thought of as the resistance to rotation.
+         */
+        moi: number;
+        /**
+         * The current "motion" of the actor, used to calculated sleep in the physics simulation
+         */
+        motion: number;
+        /**
+         * The coefficient of friction on this actor
+         */
+        friction: number;
+        /**
+         * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
+         */
+        restitution: number;
+        /**
+         * The rotation of the actor in radians
+         */
+        rotation: number;
+        /**
+         * The rotational velocity of the actor in radians/second
+         */
+        rx: number;
+        private _totalMtv;
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
+         */
+        addMtv(mtv: Vector): void;
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        applyMtv(): void;
+        /**
+         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
+         */
+        getBounds(): BoundingBox;
+        /**
+         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         */
+        getRelativeBounds(): BoundingBox;
+        /**
+         * Updates the collision area geometry and internal caches
+         */
+        update(): void;
+        /**
+         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useBoxCollision(center?: Vector): void;
+        /**
+         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+         *
+         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        usePolygonCollision(points: Vector[], center?: Vector): void;
+        /**
+         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useCircleCollision(radius?: number, center?: Vector): void;
+        /**
+         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+         * of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        useEdgeCollision(begin: Vector, end: Vector): void;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+        /**
+         * Returns a boolean indicating whether this body collided with
+         * or was in stationary contact with
+         * the body of the other [[Actor]]
+         */
+        touching(other: Actor): boolean;
+        /**
+         * Returns a boolean indicating true if this body COLLIDED with
+         * the body of the other Actor in the last frame, and they are no longer touching
+         * in this frame
+         */
+        wasTouching(other: Actor, game: Engine): boolean;
+    }
+}
+declare module "Collision/Pair" {
+    import { Body } from "Collision/Body";
+    import { CollisionContact } from "Collision/CollisionContact";
+    import { CollisionResolutionStrategy } from "Physics";
+    /**
+     * Models a potential collision between 2 bodies
+     */
+    export class Pair {
+        bodyA: Body;
+        bodyB: Body;
+        id: string;
+        collision: CollisionContact;
+        constructor(bodyA: Body, bodyB: Body);
+        /**
+         * Runs the collison intersection logic on the members of this pair
+         */
+        collide(): void;
+        /**
+         * Resovles the collision body position and velocity if a collision occured
+         */
+        resolve(strategy: CollisionResolutionStrategy): void;
+        /**
+         * Calculates the unique pair hash id for this collision pair
+         */
+        static calculatePairHash(bodyA: Body, bodyB: Body): string;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+}
+declare module "Debug" {
+    import { IDebugFlags } from "DebugFlags";
+    import { Pair } from "Collision/Pair";
+    /**
+     * Debug stats containing current and previous frame statistics
+     */
+    export interface IDebugStats {
+        currFrame: FrameStats;
+        prevFrame: FrameStats;
+    }
+    /**
+     * Hash containing the [[Pair.id]]s of pairs that collided in a frame
+     */
+    export interface ICollidersHash {
+        [pairId: string]: Pair;
+    }
+    /**
+     * Represents a frame's individual statistics
+     */
+    export interface IFrameStats {
+        /**
+         * The number of the frame
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame scaled by [[Engine.timescale]]) (in ms)
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        fps: number;
+        /**
+         * Duration statistics (in ms)
+         */
+        duration: IFrameDurationStats;
+        /**
+         * Actor statistics
+         */
+        actors: IFrameActorStats;
+        /**
+         * Physics statistics
+         */
+        physics: IPhysicsStats;
+    }
+    /**
+     * Represents actor stats for a frame
+     */
+    export interface IFrameActorStats {
+        /**
+         * Gets the frame's number of actors (alive)
+         */
+        alive: number;
+        /**
+         * Gets the frame's number of actors (killed)
+         */
+        killed: number;
+        /**
+         * Gets the frame's number of remaining actors (alive - killed)
+         */
+        remaining: number;
+        /**
+         * Gets the frame's number of UI actors
+         */
+        ui: number;
+        /**
+         * Gets the frame's number of total actors (remaining + UI)
+         */
+        total: number;
+    }
+    /**
+     * Represents duration stats for a frame
+     */
+    export interface IFrameDurationStats {
+        /**
+         * Gets the frame's total time to run the update function (in ms)
+         */
+        update: number;
+        /**
+         * Gets the frame's total time to run the draw function (in ms)
+         */
+        draw: number;
+        /**
+         * Gets the frame's total render duration (update + draw duration) (in ms)
+         */
+        total: number;
+    }
+    /**
+     * Represents physics stats for the current frame
+     */
+    export interface IPhysicsStats {
+        /**
+         * Gets the number of broadphase collision pairs which
+         */
+        pairs: number;
+        /**
+         * Gets the number of actual collisons
+         */
+        collisions: number;
+        /**
+         * A Hash storing the [[Pair.ids]]s of [[Pairs]]s that collided in the frame
+         */
+        collidersHash: ICollidersHash;
+        /**
+         * Gets the number of fast moving bodies using raycast continuous collisions in the scene
+         */
+        fastBodies: number;
+        /**
+         * Gets the number of bodies that had a fast body collision resolution
+         */
+        fastBodyCollisions: number;
+        /**
+         * Gets the time it took to calculate the broadphase pairs
+         */
+        broadphase: number;
+        /**
+         * Gets the time it took to calculate the narrowphase
+         */
+        narrowphase: number;
+    }
+    /**
+     * Debug statistics and flags for Excalibur. If polling these values, it would be
+     * best to do so on the `postupdate` event for [[Engine]], after all values have been
+     * updated during a frame.
+     */
+    export class Debug implements IDebugFlags {
+        /**
+         * Performance statistics
+         */
+        stats: IDebugStats;
+    }
+    /**
+     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
+     * creating instances of this every frame.
+     */
+    export class FrameStats implements IFrameStats {
+        private _id;
+        private _delta;
+        private _fps;
+        private _actorStats;
+        private _durationStats;
+        private _physicsStats;
+        /**
+         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IFrameStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): FrameStats;
+        /**
+         * Gets the frame's id
+         */
+        /**
+         * Sets the frame's id
+         */
+        id: number;
+        /**
+         * Gets the frame's delta (time since last frame)
+         */
+        /**
+         * Sets the frame's delta (time since last frame). Internal use only.
+         * @internal
+         */
+        delta: number;
+        /**
+         * Gets the frame's frames-per-second (FPS)
+         */
+        /**
+         * Sets the frame's frames-per-second (FPS). Internal use only.
+         * @internal
+         */
+        fps: number;
+        /**
+         * Gets the frame's actor statistics
+         */
+        readonly actors: IFrameActorStats;
+        /**
+         * Gets the frame's duration statistics
+         */
+        readonly duration: IFrameDurationStats;
+        /**
+         * Gets the frame's physics statistics
+         */
+        readonly physics: PhysicsStats;
+    }
+    export class PhysicsStats implements IPhysicsStats {
+        private _pairs;
+        private _collisions;
+        private _collidersHash;
+        private _fastBodies;
+        private _fastBodyCollisions;
+        private _broadphase;
+        private _narrowphase;
+        /**
+         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        reset(otherStats?: IPhysicsStats): void;
+        /**
+         * Provides a clone of this instance.
+         */
+        clone(): IPhysicsStats;
+        pairs: number;
+        collisions: number;
+        collidersHash: ICollidersHash;
+        fastBodies: number;
+        fastBodyCollisions: number;
+        broadphase: number;
+        narrowphase: number;
+    }
+}
+declare module "Interfaces/IEvented" {
+    import { GameEvent } from "Events";
+    export interface IEvented {
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        emit(eventName: string, event?: GameEvent<any>): void;
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    }
+}
+declare module "EventDispatcher" {
+    import { GameEvent } from "Events";
+    import { IEvented } from "Interfaces/IEvented";
+    /**
+     * Excalibur's internal event dispatcher implementation.
+     * Callbacks are fired immediately after an event is published.
+     * Typically you will use [[Class.eventDispatcher]] since most classes in
+     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
+     * yourself.
+     *
+     * [[include:Events.md]]
+     */
+    export class EventDispatcher implements IEvented {
+        private _handlers;
+        private _wiredEventDispatchers;
+        private _target;
+        /**
+         * @param target  The object that will be the recipient of events from this event dispatcher
+         */
+        constructor(target: any);
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        emit(eventName: string, event?: GameEvent<any>): void;
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Wires this event dispatcher to also recieve events from another
+         */
+        wire(eventDispatcher: EventDispatcher): void;
+        /**
+         * Unwires this event dispatcher from another
+         */
+        unwire(eventDispatcher: EventDispatcher): void;
     }
 }
 declare module "Actions/ActionContext" {
@@ -4160,34 +4214,6 @@ declare module "Collision/DynamicTree" {
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
-declare module "Collision/Pair" {
-    import { Body } from "Collision/Body";
-    import { CollisionContact } from "Collision/CollisionContact";
-    import { CollisionResolutionStrategy } from "Physics";
-    /**
-     * Models a potential collision between 2 bodies
-     */
-    export class Pair {
-        bodyA: Body;
-        bodyB: Body;
-        id: string;
-        collision: CollisionContact;
-        constructor(bodyA: Body, bodyB: Body);
-        /**
-         * Runs the collison intersection logic on the members of this pair
-         */
-        collide(): void;
-        /**
-         * Resovles the collision body position and velocity if a collision occured
-         */
-        resolve(strategy: CollisionResolutionStrategy): void;
-        /**
-         * Calculates the unique pair hash id for this collision pair
-         */
-        static calculatePairHash(bodyA: Body, bodyB: Body): string;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-    }
-}
 declare module "Collision/ICollisionResolver" {
     import { Body } from "Collision/Body";
     import { FrameStats } from "Debug";
@@ -4254,6 +4280,7 @@ declare module "Collision/DynamicTreeCollisionBroadphase" {
         broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
         /**
          * Applies narrow phase on collision pairs to find actual area intersections
+         * Adds actual colliding pairs to stats' Frame data
          */
         narrowphase(pairs: Pair[], stats?: FrameStats): void;
         /**

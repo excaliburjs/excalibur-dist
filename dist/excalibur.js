@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1454+9fa3467 - 2017-05-22
+/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1454+9fa3467 - 2017-05-22
+/*! excalibur - v0.10.0-alpha.1467+ec75b46 - 2017-05-23
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2336,396 +2336,6 @@ define("DebugFlags", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Debug", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Debug statistics and flags for Excalibur. If polling these values, it would be
-     * best to do so on the `postupdate` event for [[Engine]], after all values have been
-     * updated during a frame.
-     */
-    var Debug = (function () {
-        function Debug() {
-            /**
-             * Performance statistics
-             */
-            this.stats = {
-                /**
-                 * Current frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
-                 * Best accessed on [[postframe]] event. See [[IFrameStats]]
-                 */
-                currFrame: new FrameStats(),
-                /**
-                 * Previous frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
-                 * Best accessed on [[preframe]] event. Best inspected on engine event `preframe`. See [[IFrameStats]]
-                 */
-                prevFrame: new FrameStats()
-            };
-        }
-        return Debug;
-    }());
-    exports.Debug = Debug;
-    /**
-     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
-     * creating instances of this every frame.
-     */
-    var FrameStats = (function () {
-        function FrameStats() {
-            this._id = 0;
-            this._delta = 0;
-            this._fps = 0;
-            this._actorStats = {
-                alive: 0,
-                killed: 0,
-                ui: 0,
-                get remaining() {
-                    return this.alive - this.killed;
-                },
-                get total() {
-                    return this.remaining + this.ui;
-                }
-            };
-            this._durationStats = {
-                update: 0,
-                draw: 0,
-                get total() {
-                    return this.update + this.draw;
-                }
-            };
-            this._physicsStats = new PhysicsStats();
-        }
-        /**
-         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        FrameStats.prototype.reset = function (otherStats) {
-            if (otherStats) {
-                this.id = otherStats.id;
-                this.delta = otherStats.delta;
-                this.fps = otherStats.fps;
-                this.actors.alive = otherStats.actors.alive;
-                this.actors.killed = otherStats.actors.killed;
-                this.actors.ui = otherStats.actors.ui;
-                this.duration.update = otherStats.duration.update;
-                this.duration.draw = otherStats.duration.draw;
-                this._physicsStats.reset(otherStats.physics);
-            }
-            else {
-                this.id = this.delta = this.fps = 0;
-                this.actors.alive = this.actors.killed = this.actors.ui = 0;
-                this.duration.update = this.duration.draw = 0;
-                this._physicsStats.reset();
-            }
-        };
-        /**
-         * Provides a clone of this instance.
-         */
-        FrameStats.prototype.clone = function () {
-            var fs = new FrameStats();
-            fs.reset(this);
-            return fs;
-        };
-        Object.defineProperty(FrameStats.prototype, "id", {
-            /**
-             * Gets the frame's id
-             */
-            get: function () {
-                return this._id;
-            },
-            /**
-             * Sets the frame's id
-             */
-            set: function (value) {
-                this._id = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FrameStats.prototype, "delta", {
-            /**
-             * Gets the frame's delta (time since last frame)
-             */
-            get: function () {
-                return this._delta;
-            },
-            /**
-             * Sets the frame's delta (time since last frame). Internal use only.
-             * @internal
-             */
-            set: function (value) {
-                this._delta = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FrameStats.prototype, "fps", {
-            /**
-             * Gets the frame's frames-per-second (FPS)
-             */
-            get: function () {
-                return this._fps;
-            },
-            /**
-             * Sets the frame's frames-per-second (FPS). Internal use only.
-             * @internal
-             */
-            set: function (value) {
-                this._fps = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FrameStats.prototype, "actors", {
-            /**
-             * Gets the frame's actor statistics
-             */
-            get: function () {
-                return this._actorStats;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FrameStats.prototype, "duration", {
-            /**
-             * Gets the frame's duration statistics
-             */
-            get: function () {
-                return this._durationStats;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FrameStats.prototype, "physics", {
-            /**
-             * Gets the frame's physics statistics
-             */
-            get: function () {
-                return this._physicsStats;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return FrameStats;
-    }());
-    exports.FrameStats = FrameStats;
-    var PhysicsStats = (function () {
-        function PhysicsStats() {
-            this._pairs = 0;
-            this._collisions = 0;
-            this._fastBodies = 0;
-            this._fastBodyCollisions = 0;
-            this._broadphase = 0;
-            this._narrowphase = 0;
-        }
-        /**
-         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
-         *
-         * @param [otherStats] Optional stats to clone
-         */
-        PhysicsStats.prototype.reset = function (otherStats) {
-            if (otherStats) {
-                this.pairs = otherStats.pairs;
-                this.collisions = otherStats.collisions;
-                this.fastBodies = otherStats.fastBodies;
-                this.fastBodyCollisions = otherStats.fastBodyCollisions;
-                this.broadphase = otherStats.broadphase;
-                this.narrowphase = otherStats.narrowphase;
-            }
-            else {
-                this.pairs = this.collisions = this.fastBodies = 0;
-                this.fastBodyCollisions = this.broadphase = this.narrowphase = 0;
-            }
-        };
-        /**
-         * Provides a clone of this instance.
-         */
-        PhysicsStats.prototype.clone = function () {
-            var ps = new PhysicsStats();
-            ps.reset(this);
-            return ps;
-        };
-        Object.defineProperty(PhysicsStats.prototype, "pairs", {
-            get: function () {
-                return this._pairs;
-            },
-            set: function (value) {
-                this._pairs = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PhysicsStats.prototype, "collisions", {
-            get: function () {
-                return this._collisions;
-            },
-            set: function (value) {
-                this._collisions = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
-            get: function () {
-                return this._fastBodies;
-            },
-            set: function (value) {
-                this._fastBodies = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
-            get: function () {
-                return this._fastBodyCollisions;
-            },
-            set: function (value) {
-                this._fastBodyCollisions = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PhysicsStats.prototype, "broadphase", {
-            get: function () {
-                return this._broadphase;
-            },
-            set: function (value) {
-                this._broadphase = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
-            get: function () {
-                return this._narrowphase;
-            },
-            set: function (value) {
-                this._narrowphase = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return PhysicsStats;
-    }());
-    exports.PhysicsStats = PhysicsStats;
-});
-define("Interfaces/IEvented", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-});
-define("EventDispatcher", ["require", "exports", "Events"], function (require, exports, Events_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Excalibur's internal event dispatcher implementation.
-     * Callbacks are fired immediately after an event is published.
-     * Typically you will use [[Class.eventDispatcher]] since most classes in
-     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
-     * yourself.
-     *
-     * [[include:Events.md]]
-     */
-    var EventDispatcher = (function () {
-        /**
-         * @param target  The object that will be the recipient of events from this event dispatcher
-         */
-        function EventDispatcher(target) {
-            this._handlers = {};
-            this._wiredEventDispatchers = [];
-            this._target = target;
-        }
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        EventDispatcher.prototype.emit = function (eventName, event) {
-            if (!eventName) {
-                // key not mapped
-                return;
-            }
-            eventName = eventName.toLowerCase();
-            var target = this._target;
-            if (!event) {
-                event = new Events_1.GameEvent();
-            }
-            event.target = target;
-            var i, len;
-            if (this._handlers[eventName]) {
-                i = 0;
-                len = this._handlers[eventName].length;
-                for (i; i < len; i++) {
-                    this._handlers[eventName][i].call(target, event);
-                }
-            }
-            i = 0;
-            len = this._wiredEventDispatchers.length;
-            for (i; i < len; i++) {
-                this._wiredEventDispatchers[i].emit(eventName, event);
-            }
-        };
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        EventDispatcher.prototype.on = function (eventName, handler) {
-            eventName = eventName.toLowerCase();
-            if (!this._handlers[eventName]) {
-                this._handlers[eventName] = [];
-            }
-            this._handlers[eventName].push(handler);
-            // meta event handlers
-            if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
-                this.emit('subscribe', new Events_1.SubscribeEvent(eventName, handler));
-            }
-        };
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        EventDispatcher.prototype.off = function (eventName, handler) {
-            eventName = eventName.toLowerCase();
-            var eventHandlers = this._handlers[eventName];
-            if (eventHandlers) {
-                // if no explicit handler is give with the event name clear all handlers
-                if (!handler) {
-                    this._handlers[eventName].length = 0;
-                }
-                else {
-                    var index = eventHandlers.indexOf(handler);
-                    this._handlers[eventName].splice(index, 1);
-                }
-            }
-            // meta event handlers
-            if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
-                this.emit('unsubscribe', new Events_1.UnsubscribeEvent(eventName, handler));
-            }
-        };
-        /**
-         * Wires this event dispatcher to also recieve events from another
-         */
-        EventDispatcher.prototype.wire = function (eventDispatcher) {
-            eventDispatcher._wiredEventDispatchers.push(this);
-        };
-        /**
-         * Unwires this event dispatcher from another
-         */
-        EventDispatcher.prototype.unwire = function (eventDispatcher) {
-            var index = eventDispatcher._wiredEventDispatchers.indexOf(this);
-            if (index > -1) {
-                eventDispatcher._wiredEventDispatchers.splice(index, 1);
-            }
-        };
-        return EventDispatcher;
-    }());
-    exports.EventDispatcher = EventDispatcher;
-});
 define("Drawing/Color", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -3057,7 +2667,7 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         return HSLColor;
     }());
 });
-define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Side_2, Actor_1, Algebra_4, Physics_1, Events_2, Util) {
+define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Side_2, Actor_1, Algebra_4, Physics_1, Events_1, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -3164,8 +2774,8 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
             var side = Util.getSideFromVector(this.mtv);
             var mtv = this.mtv.negate();
             // Publish collision events on both participants
-            bodyA.emit('collision', new Events_2.CollisionEvent(bodyA, bodyB, side, mtv));
-            bodyB.emit('collision', new Events_2.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
+            bodyA.emit('collision', new Events_1.CollisionEvent(bodyA, bodyB, side, mtv));
+            bodyB.emit('collision', new Events_1.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
             this._applyBoxImpluse(bodyA, bodyB, mtv, side);
             this._applyBoxImpluse(bodyB, bodyA, mtv.negate(), Util.getOppositeSide(side));
         };
@@ -3204,8 +2814,8 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
             }
             // Publish collision events on both participants
             var side = Util.getSideFromVector(this.mtv);
-            bodyA.actor.emit('collision', new Events_2.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-            bodyB.actor.emit('collision', new Events_2.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
+            bodyA.actor.emit('collision', new Events_1.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyB.actor.emit('collision', new Events_1.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
             // Collision impulse formula from Chris Hecker
             // https://en.wikipedia.org/wiki/Collision_response
             var impulse = -((1 + coefRestitution) * rvNormal) /
@@ -3284,143 +2894,7 @@ define("Collision/ICollisionArea", ["require", "exports"], function (require, ex
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/CollisionJumpTable", ["require", "exports", "Collision/CollisionContact", "Collision/PolygonArea"], function (require, exports, CollisionContact_1, PolygonArea_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.CollisionJumpTable = {
-        CollideCircleCircle: function (circleA, circleB) {
-            var radius = circleA.radius + circleB.radius;
-            var circleAPos = circleA.body.pos.add(circleA.pos);
-            var circleBPos = circleB.body.pos.add(circleB.pos);
-            if (circleAPos.distance(circleBPos) > radius) {
-                return null;
-            }
-            var axisOfCollision = circleBPos.sub(circleAPos).normalize();
-            var mvt = axisOfCollision.scale(radius - circleBPos.distance(circleAPos));
-            var pointOfCollision = circleA.getFurthestPoint(axisOfCollision);
-            return new CollisionContact_1.CollisionContact(circleA, circleB, mvt, pointOfCollision, axisOfCollision);
-        },
-        CollideCirclePolygon: function (circle, polygon) {
-            var minAxis = circle.testSeparatingAxisTheorem(polygon);
-            if (!minAxis) {
-                return null;
-            }
-            // make sure that the minAxis is pointing away from circle
-            var samedir = minAxis.dot(polygon.getCenter().sub(circle.getCenter()));
-            minAxis = samedir < 0 ? minAxis.negate() : minAxis;
-            var verts = [];
-            var point1 = polygon.getFurthestPoint(minAxis.negate());
-            var point2 = circle.getFurthestPoint(minAxis); //.add(cc);
-            if (circle.contains(point1)) {
-                verts.push(point1);
-            }
-            if (polygon.contains(point2)) {
-                verts.push(point2);
-            }
-            if (verts.length === 0) {
-                verts.push(point2);
-            }
-            return new CollisionContact_1.CollisionContact(circle, polygon, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
-        },
-        CollideCircleEdge: function (circle, edge) {
-            // center of the circle
-            var cc = circle.getCenter();
-            // vector in the direction of the edge
-            var e = edge.end.sub(edge.begin);
-            // amount of overlap with the circle's center along the edge direction
-            var u = e.dot(edge.end.sub(cc));
-            var v = e.dot(cc.sub(edge.begin));
-            // Potential region A collision (circle is on the left side of the edge, before the beginning)
-            if (v <= 0) {
-                var da = edge.begin.sub(cc);
-                var dda = da.dot(da); // quick and dirty way of calc'n distance in r^2 terms saves some sqrts
-                // save some sqrts
-                if (dda > circle.radius * circle.radius) {
-                    return null; // no collision
-                }
-                return new CollisionContact_1.CollisionContact(circle, edge, da.normalize().scale(circle.radius - Math.sqrt(dda)), edge.begin, da.normalize());
-            }
-            // Potential region B collision (circle is on the right side of the edge, after the end)
-            if (u <= 0) {
-                var db = edge.end.sub(cc);
-                var ddb = db.dot(db);
-                if (ddb > circle.radius * circle.radius) {
-                    return null;
-                }
-                return new CollisionContact_1.CollisionContact(circle, edge, db.normalize().scale(circle.radius - Math.sqrt(ddb)), edge.end, db.normalize());
-            }
-            // Otherwise potential region AB collision (circle is in the middle of the edge between the beginning and end)
-            var den = e.dot(e);
-            var pointOnEdge = (edge.begin.scale(u).add(edge.end.scale(v))).scale(1 / den);
-            var d = cc.sub(pointOnEdge);
-            var dd = d.dot(d);
-            if (dd > circle.radius * circle.radius) {
-                return null; // no collision
-            }
-            var n = e.perpendicular();
-            // flip correct direction
-            if (n.dot(cc.sub(edge.begin)) < 0) {
-                n.x = -n.x;
-                n.y = -n.y;
-            }
-            n = n.normalize();
-            var mvt = n.scale(Math.abs(circle.radius - Math.sqrt(dd)));
-            return new CollisionContact_1.CollisionContact(circle, edge, mvt.negate(), pointOnEdge, n.negate());
-        },
-        CollideEdgeEdge: function () {
-            // Edge-edge collision doesn't make sense
-            return null;
-        },
-        CollidePolygonEdge: function (polygon, edge) {
-            var e = edge.end.sub(edge.begin);
-            var edgeNormal = e.normal();
-            // build a temporary polygon from the edge to use SAT
-            var linePoly = new PolygonArea_1.PolygonArea({
-                points: [
-                    edge.begin,
-                    edge.end,
-                    edge.end.sub(edgeNormal.scale(10)),
-                    edge.begin.sub(edgeNormal.scale(10))
-                ]
-            });
-            var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
-            // no minAxis, no overlap, no collision
-            if (!minAxis) {
-                return null;
-            }
-            return new CollisionContact_1.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal.negate()), edgeNormal.negate());
-        },
-        CollidePolygonPolygon: function (polyA, polyB) {
-            // do a SAT test to find a min axis if it exists
-            var minAxis = polyA.testSeparatingAxisTheorem(polyB);
-            // no overlap, no collision return null
-            if (!minAxis) {
-                return null;
-            }
-            // make sure that minAxis is pointing from A -> B
-            var sameDir = minAxis.dot(polyB.getCenter().sub(polyA.getCenter()));
-            minAxis = sameDir < 0 ? minAxis.negate() : minAxis;
-            // find rough point of collision
-            // todo this could be better
-            var verts = [];
-            var pointA = polyA.getFurthestPoint(minAxis);
-            var pointB = polyB.getFurthestPoint(minAxis.negate());
-            if (polyB.contains(pointA)) {
-                verts.push(pointA);
-            }
-            if (polyA.contains(pointB)) {
-                verts.push(pointB);
-            }
-            // no candidates, pick something
-            if (verts.length === 0) {
-                verts.push(pointB);
-            }
-            var contact = verts.length === 2 ? verts[0].add(verts[1]).scale(.5) : verts[0];
-            return new CollisionContact_1.CollisionContact(polyA, polyB, minAxis, contact, minAxis.normalize());
-        }
-    };
-});
-define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "Collision/PolygonArea", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_1, PolygonArea_2, EdgeArea_1, CollisionJumpTable_1, Algebra_5, Physics_2, Color_1) {
+define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "Collision/PolygonArea", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_1, PolygonArea_1, EdgeArea_1, CollisionJumpTable_1, Algebra_5, Physics_2, Color_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -3499,7 +2973,7 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
             if (area instanceof CircleArea) {
                 return CollisionJumpTable_1.CollisionJumpTable.CollideCircleCircle(this, area);
             }
-            else if (area instanceof PolygonArea_2.PolygonArea) {
+            else if (area instanceof PolygonArea_1.PolygonArea) {
                 return CollisionJumpTable_1.CollisionJumpTable.CollideCirclePolygon(this, area);
             }
             else if (area instanceof EdgeArea_1.EdgeArea) {
@@ -3603,500 +3077,143 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
     }());
     exports.CircleArea = CircleArea;
 });
-define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (require, exports, Color_2) {
+define("Collision/CollisionJumpTable", ["require", "exports", "Collision/CollisionContact", "Collision/PolygonArea"], function (require, exports, CollisionContact_1, PolygonArea_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Draw a line on canvas context
-     *
-     * @param ctx The canvas context
-     * @param color The color of the line
-     * @param x1 The start x coordinate
-     * @param y1 The start y coordinate
-     * @param x2 The ending x coordinate
-     * @param y2 The ending y coordinate
-     * @param thickness The line thickness
-     * @param cap The [[LineCapStyle]] (butt, round, or square)
-     */
-    /* istanbul ignore next */
-    function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
-        if (color === void 0) { color = Color_2.Color.Red.clone(); }
-        if (thickness === void 0) { thickness = 1; }
-        if (cap === void 0) { cap = 'butt'; }
-        ctx.beginPath();
-        ctx.lineWidth = thickness;
-        ctx.lineCap = cap;
-        ctx.strokeStyle = color.toString();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    exports.line = line;
-    /**
-     * Draw the vector as a point onto the canvas.
-     */
-    /* istanbul ignore next */
-    function point(ctx, color, point) {
-        if (color === void 0) { color = Color_2.Color.Red.clone(); }
-        ctx.beginPath();
-        ctx.strokeStyle = color.toString();
-        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    exports.point = point;
-    /**
-     * Draw the vector as a line onto the canvas starting a origin point.
-     */
-    /* istanbul ignore next */
-    function vector(ctx, color, origin, vector, scale) {
-        if (scale === void 0) { scale = 1.0; }
-        var c = color ? color.toString() : 'blue';
-        var v = vector.scale(scale);
-        ctx.beginPath();
-        ctx.strokeStyle = c;
-        ctx.moveTo(origin.x, origin.y);
-        ctx.lineTo(origin.x + v.x, origin.y + v.y);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    exports.vector = vector;
-    /**
-     * Draw a round rectangle on a canvas context
-     *
-     * @param ctx The canvas context
-     * @param x The top-left x coordinate
-     * @param y The top-left y coordinate
-     * @param width The width of the rectangle
-     * @param height The height of the rectangle
-     * @param radius The border radius of the rectangle
-     * @param fill The [[Color]] to fill rectangle with
-     * @param stroke The [[Color]] to stroke rectangle with
-     */
-    function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
-        if (radius === void 0) { radius = 5; }
-        if (stroke === void 0) { stroke = Color_2.Color.White; }
-        if (fill === void 0) { fill = null; }
-        var br;
-        if (typeof radius === 'number') {
-            br = { tl: radius, tr: radius, br: radius, bl: radius };
-        }
-        else {
-            var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-            for (var prop in defaultRadius) {
-                if (defaultRadius.hasOwnProperty(prop)) {
-                    var side = prop;
-                    br[side] = radius[side] || defaultRadius[side];
-                }
-            }
-        }
-        ctx.beginPath();
-        ctx.moveTo(x + br.tl, y);
-        ctx.lineTo(x + width - br.tr, y);
-        ctx.quadraticCurveTo(x + width, y, x + width, y + br.tr);
-        ctx.lineTo(x + width, y + height - br.br);
-        ctx.quadraticCurveTo(x + width, y + height, x + width - br.br, y + height);
-        ctx.lineTo(x + br.bl, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - br.bl);
-        ctx.lineTo(x, y + br.tl);
-        ctx.quadraticCurveTo(x, y, x + br.tl, y);
-        ctx.closePath();
-        if (fill) {
-            ctx.fillStyle = fill.toString();
-            ctx.fill();
-        }
-        if (stroke) {
-            ctx.strokeStyle = stroke.toString();
-            ctx.stroke();
-        }
-    }
-    exports.roundRect = roundRect;
-    function circle(ctx, x, y, radius, stroke, fill) {
-        if (stroke === void 0) { stroke = Color_2.Color.White; }
-        if (fill === void 0) { fill = null; }
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.closePath();
-        if (fill) {
-            ctx.fillStyle = fill.toString();
-            ctx.fill();
-        }
-        if (stroke) {
-            ctx.strokeStyle = stroke.toString();
-            ctx.stroke();
-        }
-    }
-    exports.circle = circle;
-});
-define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_3, EdgeArea_2, CircleArea_1, PolygonArea_3, Algebra_6, Color_3, DrawUtil) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var Body = (function () {
-        /**
-         * Constructs a new physics body associated with an actor
-         */
-        function Body(actor) {
-            this.actor = actor;
-            /**
-             * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
-             */
-            this.collisionArea = null;
-            /**
-             * The (x, y) position of the actor this will be in the middle of the actor if the
-             * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-             * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-             */
-            this.pos = new Algebra_6.Vector(0, 0);
-            /**
-             * The position of the actor last frame (x, y) in pixels
-             */
-            this.oldPos = new Algebra_6.Vector(0, 0);
-            /**
-             * The current velocity vector (vx, vy) of the actor in pixels/second
-             */
-            this.vel = new Algebra_6.Vector(0, 0);
-            /**
-             * The velocity of the actor last frame (vx, vy) in pixels/second
-             */
-            this.oldVel = new Algebra_6.Vector(0, 0);
-            /**
-             * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
-             * be useful to simulate a gravitational effect.
-             */
-            this.acc = new Algebra_6.Vector(0, 0);
-            /**
-             * The current torque applied to the actor
-             */
-            this.torque = 0;
-            /**
-             * The current mass of the actor, mass can be thought of as the resistance to acceleration.
-             */
-            this.mass = 1.0;
-            /**
-             * The current moment of inertia, moi can be thought of as the resistance to rotation.
-             */
-            this.moi = 1000;
-            /**
-             * The current "motion" of the actor, used to calculated sleep in the physics simulation
-             */
-            this.motion = 10;
-            /**
-             * The coefficient of friction on this actor
-             */
-            this.friction = .99;
-            /**
-             * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
-             */
-            this.restitution = .2;
-            /**
-             * The rotation of the actor in radians
-             */
-            this.rotation = 0; // radians
-            /**
-             * The rotational velocity of the actor in radians/second
-             */
-            this.rx = 0; //radians/sec
-            this._totalMtv = Algebra_6.Vector.Zero.clone();
-        }
-        /**
-         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
-         */
-        Body.prototype.addMtv = function (mtv) {
-            this._totalMtv.addEqual(mtv);
-        };
-        /**
-         * Applies the accumulated translation vectors to the actors position
-         */
-        Body.prototype.applyMtv = function () {
-            this.pos.addEqual(this._totalMtv);
-            this._totalMtv.setTo(0, 0);
-        };
-        /**
-         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
-         */
-        Body.prototype.getBounds = function () {
-            if (Physics_3.Physics.collisionResolutionStrategy === Physics_3.CollisionResolutionStrategy.Box) {
-                return this.actor.getBounds();
-            }
-            else {
-                return this.collisionArea.getBounds();
-            }
-        };
-        /**
-         * Returns the actor's [[BoundingBox]] relative to the actors position.
-         */
-        Body.prototype.getRelativeBounds = function () {
-            if (Physics_3.Physics.collisionResolutionStrategy === Physics_3.CollisionResolutionStrategy.Box) {
-                return this.actor.getRelativeBounds();
-            }
-            else {
-                return this.actor.getRelativeBounds();
-            }
-        };
-        /**
-         * Updates the collision area geometry and internal caches
-         */
-        Body.prototype.update = function () {
-            if (this.collisionArea) {
-                this.collisionArea.recalc();
-            }
-        };
-        /**
-         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        Body.prototype.useBoxCollision = function (center) {
-            if (center === void 0) { center = Algebra_6.Vector.Zero.clone(); }
-            this.collisionArea = new PolygonArea_3.PolygonArea({
-                body: this,
-                points: this.actor.getRelativeBounds().getPoints(),
-                pos: center // position relative to actor
-            });
-            // in case of a nan moi, coalesce to a safe default
-            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
-        };
-        /**
-         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
-         *
-         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        Body.prototype.usePolygonCollision = function (points, center) {
-            if (center === void 0) { center = Algebra_6.Vector.Zero.clone(); }
-            this.collisionArea = new PolygonArea_3.PolygonArea({
-                body: this,
-                points: points,
-                pos: center // position relative to actor
-            });
-            // in case of a nan moi, collesce to a safe default
-            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
-        };
-        /**
-         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        Body.prototype.useCircleCollision = function (radius, center) {
-            if (center === void 0) { center = Algebra_6.Vector.Zero.clone(); }
-            if (!radius) {
-                radius = this.actor.getWidth() / 2;
-            }
-            this.collisionArea = new CircleArea_1.CircleArea({
-                body: this,
-                radius: radius,
-                pos: center
-            });
-            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
-        };
-        /**
-         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
-         * of this physics body.
-         *
-         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
-         */
-        Body.prototype.useEdgeCollision = function (begin, end) {
-            this.collisionArea = new EdgeArea_2.EdgeArea({
-                begin: begin,
-                end: end,
-                body: this
-            });
-            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
-        };
-        /* istanbul ignore next */
-        Body.prototype.debugDraw = function (ctx) {
-            // Draw motion vectors
-            if (Physics_3.Physics.showMotionVectors) {
-                DrawUtil.vector(ctx, Color_3.Color.Yellow, this.pos, (this.acc.add(Physics_3.Physics.acc)));
-                DrawUtil.vector(ctx, Color_3.Color.Red, this.pos, (this.vel));
-                DrawUtil.point(ctx, Color_3.Color.Red, this.pos);
-            }
-            if (Physics_3.Physics.showBounds) {
-                this.getBounds().debugDraw(ctx, Color_3.Color.Yellow);
-            }
-            if (Physics_3.Physics.showArea) {
-                this.collisionArea.debugDraw(ctx, Color_3.Color.Green);
-            }
-        };
-        return Body;
-    }());
-    exports.Body = Body;
-});
-define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_2, CollisionJumpTable_2, CircleArea_2, PolygonArea_4, Algebra_7, Physics_4, Color_4) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var EdgeArea = (function () {
-        function EdgeArea(options) {
-            this.begin = options.begin || Algebra_7.Vector.Zero.clone();
-            this.end = options.end || Algebra_7.Vector.Zero.clone();
-            this.body = options.body || null;
-            this.pos = this.getCenter();
-        }
-        /**
-         * Get the center of the collision area in world coordinates
-         */
-        EdgeArea.prototype.getCenter = function () {
-            var pos = this.begin.average(this.end).add(this._getBodyPos());
-            return pos;
-        };
-        EdgeArea.prototype._getBodyPos = function () {
-            var bodyPos = Algebra_7.Vector.Zero.clone();
-            if (this.body.pos) {
-                bodyPos = this.body.pos;
-            }
-            return bodyPos;
-        };
-        EdgeArea.prototype._getTransformedBegin = function () {
-            var angle = this.body ? this.body.rotation : 0;
-            return this.begin.rotate(angle).add(this._getBodyPos());
-        };
-        EdgeArea.prototype._getTransformedEnd = function () {
-            var angle = this.body ? this.body.rotation : 0;
-            return this.end.rotate(angle).add(this._getBodyPos());
-        };
-        /**
-         * Returns the slope of the line in the form of a vector
-         */
-        EdgeArea.prototype.getSlope = function () {
-            var begin = this._getTransformedBegin();
-            var end = this._getTransformedEnd();
-            var distance = begin.distance(end);
-            return end.sub(begin).scale(1 / distance);
-        };
-        /**
-         * Returns the length of the line segment in pixels
-         */
-        EdgeArea.prototype.getLength = function () {
-            var begin = this._getTransformedBegin();
-            var end = this._getTransformedEnd();
-            var distance = begin.distance(end);
-            return distance;
-        };
-        /**
-         * Tests if a point is contained in this collision area
-         */
-        EdgeArea.prototype.contains = function () {
-            return false;
-        };
-        /**
-         * @inheritdoc
-         */
-        EdgeArea.prototype.rayCast = function (ray, max) {
-            if (max === void 0) { max = Infinity; }
-            var numerator = this._getTransformedBegin().sub(ray.pos);
-            // Test is line and ray are parallel and non intersecting
-            if (ray.dir.cross(this.getSlope()) === 0 && numerator.cross(ray.dir) !== 0) {
+    exports.CollisionJumpTable = {
+        CollideCircleCircle: function (circleA, circleB) {
+            var radius = circleA.radius + circleB.radius;
+            var circleAPos = circleA.body.pos.add(circleA.pos);
+            var circleBPos = circleB.body.pos.add(circleB.pos);
+            if (circleAPos.distance(circleBPos) > radius) {
                 return null;
             }
-            // Lines are parallel
-            var divisor = (ray.dir.cross(this.getSlope()));
-            if (divisor === 0) {
+            var axisOfCollision = circleBPos.sub(circleAPos).normalize();
+            var mvt = axisOfCollision.scale(radius - circleBPos.distance(circleAPos));
+            var pointOfCollision = circleA.getFurthestPoint(axisOfCollision);
+            return new CollisionContact_1.CollisionContact(circleA, circleB, mvt, pointOfCollision, axisOfCollision);
+        },
+        CollideCirclePolygon: function (circle, polygon) {
+            var minAxis = circle.testSeparatingAxisTheorem(polygon);
+            if (!minAxis) {
                 return null;
             }
-            var t = numerator.cross(this.getSlope()) / divisor;
-            if (t >= 0 && t <= max) {
-                var u = (numerator.cross(ray.dir) / divisor) / this.getLength();
-                if (u >= 0 && u <= 1) {
-                    return ray.getPoint(t);
-                }
+            // make sure that the minAxis is pointing away from circle
+            var samedir = minAxis.dot(polygon.getCenter().sub(circle.getCenter()));
+            minAxis = samedir < 0 ? minAxis.negate() : minAxis;
+            var verts = [];
+            var point1 = polygon.getFurthestPoint(minAxis.negate());
+            var point2 = circle.getFurthestPoint(minAxis); //.add(cc);
+            if (circle.contains(point1)) {
+                verts.push(point1);
             }
+            if (polygon.contains(point2)) {
+                verts.push(point2);
+            }
+            if (verts.length === 0) {
+                verts.push(point2);
+            }
+            return new CollisionContact_1.CollisionContact(circle, polygon, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
+        },
+        CollideCircleEdge: function (circle, edge) {
+            // center of the circle
+            var cc = circle.getCenter();
+            // vector in the direction of the edge
+            var e = edge.end.sub(edge.begin);
+            // amount of overlap with the circle's center along the edge direction
+            var u = e.dot(edge.end.sub(cc));
+            var v = e.dot(cc.sub(edge.begin));
+            // Potential region A collision (circle is on the left side of the edge, before the beginning)
+            if (v <= 0) {
+                var da = edge.begin.sub(cc);
+                var dda = da.dot(da); // quick and dirty way of calc'n distance in r^2 terms saves some sqrts
+                // save some sqrts
+                if (dda > circle.radius * circle.radius) {
+                    return null; // no collision
+                }
+                return new CollisionContact_1.CollisionContact(circle, edge, da.normalize().scale(circle.radius - Math.sqrt(dda)), edge.begin, da.normalize());
+            }
+            // Potential region B collision (circle is on the right side of the edge, after the end)
+            if (u <= 0) {
+                var db = edge.end.sub(cc);
+                var ddb = db.dot(db);
+                if (ddb > circle.radius * circle.radius) {
+                    return null;
+                }
+                return new CollisionContact_1.CollisionContact(circle, edge, db.normalize().scale(circle.radius - Math.sqrt(ddb)), edge.end, db.normalize());
+            }
+            // Otherwise potential region AB collision (circle is in the middle of the edge between the beginning and end)
+            var den = e.dot(e);
+            var pointOnEdge = (edge.begin.scale(u).add(edge.end.scale(v))).scale(1 / den);
+            var d = cc.sub(pointOnEdge);
+            var dd = d.dot(d);
+            if (dd > circle.radius * circle.radius) {
+                return null; // no collision
+            }
+            var n = e.perpendicular();
+            // flip correct direction
+            if (n.dot(cc.sub(edge.begin)) < 0) {
+                n.x = -n.x;
+                n.y = -n.y;
+            }
+            n = n.normalize();
+            var mvt = n.scale(Math.abs(circle.radius - Math.sqrt(dd)));
+            return new CollisionContact_1.CollisionContact(circle, edge, mvt.negate(), pointOnEdge, n.negate());
+        },
+        CollideEdgeEdge: function () {
+            // Edge-edge collision doesn't make sense
             return null;
-        };
-        /**
-         * @inheritdoc
-         */
-        EdgeArea.prototype.collide = function (area) {
-            if (area instanceof CircleArea_2.CircleArea) {
-                return CollisionJumpTable_2.CollisionJumpTable.CollideCircleEdge(area, this);
-            }
-            else if (area instanceof PolygonArea_4.PolygonArea) {
-                return CollisionJumpTable_2.CollisionJumpTable.CollidePolygonEdge(area, this);
-            }
-            else if (area instanceof EdgeArea) {
-                return CollisionJumpTable_2.CollisionJumpTable.CollideEdgeEdge();
-            }
-            else {
-                throw new Error("Edge could not collide with unknown ICollisionArea " + typeof area);
-            }
-        };
-        /**
-         * Find the point on the shape furthest in the direction specified
-         */
-        EdgeArea.prototype.getFurthestPoint = function (direction) {
-            var transformedBegin = this._getTransformedBegin();
-            var transformedEnd = this._getTransformedEnd();
-            if (direction.dot(transformedBegin) > 0) {
-                return transformedBegin;
-            }
-            else {
-                return transformedEnd;
-            }
-        };
-        /**
-         * Get the axis aligned bounding box for the circle area
-         */
-        EdgeArea.prototype.getBounds = function () {
-            var transformedBegin = this._getTransformedBegin();
-            var transformedEnd = this._getTransformedEnd();
-            return new BoundingBox_2.BoundingBox(Math.min(transformedBegin.x, transformedEnd.x), Math.min(transformedBegin.y, transformedEnd.y), Math.max(transformedBegin.x, transformedEnd.x), Math.max(transformedBegin.y, transformedEnd.y));
-        };
-        /**
-         * Get the axis associated with the edge
-         */
-        EdgeArea.prototype.getAxes = function () {
-            var e = this._getTransformedEnd().sub(this._getTransformedBegin());
+        },
+        CollidePolygonEdge: function (polygon, edge) {
+            var e = edge.end.sub(edge.begin);
             var edgeNormal = e.normal();
-            var axes = [];
-            axes.push(edgeNormal);
-            axes.push(edgeNormal.negate());
-            axes.push(edgeNormal.normal());
-            axes.push(edgeNormal.normal().negate());
-            return axes;
-        };
-        /**
-         * Get the moment of inertia for an edge
-         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-         */
-        EdgeArea.prototype.getMomentOfInertia = function () {
-            var mass = this.body ? this.body.mass : Physics_4.Physics.defaultMass;
-            var length = this.end.sub(this.begin).distance() / 2;
-            return mass * length * length;
-        };
-        /**
-         * @inheritdoc
-         */
-        EdgeArea.prototype.recalc = function () {
-            // edges don't have any cached data
-        };
-        /**
-         * Project the edge along a specified axis
-         */
-        EdgeArea.prototype.project = function (axis) {
-            var scalars = [];
-            var points = [this._getTransformedBegin(), this._getTransformedEnd()];
-            var len = points.length;
-            for (var i = 0; i < len; i++) {
-                scalars.push(points[i].dot(axis));
+            // build a temporary polygon from the edge to use SAT
+            var linePoly = new PolygonArea_2.PolygonArea({
+                points: [
+                    edge.begin,
+                    edge.end,
+                    edge.end.sub(edgeNormal.scale(10)),
+                    edge.begin.sub(edgeNormal.scale(10))
+                ]
+            });
+            var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
+            // no minAxis, no overlap, no collision
+            if (!minAxis) {
+                return null;
             }
-            return new Algebra_7.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
-        };
-        /* istanbul ignore next */
-        EdgeArea.prototype.debugDraw = function (ctx, color) {
-            if (color === void 0) { color = Color_4.Color.Red.clone(); }
-            ctx.strokeStyle = color.toString();
-            ctx.beginPath();
-            ctx.moveTo(this.begin.x, this.begin.y);
-            ctx.lineTo(this.end.x, this.end.y);
-            ctx.closePath();
-            ctx.stroke();
-        };
-        return EdgeArea;
-    }());
-    exports.EdgeArea = EdgeArea;
+            return new CollisionContact_1.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal.negate()), edgeNormal.negate());
+        },
+        CollidePolygonPolygon: function (polyA, polyB) {
+            // do a SAT test to find a min axis if it exists
+            var minAxis = polyA.testSeparatingAxisTheorem(polyB);
+            // no overlap, no collision return null
+            if (!minAxis) {
+                return null;
+            }
+            // make sure that minAxis is pointing from A -> B
+            var sameDir = minAxis.dot(polyB.getCenter().sub(polyA.getCenter()));
+            minAxis = sameDir < 0 ? minAxis.negate() : minAxis;
+            // find rough point of collision
+            // todo this could be better
+            var verts = [];
+            var pointA = polyA.getFurthestPoint(minAxis);
+            var pointB = polyB.getFurthestPoint(minAxis.negate());
+            if (polyB.contains(pointA)) {
+                verts.push(pointA);
+            }
+            if (polyA.contains(pointB)) {
+                verts.push(pointB);
+            }
+            // no candidates, pick something
+            if (verts.length === 0) {
+                verts.push(pointB);
+            }
+            var contact = verts.length === 2 ? verts[0].add(verts[1]).scale(.5) : verts[0];
+            return new CollisionContact_1.CollisionContact(polyA, polyB, minAxis, contact, minAxis.normalize());
+        }
+    };
 });
-define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics", "Collision/BoundingBox", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Collision/CircleArea", "Algebra"], function (require, exports, Color_5, Physics_5, BoundingBox_3, EdgeArea_3, CollisionJumpTable_3, CircleArea_3, Algebra_8) {
+define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics", "Collision/BoundingBox", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Collision/CircleArea", "Algebra"], function (require, exports, Color_2, Physics_3, BoundingBox_2, EdgeArea_2, CollisionJumpTable_2, CircleArea_1, Algebra_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -4107,7 +3224,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             this._transformedPoints = [];
             this._axes = [];
             this._sides = [];
-            this.pos = options.pos || Algebra_8.Vector.Zero.clone();
+            this.pos = options.pos || Algebra_6.Vector.Zero.clone();
             var winding = !!options.clockwiseWinding;
             this.points = (winding ? options.points.reverse() : options.points) || [];
             this.body = options.body || null;
@@ -4156,7 +3273,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             var points = this.getTransformedPoints();
             var len = points.length;
             for (var i = 0; i < len; i++) {
-                lines.push(new Algebra_8.Line(points[i], points[(i - 1 + len) % len]));
+                lines.push(new Algebra_6.Line(points[i], points[(i - 1 + len) % len]));
             }
             this._sides = lines;
             return this._sides;
@@ -4175,7 +3292,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
         PolygonArea.prototype.contains = function (point) {
             // Always cast to the right, as long as we cast in a consitent fixed direction we
             // will be fine
-            var testRay = new Algebra_8.Ray(point, new Algebra_8.Vector(1, 0));
+            var testRay = new Algebra_6.Ray(point, new Algebra_6.Vector(1, 0));
             var intersectCount = this.getSides().reduce(function (accum, side) {
                 if (testRay.intersect(side) >= 0) {
                     return accum + 1;
@@ -4193,14 +3310,14 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
          * @param area
          */
         PolygonArea.prototype.collide = function (area) {
-            if (area instanceof CircleArea_3.CircleArea) {
-                return CollisionJumpTable_3.CollisionJumpTable.CollideCirclePolygon(area, this);
+            if (area instanceof CircleArea_1.CircleArea) {
+                return CollisionJumpTable_2.CollisionJumpTable.CollideCirclePolygon(area, this);
             }
             else if (area instanceof PolygonArea) {
-                return CollisionJumpTable_3.CollisionJumpTable.CollidePolygonPolygon(this, area);
+                return CollisionJumpTable_2.CollisionJumpTable.CollidePolygonPolygon(this, area);
             }
-            else if (area instanceof EdgeArea_3.EdgeArea) {
-                return CollisionJumpTable_3.CollisionJumpTable.CollidePolygonEdge(this, area);
+            else if (area instanceof EdgeArea_2.EdgeArea) {
+                return CollisionJumpTable_2.CollisionJumpTable.CollidePolygonEdge(this, area);
             }
             else {
                 throw new Error("Polygon could not collide with unknown ICollisionArea " + typeof area);
@@ -4240,14 +3357,14 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             var maxY = points.reduce(function (prev, curr) {
                 return Math.max(prev, curr.y);
             }, -9999999999);
-            return new BoundingBox_3.BoundingBox(minX, minY, maxX, maxY);
+            return new BoundingBox_2.BoundingBox(minX, minY, maxX, maxY);
         };
         /**
          * Get the moment of inertia for an arbitrary polygon
          * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
          */
         PolygonArea.prototype.getMomentOfInertia = function () {
-            var mass = this.body ? this.body.mass : Physics_5.Physics.defaultMass;
+            var mass = this.body ? this.body.mass : Physics_3.Physics.defaultMass;
             var numerator = 0;
             var denominator = 0;
             for (var i = 0; i < this.points.length; i++) {
@@ -4346,11 +3463,11 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
                 min = Math.min(min, scalar);
                 max = Math.max(max, scalar);
             }
-            return new Algebra_8.Projection(min, max);
+            return new Algebra_6.Projection(min, max);
         };
         /* istanbul ignore next */
         PolygonArea.prototype.debugDraw = function (ctx, color) {
-            if (color === void 0) { color = Color_5.Color.Red.clone(); }
+            if (color === void 0) { color = Color_2.Color.Red.clone(); }
             ctx.beginPath();
             ctx.strokeStyle = color.toString();
             // Iterate through the supplied points and construct a 'polygon'
@@ -4367,7 +3484,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
     }());
     exports.PolygonArea = PolygonArea;
 });
-define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", "Algebra", "Drawing/Color"], function (require, exports, PolygonArea_5, Algebra_9, Color_6) {
+define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", "Algebra", "Drawing/Color"], function (require, exports, PolygonArea_3, Algebra_7, Color_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -4427,7 +3544,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
          * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default
          */
         BoundingBox.prototype.rotate = function (angle, point) {
-            if (point === void 0) { point = Algebra_9.Vector.Zero.clone(); }
+            if (point === void 0) { point = Algebra_7.Vector.Zero.clone(); }
             var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
             return BoundingBox.fromPoints(points);
         };
@@ -4441,20 +3558,20 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
         };
         BoundingBox.prototype.getPoints = function () {
             var results = [];
-            results.push(new Algebra_9.Vector(this.left, this.top));
-            results.push(new Algebra_9.Vector(this.right, this.top));
-            results.push(new Algebra_9.Vector(this.right, this.bottom));
-            results.push(new Algebra_9.Vector(this.left, this.bottom));
+            results.push(new Algebra_7.Vector(this.left, this.top));
+            results.push(new Algebra_7.Vector(this.right, this.top));
+            results.push(new Algebra_7.Vector(this.right, this.bottom));
+            results.push(new Algebra_7.Vector(this.left, this.bottom));
             return results;
         };
         /**
          * Creates a Polygon collision area from the points of the bounding box
          */
         BoundingBox.prototype.toPolygon = function (actor) {
-            return new PolygonArea_5.PolygonArea({
+            return new PolygonArea_3.PolygonArea({
                 body: actor ? actor.body : null,
                 points: this.getPoints(),
-                pos: Algebra_9.Vector.Zero.clone()
+                pos: Algebra_7.Vector.Zero.clone()
             });
         };
         /**
@@ -4480,7 +3597,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
         };
         BoundingBox.prototype.contains = function (val) {
-            if (val instanceof Algebra_9.Vector) {
+            if (val instanceof Algebra_7.Vector) {
                 return (this.left <= val.x && this.top <= val.y && this.bottom >= val.y && this.right >= val.x);
             }
             else if (val instanceof BoundingBox) {
@@ -4531,10 +3648,10 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
                         overlapY = other.top - this.bottom;
                     }
                     if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                        return new Algebra_9.Vector(overlapX, 0);
+                        return new Algebra_7.Vector(overlapX, 0);
                     }
                     else {
-                        return new Algebra_9.Vector(0, overlapY);
+                        return new Algebra_7.Vector(0, overlapY);
                     }
                 }
                 else {
@@ -4545,13 +3662,991 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
         };
         /* istanbul ignore next */
         BoundingBox.prototype.debugDraw = function (ctx, color) {
-            if (color === void 0) { color = Color_6.Color.Yellow; }
+            if (color === void 0) { color = Color_3.Color.Yellow; }
             ctx.strokeStyle = color.toString();
             ctx.strokeRect(this.left, this.top, this.getWidth(), this.getHeight());
         };
         return BoundingBox;
     }());
     exports.BoundingBox = BoundingBox;
+});
+define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_3, CollisionJumpTable_3, CircleArea_2, PolygonArea_4, Algebra_8, Physics_4, Color_4) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var EdgeArea = (function () {
+        function EdgeArea(options) {
+            this.begin = options.begin || Algebra_8.Vector.Zero.clone();
+            this.end = options.end || Algebra_8.Vector.Zero.clone();
+            this.body = options.body || null;
+            this.pos = this.getCenter();
+        }
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        EdgeArea.prototype.getCenter = function () {
+            var pos = this.begin.average(this.end).add(this._getBodyPos());
+            return pos;
+        };
+        EdgeArea.prototype._getBodyPos = function () {
+            var bodyPos = Algebra_8.Vector.Zero.clone();
+            if (this.body.pos) {
+                bodyPos = this.body.pos;
+            }
+            return bodyPos;
+        };
+        EdgeArea.prototype._getTransformedBegin = function () {
+            var angle = this.body ? this.body.rotation : 0;
+            return this.begin.rotate(angle).add(this._getBodyPos());
+        };
+        EdgeArea.prototype._getTransformedEnd = function () {
+            var angle = this.body ? this.body.rotation : 0;
+            return this.end.rotate(angle).add(this._getBodyPos());
+        };
+        /**
+         * Returns the slope of the line in the form of a vector
+         */
+        EdgeArea.prototype.getSlope = function () {
+            var begin = this._getTransformedBegin();
+            var end = this._getTransformedEnd();
+            var distance = begin.distance(end);
+            return end.sub(begin).scale(1 / distance);
+        };
+        /**
+         * Returns the length of the line segment in pixels
+         */
+        EdgeArea.prototype.getLength = function () {
+            var begin = this._getTransformedBegin();
+            var end = this._getTransformedEnd();
+            var distance = begin.distance(end);
+            return distance;
+        };
+        /**
+         * Tests if a point is contained in this collision area
+         */
+        EdgeArea.prototype.contains = function () {
+            return false;
+        };
+        /**
+         * @inheritdoc
+         */
+        EdgeArea.prototype.rayCast = function (ray, max) {
+            if (max === void 0) { max = Infinity; }
+            var numerator = this._getTransformedBegin().sub(ray.pos);
+            // Test is line and ray are parallel and non intersecting
+            if (ray.dir.cross(this.getSlope()) === 0 && numerator.cross(ray.dir) !== 0) {
+                return null;
+            }
+            // Lines are parallel
+            var divisor = (ray.dir.cross(this.getSlope()));
+            if (divisor === 0) {
+                return null;
+            }
+            var t = numerator.cross(this.getSlope()) / divisor;
+            if (t >= 0 && t <= max) {
+                var u = (numerator.cross(ray.dir) / divisor) / this.getLength();
+                if (u >= 0 && u <= 1) {
+                    return ray.getPoint(t);
+                }
+            }
+            return null;
+        };
+        /**
+         * @inheritdoc
+         */
+        EdgeArea.prototype.collide = function (area) {
+            if (area instanceof CircleArea_2.CircleArea) {
+                return CollisionJumpTable_3.CollisionJumpTable.CollideCircleEdge(area, this);
+            }
+            else if (area instanceof PolygonArea_4.PolygonArea) {
+                return CollisionJumpTable_3.CollisionJumpTable.CollidePolygonEdge(area, this);
+            }
+            else if (area instanceof EdgeArea) {
+                return CollisionJumpTable_3.CollisionJumpTable.CollideEdgeEdge();
+            }
+            else {
+                throw new Error("Edge could not collide with unknown ICollisionArea " + typeof area);
+            }
+        };
+        /**
+         * Find the point on the shape furthest in the direction specified
+         */
+        EdgeArea.prototype.getFurthestPoint = function (direction) {
+            var transformedBegin = this._getTransformedBegin();
+            var transformedEnd = this._getTransformedEnd();
+            if (direction.dot(transformedBegin) > 0) {
+                return transformedBegin;
+            }
+            else {
+                return transformedEnd;
+            }
+        };
+        /**
+         * Get the axis aligned bounding box for the circle area
+         */
+        EdgeArea.prototype.getBounds = function () {
+            var transformedBegin = this._getTransformedBegin();
+            var transformedEnd = this._getTransformedEnd();
+            return new BoundingBox_3.BoundingBox(Math.min(transformedBegin.x, transformedEnd.x), Math.min(transformedBegin.y, transformedEnd.y), Math.max(transformedBegin.x, transformedEnd.x), Math.max(transformedBegin.y, transformedEnd.y));
+        };
+        /**
+         * Get the axis associated with the edge
+         */
+        EdgeArea.prototype.getAxes = function () {
+            var e = this._getTransformedEnd().sub(this._getTransformedBegin());
+            var edgeNormal = e.normal();
+            var axes = [];
+            axes.push(edgeNormal);
+            axes.push(edgeNormal.negate());
+            axes.push(edgeNormal.normal());
+            axes.push(edgeNormal.normal().negate());
+            return axes;
+        };
+        /**
+         * Get the moment of inertia for an edge
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        EdgeArea.prototype.getMomentOfInertia = function () {
+            var mass = this.body ? this.body.mass : Physics_4.Physics.defaultMass;
+            var length = this.end.sub(this.begin).distance() / 2;
+            return mass * length * length;
+        };
+        /**
+         * @inheritdoc
+         */
+        EdgeArea.prototype.recalc = function () {
+            // edges don't have any cached data
+        };
+        /**
+         * Project the edge along a specified axis
+         */
+        EdgeArea.prototype.project = function (axis) {
+            var scalars = [];
+            var points = [this._getTransformedBegin(), this._getTransformedEnd()];
+            var len = points.length;
+            for (var i = 0; i < len; i++) {
+                scalars.push(points[i].dot(axis));
+            }
+            return new Algebra_8.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
+        };
+        /* istanbul ignore next */
+        EdgeArea.prototype.debugDraw = function (ctx, color) {
+            if (color === void 0) { color = Color_4.Color.Red.clone(); }
+            ctx.strokeStyle = color.toString();
+            ctx.beginPath();
+            ctx.moveTo(this.begin.x, this.begin.y);
+            ctx.lineTo(this.end.x, this.end.y);
+            ctx.closePath();
+            ctx.stroke();
+        };
+        return EdgeArea;
+    }());
+    exports.EdgeArea = EdgeArea;
+});
+define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (require, exports, Color_5) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Draw a line on canvas context
+     *
+     * @param ctx The canvas context
+     * @param color The color of the line
+     * @param x1 The start x coordinate
+     * @param y1 The start y coordinate
+     * @param x2 The ending x coordinate
+     * @param y2 The ending y coordinate
+     * @param thickness The line thickness
+     * @param cap The [[LineCapStyle]] (butt, round, or square)
+     */
+    /* istanbul ignore next */
+    function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
+        if (color === void 0) { color = Color_5.Color.Red.clone(); }
+        if (thickness === void 0) { thickness = 1; }
+        if (cap === void 0) { cap = 'butt'; }
+        ctx.beginPath();
+        ctx.lineWidth = thickness;
+        ctx.lineCap = cap;
+        ctx.strokeStyle = color.toString();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.closePath();
+        ctx.stroke();
+    }
+    exports.line = line;
+    /**
+     * Draw the vector as a point onto the canvas.
+     */
+    /* istanbul ignore next */
+    function point(ctx, color, point) {
+        if (color === void 0) { color = Color_5.Color.Red.clone(); }
+        ctx.beginPath();
+        ctx.strokeStyle = color.toString();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.stroke();
+    }
+    exports.point = point;
+    /**
+     * Draw the vector as a line onto the canvas starting a origin point.
+     */
+    /* istanbul ignore next */
+    function vector(ctx, color, origin, vector, scale) {
+        if (scale === void 0) { scale = 1.0; }
+        var c = color ? color.toString() : 'blue';
+        var v = vector.scale(scale);
+        ctx.beginPath();
+        ctx.strokeStyle = c;
+        ctx.moveTo(origin.x, origin.y);
+        ctx.lineTo(origin.x + v.x, origin.y + v.y);
+        ctx.closePath();
+        ctx.stroke();
+    }
+    exports.vector = vector;
+    /**
+     * Draw a round rectangle on a canvas context
+     *
+     * @param ctx The canvas context
+     * @param x The top-left x coordinate
+     * @param y The top-left y coordinate
+     * @param width The width of the rectangle
+     * @param height The height of the rectangle
+     * @param radius The border radius of the rectangle
+     * @param fill The [[Color]] to fill rectangle with
+     * @param stroke The [[Color]] to stroke rectangle with
+     */
+    function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
+        if (radius === void 0) { radius = 5; }
+        if (stroke === void 0) { stroke = Color_5.Color.White; }
+        if (fill === void 0) { fill = null; }
+        var br;
+        if (typeof radius === 'number') {
+            br = { tl: radius, tr: radius, br: radius, bl: radius };
+        }
+        else {
+            var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+            for (var prop in defaultRadius) {
+                if (defaultRadius.hasOwnProperty(prop)) {
+                    var side = prop;
+                    br[side] = radius[side] || defaultRadius[side];
+                }
+            }
+        }
+        ctx.beginPath();
+        ctx.moveTo(x + br.tl, y);
+        ctx.lineTo(x + width - br.tr, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + br.tr);
+        ctx.lineTo(x + width, y + height - br.br);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - br.br, y + height);
+        ctx.lineTo(x + br.bl, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - br.bl);
+        ctx.lineTo(x, y + br.tl);
+        ctx.quadraticCurveTo(x, y, x + br.tl, y);
+        ctx.closePath();
+        if (fill) {
+            ctx.fillStyle = fill.toString();
+            ctx.fill();
+        }
+        if (stroke) {
+            ctx.strokeStyle = stroke.toString();
+            ctx.stroke();
+        }
+    }
+    exports.roundRect = roundRect;
+    function circle(ctx, x, y, radius, stroke, fill) {
+        if (stroke === void 0) { stroke = Color_5.Color.White; }
+        if (fill === void 0) { fill = null; }
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.closePath();
+        if (fill) {
+            ctx.fillStyle = fill.toString();
+            ctx.fill();
+        }
+        if (stroke) {
+            ctx.strokeStyle = stroke.toString();
+            ctx.stroke();
+        }
+    }
+    exports.circle = circle;
+});
+define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_5, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_9, Color_6, DrawUtil) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Body = (function () {
+        /**
+         * Constructs a new physics body associated with an actor
+         */
+        function Body(actor) {
+            this.actor = actor;
+            /**
+             * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
+             */
+            this.collisionArea = null;
+            /**
+             * The (x, y) position of the actor this will be in the middle of the actor if the
+             * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+             * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+             */
+            this.pos = new Algebra_9.Vector(0, 0);
+            /**
+             * The position of the actor last frame (x, y) in pixels
+             */
+            this.oldPos = new Algebra_9.Vector(0, 0);
+            /**
+             * The current velocity vector (vx, vy) of the actor in pixels/second
+             */
+            this.vel = new Algebra_9.Vector(0, 0);
+            /**
+             * The velocity of the actor last frame (vx, vy) in pixels/second
+             */
+            this.oldVel = new Algebra_9.Vector(0, 0);
+            /**
+             * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+             * be useful to simulate a gravitational effect.
+             */
+            this.acc = new Algebra_9.Vector(0, 0);
+            /**
+             * The current torque applied to the actor
+             */
+            this.torque = 0;
+            /**
+             * The current mass of the actor, mass can be thought of as the resistance to acceleration.
+             */
+            this.mass = 1.0;
+            /**
+             * The current moment of inertia, moi can be thought of as the resistance to rotation.
+             */
+            this.moi = 1000;
+            /**
+             * The current "motion" of the actor, used to calculated sleep in the physics simulation
+             */
+            this.motion = 10;
+            /**
+             * The coefficient of friction on this actor
+             */
+            this.friction = .99;
+            /**
+             * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
+             */
+            this.restitution = .2;
+            /**
+             * The rotation of the actor in radians
+             */
+            this.rotation = 0; // radians
+            /**
+             * The rotational velocity of the actor in radians/second
+             */
+            this.rx = 0; //radians/sec
+            this._totalMtv = Algebra_9.Vector.Zero.clone();
+        }
+        /**
+         * Add minimum translation vectors accumulated during the current frame to resolve collisions.
+         */
+        Body.prototype.addMtv = function (mtv) {
+            this._totalMtv.addEqual(mtv);
+        };
+        /**
+         * Applies the accumulated translation vectors to the actors position
+         */
+        Body.prototype.applyMtv = function () {
+            this.pos.addEqual(this._totalMtv);
+            this._totalMtv.setTo(0, 0);
+        };
+        /**
+         * Returns the body's [[BoundingBox]] calculated for this instant in world space.
+         */
+        Body.prototype.getBounds = function () {
+            if (Physics_5.Physics.collisionResolutionStrategy === Physics_5.CollisionResolutionStrategy.Box) {
+                return this.actor.getBounds();
+            }
+            else {
+                return this.collisionArea.getBounds();
+            }
+        };
+        /**
+         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         */
+        Body.prototype.getRelativeBounds = function () {
+            if (Physics_5.Physics.collisionResolutionStrategy === Physics_5.CollisionResolutionStrategy.Box) {
+                return this.actor.getRelativeBounds();
+            }
+            else {
+                return this.actor.getRelativeBounds();
+            }
+        };
+        /**
+         * Updates the collision area geometry and internal caches
+         */
+        Body.prototype.update = function () {
+            if (this.collisionArea) {
+                this.collisionArea.recalc();
+            }
+        };
+        /**
+         * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.useBoxCollision = function (center) {
+            if (center === void 0) { center = Algebra_9.Vector.Zero.clone(); }
+            this.collisionArea = new PolygonArea_5.PolygonArea({
+                body: this,
+                points: this.actor.getRelativeBounds().getPoints(),
+                pos: center // position relative to actor
+            });
+            // in case of a nan moi, coalesce to a safe default
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+        };
+        /**
+         * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+         *
+         * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.usePolygonCollision = function (points, center) {
+            if (center === void 0) { center = Algebra_9.Vector.Zero.clone(); }
+            this.collisionArea = new PolygonArea_5.PolygonArea({
+                body: this,
+                points: points,
+                pos: center // position relative to actor
+            });
+            // in case of a nan moi, collesce to a safe default
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+        };
+        /**
+         * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.useCircleCollision = function (radius, center) {
+            if (center === void 0) { center = Algebra_9.Vector.Zero.clone(); }
+            if (!radius) {
+                radius = this.actor.getWidth() / 2;
+            }
+            this.collisionArea = new CircleArea_3.CircleArea({
+                body: this,
+                radius: radius,
+                pos: center
+            });
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+        };
+        /**
+         * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+         * of this physics body.
+         *
+         * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
+         */
+        Body.prototype.useEdgeCollision = function (begin, end) {
+            this.collisionArea = new EdgeArea_3.EdgeArea({
+                begin: begin,
+                end: end,
+                body: this
+            });
+            this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+        };
+        /* istanbul ignore next */
+        Body.prototype.debugDraw = function (ctx) {
+            // Draw motion vectors
+            if (Physics_5.Physics.showMotionVectors) {
+                DrawUtil.vector(ctx, Color_6.Color.Yellow, this.pos, (this.acc.add(Physics_5.Physics.acc)));
+                DrawUtil.vector(ctx, Color_6.Color.Red, this.pos, (this.vel));
+                DrawUtil.point(ctx, Color_6.Color.Red, this.pos);
+            }
+            if (Physics_5.Physics.showBounds) {
+                this.getBounds().debugDraw(ctx, Color_6.Color.Yellow);
+            }
+            if (Physics_5.Physics.showArea) {
+                this.collisionArea.debugDraw(ctx, Color_6.Color.Green);
+            }
+        };
+        /**
+         * Returns a boolean indicating whether this body collided with
+         * or was in stationary contact with
+         * the body of the other [[Actor]]
+         */
+        Body.prototype.touching = function (other) {
+            var pair = new Pair_1.Pair(this, other.body);
+            pair.collide();
+            if (pair.collision) {
+                return true;
+            }
+            return false;
+        };
+        /**
+         * Returns a boolean indicating true if this body COLLIDED with
+         * the body of the other Actor in the last frame, and they are no longer touching
+         * in this frame
+         */
+        Body.prototype.wasTouching = function (other, game) {
+            var pair = new Pair_1.Pair(this, other.body);
+            var wasTouchingLastFrame = false;
+            if (game.stats.prevFrame.physics.collidersHash[pair.id]) {
+                wasTouchingLastFrame = true;
+            }
+            ;
+            var currentlyTouching = this.touching(other);
+            return wasTouchingLastFrame && !currentlyTouching;
+        };
+        return Body;
+    }());
+    exports.Body = Body;
+});
+define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_6, Color_7, DrawUtil) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Models a potential collision between 2 bodies
+     */
+    var Pair = (function () {
+        function Pair(bodyA, bodyB) {
+            this.bodyA = bodyA;
+            this.bodyB = bodyB;
+            this.id = null;
+            this.collision = null;
+            this.id = Pair.calculatePairHash(bodyA, bodyB);
+        }
+        /**
+         * Runs the collison intersection logic on the members of this pair
+         */
+        Pair.prototype.collide = function () {
+            this.collision = this.bodyA.collisionArea.collide(this.bodyB.collisionArea);
+        };
+        /**
+         * Resovles the collision body position and velocity if a collision occured
+         */
+        Pair.prototype.resolve = function (strategy) {
+            if (this.collision) {
+                this.collision.resolve(strategy);
+            }
+        };
+        /**
+         * Calculates the unique pair hash id for this collision pair
+         */
+        Pair.calculatePairHash = function (bodyA, bodyB) {
+            if (bodyA.actor.id < bodyB.actor.id) {
+                return "#" + bodyA.actor.id + "+" + bodyB.actor.id;
+            }
+            else {
+                return "#" + bodyB.actor.id + "+" + bodyA.actor.id;
+            }
+        };
+        /* istanbul ignore next */
+        Pair.prototype.debugDraw = function (ctx) {
+            if (this.collision) {
+                if (Physics_6.Physics.showContacts) {
+                    DrawUtil.point(ctx, Color_7.Color.Red, this.collision.point);
+                }
+                if (Physics_6.Physics.showCollisionNormals) {
+                    DrawUtil.vector(ctx, Color_7.Color.Cyan, this.collision.point, this.collision.normal, 30);
+                }
+            }
+        };
+        return Pair;
+    }());
+    exports.Pair = Pair;
+});
+define("Debug", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Debug statistics and flags for Excalibur. If polling these values, it would be
+     * best to do so on the `postupdate` event for [[Engine]], after all values have been
+     * updated during a frame.
+     */
+    var Debug = (function () {
+        function Debug() {
+            /**
+             * Performance statistics
+             */
+            this.stats = {
+                /**
+                 * Current frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
+                 * Best accessed on [[postframe]] event. See [[IFrameStats]]
+                 */
+                currFrame: new FrameStats(),
+                /**
+                 * Previous frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
+                 * Best accessed on [[preframe]] event. Best inspected on engine event `preframe`. See [[IFrameStats]]
+                 */
+                prevFrame: new FrameStats()
+            };
+        }
+        return Debug;
+    }());
+    exports.Debug = Debug;
+    /**
+     * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
+     * creating instances of this every frame.
+     */
+    var FrameStats = (function () {
+        function FrameStats() {
+            this._id = 0;
+            this._delta = 0;
+            this._fps = 0;
+            this._actorStats = {
+                alive: 0,
+                killed: 0,
+                ui: 0,
+                get remaining() {
+                    return this.alive - this.killed;
+                },
+                get total() {
+                    return this.remaining + this.ui;
+                }
+            };
+            this._durationStats = {
+                update: 0,
+                draw: 0,
+                get total() {
+                    return this.update + this.draw;
+                }
+            };
+            this._physicsStats = new PhysicsStats();
+        }
+        /**
+         * Zero out values or clone other IFrameStat stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        FrameStats.prototype.reset = function (otherStats) {
+            if (otherStats) {
+                this.id = otherStats.id;
+                this.delta = otherStats.delta;
+                this.fps = otherStats.fps;
+                this.actors.alive = otherStats.actors.alive;
+                this.actors.killed = otherStats.actors.killed;
+                this.actors.ui = otherStats.actors.ui;
+                this.duration.update = otherStats.duration.update;
+                this.duration.draw = otherStats.duration.draw;
+                this._physicsStats.reset(otherStats.physics);
+            }
+            else {
+                this.id = this.delta = this.fps = 0;
+                this.actors.alive = this.actors.killed = this.actors.ui = 0;
+                this.duration.update = this.duration.draw = 0;
+                this._physicsStats.reset();
+            }
+        };
+        /**
+         * Provides a clone of this instance.
+         */
+        FrameStats.prototype.clone = function () {
+            var fs = new FrameStats();
+            fs.reset(this);
+            return fs;
+        };
+        Object.defineProperty(FrameStats.prototype, "id", {
+            /**
+             * Gets the frame's id
+             */
+            get: function () {
+                return this._id;
+            },
+            /**
+             * Sets the frame's id
+             */
+            set: function (value) {
+                this._id = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "delta", {
+            /**
+             * Gets the frame's delta (time since last frame)
+             */
+            get: function () {
+                return this._delta;
+            },
+            /**
+             * Sets the frame's delta (time since last frame). Internal use only.
+             * @internal
+             */
+            set: function (value) {
+                this._delta = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "fps", {
+            /**
+             * Gets the frame's frames-per-second (FPS)
+             */
+            get: function () {
+                return this._fps;
+            },
+            /**
+             * Sets the frame's frames-per-second (FPS). Internal use only.
+             * @internal
+             */
+            set: function (value) {
+                this._fps = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "actors", {
+            /**
+             * Gets the frame's actor statistics
+             */
+            get: function () {
+                return this._actorStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "duration", {
+            /**
+             * Gets the frame's duration statistics
+             */
+            get: function () {
+                return this._durationStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(FrameStats.prototype, "physics", {
+            /**
+             * Gets the frame's physics statistics
+             */
+            get: function () {
+                return this._physicsStats;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return FrameStats;
+    }());
+    exports.FrameStats = FrameStats;
+    var PhysicsStats = (function () {
+        function PhysicsStats() {
+            this._pairs = 0;
+            this._collisions = 0;
+            this._collidersHash = {};
+            this._fastBodies = 0;
+            this._fastBodyCollisions = 0;
+            this._broadphase = 0;
+            this._narrowphase = 0;
+        }
+        /**
+         * Zero out values or clone other IPhysicsStats stats. Allows instance reuse.
+         *
+         * @param [otherStats] Optional stats to clone
+         */
+        PhysicsStats.prototype.reset = function (otherStats) {
+            if (otherStats) {
+                this.pairs = otherStats.pairs;
+                this.collisions = otherStats.collisions;
+                this.collidersHash = otherStats.collidersHash;
+                this.fastBodies = otherStats.fastBodies;
+                this.fastBodyCollisions = otherStats.fastBodyCollisions;
+                this.broadphase = otherStats.broadphase;
+                this.narrowphase = otherStats.narrowphase;
+            }
+            else {
+                this.pairs = this.collisions = this.fastBodies = 0;
+                this.fastBodyCollisions = this.broadphase = this.narrowphase = 0;
+                this.collidersHash = {};
+            }
+        };
+        /**
+         * Provides a clone of this instance.
+         */
+        PhysicsStats.prototype.clone = function () {
+            var ps = new PhysicsStats();
+            ps.reset(this);
+            return ps;
+        };
+        Object.defineProperty(PhysicsStats.prototype, "pairs", {
+            get: function () {
+                return this._pairs;
+            },
+            set: function (value) {
+                this._pairs = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "collisions", {
+            get: function () {
+                return this._collisions;
+            },
+            set: function (value) {
+                this._collisions = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "collidersHash", {
+            get: function () {
+                return this._collidersHash;
+            },
+            set: function (colliders) {
+                this._collidersHash = colliders;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
+            get: function () {
+                return this._fastBodies;
+            },
+            set: function (value) {
+                this._fastBodies = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
+            get: function () {
+                return this._fastBodyCollisions;
+            },
+            set: function (value) {
+                this._fastBodyCollisions = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "broadphase", {
+            get: function () {
+                return this._broadphase;
+            },
+            set: function (value) {
+                this._broadphase = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
+            get: function () {
+                return this._narrowphase;
+            },
+            set: function (value) {
+                this._narrowphase = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PhysicsStats;
+    }());
+    exports.PhysicsStats = PhysicsStats;
+});
+define("Interfaces/IEvented", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("EventDispatcher", ["require", "exports", "Events"], function (require, exports, Events_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Excalibur's internal event dispatcher implementation.
+     * Callbacks are fired immediately after an event is published.
+     * Typically you will use [[Class.eventDispatcher]] since most classes in
+     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
+     * yourself.
+     *
+     * [[include:Events.md]]
+     */
+    var EventDispatcher = (function () {
+        /**
+         * @param target  The object that will be the recipient of events from this event dispatcher
+         */
+        function EventDispatcher(target) {
+            this._handlers = {};
+            this._wiredEventDispatchers = [];
+            this._target = target;
+        }
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        EventDispatcher.prototype.emit = function (eventName, event) {
+            if (!eventName) {
+                // key not mapped
+                return;
+            }
+            eventName = eventName.toLowerCase();
+            var target = this._target;
+            if (!event) {
+                event = new Events_2.GameEvent();
+            }
+            event.target = target;
+            var i, len;
+            if (this._handlers[eventName]) {
+                i = 0;
+                len = this._handlers[eventName].length;
+                for (i; i < len; i++) {
+                    this._handlers[eventName][i].call(target, event);
+                }
+            }
+            i = 0;
+            len = this._wiredEventDispatchers.length;
+            for (i; i < len; i++) {
+                this._wiredEventDispatchers[i].emit(eventName, event);
+            }
+        };
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        EventDispatcher.prototype.on = function (eventName, handler) {
+            eventName = eventName.toLowerCase();
+            if (!this._handlers[eventName]) {
+                this._handlers[eventName] = [];
+            }
+            this._handlers[eventName].push(handler);
+            // meta event handlers
+            if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
+                this.emit('subscribe', new Events_2.SubscribeEvent(eventName, handler));
+            }
+        };
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        EventDispatcher.prototype.off = function (eventName, handler) {
+            eventName = eventName.toLowerCase();
+            var eventHandlers = this._handlers[eventName];
+            if (eventHandlers) {
+                // if no explicit handler is give with the event name clear all handlers
+                if (!handler) {
+                    this._handlers[eventName].length = 0;
+                }
+                else {
+                    var index = eventHandlers.indexOf(handler);
+                    this._handlers[eventName].splice(index, 1);
+                }
+            }
+            // meta event handlers
+            if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
+                this.emit('unsubscribe', new Events_2.UnsubscribeEvent(eventName, handler));
+            }
+        };
+        /**
+         * Wires this event dispatcher to also recieve events from another
+         */
+        EventDispatcher.prototype.wire = function (eventDispatcher) {
+            eventDispatcher._wiredEventDispatchers.push(this);
+        };
+        /**
+         * Unwires this event dispatcher from another
+         */
+        EventDispatcher.prototype.unwire = function (eventDispatcher) {
+            var index = eventDispatcher._wiredEventDispatchers.indexOf(this);
+            if (index > -1) {
+                eventDispatcher._wiredEventDispatchers.splice(index, 1);
+            }
+        };
+        return EventDispatcher;
+    }());
+    exports.EventDispatcher = EventDispatcher;
 });
 define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promises", "Util/EasingFunctions"], function (require, exports, Actions, Promises_2, EasingFunctions_2) {
     "use strict";
@@ -4978,7 +5073,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
  *
  * [[include:SpriteEffects.md]]
  */
-define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], function (require, exports, Color_7) {
+define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], function (require, exports, Color_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5071,7 +5166,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
         Lighten.prototype.updatePixel = function (x, y, imageData) {
             var firstPixel = (x + y * imageData.width) * 4;
             var pixel = imageData.data;
-            var color = Color_7.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).lighten(this.factor);
+            var color = Color_8.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).lighten(this.factor);
             pixel[firstPixel + 0] = color.r;
             pixel[firstPixel + 1] = color.g;
             pixel[firstPixel + 2] = color.b;
@@ -5094,7 +5189,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
         Darken.prototype.updatePixel = function (x, y, imageData) {
             var firstPixel = (x + y * imageData.width) * 4;
             var pixel = imageData.data;
-            var color = Color_7.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).darken(this.factor);
+            var color = Color_8.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).darken(this.factor);
             pixel[firstPixel + 0] = color.r;
             pixel[firstPixel + 1] = color.g;
             pixel[firstPixel + 2] = color.b;
@@ -5117,7 +5212,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
         Saturate.prototype.updatePixel = function (x, y, imageData) {
             var firstPixel = (x + y * imageData.width) * 4;
             var pixel = imageData.data;
-            var color = Color_7.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).saturate(this.factor);
+            var color = Color_8.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).saturate(this.factor);
             pixel[firstPixel + 0] = color.r;
             pixel[firstPixel + 1] = color.g;
             pixel[firstPixel + 2] = color.b;
@@ -5140,7 +5235,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
         Desaturate.prototype.updatePixel = function (x, y, imageData) {
             var firstPixel = (x + y * imageData.width) * 4;
             var pixel = imageData.data;
-            var color = Color_7.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).desaturate(this.factor);
+            var color = Color_8.Color.fromRGB(pixel[firstPixel + 0], pixel[firstPixel + 1], pixel[firstPixel + 2], pixel[firstPixel + 3]).desaturate(this.factor);
             pixel[firstPixel + 0] = color.r;
             pixel[firstPixel + 1] = color.g;
             pixel[firstPixel + 2] = color.b;
@@ -5358,7 +5453,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
     }(Resource_1.Resource));
     exports.Texture = Texture;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_8, Algebra_11, Log_4, Util_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_4, Util_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5575,7 +5670,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             var scaledSHeight = this.height * this.scale.y;
             var xpoint = (scaledSWidth) * this.anchor.x;
             var ypoint = (scaledSHeight) * this.anchor.y;
-            ctx.strokeStyle = Color_8.Color.Black.toString();
+            ctx.strokeStyle = Color_9.Color.Black.toString();
             ctx.strokeRect(-xpoint, -ypoint, scaledSWidth, scaledSHeight);
             ctx.restore();
         };
@@ -5866,7 +5961,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
     }());
     exports.Animation = Animation;
 });
-define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_9, Effects, Log_5, Label_1) {
+define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_10, Effects, Log_5, Label_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5992,13 +6087,13 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
             _this.caseInsensitive = caseInsensitive;
             _this.spWidth = spWidth;
             _this.spHeight = spHeight;
-            _this._currentColor = Color_9.Color.Black.clone();
+            _this._currentColor = Color_10.Color.Black.clone();
             _this._currentOpacity = 1.0;
             _this._sprites = {};
             // text shadow
             _this._textShadowOn = false;
             _this._textShadowDirty = true;
-            _this._textShadowColor = Color_9.Color.Black.clone();
+            _this._textShadowColor = Color_10.Color.Black.clone();
             _this._textShadowSprites = {};
             _this._shadowOffsetX = 5;
             _this._shadowOffsetY = 5;
@@ -6121,7 +6216,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
             return {
                 fontSize: options.fontSize || 10,
                 letterSpacing: options.letterSpacing || 0,
-                color: options.color || Color_9.Color.Black.clone(),
+                color: options.color || Color_10.Color.Black.clone(),
                 textAlign: typeof options.textAlign === undefined ? Label_1.TextAlign.Left : options.textAlign,
                 baseAlign: typeof options.baseAlign === undefined ? Label_1.BaseAlign.Bottom : options.baseAlign,
                 maxWidth: options.maxWidth || -1,
@@ -6132,7 +6227,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
     }(SpriteSheet));
     exports.SpriteFont = SpriteFont;
 });
-define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (require, exports, Color_10, Actor_3) {
+define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (require, exports, Color_11, Actor_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6288,9 +6383,9 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _this._textShadowOn = false;
             _this._shadowOffsetX = 0;
             _this._shadowOffsetY = 0;
-            _this._shadowColor = Color_10.Color.Black.clone();
+            _this._shadowColor = Color_11.Color.Black.clone();
             _this.text = text || '';
-            _this.color = Color_10.Color.Black.clone();
+            _this.color = Color_11.Color.Black.clone();
             _this.spriteFont = spriteFont;
             _this.collisionType = Actor_3.CollisionType.PreventCollision;
             _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
@@ -6396,7 +6491,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             this._textShadowOn = false;
             this._shadowOffsetX = 0;
             this._shadowOffsetY = 0;
-            this._shadowColor = Color_10.Color.Black.clone();
+            this._shadowColor = Color_11.Color.Black.clone();
         };
         Label.prototype.update = function (engine, delta) {
             _super.prototype.update.call(this, engine, delta);
@@ -7076,7 +7171,7 @@ define("Interfaces/ILoader", ["require", "exports"], function (require, exports)
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_11, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
+define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_12, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -7258,7 +7353,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             var margin = 5;
             var progressWidth = progress - margin * 2;
             var height = 20 - margin * 2;
-            DrawUtil.roundRect(ctx, x + margin, y + margin, progressWidth > 0 ? progressWidth : 0, height, 5, null, Color_11.Color.White);
+            DrawUtil.roundRect(ctx, x + margin, y + margin, progressWidth > 0 ? progressWidth : 0, height, 5, null, Color_12.Color.White);
             this._engine.setAntialiasing(oldAntialias);
         };
         /**
@@ -7411,7 +7506,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
     }());
     exports.CapturePointer = CapturePointer;
 });
-define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_6, Actor_4) {
+define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_7, Actor_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EulerMovement = (function () {
@@ -7423,7 +7518,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
             var totalAcc = actor.acc.clone();
             // Only active vanilla actors are affected by global acceleration
             if (actor.collisionType === Actor_4.CollisionType.Active) {
-                totalAcc.addEqual(Physics_6.Physics.acc);
+                totalAcc.addEqual(Physics_7.Physics.acc);
             }
             actor.oldVel = actor.vel;
             actor.vel.addEqual(totalAcc.scale(seconds));
@@ -7437,7 +7532,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
     }());
     exports.EulerMovement = EulerMovement;
 });
-define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_13, Color_12) {
+define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_13, Color_13) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CullingBox = (function () {
@@ -7516,25 +7611,25 @@ define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], fu
         CullingBox.prototype.debugDraw = function (ctx) {
             // bounding rectangle
             ctx.beginPath();
-            ctx.strokeStyle = Color_12.Color.White.toString();
+            ctx.strokeStyle = Color_13.Color.White.toString();
             ctx.rect(this._xMinWorld, this._yMinWorld, this._xMaxWorld - this._xMinWorld, this._yMaxWorld - this._yMinWorld);
             ctx.stroke();
-            ctx.fillStyle = Color_12.Color.Red.toString();
+            ctx.fillStyle = Color_13.Color.Red.toString();
             ctx.beginPath();
             ctx.arc(this._topLeft.x, this._topLeft.y, 5, 0, Math.PI * 2);
             ctx.closePath();
             ctx.fill();
-            ctx.fillStyle = Color_12.Color.Green.toString();
+            ctx.fillStyle = Color_13.Color.Green.toString();
             ctx.beginPath();
             ctx.arc(this._topRight.x, this._topRight.y, 5, 0, Math.PI * 2);
             ctx.closePath();
             ctx.fill();
-            ctx.fillStyle = Color_12.Color.Blue.toString();
+            ctx.fillStyle = Color_13.Color.Blue.toString();
             ctx.beginPath();
             ctx.arc(this._bottomLeft.x, this._bottomLeft.y, 5, 0, Math.PI * 2);
             ctx.closePath();
             ctx.fill();
-            ctx.fillStyle = Color_12.Color.Magenta.toString();
+            ctx.fillStyle = Color_13.Color.Magenta.toString();
             ctx.beginPath();
             ctx.arc(this._bottomRight.x, this._bottomRight.y, 5, 0, Math.PI * 2);
             ctx.closePath();
@@ -7652,7 +7747,7 @@ define("Traits/Index", ["require", "exports", "Traits/CapturePointer", "Traits/E
     __export(OffscreenCulling_1);
     __export(TileMapCollisionDetection_1);
 });
-define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index"], function (require, exports, Actor_6, Color_13, Algebra_15, Util, DrawUtil, Traits) {
+define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index"], function (require, exports, Actor_6, Color_14, Algebra_15, Util, DrawUtil, Traits) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -7682,8 +7777,8 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             this.focus = null;
             this.focusAccel = 0;
             this.opacity = 1;
-            this.beginColor = Color_13.Color.White.clone();
-            this.endColor = Color_13.Color.White.clone();
+            this.beginColor = Color_14.Color.White.clone();
+            this.endColor = Color_14.Color.White.clone();
             // Life is counted in ms
             this.life = 300;
             this.fadeFlag = false;
@@ -7692,7 +7787,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             this._gRate = 1;
             this._bRate = 1;
             this._aRate = 0;
-            this._currentColor = Color_13.Color.White.clone();
+            this._currentColor = Color_14.Color.White.clone();
             this.emitter = null;
             this.particleSize = 5;
             this.particleSprite = null;
@@ -7782,7 +7877,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
          * @param height  The height of the emitter
          */
         function ParticleEmitter(x, y, width, height) {
-            var _this = _super.call(this, x, y, width, height, Color_13.Color.White) || this;
+            var _this = _super.call(this, x, y, width, height, Color_14.Color.White) || this;
             _this._particlesToEmit = 0;
             _this.numParticles = 0;
             /**
@@ -7860,11 +7955,11 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             /**
              * Gets or sets the beginning color of all particles
              */
-            _this.beginColor = Color_13.Color.White;
+            _this.beginColor = Color_14.Color.White;
             /**
              * Gets or sets the ending color of all particles
              */
-            _this.endColor = Color_13.Color.White;
+            _this.endColor = Color_14.Color.White;
             /**
              * Gets or sets the sprite that a particle should use
              * @warning Performance intensive
@@ -7969,11 +8064,11 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
         };
         ParticleEmitter.prototype.debugDraw = function (ctx) {
             _super.prototype.debugDraw.call(this, ctx);
-            ctx.fillStyle = Color_13.Color.Black.toString();
+            ctx.fillStyle = Color_14.Color.Black.toString();
             ctx.fillText('Particles: ' + this.particles.count(), this.pos.x, this.pos.y + 20);
             if (this.focus) {
                 ctx.fillRect(this.focus.x + this.pos.x, this.focus.y + this.pos.y, 3, 3);
-                DrawUtil.line(ctx, Color_13.Color.Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
+                DrawUtil.line(ctx, Color_14.Color.Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
                 ctx.fillText('Focus', this.focus.x + this.pos.x, this.focus.y + this.pos.y);
             }
         };
@@ -7981,7 +8076,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
     }(Actor_6.Actor));
     exports.ParticleEmitter = ParticleEmitter;
 });
-define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_14, Class_4, Algebra_16, Log_8, Events) {
+define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_15, Class_4, Algebra_16, Log_8, Events) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8159,7 +8254,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
             var width = this.cols * this.cellWidth;
             var height = this.rows * this.cellHeight;
             ctx.save();
-            ctx.strokeStyle = Color_14.Color.Red.toString();
+            ctx.strokeStyle = Color_15.Color.Red.toString();
             for (var x = 0; x < this.cols + 1; x++) {
                 ctx.beginPath();
                 ctx.moveTo(this.x + x * this.cellWidth, this.y);
@@ -8172,7 +8267,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
                 ctx.lineTo(this.x + width, this.y + y * this.cellHeight);
                 ctx.stroke();
             }
-            var solid = Color_14.Color.Red.clone();
+            var solid = Color_15.Color.Red.clone();
             solid.a = .3;
             this.data.filter(function (cell) {
                 return cell.solid;
@@ -8181,7 +8276,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
                 ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
             });
             if (this._collidingY > -1 && this._collidingX > -1) {
-                ctx.fillStyle = Color_14.Color.Cyan.toString();
+                ctx.fillStyle = Color_15.Color.Cyan.toString();
                 ctx.fillRect(this.x + this._collidingX * this.cellWidth, this.y + this._collidingY * this.cellHeight, this.cellWidth, this.cellHeight);
             }
             ctx.restore();
@@ -8333,7 +8428,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
     Timer.id = 0;
     exports.Timer = Timer;
 });
-define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor"], function (require, exports, Color_15, Action_1, EventDispatcher_1, Actor_7) {
+define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor"], function (require, exports, Color_16, Action_1, EventDispatcher_1, Actor_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8416,8 +8511,8 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
             bb.bottom = bb.bottom - wp.y;
             // Currently collision primitives cannot rotate 
             // ctx.rotate(this.rotation);
-            ctx.fillStyle = Color_15.Color.Violet.toString();
-            ctx.strokeStyle = Color_15.Color.Violet.toString();
+            ctx.fillStyle = Color_16.Color.Violet.toString();
+            ctx.strokeStyle = Color_16.Color.Violet.toString();
             ctx.fillText('Trigger', 10, 10);
             bb.debugDraw(ctx);
             ctx.restore();
@@ -8438,7 +8533,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
     // legacy Internal.Actions namespace support
     exports.Internal = { Actions: actions };
 });
-define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_7, BoundingBox_5, Log_9) {
+define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_8, BoundingBox_5, Log_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8645,12 +8740,12 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
                 return false;
             }
             this._remove(node);
-            b.left -= Physics_7.Physics.boundsPadding;
-            b.top -= Physics_7.Physics.boundsPadding;
-            b.right += Physics_7.Physics.boundsPadding;
-            b.bottom += Physics_7.Physics.boundsPadding;
-            var multdx = body.vel.x * Physics_7.Physics.dynamicTreeVelocityMultiplyer;
-            var multdy = body.vel.y * Physics_7.Physics.dynamicTreeVelocityMultiplyer;
+            b.left -= Physics_8.Physics.boundsPadding;
+            b.top -= Physics_8.Physics.boundsPadding;
+            b.right += Physics_8.Physics.boundsPadding;
+            b.bottom += Physics_8.Physics.boundsPadding;
+            var multdx = body.vel.x * Physics_8.Physics.dynamicTreeVelocityMultiplyer;
+            var multdy = body.vel.y * Physics_8.Physics.dynamicTreeVelocityMultiplyer;
             if (multdx < 0) {
                 b.left += multdx;
             }
@@ -8881,65 +8976,11 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
     }());
     exports.DynamicTree = DynamicTree;
 });
-define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_8, Color_16, DrawUtil) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Models a potential collision between 2 bodies
-     */
-    var Pair = (function () {
-        function Pair(bodyA, bodyB) {
-            this.bodyA = bodyA;
-            this.bodyB = bodyB;
-            this.id = null;
-            this.collision = null;
-            this.id = Pair.calculatePairHash(bodyA, bodyB);
-        }
-        /**
-         * Runs the collison intersection logic on the members of this pair
-         */
-        Pair.prototype.collide = function () {
-            this.collision = this.bodyA.collisionArea.collide(this.bodyB.collisionArea);
-        };
-        /**
-         * Resovles the collision body position and velocity if a collision occured
-         */
-        Pair.prototype.resolve = function (strategy) {
-            if (this.collision) {
-                this.collision.resolve(strategy);
-            }
-        };
-        /**
-         * Calculates the unique pair hash id for this collision pair
-         */
-        Pair.calculatePairHash = function (bodyA, bodyB) {
-            if (bodyA.actor.id < bodyB.actor.id) {
-                return "#" + bodyA.actor.id + "+" + bodyB.actor.id;
-            }
-            else {
-                return "#" + bodyB.actor.id + "+" + bodyA.actor.id;
-            }
-        };
-        /* istanbul ignore next */
-        Pair.prototype.debugDraw = function (ctx) {
-            if (this.collision) {
-                if (Physics_8.Physics.showContacts) {
-                    DrawUtil.point(ctx, Color_16.Color.Red, this.collision.point);
-                }
-                if (Physics_8.Physics.showCollisionNormals) {
-                    DrawUtil.vector(ctx, Color_16.Color.Cyan, this.collision.point, this.collision.normal, 30);
-                }
-            }
-        };
-        return Pair;
-    }());
-    exports.Pair = Pair;
-});
 define("Collision/ICollisionResolver", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_1, Algebra_17, Actor_8, Log_10) {
+define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_17, Actor_8, Log_10) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DynamicTreeCollisionBroadphase = (function () {
@@ -8970,7 +9011,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
         };
         DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
             // if the collision pair has been calculated already short circuit
-            var hash = Pair_1.Pair.calculatePairHash(actorA.body, actorB.body);
+            var hash = Pair_2.Pair.calculatePairHash(actorA.body, actorB.body);
             if (this._collisionHash[hash]) {
                 return false; // pair exists easy exit return false
             }
@@ -9006,7 +9047,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                 // Query the collision tree for potential colliders
                 this._dynamicCollisionTree.query(actor.body, function (other) {
                     if (_this._canCollide(actor, other.actor)) {
-                        var pair = new Pair_1.Pair(actor.body, other);
+                        var pair = new Pair_2.Pair(actor.body, other);
                         _this._collisionHash[pair.id] = true;
                         _this._collisionPairCache.push(pair);
                     }
@@ -9061,7 +9102,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                             return false;
                         });
                         if (minBody && Algebra_17.Vector.isValid(minTranslate)) {
-                            var pair = new Pair_1.Pair(actor.body, minBody);
+                            var pair = new Pair_2.Pair(actor.body, minBody);
                             if (!this._collisionHash[pair.id]) {
                                 this._collisionHash[pair.id] = true;
                                 this._collisionPairCache.push(pair);
@@ -9083,12 +9124,14 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
         };
         /**
          * Applies narrow phase on collision pairs to find actual area intersections
+         * Adds actual colliding pairs to stats' Frame data
          */
         DynamicTreeCollisionBroadphase.prototype.narrowphase = function (pairs, stats) {
             for (var i = 0; i < pairs.length; i++) {
                 pairs[i].collide();
                 if (stats && pairs[i].collision) {
                     stats.physics.collisions++;
+                    stats.physics.collidersHash[pairs[i].id] = pairs[i];
                 }
             }
         };
@@ -9145,7 +9188,7 @@ define("Collision/IPhysics", ["require", "exports"], function (require, exports)
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor"], function (require, exports, Physics_10, CollisionContact_2, Pair_2, Actor_9) {
+define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor"], function (require, exports, Physics_10, CollisionContact_2, Pair_3, Actor_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var NaiveCollisionBroadphase = (function () {
@@ -9174,7 +9217,7 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
                     actor2 = potentialColliders[i];
                     var minimumTranslationVector;
                     if (minimumTranslationVector = actor1.collides(actor2)) {
-                        var pair = new Pair_2.Pair(actor1.body, actor2.body);
+                        var pair = new Pair_3.Pair(actor1.body, actor2.body);
                         pair.collision = new CollisionContact_2.CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                         if (!collisionPairs.some(function (cp) {
                             return cp.id === pair.id;
@@ -9212,7 +9255,7 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
     }());
     exports.NaiveCollisionBroadphase = NaiveCollisionBroadphase;
 });
-define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/BoundingBox", "Collision/CircleArea", "Collision/CollisionContact", "Collision/CollisionJumpTable", "Collision/DynamicTree", "Collision/DynamicTreeCollisionBroadphase", "Collision/EdgeArea", "Collision/NaiveCollisionBroadphase", "Collision/Pair", "Collision/PolygonArea", "Collision/Side"], function (require, exports, Body_1, BoundingBox_6, CircleArea_4, CollisionContact_3, CollisionJumpTable_4, DynamicTree_2, DynamicTreeCollisionBroadphase_1, EdgeArea_4, NaiveCollisionBroadphase_1, Pair_3, PolygonArea_6, Side_4) {
+define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/BoundingBox", "Collision/CircleArea", "Collision/CollisionContact", "Collision/CollisionJumpTable", "Collision/DynamicTree", "Collision/DynamicTreeCollisionBroadphase", "Collision/EdgeArea", "Collision/NaiveCollisionBroadphase", "Collision/Pair", "Collision/PolygonArea", "Collision/Side"], function (require, exports, Body_1, BoundingBox_6, CircleArea_4, CollisionContact_3, CollisionJumpTable_4, DynamicTree_2, DynamicTreeCollisionBroadphase_1, EdgeArea_4, NaiveCollisionBroadphase_1, Pair_4, PolygonArea_6, Side_4) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -9227,7 +9270,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
     __export(DynamicTreeCollisionBroadphase_1);
     __export(EdgeArea_4);
     __export(NaiveCollisionBroadphase_1);
-    __export(Pair_3);
+    __export(Pair_4);
     __export(PolygonArea_6);
     __export(Side_4);
 });
@@ -11388,7 +11431,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1454+9fa3467';
+    exports.EX_VERSION = '0.10.0-alpha.1467+ec75b46';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

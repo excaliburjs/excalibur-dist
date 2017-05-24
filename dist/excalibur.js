@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1483+61bfa2c - 2017-05-24
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1483+61bfa2c - 2017-05-24
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -10577,15 +10577,8 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
         /**
          * Initializes pointer event listeners
          */
-        Pointers.prototype.init = function (scope) {
-            if (scope === void 0) { scope = PointerScope.Document; }
-            var target = document;
-            if (scope === PointerScope.Document) {
-                target = document;
-            }
-            else {
-                target = this._engine.canvas;
-            }
+        Pointers.prototype.init = function (target) {
+            target = target || this._engine.canvas;
             // Touch Events
             target.addEventListener('touchstart', this._handleTouchEvent('down', this._pointerDown));
             target.addEventListener('touchend', this._handleTouchEvent('up', this._pointerUp));
@@ -11437,7 +11430,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1470+6473b22';
+    exports.EX_VERSION = '0.10.0-alpha.1483+61bfa2c';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12030,7 +12023,7 @@ O|===|* >________________>\n\
                 gamepads: new Input.Gamepads(this)
             };
             this.input.keyboard.init();
-            this.input.pointers.init(options ? options.pointerScope : Input.PointerScope.Document);
+            this.input.pointers.init(options && options.pointerScope === Input.PointerScope.Document ? document : this.canvas);
             this.input.gamepads.init();
             // Issue #385 make use of the visibility api
             // https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API

@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1470+6473b22 - 2017-05-23
+/*! excalibur - v0.10.0-alpha.1483+61bfa2c - 2017-05-24
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5068,7 +5068,7 @@ declare module "Input/Pointer" {
         /**
          * Initializes pointer event listeners
          */
-        init(scope?: PointerScope): void;
+        init(target?: GlobalEventHandlers): void;
         update(): void;
         /**
          * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
@@ -5197,7 +5197,7 @@ declare module "Input/Keyboard" {
         /**
          * Initialize Keyboard event listeners
          */
-        init(global?: any): void;
+        init(global?: GlobalEventHandlers): void;
         update(): void;
         /**
          * Gets list of keys being pressed down

@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1517+a2dd497 - 2017-05-27
+/*! excalibur - v0.10.0-alpha.1519+74df55e - 2017-05-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5224,12 +5224,6 @@ declare module "Input/Keyboard" {
          * @param key  Test whether a key was just released
          */
         wasReleased(key: Keys): boolean;
-        /**
-         * Normalizes some browser event key codes to map to standard Excalibur key codes
-         * @param code Event keyCode
-         * @see http://unixpapa.com/js/key.html
-         */
-        private _normalizeKeyCode(code);
     }
 }
 declare module "Input/IEngineInput" {

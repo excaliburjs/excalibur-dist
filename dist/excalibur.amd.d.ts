@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1504+3890fd6 - 2017-05-26
+/*! excalibur - v0.10.0-alpha.1509+78ff606 - 2017-05-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1511,6 +1511,7 @@ declare module "Collision/BoundingBox" {
          * Determines whether a ray intersects with a bounding box
          */
         rayCast(ray: Ray, farClipDistance?: number): boolean;
+        rayCastTime(ray: Ray, farClipDistance?: number): number;
         /**
          * Tests whether a point is contained within the bounding box
          * @param p  The point to test

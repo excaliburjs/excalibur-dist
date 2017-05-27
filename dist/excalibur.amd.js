@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1509+78ff606 - 2017-05-27
+/*! excalibur - v0.10.0-alpha.1510+152e2ed - 2017-05-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -87,6 +87,14 @@ define("Algebra", ["require", "exports"], function (require, exports) {
                 return false;
             }
             return true;
+        };
+        /**
+         * Calculates distance between two Vectors
+         * @param vec1
+         * @param vec2
+         */
+        Vector.distance = function (vec1, vec2) {
+            return Math.sqrt(Math.pow(vec1.x - vec2.x, 2) + Math.pow(vec1.y - vec2.y, 2));
         };
         /**
          * Sets the x and y components at once
@@ -3127,37 +3135,19 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/ 
             var tmin = -Infinity;
             var tmax = +Infinity;
-            var xinv = ray.dir.x === 0 ? 999999999999 : (1 / ray.dir.x);
-            var yinv = ray.dir.y === 0 ? 999999999999 : (1 / ray.dir.y);
-            var tx1 = (this.left - ray.pos.x) * xinv;
-            var tx2 = (this.right - ray.pos.x) * xinv;
-            tmin = Math.min(tx1, tx2);
-            tmax = Math.max(tx1, tx2);
-            var ty1 = (this.top - ray.pos.y) * yinv;
-            var ty2 = (this.bottom - ray.pos.y) * yinv;
-            tmin = Math.max(tmin, Math.min(ty1, ty2));
-            tmax = Math.min(tmax, Math.max(ty1, ty2));
-            return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
-        };
-        BoundingBox.prototype.rayCastTime = function (ray, farClipDistance) {
-            if (farClipDistance === void 0) { farClipDistance = Infinity; }
-            // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/ 
-            var tmin = -Infinity;
-            var tmax = +Infinity;
-            var xinv = ray.dir.x === 0 ? 999999999999 : (1 / ray.dir.x);
-            var yinv = ray.dir.y === 0 ? 999999999999 : (1 / ray.dir.y);
-            var tx1 = (this.left - ray.pos.x) * xinv;
-            var tx2 = (this.right - ray.pos.x) * xinv;
-            tmin = Math.min(tx1, tx2);
-            tmax = Math.max(tx1, tx2);
-            var ty1 = (this.top - ray.pos.y) * yinv;
-            var ty2 = (this.bottom - ray.pos.y) * yinv;
-            tmin = Math.max(tmin, Math.min(ty1, ty2));
-            tmax = Math.min(tmax, Math.max(ty1, ty2));
-            if (tmax >= Math.max(0, tmin) && tmin < farClipDistance) {
-                return tmin;
+            if (ray.dir.x !== 0) {
+                var tx1 = (this.left - ray.pos.x) / ray.dir.x;
+                var tx2 = (this.right - ray.pos.x) / ray.dir.x;
+                tmin = Math.max(tmin, Math.min(tx1, tx2));
+                tmax = Math.min(tmax, Math.max(tx1, tx2));
             }
-            return -1;
+            if (ray.dir.y !== 0) {
+                var ty1 = (this.top - ray.pos.y) / ray.dir.y;
+                var ty2 = (this.bottom - ray.pos.y) / ray.dir.y;
+                tmin = Math.max(tmin, Math.min(ty1, ty2));
+                tmax = Math.min(tmax, Math.max(ty1, ty2));
+            }
+            return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
         };
         BoundingBox.prototype.contains = function (val) {
             if (val instanceof Algebra_7.Vector) {
@@ -10993,7 +10983,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1509+78ff606';
+    exports.EX_VERSION = '0.10.0-alpha.1510+152e2ed';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

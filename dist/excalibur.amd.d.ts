@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1509+78ff606 - 2017-05-27
+/*! excalibur - v0.10.0-alpha.1510+152e2ed - 2017-05-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -73,6 +73,12 @@ declare module "Algebra" {
          * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
          */
         static isValid(vec: Vector): boolean;
+        /**
+         * Calculates distance between two Vectors
+         * @param vec1
+         * @param vec2
+         */
+        static distance(vec1: Vector, vec2: Vector): number;
         /**
          * @param x  X component of the Vector
          * @param y  Y component of the Vector
@@ -1511,7 +1517,6 @@ declare module "Collision/BoundingBox" {
          * Determines whether a ray intersects with a bounding box
          */
         rayCast(ray: Ray, farClipDistance?: number): boolean;
-        rayCastTime(ray: Ray, farClipDistance?: number): number;
         /**
          * Tests whether a point is contained within the bounding box
          * @param p  The point to test

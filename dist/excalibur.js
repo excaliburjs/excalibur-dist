@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1532+9f4144e - 2017-06-04
+/*! excalibur - v0.10.0-alpha.1537+1234788 - 2017-06-05
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1532+9f4144e - 2017-06-04
+/*! excalibur - v0.10.0-alpha.1537+1234788 - 2017-06-05
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1502,7 +1502,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
         var outputStr = '';
         var i = 0;
         while (i < inputStr.length) {
-            //all three "& 0xff" added below are there to fix a known bug 
+            //all three "& 0xff" added below are there to fix a known bug
             //with bytes returned by xhr.responseText
             var byte1 = inputStr.charCodeAt(i++) & 0xff;
             var byte2 = inputStr.charCodeAt(i++) & 0xff;
@@ -1592,7 +1592,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
         return false;
     }
     exports.addItemToArray = addItemToArray;
-    function removeItemToArray(item, array) {
+    function removeItemFromArray(item, array) {
         var index = -1;
         if ((index = array.indexOf(item)) > -1) {
             array.splice(index, 1);
@@ -1600,7 +1600,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
         }
         return false;
     }
-    exports.removeItemToArray = removeItemToArray;
+    exports.removeItemFromArray = removeItemFromArray;
     function contains(array, obj) {
         for (var i = 0; i < array.length; i++) {
             if (array[i] === obj) {
@@ -1729,7 +1729,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
                 //Logger.getInstance().error('Invalid parameter: ' + index);
                 throw new Error('Invalid parameter ' + index);
             }
-            // O(n) Shift 
+            // O(n) Shift
             var removed = this._internalArray[index];
             for (var i = index; i < count; i++) {
                 this._internalArray[i] = this._internalArray[i + 1];
@@ -11438,7 +11438,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1532+9f4144e';
+    exports.EX_VERSION = '0.10.0-alpha.1537+1234788';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13761,7 +13761,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param actor The child actor to remove
          */
         Actor.prototype.remove = function (actor) {
-            if (Util.removeItemToArray(actor, this.children)) {
+            if (Util.removeItemFromArray(actor, this.children)) {
                 actor.parent = null;
             }
         };

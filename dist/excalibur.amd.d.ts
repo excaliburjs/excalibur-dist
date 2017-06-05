@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1532+9f4144e - 2017-06-04
+/*! excalibur - v0.10.0-alpha.1537+1234788 - 2017-06-05
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -664,7 +664,7 @@ declare module "Util/Util" {
     export function toRadians(degrees: number): number;
     export function getPosition(el: HTMLElement): Vector;
     export function addItemToArray<T>(item: T, array: T[]): boolean;
-    export function removeItemToArray<T>(item: T, array: T[]): boolean;
+    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
     export function contains(array: Array<any>, obj: any): boolean;
     export function getOppositeSide(side: Side): Side;
     export function getSideFromVector(direction: Vector): Side;

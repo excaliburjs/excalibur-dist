@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1553+95579d7 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1551+dcf17a3 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -3135,37 +3135,19 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/ 
             var tmin = -Infinity;
             var tmax = +Infinity;
-            var xinv = ray.dir.x === 0 ? Number.MAX_VALUE : (1 / ray.dir.x);
-            var yinv = ray.dir.y === 0 ? Number.MAX_VALUE : (1 / ray.dir.y);
-            var tx1 = (this.left - ray.pos.x) * xinv;
-            var tx2 = (this.right - ray.pos.x) * xinv;
-            tmin = Math.min(tx1, tx2);
-            tmax = Math.max(tx1, tx2);
-            var ty1 = (this.top - ray.pos.y) * yinv;
-            var ty2 = (this.bottom - ray.pos.y) * yinv;
-            tmin = Math.max(tmin, Math.min(ty1, ty2));
-            tmax = Math.min(tmax, Math.max(ty1, ty2));
-            return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
-        };
-        BoundingBox.prototype.rayCastTime = function (ray, farClipDistance) {
-            if (farClipDistance === void 0) { farClipDistance = Infinity; }
-            // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/ 
-            var tmin = -Infinity;
-            var tmax = +Infinity;
-            var xinv = ray.dir.x === 0 ? Number.MAX_VALUE : (1 / ray.dir.x);
-            var yinv = ray.dir.y === 0 ? Number.MAX_VALUE : (1 / ray.dir.y);
-            var tx1 = (this.left - ray.pos.x) * xinv;
-            var tx2 = (this.right - ray.pos.x) * xinv;
-            tmin = Math.min(tx1, tx2);
-            tmax = Math.max(tx1, tx2);
-            var ty1 = (this.top - ray.pos.y) * yinv;
-            var ty2 = (this.bottom - ray.pos.y) * yinv;
-            tmin = Math.max(tmin, Math.min(ty1, ty2));
-            tmax = Math.min(tmax, Math.max(ty1, ty2));
-            if (tmax >= Math.max(0, tmin) && tmin < farClipDistance) {
-                return tmin;
+            if (ray.dir.x !== 0) {
+                var tx1 = (this.left - ray.pos.x) / ray.dir.x;
+                var tx2 = (this.right - ray.pos.x) / ray.dir.x;
+                tmin = Math.max(tmin, Math.min(tx1, tx2));
+                tmax = Math.min(tmax, Math.max(tx1, tx2));
             }
-            return -1;
+            if (ray.dir.y !== 0) {
+                var ty1 = (this.top - ray.pos.y) / ray.dir.y;
+                var ty2 = (this.bottom - ray.pos.y) / ray.dir.y;
+                tmin = Math.max(tmin, Math.min(ty1, ty2));
+                tmax = Math.min(tmax, Math.max(ty1, ty2));
+            }
+            return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
         };
         BoundingBox.prototype.contains = function (val) {
             if (val instanceof Algebra_7.Vector) {
@@ -11001,7 +10983,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1553+95579d7';
+    exports.EX_VERSION = '0.10.0-alpha.1551+dcf17a3';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13050,7 +13032,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in pixels
              */
             set: function (thePos) {
-                this.body.pos = thePos;
+                this.body.pos.setTo(thePos.x, thePos.y);
             },
             enumerable: true,
             configurable: true
@@ -13066,7 +13048,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in the last frame
              */
             set: function (thePos) {
-                this.body.oldPos = thePos;
+                this.body.oldPos.setTo(thePos.x, thePos.y);
             },
             enumerable: true,
             configurable: true
@@ -13082,7 +13064,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor in pixels/sec
              */
             set: function (theVel) {
-                this.body.vel = theVel;
+                this.body.vel.setTo(theVel.x, theVel.y);
             },
             enumerable: true,
             configurable: true
@@ -13098,7 +13080,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor from the last frame
              */
             set: function (theVel) {
-                this.body.oldVel = theVel;
+                this.body.oldVel.setTo(theVel.x, theVel.y);
             },
             enumerable: true,
             configurable: true
@@ -13115,7 +13097,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the acceleration vector of teh actor in pixels/second/second
              */
             set: function (theAcc) {
-                this.body.acc = theAcc;
+                this.body.acc.setTo(theAcc.x, theAcc.y);
             },
             enumerable: true,
             configurable: true

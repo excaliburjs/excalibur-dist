@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1577+71098f9 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1579+6049b89 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -965,6 +965,12 @@ declare module "Camera" {
     export class LockedCamera extends BaseCamera {
         getFocus(): Vector;
     }
+}
+declare module "Configurable" {
+    export type Constructor<T> = {
+        new (...args: any[]): T;
+    };
+    export function Configurable<T extends Constructor<Object>>(base: T): T;
 }
 declare module "DebugFlags" {
     export interface IDebugFlags {
@@ -5407,6 +5413,7 @@ declare module "Index" {
     export * from "Algebra";
     export * from "Camera";
     export * from "Class";
+    export * from "Configurable";
     export * from "Debug";
     export * from "Engine";
     export * from "EventDispatcher";

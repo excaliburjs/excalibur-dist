@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1551+dcf17a3 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1555+454d380 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -10456,20 +10456,22 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
             });
             // key up is on window because canvas cannot have focus
             global.addEventListener('keyup', function (ev) {
-                var key = _this._keys.indexOf(ev.keyCode);
+                var code = _this._normalizeKeyCode(ev.keyCode);
+                var key = _this._keys.indexOf(code);
                 _this._keys.splice(key, 1);
-                _this._keysUp.push(ev.keyCode);
-                var keyEvent = new KeyEvent(ev.keyCode);
+                _this._keysUp.push(code);
+                var keyEvent = new KeyEvent(code);
                 // alias the old api, we may want to deprecate this in the future
                 _this.eventDispatcher.emit('up', keyEvent);
                 _this.eventDispatcher.emit('release', keyEvent);
             });
             // key down is on window because canvas cannot have focus
             global.addEventListener('keydown', function (ev) {
-                if (_this._keys.indexOf(ev.keyCode) === -1) {
-                    _this._keys.push(ev.keyCode);
-                    _this._keysDown.push(ev.keyCode);
-                    var keyEvent = new KeyEvent(ev.keyCode);
+                var code = _this._normalizeKeyCode(ev.keyCode);
+                if (_this._keys.indexOf(code) === -1) {
+                    _this._keys.push(code);
+                    _this._keysDown.push(code);
+                    var keyEvent = new KeyEvent(code);
                     _this.eventDispatcher.emit('down', keyEvent);
                     _this.eventDispatcher.emit('press', keyEvent);
                 }
@@ -10510,6 +10512,19 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
          */
         Keyboard.prototype.wasReleased = function (key) {
             return this._keysUp.indexOf(key) > -1;
+        };
+        /**
+         * Normalizes some browser event key codes to map to standard Excalibur key codes
+         * @param code Event keyCode
+         * @see http://unixpapa.com/js/key.html
+         */
+        Keyboard.prototype._normalizeKeyCode = function (code) {
+            switch (code) {
+                case 59:
+                    return Keys.Semicolon;
+                default:
+                    return code;
+            }
         };
         return Keyboard;
     }(Class_7.Class));
@@ -10983,7 +10998,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1551+dcf17a3';
+    exports.EX_VERSION = '0.10.0-alpha.1555+454d380';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13032,7 +13047,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in pixels
              */
             set: function (thePos) {
-                this.body.pos.setTo(thePos.x, thePos.y);
+                this.body.pos = thePos;
             },
             enumerable: true,
             configurable: true
@@ -13048,7 +13063,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in the last frame
              */
             set: function (thePos) {
-                this.body.oldPos.setTo(thePos.x, thePos.y);
+                this.body.oldPos = thePos;
             },
             enumerable: true,
             configurable: true
@@ -13064,7 +13079,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor in pixels/sec
              */
             set: function (theVel) {
-                this.body.vel.setTo(theVel.x, theVel.y);
+                this.body.vel = theVel;
             },
             enumerable: true,
             configurable: true
@@ -13080,7 +13095,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor from the last frame
              */
             set: function (theVel) {
-                this.body.oldVel.setTo(theVel.x, theVel.y);
+                this.body.oldVel = theVel;
             },
             enumerable: true,
             configurable: true
@@ -13097,7 +13112,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the acceleration vector of teh actor in pixels/second/second
              */
             set: function (theAcc) {
-                this.body.acc.setTo(theAcc.x, theAcc.y);
+                this.body.acc = theAcc;
             },
             enumerable: true,
             configurable: true

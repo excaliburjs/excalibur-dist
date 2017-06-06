@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1545+f66a90b - 2017-06-05
+/*! excalibur - v0.10.0-alpha.1549+c0bbdc2 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1545+f66a90b - 2017-06-05
+/*! excalibur - v0.10.0-alpha.1549+c0bbdc2 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11438,7 +11438,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1545+f66a90b';
+    exports.EX_VERSION = '0.10.0-alpha.1549+c0bbdc2';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13487,7 +13487,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in pixels
              */
             set: function (thePos) {
-                this.body.pos = thePos;
+                this.body.pos.setTo(thePos.x, thePos.y);
             },
             enumerable: true,
             configurable: true
@@ -13503,7 +13503,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the position vector of the actor in the last frame
              */
             set: function (thePos) {
-                this.body.oldPos = thePos;
+                this.body.oldPos.setTo(thePos.x, thePos.y);
             },
             enumerable: true,
             configurable: true
@@ -13519,7 +13519,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor in pixels/sec
              */
             set: function (theVel) {
-                this.body.vel = theVel;
+                this.body.vel.setTo(theVel.x, theVel.y);
             },
             enumerable: true,
             configurable: true
@@ -13535,7 +13535,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the velocity vector of the actor from the last frame
              */
             set: function (theVel) {
-                this.body.oldVel = theVel;
+                this.body.oldVel.setTo(theVel.x, theVel.y);
             },
             enumerable: true,
             configurable: true
@@ -13552,7 +13552,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * Sets the acceleration vector of teh actor in pixels/second/second
              */
             set: function (theAcc) {
-                this.body.acc = theAcc;
+                this.body.acc.setTo(theAcc.x, theAcc.y);
             },
             enumerable: true,
             configurable: true

@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1573+38452d8 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1577+71098f9 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5001,6 +5001,11 @@ declare module "Input/Pointer" {
         Right = 2,
         Unknown = 3,
     }
+    export enum WheelDeltaMode {
+        Pixel = 0,
+        Line = 1,
+        Page = 2,
+    }
     /**
      * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
      */
@@ -5049,6 +5054,41 @@ declare module "Input/Pointer" {
         constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, pointerType: PointerType, button: PointerButton, ev: any);
     }
     /**
+     * Wheel Events
+     *
+     * Represents a mouse wheel event. See [[Pointers]] for more information on
+     * handling point input.
+     */
+    export class WheelEvent extends GameEvent<any> {
+        x: number;
+        y: number;
+        pageX: number;
+        pageY: number;
+        screenX: number;
+        screenY: number;
+        index: number;
+        deltaX: number;
+        deltaY: number;
+        deltaZ: number;
+        deltaMode: WheelDeltaMode;
+        ev: any;
+        /**
+         * @param x            The `x` coordinate of the event (in world coordinates)
+         * @param y            The `y` coordinate of the event (in world coordinates)
+         * @param pageX        The `x` coordinate of the event (in document coordinates)
+         * @param pageY        The `y` coordinate of the event (in document coordinates)
+         * @param screenX      The `x` coordinate of the event (in screen coordinates)
+         * @param screenY      The `y` coordinate of the event (in screen coordinates)
+         * @param index        The index of the pointer (zero-based)
+         * @param deltaX       The type of pointer
+         * @param deltaY       The type of pointer
+         * @param deltaZ       The type of pointer
+         * @param deltaMode    The type of movement [[WheelDeltaMode]]
+         * @param ev           The raw DOM event being handled
+         */
+        constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, deltaX: number, deltaY: number, deltaZ: number, deltaMode: WheelDeltaMode, ev: any);
+    }
+    /**
      * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
      * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
      *
@@ -5060,6 +5100,7 @@ declare module "Input/Pointer" {
         private _pointerUp;
         private _pointerMove;
         private _pointerCancel;
+        private _wheel;
         private _pointers;
         private _activePointers;
         constructor(engine: Engine);
@@ -5067,6 +5108,7 @@ declare module "Input/Pointer" {
         on(eventName: Events.down, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.move, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.wheel, handler: (event?: WheelEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Primary pointer (mouse, 1 finger, stylus, etc.)
@@ -5093,6 +5135,7 @@ declare module "Input/Pointer" {
         private _handleMouseEvent(eventName, eventArr);
         private _handleTouchEvent(eventName, eventArr);
         private _handlePointerEvent(eventName, eventArr);
+        private _handleWheelEvent(eventName, eventArr);
         /**
          * Gets the index of the pointer specified for the given pointer ID or finds the next empty pointer slot available.
          * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
@@ -5438,6 +5481,23 @@ declare module "Engine" {
         Fixed = 2,
         Position = 3,
     }
+    /**
+     * Enum representing the different mousewheel event bubble prevention
+     */
+    export enum ScrollPreventionMode {
+        /**
+         * Do not prevent any page scrolling
+         */
+        None = 0,
+        /**
+         * Prevent page scroll if mouse is over the game canvas
+         */
+        Canvas = 1,
+        /**
+         * Prevent all page scrolling via mouse wheel
+         */
+        All = 2,
+    }
     export interface IAbsolutePosition {
         top?: number | string;
         left?: number | string;
@@ -5480,6 +5540,10 @@ declare module "Engine" {
          */
         suppressMinimumBrowserFeatureDetection?: boolean;
         position?: string | IAbsolutePosition;
+        /**
+         * Scroll prevention method.
+         */
+        scrollPreventionMode?: ScrollPreventionMode;
     }
     /**
      * The Excalibur Engine
@@ -5577,6 +5641,10 @@ declare module "Engine" {
          * The action to take when a fatal exception is thrown
          */
         onFatalException: (e: any) => void;
+        /**
+         * The mouse wheel scroll prevention mode
+         */
+        pageScrollPreventionMode: ScrollPreventionMode;
         private _logger;
         private _isSmoothingEnabled;
         private _requestId;
@@ -6145,10 +6213,12 @@ declare module "Events" {
     export type pointerdown = 'pointerdown';
     export type pointermove = 'pointermove';
     export type pointercancel = 'pointercancel';
+    export type pointerwheel = 'pointerwheel';
     export type up = 'up';
     export type down = 'down';
     export type move = 'move';
     export type cancel = 'cancel';
+    export type wheel = 'wheel';
     export type press = 'press';
     export type release = 'release';
     export type hold = 'hold';
@@ -6761,6 +6831,7 @@ declare module "Actor" {
         on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * If the current actor is a member of the scene, this will remove

@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1573+38452d8 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1577+71098f9 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1573+38452d8 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1577+71098f9 - 2017-06-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -10497,7 +10497,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
         Axes[Axes["RightStickY"] = 3] = "RightStickY";
     })(Axes = exports.Axes || (exports.Axes = {}));
 });
-define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "Class", "Util/Util"], function (require, exports, Events_6, UIActor_1, Algebra_19, Class_6, Util) {
+define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "Algebra", "Class", "Util/Util"], function (require, exports, Engine_1, Events_6, UIActor_1, Algebra_19, Class_6, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -10520,6 +10520,12 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
         PointerButton[PointerButton["Right"] = 2] = "Right";
         PointerButton[PointerButton["Unknown"] = 3] = "Unknown";
     })(PointerButton = exports.PointerButton || (exports.PointerButton = {}));
+    var WheelDeltaMode;
+    (function (WheelDeltaMode) {
+        WheelDeltaMode[WheelDeltaMode["Pixel"] = 0] = "Pixel";
+        WheelDeltaMode[WheelDeltaMode["Line"] = 1] = "Line";
+        WheelDeltaMode[WheelDeltaMode["Page"] = 2] = "Page";
+    })(WheelDeltaMode = exports.WheelDeltaMode || (exports.WheelDeltaMode = {}));
     /**
      * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
      */
@@ -10535,6 +10541,12 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
          */
         PointerScope[PointerScope["Document"] = 1] = "Document";
     })(PointerScope = exports.PointerScope || (exports.PointerScope = {}));
+    /**
+     * A constant used to normalize wheel events across different browsers
+     *
+     * This normalization factor is pulled from https://developer.mozilla.org/en-US/docs/Web/Events/wheel#Listening_to_this_event_across_browser
+     */
+    var ScrollWheelNormalizationFactor = -1 / 40;
     /**
      * Pointer events
      *
@@ -10576,6 +10588,48 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
     exports.PointerEvent = PointerEvent;
     ;
     /**
+     * Wheel Events
+     *
+     * Represents a mouse wheel event. See [[Pointers]] for more information on
+     * handling point input.
+     */
+    var WheelEvent = (function (_super) {
+        __extends(WheelEvent, _super);
+        /**
+         * @param x            The `x` coordinate of the event (in world coordinates)
+         * @param y            The `y` coordinate of the event (in world coordinates)
+         * @param pageX        The `x` coordinate of the event (in document coordinates)
+         * @param pageY        The `y` coordinate of the event (in document coordinates)
+         * @param screenX      The `x` coordinate of the event (in screen coordinates)
+         * @param screenY      The `y` coordinate of the event (in screen coordinates)
+         * @param index        The index of the pointer (zero-based)
+         * @param deltaX       The type of pointer
+         * @param deltaY       The type of pointer
+         * @param deltaZ       The type of pointer
+         * @param deltaMode    The type of movement [[WheelDeltaMode]]
+         * @param ev           The raw DOM event being handled
+         */
+        function WheelEvent(x, y, pageX, pageY, screenX, screenY, index, deltaX, deltaY, deltaZ, deltaMode, ev) {
+            var _this = _super.call(this) || this;
+            _this.x = x;
+            _this.y = y;
+            _this.pageX = pageX;
+            _this.pageY = pageY;
+            _this.screenX = screenX;
+            _this.screenY = screenY;
+            _this.index = index;
+            _this.deltaX = deltaX;
+            _this.deltaY = deltaY;
+            _this.deltaZ = deltaZ;
+            _this.deltaMode = deltaMode;
+            _this.ev = ev;
+            return _this;
+        }
+        return WheelEvent;
+    }(Events_6.GameEvent));
+    exports.WheelEvent = WheelEvent;
+    ;
+    /**
      * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
      * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
      *
@@ -10589,6 +10643,7 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
             _this._pointerUp = [];
             _this._pointerMove = [];
             _this._pointerCancel = [];
+            _this._wheel = [];
             _this._pointers = [];
             _this._activePointers = [];
             _this._engine = engine;
@@ -10634,12 +10689,26 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
                 target.addEventListener('mouseup', this._handleMouseEvent('up', this._pointerUp));
                 target.addEventListener('mousemove', this._handleMouseEvent('move', this._pointerMove));
             }
+            // MDN MouseWheelEvent
+            if ('onwheel' in document.createElement('div')) {
+                // Modern Browsers
+                target.addEventListener('wheel', this._handleWheelEvent('wheel', this._wheel));
+            }
+            else if (document.onmousewheel !== undefined) {
+                // Webkit and IE
+                target.addEventListener('mousewheel', this._handleWheelEvent('wheel', this._wheel));
+            }
+            else {
+                // Remaining browser and older Firefox
+                target.addEventListener('MozMousePixelScroll', this._handleWheelEvent('wheel', this._wheel));
+            }
         };
         Pointers.prototype.update = function () {
             this._pointerUp.length = 0;
             this._pointerDown.length = 0;
             this._pointerMove.length = 0;
             this._pointerCancel.length = 0;
+            this._wheel.length = 0;
         };
         /**
          * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
@@ -10693,6 +10762,13 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
             for (i; i < len; i++) {
                 if (actor.contains(this._pointerCancel[i].x, this._pointerCancel[i].y, !isUIActor)) {
                     actor.eventDispatcher.emit('pointercancel', this._pointerCancel[i]);
+                }
+            }
+            i = 0;
+            len = this._wheel.length;
+            for (i; i < len; i++) {
+                if (actor.contains(this._wheel[i].x, this._wheel[i].y, !isUIActor)) {
+                    actor.eventDispatcher.emit('pointerwheel', this._wheel[i]);
                 }
             }
         };
@@ -10763,6 +10839,43 @@ define("Input/Pointer", ["require", "exports", "Events", "UIActor", "Algebra", "
                         _this._activePointers[index] = e.pointerId;
                     }
                 }
+            };
+        };
+        Pointers.prototype._handleWheelEvent = function (eventName, eventArr) {
+            var _this = this;
+            return function (e) {
+                // Should we prevent page scroll because of this event
+                if (_this._engine.pageScrollPreventionMode === Engine_1.ScrollPreventionMode.All ||
+                    (_this._engine.pageScrollPreventionMode === Engine_1.ScrollPreventionMode.Canvas && e.target === _this._engine.canvas)) {
+                    e.preventDefault();
+                }
+                var x = e.pageX - Util.getPosition(_this._engine.canvas).x;
+                var y = e.pageY - Util.getPosition(_this._engine.canvas).y;
+                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_19.Vector(x, y));
+                // deltaX, deltaY, and deltaZ are the standard modern properties
+                // wheelDeltaX, wheelDeltaY, are legacy properties in webkit browsers and older IE
+                // e.detail is only used in opera
+                var deltaX = e.deltaX ||
+                    (e.wheelDeltaX * ScrollWheelNormalizationFactor) ||
+                    0;
+                var deltaY = e.deltaY ||
+                    (e.wheelDeltaY * ScrollWheelNormalizationFactor) ||
+                    (e.wheelDelta * ScrollWheelNormalizationFactor) ||
+                    e.detail ||
+                    0;
+                var deltaZ = e.deltaZ || 0;
+                var deltaMode = WheelDeltaMode.Pixel;
+                if (e.deltaMode) {
+                    if (e.deltaMode === 1) {
+                        deltaMode = WheelDeltaMode.Line;
+                    }
+                    else if (e.deltaMode === 2) {
+                        deltaMode = WheelDeltaMode.Page;
+                    }
+                }
+                var we = new WheelEvent(transformedPoint.x, transformedPoint.y, e.pageX, e.pageY, x, y, 0, deltaX, deltaY, deltaZ, deltaMode, e);
+                eventArr.push(we);
+                _this.at(0).eventDispatcher.emit(eventName, we);
             };
         };
         /**
@@ -11462,7 +11575,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     }());
     exports.MockedElement = MockedElement;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_1, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -11471,7 +11584,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1573+38452d8';
+    exports.EX_VERSION = '0.10.0-alpha.1577+71098f9';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -11479,7 +11592,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     __export(Camera_1);
     __export(Class_8);
     __export(Debug_1);
-    __export(Engine_1);
+    __export(Engine_2);
     __export(EventDispatcher_2);
     __export(Events_8);
     __export(Group_1);
@@ -11535,6 +11648,24 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
         */
         DisplayMode[DisplayMode["Position"] = 3] = "Position";
     })(DisplayMode = exports.DisplayMode || (exports.DisplayMode = {}));
+    /**
+     * Enum representing the different mousewheel event bubble prevention
+     */
+    var ScrollPreventionMode;
+    (function (ScrollPreventionMode) {
+        /**
+         * Do not prevent any page scrolling
+         */
+        ScrollPreventionMode[ScrollPreventionMode["None"] = 0] = "None";
+        /**
+         * Prevent page scroll if mouse is over the game canvas
+         */
+        ScrollPreventionMode[ScrollPreventionMode["Canvas"] = 1] = "Canvas";
+        /**
+         * Prevent all page scrolling via mouse wheel
+         */
+        ScrollPreventionMode[ScrollPreventionMode["All"] = 2] = "All";
+    })(ScrollPreventionMode = exports.ScrollPreventionMode || (exports.ScrollPreventionMode = {}));
     /**
      * The Excalibur Engine
      *
@@ -12066,6 +12197,7 @@ O|===|* >________________>\n\
             this.input.keyboard.init();
             this.input.pointers.init(options && options.pointerScope === Input.PointerScope.Document ? document : this.canvas);
             this.input.gamepads.init();
+            this.pageScrollPreventionMode = options.scrollPreventionMode;
             // Issue #385 make use of the visibility api
             // https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
             var hidden, visibilityChange;
@@ -12324,7 +12456,8 @@ O|===|* >________________>\n\
         canvasElementId: '',
         pointerScope: Input.PointerScope.Document,
         suppressConsoleBootMessage: null,
-        suppressMinimumBrowserFeatureDetection: null
+        suppressMinimumBrowserFeatureDetection: null,
+        scrollPreventionMode: ScrollPreventionMode.Canvas
     };
     __decorate([
         Decorators_3.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })

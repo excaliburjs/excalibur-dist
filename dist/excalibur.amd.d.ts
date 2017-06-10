@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1592+e829ad4 - 2017-06-10
+/*! excalibur - v0.10.0-alpha.1594+5b9f7bd - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1942,7 +1942,7 @@ declare module "Debug" {
          */
         collisions: number;
         /**
-         * A Hash storing the [[Pair.ids]]s of [[Pairs]]s that collided in the frame
+         * A Hash storing the [[Pair.id]]s of [[Pair]]s that collided in the frame
          */
         collidersHash: ICollidersHash;
         /**

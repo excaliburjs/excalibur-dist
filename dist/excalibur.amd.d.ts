@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1579+6049b89 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1581+b3e5f17 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -841,7 +841,7 @@ declare module "Promises" {
 declare module "Camera" {
     import { Engine } from "Engine";
     import { EasingFunction } from "Util/EasingFunctions";
-    import { IPromise } from "Promises";
+    import { IPromise, Promise } from "Promises";
     import { Vector } from "Algebra";
     import { Actor } from "Actor";
     /**
@@ -880,9 +880,9 @@ declare module "Camera" {
         private _xShake;
         private _yShake;
         protected _isZooming: boolean;
-        private _currentZoomScale;
         private _maxZoomScale;
         private _zoomDuration;
+        private _zoomPromise;
         private _zoomIncrement;
         private _easing;
         /**
@@ -931,12 +931,11 @@ declare module "Camera" {
          * @param scale    The scale of the zoom
          * @param duration The duration of the zoom in milliseconds
          */
-        zoom(scale: number, duration?: number): void;
+        zoom(scale: number, duration?: number): Promise<boolean>;
         /**
          * Gets the current zoom scale
          */
         getZoom(): number;
-        private _setCurrentZoomScale(zoomScale);
         update(_engine: Engine, delta: number): void;
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
@@ -965,12 +964,6 @@ declare module "Camera" {
     export class LockedCamera extends BaseCamera {
         getFocus(): Vector;
     }
-}
-declare module "Configurable" {
-    export type Constructor<T> = {
-        new (...args: any[]): T;
-    };
-    export function Configurable<T extends Constructor<Object>>(base: T): T;
 }
 declare module "DebugFlags" {
     export interface IDebugFlags {
@@ -5413,7 +5406,6 @@ declare module "Index" {
     export * from "Algebra";
     export * from "Camera";
     export * from "Class";
-    export * from "Configurable";
     export * from "Debug";
     export * from "Engine";
     export * from "EventDispatcher";

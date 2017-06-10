@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1579+6049b89 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1581+b3e5f17 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1579+6049b89 - 2017-06-06
+/*! excalibur - v0.10.0-alpha.1581+b3e5f17 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2061,7 +2061,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this._xShake = 0;
             this._yShake = 0;
             this._isZooming = false;
-            this._currentZoomScale = 1;
             this._maxZoomScale = 1;
             this._zoomDuration = 0;
             this._zoomIncrement = 0.01;
@@ -2167,36 +2166,25 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
          */
         BaseCamera.prototype.zoom = function (scale, duration) {
             if (duration === void 0) { duration = 0; }
-            this._isZooming = true;
-            this._maxZoomScale = scale;
-            this._zoomDuration = duration;
+            this._zoomPromise = new Promises_1.Promise();
             if (duration) {
-                this._zoomIncrement = Math.abs(this._maxZoomScale - this._currentZoomScale) / duration * 1000;
-            }
-            if (this._maxZoomScale < 1) {
-                if (duration) {
-                    this._zoomIncrement = -1 * this._zoomIncrement;
-                }
-                else {
-                    this._isZooming = false;
-                    this._setCurrentZoomScale(this._maxZoomScale);
-                }
+                this._isZooming = true;
+                this._maxZoomScale = scale;
+                this._zoomDuration = duration;
+                this._zoomIncrement = (scale - this.z) / duration;
             }
             else {
-                if (!duration) {
-                    this._isZooming = false;
-                    this._setCurrentZoomScale(this._maxZoomScale);
-                }
+                this._isZooming = false;
+                this.z = scale;
+                this._zoomPromise.resolve(true);
             }
+            return this._zoomPromise;
         };
         /**
          * Gets the current zoom scale
          */
         BaseCamera.prototype.getZoom = function () {
             return this.z;
-        };
-        BaseCamera.prototype._setCurrentZoomScale = function (zoomScale) {
-            this.z = zoomScale;
         };
         BaseCamera.prototype.update = function (_engine, delta) {
             // Update placements based on linear algebra
@@ -2207,6 +2195,24 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this.dy += this.ay * delta / 1000;
             this.dz += this.az * delta / 1000;
             this.rotation += this.rx * delta / 1000;
+            if (this._isZooming) {
+                var newZoom = this.z + this._zoomIncrement * delta;
+                this.z = newZoom;
+                if (this._zoomIncrement > 0) {
+                    if (newZoom >= this._maxZoomScale) {
+                        this._isZooming = false;
+                        this.z = this._maxZoomScale;
+                        this._zoomPromise.resolve(true);
+                    }
+                }
+                else {
+                    if (newZoom <= this._maxZoomScale) {
+                        this._isZooming = false;
+                        this.z = this._maxZoomScale;
+                        this._zoomPromise.resolve(true);
+                    }
+                }
+            }
             if (this._cameraMoving) {
                 if (this._currentLerpTime < this._lerpDuration) {
                     if (this._lerpEnd.x < this._lerpStart.x) {
@@ -2339,36 +2345,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         return LockedCamera;
     }(BaseCamera));
     exports.LockedCamera = LockedCamera;
-});
-define("Configurable", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function Configurable(base) {
-        return (function (_super) {
-            __extends(class_1, _super);
-            function class_1() {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                var _this = _super.apply(this, args) || this;
-                if (args.length === 1 && typeof args[0] === {}) {
-                    _this.setProperties(args[0]);
-                }
-                return _this;
-            }
-            class_1.prototype.setProperties = function (props) {
-                for (var k in props) {
-                    if (typeof this[k] !== 'function') {
-                        this[k] = props[k];
-                    }
-                }
-                return this;
-            };
-            return class_1;
-        }(base));
-    }
-    exports.Configurable = Configurable;
 });
 define("DebugFlags", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -11605,7 +11581,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     }());
     exports.MockedElement = MockedElement;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Configurable", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Configurable_1, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -11614,14 +11590,13 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1579+6049b89';
+    exports.EX_VERSION = '0.10.0-alpha.1581+b3e5f17';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
     __export(Algebra_20);
     __export(Camera_1);
     __export(Class_8);
-    __export(Configurable_1);
     __export(Debug_1);
     __export(Engine_2);
     __export(EventDispatcher_2);

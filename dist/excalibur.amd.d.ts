@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1596+4714760 - 2017-06-10
+/*! excalibur - v0.10.0-alpha.1598+c533b07 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5478,6 +5478,9 @@ declare module "Engine" {
          * Show the game as a fixed size
          */
         Fixed = 2,
+        /**
+         * Allow the game to be positioned with the [[IEngineOptions.position]] option
+         */
         Position = 3,
     }
     /**
@@ -5497,6 +5500,11 @@ declare module "Engine" {
          */
         All = 2,
     }
+    /**
+     * Interface describing the absolute CSS position of the game window. For use when [[DisplayMode.Position]]
+     * is specified and when the user wants to define exact pixel spacing of the window.
+     * When a number is given, the value is interpreted as pixels
+     */
     export interface IAbsolutePosition {
         top?: number | string;
         left?: number | string;
@@ -5538,6 +5546,14 @@ declare module "Engine" {
          * browsers or if there is a bug in excalibur preventing execution.
          */
         suppressMinimumBrowserFeatureDetection?: boolean;
+        /**
+         * Specify how the game window is to be positioned when the [[DisplayMode.Position]] is chosen. This option MUST be specified
+         * if the DisplayMode is set as [[DisplayMode.Position]]. The position can be either a string or an [[IAbsolutePosition]].
+         * String must be in the format of css style background-position. The vertical position must precede the horizontal position in strings.
+         *
+         * Valid String examples: "top left", "top", "bottom", "middle", "middle center", "bottom right"
+         * Valid [[IAbsolutePosition]] examples: `{top: 5, right: 10%}`, `{bottom: 49em, left: 10px}`, `{left: 10, bottom: 40}`
+         */
         position?: string | IAbsolutePosition;
         /**
          * Scroll prevention method.

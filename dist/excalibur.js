@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1596+4714760 - 2017-06-10
+/*! excalibur - v0.10.0-alpha.1598+c533b07 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.10.0-alpha.1596+4714760 - 2017-06-10
+/*! excalibur - v0.10.0-alpha.1598+c533b07 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11590,7 +11590,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1596+4714760';
+    exports.EX_VERSION = '0.10.0-alpha.1598+c533b07';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -11649,9 +11649,9 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
          * Show the game as a fixed size
          */
         DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
-        /*
-        * Allow the game to be positioned with the position option
-        */
+        /**
+         * Allow the game to be positioned with the [[IEngineOptions.position]] option
+         */
         DisplayMode[DisplayMode["Position"] = 3] = "Position";
     })(DisplayMode = exports.DisplayMode || (exports.DisplayMode = {}));
     /**

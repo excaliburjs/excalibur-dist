@@ -1,4 +1,4 @@
-/*! excalibur - v0.10.0-alpha.1602+836c894 - 2017-06-10
+/*! excalibur - v0.10.0-alpha.1603+a24cdb6 - 2017-06-10
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11135,7 +11135,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.10.0-alpha.1602+836c894';
+    exports.EX_VERSION = '0.10.0-alpha.1603+a24cdb6';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

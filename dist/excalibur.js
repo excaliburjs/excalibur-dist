@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1610+e9080f2 - 2017-06-11
+/*! excalibur - v0.11.0-alpha.1613+1274a22 - 2017-06-15
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1610+e9080f2 - 2017-06-11
+/*! excalibur - v0.11.0-alpha.1613+1274a22 - 2017-06-15
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -8440,7 +8440,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
         Timer.prototype.update = function (delta) {
             this._totalTimeAlive += delta;
             this._elapsedTime += delta;
-            if (this._elapsedTime > this.interval) {
+            if (!this.complete && this._elapsedTime > this.interval) {
                 this.fcn.call(this);
                 if (this.repeats) {
                     this._elapsedTime = 0;
@@ -8449,6 +8449,17 @@ define("Timer", ["require", "exports"], function (require, exports) {
                     this.complete = true;
                 }
             }
+        };
+        /**
+         * Resets the timer so that it can be reused, and optionally reconfigure the timers interval.
+         * @param newInterval If specified, sets a new non-negative interval in milliseconds to refire the callback
+         */
+        Timer.prototype.reset = function (newInterval) {
+            if (!!newInterval && newInterval >= 0) {
+                this.interval = newInterval;
+            }
+            this.complete = false;
+            this._elapsedTime = 0;
         };
         Timer.prototype.getTimeRunning = function () {
             return this._totalTimeAlive;
@@ -11590,7 +11601,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1610+e9080f2';
+    exports.EX_VERSION = '0.11.0-alpha.1613+1274a22';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12660,10 +12671,11 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             }
             this._cancelQueue.length = 0;
             // Cycle through timers updating timers
-            this._timers = this._timers.filter(function (timer) {
+            for (var _i = 0, _a = this._timers; _i < _a.length; _i++) {
+                var timer = _a[_i];
                 timer.update(delta);
-                return !timer.complete;
-            });
+            }
+            ;
             // Cycle through actors updating UI actors
             for (i = 0, len = this.uiActors.length; i < len; i++) {
                 this.uiActors[i].update(engine, delta);
@@ -12903,7 +12915,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          * Tests whether a [[Timer]] is active in the scene
          */
         Scene.prototype.isTimerActive = function (timer) {
-            return (this._timers.indexOf(timer) > -1);
+            return (this._timers.indexOf(timer) > -1 && !timer.complete);
         };
         /**
          * Creates and adds a [[Group]] to the scene with a name

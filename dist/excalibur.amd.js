@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1628+d89e5bc - 2017-06-27
+/*! excalibur - v0.11.0-alpha.1629+6731e4e - 2017-06-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11146,7 +11146,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1628+d89e5bc';
+    exports.EX_VERSION = '0.11.0-alpha.1629+6731e4e';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12090,7 +12090,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
     }
     exports.isUIActor = isUIActor;
 });
-define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
+define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors", "Util/Decorators"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils, Decorators_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12109,7 +12109,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             /**
              * The actors in the current scene
              */
-            _this.children = [];
+            _this.actors = [];
             /**
              * The [[TileMap]]s in the scene, if any
              */
@@ -12516,8 +12516,21 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 }
             }
         };
+        Object.defineProperty(Scene.prototype, "children", {
+            get: function () {
+                return this.actors;
+            },
+            set: function (actors) {
+                this.actors = actors;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return Scene;
     }(Class_10.Class));
+    __decorate([
+        Decorators_4.obsolete({ alternateMethod: 'ex.Scene.actors' })
+    ], Scene.prototype, "children", null);
     exports.Scene = Scene;
 });
 define("Events", ["require", "exports"], function (require, exports) {

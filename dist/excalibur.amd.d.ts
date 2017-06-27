@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1628+d89e5bc - 2017-06-27
+/*! excalibur - v0.11.0-alpha.1629+6731e4e - 2017-06-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5996,7 +5996,7 @@ declare module "Scene" {
         /**
          * The actors in the current scene
          */
-        children: Actor[];
+        actors: Actor[];
         /**
          * The [[TileMap]]s in the scene, if any
          */
@@ -6193,6 +6193,7 @@ declare module "Scene" {
          */
         updateDrawTree(actor: Actor): void;
         private _collectActorStats(engine);
+        children: Actor[];
     }
 }
 declare module "Events" {

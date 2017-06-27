@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1617+40bfb3c - 2017-06-24
+/*! excalibur - v0.11.0-alpha.1618+204e5af - 2017-06-27
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -4095,6 +4095,11 @@ declare module "Timer" {
          * @param delta  Number of elapsed milliseconds since the last update.
          */
         update(delta: number): void;
+        /**
+         * Resets the timer so that it can be reused, and optionally reconfigure the timers interval.
+         * @param newInterval If specified, sets a new non-negative interval in milliseconds to refire the callback
+         */
+        reset(newInterval?: number): void;
         getTimeRunning(): number;
         /**
          * Cancels the timer, preventing any further executions.

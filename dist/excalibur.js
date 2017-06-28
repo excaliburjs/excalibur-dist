@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1640+255f6ae - 2017-06-28
+/*! excalibur - v0.11.0-alpha.1647+5fb4f64 - 2017-06-28
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1640+255f6ae - 2017-06-28
+/*! excalibur - v0.11.0-alpha.1647+5fb4f64 - 2017-06-28
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11601,7 +11601,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1640+255f6ae';
+    exports.EX_VERSION = '0.11.0-alpha.1647+5fb4f64';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -11707,7 +11707,8 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
          *   height: 0, // the height of the canvas
          *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
          *   displayMode: ex.DisplayMode.FullScreen, // the display mode
-         *   pointerScope: ex.Input.PointerScope.Document // the scope of capturing pointer (mouse/touch) events
+         *   pointerScope: ex.Input.PointerScope.Document, // the scope of capturing pointer (mouse/touch) events
+         *   backgroundColor: ex.Color.fromHex('#2185d0') // background color of the engine
          * });
          *
          * // call game.start, which is a Promise
@@ -11749,10 +11750,6 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
              */
             _this.isDebug = false;
             _this.debugColor = new Color_19.Color(255, 255, 255);
-            /**
-             * Sets the background color for the engine.
-             */
-            _this.backgroundColor = new Color_19.Color(0, 0, 100);
             /**
              * The action to take when a fatal exception is thrown
              */
@@ -11820,6 +11817,9 @@ O|===|* >________________>\n\
             else if (!options.displayMode) {
                 _this._logger.debug('Engine viewport is fullscreen');
                 _this.displayMode = DisplayMode.FullScreen;
+            }
+            if (options.backgroundColor) {
+                _this.backgroundColor = options.backgroundColor.clone();
             }
             _this._loader = new Loader_2.Loader();
             _this._initialize(options);
@@ -12474,7 +12474,8 @@ O|===|* >________________>\n\
         pointerScope: Input.PointerScope.Document,
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,
-        scrollPreventionMode: ScrollPreventionMode.Canvas
+        scrollPreventionMode: ScrollPreventionMode.Canvas,
+        backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
     };
     __decorate([
         Decorators_3.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })

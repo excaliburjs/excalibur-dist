@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1647+5fb4f64 - 2017-06-28
+/*! excalibur - v0.11.0-alpha.1651+6986d4a - 2017-06-30
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1647+5fb4f64 - 2017-06-28
+/*! excalibur - v0.11.0-alpha.1651+6986d4a - 2017-06-30
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5787,7 +5787,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
             /**
              * Indicates whether the animation should loop after it is completed
              */
-            this.loop = false;
+            this.loop = true;
             /**
              * Indicates the frame index the animation should freeze on for a non-looping
              * animation. By default it is the last frame.
@@ -11601,7 +11601,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1647+5fb4f64';
+    exports.EX_VERSION = '0.11.0-alpha.1651+6986d4a';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

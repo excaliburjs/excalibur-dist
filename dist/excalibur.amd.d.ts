@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1651+6986d4a - 2017-06-30
+/*! excalibur - v0.11.0-alpha.1655+1b7f908 - 2017-07-01
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1087,8 +1087,28 @@ declare module "Drawing/Color" {
         average(color: Color): Color;
         /**
          * Returns a CSS string representation of a color.
+         *
+         * @param format Color representation, accepts: rgb, hsl, or hex
          */
-        toString(): string;
+        toString(format?: 'rgb' | 'hsl' | 'hex'): string;
+        /**
+         * Returns Hex Value of a color component
+         * @param c color component
+         * @see https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+         */
+        private _componentToHex(c);
+        /**
+         * Return Hex representation of a color.
+         */
+        toHex(): string;
+        /**
+         * Return RGBA representation of a color.
+         */
+        toRGBA(): string;
+        /**
+         * Return HSLA representation of a color.
+         */
+        toHSLA(): string;
         /**
          * Returns a CSS string representation of a color.
          */

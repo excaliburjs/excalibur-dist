@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1651+6986d4a - 2017-06-30
+/*! excalibur - v0.11.0-alpha.1655+1b7f908 - 2017-07-01
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1651+6986d4a - 2017-06-30
+/*! excalibur - v0.11.0-alpha.1655+1b7f908 - 2017-07-01
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2507,13 +2507,52 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         };
         /**
          * Returns a CSS string representation of a color.
+         *
+         * @param format Color representation, accepts: rgb, hsl, or hex
          */
-        Color.prototype.toString = function () {
+        Color.prototype.toString = function (format) {
+            if (format === void 0) { format = 'rgb'; }
+            switch (format) {
+                case 'rgb':
+                    return this.toRGBA();
+                case 'hsl':
+                    return this.toHSLA();
+                case 'hex':
+                    return this.toHex();
+                default:
+                    throw new Error('Invalid Color format');
+            }
+        };
+        /**
+         * Returns Hex Value of a color component
+         * @param c color component
+         * @see https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+         */
+        Color.prototype._componentToHex = function (c) {
+            var hex = c.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        };
+        /**
+         * Return Hex representation of a color.
+         */
+        Color.prototype.toHex = function () {
+            return '#' + this._componentToHex(this.r) + this._componentToHex(this.g) + this._componentToHex(this.b);
+        };
+        /**
+         * Return RGBA representation of a color.
+         */
+        Color.prototype.toRGBA = function () {
             var result = String(this.r.toFixed(0)) + ', ' + String(this.g.toFixed(0)) + ', ' + String(this.b.toFixed(0));
             if (this.a !== undefined || this.a !== null) {
                 return 'rgba(' + result + ', ' + String(this.a) + ')';
             }
             return 'rgb(' + result + ')';
+        };
+        /**
+         * Return HSLA representation of a color.
+         */
+        Color.prototype.toHSLA = function () {
+            return HSLColor.fromRGBA(this.r, this.g, this.b, this.a).toString();
         };
         /**
          * Returns a CSS string representation of a color.
@@ -2677,6 +2716,10 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
                 b = HSLColor.hue2rgb(p, q, this.h - 1 / 3);
             }
             return new Color(r * 255, g * 255, b * 255, this.a);
+        };
+        HSLColor.prototype.toString = function () {
+            var h = this.h.toFixed(0), s = this.s.toFixed(0), l = this.l.toFixed(0), a = this.a.toFixed(0);
+            return "hsla(" + h + ", " + s + ", " + l + ", " + a + ")";
         };
         return HSLColor;
     }());
@@ -11601,7 +11644,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1651+6986d4a';
+    exports.EX_VERSION = '0.11.0-alpha.1655+1b7f908';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

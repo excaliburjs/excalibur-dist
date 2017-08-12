@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1665+5b72924 - 2017-08-08
+/*! excalibur - v0.11.0-alpha.1669+f4f12a2 - 2017-08-12
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,16 +453,10 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1665+5b72924 - 2017-08-08
+/*! excalibur - v0.11.0-alpha.1669+f4f12a2 - 2017-08-12
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -473,6 +467,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 define("Actions/RotationType", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -1199,634 +1199,10 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
     };
     exports.EasingFunctions = EasingFunctions;
 });
-define("Util/Log", ["require", "exports"], function (require, exports) {
+// Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
+define("Promises", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Logging level that Excalibur will tag
-     */
-    var LogLevel;
-    (function (LogLevel) {
-        LogLevel[LogLevel["Debug"] = 0] = "Debug";
-        LogLevel[LogLevel["Info"] = 1] = "Info";
-        LogLevel[LogLevel["Warn"] = 2] = "Warn";
-        LogLevel[LogLevel["Error"] = 3] = "Error";
-        LogLevel[LogLevel["Fatal"] = 4] = "Fatal";
-    })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
-    /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
-     *
-     * [[include:Logger.md]]
-     */
-    var Logger = (function () {
-        function Logger() {
-            this._appenders = [];
-            /**
-             * Gets or sets the default logging level. Excalibur will only log
-             * messages if equal to or above this level. Default: [[LogLevel.Info]]
-             */
-            this.defaultLevel = LogLevel.Info;
-            if (Logger._instance) {
-                throw new Error('Logger is a singleton');
-            }
-            Logger._instance = this;
-            // Default console appender
-            Logger._instance.addAppender(new ConsoleAppender());
-            return Logger._instance;
-        }
-        /**
-         * Gets the current static instance of Logger
-         */
-        Logger.getInstance = function () {
-            if (Logger._instance == null) {
-                Logger._instance = new Logger();
-            }
-            return Logger._instance;
-        };
-        /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
-         */
-        Logger.prototype.addAppender = function (appender) {
-            this._appenders.push(appender);
-        };
-        /**
-         * Clears all appenders from the logger
-         */
-        Logger.prototype.clearAppenders = function () {
-            this._appenders.length = 0;
-        };
-        /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
-         */
-        Logger.prototype._log = function (level, args) {
-            if (level == null) {
-                level = this.defaultLevel;
-            }
-            var i = 0, len = this._appenders.length;
-            for (i; i < len; i++) {
-                if (level >= this.defaultLevel) {
-                    this._appenders[i].log(level, args);
-                }
-            }
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.debug = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Debug, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.info = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Info, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.warn = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Warn, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.error = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Error, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.fatal = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Fatal, args);
-        };
-        return Logger;
-    }());
-    Logger._instance = null;
-    exports.Logger = Logger;
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    var ConsoleAppender = (function () {
-        function ConsoleAppender() {
-        }
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        ConsoleAppender.prototype.log = function (level, args) {
-            // Check for console support
-            if (!console && !console.log && console.warn && console.error) {
-                // todo maybe do something better than nothing
-                return;
-            }
-            // Create a new console args array
-            var consoleArgs = [];
-            consoleArgs.unshift.apply(consoleArgs, args);
-            consoleArgs.unshift('[' + LogLevel[level] + '] : ');
-            if (level < LogLevel.Warn) {
-                // Call .log for Debug/Info
-                if (console.log.apply) {
-                    // this is required on some older browsers that don't support apply on console.log :(
-                    console.log.apply(console, consoleArgs);
-                }
-                else {
-                    console.log(consoleArgs.join(' '));
-                }
-            }
-            else if (level < LogLevel.Error) {
-                // Call .warn for Warn
-                if (console.warn.apply) {
-                    console.warn.apply(console, consoleArgs);
-                }
-                else {
-                    console.warn(consoleArgs.join(' '));
-                }
-            }
-            else {
-                // Call .error for Error/Fatal
-                if (console.error.apply) {
-                    console.error.apply(console, consoleArgs);
-                }
-                else {
-                    console.error(consoleArgs.join(' '));
-                }
-            }
-        };
-        return ConsoleAppender;
-    }());
-    exports.ConsoleAppender = ConsoleAppender;
-    /**
-     * On-screen (canvas) appender
-     */
-    var ScreenAppender = (function () {
-        /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
-         */
-        function ScreenAppender(width, height) {
-            // @todo Clean this up
-            this._messages = [];
-            this._canvas = document.createElement('canvas');
-            this._canvas.width = width || window.innerWidth;
-            this._canvas.height = height || window.innerHeight;
-            this._canvas.style.position = 'absolute';
-            this._ctx = this._canvas.getContext('2d');
-            document.body.appendChild(this._canvas);
-        }
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        ScreenAppender.prototype.log = function (level, args) {
-            var message = args.join(',');
-            this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._messages.unshift('[' + LogLevel[level] + '] : ' + message);
-            var pos = 10;
-            var opacity = 1.0;
-            for (var i = 0; i < this._messages.length; i++) {
-                this._ctx.fillStyle = 'rgba(255,255,255,' + opacity.toFixed(2) + ')';
-                this._ctx.fillText(this._messages[i], 200, pos);
-                pos += 10;
-                opacity = opacity > 0 ? opacity - .05 : 0;
-            }
-        };
-        return ScreenAppender;
-    }());
-    exports.ScreenAppender = ScreenAppender;
-});
-define("Collision/Side", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * An enum that describes the sides of an Actor for collision
-     */
-    var Side;
-    (function (Side) {
-        Side[Side["None"] = 0] = "None";
-        Side[Side["Top"] = 1] = "Top";
-        Side[Side["Bottom"] = 2] = "Bottom";
-        Side[Side["Left"] = 3] = "Left";
-        Side[Side["Right"] = 4] = "Right";
-    })(Side = exports.Side || (exports.Side = {}));
-});
-define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], function (require, exports, Algebra_2, Side_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Two PI constant
-     */
-    exports.TwoPI = Math.PI * 2;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @returns Merged object with properties from other objects
-     * @credit https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
-     */
-    function extend() {
-        var extended = {};
-        var deep = false;
-        var i = 0;
-        var length = arguments.length;
-        // Check if a deep merge
-        if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
-            deep = arguments[0];
-            i++;
-        }
-        // Merge the object into the extended object
-        var assignExists = typeof Object.assign === 'function';
-        var merge = null;
-        if (!assignExists) {
-            merge = function (obj) {
-                for (var prop in obj) {
-                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                        // If deep merge and property is an object, merge properties
-                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-                            extended[prop] = extend(true, extended[prop], obj[prop]);
-                        }
-                        else {
-                            extended[prop] = obj[prop];
-                        }
-                    }
-                }
-            };
-        }
-        else {
-            merge = Object.assign;
-        }
-        // Loop through each object and conduct a merge
-        for (; i < length; i++) {
-            var obj = arguments[i];
-            if (!assignExists) {
-                merge(obj);
-            }
-            else {
-                merge(extended, obj);
-            }
-        }
-        return extended;
-    }
-    exports.extend = extend;
-    function base64Encode(inputStr) {
-        var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-        var outputStr = '';
-        var i = 0;
-        while (i < inputStr.length) {
-            //all three "& 0xff" added below are there to fix a known bug
-            //with bytes returned by xhr.responseText
-            var byte1 = inputStr.charCodeAt(i++) & 0xff;
-            var byte2 = inputStr.charCodeAt(i++) & 0xff;
-            var byte3 = inputStr.charCodeAt(i++) & 0xff;
-            var enc1 = byte1 >> 2;
-            var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
-            var enc3, enc4;
-            if (isNaN(byte2)) {
-                enc3 = enc4 = 64;
-            }
-            else {
-                enc3 = ((byte2 & 15) << 2) | (byte3 >> 6);
-                if (isNaN(byte3)) {
-                    enc4 = 64;
-                }
-                else {
-                    enc4 = byte3 & 63;
-                }
-            }
-            outputStr += b64.charAt(enc1) + b64.charAt(enc2) + b64.charAt(enc3) + b64.charAt(enc4);
-        }
-        return outputStr;
-    }
-    exports.base64Encode = base64Encode;
-    /**
-     * Clamps a value between a min and max inclusive
-     */
-    function clamp(val, min, max) {
-        return Math.min(Math.max(min, val), max);
-    }
-    exports.clamp = clamp;
-    function randomInRange(min, max) {
-        return min + Math.random() * (max - min);
-    }
-    exports.randomInRange = randomInRange;
-    function randomIntInRange(min, max) {
-        return Math.round(randomInRange(min, max));
-    }
-    exports.randomIntInRange = randomIntInRange;
-    function canonicalizeAngle(angle) {
-        var tmpAngle = angle;
-        if (angle > exports.TwoPI) {
-            while (tmpAngle > exports.TwoPI) {
-                tmpAngle -= exports.TwoPI;
-            }
-        }
-        if (angle < 0) {
-            while (tmpAngle < 0) {
-                tmpAngle += exports.TwoPI;
-            }
-        }
-        return tmpAngle;
-    }
-    exports.canonicalizeAngle = canonicalizeAngle;
-    function toDegrees(radians) {
-        return 180 / Math.PI * radians;
-    }
-    exports.toDegrees = toDegrees;
-    function toRadians(degrees) {
-        return degrees / 180 * Math.PI;
-    }
-    exports.toRadians = toRadians;
-    function getPosition(el) {
-        var oLeft = 0, oTop = 0;
-        var calcOffsetLeft = function (parent) {
-            oLeft += parent.offsetLeft;
-            if (parent.offsetParent) {
-                calcOffsetLeft(parent.offsetParent);
-            }
-        };
-        var calcOffsetTop = function (parent) {
-            oTop += parent.offsetTop;
-            if (parent.offsetParent) {
-                calcOffsetTop(parent.offsetParent);
-            }
-        };
-        calcOffsetLeft(el);
-        calcOffsetTop(el);
-        return new Algebra_2.Vector(oLeft, oTop);
-    }
-    exports.getPosition = getPosition;
-    function addItemToArray(item, array) {
-        if (array.indexOf(item) === -1) {
-            array.push(item);
-            return true;
-        }
-        return false;
-    }
-    exports.addItemToArray = addItemToArray;
-    function removeItemFromArray(item, array) {
-        var index = -1;
-        if ((index = array.indexOf(item)) > -1) {
-            array.splice(index, 1);
-            return true;
-        }
-        return false;
-    }
-    exports.removeItemFromArray = removeItemFromArray;
-    function contains(array, obj) {
-        for (var i = 0; i < array.length; i++) {
-            if (array[i] === obj) {
-                return true;
-            }
-        }
-        return false;
-    }
-    exports.contains = contains;
-    function getOppositeSide(side) {
-        if (side === Side_1.Side.Top) {
-            return Side_1.Side.Bottom;
-        }
-        if (side === Side_1.Side.Bottom) {
-            return Side_1.Side.Top;
-        }
-        if (side === Side_1.Side.Left) {
-            return Side_1.Side.Right;
-        }
-        if (side === Side_1.Side.Right) {
-            return Side_1.Side.Left;
-        }
-        return Side_1.Side.None;
-    }
-    exports.getOppositeSide = getOppositeSide;
-    function getSideFromVector(direction) {
-        var directions = [Algebra_2.Vector.Left, Algebra_2.Vector.Right, Algebra_2.Vector.Up, Algebra_2.Vector.Down];
-        var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
-        var max = -Number.MAX_VALUE;
-        var maxIndex = -1;
-        for (var i = 0; i < directions.length; i++) {
-            if (directions[i].dot(direction) > max) {
-                max = directions[i].dot(direction);
-                maxIndex = i;
-            }
-        }
-        return directionEnum[maxIndex];
-    }
-    exports.getSideFromVector = getSideFromVector;
-    /**
-     * Excalibur's dynamically resizing collection
-     */
-    var Collection = (function () {
-        /**
-         * @param initialSize  Initial size of the internal backing array
-         */
-        function Collection(initialSize) {
-            if (initialSize === void 0) { initialSize = Collection.DefaultSize; }
-            this._internalArray = null;
-            this._endPointer = 0;
-            this._internalArray = new Array(initialSize);
-        }
-        Collection.prototype._resize = function () {
-            var newSize = this._internalArray.length * 2;
-            var newArray = new Array(newSize);
-            var count = this.count();
-            for (var i = 0; i < count; i++) {
-                newArray[i] = this._internalArray[i];
-            }
-            delete this._internalArray;
-            this._internalArray = newArray;
-        };
-        /**
-         * Push elements to the end of the collection
-         */
-        Collection.prototype.push = function (element) {
-            if (this._endPointer === this._internalArray.length) {
-                this._resize();
-            }
-            return this._internalArray[this._endPointer++] = element;
-        };
-        /**
-         * Removes elements from the end of the collection
-         */
-        Collection.prototype.pop = function () {
-            this._endPointer = this._endPointer - 1 < 0 ? 0 : this._endPointer - 1;
-            return this._internalArray[this._endPointer];
-        };
-        /**
-         * Returns the count of the collection
-         */
-        Collection.prototype.count = function () {
-            return this._endPointer;
-        };
-        /**
-         * Empties the collection
-         */
-        Collection.prototype.clear = function () {
-            this._endPointer = 0;
-        };
-        /**
-         * Returns the size of the internal backing array
-         */
-        Collection.prototype.internalSize = function () {
-            return this._internalArray.length;
-        };
-        /**
-         * Returns an element at a specific index
-         * @param index  Index of element to retrieve
-         */
-        Collection.prototype.elementAt = function (index) {
-            if (index >= this.count()) {
-                //Logger.getInstance().error('Invalid parameter: ' + index);
-                throw new Error('Invalid index ' + index);
-            }
-            return this._internalArray[index];
-        };
-        /**
-         * Inserts an element at a specific index
-         * @param index  Index to insert the element
-         * @param value  Element to insert
-         */
-        Collection.prototype.insert = function (index, value) {
-            if (index >= this.count()) {
-                this._resize();
-            }
-            return this._internalArray[index] = value;
-        };
-        /**
-         * Removes an element at a specific index
-         * @param index  Index of element to remove
-         */
-        Collection.prototype.remove = function (index) {
-            var count = this.count();
-            if (count === 0) {
-                //Logger.getInstance().error('Invalid parameter: ' + index);
-                throw new Error('Invalid parameter ' + index);
-            }
-            // O(n) Shift
-            var removed = this._internalArray[index];
-            for (var i = index; i < count; i++) {
-                this._internalArray[i] = this._internalArray[i + 1];
-            }
-            this._endPointer--;
-            return removed;
-        };
-        /**
-         * Removes an element by reference
-         * @param element  Element to retrieve
-         */
-        Collection.prototype.removeElement = function (element) {
-            var index = this._internalArray.indexOf(element);
-            this.remove(index);
-        };
-        /**
-         * Returns a array representing the collection
-         */
-        Collection.prototype.toArray = function () {
-            return this._internalArray.slice(0, this._endPointer);
-        };
-        /**
-         * Iterate over every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
-         */
-        Collection.prototype.forEach = function (func) {
-            var i = 0, count = this.count();
-            for (i; i < count; i++) {
-                func.call(this, this._internalArray[i], i);
-            }
-        };
-        /**
-         * Mutate every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
-         * the collection
-         */
-        Collection.prototype.map = function (func) {
-            var count = this.count();
-            for (var i = 0; i < count; i++) {
-                this._internalArray[i] = func.call(this, this._internalArray[i], i);
-            }
-        };
-        return Collection;
-    }());
-    /**
-     * Default collection size
-     */
-    Collection.DefaultSize = 200;
-    exports.Collection = Collection;
-});
-define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], function (require, exports, Log_1, Util) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    function obsolete(options) {
-        options = Util.extend({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
-        return function (target, property, descriptor) {
-            if (!(typeof descriptor.value === 'function' ||
-                typeof descriptor.get === 'function' ||
-                typeof descriptor.set === 'function')) {
-                throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
-            }
-            var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
-            var message = methodSignature + " is marked obsolete: " + options.message +
-                (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
-            var method = Util.extend({}, descriptor);
-            if (descriptor.value) {
-                method.value = function () {
-                    Log_1.Logger.getInstance().warn(message);
-                    return descriptor.value.apply(this, arguments);
-                };
-                return method;
-            }
-            if (descriptor.get) {
-                method.get = function () {
-                    Log_1.Logger.getInstance().warn(message);
-                    return descriptor.get.apply(this, arguments);
-                };
-            }
-            if (descriptor.set) {
-                method.set = function () {
-                    Log_1.Logger.getInstance().warn(message);
-                    return descriptor.set.apply(this, arguments);
-                };
-            }
-            return method;
-        };
-    }
-    exports.obsolete = obsolete;
-});
-define("Promises", ["require", "exports", "Util/Decorators"], function (require, exports, Decorators_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
     /**
      * Valid states for a promise to be in
      */
@@ -1849,14 +1225,6 @@ define("Promises", ["require", "exports", "Util/Decorators"], function (require,
             this._successCallbacks = [];
             this._rejectCallback = function () { return; };
         }
-        /**
-         * Wrap a value in a resolved promise
-         * @param value  An optional value to wrap in a resolved promise
-         * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
-         */
-        Promise.wrap = function (value) {
-            return Promise.resolve(value);
-        };
         /**
          * Create and resolve a Promise with an optional value
          * @param value  An optional value to wrap in a resolved promise
@@ -2016,12 +1384,9 @@ define("Promises", ["require", "exports", "Util/Decorators"], function (require,
         };
         return Promise;
     }());
-    __decorate([
-        Decorators_1.obsolete({ alternateMethod: 'ex.Promise.resolve/reject' })
-    ], Promise, "wrap", null);
     exports.Promise = Promise;
 });
-define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_3) {
+define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2113,7 +1478,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
         BaseCamera.prototype.getFocus = function () {
-            return new Algebra_3.Vector(this.x, this.y);
+            return new Algebra_2.Vector(this.x, this.y);
         };
         /**
          * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
@@ -2313,7 +1678,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         }
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new Algebra_3.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
+                return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
             }
             else {
                 return _super.prototype.getFocus.call(this);
@@ -2336,7 +1701,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         }
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new Algebra_3.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
+                return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
             }
             else {
                 return _super.prototype.getFocus.call(this);
@@ -2724,7 +2089,362 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         return HSLColor;
     }());
 });
-define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Side_2, Actor_1, Algebra_4, Physics_1, Events_1, Util) {
+define("Collision/Side", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * An enum that describes the sides of an Actor for collision
+     */
+    var Side;
+    (function (Side) {
+        Side[Side["None"] = 0] = "None";
+        Side[Side["Top"] = 1] = "Top";
+        Side[Side["Bottom"] = 2] = "Bottom";
+        Side[Side["Left"] = 3] = "Left";
+        Side[Side["Right"] = 4] = "Right";
+    })(Side = exports.Side || (exports.Side = {}));
+});
+define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], function (require, exports, Algebra_3, Side_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Two PI constant
+     */
+    exports.TwoPI = Math.PI * 2;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @returns Merged object with properties from other objects
+     * @credit https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
+     */
+    function extend() {
+        var extended = {};
+        var deep = false;
+        var i = 0;
+        var length = arguments.length;
+        // Check if a deep merge
+        if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+            deep = arguments[0];
+            i++;
+        }
+        // Merge the object into the extended object
+        var assignExists = typeof Object.assign === 'function';
+        var merge = null;
+        if (!assignExists) {
+            merge = function (obj) {
+                for (var prop in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                        // If deep merge and property is an object, merge properties
+                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+                            extended[prop] = extend(true, extended[prop], obj[prop]);
+                        }
+                        else {
+                            extended[prop] = obj[prop];
+                        }
+                    }
+                }
+            };
+        }
+        else {
+            merge = Object.assign;
+        }
+        // Loop through each object and conduct a merge
+        for (; i < length; i++) {
+            var obj = arguments[i];
+            if (!assignExists) {
+                merge(obj);
+            }
+            else {
+                merge(extended, obj);
+            }
+        }
+        return extended;
+    }
+    exports.extend = extend;
+    function base64Encode(inputStr) {
+        var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        var outputStr = '';
+        var i = 0;
+        while (i < inputStr.length) {
+            //all three "& 0xff" added below are there to fix a known bug
+            //with bytes returned by xhr.responseText
+            var byte1 = inputStr.charCodeAt(i++) & 0xff;
+            var byte2 = inputStr.charCodeAt(i++) & 0xff;
+            var byte3 = inputStr.charCodeAt(i++) & 0xff;
+            var enc1 = byte1 >> 2;
+            var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
+            var enc3, enc4;
+            if (isNaN(byte2)) {
+                enc3 = enc4 = 64;
+            }
+            else {
+                enc3 = ((byte2 & 15) << 2) | (byte3 >> 6);
+                if (isNaN(byte3)) {
+                    enc4 = 64;
+                }
+                else {
+                    enc4 = byte3 & 63;
+                }
+            }
+            outputStr += b64.charAt(enc1) + b64.charAt(enc2) + b64.charAt(enc3) + b64.charAt(enc4);
+        }
+        return outputStr;
+    }
+    exports.base64Encode = base64Encode;
+    /**
+     * Clamps a value between a min and max inclusive
+     */
+    function clamp(val, min, max) {
+        return Math.min(Math.max(min, val), max);
+    }
+    exports.clamp = clamp;
+    function randomInRange(min, max) {
+        return min + Math.random() * (max - min);
+    }
+    exports.randomInRange = randomInRange;
+    function randomIntInRange(min, max) {
+        return Math.round(randomInRange(min, max));
+    }
+    exports.randomIntInRange = randomIntInRange;
+    function canonicalizeAngle(angle) {
+        var tmpAngle = angle;
+        if (angle > exports.TwoPI) {
+            while (tmpAngle > exports.TwoPI) {
+                tmpAngle -= exports.TwoPI;
+            }
+        }
+        if (angle < 0) {
+            while (tmpAngle < 0) {
+                tmpAngle += exports.TwoPI;
+            }
+        }
+        return tmpAngle;
+    }
+    exports.canonicalizeAngle = canonicalizeAngle;
+    function toDegrees(radians) {
+        return 180 / Math.PI * radians;
+    }
+    exports.toDegrees = toDegrees;
+    function toRadians(degrees) {
+        return degrees / 180 * Math.PI;
+    }
+    exports.toRadians = toRadians;
+    function getPosition(el) {
+        var oLeft = 0, oTop = 0;
+        var calcOffsetLeft = function (parent) {
+            oLeft += parent.offsetLeft;
+            if (parent.offsetParent) {
+                calcOffsetLeft(parent.offsetParent);
+            }
+        };
+        var calcOffsetTop = function (parent) {
+            oTop += parent.offsetTop;
+            if (parent.offsetParent) {
+                calcOffsetTop(parent.offsetParent);
+            }
+        };
+        calcOffsetLeft(el);
+        calcOffsetTop(el);
+        return new Algebra_3.Vector(oLeft, oTop);
+    }
+    exports.getPosition = getPosition;
+    function addItemToArray(item, array) {
+        if (array.indexOf(item) === -1) {
+            array.push(item);
+            return true;
+        }
+        return false;
+    }
+    exports.addItemToArray = addItemToArray;
+    function removeItemFromArray(item, array) {
+        var index = -1;
+        if ((index = array.indexOf(item)) > -1) {
+            array.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+    exports.removeItemFromArray = removeItemFromArray;
+    function contains(array, obj) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+    exports.contains = contains;
+    function getOppositeSide(side) {
+        if (side === Side_1.Side.Top) {
+            return Side_1.Side.Bottom;
+        }
+        if (side === Side_1.Side.Bottom) {
+            return Side_1.Side.Top;
+        }
+        if (side === Side_1.Side.Left) {
+            return Side_1.Side.Right;
+        }
+        if (side === Side_1.Side.Right) {
+            return Side_1.Side.Left;
+        }
+        return Side_1.Side.None;
+    }
+    exports.getOppositeSide = getOppositeSide;
+    function getSideFromVector(direction) {
+        var directions = [Algebra_3.Vector.Left, Algebra_3.Vector.Right, Algebra_3.Vector.Up, Algebra_3.Vector.Down];
+        var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
+        var max = -Number.MAX_VALUE;
+        var maxIndex = -1;
+        for (var i = 0; i < directions.length; i++) {
+            if (directions[i].dot(direction) > max) {
+                max = directions[i].dot(direction);
+                maxIndex = i;
+            }
+        }
+        return directionEnum[maxIndex];
+    }
+    exports.getSideFromVector = getSideFromVector;
+    /**
+     * Excalibur's dynamically resizing collection
+     */
+    var Collection = (function () {
+        /**
+         * @param initialSize  Initial size of the internal backing array
+         */
+        function Collection(initialSize) {
+            if (initialSize === void 0) { initialSize = Collection.DefaultSize; }
+            this._internalArray = null;
+            this._endPointer = 0;
+            this._internalArray = new Array(initialSize);
+        }
+        Collection.prototype._resize = function () {
+            var newSize = this._internalArray.length * 2;
+            var newArray = new Array(newSize);
+            var count = this.count();
+            for (var i = 0; i < count; i++) {
+                newArray[i] = this._internalArray[i];
+            }
+            delete this._internalArray;
+            this._internalArray = newArray;
+        };
+        /**
+         * Push elements to the end of the collection
+         */
+        Collection.prototype.push = function (element) {
+            if (this._endPointer === this._internalArray.length) {
+                this._resize();
+            }
+            return this._internalArray[this._endPointer++] = element;
+        };
+        /**
+         * Removes elements from the end of the collection
+         */
+        Collection.prototype.pop = function () {
+            this._endPointer = this._endPointer - 1 < 0 ? 0 : this._endPointer - 1;
+            return this._internalArray[this._endPointer];
+        };
+        /**
+         * Returns the count of the collection
+         */
+        Collection.prototype.count = function () {
+            return this._endPointer;
+        };
+        /**
+         * Empties the collection
+         */
+        Collection.prototype.clear = function () {
+            this._endPointer = 0;
+        };
+        /**
+         * Returns the size of the internal backing array
+         */
+        Collection.prototype.internalSize = function () {
+            return this._internalArray.length;
+        };
+        /**
+         * Returns an element at a specific index
+         * @param index  Index of element to retrieve
+         */
+        Collection.prototype.elementAt = function (index) {
+            if (index >= this.count()) {
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid index ' + index);
+            }
+            return this._internalArray[index];
+        };
+        /**
+         * Inserts an element at a specific index
+         * @param index  Index to insert the element
+         * @param value  Element to insert
+         */
+        Collection.prototype.insert = function (index, value) {
+            if (index >= this.count()) {
+                this._resize();
+            }
+            return this._internalArray[index] = value;
+        };
+        /**
+         * Removes an element at a specific index
+         * @param index  Index of element to remove
+         */
+        Collection.prototype.remove = function (index) {
+            var count = this.count();
+            if (count === 0) {
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid parameter ' + index);
+            }
+            // O(n) Shift
+            var removed = this._internalArray[index];
+            for (var i = index; i < count; i++) {
+                this._internalArray[i] = this._internalArray[i + 1];
+            }
+            this._endPointer--;
+            return removed;
+        };
+        /**
+         * Removes an element by reference
+         * @param element  Element to retrieve
+         */
+        Collection.prototype.removeElement = function (element) {
+            var index = this._internalArray.indexOf(element);
+            this.remove(index);
+        };
+        /**
+         * Returns a array representing the collection
+         */
+        Collection.prototype.toArray = function () {
+            return this._internalArray.slice(0, this._endPointer);
+        };
+        /**
+         * Iterate over every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
+         */
+        Collection.prototype.forEach = function (func) {
+            var i = 0, count = this.count();
+            for (i; i < count; i++) {
+                func.call(this, this._internalArray[i], i);
+            }
+        };
+        /**
+         * Mutate every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
+         * the collection
+         */
+        Collection.prototype.map = function (func) {
+            var count = this.count();
+            for (var i = 0; i < count; i++) {
+                this._internalArray[i] = func.call(this, this._internalArray[i], i);
+            }
+        };
+        return Collection;
+    }());
+    /**
+     * Default collection size
+     */
+    Collection.DefaultSize = 200;
+    exports.Collection = Collection;
+});
+define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Actor_1, Algebra_4, Physics_1, Events_1, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2750,9 +2470,8 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
                 throw new Error('Unknown collision resolution strategy');
             }
         };
-        CollisionContact.prototype._applyBoxImpluse = function (bodyA, bodyB, mtv, side) {
-            if ((bodyA.collisionType === Actor_1.CollisionType.Active ||
-                bodyA.collisionType === Actor_1.CollisionType.Elastic) &&
+        CollisionContact.prototype._applyBoxImpluse = function (bodyA, bodyB, mtv) {
+            if (bodyA.collisionType === Actor_1.CollisionType.Active &&
                 bodyB.collisionType !== Actor_1.CollisionType.Passive) {
                 // Resolve overlaps
                 if (bodyA.collisionType === Actor_1.CollisionType.Active &&
@@ -2763,65 +2482,48 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
                 // Apply mtv
                 bodyA.pos.y += mtv.y;
                 bodyA.pos.x += mtv.x;
-                // Naive elastic bounce
-                if (bodyA.collisionType === Actor_1.CollisionType.Elastic) {
-                    if (side === Side_2.Side.Left) {
-                        bodyA.vel.x = Math.abs(bodyA.vel.x);
+                // non-zero intersection on the y axis
+                if (this.mtv.x !== 0) {
+                    var velX = 0;
+                    // both bodies are traveling in the same direction (negative or positive)
+                    if (bodyA.vel.x < 0 && bodyB.vel.x < 0) {
+                        velX = Math.min(bodyA.vel.x, bodyB.vel.x);
                     }
-                    else if (side === Side_2.Side.Right) {
-                        bodyA.vel.x = -Math.abs(bodyA.vel.x);
+                    else if (bodyA.vel.x > 0 && bodyB.vel.x > 0) {
+                        velX = Math.max(bodyA.vel.x, bodyB.vel.x);
                     }
-                    else if (side === Side_2.Side.Top) {
-                        bodyA.vel.y = Math.abs(bodyA.vel.y);
+                    else if (bodyB.collisionType === Actor_1.CollisionType.Fixed) {
+                        // bodies are traveling in opposite directions
+                        if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
+                            velX = bodyA.vel.x;
+                        }
+                        else {
+                            // bodyA is heading towards b
+                            velX = bodyB.vel.x;
+                        }
                     }
-                    else if (side === Side_2.Side.Bottom) {
-                        bodyA.vel.y = -Math.abs(bodyA.vel.y);
-                    }
+                    bodyA.vel.x = velX;
                 }
-                else {
-                    // non-zero intersection on the y axis
-                    if (this.mtv.x !== 0) {
-                        var velX = 0;
-                        // both bodies are traveling in the same direction (negative or positive)
-                        if (bodyA.vel.x < 0 && bodyB.vel.x < 0) {
-                            velX = Math.min(bodyA.vel.x, bodyB.vel.x);
-                        }
-                        else if (bodyA.vel.x > 0 && bodyB.vel.x > 0) {
-                            velX = Math.max(bodyA.vel.x, bodyB.vel.x);
-                        }
-                        else if (bodyB.collisionType === Actor_1.CollisionType.Fixed) {
-                            // bodies are traveling in opposite directions
-                            if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
-                                velX = bodyA.vel.x;
-                            }
-                            else {
-                                // bodyA is heading towards b
-                                velX = bodyB.vel.x;
-                            }
-                        }
-                        bodyA.vel.x = velX;
+                if (this.mtv.y !== 0) {
+                    var velY = 0;
+                    // both bodies are traveling in the same direction (negative or positive)
+                    if (bodyA.vel.y < 0 && bodyB.vel.y < 0) {
+                        velY = Math.min(bodyA.vel.y, bodyB.vel.y);
                     }
-                    if (this.mtv.y !== 0) {
-                        var velY = 0;
-                        // both bodies are traveling in the same direction (negative or positive)
-                        if (bodyA.vel.y < 0 && bodyB.vel.y < 0) {
-                            velY = Math.min(bodyA.vel.y, bodyB.vel.y);
-                        }
-                        else if (bodyA.vel.y > 0 && bodyB.vel.y > 0) {
-                            velY = Math.max(bodyA.vel.y, bodyB.vel.y);
-                        }
-                        else if (bodyB.collisionType === Actor_1.CollisionType.Fixed) {
-                            // bodies are traveling in opposite directions
-                            if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
-                                velY = bodyA.vel.y;
-                            }
-                            else {
-                                // bodyA is heading towards b
-                                velY = bodyB.vel.y;
-                            }
-                        }
-                        bodyA.vel.y = velY;
+                    else if (bodyA.vel.y > 0 && bodyB.vel.y > 0) {
+                        velY = Math.max(bodyA.vel.y, bodyB.vel.y);
                     }
+                    else if (bodyB.collisionType === Actor_1.CollisionType.Fixed) {
+                        // bodies are traveling in opposite directions
+                        if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
+                            velY = bodyA.vel.y;
+                        }
+                        else {
+                            // bodyA is heading towards b
+                            velY = bodyB.vel.y;
+                        }
+                    }
+                    bodyA.vel.y = velY;
                 }
             }
         };
@@ -2833,8 +2535,8 @@ define("Collision/CollisionContact", ["require", "exports", "Collision/Side", "A
             // Publish collision events on both participants
             bodyA.emit('collision', new Events_1.CollisionEvent(bodyA, bodyB, side, mtv));
             bodyB.emit('collision', new Events_1.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
-            this._applyBoxImpluse(bodyA, bodyB, mtv, side);
-            this._applyBoxImpluse(bodyB, bodyA, mtv.negate(), Util.getOppositeSide(side));
+            this._applyBoxImpluse(bodyA, bodyB, mtv);
+            this._applyBoxImpluse(bodyB, bodyA, mtv.negate());
         };
         CollisionContact.prototype._resolveRigidBodyCollision = function () {
             // perform collison on bounding areas
@@ -5028,11 +4730,237 @@ define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promis
     }());
     exports.ActionContext = ActionContext;
 });
+define("Util/Log", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Logging level that Excalibur will tag
+     */
+    var LogLevel;
+    (function (LogLevel) {
+        LogLevel[LogLevel["Debug"] = 0] = "Debug";
+        LogLevel[LogLevel["Info"] = 1] = "Info";
+        LogLevel[LogLevel["Warn"] = 2] = "Warn";
+        LogLevel[LogLevel["Error"] = 3] = "Error";
+        LogLevel[LogLevel["Fatal"] = 4] = "Fatal";
+    })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    var Logger = (function () {
+        function Logger() {
+            this._appenders = [];
+            /**
+             * Gets or sets the default logging level. Excalibur will only log
+             * messages if equal to or above this level. Default: [[LogLevel.Info]]
+             */
+            this.defaultLevel = LogLevel.Info;
+            if (Logger._instance) {
+                throw new Error('Logger is a singleton');
+            }
+            Logger._instance = this;
+            // Default console appender
+            Logger._instance.addAppender(new ConsoleAppender());
+            return Logger._instance;
+        }
+        /**
+         * Gets the current static instance of Logger
+         */
+        Logger.getInstance = function () {
+            if (Logger._instance == null) {
+                Logger._instance = new Logger();
+            }
+            return Logger._instance;
+        };
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        Logger.prototype.addAppender = function (appender) {
+            this._appenders.push(appender);
+        };
+        /**
+         * Clears all appenders from the logger
+         */
+        Logger.prototype.clearAppenders = function () {
+            this._appenders.length = 0;
+        };
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        Logger.prototype._log = function (level, args) {
+            if (level == null) {
+                level = this.defaultLevel;
+            }
+            var i = 0, len = this._appenders.length;
+            for (i; i < len; i++) {
+                if (level >= this.defaultLevel) {
+                    this._appenders[i].log(level, args);
+                }
+            }
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.debug = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Debug, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.info = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Info, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.warn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Warn, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.error = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Error, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.fatal = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Fatal, args);
+        };
+        return Logger;
+    }());
+    Logger._instance = null;
+    exports.Logger = Logger;
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    var ConsoleAppender = (function () {
+        function ConsoleAppender() {
+        }
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        ConsoleAppender.prototype.log = function (level, args) {
+            // Check for console support
+            if (!console && !console.log && console.warn && console.error) {
+                // todo maybe do something better than nothing
+                return;
+            }
+            // Create a new console args array
+            var consoleArgs = [];
+            consoleArgs.unshift.apply(consoleArgs, args);
+            consoleArgs.unshift('[' + LogLevel[level] + '] : ');
+            if (level < LogLevel.Warn) {
+                // Call .log for Debug/Info
+                if (console.log.apply) {
+                    // this is required on some older browsers that don't support apply on console.log :(
+                    console.log.apply(console, consoleArgs);
+                }
+                else {
+                    console.log(consoleArgs.join(' '));
+                }
+            }
+            else if (level < LogLevel.Error) {
+                // Call .warn for Warn
+                if (console.warn.apply) {
+                    console.warn.apply(console, consoleArgs);
+                }
+                else {
+                    console.warn(consoleArgs.join(' '));
+                }
+            }
+            else {
+                // Call .error for Error/Fatal
+                if (console.error.apply) {
+                    console.error.apply(console, consoleArgs);
+                }
+                else {
+                    console.error(consoleArgs.join(' '));
+                }
+            }
+        };
+        return ConsoleAppender;
+    }());
+    exports.ConsoleAppender = ConsoleAppender;
+    /**
+     * On-screen (canvas) appender
+     */
+    var ScreenAppender = (function () {
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        function ScreenAppender(width, height) {
+            // @todo Clean this up
+            this._messages = [];
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = width || window.innerWidth;
+            this._canvas.height = height || window.innerHeight;
+            this._canvas.style.position = 'absolute';
+            this._ctx = this._canvas.getContext('2d');
+            document.body.appendChild(this._canvas);
+        }
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        ScreenAppender.prototype.log = function (level, args) {
+            var message = args.join(',');
+            this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            this._messages.unshift('[' + LogLevel[level] + '] : ' + message);
+            var pos = 10;
+            var opacity = 1.0;
+            for (var i = 0; i < this._messages.length; i++) {
+                this._ctx.fillStyle = 'rgba(255,255,255,' + opacity.toFixed(2) + ')';
+                this._ctx.fillText(this._messages[i], 200, pos);
+                pos += 10;
+                opacity = opacity > 0 ? opacity - .05 : 0;
+            }
+        };
+        return ScreenAppender;
+    }());
+    exports.ScreenAppender = ScreenAppender;
+});
 define("Actions/IActionable", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_2, Class_1) {
+define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_1, Class_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5047,7 +4975,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
             var _this = _super.call(this) || this;
             _this.name = name;
             _this.scene = scene;
-            _this._logger = Log_2.Logger.getInstance();
+            _this._logger = Log_1.Logger.getInstance();
             _this._members = [];
             _this.actions = new ActionContext_1.ActionContext();
             if (scene == null) {
@@ -5351,7 +5279,7 @@ define("Interfaces/ILoadable", ["require", "exports"], function (require, export
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_3) {
+define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5374,7 +5302,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             _this.responseType = responseType;
             _this.bustCache = bustCache;
             _this.data = null;
-            _this.logger = Log_3.Logger.getInstance();
+            _this.logger = Log_2.Logger.getInstance();
             _this.onprogress = function () { return; };
             _this.oncomplete = function () { return; };
             _this.onerror = function () { return; };
@@ -5528,7 +5456,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
     }(Resource_1.Resource));
     exports.Texture = Texture;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_4, Util_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_3, Util_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5554,7 +5482,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             this.rotation = 0.0;
             this.anchor = new Algebra_11.Vector(0.0, 0.0);
             this.scale = new Algebra_11.Vector(1, 1);
-            this.logger = Log_4.Logger.getInstance();
+            this.logger = Log_3.Logger.getInstance();
             /**
              * Draws the sprite flipped vertically
              */
@@ -6036,7 +5964,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
     }());
     exports.Animation = Animation;
 });
-define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_10, Effects, Log_5, Label_1) {
+define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_10, Effects, Log_4, Label_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6283,7 +6211,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
                     currX += (charSprite.width + options.letterSpacing);
                 }
                 catch (e) {
-                    Log_5.Logger.getInstance().error("SpriteFont Error drawing char " + character);
+                    Log_4.Logger.getInstance().error("SpriteFont Error drawing char " + character);
                 }
             }
         };
@@ -6658,7 +6586,7 @@ define("Interfaces/IAudioImplementation", ["require", "exports"], function (requ
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_6, Util, Promises_5) {
+define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_5, Util, Promises_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // set up audio context reference
@@ -6694,7 +6622,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      */
     var WebAudio = (function () {
         function WebAudio() {
-            this._logger = Log_6.Logger.getInstance();
+            this._logger = Log_5.Logger.getInstance();
             this.responseType = 'arraybuffer';
         }
         /**
@@ -6794,7 +6722,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             for (var _i = 0; _i < arguments.length; _i++) {
                 paths[_i] = arguments[_i];
             }
-            this._logger = Log_6.Logger.getInstance();
+            this._logger = Log_5.Logger.getInstance();
             this._data = null;
             this._tracks = [];
             this._isLoaded = false;
@@ -6841,7 +6769,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
                 }
             }
             catch (e) {
-                Log_6.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
+                Log_5.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
                 return false;
             }
         };
@@ -7252,7 +7180,7 @@ define("Interfaces/ILoader", ["require", "exports"], function (require, exports)
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_12, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
+define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_12, Sound_1, Log_6, Promises_6, Class_3, DrawUtil) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -7314,7 +7242,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             _this.setData = function () { return; };
             _this.processData = function () { return; };
             _this.onprogress = function (e) {
-                Log_7.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
+                Log_6.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
                 return;
             };
             _this.oncomplete = function () { return; };
@@ -7768,7 +7696,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
     }());
     exports.OffscreenCulling = OffscreenCulling;
 });
-define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_5, Side_3, Events_4) {
+define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_5, Side_2, Events_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var TileMapCollisionDetection = (function () {
@@ -7780,34 +7708,17 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
                 for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
                     var map = engine.currentScene.tileMaps[j];
                     var intersectMap;
-                    var side = Side_3.Side.None;
+                    var side = Side_2.Side.None;
                     var max = 2;
-                    var hasBounced = false;
                     while (intersectMap = map.collides(actor)) {
                         if (max-- < 0) {
                             break;
                         }
                         side = actor.getSideFromIntersect(intersectMap);
                         eventDispatcher.emit('collision', new Events_4.CollisionEvent(actor, null, side, intersectMap));
-                        if ((actor.collisionType === Actor_5.CollisionType.Active || actor.collisionType === Actor_5.CollisionType.Elastic)) {
+                        if (actor.collisionType === Actor_5.CollisionType.Active) {
                             actor.pos.y += intersectMap.y;
                             actor.pos.x += intersectMap.x;
-                            // Naive elastic bounce
-                            if (actor.collisionType === Actor_5.CollisionType.Elastic && !hasBounced) {
-                                hasBounced = true;
-                                if (side === Side_3.Side.Left) {
-                                    actor.vel.x = Math.abs(actor.vel.x);
-                                }
-                                else if (side === Side_3.Side.Right) {
-                                    actor.vel.x = -Math.abs(actor.vel.x);
-                                }
-                                else if (side === Side_3.Side.Top) {
-                                    actor.vel.y = Math.abs(actor.vel.y);
-                                }
-                                else if (side === Side_3.Side.Bottom) {
-                                    actor.vel.y = -Math.abs(actor.vel.y);
-                                }
-                            }
                         }
                     }
                 }
@@ -8157,7 +8068,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
     }(Actor_6.Actor));
     exports.ParticleEmitter = ParticleEmitter;
 });
-define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_15, Class_4, Algebra_16, Log_8, Events) {
+define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_15, Class_4, Algebra_16, Log_7, Events) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8191,7 +8102,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
             _this._onScreenYStart = 0;
             _this._onScreenYEnd = 9999;
             _this._spriteSheets = {};
-            _this.logger = Log_8.Logger.getInstance();
+            _this.logger = Log_7.Logger.getInstance();
             _this.data = [];
             _this.data = new Array(rows * cols);
             for (var i = 0; i < cols; i++) {
@@ -8568,8 +8479,8 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
                 }
             }
             else {
-                for (var i = 0; i < engine.currentScene.children.length; i++) {
-                    var other = engine.currentScene.children[i];
+                for (var i = 0; i < engine.currentScene.actors.length; i++) {
+                    var other = engine.currentScene.actors[i];
                     if (other !== this &&
                         other.collisionType !== Actor_7.CollisionType.PreventCollision &&
                         this.collides(other)) {
@@ -8625,7 +8536,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
     // legacy Internal.Actions namespace support
     exports.Internal = { Actions: actions };
 });
-define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_8, BoundingBox_5, Log_9) {
+define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_8, BoundingBox_5, Log_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8823,7 +8734,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
             var b = body.getBounds();
             // if the body is outside the world no longer update it
             if (!this.worldBounds.contains(b)) {
-                Log_9.Logger.getInstance().warn('Actor with id ' + body.actor.id +
+                Log_8.Logger.getInstance().warn('Actor with id ' + body.actor.id +
                     ' is outside the world bounds and will no longer be tracked for physics');
                 this.untrackBody(body);
                 return false;
@@ -9072,7 +8983,7 @@ define("Collision/ICollisionResolver", ["require", "exports"], function (require
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_17, Actor_8, Log_10) {
+define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_17, Actor_8, Log_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DynamicTreeCollisionBroadphase = (function () {
@@ -9086,7 +8997,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
          */
         DynamicTreeCollisionBroadphase.prototype.track = function (target) {
             if (!target) {
-                Log_10.Logger.getInstance().warn('Cannot track null physics body');
+                Log_9.Logger.getInstance().warn('Cannot track null physics body');
                 return;
             }
             this._dynamicCollisionTree.trackBody(target);
@@ -9096,7 +9007,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
          */
         DynamicTreeCollisionBroadphase.prototype.untrack = function (target) {
             if (!target) {
-                Log_10.Logger.getInstance().warn('Cannot untrack a null physics body');
+                Log_9.Logger.getInstance().warn('Cannot untrack a null physics body');
                 return;
             }
             this._dynamicCollisionTree.untrackBody(target);
@@ -9347,7 +9258,7 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
     }());
     exports.NaiveCollisionBroadphase = NaiveCollisionBroadphase;
 });
-define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/BoundingBox", "Collision/CircleArea", "Collision/CollisionContact", "Collision/CollisionJumpTable", "Collision/DynamicTree", "Collision/DynamicTreeCollisionBroadphase", "Collision/EdgeArea", "Collision/NaiveCollisionBroadphase", "Collision/Pair", "Collision/PolygonArea", "Collision/Side"], function (require, exports, Body_1, BoundingBox_6, CircleArea_4, CollisionContact_3, CollisionJumpTable_4, DynamicTree_2, DynamicTreeCollisionBroadphase_1, EdgeArea_4, NaiveCollisionBroadphase_1, Pair_4, PolygonArea_6, Side_4) {
+define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/BoundingBox", "Collision/CircleArea", "Collision/CollisionContact", "Collision/CollisionJumpTable", "Collision/DynamicTree", "Collision/DynamicTreeCollisionBroadphase", "Collision/EdgeArea", "Collision/NaiveCollisionBroadphase", "Collision/Pair", "Collision/PolygonArea", "Collision/Side"], function (require, exports, Body_1, BoundingBox_6, CircleArea_4, CollisionContact_3, CollisionJumpTable_4, DynamicTree_2, DynamicTreeCollisionBroadphase_1, EdgeArea_4, NaiveCollisionBroadphase_1, Pair_4, PolygonArea_6, Side_3) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -9364,7 +9275,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
     __export(NaiveCollisionBroadphase_1);
     __export(Pair_4);
     __export(PolygonArea_6);
-    __export(Side_4);
+    __export(Side_3);
 });
 define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_18) {
     "use strict";
@@ -9950,7 +9861,7 @@ define("PostProcessing/IPostProcessor", ["require", "exports"], function (requir
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_11) {
+define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_10) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ColorBlindness;
@@ -10046,7 +9957,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
             this._gl.attachShader(this._program, fragmentShader);
             this._gl.linkProgram(this._program);
             if (!this._gl.getProgramParameter(this._program, this._gl.LINK_STATUS)) {
-                Log_11.Logger.getInstance().error('Unable to link shader program!');
+                Log_10.Logger.getInstance().error('Unable to link shader program!');
             }
             this._gl.useProgram(this._program);
         }
@@ -10101,12 +10012,12 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
                 shader = this._gl.createShader(this._gl.VERTEX_SHADER);
             }
             else {
-                Log_11.Logger.getInstance().error('Error unknown shader type', type);
+                Log_10.Logger.getInstance().error('Error unknown shader type', type);
             }
             this._gl.shaderSource(shader, program);
             this._gl.compileShader(shader);
             if (!this._gl.getShaderParameter(shader, this._gl.COMPILE_STATUS)) {
-                Log_11.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
+                Log_10.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
                 return null;
             }
             return shader;
@@ -11207,6 +11118,49 @@ define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], funct
     __export(Util_2);
     exports.DrawUtil = drawUtil;
 });
+define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], function (require, exports, Log_11, Util) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    function obsolete(options) {
+        options = Util.extend({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+        return function (target, property, descriptor) {
+            if (!(typeof descriptor.value === 'function' ||
+                typeof descriptor.get === 'function' ||
+                typeof descriptor.set === 'function')) {
+                throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
+            }
+            var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
+            var message = methodSignature + " is marked obsolete: " + options.message +
+                (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
+            var method = Util.extend({}, descriptor);
+            if (descriptor.value) {
+                method.value = function () {
+                    Log_11.Logger.getInstance().warn(message);
+                    return descriptor.value.apply(this, arguments);
+                };
+                return method;
+            }
+            if (descriptor.get) {
+                method.get = function () {
+                    Log_11.Logger.getInstance().warn(message);
+                    return descriptor.get.apply(this, arguments);
+                };
+            }
+            if (descriptor.set) {
+                method.set = function () {
+                    Log_11.Logger.getInstance().warn(message);
+                    return descriptor.set.apply(this, arguments);
+                };
+            }
+            return method;
+        };
+    }
+    exports.obsolete = obsolete;
+});
 define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_12) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -11635,7 +11589,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     }());
     exports.MockedElement = MockedElement;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_1, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -11644,7 +11598,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1665+5b72924';
+    exports.EX_VERSION = '0.11.0-alpha.1669+f4f12a2';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -11676,14 +11630,14 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     exports.Input = input;
     exports.Traits = traits;
     exports.Util = util;
-    __export(Decorators_2);
+    __export(Decorators_1);
     __export(Detector_1);
     __export(CullingBox_2);
     __export(EasingFunctions_3);
     __export(Log_13);
     __export(SortedList_1);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Decorators", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_7, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Decorators_3, Util, BoundingBox_7) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_7, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Util, BoundingBox_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -11871,17 +11825,6 @@ O|===|* >________________>\n\
             _this.goToScene('root');
             return _this;
         }
-        Object.defineProperty(Engine.prototype, "fps", {
-            /**
-             * Current FPS
-             * @obsolete Use [[FrameStats.fps|Engine.stats.fps]]. Will be deprecated in future versions.
-             */
-            get: function () {
-                return this.stats.currFrame.fps;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Engine.prototype, "stats", {
             /**
              * Access [[stats]] that holds frame statistics.
@@ -12520,9 +12463,6 @@ O|===|* >________________>\n\
         scrollPreventionMode: ScrollPreventionMode.Canvas,
         backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
     };
-    __decorate([
-        Decorators_3.obsolete({ alternateMethod: 'ex.Engine.stats.currFrame.fps' })
-    ], Engine.prototype, "fps", null);
     exports.Engine = Engine;
     /**
      * @internal
@@ -12589,7 +12529,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
     }
     exports.isUIActor = isUIActor;
 });
-define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors", "Util/Decorators"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils, Decorators_4) {
+define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors", "Util/Decorators"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils, Decorators_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12670,7 +12610,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          * Initializes actors in the scene
          */
         Scene.prototype._initializeChildren = function () {
-            for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
+            for (var _i = 0, _a = this.actors; _i < _a.length; _i++) {
                 var child = _a[_i];
                 child._initialize(this.engine);
             }
@@ -12729,15 +12669,15 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 this.tileMaps[i].update(engine, delta);
             }
             // Cycle through actors updating actors
-            for (i = 0, len = this.children.length; i < len; i++) {
-                this.children[i].update(engine, delta);
+            for (i = 0, len = this.actors.length; i < len; i++) {
+                this.actors[i].update(engine, delta);
             }
             this._collectActorStats(engine);
             // Run the broadphase and narrowphase
             if (this._broadphase && Physics_12.Physics.enabled) {
                 var beforeBroadphase = Date.now();
-                this._broadphase.update(this.children, delta);
-                var pairs = this._broadphase.broadphase(this.children, delta, engine.stats.currFrame);
+                this._broadphase.update(this.actors, delta);
+                var pairs = this._broadphase.broadphase(this.actors, delta, engine.stats.currFrame);
                 var afterBroadphase = Date.now();
                 var beforeNarrowphase = Date.now();
                 var iter = Physics_12.Physics.collisionPasses;
@@ -12756,10 +12696,10 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             // Remove actors from scene graph after being killed
             var actorIndex;
             for (i = 0, len = this._killQueue.length; i < len; i++) {
-                actorIndex = this.children.indexOf(this._killQueue[i]);
+                actorIndex = this.actors.indexOf(this._killQueue[i]);
                 if (actorIndex > -1) {
                     this._sortedDrawingTree.removeByComparable(this._killQueue[i]);
-                    this.children.splice(actorIndex, 1);
+                    this.actors.splice(actorIndex, 1);
                 }
             }
             engine.stats.currFrame.actors.killed = this._killQueue.length;
@@ -12817,8 +12757,8 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
                 this.tileMaps[i].debugDraw(ctx);
             }
-            for (i = 0, len = this.children.length; i < len; i++) {
-                this.children[i].debugDraw(ctx);
+            for (i = 0, len = this.actors.length; i < len; i++) {
+                this.actors[i].debugDraw(ctx);
             }
             this._broadphase.debugDraw(ctx, 20);
             this.camera.debugDraw(ctx);
@@ -12828,7 +12768,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          * Checks whether an actor is contained in this scene or not
          */
         Scene.prototype.contains = function (actor) {
-            return this.children.indexOf(actor) > -1;
+            return this.actors.indexOf(actor) > -1;
         };
         Scene.prototype.add = function (entity) {
             if (entity instanceof Actor_13.Actor) {
@@ -12841,7 +12781,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 return;
             }
             if (entity instanceof Actor_13.Actor) {
-                if (!Util.contains(this.children, entity)) {
+                if (!Util.contains(this.actors, entity)) {
                     this._addChild(entity);
                     this._sortedDrawingTree.add(entity);
                 }
@@ -12899,7 +12839,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype._addChild = function (actor) {
             this._broadphase.track(actor.body);
             actor.scene = this;
-            this.children.push(actor);
+            this.actors.push(actor);
             this._sortedDrawingTree.add(actor);
             actor.parent = this.actor;
         };
@@ -13001,7 +12941,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 var _ui = _a[_i];
                 engine.stats.currFrame.actors.ui++;
             }
-            for (var _b = 0, _c = this.children; _b < _c.length; _b++) {
+            for (var _b = 0, _c = this.actors; _b < _c.length; _b++) {
                 var actor = _c[_b];
                 engine.stats.currFrame.actors.alive++;
                 for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
@@ -13028,7 +12968,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         return Scene;
     }(Class_10.Class));
     __decorate([
-        Decorators_4.obsolete({ alternateMethod: 'ex.Scene.actors' })
+        Decorators_2.obsolete({ alternateMethod: 'ex.Scene.actors', message: 'This method will be removed in the 0.13.0 release. ' })
     ], Scene.prototype, "children", null);
     exports.Scene = Scene;
 });
@@ -13531,7 +13471,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_5, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_4, Traits, Effects, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -14237,18 +14177,18 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             if (intersect) {
                 if (Math.abs(intersect.x) > Math.abs(intersect.y)) {
                     if (intersect.x < 0) {
-                        return Side_5.Side.Right;
+                        return Side_4.Side.Right;
                     }
-                    return Side_5.Side.Left;
+                    return Side_4.Side.Left;
                 }
                 else {
                     if (intersect.y < 0) {
-                        return Side_5.Side.Bottom;
+                        return Side_4.Side.Bottom;
                     }
-                    return Side_5.Side.Top;
+                    return Side_4.Side.Top;
                 }
             }
-            return Side_5.Side.None;
+            return Side_4.Side.None;
         };
         /**
          * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
@@ -14257,22 +14197,22 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype.collidesWithSide = function (actor) {
             var separationVector = this.collides(actor);
             if (!separationVector) {
-                return Side_5.Side.None;
+                return Side_4.Side.None;
             }
             if (Math.abs(separationVector.x) > Math.abs(separationVector.y)) {
                 if (this.pos.x < actor.pos.x) {
-                    return Side_5.Side.Right;
+                    return Side_4.Side.Right;
                 }
                 else {
-                    return Side_5.Side.Left;
+                    return Side_4.Side.Left;
                 }
             }
             else {
                 if (this.pos.y < actor.pos.y) {
-                    return Side_5.Side.Bottom;
+                    return Side_4.Side.Bottom;
                 }
                 else {
-                    return Side_5.Side.Top;
+                    return Side_4.Side.Top;
                 }
             }
         };
@@ -14503,13 +14443,6 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         CollisionType[CollisionType["Active"] = 2] = "Active";
         /**
-         * Actors with the `Elastic` setting will behave the same as `Active`, except that they will
-         * "bounce" in the opposite direction given their velocity dx/dy. This is a naive implementation meant for
-         * prototyping, for a more robust elastic collision listen to the "collision" event and perform your custom logic.
-         * @obsolete This behavior will be handled by a future physics system
-         */
-        CollisionType[CollisionType["Elastic"] = 3] = "Elastic";
-        /**
          * Actors with the `Fixed` setting raise collision events and participate in
          * collisions with other actors. Actors with the `Fixed` setting will not be
          * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
@@ -14517,7 +14450,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * not be pushed or moved by each other, they will not interact except to throw
          * collision events.
          */
-        CollisionType[CollisionType["Fixed"] = 4] = "Fixed";
+        CollisionType[CollisionType["Fixed"] = 3] = "Fixed";
     })(CollisionType = exports.CollisionType || (exports.CollisionType = {}));
 });
 define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_17, Util) {

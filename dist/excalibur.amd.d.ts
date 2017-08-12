@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1665+5b72924 - 2017-08-08
+/*! excalibur - v0.11.0-alpha.1669+f4f12a2 - 2017-08-12
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -486,275 +486,6 @@ declare module "Util/EasingFunctions" {
         static EaseInOutCubic: EasingFunction;
     }
 }
-declare module "Util/Log" {
-    /**
-     * Logging level that Excalibur will tag
-     */
-    export enum LogLevel {
-        Debug = 0,
-        Info = 1,
-        Warn = 2,
-        Error = 3,
-        Fatal = 4,
-    }
-    /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
-     *
-     * [[include:Logger.md]]
-     */
-    export class Logger {
-        private static _instance;
-        private _appenders;
-        constructor();
-        /**
-         * Gets or sets the default logging level. Excalibur will only log
-         * messages if equal to or above this level. Default: [[LogLevel.Info]]
-         */
-        defaultLevel: LogLevel;
-        /**
-         * Gets the current static instance of Logger
-         */
-        static getInstance(): Logger;
-        /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
-         */
-        addAppender(appender: IAppender): void;
-        /**
-         * Clears all appenders from the logger
-         */
-        clearAppenders(): void;
-        /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
-         */
-        private _log(level, args);
-        /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
-         */
-        debug(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
-         */
-        info(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
-         */
-        warn(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
-         */
-        error(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        fatal(...args: any[]): void;
-    }
-    /**
-     * Contract for any log appender (such as console/screen)
-     */
-    export interface IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    export class ConsoleAppender implements IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * On-screen (canvas) appender
-     */
-    export class ScreenAppender implements IAppender {
-        private _messages;
-        private _canvas;
-        private _ctx;
-        /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-}
-declare module "Collision/Side" {
-    /**
-     * An enum that describes the sides of an Actor for collision
-     */
-    export enum Side {
-        None = 0,
-        Top = 1,
-        Bottom = 2,
-        Left = 3,
-        Right = 4,
-    }
-}
-declare module "Util/Util" {
-    import { Vector } from "Algebra";
-    import { Side } from "Collision/Side";
-    /**
-     * Two PI constant
-     */
-    export const TwoPI: number;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param deep Whether or not to do a deep clone
-     * @param target The target object to attach properties on
-     * @param objects The objects whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend(deep: boolean, target: any, ...objects: any[]): any;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param object2 The second object whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend<T1, T2>(target: T1, object2: T2): T1 & T2;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param object2 The second object whose properties to merge
-     * @param object3 The third object whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3): T1 & T2 & T3;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param objects The objects whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend(target: any, ...objects: any[]): any;
-    export function base64Encode(inputStr: string): string;
-    /**
-     * Clamps a value between a min and max inclusive
-     */
-    export function clamp(val: number, min: number, max: number): number;
-    export function randomInRange(min: number, max: number): number;
-    export function randomIntInRange(min: number, max: number): number;
-    export function canonicalizeAngle(angle: number): number;
-    export function toDegrees(radians: number): number;
-    export function toRadians(degrees: number): number;
-    export function getPosition(el: HTMLElement): Vector;
-    export function addItemToArray<T>(item: T, array: T[]): boolean;
-    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
-    export function contains(array: Array<any>, obj: any): boolean;
-    export function getOppositeSide(side: Side): Side;
-    export function getSideFromVector(direction: Vector): Side;
-    /**
-     * Excalibur's dynamically resizing collection
-     */
-    export class Collection<T> {
-        /**
-         * Default collection size
-         */
-        static DefaultSize: number;
-        private _internalArray;
-        private _endPointer;
-        /**
-         * @param initialSize  Initial size of the internal backing array
-         */
-        constructor(initialSize?: number);
-        private _resize();
-        /**
-         * Push elements to the end of the collection
-         */
-        push(element: T): T;
-        /**
-         * Removes elements from the end of the collection
-         */
-        pop(): T;
-        /**
-         * Returns the count of the collection
-         */
-        count(): number;
-        /**
-         * Empties the collection
-         */
-        clear(): void;
-        /**
-         * Returns the size of the internal backing array
-         */
-        internalSize(): number;
-        /**
-         * Returns an element at a specific index
-         * @param index  Index of element to retrieve
-         */
-        elementAt(index: number): T;
-        /**
-         * Inserts an element at a specific index
-         * @param index  Index to insert the element
-         * @param value  Element to insert
-         */
-        insert(index: number, value: T): T;
-        /**
-         * Removes an element at a specific index
-         * @param index  Index of element to remove
-         */
-        remove(index: number): T;
-        /**
-         * Removes an element by reference
-         * @param element  Element to retrieve
-         */
-        removeElement(element: T): void;
-        /**
-         * Returns a array representing the collection
-         */
-        toArray(): T[];
-        /**
-         * Iterate over every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
-         */
-        forEach(func: (element: T, index: number) => any): void;
-        /**
-         * Mutate every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
-         * the collection
-         */
-        map(func: (element: T, index: number) => any): void;
-    }
-}
-declare module "Util/Decorators" {
-    /**
-     * Obsolete decorator options
-     */
-    export interface IObsoleteOptions {
-        message?: string;
-        alternateMethod?: string;
-    }
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
-}
 declare module "Promises" {
     /**
      * Valid states for a promise to be in
@@ -784,12 +515,6 @@ declare module "Promises" {
         private _successCallbacks;
         private _rejectCallback;
         private _errorCallback;
-        /**
-         * Wrap a value in a resolved promise
-         * @param value  An optional value to wrap in a resolved promise
-         * @obsolete Use [[resolve]] instead. This will be deprecated in future versions.
-         */
-        static wrap<T>(value?: T): Promise<T>;
         /**
          * Create and resolve a Promise with an optional value
          * @param value  An optional value to wrap in a resolved promise
@@ -1195,6 +920,148 @@ declare module "Drawing/Color" {
         static Transparent: Color;
     }
 }
+declare module "Collision/Side" {
+    /**
+     * An enum that describes the sides of an Actor for collision
+     */
+    export enum Side {
+        None = 0,
+        Top = 1,
+        Bottom = 2,
+        Left = 3,
+        Right = 4,
+    }
+}
+declare module "Util/Util" {
+    import { Vector } from "Algebra";
+    import { Side } from "Collision/Side";
+    /**
+     * Two PI constant
+     */
+    export const TwoPI: number;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param deep Whether or not to do a deep clone
+     * @param target The target object to attach properties on
+     * @param objects The objects whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend(deep: boolean, target: any, ...objects: any[]): any;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2>(target: T1, object2: T2): T1 & T2;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @param object3 The third object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3): T1 & T2 & T3;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param objects The objects whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend(target: any, ...objects: any[]): any;
+    export function base64Encode(inputStr: string): string;
+    /**
+     * Clamps a value between a min and max inclusive
+     */
+    export function clamp(val: number, min: number, max: number): number;
+    export function randomInRange(min: number, max: number): number;
+    export function randomIntInRange(min: number, max: number): number;
+    export function canonicalizeAngle(angle: number): number;
+    export function toDegrees(radians: number): number;
+    export function toRadians(degrees: number): number;
+    export function getPosition(el: HTMLElement): Vector;
+    export function addItemToArray<T>(item: T, array: T[]): boolean;
+    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
+    export function contains(array: Array<any>, obj: any): boolean;
+    export function getOppositeSide(side: Side): Side;
+    export function getSideFromVector(direction: Vector): Side;
+    /**
+     * Excalibur's dynamically resizing collection
+     */
+    export class Collection<T> {
+        /**
+         * Default collection size
+         */
+        static DefaultSize: number;
+        private _internalArray;
+        private _endPointer;
+        /**
+         * @param initialSize  Initial size of the internal backing array
+         */
+        constructor(initialSize?: number);
+        private _resize();
+        /**
+         * Push elements to the end of the collection
+         */
+        push(element: T): T;
+        /**
+         * Removes elements from the end of the collection
+         */
+        pop(): T;
+        /**
+         * Returns the count of the collection
+         */
+        count(): number;
+        /**
+         * Empties the collection
+         */
+        clear(): void;
+        /**
+         * Returns the size of the internal backing array
+         */
+        internalSize(): number;
+        /**
+         * Returns an element at a specific index
+         * @param index  Index of element to retrieve
+         */
+        elementAt(index: number): T;
+        /**
+         * Inserts an element at a specific index
+         * @param index  Index to insert the element
+         * @param value  Element to insert
+         */
+        insert(index: number, value: T): T;
+        /**
+         * Removes an element at a specific index
+         * @param index  Index of element to remove
+         */
+        remove(index: number): T;
+        /**
+         * Removes an element by reference
+         * @param element  Element to retrieve
+         */
+        removeElement(element: T): void;
+        /**
+         * Returns a array representing the collection
+         */
+        toArray(): T[];
+        /**
+         * Iterate over every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
+         */
+        forEach(func: (element: T, index: number) => any): void;
+        /**
+         * Mutate every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
+         * the collection
+         */
+        map(func: (element: T, index: number) => any): void;
+    }
+}
 declare module "Collision/CollisionContact" {
     import { ICollisionArea } from "Collision/ICollisionArea";
     import { Vector } from "Algebra";
@@ -1230,7 +1097,7 @@ declare module "Collision/CollisionContact" {
         normal: Vector;
         constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
         resolve(strategy: CollisionResolutionStrategy): void;
-        private _applyBoxImpluse(bodyA, bodyB, mtv, side);
+        private _applyBoxImpluse(bodyA, bodyB, mtv);
         private _resolveBoxCollision();
         private _resolveRigidBodyCollision();
     }
@@ -2317,6 +2184,119 @@ declare module "Actions/ActionContext" {
          * is finished.
          */
         asPromise<T>(): Promise<T>;
+    }
+}
+declare module "Util/Log" {
+    /**
+     * Logging level that Excalibur will tag
+     */
+    export enum LogLevel {
+        Debug = 0,
+        Info = 1,
+        Warn = 2,
+        Error = 3,
+        Fatal = 4,
+    }
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    export class Logger {
+        private static _instance;
+        private _appenders;
+        constructor();
+        /**
+         * Gets or sets the default logging level. Excalibur will only log
+         * messages if equal to or above this level. Default: [[LogLevel.Info]]
+         */
+        defaultLevel: LogLevel;
+        /**
+         * Gets the current static instance of Logger
+         */
+        static getInstance(): Logger;
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        addAppender(appender: IAppender): void;
+        /**
+         * Clears all appenders from the logger
+         */
+        clearAppenders(): void;
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        private _log(level, args);
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        debug(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        info(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        warn(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        error(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        fatal(...args: any[]): void;
+    }
+    /**
+     * Contract for any log appender (such as console/screen)
+     */
+    export interface IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    export class ConsoleAppender implements IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * On-screen (canvas) appender
+     */
+    export class ScreenAppender implements IAppender {
+        private _messages;
+        private _canvas;
+        private _ctx;
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
     }
 }
 declare module "Actions/IActionable" {
@@ -5329,6 +5309,20 @@ declare module "Util/Index" {
     import * as drawUtil from "Util/DrawUtil";
     export { drawUtil as DrawUtil };
 }
+declare module "Util/Decorators" {
+    /**
+     * Obsolete decorator options
+     */
+    export interface IObsoleteOptions {
+        message?: string;
+        alternateMethod?: string;
+    }
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
+}
 declare module "Util/Detector" {
     /**
      * Interface for detected browser features matrix
@@ -5624,11 +5618,6 @@ declare module "Engine" {
          */
         input: Input.IEngineInput;
         private _hasStarted;
-        /**
-         * Current FPS
-         * @obsolete Use [[FrameStats.fps|Engine.stats.fps]]. Will be deprecated in future versions.
-         */
-        readonly fps: number;
         /**
          * Access Excalibur debugging functionality.
          */
@@ -7108,13 +7097,6 @@ declare module "Actor" {
          */
         Active = 2,
         /**
-         * Actors with the `Elastic` setting will behave the same as `Active`, except that they will
-         * "bounce" in the opposite direction given their velocity dx/dy. This is a naive implementation meant for
-         * prototyping, for a more robust elastic collision listen to the "collision" event and perform your custom logic.
-         * @obsolete This behavior will be handled by a future physics system
-         */
-        Elastic = 3,
-        /**
          * Actors with the `Fixed` setting raise collision events and participate in
          * collisions with other actors. Actors with the `Fixed` setting will not be
          * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
@@ -7122,7 +7104,7 @@ declare module "Actor" {
          * not be pushed or moved by each other, they will not interact except to throw
          * collision events.
          */
-        Fixed = 4,
+        Fixed = 3,
     }
 }
 declare module "Actions/Action" {

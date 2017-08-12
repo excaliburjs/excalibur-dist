@@ -1,4 +1,4 @@
-/*! excalibur - v0.11.0-alpha.1692+c450dcb - 2017-08-12
+/*! excalibur - v0.11.0-alpha.1693+edb2c97 - 2017-08-12
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.11.0-alpha.1692+c450dcb - 2017-08-12
+/*! excalibur - v0.11.0-alpha.1693+edb2c97 - 2017-08-12
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11598,7 +11598,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.11.0-alpha.1692+c450dcb';
+    exports.EX_VERSION = '0.11.0-alpha.1693+edb2c97';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

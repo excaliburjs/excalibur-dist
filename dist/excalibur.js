@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1712+28dc0e7 - 2017-08-14
+/*! excalibur - v0.12.0-alpha.1710+7f17810 - 2017-08-14
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.12.0-alpha.1712+28dc0e7 - 2017-08-14
+/*! excalibur - v0.12.0-alpha.1710+7f17810 - 2017-08-14
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2470,7 +2470,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
                 throw new Error('Unknown collision resolution strategy');
             }
         };
-        CollisionContact.prototype._applyBoxImpulse = function (bodyA, bodyB, mtv) {
+        CollisionContact.prototype._applyBoxImpluse = function (bodyA, bodyB, mtv) {
             if (bodyA.collisionType === Actor_1.CollisionType.Active &&
                 bodyB.collisionType !== Actor_1.CollisionType.Passive) {
                 // Resolve overlaps
@@ -2535,8 +2535,8 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             // Publish collision events on both participants
             bodyA.emit('collision', new Events_1.CollisionEvent(bodyA, bodyB, side, mtv));
             bodyB.emit('collision', new Events_1.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
-            this._applyBoxImpulse(bodyA, bodyB, mtv);
-            this._applyBoxImpulse(bodyB, bodyA, mtv.negate());
+            this._applyBoxImpluse(bodyA, bodyB, mtv);
+            this._applyBoxImpluse(bodyB, bodyA, mtv.negate());
         };
         CollisionContact.prototype._resolveRigidBodyCollision = function () {
             // perform collison on bounding areas
@@ -11598,7 +11598,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1712+28dc0e7';
+    exports.EX_VERSION = '0.12.0-alpha.1710+7f17810';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

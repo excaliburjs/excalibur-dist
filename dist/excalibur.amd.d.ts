@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1710+7f17810 - 2017-08-14
+/*! excalibur - v0.12.0-alpha.1713+ad2deb6 - 2017-08-15
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1097,7 +1097,7 @@ declare module "Collision/CollisionContact" {
         normal: Vector;
         constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
         resolve(strategy: CollisionResolutionStrategy): void;
-        private _applyBoxImpluse(bodyA, bodyB, mtv);
+        private _applyBoxImpulse(bodyA, bodyB, mtv);
         private _resolveBoxCollision();
         private _resolveRigidBodyCollision();
     }

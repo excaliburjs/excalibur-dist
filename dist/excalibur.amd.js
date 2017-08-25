@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1719+172701d - 2017-08-25
+/*! excalibur - v0.12.0-alpha.1721+ee194d3 - 2017-08-25
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1269,7 +1269,10 @@ define("Configurable", ["require", "exports"], function (require, exports) {
                 }
                 var _this = _super.apply(this, args) || this;
                 if (args.length === 1 && typeof args[0] === 'object') {
-                    _this.assign(args[0]);
+                    _this._initWithOptions(args[0]);
+                }
+                else {
+                    _this._setDefaultsIfUndefined();
                 }
                 return _this;
             }
@@ -1281,14 +1284,20 @@ define("Configurable", ["require", "exports"], function (require, exports) {
                         this[k] = props[k];
                     }
                 }
+            };
+            class_1.prototype._setDefaultsIfUndefined = function () {
                 //set default property values only if they WEREN'T set
                 //by either the passed in properties or the constructor
-                for (var i in this.getDefaultPropVals()) {
+                var defaults = this.getDefaultPropVals();
+                for (var i in defaults) {
                     if (typeof this[i] === 'undefined') {
-                        this[i] = props[i];
+                        this[i] = defaults[i];
                     }
                 }
-                return this;
+            };
+            class_1.prototype._initWithOptions = function (options) {
+                this.assign(options);
+                this._setDefaultsIfUndefined();
             };
             return class_1;
         }(base));
@@ -11182,7 +11191,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1719+172701d';
+    exports.EX_VERSION = '0.12.0-alpha.1721+ee194d3';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13056,7 +13065,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_4, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util", "Configurable"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_4, Traits, Effects, Util, Configurable_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -13068,8 +13077,8 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
      * [[include:Actors.md]]
      *
      */
-    var Actor = (function (_super) {
-        __extends(Actor, _super);
+    var InternalActor = (function (_super) {
+        __extends(InternalActor, _super);
         /**
          * @param x       The starting x coordinate of the actor
          * @param y       The starting y coordinate of the actor
@@ -13078,12 +13087,12 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
          * initial [[opacity]].
          */
-        function Actor(x, y, width, height, color) {
+        function InternalActor(xOrConfig, y, width, height, color) {
             var _this = _super.call(this) || this;
             /**
              * The unique identifier for the actor
              */
-            _this.id = Actor.maxId++;
+            _this.id = InternalActor.maxId++;
             /**
              * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
              * acceleration, mass, inertia, etc.
@@ -13096,86 +13105,42 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              */
             _this.scale = new Algebra_23.Vector(1, 1);
             /**
-             * The x scalar velocity of the actor in scale/second
-             */
-            _this.sx = 0; //scale/sec
-            /**
-             * The y scalar velocity of the actor in scale/second
-             */
-            _this.sy = 0; //scale/sec
-            /**
-             * Indicates whether the actor is physically in the viewport
-             */
-            _this.isOffScreen = false;
-            /**
-             * The visibility of an actor
-             */
-            _this.visible = true;
-            /**
              * The opacity of an actor. Passing in a color in the [[constructor]] will use the
              * color's opacity.
              */
             _this.opacity = 1;
             _this.previousOpacity = 1;
-            /**
-             * Convenience reference to the global logger
-             */
-            _this.logger = Log_16.Logger.getInstance();
-            /**
-             * The scene that the actor is in
-             */
-            _this.scene = null;
-            /**
-             * The parent of this actor
-             */
-            _this.parent = null;
-            // TODO: Replace this with the new actor collection once z-indexing is built
-            /**
-             * The children of this actor
-             */
-            _this.children = [];
-            /**
-             * Gets or sets the current collision type of this actor. By
-             * default it is ([[CollisionType.PreventCollision]]).
-             */
-            _this.collisionType = CollisionType.PreventCollision;
-            _this.collisionGroups = [];
             _this._collisionHandlers = {};
             _this._isInitialized = false;
-            _this.frames = {};
             _this._effectsDirty = false;
-            /**
-             * Access to the current drawing for the actor, this can be
-             * an [[Animation]], [[Sprite]], or [[Polygon]].
-             * Set drawings with [[setDrawing]].
-             */
-            _this.currentDrawing = null;
             /**
              * Modify the current actor update pipeline.
              */
             _this.traits = [];
-            /**
-             * Whether or not to enable the [[CapturePointer]] trait that propagates
-             * pointer events to this actor
-             */
-            _this.enableCapturePointer = false;
-            /**
-             * Configuration for [[CapturePointer]] trait
-             */
-            _this.capturePointer = {
-                captureMoveEvents: false
-            };
             _this._zIndex = 0;
             _this._isKilled = false;
             _this._opacityFx = new Effects.Opacity(_this.opacity);
-            _this.pos.x = x || 0;
-            _this.pos.y = y || 0;
-            _this._width = width || 0;
-            _this._height = height || 0;
-            if (color) {
-                _this.color = color.clone();
-                // set default opacity of an actor to the color
-                _this.opacity = color.a;
+            if (typeof xOrConfig !== 'object') {
+                _this.pos.x = xOrConfig || 0;
+                _this.pos.y = y || 0;
+                _this._width = width || 0;
+                _this._height = height || 0;
+                if (color) {
+                    _this.color = color.clone();
+                    // set default opacity of an actor to the color
+                    _this.opacity = color.a;
+                }
+            }
+            else {
+                _this.pos.x = xOrConfig.pos.x || 0;
+                _this.pos.y = xOrConfig.pos.y || 0;
+                _this._width = xOrConfig.width || 0;
+                _this._height = xOrConfig.height || 0;
+                if (xOrConfig.color) {
+                    _this.color = xOrConfig.color.clone();
+                    // set default opacity of an actor to the color
+                    _this.opacity = xOrConfig.color.a;
+                }
             }
             // Build default pipeline
             //this.traits.push(new ex.Traits.EulerMovement());
@@ -13192,7 +13157,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             _this.body.useBoxCollision();
             return _this;
         }
-        Object.defineProperty(Actor.prototype, "collisionArea", {
+        Object.defineProperty(InternalActor.prototype, "collisionArea", {
             /**
              * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
              * [EdgeArea|edges].
@@ -13210,7 +13175,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "x", {
+        Object.defineProperty(InternalActor.prototype, "x", {
             /**
              * Gets the x position of the actor relative to it's parent (if any)
              */
@@ -13226,7 +13191,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "y", {
+        Object.defineProperty(InternalActor.prototype, "y", {
             /**
              * Gets the y position of the actor relative to it's parent (if any)
              */
@@ -13242,7 +13207,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "pos", {
+        Object.defineProperty(InternalActor.prototype, "pos", {
             /**
              * Gets the position vector of the actor in pixels
              */
@@ -13258,7 +13223,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "oldPos", {
+        Object.defineProperty(InternalActor.prototype, "oldPos", {
             /**
              * Gets the position vector of the actor from the last frame
              */
@@ -13274,7 +13239,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "vel", {
+        Object.defineProperty(InternalActor.prototype, "vel", {
             /**
              * Gets the velocity vector of the actor in pixels/sec
              */
@@ -13290,7 +13255,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "oldVel", {
+        Object.defineProperty(InternalActor.prototype, "oldVel", {
             /**
              * Gets the velocity vector of the actor from the last frame
              */
@@ -13306,7 +13271,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "acc", {
+        Object.defineProperty(InternalActor.prototype, "acc", {
             /**
              * Gets the acceleration vector of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may be
              * useful to simulate a gravitational effect.
@@ -13323,7 +13288,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "rotation", {
+        Object.defineProperty(InternalActor.prototype, "rotation", {
             /**
              * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
              */
@@ -13339,7 +13304,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "rx", {
+        Object.defineProperty(InternalActor.prototype, "rx", {
             /**
              * Gets the rotational velocity of the actor in radians/second
              */
@@ -13355,7 +13320,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "torque", {
+        Object.defineProperty(InternalActor.prototype, "torque", {
             /**
              * Gets the current torque applied to the actor. Torque can be thought of as rotational force
              */
@@ -13371,7 +13336,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "mass", {
+        Object.defineProperty(InternalActor.prototype, "mass", {
             /**
              * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
              */
@@ -13387,7 +13352,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "moi", {
+        Object.defineProperty(InternalActor.prototype, "moi", {
             /**
              * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
              */
@@ -13403,7 +13368,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "friction", {
+        Object.defineProperty(InternalActor.prototype, "friction", {
             /**
              * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
              */
@@ -13419,7 +13384,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Actor.prototype, "restitution", {
+        Object.defineProperty(InternalActor.prototype, "restitution", {
             /**
              * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
              * as bounciness.
@@ -13437,14 +13402,40 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             enumerable: true,
             configurable: true
         });
+        InternalActor.prototype.getDefaultPropVals = function () {
+            return {
+                id: InternalActor.maxId++,
+                body: new Body_2.Body(this),
+                scale: new Algebra_23.Vector(1, 1),
+                traits: [],
+                sx: 0,
+                sy: 0,
+                isOffScreen: false,
+                visible: true,
+                opacity: 1,
+                previousOpacity: 1,
+                logger: Log_16.Logger.getInstance(),
+                scene: null,
+                parent: null,
+                children: [],
+                collisionType: CollisionType.PreventCollision,
+                collisionGroups: [],
+                frames: {},
+                currentDrawing: null,
+                enableCapturePointer: false,
+                capturePointer: {
+                    captureMoveEvents: false
+                }
+            };
+        };
         /**
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
          */
-        Actor.prototype.onInitialize = function (_engine) {
+        InternalActor.prototype.onInitialize = function (_engine) {
             // Override me
         };
-        Object.defineProperty(Actor.prototype, "isInitialized", {
+        Object.defineProperty(InternalActor.prototype, "isInitialized", {
             /**
              * Gets wether the actor is Initialized
              */
@@ -13458,7 +13449,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
          * @internal
          */
-        Actor.prototype._initialize = function (engine) {
+        InternalActor.prototype._initialize = function (engine) {
             if (!this.isInitialized) {
                 this.onInitialize(engine);
                 this.eventDispatcher.emit('initialize', new Events_11.InitializeEvent(engine, this));
@@ -13469,7 +13460,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 child._initialize(engine);
             }
         };
-        Actor.prototype._checkForPointerOptIn = function (eventName) {
+        InternalActor.prototype._checkForPointerOptIn = function (eventName) {
             if (eventName) {
                 var normalized = eventName.toLowerCase();
                 if (normalized === 'pointerup' || normalized === 'pointerdown' || normalized === 'pointermove') {
@@ -13480,7 +13471,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 }
             }
         };
-        Actor.prototype.on = function (eventName, handler) {
+        InternalActor.prototype.on = function (eventName, handler) {
             this._checkForPointerOptIn(eventName);
             this.eventDispatcher.on(eventName, handler);
         };
@@ -13488,7 +13479,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.
          */
-        Actor.prototype.kill = function () {
+        InternalActor.prototype.kill = function () {
             if (this.scene) {
                 this.emit('kill', new Events_11.KillEvent(this));
                 this.scene.remove(this);
@@ -13501,13 +13492,13 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * If the current actor is killed, it will now not be killed.
          */
-        Actor.prototype.unkill = function () {
+        InternalActor.prototype.unkill = function () {
             this._isKilled = false;
         };
         /**
          * Indicates wether the actor has been killed.
          */
-        Actor.prototype.isKilled = function () {
+        InternalActor.prototype.isKilled = function () {
             return this._isKilled;
         };
         /**
@@ -13516,7 +13507,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * move with it.
          * @param actor The child actor to add
          */
-        Actor.prototype.add = function (actor) {
+        InternalActor.prototype.add = function (actor) {
             actor.collisionType = CollisionType.PreventCollision;
             if (Util.addItemToArray(actor, this.children)) {
                 actor.parent = this;
@@ -13526,12 +13517,12 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Removes a child actor from this actor.
          * @param actor The child actor to remove
          */
-        Actor.prototype.remove = function (actor) {
+        InternalActor.prototype.remove = function (actor) {
             if (Util.removeItemFromArray(actor, this.children)) {
                 actor.parent = null;
             }
         };
-        Actor.prototype.setDrawing = function (key) {
+        InternalActor.prototype.setDrawing = function (key) {
             key = key.toString();
             if (this.currentDrawing !== this.frames[key]) {
                 if (this.frames[key] != null) {
@@ -13543,7 +13534,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 }
             }
         };
-        Actor.prototype.addDrawing = function () {
+        InternalActor.prototype.addDrawing = function () {
             if (arguments.length === 2) {
                 this.frames[arguments[0]] = arguments[1];
                 if (!this.currentDrawing) {
@@ -13560,7 +13551,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 }
             }
         };
-        Object.defineProperty(Actor.prototype, "z", {
+        Object.defineProperty(InternalActor.prototype, "z", {
             get: function () {
                 return this.getZIndex();
             },
@@ -13574,7 +13565,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
          * Actors with a higher z-index are drawn on top of actors with a lower z-index
          */
-        Actor.prototype.getZIndex = function () {
+        InternalActor.prototype.getZIndex = function () {
             return this._zIndex;
         };
         /**
@@ -13583,7 +13574,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Actors with a higher z-index are drawn on top of actors with a lower z-index
          * @param newIndex new z-index to assign
          */
-        Actor.prototype.setZIndex = function (newIndex) {
+        InternalActor.prototype.setZIndex = function (newIndex) {
             this.scene.cleanupDrawTree(this);
             this._zIndex = newIndex;
             this.scene.updateDrawTree(this);
@@ -13597,14 +13588,14 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          *
          * @param name The name of the collision group
          */
-        Actor.prototype.addCollisionGroup = function (name) {
+        InternalActor.prototype.addCollisionGroup = function (name) {
             this.collisionGroups.push(name);
         };
         /**
          * Removes an actor from a collision group.
          * @param name The name of the collision group
          */
-        Actor.prototype.removeCollisionGroup = function (name) {
+        InternalActor.prototype.removeCollisionGroup = function (name) {
             var index = this.collisionGroups.indexOf(name);
             if (index !== -1) {
                 this.collisionGroups.splice(index, 1);
@@ -13613,55 +13604,55 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * Get the center point of an actor
          */
-        Actor.prototype.getCenter = function () {
+        InternalActor.prototype.getCenter = function () {
             return new Algebra_23.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
         };
         /**
          * Gets the calculated width of an actor, factoring in scale
          */
-        Actor.prototype.getWidth = function () {
+        InternalActor.prototype.getWidth = function () {
             return this._width * this.getGlobalScale().x;
         };
         /**
          * Sets the width of an actor, factoring in the current scale
          */
-        Actor.prototype.setWidth = function (width) {
+        InternalActor.prototype.setWidth = function (width) {
             this._width = width / this.scale.x;
         };
         /**
          * Gets the calculated height of an actor, factoring in scale
          */
-        Actor.prototype.getHeight = function () {
+        InternalActor.prototype.getHeight = function () {
             return this._height * this.getGlobalScale().y;
         };
         /**
          * Sets the height of an actor, factoring in the current scale
          */
-        Actor.prototype.setHeight = function (height) {
+        InternalActor.prototype.setHeight = function (height) {
             this._height = height / this.scale.y;
         };
         /**
          * Gets the left edge of the actor
          */
-        Actor.prototype.getLeft = function () {
+        InternalActor.prototype.getLeft = function () {
             return this.getBounds().left;
         };
         /**
          * Gets the right edge of the actor
          */
-        Actor.prototype.getRight = function () {
+        InternalActor.prototype.getRight = function () {
             return this.getBounds().right;
         };
         /**
          * Gets the top edge of the actor
          */
-        Actor.prototype.getTop = function () {
+        InternalActor.prototype.getTop = function () {
             return this.getBounds().top;
         };
         /**
          * Gets the bottom edge of the actor
          */
-        Actor.prototype.getBottom = function () {
+        InternalActor.prototype.getBottom = function () {
             return this.getBounds().bottom;
         };
         /**
@@ -13669,7 +13660,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          *
          * @returns Rotation angle in radians
          */
-        Actor.prototype.getWorldRotation = function () {
+        InternalActor.prototype.getWorldRotation = function () {
             if (!this.parent) {
                 return this.rotation;
             }
@@ -13680,7 +13671,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          *
          * @returns Position in world coordinates
          */
-        Actor.prototype.getWorldPos = function () {
+        InternalActor.prototype.getWorldPos = function () {
             if (!this.parent) {
                 return this.pos.clone();
             }
@@ -13714,7 +13705,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * Gets the global scale of the Actor
          */
-        Actor.prototype.getGlobalScale = function () {
+        InternalActor.prototype.getGlobalScale = function () {
             if (!this.parent) {
                 return new Algebra_23.Vector(this.scale.x, this.scale.y);
             }
@@ -13724,7 +13715,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
          */
-        Actor.prototype.getBounds = function () {
+        InternalActor.prototype.getBounds = function () {
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
             var pos = this.getWorldPos();
@@ -13733,7 +13724,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * Returns the actor's [[BoundingBox]] relative to the actors position.
          */
-        Actor.prototype.getRelativeBounds = function () {
+        InternalActor.prototype.getRelativeBounds = function () {
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
             return new BoundingBox_8.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y).rotate(this.rotation);
@@ -13744,7 +13735,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param y  Y coordinate to test (in world coordinates)
          * @param recurse checks whether the x/y are contained in any child actors (if they exist).
          */
-        Actor.prototype.contains = function (x, y, recurse) {
+        InternalActor.prototype.contains = function (x, y, recurse) {
             if (recurse === void 0) { recurse = false; }
             var containment = this.getBounds().contains(new Algebra_23.Vector(x, y));
             if (recurse) {
@@ -13758,7 +13749,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Returns the side of the collision based on the intersection
          * @param intersect The displacement vector returned by a collision
          */
-        Actor.prototype.getSideFromIntersect = function (intersect) {
+        InternalActor.prototype.getSideFromIntersect = function (intersect) {
             if (intersect) {
                 if (Math.abs(intersect.x) > Math.abs(intersect.y)) {
                     if (intersect.x < 0) {
@@ -13779,7 +13770,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
          * @param actor The other actor to test
          */
-        Actor.prototype.collidesWithSide = function (actor) {
+        InternalActor.prototype.collidesWithSide = function (actor) {
             var separationVector = this.collides(actor);
             if (!separationVector) {
                 return Side_4.Side.None;
@@ -13806,7 +13797,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * `null` when there is no collision;
          * @param actor The other actor to test
          */
-        Actor.prototype.collides = function (actor) {
+        InternalActor.prototype.collides = function (actor) {
             var bounds = this.getBounds();
             var otherBounds = actor.getBounds();
             var intersect = bounds.collides(otherBounds);
@@ -13817,20 +13808,20 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param group The group name to listen for
          * @param func The callback to fire on collision with another actor from the group. The callback is passed the other actor.
          */
-        Actor.prototype.onCollidesWith = function (group, func) {
+        InternalActor.prototype.onCollidesWith = function (group, func) {
             if (!this._collisionHandlers[group]) {
                 this._collisionHandlers[group] = [];
             }
             this._collisionHandlers[group].push(func);
         };
-        Actor.prototype.getCollisionHandlers = function () {
+        InternalActor.prototype.getCollisionHandlers = function () {
             return this._collisionHandlers;
         };
         /**
          * Removes all collision handlers for this group on this actor
          * @param group Group to remove all handlers for on this actor.
          */
-        Actor.prototype.removeCollidesWith = function (group) {
+        InternalActor.prototype.removeCollidesWith = function (group) {
             this._collisionHandlers[group] = [];
         };
         /**
@@ -13838,20 +13829,20 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param actor     Actor to test
          * @param distance  Distance in pixels to test
          */
-        Actor.prototype.within = function (actor, distance) {
+        InternalActor.prototype.within = function (actor, distance) {
             return Math.sqrt(Math.pow(this.pos.x - actor.pos.x, 2) + Math.pow(this.pos.y - actor.pos.y, 2)) <= distance;
         };
-        Actor.prototype._getCalculatedAnchor = function () {
+        InternalActor.prototype._getCalculatedAnchor = function () {
             return new Algebra_23.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
-        Actor.prototype._reapplyEffects = function (drawing) {
+        InternalActor.prototype._reapplyEffects = function (drawing) {
             drawing.removeEffect(this._opacityFx);
             drawing.addEffect(this._opacityFx);
         };
         /**
          * Perform euler integration at the specified time step
          */
-        Actor.prototype.integrate = function (delta) {
+        InternalActor.prototype.integrate = function (delta) {
             // Update placements based on linear algebra
             var seconds = delta / 1000;
             var totalAcc = this.acc.clone();
@@ -13873,7 +13864,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param engine The reference to the current game engine
          * @param delta  The time elapsed since the last update in milliseconds
          */
-        Actor.prototype.update = function (engine, delta) {
+        InternalActor.prototype.update = function (engine, delta) {
             this._initialize(engine);
             this.emit('preupdate', new Events_11.PreUpdateEvent(engine, delta, this));
             // Update action queue
@@ -13911,7 +13902,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param ctx   The rendering context
          * @param delta The time since the last draw in milliseconds
          */
-        Actor.prototype.draw = function (ctx, delta) {
+        InternalActor.prototype.draw = function (ctx, delta) {
             ctx.save();
             ctx.translate(this.pos.x, this.pos.y);
             ctx.rotate(this.rotation);
@@ -13952,7 +13943,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * @param ctx The rendering context
          */
         /* istanbul ignore next */
-        Actor.prototype.debugDraw = function (ctx) {
+        InternalActor.prototype.debugDraw = function (ctx) {
             this.emit('predebugdraw', new Events_11.PreDebugDrawEvent(ctx, this));
             this.body.debugDraw(ctx);
             // Draw actor bounding box
@@ -13999,13 +13990,13 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             }
             this.emit('postdebugdraw', new Events_11.PostDebugDrawEvent(ctx, this));
         };
-        return Actor;
+        return InternalActor;
     }(Class_11.Class));
     /**
      * Indicates the next id to be set
      */
-    Actor.maxId = 0;
-    exports.Actor = Actor;
+    InternalActor.maxId = 0;
+    exports.InternalActor = InternalActor;
     /**
      * An enum that describes the types of collisions actors can participate in
      */
@@ -14037,6 +14028,14 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         CollisionType[CollisionType["Fixed"] = 3] = "Fixed";
     })(CollisionType = exports.CollisionType || (exports.CollisionType = {}));
+    var Actor = (function (_super) {
+        __extends(Actor, _super);
+        function Actor(xOrConfig, y, width, height, color) {
+            return _super.call(this, xOrConfig, y, width, height, color) || this;
+        }
+        return Actor;
+    }(Configurable_2.Configurable(InternalActor)));
+    exports.Actor = Actor;
 });
 define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_17, Util) {
     "use strict";

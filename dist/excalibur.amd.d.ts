@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1719+172701d - 2017-08-25
+/*! excalibur - v0.12.0-alpha.1721+ee194d3 - 2017-08-25
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -6611,7 +6611,7 @@ declare module "Actor" {
      * [[include:Actors.md]]
      *
      */
-    export class Actor extends Class implements IActionable, IEvented {
+    export class InternalActor extends Class implements IActionable, IEvented {
         /**
          * Indicates the next id to be set
          */
@@ -6848,7 +6848,8 @@ declare module "Actor" {
          * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
          * initial [[opacity]].
          */
-        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
+        constructor(xOrConfig?: number | Partial<IActorArgs>, y?: number, width?: number, height?: number, color?: Color);
+        getDefaultPropVals(): Partial<InternalActor>;
         /**
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -7115,6 +7116,14 @@ declare module "Actor" {
          * collision events.
          */
         Fixed = 3,
+    }
+    export interface IActorArgs extends InternalActor {
+        width: number;
+        height: number;
+    }
+    export class Actor extends InternalActor {
+        constructor(config: Partial<IActorArgs>);
+        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
     }
 }
 declare module "Actions/Action" {

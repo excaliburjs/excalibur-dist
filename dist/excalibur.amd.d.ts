@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1721+ee194d3 - 2017-08-25
+/*! excalibur - v0.12.0-alpha.1722+2e09f7f - 2017-08-29
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -689,15 +689,6 @@ declare module "Camera" {
     export class LockedCamera extends BaseCamera {
         getFocus(): Vector;
     }
-}
-declare module "Configurable" {
-    export type Constructor<T> = {
-        new (...args: any[]): T;
-    };
-    export interface IDefaultable<T> {
-        getDefaultPropVals(): Partial<T>;
-    }
-    export function Configurable<T extends Constructor<IDefaultable<T>>>(base: T): T;
 }
 declare module "DebugFlags" {
     export interface IDebugFlags {
@@ -5434,7 +5425,6 @@ declare module "Index" {
     export * from "Algebra";
     export * from "Camera";
     export * from "Class";
-    export * from "Configurable";
     export * from "Debug";
     export * from "Engine";
     export * from "EventDispatcher";
@@ -6611,7 +6601,7 @@ declare module "Actor" {
      * [[include:Actors.md]]
      *
      */
-    export class InternalActor extends Class implements IActionable, IEvented {
+    export class Actor extends Class implements IActionable, IEvented {
         /**
          * Indicates the next id to be set
          */
@@ -6848,8 +6838,7 @@ declare module "Actor" {
          * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
          * initial [[opacity]].
          */
-        constructor(xOrConfig?: number | Partial<IActorArgs>, y?: number, width?: number, height?: number, color?: Color);
-        getDefaultPropVals(): Partial<InternalActor>;
+        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
         /**
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -7116,14 +7105,6 @@ declare module "Actor" {
          * collision events.
          */
         Fixed = 3,
-    }
-    export interface IActorArgs extends InternalActor {
-        width: number;
-        height: number;
-    }
-    export class Actor extends InternalActor {
-        constructor(config: Partial<IActorArgs>);
-        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
     }
 }
 declare module "Actions/Action" {

@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1724+417fa0e - 2017-09-04
+/*! excalibur - v0.12.0-alpha.1779+2798d54 - 2017-09-26
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.12.0-alpha.1724+417fa0e - 2017-09-04
+/*! excalibur - v0.12.0-alpha.1779+2798d54 - 2017-09-26
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -8380,6 +8380,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
             this.repeats = false;
             this._elapsedTime = 0;
             this._totalTimeAlive = 0;
+            this._paused = false;
             this.complete = false;
             this.scene = null;
             this.id = Timer.id++;
@@ -8392,15 +8393,17 @@ define("Timer", ["require", "exports"], function (require, exports) {
          * @param delta  Number of elapsed milliseconds since the last update.
          */
         Timer.prototype.update = function (delta) {
-            this._totalTimeAlive += delta;
-            this._elapsedTime += delta;
-            if (!this.complete && this._elapsedTime > this.interval) {
-                this.fcn.call(this);
-                if (this.repeats) {
-                    this._elapsedTime = 0;
-                }
-                else {
-                    this.complete = true;
+            if (!this._paused) {
+                this._totalTimeAlive += delta;
+                this._elapsedTime += delta;
+                if (!this.complete && this._elapsedTime >= this.interval) {
+                    this.fcn.call(this);
+                    if (this.repeats) {
+                        this._elapsedTime = 0;
+                    }
+                    else {
+                        this.complete = true;
+                    }
                 }
             }
         };
@@ -8417,6 +8420,18 @@ define("Timer", ["require", "exports"], function (require, exports) {
         };
         Timer.prototype.getTimeRunning = function () {
             return this._totalTimeAlive;
+        };
+        /**
+         * Pauses the timer so that no more time will be incremented towards the next call
+         */
+        Timer.prototype.pause = function () {
+            this._paused = true;
+        };
+        /**
+         * Unpauses the timer. Time will now increment towards the next call
+         */
+        Timer.prototype.unpause = function () {
+            this._paused = false;
         };
         /**
          * Cancels the timer, preventing any further executions.
@@ -11598,7 +11613,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1724+417fa0e';
+    exports.EX_VERSION = '0.12.0-alpha.1779+2798d54';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13588,7 +13603,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             _this._width = width || 0;
             _this._height = height || 0;
             if (color) {
-                _this.color = color.clone();
+                _this.color = color;
                 // set default opacity of an actor to the color
                 _this.opacity = color.a;
             }
@@ -13848,6 +13863,22 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              */
             set: function (theRestitution) {
                 this.body.restitution = theRestitution;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Actor.prototype, "color", {
+            /**
+             * Sets the color of the actor. A rectangle of this color will be
+             * drawn if no [[IDrawable]] is specified as the actors drawing.
+             *
+             * The default is `null` which prevents a rectangle from being drawn.
+             */
+            get: function () {
+                return this._color;
+            },
+            set: function (v) {
+                this._color = v.clone();
             },
             enumerable: true,
             configurable: true

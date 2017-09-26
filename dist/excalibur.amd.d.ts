@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1724+417fa0e - 2017-09-04
+/*! excalibur - v0.12.0-alpha.1779+2798d54 - 2017-09-26
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -4082,6 +4082,7 @@ declare module "Timer" {
         repeats: boolean;
         private _elapsedTime;
         private _totalTimeAlive;
+        private _paused;
         complete: boolean;
         scene: Scene;
         /**
@@ -4101,6 +4102,14 @@ declare module "Timer" {
          */
         reset(newInterval?: number): void;
         getTimeRunning(): number;
+        /**
+         * Pauses the timer so that no more time will be incremented towards the next call
+         */
+        pause(): void;
+        /**
+         * Unpauses the timer. Time will now increment towards the next call
+         */
+        unpause(): void;
         /**
          * Cancels the timer, preventing any further executions.
          */
@@ -6818,6 +6827,7 @@ declare module "Actor" {
          * The default is `null` which prevents a rectangle from being drawn.
          */
         color: Color;
+        private _color;
         /**
          * Whether or not to enable the [[CapturePointer]] trait that propagates
          * pointer events to this actor

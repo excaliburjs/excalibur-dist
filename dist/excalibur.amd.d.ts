@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1779+2798d54 - 2017-09-26
+/*! excalibur - v0.12.0-alpha.1800+73c968c - 2017-09-30
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5053,8 +5053,8 @@ declare module "Input/Pointer" {
         button: PointerButton;
         ev: any;
         /**
-         * @param x            The `x` coordinate of the event (in world coordinates)
-         * @param y            The `y` coordinate of the event (in world coordinates)
+         * @param x OBSOLETE: Will be removed in the 0.14.0 release. Use pos.x. The `x` coordinate of the event (in world coordinates).
+         * @param y OBSOLETE: Will be removed in the 0.14.0 release. Use pos.y. The `y` coordinate of the event (in world coordinates).
          * @param pageX        The `x` coordinate of the event (in document coordinates)
          * @param pageY        The `y` coordinate of the event (in document coordinates)
          * @param screenX      The `x` coordinate of the event (in screen coordinates)
@@ -5063,8 +5063,10 @@ declare module "Input/Pointer" {
          * @param pointerType  The type of pointer
          * @param button       The button pressed (if [[PointerType.Mouse]])
          * @param ev           The raw DOM event being handled
+         * @param pos          (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
          */
         constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, pointerType: PointerType, button: PointerButton, ev: any);
+        readonly pos: Vector;
     }
     /**
      * Wheel Events

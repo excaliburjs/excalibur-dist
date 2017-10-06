@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1833+27867b7 - 2017-10-03
+/*! excalibur - v0.12.0-alpha.1836+915a3ad - 2017-10-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.12.0-alpha.1833+27867b7 - 2017-10-03
+/*! excalibur - v0.12.0-alpha.1836+915a3ad - 2017-10-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -4405,6 +4405,22 @@ define("EventDispatcher", ["require", "exports", "Events"], function (require, e
             if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
                 this.emit('unsubscribe', new Events_2.UnsubscribeEvent(eventName, handler));
             }
+        };
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        EventDispatcher.prototype.once = function (eventName, handler) {
+            var _this = this;
+            var metaHandler = function (event) {
+                var ev = event || new Events_2.GameEvent();
+                ev.target = ev.target || _this._target;
+                _this.off(eventName, handler);
+                handler.call(ev.target, ev);
+            };
+            this.on(eventName, metaHandler);
         };
         /**
          * Wires this event dispatcher to also recieve events from another
@@ -11621,7 +11637,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1833+27867b7';
+    exports.EX_VERSION = '0.12.0-alpha.1836+915a3ad';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -13436,6 +13452,15 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
             this.eventDispatcher.emit(eventName, eventObject);
         };
         /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        Class.prototype.once = function (eventName, handler) {
+            this.eventDispatcher.once(eventName, handler);
+        };
+        /**
          * You may wish to extend native Excalibur functionality in vanilla Javascript.
          * Any method on a class inheriting [[Class]] may be extended to support
          * additional functionality. In the example below we create a new type called `MyActor`.
@@ -13937,6 +13962,10 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype.on = function (eventName, handler) {
             this._checkForPointerOptIn(eventName);
             this.eventDispatcher.on(eventName, handler);
+        };
+        Actor.prototype.once = function (eventName, handler) {
+            this._checkForPointerOptIn(eventName);
+            this.eventDispatcher.once(eventName, handler);
         };
         /**
          * If the current actor is a member of the scene, this will remove

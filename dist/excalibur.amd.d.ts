@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1833+27867b7 - 2017-10-03
+/*! excalibur - v0.12.0-alpha.1836+915a3ad - 2017-10-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1969,6 +1969,13 @@ declare module "Interfaces/IEvented" {
          *
          */
         off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Once listens to an event once then auto unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
     }
 }
 declare module "EventDispatcher" {
@@ -2013,6 +2020,13 @@ declare module "EventDispatcher" {
          *
          */
         off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * Wires this event dispatcher to also recieve events from another
          */
@@ -6548,6 +6562,13 @@ declare module "Class" {
          */
         emit(eventName: string, eventObject?: GameEvent<any>): void;
         /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
          * You may wish to extend native Excalibur functionality in vanilla Javascript.
          * Any method on a class inheriting [[Class]] may be extended to support
          * additional functionality. In the example below we create a new type called `MyActor`.
@@ -6880,6 +6901,20 @@ declare module "Actor" {
         on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        once(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        once(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         /**
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.

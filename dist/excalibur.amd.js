@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1836+915a3ad - 2017-10-06
+/*! excalibur - v0.12.0-alpha.1844+1d3c176 - 2017-10-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -12,12 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 define("Actions/RotationType", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -11182,7 +11176,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1836+915a3ad';
+    exports.EX_VERSION = '0.12.0-alpha.1844+1d3c176';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12113,7 +12107,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
     }
     exports.isUIActor = isUIActor;
 });
-define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors", "Util/Decorators"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils, Decorators_2) {
+define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12539,21 +12533,8 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 }
             }
         };
-        Object.defineProperty(Scene.prototype, "children", {
-            get: function () {
-                return this.actors;
-            },
-            set: function (actors) {
-                this.actors = actors;
-            },
-            enumerable: true,
-            configurable: true
-        });
         return Scene;
     }(Class_10.Class));
-    __decorate([
-        Decorators_2.obsolete({ alternateMethod: 'ex.Scene.actors', message: 'This method will be removed in the 0.13.0 release. ' })
-    ], Scene.prototype, "children", null);
     exports.Scene = Scene;
 });
 define("Events", ["require", "exports"], function (require, exports) {

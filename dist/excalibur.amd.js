@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1847+c69d33a - 2017-10-07
+/*! excalibur - v0.12.0-alpha.1850+5416d0f - 2017-10-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -4861,7 +4861,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
         __extends(Resource, _super);
         /**
          * @param path          Path to the remote resource
-         * @param responseType  The Content-Type to expect (e.g. `application/json`)
+         * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
          * @param bustCache     Whether or not to cache-bust requests
          */
         function Resource(path, responseType, bustCache) {
@@ -4952,8 +4952,12 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
          * processing. Such as decoding downloaded audio bits.
          */
         Resource.prototype.processData = function (data) {
-            // Handle any additional loading after the xhr has completed.
-            return URL.createObjectURL(data);
+            // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
+            // Blob requires an object url
+            if (this.responseType === 'blob') {
+                return URL.createObjectURL(data);
+            }
+            return data;
         };
         return Resource;
     }(Class_2.Class));
@@ -11193,7 +11197,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1847+c69d33a';
+    exports.EX_VERSION = '0.12.0-alpha.1850+5416d0f';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);

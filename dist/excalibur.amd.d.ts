@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1847+c69d33a - 2017-10-07
+/*! excalibur - v0.12.0-alpha.1850+5416d0f - 2017-10-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2611,17 +2611,17 @@ declare module "Resources/Resource" {
      */
     export class Resource<T> extends Class implements ILoadable {
         path: string;
-        responseType: string;
+        responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
         bustCache: boolean;
         data: T;
         logger: Logger;
         private _engine;
         /**
          * @param path          Path to the remote resource
-         * @param responseType  The Content-Type to expect (e.g. `application/json`)
+         * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
          * @param bustCache     Whether or not to cache-bust requests
          */
-        constructor(path: string, responseType: string, bustCache?: boolean);
+        constructor(path: string, responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text', bustCache?: boolean);
         /**
          * Returns true if the Resource is completely loaded and is ready
          * to be drawn.

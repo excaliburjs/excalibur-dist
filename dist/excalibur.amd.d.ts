@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1844+1d3c176 - 2017-10-07
+/*! excalibur - v0.12.0-alpha.1847+c69d33a - 2017-10-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -6252,7 +6252,9 @@ declare module "Events" {
     export type postupdate = 'postupdate';
     export type preframe = 'preframe';
     export type postframe = 'postframe';
+    export type precollision = 'precollision';
     export type collision = 'collision';
+    export type postcollision = 'postcollision';
     export type initialize = 'initialize';
     export type activate = 'activate';
     export type deactivate = 'deactivate';
@@ -6461,7 +6463,8 @@ declare module "Events" {
         constructor(target: Engine);
     }
     /**
-     * Event thrown on an [[Actor|actor]] when a collision has occurred
+     * OBSOLETE: Event thrown on an [[Actor|actor]] when a collision will occur this frame
+     * @deprecated Will be removed in v0.14, please use PreCollisionEvent
      */
     export class CollisionEvent extends GameEvent<Actor> {
         actor: Actor;
@@ -6472,6 +6475,38 @@ declare module "Events" {
          * @param actor         The actor the event was thrown on
          * @param other         The actor that was collided with
          * @param side          The side that was collided with
+         * @param intersection  Intersection vector
+         */
+        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
+    }
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
+     */
+    export class PreCollisionEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        side: Side;
+        intersection: Vector;
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that will collided with the current actor
+         * @param side          The side that will be collided with the current actor
+         * @param intersection  Intersection vector
+         */
+        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
+    }
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
+     */
+    export class PostCollisionEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        side: Side;
+        intersection: Vector;
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that did collide with the current actor
+         * @param side          The side that did collide with the current actor
          * @param intersection  Intersection vector
          */
         constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
@@ -6605,7 +6640,7 @@ declare module "Actor" {
     import { Class } from "Class";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Texture } from "Resources/Texture";
-    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from "Events";
+    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, CollisionEvent, PostCollisionEvent, PreCollisionEvent } from "Events";
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { Sprite } from "Drawing/Sprite";
@@ -6886,6 +6921,9 @@ declare module "Actor" {
          */
         _initialize(engine: Engine): void;
         private _checkForPointerOptIn(eventName);
+        on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        on(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
+        on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
         on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
@@ -6900,6 +6938,9 @@ declare module "Actor" {
         on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        once(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
+        once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
         once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;

@@ -1,4 +1,4 @@
-/*! excalibur - v0.12.0-alpha.1844+1d3c176 - 2017-10-07
+/*! excalibur - v0.12.0-alpha.1847+c69d33a - 2017-10-07
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2064,6 +2064,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
                     }
                     bodyA.vel.y = velY;
                 }
+                bodyA.emit('postcollision', new Events_1.PostCollisionEvent(bodyA, bodyB, Util.getSideFromVector(mtv), mtv));
             }
         };
         CollisionContact.prototype._resolveBoxCollision = function () {
@@ -2072,8 +2073,11 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             var side = Util.getSideFromVector(this.mtv);
             var mtv = this.mtv.negate();
             // Publish collision events on both participants
+            // Obsolete: Collison will be removed in v0.14
             bodyA.emit('collision', new Events_1.CollisionEvent(bodyA, bodyB, side, mtv));
+            bodyA.emit('precollision', new Events_1.PreCollisionEvent(bodyA, bodyB, side, mtv));
             bodyB.emit('collision', new Events_1.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
+            bodyB.emit('precollision', new Events_1.PreCollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
             this._applyBoxImpulse(bodyA, bodyB, mtv);
             this._applyBoxImpulse(bodyB, bodyA, mtv.negate());
         };
@@ -2084,6 +2088,18 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             var mtv = this.mtv; // normal pointing away from bodyA
             var normal = this.normal; // normal pointing away from bodyA
             if (bodyA.actor === bodyB.actor) {
+                return;
+            }
+            // Publish collision events on both participants
+            var side = Util.getSideFromVector(this.mtv);
+            // Obsolete: Collision will be removed in v0.14
+            bodyA.actor.emit('collision', new Events_1.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyA.actor.emit('precollision', new Events_1.PreCollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyB.actor.emit('collision', new Events_1.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
+            bodyB.actor.emit('precollision', new Events_1.PreCollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
+            // If any of the participants are passive then short circuit
+            if (bodyA.actor.collisionType === Actor_1.CollisionType.Passive ||
+                bodyB.actor.collisionType === Actor_1.CollisionType.Passive) {
                 return;
             }
             var invMassA = bodyA.actor.collisionType === Actor_1.CollisionType.Fixed ? 0 : 1 / bodyA.mass;
@@ -2110,10 +2126,6 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             if (rvNormal > 0) {
                 return;
             }
-            // Publish collision events on both participants
-            var side = Util.getSideFromVector(this.mtv);
-            bodyA.actor.emit('collision', new Events_1.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-            bodyB.actor.emit('collision', new Events_1.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
             // Collision impulse formula from Chris Hecker
             // https://en.wikipedia.org/wiki/Collision_response
             var impulse = -((1 + coefRestitution) * rvNormal) /
@@ -2183,6 +2195,8 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
                     }
                 }
             }
+            bodyA.actor.emit('postcollision', new Events_1.PostCollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
+            bodyB.actor.emit('postcollision', new Events_1.PostCollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
         };
         return CollisionContact;
     }());
@@ -7270,10 +7284,13 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
                             break;
                         }
                         side = actor.getSideFromIntersect(intersectMap);
+                        // OBSOLETE will be removed in v0.14
                         eventDispatcher.emit('collision', new Events_4.CollisionEvent(actor, null, side, intersectMap));
+                        eventDispatcher.emit('precollision', new Events_4.PreCollisionEvent(actor, null, side, intersectMap));
                         if (actor.collisionType === Actor_5.CollisionType.Active) {
                             actor.pos.y += intersectMap.y;
                             actor.pos.x += intersectMap.x;
+                            eventDispatcher.emit('postcollision', new Events_4.PostCollisionEvent(actor, null, side, intersectMap));
                         }
                     }
                 }
@@ -11176,7 +11193,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.12.0-alpha.1844+1d3c176';
+    exports.EX_VERSION = '0.12.0-alpha.1847+c69d33a';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_10);
@@ -12838,7 +12855,8 @@ define("Events", ["require", "exports"], function (require, exports) {
     }(GameEvent));
     exports.HiddenEvent = HiddenEvent;
     /**
-     * Event thrown on an [[Actor|actor]] when a collision has occurred
+     * OBSOLETE: Event thrown on an [[Actor|actor]] when a collision will occur this frame
+     * @deprecated Will be removed in v0.14, please use PreCollisionEvent
      */
     var CollisionEvent = (function (_super) {
         __extends(CollisionEvent, _super);
@@ -12860,6 +12878,52 @@ define("Events", ["require", "exports"], function (require, exports) {
         return CollisionEvent;
     }(GameEvent));
     exports.CollisionEvent = CollisionEvent;
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
+     */
+    var PreCollisionEvent = (function (_super) {
+        __extends(PreCollisionEvent, _super);
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that will collided with the current actor
+         * @param side          The side that will be collided with the current actor
+         * @param intersection  Intersection vector
+         */
+        function PreCollisionEvent(actor, other, side, intersection) {
+            var _this = _super.call(this) || this;
+            _this.actor = actor;
+            _this.other = other;
+            _this.side = side;
+            _this.intersection = intersection;
+            _this.target = actor;
+            return _this;
+        }
+        return PreCollisionEvent;
+    }(GameEvent));
+    exports.PreCollisionEvent = PreCollisionEvent;
+    /**
+     * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
+     */
+    var PostCollisionEvent = (function (_super) {
+        __extends(PostCollisionEvent, _super);
+        /**
+         * @param actor         The actor the event was thrown on
+         * @param other         The actor that did collide with the current actor
+         * @param side          The side that did collide with the current actor
+         * @param intersection  Intersection vector
+         */
+        function PostCollisionEvent(actor, other, side, intersection) {
+            var _this = _super.call(this) || this;
+            _this.actor = actor;
+            _this.other = other;
+            _this.side = side;
+            _this.intersection = intersection;
+            _this.target = actor;
+            return _this;
+        }
+        return PostCollisionEvent;
+    }(GameEvent));
+    exports.PostCollisionEvent = PostCollisionEvent;
     /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */

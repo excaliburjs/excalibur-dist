@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1864+4ac682a - 2017-10-11
+/*! excalibur - v0.13.0-alpha.1889+f85c686 - 2017-10-30
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -5591,6 +5591,11 @@ declare module "Engine" {
          */
         suppressMinimumBrowserFeatureDetection?: boolean;
         /**
+         * Suppress HiDPI auto detection and scaling, it is not recommended users of excalibur switch off this feature. This feature detects
+         * and scales the drawing canvas appropriately to accommodate HiDPI screens.
+         */
+        suppressHiDPIScaling?: boolean;
+        /**
          * Specify how the game window is to be positioned when the [[DisplayMode.Position]] is chosen. This option MUST be specified
          * if the DisplayMode is set as [[DisplayMode.Position]]. The position can be either a string or an [[IAbsolutePosition]].
          * String must be in the format of css style background-position. The vertical position must precede the horizontal position in strings.
@@ -5631,13 +5636,51 @@ declare module "Engine" {
          */
         canvasElementId: string;
         /**
-         * The width of the game canvas in pixels
+         * The width of the game canvas in pixels (physical width component of the
+         * resolution of the canvas element)
          */
-        canvasWidth: number;
+        readonly canvasWidth: number;
         /**
-         * The height of the game canvas in pixels
+         * Returns half width of the game canvas in pixels (half physical width component)
          */
-        canvasHeight: number;
+        readonly halfCanvasWidth: number;
+        /**
+         * The height of the game canvas in pixels, (physical height component of
+         * the resolution of the canvas element)
+         */
+        readonly canvasHeight: number;
+        /**
+         * Returns half height of the game canvas in pixels (half physical height component)
+         */
+        readonly halfCanvasHeight: number;
+        /**
+         * Returns the width of the engine's visible drawing surface in pixels including zoom including device pixel ratio.
+         */
+        getDrawWidth(): number;
+        /**
+         * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly drawWidth: number;
+        /**
+         * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly halfDrawWidth: number;
+        /**
+         * Returns the height of the engine's visible drawing surface in pixels .
+         */
+        getDrawHeight(): number;
+        /**
+         * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly drawHeight: number;
+        /**
+         * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        readonly halfDrawHeight: number;
+        /**
+         * Returns whether excalibur detects the current screen to be HiDPI
+         */
+        readonly isHiDpi: boolean;
         /**
          * Access engine input like pointer, keyboard, or gamepad
          */
@@ -5678,6 +5721,10 @@ declare module "Engine" {
          * Indicates the current [[DisplayMode]] of the engine.
          */
         displayMode: DisplayMode;
+        /**
+         * Returns the calculated pixel ration for use in rendering
+         */
+        readonly pixelRatio: number;
         /**
          * Indicates the current position of the engine. Valid only when DisplayMode is DisplayMode.Position
          */
@@ -5898,17 +5945,9 @@ declare module "Engine" {
         /**
          * Changes the currently updating and drawing scene to a different,
          * named scene. Calls the [[Scene]] lifecycle events.
-         * @param key  The key of the scene to trasition to.
+         * @param key  The key of the scene to transition to.
          */
         goToScene(key: string): void;
-        /**
-         * Returns the width of the engine's drawing surface in pixels.
-         */
-        getDrawWidth(): number;
-        /**
-         * Returns the height of the engine's drawing surface in pixels.
-         */
-        getDrawHeight(): number;
         /**
          * Transforms the current x, y from screen coordinates to world coordinates
          * @param point  Screen coordinate to convert
@@ -5927,6 +5966,8 @@ declare module "Engine" {
          * Initializes the internal canvas, rendering context, displaymode, and native event listeners
          */
         private _initialize(options?);
+        private _intializeDisplayModePosition(options);
+        private _initializeHiDpi();
         /**
          * If supported by the browser, this will set the antialiasing flag on the
          * canvas. Set this to `false` if you want a 'jagged' pixel art look to your

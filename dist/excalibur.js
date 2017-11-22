@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1889+f85c686 - 2017-10-30
+/*! excalibur - v0.13.0-alpha.1919+f34559e - 2017-11-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.13.0-alpha.1889+f85c686 - 2017-10-30
+/*! excalibur - v0.13.0-alpha.1919+f34559e - 2017-11-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -3748,7 +3748,276 @@ define("Util/DrawUtil", ["require", "exports", "Drawing/Color"], function (requi
     }
     exports.circle = circle;
 });
-define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_5, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_9, Color_6, DrawUtil) {
+define("Util/Log", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Logging level that Excalibur will tag
+     */
+    var LogLevel;
+    (function (LogLevel) {
+        LogLevel[LogLevel["Debug"] = 0] = "Debug";
+        LogLevel[LogLevel["Info"] = 1] = "Info";
+        LogLevel[LogLevel["Warn"] = 2] = "Warn";
+        LogLevel[LogLevel["Error"] = 3] = "Error";
+        LogLevel[LogLevel["Fatal"] = 4] = "Fatal";
+    })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    var Logger = (function () {
+        function Logger() {
+            this._appenders = [];
+            /**
+             * Gets or sets the default logging level. Excalibur will only log
+             * messages if equal to or above this level. Default: [[LogLevel.Info]]
+             */
+            this.defaultLevel = LogLevel.Info;
+            if (Logger._instance) {
+                throw new Error('Logger is a singleton');
+            }
+            Logger._instance = this;
+            // Default console appender
+            Logger._instance.addAppender(new ConsoleAppender());
+            return Logger._instance;
+        }
+        /**
+         * Gets the current static instance of Logger
+         */
+        Logger.getInstance = function () {
+            if (Logger._instance == null) {
+                Logger._instance = new Logger();
+            }
+            return Logger._instance;
+        };
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        Logger.prototype.addAppender = function (appender) {
+            this._appenders.push(appender);
+        };
+        /**
+         * Clears all appenders from the logger
+         */
+        Logger.prototype.clearAppenders = function () {
+            this._appenders.length = 0;
+        };
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        Logger.prototype._log = function (level, args) {
+            if (level == null) {
+                level = this.defaultLevel;
+            }
+            var i = 0, len = this._appenders.length;
+            for (i; i < len; i++) {
+                if (level >= this.defaultLevel) {
+                    this._appenders[i].log(level, args);
+                }
+            }
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.debug = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Debug, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.info = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Info, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.warn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Warn, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.error = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Error, args);
+        };
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        Logger.prototype.fatal = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._log(LogLevel.Fatal, args);
+        };
+        return Logger;
+    }());
+    Logger._instance = null;
+    exports.Logger = Logger;
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    var ConsoleAppender = (function () {
+        function ConsoleAppender() {
+        }
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        ConsoleAppender.prototype.log = function (level, args) {
+            // Check for console support
+            if (!console && !console.log && console.warn && console.error) {
+                // todo maybe do something better than nothing
+                return;
+            }
+            // Create a new console args array
+            var consoleArgs = [];
+            consoleArgs.unshift.apply(consoleArgs, args);
+            consoleArgs.unshift('[' + LogLevel[level] + '] : ');
+            if (level < LogLevel.Warn) {
+                // Call .log for Debug/Info
+                if (console.log.apply) {
+                    // this is required on some older browsers that don't support apply on console.log :(
+                    console.log.apply(console, consoleArgs);
+                }
+                else {
+                    console.log(consoleArgs.join(' '));
+                }
+            }
+            else if (level < LogLevel.Error) {
+                // Call .warn for Warn
+                if (console.warn.apply) {
+                    console.warn.apply(console, consoleArgs);
+                }
+                else {
+                    console.warn(consoleArgs.join(' '));
+                }
+            }
+            else {
+                // Call .error for Error/Fatal
+                if (console.error.apply) {
+                    console.error.apply(console, consoleArgs);
+                }
+                else {
+                    console.error(consoleArgs.join(' '));
+                }
+            }
+        };
+        return ConsoleAppender;
+    }());
+    exports.ConsoleAppender = ConsoleAppender;
+    /**
+     * On-screen (canvas) appender
+     */
+    var ScreenAppender = (function () {
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        function ScreenAppender(width, height) {
+            // @todo Clean this up
+            this._messages = [];
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = width || window.innerWidth;
+            this._canvas.height = height || window.innerHeight;
+            this._canvas.style.position = 'absolute';
+            this._ctx = this._canvas.getContext('2d');
+            document.body.appendChild(this._canvas);
+        }
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        ScreenAppender.prototype.log = function (level, args) {
+            var message = args.join(',');
+            this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            this._messages.unshift('[' + LogLevel[level] + '] : ' + message);
+            var pos = 10;
+            var opacity = 1.0;
+            for (var i = 0; i < this._messages.length; i++) {
+                this._ctx.fillStyle = 'rgba(255,255,255,' + opacity.toFixed(2) + ')';
+                this._ctx.fillText(this._messages[i], 200, pos);
+                pos += 10;
+                opacity = opacity > 0 ? opacity - .05 : 0;
+            }
+        };
+        return ScreenAppender;
+    }());
+    exports.ScreenAppender = ScreenAppender;
+});
+define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], function (require, exports, Log_1, Util) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    function obsolete(options) {
+        options = Util.extend({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+        return function (target, property, descriptor) {
+            if (!(typeof descriptor.value === 'function' ||
+                typeof descriptor.get === 'function' ||
+                typeof descriptor.set === 'function')) {
+                throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
+            }
+            var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
+            var message = methodSignature + " is marked obsolete: " + options.message +
+                (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
+            var method = Util.extend({}, descriptor);
+            if (descriptor.value) {
+                method.value = function () {
+                    Log_1.Logger.getInstance().warn(message);
+                    return descriptor.value.apply(this, arguments);
+                };
+                return method;
+            }
+            if (descriptor.get) {
+                method.get = function () {
+                    Log_1.Logger.getInstance().warn(message);
+                    return descriptor.get.apply(this, arguments);
+                };
+            }
+            if (descriptor.set) {
+                method.set = function () {
+                    Log_1.Logger.getInstance().warn(message);
+                    return descriptor.set.apply(this, arguments);
+                };
+            }
+            return method;
+        };
+    }
+    exports.obsolete = obsolete;
+});
+define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil", "Util/Decorators"], function (require, exports, Physics_5, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_9, Color_6, DrawUtil, Decorators_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Body = (function () {
@@ -3960,18 +4229,20 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
         Body.prototype.wasTouching = function (other, game) {
             var pair = new Pair_1.Pair(this, other.body);
             var wasTouchingLastFrame = false;
-            if (game.stats.prevFrame.physics.collidersHash[pair.id]) {
+            if (game && game.stats.prevFrame && game.stats.prevFrame.physics.collidersHash[pair.id]) {
                 wasTouchingLastFrame = true;
             }
-            ;
             var currentlyTouching = this.touching(other);
             return wasTouchingLastFrame && !currentlyTouching;
         };
         return Body;
     }());
+    __decorate([
+        Decorators_1.obsolete({ message: 'will be removed in v0.14, use the collisionend event instead' })
+    ], Body.prototype, "wasTouching", null);
     exports.Body = Body;
 });
-define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_6, Color_7, DrawUtil) {
+define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Actor", "Util/DrawUtil"], function (require, exports, Physics_6, Color_7, Actor_2, DrawUtil) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -3985,6 +4256,26 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Uti
             this.collision = null;
             this.id = Pair.calculatePairHash(bodyA, bodyB);
         }
+        Object.defineProperty(Pair.prototype, "canCollide", {
+            /**
+             * Returns whether or not it is possible for the pairs to collide
+             */
+            get: function () {
+                var actorA = this.bodyA.actor;
+                var actorB = this.bodyB.actor;
+                // if both are fixed short circuit
+                if (actorA.collisionType === Actor_2.CollisionType.Fixed && actorB.collisionType === Actor_2.CollisionType.Fixed) {
+                    return false;
+                }
+                // if the other is prevent collision or is dead short circuit
+                if (actorB.collisionType === Actor_2.CollisionType.PreventCollision || actorB.isKilled()) {
+                    return false;
+                }
+                return true;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Runs the collison intersection logic on the members of this pair
          */
@@ -4749,237 +5040,11 @@ define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promis
     }());
     exports.ActionContext = ActionContext;
 });
-define("Util/Log", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Logging level that Excalibur will tag
-     */
-    var LogLevel;
-    (function (LogLevel) {
-        LogLevel[LogLevel["Debug"] = 0] = "Debug";
-        LogLevel[LogLevel["Info"] = 1] = "Info";
-        LogLevel[LogLevel["Warn"] = 2] = "Warn";
-        LogLevel[LogLevel["Error"] = 3] = "Error";
-        LogLevel[LogLevel["Fatal"] = 4] = "Fatal";
-    })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
-    /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
-     *
-     * [[include:Logger.md]]
-     */
-    var Logger = (function () {
-        function Logger() {
-            this._appenders = [];
-            /**
-             * Gets or sets the default logging level. Excalibur will only log
-             * messages if equal to or above this level. Default: [[LogLevel.Info]]
-             */
-            this.defaultLevel = LogLevel.Info;
-            if (Logger._instance) {
-                throw new Error('Logger is a singleton');
-            }
-            Logger._instance = this;
-            // Default console appender
-            Logger._instance.addAppender(new ConsoleAppender());
-            return Logger._instance;
-        }
-        /**
-         * Gets the current static instance of Logger
-         */
-        Logger.getInstance = function () {
-            if (Logger._instance == null) {
-                Logger._instance = new Logger();
-            }
-            return Logger._instance;
-        };
-        /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
-         */
-        Logger.prototype.addAppender = function (appender) {
-            this._appenders.push(appender);
-        };
-        /**
-         * Clears all appenders from the logger
-         */
-        Logger.prototype.clearAppenders = function () {
-            this._appenders.length = 0;
-        };
-        /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
-         */
-        Logger.prototype._log = function (level, args) {
-            if (level == null) {
-                level = this.defaultLevel;
-            }
-            var i = 0, len = this._appenders.length;
-            for (i; i < len; i++) {
-                if (level >= this.defaultLevel) {
-                    this._appenders[i].log(level, args);
-                }
-            }
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.debug = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Debug, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.info = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Info, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.warn = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Warn, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.error = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Error, args);
-        };
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        Logger.prototype.fatal = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            this._log(LogLevel.Fatal, args);
-        };
-        return Logger;
-    }());
-    Logger._instance = null;
-    exports.Logger = Logger;
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    var ConsoleAppender = (function () {
-        function ConsoleAppender() {
-        }
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        ConsoleAppender.prototype.log = function (level, args) {
-            // Check for console support
-            if (!console && !console.log && console.warn && console.error) {
-                // todo maybe do something better than nothing
-                return;
-            }
-            // Create a new console args array
-            var consoleArgs = [];
-            consoleArgs.unshift.apply(consoleArgs, args);
-            consoleArgs.unshift('[' + LogLevel[level] + '] : ');
-            if (level < LogLevel.Warn) {
-                // Call .log for Debug/Info
-                if (console.log.apply) {
-                    // this is required on some older browsers that don't support apply on console.log :(
-                    console.log.apply(console, consoleArgs);
-                }
-                else {
-                    console.log(consoleArgs.join(' '));
-                }
-            }
-            else if (level < LogLevel.Error) {
-                // Call .warn for Warn
-                if (console.warn.apply) {
-                    console.warn.apply(console, consoleArgs);
-                }
-                else {
-                    console.warn(consoleArgs.join(' '));
-                }
-            }
-            else {
-                // Call .error for Error/Fatal
-                if (console.error.apply) {
-                    console.error.apply(console, consoleArgs);
-                }
-                else {
-                    console.error(consoleArgs.join(' '));
-                }
-            }
-        };
-        return ConsoleAppender;
-    }());
-    exports.ConsoleAppender = ConsoleAppender;
-    /**
-     * On-screen (canvas) appender
-     */
-    var ScreenAppender = (function () {
-        /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
-         */
-        function ScreenAppender(width, height) {
-            // @todo Clean this up
-            this._messages = [];
-            this._canvas = document.createElement('canvas');
-            this._canvas.width = width || window.innerWidth;
-            this._canvas.height = height || window.innerHeight;
-            this._canvas.style.position = 'absolute';
-            this._ctx = this._canvas.getContext('2d');
-            document.body.appendChild(this._canvas);
-        }
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        ScreenAppender.prototype.log = function (level, args) {
-            var message = args.join(',');
-            this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-            this._messages.unshift('[' + LogLevel[level] + '] : ' + message);
-            var pos = 10;
-            var opacity = 1.0;
-            for (var i = 0; i < this._messages.length; i++) {
-                this._ctx.fillStyle = 'rgba(255,255,255,' + opacity.toFixed(2) + ')';
-                this._ctx.fillText(this._messages[i], 200, pos);
-                pos += 10;
-                opacity = opacity > 0 ? opacity - .05 : 0;
-            }
-        };
-        return ScreenAppender;
-    }());
-    exports.ScreenAppender = ScreenAppender;
-});
 define("Actions/IActionable", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_2, Log_1, Class_1) {
+define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_10, ActionContext_1, Actor_3, Log_2, Class_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -4994,7 +5059,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
             var _this = _super.call(this) || this;
             _this.name = name;
             _this.scene = scene;
-            _this._logger = Log_1.Logger.getInstance();
+            _this._logger = Log_2.Logger.getInstance();
             _this._members = [];
             _this.actions = new ActionContext_1.ActionContext();
             if (scene == null) {
@@ -5010,7 +5075,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
             return _this;
         }
         Group.prototype.add = function (actorOrActors) {
-            if (actorOrActors instanceof Actor_2.Actor) {
+            if (actorOrActors instanceof Actor_3.Actor) {
                 actorOrActors = [].concat(actorOrActors);
             }
             var i = 0, len = actorOrActors.length, groupIdx;
@@ -5298,7 +5363,7 @@ define("Interfaces/ILoadable", ["require", "exports"], function (require, export
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_2) {
+define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/Log"], function (require, exports, Class_2, Promises_3, Log_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5321,7 +5386,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
             _this.responseType = responseType;
             _this.bustCache = bustCache;
             _this.data = null;
-            _this.logger = Log_2.Logger.getInstance();
+            _this.logger = Log_3.Logger.getInstance();
             _this.onprogress = function () { return; };
             _this.oncomplete = function () { return; };
             _this.onerror = function () { return; };
@@ -5479,7 +5544,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
     }(Resource_1.Resource));
     exports.Texture = Texture;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_3, Util_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_4, Util_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5505,7 +5570,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             this.rotation = 0.0;
             this.anchor = new Algebra_11.Vector(0.0, 0.0);
             this.scale = new Algebra_11.Vector(1, 1);
-            this.logger = Log_3.Logger.getInstance();
+            this.logger = Log_4.Logger.getInstance();
             /**
              * Draws the sprite flipped vertically
              */
@@ -5987,7 +6052,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
     }());
     exports.Animation = Animation;
 });
-define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_10, Effects, Log_4, Label_1) {
+define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/Animation", "Drawing/Color", "Drawing/SpriteEffects", "Util/Log", "Label"], function (require, exports, Sprite_2, Animation_1, Color_10, Effects, Log_5, Label_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6234,7 +6299,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
                     currX += (charSprite.width + options.letterSpacing);
                 }
                 catch (e) {
-                    Log_4.Logger.getInstance().error("SpriteFont Error drawing char " + character);
+                    Log_5.Logger.getInstance().error("SpriteFont Error drawing char " + character);
                 }
             }
         };
@@ -6253,7 +6318,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
     }(SpriteSheet));
     exports.SpriteFont = SpriteFont;
 });
-define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (require, exports, Color_11, Actor_3) {
+define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (require, exports, Color_11, Actor_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6413,7 +6478,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _this.text = text || '';
             _this.color = Color_11.Color.Black.clone();
             _this.spriteFont = spriteFont;
-            _this.collisionType = Actor_3.CollisionType.PreventCollision;
+            _this.collisionType = Actor_4.CollisionType.PreventCollision;
             _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
             if (spriteFont) {
                 //this._textSprites = spriteFont.getTextSprites();
@@ -6598,7 +6663,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _super.prototype.debugDraw.call(this, ctx);
         };
         return Label;
-    }(Actor_3.Actor));
+    }(Actor_4.Actor));
     exports.Label = Label;
 });
 define("Interfaces/IAudio", ["require", "exports"], function (require, exports) {
@@ -6609,7 +6674,7 @@ define("Interfaces/IAudioImplementation", ["require", "exports"], function (requ
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_5, Util, Promises_5) {
+define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promises"], function (require, exports, Log_6, Util, Promises_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // set up audio context reference
@@ -6645,7 +6710,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      */
     var WebAudio = (function () {
         function WebAudio() {
-            this._logger = Log_5.Logger.getInstance();
+            this._logger = Log_6.Logger.getInstance();
             this.responseType = 'arraybuffer';
         }
         /**
@@ -6745,7 +6810,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             for (var _i = 0; _i < arguments.length; _i++) {
                 paths[_i] = arguments[_i];
             }
-            this._logger = Log_5.Logger.getInstance();
+            this._logger = Log_6.Logger.getInstance();
             this._data = null;
             this._tracks = [];
             this._isLoaded = false;
@@ -6792,7 +6857,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
                 }
             }
             catch (e) {
-                Log_5.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
+                Log_6.Logger.getInstance().warn('Cannot determine audio support, assuming no support for the Audio Tag', e);
                 return false;
             }
         };
@@ -7203,7 +7268,7 @@ define("Interfaces/ILoader", ["require", "exports"], function (require, exports)
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_12, Sound_1, Log_6, Promises_6, Class_3, DrawUtil) {
+define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Util/Log", "Promises", "Class", "Util/DrawUtil"], function (require, exports, Color_12, Sound_1, Log_7, Promises_6, Class_3, DrawUtil) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -7265,7 +7330,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             _this.setData = function () { return; };
             _this.processData = function () { return; };
             _this.onprogress = function (e) {
-                Log_6.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
+                Log_7.Logger.getInstance().debug('[ex.Loader] Loading ' + (100 * e.loaded / e.total).toFixed(0));
                 return;
             };
             _this.oncomplete = function () { return; };
@@ -7540,7 +7605,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
     }());
     exports.CapturePointer = CapturePointer;
 });
-define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_7, Actor_4) {
+define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_7, Actor_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EulerMovement = (function () {
@@ -7551,7 +7616,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
             var seconds = delta / 1000;
             var totalAcc = actor.acc.clone();
             // Only active vanilla actors are affected by global acceleration
-            if (actor.collisionType === Actor_4.CollisionType.Active) {
+            if (actor.collisionType === Actor_5.CollisionType.Active) {
                 totalAcc.addEqual(Physics_7.Physics.acc);
             }
             actor.oldVel = actor.vel;
@@ -7721,7 +7786,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
     }());
     exports.OffscreenCulling = OffscreenCulling;
 });
-define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_5, Side_2, Events_4) {
+define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_6, Side_2, Events_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var TileMapCollisionDetection = (function () {
@@ -7729,7 +7794,7 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
         }
         TileMapCollisionDetection.prototype.update = function (actor, engine) {
             var eventDispatcher = actor.eventDispatcher;
-            if (actor.collisionType !== Actor_5.CollisionType.PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
+            if (actor.collisionType !== Actor_6.CollisionType.PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
                 for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
                     var map = engine.currentScene.tileMaps[j];
                     var intersectMap;
@@ -7743,7 +7808,7 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
                         // OBSOLETE will be removed in v0.14
                         eventDispatcher.emit('collision', new Events_4.CollisionEvent(actor, null, side, intersectMap));
                         eventDispatcher.emit('precollision', new Events_4.PreCollisionEvent(actor, null, side, intersectMap));
-                        if (actor.collisionType === Actor_5.CollisionType.Active) {
+                        if (actor.collisionType === Actor_6.CollisionType.Active) {
                             actor.pos.y += intersectMap.y;
                             actor.pos.x += intersectMap.x;
                             eventDispatcher.emit('postcollision', new Events_4.PostCollisionEvent(actor, null, side, intersectMap));
@@ -7767,7 +7832,7 @@ define("Traits/Index", ["require", "exports", "Traits/CapturePointer", "Traits/E
     __export(OffscreenCulling_1);
     __export(TileMapCollisionDetection_1);
 });
-define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index"], function (require, exports, Actor_6, Color_14, Algebra_15, Util, DrawUtil, Traits) {
+define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index"], function (require, exports, Actor_7, Color_14, Algebra_15, Util, DrawUtil, Traits) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8001,7 +8066,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
              * Indicates whether particles should start with a random rotation
              */
             _this.randomRotation = false;
-            _this.collisionType = Actor_6.CollisionType.PreventCollision;
+            _this.collisionType = Actor_7.CollisionType.PreventCollision;
             _this.particles = new Util.Collection();
             _this.deadParticles = new Util.Collection();
             // Remove offscreen culling from particle emitters
@@ -8093,10 +8158,10 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             }
         };
         return ParticleEmitter;
-    }(Actor_6.Actor));
+    }(Actor_7.Actor));
     exports.ParticleEmitter = ParticleEmitter;
 });
-define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_15, Class_4, Algebra_16, Log_7, Events) {
+define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events"], function (require, exports, BoundingBox_4, Color_15, Class_4, Algebra_16, Log_8, Events) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8130,7 +8195,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
             _this._onScreenYStart = 0;
             _this._onScreenYEnd = 9999;
             _this._spriteSheets = {};
-            _this.logger = Log_7.Logger.getInstance();
+            _this.logger = Log_8.Logger.getInstance();
             _this.data = [];
             _this.data = new Array(rows * cols);
             for (var i = 0; i < cols; i++) {
@@ -8474,76 +8539,94 @@ define("Timer", ["require", "exports"], function (require, exports) {
     Timer.id = 0;
     exports.Timer = Timer;
 });
-define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor"], function (require, exports, Color_16, Action_1, EventDispatcher_1, Actor_7) {
+define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor", "Algebra", "Events", "Util/Util"], function (require, exports, Color_16, Action_1, EventDispatcher_1, Actor_8, Algebra_17, Events_5, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var triggerDefaults = {
+        pos: Algebra_17.Vector.Zero.clone(),
+        width: 10,
+        height: 10,
+        visible: false,
+        action: function () { return; },
+        filter: function () { return true; },
+        repeat: -1
+    };
     /**
      * Triggers are a method of firing arbitrary code on collision. These are useful
      * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
-     * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
+     * are invisible, and can only be seen when [[Trigger.visible]] is set to `true`.
      *
      * [[include:Triggers.md]]
      */
     var Trigger = (function (_super) {
         __extends(Trigger, _super);
         /**
-         * @param x       The x position of the trigger
-         * @param y       The y position of the trigger
-         * @param width   The width of the trigger
-         * @param height  The height of the trigger
-         * @param action  Callback to fire when trigger is activated, `this` will be bound to the Trigger instance
-         * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
+         *
+         * @param opts Trigger options
          */
-        function Trigger(x, y, width, height, action, repeats) {
-            var _this = _super.call(this, x, y, width, height) || this;
-            _this._action = function () { return; };
-            _this.repeats = 1;
-            _this.target = null;
-            _this.repeats = repeats || _this.repeats;
-            _this._action = action || _this._action;
-            _this.collisionType = Actor_7.CollisionType.PreventCollision;
+        function Trigger(opts) {
+            var _this = _super.call(this, opts.pos.x, opts.pos.y, opts.width, opts.height) || this;
+            /**
+             * Action to fire when triggered by collision
+             */
+            _this.action = function () { return; };
+            /**
+             * Filter to add additional granularity to action dispatch, if a filter is specified the action will only fire when
+             * filter return true for the collided actor.
+             */
+            _this.filter = function () { return true; };
+            /**
+             * Number of times to repeat before killing the trigger,
+             */
+            _this.repeat = -1;
+            opts = Util.extend({}, triggerDefaults, opts);
+            _this.filter = opts.filter || _this.filter;
+            _this.repeat = opts.repeat || _this.repeat;
+            _this.action = opts.action || _this.action;
+            if (opts.target) {
+                _this.target = opts.target;
+            }
+            _this.visible = opts.visible;
+            _this.collisionType = Actor_8.CollisionType.Passive;
             _this.eventDispatcher = new EventDispatcher_1.EventDispatcher(_this);
             _this.actionQueue = new Action_1.ActionQueue(_this);
-            return _this;
-        }
-        Trigger.prototype.update = function (engine, delta) {
-            // Update action queue
-            this.actionQueue.update(delta);
-            // Update placements based on linear algebra
-            this.pos.x += this.vel.x * delta / 1000;
-            this.pos.y += this.vel.y * delta / 1000;
-            this.rotation += this.rx * delta / 1000;
-            this.scale.x += this.sx * delta / 1000;
-            this.scale.y += this.sy * delta / 1000;
-            // check for trigger collisions
-            if (this.target) {
-                if (this.collides(this.target)) {
-                    this._dispatchAction();
-                }
-            }
-            else {
-                for (var i = 0; i < engine.currentScene.actors.length; i++) {
-                    var other = engine.currentScene.actors[i];
-                    if (other !== this &&
-                        other.collisionType !== Actor_7.CollisionType.PreventCollision &&
-                        this.collides(other)) {
-                        this._dispatchAction();
+            _this.on('collisionstart', function (evt) {
+                if (_this.filter(evt.other)) {
+                    _this.emit('enter', new Events_5.EnterTriggerEvent(_this, evt.other));
+                    _this._dispatchAction();
+                    // remove trigger if its done, -1 repeat forever
+                    if (_this.repeat === 0) {
+                        _this.kill();
                     }
                 }
-            }
-            // remove trigger if its done, -1 repeat forever
-            if (this.repeats === 0) {
-                this.kill();
-            }
+            });
+            _this.on('collisionend', function (evt) {
+                if (_this.filter(evt.other)) {
+                    _this.emit('exit', new Events_5.ExitTriggerEvent(_this, evt.other));
+                }
+            });
+            return _this;
+        }
+        Object.defineProperty(Trigger.prototype, "target", {
+            get: function () {
+                return this._target;
+            },
+            set: function (target) {
+                this._target = target;
+                this.filter = function (actor) { return actor === target; };
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Trigger.prototype._initialize = function (engine) {
+            _super.prototype._initialize.call(this, engine);
+            this._engine = engine;
         };
         Trigger.prototype._dispatchAction = function () {
-            this._action.call(this);
-            this.repeats--;
+            this.action.call(this);
+            this.repeat--;
         };
-        Trigger.prototype.draw = function (_ctx, _delta) {
-            // does not draw
-            return;
-        };
+        /* istanbul ignore next */
         Trigger.prototype.debugDraw = function (ctx) {
             _super.prototype.debugDraw.call(this, ctx);
             // Meant to draw debug information about actors
@@ -8564,7 +8647,7 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
             ctx.restore();
         };
         return Trigger;
-    }(Actor_7.Actor));
+    }(Actor_8.Actor));
     exports.Trigger = Trigger;
 });
 define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions/RotationType", "Actions/Action"], function (require, exports, ActionContext_2, RotationType_1, actions) {
@@ -8579,7 +8662,7 @@ define("Actions/Index", ["require", "exports", "Actions/ActionContext", "Actions
     // legacy Internal.Actions namespace support
     exports.Internal = { Actions: actions };
 });
-define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_8, BoundingBox_5, Log_8) {
+define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/BoundingBox", "Util/Log"], function (require, exports, Physics_8, BoundingBox_5, Log_9) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -8777,7 +8860,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
             var b = body.getBounds();
             // if the body is outside the world no longer update it
             if (!this.worldBounds.contains(b)) {
-                Log_8.Logger.getInstance().warn('Actor with id ' + body.actor.id +
+                Log_9.Logger.getInstance().warn('Actor with id ' + body.actor.id +
                     ' is outside the world bounds and will no longer be tracked for physics');
                 this.untrackBody(body);
                 return false;
@@ -9026,7 +9109,7 @@ define("Collision/ICollisionResolver", ["require", "exports"], function (require
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_17, Actor_8, Log_9) {
+define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log", "Events"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_18, Actor_9, Log_10, Events_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DynamicTreeCollisionBroadphase = (function () {
@@ -9034,13 +9117,15 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
             this._dynamicCollisionTree = new DynamicTree_1.DynamicTree();
             this._collisionHash = {};
             this._collisionPairCache = [];
+            this._lastFramePairs = [];
+            this._lastFramePairsHash = {};
         }
         /**
          * Tracks a physics body for collisions
          */
         DynamicTreeCollisionBroadphase.prototype.track = function (target) {
             if (!target) {
-                Log_9.Logger.getInstance().warn('Cannot track null physics body');
+                Log_10.Logger.getInstance().warn('Cannot track null physics body');
                 return;
             }
             this._dynamicCollisionTree.trackBody(target);
@@ -9050,7 +9135,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
          */
         DynamicTreeCollisionBroadphase.prototype.untrack = function (target) {
             if (!target) {
-                Log_9.Logger.getInstance().warn('Cannot untrack a null physics body');
+                Log_10.Logger.getInstance().warn('Cannot untrack a null physics body');
                 return;
             }
             this._dynamicCollisionTree.untrackBody(target);
@@ -9062,11 +9147,11 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                 return false; // pair exists easy exit return false
             }
             // if both are fixed short circuit
-            if (actorA.collisionType === Actor_8.CollisionType.Fixed && actorB.collisionType === Actor_8.CollisionType.Fixed) {
+            if (actorA.collisionType === Actor_9.CollisionType.Fixed && actorB.collisionType === Actor_9.CollisionType.Fixed) {
                 return false;
             }
             // if the other is prevent collision or is dead short circuit
-            if (actorB.collisionType === Actor_8.CollisionType.PreventCollision || actorB.isKilled()) {
+            if (actorB.collisionType === Actor_9.CollisionType.PreventCollision || actorB.isKilled()) {
                 return false;
             }
             // they can collide
@@ -9081,7 +9166,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
             // TODO optimization use only the actors that are moving to start 
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
-                return !other.isKilled() && other.collisionType !== Actor_8.CollisionType.PreventCollision;
+                return !other.isKilled() && other.collisionType !== Actor_9.CollisionType.PreventCollision;
             });
             // clear old list of collision pairs
             this._collisionPairCache = [];
@@ -9110,7 +9195,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                 for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
                     var actor = potentialColliders_1[_i];
                     // Skip non-active objects. Does not make sense on other collison types
-                    if (actor.collisionType !== Actor_8.CollisionType.Active) {
+                    if (actor.collisionType !== Actor_9.CollisionType.Active) {
                         continue;
                     }
                     ;
@@ -9129,11 +9214,11 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                         var centerPoint = actor.body.collisionArea.getCenter();
                         var furthestPoint = actor.body.collisionArea.getFurthestPoint(actor.vel);
                         var origin = furthestPoint.sub(updateVec);
-                        var ray = new Algebra_17.Ray(origin, actor.vel);
+                        var ray = new Algebra_18.Ray(origin, actor.vel);
                         // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface 
                         ray.pos = ray.pos.add(ray.dir.scale(-2 * Physics_9.Physics.surfaceEpsilon));
                         var minBody;
-                        var minTranslate = new Algebra_17.Vector(Infinity, Infinity);
+                        var minTranslate = new Algebra_18.Vector(Infinity, Infinity);
                         this._dynamicCollisionTree.rayCastQuery(ray, updateDistance + Physics_9.Physics.surfaceEpsilon * 2, function (other) {
                             if (actor.body !== other && other.collisionArea) {
                                 var hitPoint = other.collisionArea.rayCast(ray, updateDistance + Physics_9.Physics.surfaceEpsilon * 10);
@@ -9147,7 +9232,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                             }
                             return false;
                         });
-                        if (minBody && Algebra_17.Vector.isValid(minTranslate)) {
+                        if (minBody && Algebra_18.Vector.isValid(minTranslate)) {
                             var pair = new Pair_2.Pair(actor.body, minBody);
                             if (!this._collisionHash[pair.id]) {
                                 this._collisionHash[pair.id] = true;
@@ -9180,27 +9265,52 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                     stats.physics.collidersHash[pairs[i].id] = pairs[i];
                 }
             }
+            return pairs.filter(function (p) { return p.collision; });
         };
         /**
          * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
          */
-        DynamicTreeCollisionBroadphase.prototype.resolve = function (delta, strategy) {
-            // resolve collision pairs
-            var i = 0, len = this._collisionPairCache.length;
-            for (i = 0; i < len; i++) {
-                this._collisionPairCache[i].resolve(strategy);
-            }
-            // We must apply mtv after all pairs have been resolved for more accuracy
-            // apply integration of collision pairs
-            for (i = 0; i < len; i++) {
-                if (this._collisionPairCache[i].collision) {
-                    this._collisionPairCache[i].bodyA.applyMtv();
-                    this._collisionPairCache[i].bodyB.applyMtv();
+        DynamicTreeCollisionBroadphase.prototype.resolve = function (pairs, delta, strategy) {
+            for (var _i = 0, pairs_1 = pairs; _i < pairs_1.length; _i++) {
+                var pair = pairs_1[_i];
+                pair.resolve(strategy);
+                if (pair.collision) {
+                    pair.bodyA.applyMtv();
+                    pair.bodyB.applyMtv();
                     // todo still don't like this, this is a small integration step to resolve narrowphase collisions
-                    this._collisionPairCache[i].bodyA.actor.integrate(delta * Physics_9.Physics.collisionShift);
-                    this._collisionPairCache[i].bodyB.actor.integrate(delta * Physics_9.Physics.collisionShift);
+                    pair.bodyA.actor.integrate(delta * Physics_9.Physics.collisionShift);
+                    pair.bodyB.actor.integrate(delta * Physics_9.Physics.collisionShift);
                 }
             }
+            return pairs.filter(function (p) { return p.canCollide; });
+        };
+        DynamicTreeCollisionBroadphase.prototype.runCollisionStartEnd = function (pairs) {
+            var currentFrameHash = {};
+            for (var _i = 0, pairs_2 = pairs; _i < pairs_2.length; _i++) {
+                var p = pairs_2[_i];
+                // load currentFrameHash
+                currentFrameHash[p.id] = p;
+                // find all new collisions
+                if (!this._lastFramePairsHash[p.id]) {
+                    var actor1 = p.bodyA.actor;
+                    var actor2 = p.bodyB.actor;
+                    actor1.emit('collisionstart', new Events_6.CollisionStartEvent(actor1, actor2, p));
+                    actor2.emit('collisionstart', new Events_6.CollisionStartEvent(actor2, actor1, p));
+                }
+            }
+            // find all old collisions
+            for (var _a = 0, _b = this._lastFramePairs; _a < _b.length; _a++) {
+                var p = _b[_a];
+                if (!currentFrameHash[p.id]) {
+                    var actor1 = p.bodyA.actor;
+                    var actor2 = p.bodyB.actor;
+                    actor1.emit('collisionend', new Events_6.CollisionEndEvent(actor1, actor2));
+                    actor2.emit('collisionend', new Events_6.CollisionEndEvent(actor2, actor1));
+                }
+            }
+            // reset the last frame cache
+            this._lastFramePairs = pairs;
+            this._lastFramePairsHash = currentFrameHash;
         };
         /**
          * Update the dynamic tree positions
@@ -9234,11 +9344,13 @@ define("Collision/IPhysics", ["require", "exports"], function (require, exports)
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor"], function (require, exports, Physics_10, CollisionContact_2, Pair_3, Actor_9) {
+define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor", "Events"], function (require, exports, Physics_10, CollisionContact_2, Pair_3, Actor_10, Events_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var NaiveCollisionBroadphase = (function () {
         function NaiveCollisionBroadphase() {
+            this._lastFramePairs = [];
+            this._lastFramePairsHash = {};
         }
         NaiveCollisionBroadphase.prototype.track = function () {
             // pass
@@ -9252,7 +9364,7 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
         NaiveCollisionBroadphase.prototype.broadphase = function (targets) {
             // Retrieve the list of potential colliders, exclude killed, prevented, and self
             var potentialColliders = targets.filter(function (other) {
-                return !other.isKilled() && other.collisionType !== Actor_9.CollisionType.PreventCollision;
+                return !other.isKilled() && other.collisionType !== Actor_10.CollisionType.PreventCollision;
             });
             var actor1;
             var actor2;
@@ -9273,23 +9385,51 @@ define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "
                     }
                 }
             }
-            var k = 0, len = collisionPairs.length;
-            for (k; k < len; k++) {
-                collisionPairs[k].resolve(Physics_10.Physics.collisionResolutionStrategy);
-            }
             return collisionPairs;
         };
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        NaiveCollisionBroadphase.prototype.narrowphase = function () {
-            // pass
+        NaiveCollisionBroadphase.prototype.narrowphase = function (pairs) {
+            return pairs;
+        };
+        NaiveCollisionBroadphase.prototype.runCollisionStartEnd = function (pairs) {
+            var currentFrameHash = {};
+            for (var _i = 0, pairs_3 = pairs; _i < pairs_3.length; _i++) {
+                var p = pairs_3[_i];
+                // load currentFrameHash
+                currentFrameHash[p.id] = p;
+                // find all new collisions
+                if (!this._lastFramePairsHash[p.id]) {
+                    var actor1 = p.bodyA.actor;
+                    var actor2 = p.bodyB.actor;
+                    actor1.emit('collisionstart', new Events_7.CollisionStartEvent(actor1, actor2, p));
+                    actor2.emit('collisionstart', new Events_7.CollisionStartEvent(actor2, actor1, p));
+                }
+            }
+            // find all old collisions
+            for (var _a = 0, _b = this._lastFramePairs; _a < _b.length; _a++) {
+                var p = _b[_a];
+                if (!currentFrameHash[p.id]) {
+                    var actor1 = p.bodyA.actor;
+                    var actor2 = p.bodyB.actor;
+                    actor1.emit('collisionend', new Events_7.CollisionEndEvent(actor1, actor2));
+                    actor2.emit('collisionend', new Events_7.CollisionEndEvent(actor2, actor1));
+                }
+            }
+            // reset the last frame cache
+            this._lastFramePairs = pairs;
+            this._lastFramePairsHash = currentFrameHash;
         };
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        NaiveCollisionBroadphase.prototype.resolve = function () {
-            // pass
+        NaiveCollisionBroadphase.prototype.resolve = function (pairs) {
+            for (var _i = 0, pairs_4 = pairs; _i < pairs_4.length; _i++) {
+                var pair = pairs_4[_i];
+                pair.resolve(Physics_10.Physics.collisionResolutionStrategy);
+            }
+            return pairs.filter(function (p) { return p.canCollide; });
         };
         NaiveCollisionBroadphase.prototype.update = function () {
             return 0;
@@ -9320,7 +9460,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
     __export(PolygonArea_6);
     __export(Side_3);
 });
-define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_18) {
+define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_19) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -9342,9 +9482,9 @@ define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, 
              */
             this.filled = false;
             this._points = [];
-            this.anchor = new Algebra_18.Vector(0, 0);
+            this.anchor = new Algebra_19.Vector(0, 0);
             this.rotation = 0;
-            this.scale = new Algebra_18.Vector(1, 1);
+            this.scale = new Algebra_19.Vector(1, 1);
             this._points = points;
             var minX = this._points.reduce(function (prev, curr) {
                 return Math.min(prev, curr.x);
@@ -9904,7 +10044,7 @@ define("PostProcessing/IPostProcessor", ["require", "exports"], function (requir
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_10) {
+define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"], function (require, exports, Log_11) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ColorBlindness;
@@ -10000,7 +10140,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
             this._gl.attachShader(this._program, fragmentShader);
             this._gl.linkProgram(this._program);
             if (!this._gl.getProgramParameter(this._program, this._gl.LINK_STATUS)) {
-                Log_10.Logger.getInstance().error('Unable to link shader program!');
+                Log_11.Logger.getInstance().error('Unable to link shader program!');
             }
             this._gl.useProgram(this._program);
         }
@@ -10055,12 +10195,12 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
                 shader = this._gl.createShader(this._gl.VERTEX_SHADER);
             }
             else {
-                Log_10.Logger.getInstance().error('Error unknown shader type', type);
+                Log_11.Logger.getInstance().error('Error unknown shader type', type);
             }
             this._gl.shaderSource(shader, program);
             this._gl.compileShader(shader);
             if (!this._gl.getShaderParameter(shader, this._gl.COMPILE_STATUS)) {
-                Log_10.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
+                Log_11.Logger.getInstance().error('Unable to compile shader!', this._gl.getShaderInfoLog(shader));
                 return null;
             }
             return shader;
@@ -10134,7 +10274,7 @@ define("Resources/Index", ["require", "exports", "Resources/Resource", "Resource
     __export(Sound_2);
     __export(Texture_1);
 });
-define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (require, exports, Class_5, Events_5) {
+define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (require, exports, Class_5, Events_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -10241,7 +10381,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                     var gamepad = this.at(i);
                     // If was connected, but now isn't emit the disconnect event
                     if (gamepad.connected) {
-                        this.eventDispatcher.emit('disconnect', new Events_5.GamepadDisconnectEvent(i, gamepad));
+                        this.eventDispatcher.emit('disconnect', new Events_8.GamepadDisconnectEvent(i, gamepad));
                     }
                     // Reset connection status
                     gamepad.connected = false;
@@ -10249,7 +10389,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                 }
                 else {
                     if (!this.at(i).connected && this._isGamepadValid(gamepads[i])) {
-                        this.eventDispatcher.emit('connect', new Events_5.GamepadConnectEvent(i, this.at(i)));
+                        this.eventDispatcher.emit('connect', new Events_8.GamepadConnectEvent(i, this.at(i)));
                     }
                     // Set connection status
                     this.at(i).connected = true;
@@ -10272,7 +10412,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                             if (value !== this._oldPads[i].getButton(bi)) {
                                 if (gamepads[i].buttons[bi].pressed) {
                                     this.at(i).updateButton(bi, value);
-                                    this.at(i).eventDispatcher.emit('button', new Events_5.GamepadButtonEvent(bi, value, this.at(i)));
+                                    this.at(i).eventDispatcher.emit('button', new Events_8.GamepadButtonEvent(bi, value, this.at(i)));
                                 }
                                 else {
                                     this.at(i).updateButton(bi, 0);
@@ -10288,7 +10428,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
                         value = gamepads[i].axes[ai];
                         if (value !== this._oldPads[i].getAxes(ai)) {
                             this.at(i).updateAxes(ai, value);
-                            this.at(i).eventDispatcher.emit('axis', new Events_5.GamepadAxisEvent(ai, value, this.at(i)));
+                            this.at(i).eventDispatcher.emit('axis', new Events_8.GamepadAxisEvent(ai, value, this.at(i)));
                         }
                     }
                 }
@@ -10511,7 +10651,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
         Axes[Axes["RightStickY"] = 3] = "RightStickY";
     })(Axes = exports.Axes || (exports.Axes = {}));
 });
-define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "Algebra", "Class", "Util/Util"], function (require, exports, Engine_1, Events_6, UIActor_1, Algebra_19, Class_6, Util) {
+define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "Algebra", "Class", "Util/Util"], function (require, exports, Engine_1, Events_9, UIActor_1, Algebra_20, Class_6, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -10600,13 +10740,13 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
         }
         Object.defineProperty(PointerEvent.prototype, "pos", {
             get: function () {
-                return new Algebra_19.Vector(this.x, this.y);
+                return new Algebra_20.Vector(this.x, this.y);
             },
             enumerable: true,
             configurable: true
         });
         return PointerEvent;
-    }(Events_6.GameEvent));
+    }(Events_9.GameEvent));
     exports.PointerEvent = PointerEvent;
     ;
     /**
@@ -10648,7 +10788,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
             return _this;
         }
         return WheelEvent;
-    }(Events_6.GameEvent));
+    }(Events_9.GameEvent));
     exports.WheelEvent = WheelEvent;
     ;
     /**
@@ -10800,7 +10940,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
                 e.preventDefault();
                 var x = e.pageX - Util.getPosition(_this._engine.canvas).x;
                 var y = e.pageY - Util.getPosition(_this._engine.canvas).y;
-                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_19.Vector(x, y));
+                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_20.Vector(x, y));
                 var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, e.pageX, e.pageY, x, y, 0, PointerType.Mouse, e.button, e);
                 eventArr.push(pe);
                 _this.at(0).eventDispatcher.emit(eventName, pe);
@@ -10817,7 +10957,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
                     }
                     var x = e.changedTouches[i].pageX - Util.getPosition(_this._engine.canvas).x;
                     var y = e.changedTouches[i].pageY - Util.getPosition(_this._engine.canvas).y;
-                    var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_19.Vector(x, y));
+                    var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_20.Vector(x, y));
                     var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, e.changedTouches[i].pageX, e.changedTouches[i].pageY, x, y, index, PointerType.Touch, PointerButton.Unknown, e);
                     eventArr.push(pe);
                     _this.at(index).eventDispatcher.emit(eventName, pe);
@@ -10846,7 +10986,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
                 }
                 var x = e.pageX - Util.getPosition(_this._engine.canvas).x;
                 var y = e.pageY - Util.getPosition(_this._engine.canvas).y;
-                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_19.Vector(x, y));
+                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_20.Vector(x, y));
                 var pe = new PointerEvent(transformedPoint.x, transformedPoint.y, e.pageX, e.pageY, x, y, index, _this._stringToPointerType(e.pointerType), e.button, e);
                 eventArr.push(pe);
                 _this.at(index).eventDispatcher.emit(eventName, pe);
@@ -10873,7 +11013,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
                 }
                 var x = e.pageX - Util.getPosition(_this._engine.canvas).x;
                 var y = e.pageY - Util.getPosition(_this._engine.canvas).y;
-                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_19.Vector(x, y));
+                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_20.Vector(x, y));
                 // deltaX, deltaY, and deltaZ are the standard modern properties
                 // wheelDeltaX, wheelDeltaY, are legacy properties in webkit browsers and older IE
                 // e.detail is only used in opera
@@ -10955,15 +11095,15 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
             return _this;
         }
         Pointer.prototype._onPointerMove = function (ev) {
-            this.lastWorldPos = new Algebra_19.Vector(ev.x, ev.y);
-            this.lastPagePos = new Algebra_19.Vector(ev.pageX, ev.pageY);
-            this.lastScreenPos = new Algebra_19.Vector(ev.screenX, ev.screenY);
+            this.lastWorldPos = new Algebra_20.Vector(ev.x, ev.y);
+            this.lastPagePos = new Algebra_20.Vector(ev.pageX, ev.pageY);
+            this.lastScreenPos = new Algebra_20.Vector(ev.screenX, ev.screenY);
         };
         return Pointer;
     }(Class_6.Class));
     exports.Pointer = Pointer;
 });
-define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (require, exports, Class_7, Events_7) {
+define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (require, exports, Class_7, Events_10) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -11033,7 +11173,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
             return _this;
         }
         return KeyEvent;
-    }(Events_7.GameEvent));
+    }(Events_10.GameEvent));
     exports.KeyEvent = KeyEvent;
     /**
      * Provides keyboard support for Excalibur.
@@ -11168,49 +11308,6 @@ define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], funct
     Object.defineProperty(exports, "__esModule", { value: true });
     __export(Util_2);
     exports.DrawUtil = drawUtil;
-});
-define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], function (require, exports, Log_11, Util) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    function obsolete(options) {
-        options = Util.extend({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
-        return function (target, property, descriptor) {
-            if (!(typeof descriptor.value === 'function' ||
-                typeof descriptor.get === 'function' ||
-                typeof descriptor.set === 'function')) {
-                throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
-            }
-            var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
-            var message = methodSignature + " is marked obsolete: " + options.message +
-                (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
-            var method = Util.extend({}, descriptor);
-            if (descriptor.value) {
-                method.value = function () {
-                    Log_11.Logger.getInstance().warn(message);
-                    return descriptor.value.apply(this, arguments);
-                };
-                return method;
-            }
-            if (descriptor.get) {
-                method.get = function () {
-                    Log_11.Logger.getInstance().warn(message);
-                    return descriptor.get.apply(this, arguments);
-                };
-            }
-            if (descriptor.set) {
-                method.set = function () {
-                    Log_11.Logger.getInstance().warn(message);
-                    return descriptor.set.apply(this, arguments);
-                };
-            }
-            return method;
-        };
-    }
-    exports.obsolete = obsolete;
 });
 define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_12) {
     "use strict";
@@ -11640,7 +11737,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     }());
     exports.MockedElement = MockedElement;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_10, Algebra_20, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_8, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_1, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_11, Algebra_21, Camera_1, Class_8, Debug_1, Engine_2, EventDispatcher_2, Events_11, Group_1, Label_2, Loader_1, Particles_1, Physics_11, Promises_7, Scene_1, TileMap_1, Timer_1, Trigger_1, UIActor_2, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_2, Detector_1, CullingBox_2, EasingFunctions_3, Log_13, SortedList_1) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -11649,17 +11746,17 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.13.0-alpha.1889+f85c686';
+    exports.EX_VERSION = '0.13.0-alpha.1919+f34559e';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
-    __export(Actor_10);
-    __export(Algebra_20);
+    __export(Actor_11);
+    __export(Algebra_21);
     __export(Camera_1);
     __export(Class_8);
     __export(Debug_1);
     __export(Engine_2);
     __export(EventDispatcher_2);
-    __export(Events_8);
+    __export(Events_11);
     __export(Group_1);
     __export(Label_2);
     __export(Loader_1);
@@ -11681,14 +11778,14 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     exports.Input = input;
     exports.Traits = traits;
     exports.Util = util;
-    __export(Decorators_1);
+    __export(Decorators_2);
     __export(Detector_1);
     __export(CullingBox_2);
     __export(EasingFunctions_3);
     __export(Log_13);
     __export(SortedList_1);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox", "Util/Decorators"], function (require, exports, Index_7, Promises_8, Algebra_21, UIActor_3, Actor_11, Timer_2, TileMap_2, Loader_2, Detector_2, Events_9, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Util, BoundingBox_7, Decorators_2) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox", "Util/Decorators"], function (require, exports, Index_7, Promises_8, Algebra_22, UIActor_3, Actor_12, Timer_2, TileMap_2, Loader_2, Detector_2, Events_12, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Util, BoundingBox_7, Decorators_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12014,8 +12111,8 @@ O|===|* >________________>\n\
          * and the bottom right corner of the screen.
          */
         Engine.prototype.getWorldBounds = function () {
-            var left = this.screenToWorldCoordinates(Algebra_21.Vector.Zero).x;
-            var top = this.screenToWorldCoordinates(Algebra_21.Vector.Zero).y;
+            var left = this.screenToWorldCoordinates(Algebra_22.Vector.Zero).x;
+            var top = this.screenToWorldCoordinates(Algebra_22.Vector.Zero).y;
             var right = left + this.drawWidth;
             var bottom = top + this.drawHeight;
             return new BoundingBox_7.BoundingBox(left, top, right, bottom);
@@ -12120,7 +12217,7 @@ O|===|* >________________>\n\
                 this.currentScene.addUIActor(entity);
                 return;
             }
-            if (entity instanceof Actor_11.Actor) {
+            if (entity instanceof Actor_12.Actor) {
                 this._addChild(entity);
             }
             if (entity instanceof Timer_2.Timer) {
@@ -12138,7 +12235,7 @@ O|===|* >________________>\n\
                 this.currentScene.removeUIActor(entity);
                 return;
             }
-            if (entity instanceof Actor_11.Actor) {
+            if (entity instanceof Actor_12.Actor) {
                 this._removeChild(entity);
             }
             if (entity instanceof Timer_2.Timer) {
@@ -12189,14 +12286,14 @@ O|===|* >________________>\n\
                 // only deactivate when initialized
                 if (this.currentScene.isInitialized) {
                     this.currentScene.onDeactivate.call(this.currentScene);
-                    this.currentScene.eventDispatcher.emit('deactivate', new Events_9.DeactivateEvent(newScene, this.currentScene));
+                    this.currentScene.eventDispatcher.emit('deactivate', new Events_12.DeactivateEvent(newScene, this.currentScene));
                 }
                 // set current scene to new one
                 this.currentScene = newScene;
                 // initialize the current scene if has not been already
                 this.currentScene._initialize(this);
                 this.currentScene.onActivate.call(this.currentScene);
-                this.currentScene.eventDispatcher.emit('activate', new Events_9.ActivateEvent(oldScene, this.currentScene));
+                this.currentScene.eventDispatcher.emit('activate', new Events_12.ActivateEvent(oldScene, this.currentScene));
             }
             else {
                 this._logger.error('Scene', key, 'does not exist!');
@@ -12221,7 +12318,7 @@ O|===|* >________________>\n\
                 newX += focus.x;
                 newY += focus.y;
             }
-            return new Algebra_21.Vector(Math.floor(newX), Math.floor(newY));
+            return new Algebra_22.Vector(Math.floor(newX), Math.floor(newY));
         };
         /**
          * Transforms a world coordinate, to a screen coordinate
@@ -12242,7 +12339,7 @@ O|===|* >________________>\n\
             // transform back to screen space
             screenX = (screenX * this.canvas.clientWidth) / this.drawWidth;
             screenY = (screenY * this.canvas.clientHeight) / this.drawHeight;
-            return new Algebra_21.Vector(Math.floor(screenX), Math.floor(screenY));
+            return new Algebra_22.Vector(Math.floor(screenX), Math.floor(screenY));
         };
         /**
          * Sets the internal canvas height based on the selected display mode.
@@ -12308,11 +12405,11 @@ O|===|* >________________>\n\
             }
             document.addEventListener(visibilityChange, function () {
                 if (document[hidden]) {
-                    _this.eventDispatcher.emit('hidden', new Events_9.HiddenEvent(_this));
+                    _this.eventDispatcher.emit('hidden', new Events_12.HiddenEvent(_this));
                     _this._logger.debug('Window hidden');
                 }
                 else {
-                    _this.eventDispatcher.emit('visible', new Events_9.VisibleEvent(_this));
+                    _this.eventDispatcher.emit('visible', new Events_12.VisibleEvent(_this));
                     _this._logger.debug('Window visible');
                 }
             });
@@ -12445,7 +12542,7 @@ O|===|* >________________>\n\
                 this.input.gamepads.update();
                 return;
             }
-            this.emit('preupdate', new Events_9.PreUpdateEvent(this, delta, this));
+            this.emit('preupdate', new Events_12.PreUpdateEvent(this, delta, this));
             // process engine level events
             this.currentScene.update(this, delta);
             // update animations
@@ -12458,8 +12555,8 @@ O|===|* >________________>\n\
             this.input.gamepads.update();
             // Publish update event
             // TODO: Obsolete `update` event on Engine
-            this.eventDispatcher.emit('update', new Events_9.PostUpdateEvent(this, delta, this));
-            this.emit('postupdate', new Events_9.PostUpdateEvent(this, delta, this));
+            this.eventDispatcher.emit('update', new Events_12.PostUpdateEvent(this, delta, this));
+            this.emit('postupdate', new Events_12.PostUpdateEvent(this, delta, this));
         };
         /**
          * Draws the entire game
@@ -12467,7 +12564,7 @@ O|===|* >________________>\n\
          */
         Engine.prototype._draw = function (delta) {
             var ctx = this.ctx;
-            this.emit('predraw', new Events_9.PreDrawEvent(ctx, delta, this));
+            this.emit('predraw', new Events_12.PreDrawEvent(ctx, delta, this));
             if (this._isLoading) {
                 this._loader.draw(ctx, delta);
                 // Drawing nothing else while loading
@@ -12496,7 +12593,7 @@ O|===|* >________________>\n\
             for (var i = 0; i < this.postProcessors.length; i++) {
                 this.postProcessors[i].process(this.ctx.getImageData(0, 0, this.canvasWidth, this.canvasHeight), this.ctx);
             }
-            this.emit('postdraw', new Events_9.PostDrawEvent(ctx, delta, this));
+            this.emit('postdraw', new Events_12.PostDrawEvent(ctx, delta, this));
         };
         /**
          * Starts the internal game loop for Excalibur after loading
@@ -12520,7 +12617,7 @@ O|===|* >________________>\n\
                 loadingComplete = Promises_8.Promise.resolve();
             }
             loadingComplete.then(function () {
-                _this.emit('start', new Events_9.GameStartEvent(_this));
+                _this.emit('start', new Events_12.GameStartEvent(_this));
             });
             if (!this._hasStarted) {
                 this._hasStarted = true;
@@ -12541,7 +12638,7 @@ O|===|* >________________>\n\
                 }
                 try {
                     game._requestId = raf(mainloop);
-                    game.emit('preframe', new Events_9.PreFrameEvent(game, game.stats.prevFrame));
+                    game.emit('preframe', new Events_12.PreFrameEvent(game, game.stats.prevFrame));
                     // Get the time to calculate time-elapsed
                     var now = nowFn();
                     var elapsed = Math.floor(now - lastTime) || 1;
@@ -12568,7 +12665,7 @@ O|===|* >________________>\n\
                     game.stats.currFrame.duration.update = afterUpdate - beforeUpdate;
                     game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                     lastTime = now;
-                    game.emit('postframe', new Events_9.PostFrameEvent(game, game.stats.currFrame));
+                    game.emit('postframe', new Events_12.PostFrameEvent(game, game.stats.currFrame));
                 }
                 catch (e) {
                     window.cancelAnimationFrame(game._requestId);
@@ -12582,7 +12679,7 @@ O|===|* >________________>\n\
          */
         Engine.prototype.stop = function () {
             if (this._hasStarted) {
-                this.emit('stop', new Events_9.GameStopEvent(this));
+                this.emit('stop', new Events_12.GameStopEvent(this));
                 this._hasStarted = false;
                 this._logger.debug('Game stopped');
             }
@@ -12638,12 +12735,12 @@ O|===|* >________________>\n\
         backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
     };
     __decorate([
-        Decorators_2.obsolete({ message: 'getDrawWidth() will be removed in the 0.14 release',
+        Decorators_3.obsolete({ message: 'getDrawWidth() will be removed in the 0.14 release',
             alternateMethod: 'drawWidth property'
         })
     ], Engine.prototype, "getDrawWidth", null);
     __decorate([
-        Decorators_2.obsolete({ message: 'getDrawHeight() will be removed in the 0.14 release',
+        Decorators_3.obsolete({ message: 'getDrawHeight() will be removed in the 0.14 release',
             alternateMethod: 'drawHeight property'
         })
     ], Engine.prototype, "getDrawHeight", null);
@@ -12660,7 +12757,7 @@ O|===|* >________________>\n\
         return AnimationNode;
     }());
 });
-define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], function (require, exports, Algebra_22, Actor_12, Traits) {
+define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], function (require, exports, Algebra_23, Actor_13, Traits) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12680,7 +12777,7 @@ define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], fu
             _this.traits = [];
             _this.traits.push(new Traits.CapturePointer());
             _this.anchor.setTo(0, 0);
-            _this.collisionType = Actor_12.CollisionType.PreventCollision;
+            _this.collisionType = Actor_13.CollisionType.PreventCollision;
             _this.enableCapturePointer = true;
             return _this;
         }
@@ -12692,11 +12789,11 @@ define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], fu
             if (useWorld) {
                 return _super.prototype.contains.call(this, x, y);
             }
-            var coords = this._engine.worldToScreenCoordinates(new Algebra_22.Vector(x, y));
+            var coords = this._engine.worldToScreenCoordinates(new Algebra_23.Vector(x, y));
             return _super.prototype.contains.call(this, coords.x, coords.y);
         };
         return UIActor;
-    }(Actor_12.Actor));
+    }(Actor_13.Actor));
     exports.UIActor = UIActor;
 });
 define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], function (require, exports, UIActor_4, Label_3, Trigger_2) {
@@ -12713,7 +12810,7 @@ define("Util/Actors", ["require", "exports", "UIActor", "Label", "Trigger"], fun
     }
     exports.isUIActor = isUIActor;
 });
-define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors"], function (require, exports, UIActor_5, Physics_12, Events_10, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_13, Class_10, Util, ActorUtils) {
+define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log", "Timer", "Collision/DynamicTreeCollisionBroadphase", "Util/SortedList", "Group", "TileMap", "Camera", "Actor", "Class", "Util/Util", "Util/Actors", "Trigger"], function (require, exports, UIActor_5, Physics_12, Events_13, Log_15, Timer_3, DynamicTreeCollisionBroadphase_2, SortedList_2, Group_2, TileMap_3, Camera_2, Actor_14, Class_10, Util, ActorUtils, Trigger_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12734,6 +12831,10 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
              */
             _this.actors = [];
             /**
+             * The triggers in the current scene
+             */
+            _this.triggers = [];
+            /**
              * The [[TileMap]]s in the scene, if any
              */
             _this.tileMaps = [];
@@ -12746,9 +12847,10 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
              */
             _this.uiActors = [];
             _this._isInitialized = false;
-            _this._sortedDrawingTree = new SortedList_2.SortedList(Actor_13.Actor.prototype.getZIndex);
+            _this._sortedDrawingTree = new SortedList_2.SortedList(Actor_14.Actor.prototype.getZIndex);
             _this._broadphase = new DynamicTreeCollisionBroadphase_2.DynamicTreeCollisionBroadphase();
             _this._killQueue = [];
+            _this._triggerKillQueue = [];
             _this._timers = [];
             _this._cancelQueue = [];
             _this._logger = Log_15.Logger.getInstance();
@@ -12817,7 +12919,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype._initialize = function (engine) {
             if (!this.isInitialized) {
                 this.onInitialize.call(this, engine);
-                this.eventDispatcher.emit('initialize', new Events_10.InitializeEvent(engine, this));
+                this.eventDispatcher.emit('initialize', new Events_13.InitializeEvent(engine, this));
                 this._initializeChildren();
                 this._isInitialized = true;
             }
@@ -12828,7 +12930,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          * @param delta   The number of milliseconds since the last update
          */
         Scene.prototype.update = function (engine, delta) {
-            this.emit('preupdate', new Events_10.PreUpdateEvent(engine, delta, this));
+            this.emit('preupdate', new Events_13.PreUpdateEvent(engine, delta, this));
             var i, len;
             if (this.camera) {
                 this.camera.update(engine, delta);
@@ -12856,6 +12958,10 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             for (i = 0, len = this.actors.length; i < len; i++) {
                 this.actors[i].update(engine, delta);
             }
+            // Cycle through triggers updating
+            for (i = 0, len = this.triggers.length; i < len; i++) {
+                this.triggers[i].update(engine, delta);
+            }
             this._collectActorStats(engine);
             // Run the broadphase and narrowphase
             if (this._broadphase && Physics_12.Physics.enabled) {
@@ -12868,27 +12974,33 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 var collisionDelta = delta / iter;
                 while (iter > 0) {
                     // Run the narrowphase
-                    this._broadphase.narrowphase(pairs, engine.stats.currFrame);
+                    pairs = this._broadphase.narrowphase(pairs, engine.stats.currFrame);
                     // Run collision resolution strategy
-                    this._broadphase.resolve(collisionDelta, Physics_12.Physics.collisionResolutionStrategy);
+                    pairs = this._broadphase.resolve(pairs, collisionDelta, Physics_12.Physics.collisionResolutionStrategy);
+                    this._broadphase.runCollisionStartEnd(pairs);
                     iter--;
                 }
                 var afterNarrowphase = Date.now();
                 engine.stats.currFrame.physics.broadphase = afterBroadphase - beforeBroadphase;
                 engine.stats.currFrame.physics.narrowphase = afterNarrowphase - beforeNarrowphase;
             }
+            engine.stats.currFrame.actors.killed = this._killQueue.length + this._triggerKillQueue.length;
+            this._processKillQueue(this._killQueue, this.actors);
+            this._processKillQueue(this._triggerKillQueue, this.triggers);
+            this.emit('postupdate', new Events_13.PostUpdateEvent(engine, delta, this));
+        };
+        Scene.prototype._processKillQueue = function (killQueue, collection) {
             // Remove actors from scene graph after being killed
             var actorIndex;
-            for (i = 0, len = this._killQueue.length; i < len; i++) {
-                actorIndex = this.actors.indexOf(this._killQueue[i]);
+            for (var _i = 0, killQueue_1 = killQueue; _i < killQueue_1.length; _i++) {
+                var killed = killQueue_1[_i];
+                actorIndex = collection.indexOf(killed);
                 if (actorIndex > -1) {
-                    this._sortedDrawingTree.removeByComparable(this._killQueue[i]);
-                    this.actors.splice(actorIndex, 1);
+                    this._sortedDrawingTree.removeByComparable(killed);
+                    collection.splice(actorIndex, 1);
                 }
             }
-            engine.stats.currFrame.actors.killed = this._killQueue.length;
-            this._killQueue.length = 0;
-            this.emit('postupdate', new Events_10.PostUpdateEvent(engine, delta, this));
+            killQueue.length = 0;
         };
         /**
          * Draws all the actors in the Scene. Called by the [[Engine]].
@@ -12896,7 +13008,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          * @param delta  The number of milliseconds since the last draw
          */
         Scene.prototype.draw = function (ctx, delta) {
-            this.emit('predraw', new Events_10.PreDrawEvent(ctx, delta, this));
+            this.emit('predraw', new Events_13.PreDrawEvent(ctx, delta, this));
             ctx.save();
             if (this.camera) {
                 this.camera.draw(ctx);
@@ -12928,7 +13040,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                     this.uiActors[i].debugDraw(ctx);
                 }
             }
-            this.emit('postdraw', new Events_10.PostDrawEvent(ctx, delta, this));
+            this.emit('postdraw', new Events_13.PostDrawEvent(ctx, delta, this));
         };
         /**
          * Draws all the actors' debug information in the Scene. Called by the [[Engine]].
@@ -12936,7 +13048,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          */
         /* istanbul ignore next */
         Scene.prototype.debugDraw = function (ctx) {
-            this.emit('predebugdraw', new Events_10.PreDebugDrawEvent(ctx, this));
+            this.emit('predebugdraw', new Events_13.PreDebugDrawEvent(ctx, this));
             var i, len;
             for (i = 0, len = this.tileMaps.length; i < len; i++) {
                 this.tileMaps[i].debugDraw(ctx);
@@ -12944,9 +13056,12 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             for (i = 0, len = this.actors.length; i < len; i++) {
                 this.actors[i].debugDraw(ctx);
             }
+            for (i = 0, len = this.triggers.length; i < len; i++) {
+                this.triggers[i].debugDraw(ctx);
+            }
             this._broadphase.debugDraw(ctx, 20);
             this.camera.debugDraw(ctx);
-            this.emit('postdebugdraw', new Events_10.PostDebugDrawEvent(ctx, this));
+            this.emit('postdebugdraw', new Events_13.PostDebugDrawEvent(ctx, this));
         };
         /**
          * Checks whether an actor is contained in this scene or not
@@ -12955,7 +13070,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             return this.actors.indexOf(actor) > -1;
         };
         Scene.prototype.add = function (entity) {
-            if (entity instanceof Actor_13.Actor) {
+            if (entity instanceof Actor_14.Actor) {
                 entity.unkill();
             }
             if (entity instanceof UIActor_5.UIActor) {
@@ -12964,10 +13079,9 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 }
                 return;
             }
-            if (entity instanceof Actor_13.Actor) {
+            if (entity instanceof Actor_14.Actor) {
                 if (!Util.contains(this.actors, entity)) {
                     this._addChild(entity);
-                    this._sortedDrawingTree.add(entity);
                 }
                 return;
             }
@@ -12988,7 +13102,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
                 this.removeUIActor(entity);
                 return;
             }
-            if (entity instanceof Actor_13.Actor) {
+            if (entity instanceof Actor_14.Actor) {
                 this._broadphase.untrack(entity.body);
                 this._removeChild(entity);
             }
@@ -13023,9 +13137,13 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype._addChild = function (actor) {
             this._broadphase.track(actor.body);
             actor.scene = this;
-            this.actors.push(actor);
+            if (actor instanceof Trigger_3.Trigger) {
+                this.triggers.push(actor);
+            }
+            else {
+                this.actors.push(actor);
+            }
             this._sortedDrawingTree.add(actor);
-            actor.parent = this.actor;
         };
         /**
          * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
@@ -13047,7 +13165,12 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
          */
         Scene.prototype._removeChild = function (actor) {
             this._broadphase.untrack(actor.body);
-            this._killQueue.push(actor);
+            if (actor instanceof Trigger_3.Trigger) {
+                this._triggerKillQueue.push(actor);
+            }
+            else {
+                this._killQueue.push(actor);
+            }
             actor.parent = null;
         };
         /**
@@ -13514,6 +13637,43 @@ define("Events", ["require", "exports"], function (require, exports) {
     }(GameEvent));
     exports.PostCollisionEvent = PostCollisionEvent;
     /**
+     * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
+     */
+    var CollisionStartEvent = (function (_super) {
+        __extends(CollisionStartEvent, _super);
+        /**
+         *
+         */
+        function CollisionStartEvent(actor, other, pair) {
+            var _this = _super.call(this) || this;
+            _this.actor = actor;
+            _this.other = other;
+            _this.pair = pair;
+            _this.target = actor;
+            return _this;
+        }
+        return CollisionStartEvent;
+    }(GameEvent));
+    exports.CollisionStartEvent = CollisionStartEvent;
+    /**
+     * Event thrown when the [[Actor|actor]] is no longer colliding with another
+     */
+    var CollisionEndEvent = (function (_super) {
+        __extends(CollisionEndEvent, _super);
+        /**
+         *
+         */
+        function CollisionEndEvent(actor, other) {
+            var _this = _super.call(this) || this;
+            _this.actor = actor;
+            _this.other = other;
+            _this.target = actor;
+            return _this;
+        }
+        return CollisionEndEvent;
+    }(GameEvent));
+    exports.CollisionEndEvent = CollisionEndEvent;
+    /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
     var InitializeEvent = (function (_super) {
@@ -13590,6 +13750,28 @@ define("Events", ["require", "exports"], function (require, exports) {
         return EnterViewPortEvent;
     }(GameEvent));
     exports.EnterViewPortEvent = EnterViewPortEvent;
+    var EnterTriggerEvent = (function (_super) {
+        __extends(EnterTriggerEvent, _super);
+        function EnterTriggerEvent(target, actor) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            _this.actor = actor;
+            return _this;
+        }
+        return EnterTriggerEvent;
+    }(GameEvent));
+    exports.EnterTriggerEvent = EnterTriggerEvent;
+    var ExitTriggerEvent = (function (_super) {
+        __extends(ExitTriggerEvent, _super);
+        function ExitTriggerEvent(target, actor) {
+            var _this = _super.call(this) || this;
+            _this.target = target;
+            _this.actor = actor;
+            return _this;
+        }
+        return ExitTriggerEvent;
+    }(GameEvent));
+    exports.ExitTriggerEvent = ExitTriggerEvent;
 });
 define("Class", ["require", "exports", "EventDispatcher"], function (require, exports, EventDispatcher_3) {
     "use strict";
@@ -13698,7 +13880,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_11, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_23, Body_2, Side_4, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_11, BoundingBox_8, Texture_2, Events_14, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_24, Body_2, Side_4, Traits, Effects, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -13736,7 +13918,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             /**
              * The scale vector of the actor
              */
-            _this.scale = new Algebra_23.Vector(1, 1);
+            _this.scale = new Algebra_24.Vector(1, 1);
             /**
              * The x scalar velocity of the actor in scale/second
              */
@@ -13829,7 +14011,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             _this.actionQueue = new Action_2.ActionQueue(_this);
             _this.actions = new ActionContext_3.ActionContext(_this);
             // default anchor is in the middle
-            _this.anchor = new Algebra_23.Vector(.5, .5);
+            _this.anchor = new Algebra_24.Vector(.5, .5);
             // Initialize default collision area to be box
             _this.body.useBoxCollision();
             return _this;
@@ -14119,7 +14301,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         Actor.prototype._initialize = function (engine) {
             if (!this.isInitialized) {
                 this.onInitialize(engine);
-                this.eventDispatcher.emit('initialize', new Events_11.InitializeEvent(engine, this));
+                this.eventDispatcher.emit('initialize', new Events_14.InitializeEvent(engine, this));
                 this._isInitialized = true;
             }
             for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
@@ -14152,7 +14334,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         Actor.prototype.kill = function () {
             if (this.scene) {
-                this.emit('kill', new Events_11.KillEvent(this));
+                this.emit('kill', new Events_14.KillEvent(this));
                 this.scene.remove(this);
                 this._isKilled = true;
             }
@@ -14276,7 +14458,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Get the center point of an actor
          */
         Actor.prototype.getCenter = function () {
-            return new Algebra_23.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
+            return new Algebra_24.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
         };
         /**
          * Gets the calculated width of an actor, factoring in scale
@@ -14371,17 +14553,17 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             // rotate around root anchor
             var ra = root.getWorldPos(); // 10, 10
             var r = this.getWorldRotation();
-            return new Algebra_23.Vector(x, y).rotate(r, ra);
+            return new Algebra_24.Vector(x, y).rotate(r, ra);
         };
         /**
          * Gets the global scale of the Actor
          */
         Actor.prototype.getGlobalScale = function () {
             if (!this.parent) {
-                return new Algebra_23.Vector(this.scale.x, this.scale.y);
+                return new Algebra_24.Vector(this.scale.x, this.scale.y);
             }
             var parentScale = this.parent.getGlobalScale();
-            return new Algebra_23.Vector(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+            return new Algebra_24.Vector(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
         };
         /**
          * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
@@ -14408,7 +14590,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         Actor.prototype.contains = function (x, y, recurse) {
             if (recurse === void 0) { recurse = false; }
-            var containment = this.getBounds().contains(new Algebra_23.Vector(x, y));
+            var containment = this.getBounds().contains(new Algebra_24.Vector(x, y));
             if (recurse) {
                 return containment || this.children.some(function (child) {
                     return child.contains(x, y, true);
@@ -14504,7 +14686,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             return Math.sqrt(Math.pow(this.pos.x - actor.pos.x, 2) + Math.pow(this.pos.y - actor.pos.y, 2)) <= distance;
         };
         Actor.prototype._getCalculatedAnchor = function () {
-            return new Algebra_23.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
+            return new Algebra_24.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
         Actor.prototype._reapplyEffects = function (drawing) {
             drawing.removeEffect(this._opacityFx);
@@ -14537,7 +14719,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         Actor.prototype.update = function (engine, delta) {
             this._initialize(engine);
-            this.emit('preupdate', new Events_11.PreUpdateEvent(engine, delta, this));
+            this.emit('preupdate', new Events_14.PreUpdateEvent(engine, delta, this));
             // Update action queue
             this.actionQueue.update(delta);
             // Update color only opacity
@@ -14565,8 +14747,8 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                 this.children[i].update(engine, delta);
             }
             // TODO: Obsolete `update` event on Actor
-            this.eventDispatcher.emit('update', new Events_11.PostUpdateEvent(engine, delta, this));
-            this.emit('postupdate', new Events_11.PostUpdateEvent(engine, delta, this));
+            this.eventDispatcher.emit('update', new Events_14.PostUpdateEvent(engine, delta, this));
+            this.emit('postupdate', new Events_14.PostUpdateEvent(engine, delta, this));
         };
         /**
          * Called by the Engine, draws the actor to the screen
@@ -14581,7 +14763,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             // translate canvas by anchor offset
             ctx.save();
             ctx.translate(-(this._width * this.anchor.x), -(this._height * this.anchor.y));
-            this.emit('predraw', new Events_11.PreDrawEvent(ctx, delta, this));
+            this.emit('predraw', new Events_14.PreDrawEvent(ctx, delta, this));
             if (this.currentDrawing) {
                 var drawing = this.currentDrawing;
                 // See https://github.com/excaliburjs/Excalibur/pull/619 for discussion on this formula          
@@ -14606,7 +14788,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
                     this.children[i].draw(ctx, delta);
                 }
             }
-            this.emit('postdraw', new Events_11.PostDrawEvent(ctx, delta, this));
+            this.emit('postdraw', new Events_14.PostDrawEvent(ctx, delta, this));
             ctx.restore();
         };
         /**
@@ -14615,7 +14797,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         /* istanbul ignore next */
         Actor.prototype.debugDraw = function (ctx) {
-            this.emit('predebugdraw', new Events_11.PreDebugDrawEvent(ctx, this));
+            this.emit('predebugdraw', new Events_14.PreDebugDrawEvent(ctx, this));
             this.body.debugDraw(ctx);
             // Draw actor bounding box
             var bb = this.getBounds();
@@ -14659,7 +14841,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             for (var i = 0; i < this.children.length; i++) {
                 this.children[i].debugDraw(ctx);
             }
-            this.emit('postdebugdraw', new Events_11.PostDebugDrawEvent(ctx, this));
+            this.emit('postdebugdraw', new Events_14.PostDebugDrawEvent(ctx, this));
         };
         return Actor;
     }(Class_11.Class));
@@ -14700,7 +14882,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         CollisionType[CollisionType["Fixed"] = 3] = "Fixed";
     })(CollisionType = exports.CollisionType || (exports.CollisionType = {}));
 });
-define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_24, Log_17, Util) {
+define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_25, Log_17, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EaseTo = (function () {
@@ -14709,16 +14891,16 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this.easingFcn = easingFcn;
             this._currentLerpTime = 0;
             this._lerpDuration = 1 * 1000; // 1 second
-            this._lerpStart = new Algebra_24.Vector(0, 0);
-            this._lerpEnd = new Algebra_24.Vector(0, 0);
+            this._lerpStart = new Algebra_25.Vector(0, 0);
+            this._lerpEnd = new Algebra_25.Vector(0, 0);
             this._initialized = false;
             this._stopped = false;
             this._distance = 0;
             this._lerpDuration = duration;
-            this._lerpEnd = new Algebra_24.Vector(x, y);
+            this._lerpEnd = new Algebra_25.Vector(x, y);
         }
         EaseTo.prototype._initialize = function () {
-            this._lerpStart = new Algebra_24.Vector(this.actor.pos.x, this.actor.pos.y);
+            this._lerpStart = new Algebra_25.Vector(this.actor.pos.x, this.actor.pos.y);
             this._currentLerpTime = 0;
             this._distance = this._lerpStart.distance(this._lerpEnd);
         };
@@ -14755,7 +14937,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         EaseTo.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_24.Vector(actor.pos.x, actor.pos.y)).distance(this._lerpStart) >= this._distance;
+            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._lerpStart) >= this._distance;
         };
         EaseTo.prototype.reset = function () {
             this._initialized = false;
@@ -14771,13 +14953,13 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._started = false;
             this._stopped = false;
             this._actor = actor;
-            this._end = new Algebra_24.Vector(destx, desty);
+            this._end = new Algebra_25.Vector(destx, desty);
             this._speed = speed;
         }
         MoveTo.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
-                this._start = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
+                this._start = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
                 this._distance = this._start.distance(this._end);
                 this._dir = this._end.sub(this._start).normalize();
             }
@@ -14792,7 +14974,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         MoveTo.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_24.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
+            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
         };
         MoveTo.prototype.stop = function () {
             this._actor.vel.y = 0;
@@ -14810,7 +14992,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._started = false;
             this._stopped = false;
             this._actor = actor;
-            this._end = new Algebra_24.Vector(destx, desty);
+            this._end = new Algebra_25.Vector(destx, desty);
             if (time <= 0) {
                 Log_17.Logger.getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
                 throw new Error('Cannot move in time <= 0');
@@ -14820,7 +15002,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         MoveBy.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
-                this._start = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
+                this._start = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
                 this._distance = this._start.distance(this._end);
                 this._dir = this._end.sub(this._start).normalize();
                 this._speed = this._distance / (this._time / 1000);
@@ -14836,7 +15018,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         MoveBy.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_24.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
+            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
         };
         MoveBy.prototype.stop = function () {
             this._actor.vel.y = 0;
@@ -14855,8 +15037,8 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._stopped = false;
             this._actor = actor;
             this._actorToFollow = actorToFollow;
-            this._current = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
-            this._end = new Algebra_24.Vector(actorToFollow.pos.x, actorToFollow.pos.y);
+            this._current = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
+            this._end = new Algebra_25.Vector(actorToFollow.pos.x, actorToFollow.pos.y);
             this._maximumDistance = (followDistance !== undefined) ? followDistance : this._current.distance(this._end);
             this._speed = 0;
         }
@@ -14915,8 +15097,8 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._speedWasSpecified = false;
             this._actor = actor;
             this._actorToMeet = actorToMeet;
-            this._current = new Algebra_24.Vector(this._actor.pos.x, this._actor.pos.y);
-            this._end = new Algebra_24.Vector(actorToMeet.pos.x, actorToMeet.pos.y);
+            this._current = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
+            this._end = new Algebra_25.Vector(actorToMeet.pos.x, actorToMeet.pos.y);
             this._speed = speed || 0;
             if (speed !== undefined) {
                 this._speedWasSpecified = true;

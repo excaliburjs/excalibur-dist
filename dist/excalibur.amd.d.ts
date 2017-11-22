@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1889+f85c686 - 2017-10-30
+/*! excalibur - v0.13.0-alpha.1919+f34559e - 2017-11-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1567,6 +1567,133 @@ declare module "Util/DrawUtil" {
     export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
     export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
 }
+declare module "Util/Log" {
+    /**
+     * Logging level that Excalibur will tag
+     */
+    export enum LogLevel {
+        Debug = 0,
+        Info = 1,
+        Warn = 2,
+        Error = 3,
+        Fatal = 4,
+    }
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    export class Logger {
+        private static _instance;
+        private _appenders;
+        constructor();
+        /**
+         * Gets or sets the default logging level. Excalibur will only log
+         * messages if equal to or above this level. Default: [[LogLevel.Info]]
+         */
+        defaultLevel: LogLevel;
+        /**
+         * Gets the current static instance of Logger
+         */
+        static getInstance(): Logger;
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        addAppender(appender: IAppender): void;
+        /**
+         * Clears all appenders from the logger
+         */
+        clearAppenders(): void;
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        private _log(level, args);
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        debug(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        info(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        warn(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        error(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        fatal(...args: any[]): void;
+    }
+    /**
+     * Contract for any log appender (such as console/screen)
+     */
+    export interface IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    export class ConsoleAppender implements IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * On-screen (canvas) appender
+     */
+    export class ScreenAppender implements IAppender {
+        private _messages;
+        private _canvas;
+        private _ctx;
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+}
+declare module "Util/Decorators" {
+    /**
+     * Obsolete decorator options
+     */
+    export interface IObsoleteOptions {
+        message?: string;
+        alternateMethod?: string;
+    }
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
+}
 declare module "Collision/Body" {
     import { Engine } from "Engine";
     import { ICollisionArea } from "Collision/ICollisionArea";
@@ -1714,6 +1841,10 @@ declare module "Collision/Pair" {
         id: string;
         collision: CollisionContact;
         constructor(bodyA: Body, bodyB: Body);
+        /**
+         * Returns whether or not it is possible for the pairs to collide
+         */
+        readonly canCollide: boolean;
         /**
          * Runs the collison intersection logic on the members of this pair
          */
@@ -2198,119 +2329,6 @@ declare module "Actions/ActionContext" {
          * is finished.
          */
         asPromise<T>(): Promise<T>;
-    }
-}
-declare module "Util/Log" {
-    /**
-     * Logging level that Excalibur will tag
-     */
-    export enum LogLevel {
-        Debug = 0,
-        Info = 1,
-        Warn = 2,
-        Error = 3,
-        Fatal = 4,
-    }
-    /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
-     *
-     * [[include:Logger.md]]
-     */
-    export class Logger {
-        private static _instance;
-        private _appenders;
-        constructor();
-        /**
-         * Gets or sets the default logging level. Excalibur will only log
-         * messages if equal to or above this level. Default: [[LogLevel.Info]]
-         */
-        defaultLevel: LogLevel;
-        /**
-         * Gets the current static instance of Logger
-         */
-        static getInstance(): Logger;
-        /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
-         */
-        addAppender(appender: IAppender): void;
-        /**
-         * Clears all appenders from the logger
-         */
-        clearAppenders(): void;
-        /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
-         */
-        private _log(level, args);
-        /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
-         */
-        debug(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
-         */
-        info(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
-         */
-        warn(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
-         */
-        error(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        fatal(...args: any[]): void;
-    }
-    /**
-     * Contract for any log appender (such as console/screen)
-     */
-    export interface IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    export class ConsoleAppender implements IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * On-screen (canvas) appender
-     */
-    export class ScreenAppender implements IAppender {
-        private _messages;
-        private _canvas;
-        private _ctx;
-        /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
     }
 }
 declare module "Actions/IActionable" {
@@ -4133,29 +4151,51 @@ declare module "Timer" {
 declare module "Trigger" {
     import { Engine } from "Engine";
     import { Actor } from "Actor";
+    import { Vector } from "Algebra";
+    /**
+     * ITriggerOptions
+     */
+    export interface ITriggerOptions {
+        pos: Vector;
+        width: number;
+        height: number;
+        visible: boolean;
+        action: () => void;
+        target: Actor;
+        filter: (actor: Actor) => boolean;
+        repeat: number;
+    }
     /**
      * Triggers are a method of firing arbitrary code on collision. These are useful
      * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
-     * are invisible, and can only be seen when [[Engine.isDebug]] is set to `true`.
+     * are invisible, and can only be seen when [[Trigger.visible]] is set to `true`.
      *
      * [[include:Triggers.md]]
      */
     export class Trigger extends Actor {
-        private _action;
-        repeats: number;
-        target: Actor;
+        private _engine;
+        private _target;
         /**
-         * @param x       The x position of the trigger
-         * @param y       The y position of the trigger
-         * @param width   The width of the trigger
-         * @param height  The height of the trigger
-         * @param action  Callback to fire when trigger is activated, `this` will be bound to the Trigger instance
-         * @param repeats The number of times that this trigger should fire, by default it is 1, if -1 is supplied it will fire indefinitely
+         * Action to fire when triggered by collision
          */
-        constructor(x?: number, y?: number, width?: number, height?: number, action?: () => void, repeats?: number);
-        update(engine: Engine, delta: number): void;
+        action: () => void;
+        /**
+         * Filter to add additional granularity to action dispatch, if a filter is specified the action will only fire when
+         * filter return true for the collided actor.
+         */
+        filter: (actor: Actor) => boolean;
+        /**
+         * Number of times to repeat before killing the trigger,
+         */
+        repeat: number;
+        /**
+         *
+         * @param opts Trigger options
+         */
+        constructor(opts: Partial<ITriggerOptions>);
+        target: Actor;
+        _initialize(engine: Engine): void;
         private _dispatchAction();
-        draw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
 }
@@ -4274,11 +4314,15 @@ declare module "Collision/ICollisionResolver" {
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        narrowphase(pairs: Pair[], stats?: FrameStats): void;
+        narrowphase(pairs: Pair[], stats?: FrameStats): Pair[];
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
+        resolve(pairs: Pair[], delta: number, strategy: CollisionResolutionStrategy): Pair[];
+        /**
+         * Publish collision start/end events
+         */
+        runCollisionStartEnd(pairs: Pair[]): void;
         /**
          * Update the internal structures to track bodies
          */
@@ -4300,6 +4344,8 @@ declare module "Collision/DynamicTreeCollisionBroadphase" {
         private _dynamicCollisionTree;
         private _collisionHash;
         private _collisionPairCache;
+        private _lastFramePairs;
+        private _lastFramePairsHash;
         /**
          * Tracks a physics body for collisions
          */
@@ -4317,11 +4363,12 @@ declare module "Collision/DynamicTreeCollisionBroadphase" {
          * Applies narrow phase on collision pairs to find actual area intersections
          * Adds actual colliding pairs to stats' Frame data
          */
-        narrowphase(pairs: Pair[], stats?: FrameStats): void;
+        narrowphase(pairs: Pair[], stats?: FrameStats): Pair[];
         /**
          * Perform collision resolution given a strategy (rigid body or box) and move objects out of intersect.
          */
-        resolve(delta: number, strategy: CollisionResolutionStrategy): void;
+        resolve(pairs: Pair[], delta: number, strategy: CollisionResolutionStrategy): Pair[];
+        runCollisionStartEnd(pairs: Pair[]): void;
         /**
          * Update the dynamic tree positions
          */
@@ -4380,6 +4427,8 @@ declare module "Collision/NaiveCollisionBroadphase" {
     import { Actor } from "Actor";
     import { ICollisionBroadphase } from "Collision/ICollisionResolver";
     export class NaiveCollisionBroadphase implements ICollisionBroadphase {
+        private _lastFramePairs;
+        private _lastFramePairsHash;
         track(): void;
         untrack(): void;
         /**
@@ -4389,11 +4438,12 @@ declare module "Collision/NaiveCollisionBroadphase" {
         /**
          * Identify actual collisions from those pairs, and calculate collision impulse
          */
-        narrowphase(): void;
+        narrowphase(pairs: Pair[]): Pair[];
+        runCollisionStartEnd(pairs: Pair[]): void;
         /**
          * Resolve the position and velocity of the physics bodies
          */
-        resolve(): void;
+        resolve(pairs: Pair[]): Pair[];
         update(): number;
         debugDraw(): void;
     }
@@ -5334,20 +5384,6 @@ declare module "Util/Index" {
     import * as drawUtil from "Util/DrawUtil";
     export { drawUtil as DrawUtil };
 }
-declare module "Util/Decorators" {
-    /**
-     * Obsolete decorator options
-     */
-    export interface IObsoleteOptions {
-        message?: string;
-        alternateMethod?: string;
-    }
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
-}
 declare module "Util/Detector" {
     /**
      * Interface for detected browser features matrix
@@ -6055,6 +6091,7 @@ declare module "Scene" {
     import { Actor } from "Actor";
     import { Class } from "Class";
     import * as Events from "Events";
+    import { Trigger } from "Trigger";
     /**
      * [[Actor|Actors]] are composed together into groupings called Scenes in
      * Excalibur. The metaphor models the same idea behind real world
@@ -6066,10 +6103,6 @@ declare module "Scene" {
      */
     export class Scene extends Class {
         /**
-         * The actor this scene is attached to, if any
-         */
-        actor: Actor;
-        /**
          * Gets or sets the current camera for the scene
          */
         camera: BaseCamera;
@@ -6077,6 +6110,10 @@ declare module "Scene" {
          * The actors in the current scene
          */
         actors: Actor[];
+        /**
+         * The triggers in the current scene
+         */
+        triggers: Trigger[];
         /**
          * The [[TileMap]]s in the scene, if any
          */
@@ -6099,6 +6136,7 @@ declare module "Scene" {
         private _sortedDrawingTree;
         private _broadphase;
         private _killQueue;
+        private _triggerKillQueue;
         private _timers;
         private _cancelQueue;
         private _logger;
@@ -6148,6 +6186,7 @@ declare module "Scene" {
          * @param delta   The number of milliseconds since the last update
          */
         update(engine: Engine, delta: number): void;
+        private _processKillQueue(killQueue, collection);
         /**
          * Draws all the actors in the Scene. Called by the [[Engine]].
          * @param ctx    The current rendering context
@@ -6164,14 +6203,19 @@ declare module "Scene" {
          */
         contains(actor: Actor): boolean;
         /**
-         * Adds a [[Timer]] to the current scene.
-         * @param timer  The timer to add to the current scene.
+         * Adds a [[Timer]] to the current [[Scene]].
+         * @param timer  The timer to add to the current [[Scene]].
          */
         add(timer: Timer): void;
         /**
-         * Adds a [[TileMap]] to the Scene, once this is done the TileMap will be drawn and updated.
+         * Adds a [[TileMap]] to the [[Scene]], once this is done the [[TileMap]] will be drawn and updated.
          */
         add(tileMap: TileMap): void;
+        /**
+         * Adds a [[Trigger]] to the [[Scene]], once this is done the [[Trigger]] will listen for interactions with other actors.
+         * @param trigger
+         */
+        add(trigger: Trigger): void;
         /**
          * Adds an actor to the scene, once this is done the [[Actor]] will be drawn and updated.
          * @param actor  The actor to add to the current scene
@@ -6279,11 +6323,13 @@ declare module "Events" {
     import { Scene } from "Scene";
     import { Vector } from "Algebra";
     import { Actor } from "Actor";
+    import { Trigger } from "Trigger";
     import { FrameStats } from "Debug";
     import { Engine } from "Engine";
     import { TileMap } from "TileMap";
     import { Side } from "Collision/Side";
     import * as Input from "Input/Index";
+    import { Pair } from "Index";
     export type kill = 'kill';
     export type predraw = 'predraw';
     export type postdraw = 'postdraw';
@@ -6295,12 +6341,16 @@ declare module "Events" {
     export type postframe = 'postframe';
     export type precollision = 'precollision';
     export type collision = 'collision';
+    export type collisionstart = 'collisionstart';
+    export type collisionend = 'collisionend';
     export type postcollision = 'postcollision';
     export type initialize = 'initialize';
     export type activate = 'activate';
     export type deactivate = 'deactivate';
     export type exitviewport = 'exitviewport';
     export type enterviewport = 'enterviewport';
+    export type exittrigger = 'exit';
+    export type entertrigger = 'enter';
     export type connect = 'connect';
     export type disconnect = 'disconnect';
     export type button = 'button';
@@ -6553,6 +6603,29 @@ declare module "Events" {
         constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
     }
     /**
+     * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
+     */
+    export class CollisionStartEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        pair: Pair;
+        /**
+         *
+         */
+        constructor(actor: Actor, other: Actor, pair: Pair);
+    }
+    /**
+     * Event thrown when the [[Actor|actor]] is no longer colliding with another
+     */
+    export class CollisionEndEvent extends GameEvent<Actor> {
+        actor: Actor;
+        other: Actor;
+        /**
+         *
+         */
+        constructor(actor: Actor, other: Actor);
+    }
+    /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
     export class InitializeEvent extends GameEvent<Actor | Scene> {
@@ -6598,6 +6671,16 @@ declare module "Events" {
     export class EnterViewPortEvent extends GameEvent<Actor> {
         target: Actor;
         constructor(target: Actor);
+    }
+    export class EnterTriggerEvent extends GameEvent<Actor> {
+        target: Trigger;
+        actor: Actor;
+        constructor(target: Trigger, actor: Actor);
+    }
+    export class ExitTriggerEvent extends GameEvent<Actor> {
+        target: Trigger;
+        actor: Actor;
+        constructor(target: Trigger, actor: Actor);
     }
 }
 declare module "Class" {
@@ -6681,7 +6764,7 @@ declare module "Actor" {
     import { Class } from "Class";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Texture } from "Resources/Texture";
-    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, CollisionEvent, PostCollisionEvent, PreCollisionEvent } from "Events";
+    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, CollisionEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent } from "Events";
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { Sprite } from "Drawing/Sprite";
@@ -6962,6 +7045,8 @@ declare module "Actor" {
          */
         _initialize(engine: Engine): void;
         private _checkForPointerOptIn(eventName);
+        on(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        on(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
         on(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
         on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
@@ -6979,6 +7064,8 @@ declare module "Actor" {
         on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
         on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        once(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
         once(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
         once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;

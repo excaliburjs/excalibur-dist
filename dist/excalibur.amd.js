@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1919+f34559e - 2017-11-22
+/*! excalibur - v0.13.0-alpha.1922+f8e0195 - 2017-11-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -972,7 +972,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this._yShake = 0;
             this._isZooming = false;
             this._maxZoomScale = 1;
-            this._zoomDuration = 0;
             this._zoomIncrement = 0.01;
             this._easing = EasingFunctions_1.EasingFunctions.EaseInOutCubic;
         }
@@ -1012,13 +1011,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             enumerable: true,
             configurable: true
         });
-        /**
-         * Sets the [[Actor]] to follow with the camera
-         * @param actor  The actor to follow
-         */
-        BaseCamera.prototype.setActorToFollow = function (actor) {
-            this._follow = actor;
-        };
         /**
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
@@ -1080,7 +1072,6 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             if (duration) {
                 this._isZooming = true;
                 this._maxZoomScale = scale;
-                this._zoomDuration = duration;
                 this._zoomIncrement = (scale - this.z) / duration;
             }
             else {
@@ -1210,6 +1201,13 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         function SideCamera() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        /**
+         * Sets the [[Actor]] to follow with the camera
+         * @param actor  The actor to follow
+         */
+        SideCamera.prototype.setActorToFollow = function (actor) {
+            this._follow = actor;
+        };
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
                 return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
@@ -1233,6 +1231,13 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         function LockedCamera() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
+        /**
+         * Sets the [[Actor]] to follow with the camera
+         * @param actor  The actor to follow
+         */
+        LockedCamera.prototype.setActorToFollow = function (actor) {
+            this._follow = actor;
+        };
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
                 return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
@@ -11291,7 +11296,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.13.0-alpha.1919+f34559e';
+    exports.EX_VERSION = '0.13.0-alpha.1922+f8e0195';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_11);

@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1919+f34559e - 2017-11-22
+/*! excalibur - v0.13.0-alpha.1922+f8e0195 - 2017-11-22
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -606,7 +606,6 @@ declare module "Camera" {
         private _yShake;
         protected _isZooming: boolean;
         private _maxZoomScale;
-        private _zoomDuration;
         private _zoomPromise;
         private _zoomIncrement;
         private _easing;
@@ -624,11 +623,6 @@ declare module "Camera" {
          * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
          */
         y: number;
-        /**
-         * Sets the [[Actor]] to follow with the camera
-         * @param actor  The actor to follow
-         */
-        setActorToFollow(actor: Actor): void;
         /**
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
@@ -677,6 +671,11 @@ declare module "Camera" {
      * Common usages: platformers.
      */
     export class SideCamera extends BaseCamera {
+        /**
+         * Sets the [[Actor]] to follow with the camera
+         * @param actor  The actor to follow
+         */
+        setActorToFollow(actor: Actor): void;
         getFocus(): Vector;
     }
     /**
@@ -687,6 +686,11 @@ declare module "Camera" {
      * Common usages: RPGs, adventure games, top-down games.
      */
     export class LockedCamera extends BaseCamera {
+        /**
+         * Sets the [[Actor]] to follow with the camera
+         * @param actor  The actor to follow
+         */
+        setActorToFollow(actor: Actor): void;
         getFocus(): Vector;
     }
 }

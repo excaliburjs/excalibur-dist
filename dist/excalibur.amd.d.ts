@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1922+f8e0195 - 2017-11-22
+/*! excalibur - v0.14.0-alpha.1962+7158b50 - 2017-12-02
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -226,6 +226,10 @@ declare module "Algebra" {
          */
         readonly intercept: number;
         /**
+         * Gets the normal of the line
+         */
+        normal(): Vector;
+        /**
          * Returns the slope of the line in the form of a vector
          */
         getSlope(): Vector;
@@ -233,6 +237,12 @@ declare module "Algebra" {
          * Returns the length of the line segment in pixels
          */
         getLength(): number;
+        /**
+         * Find the perpendicular distance from the line to a point
+         * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+         * @param point
+         */
+        distanceToPoint(point: Vector): number;
         /**
          * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
          * a new point with the calculated Y value and vice-versa.
@@ -563,12 +573,261 @@ declare module "Promises" {
         private _handleError(e);
     }
 }
+declare module "Collision/Side" {
+    /**
+     * An enum that describes the sides of an Actor for collision
+     */
+    export enum Side {
+        None = 0,
+        Top = 1,
+        Bottom = 2,
+        Left = 3,
+        Right = 4,
+    }
+}
+declare module "Util/Util" {
+    import { Vector } from "Algebra";
+    import { Side } from "Collision/Side";
+    /**
+     * Two PI constant
+     */
+    export const TwoPI: number;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param deep Whether or not to do a deep clone
+     * @param target The target object to attach properties on
+     * @param objects The objects whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend(deep: boolean, target: any, ...objects: any[]): any;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2>(target: T1, object2: T2): T1 & T2;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param object2 The second object whose properties to merge
+     * @param object3 The third object whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3): T1 & T2 & T3;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @param target The target object to attach properties on
+     * @param objects The objects whose properties to merge
+     * @returns Merged object with properties from other objects
+     */
+    export function extend(target: any, ...objects: any[]): any;
+    export function base64Encode(inputStr: string): string;
+    /**
+     * Clamps a value between a min and max inclusive
+     */
+    export function clamp(val: number, min: number, max: number): number;
+    export function randomInRange(min: number, max: number): number;
+    export function randomIntInRange(min: number, max: number): number;
+    export function canonicalizeAngle(angle: number): number;
+    export function toDegrees(radians: number): number;
+    export function toRadians(degrees: number): number;
+    export function getPosition(el: HTMLElement): Vector;
+    export function addItemToArray<T>(item: T, array: T[]): boolean;
+    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
+    export function contains(array: Array<any>, obj: any): boolean;
+    export function getOppositeSide(side: Side): Side;
+    export function getSideFromVector(direction: Vector): Side;
+    /**
+     * Excalibur's dynamically resizing collection
+     */
+    export class Collection<T> {
+        /**
+         * Default collection size
+         */
+        static DefaultSize: number;
+        private _internalArray;
+        private _endPointer;
+        /**
+         * @param initialSize  Initial size of the internal backing array
+         */
+        constructor(initialSize?: number);
+        private _resize();
+        /**
+         * Push elements to the end of the collection
+         */
+        push(element: T): T;
+        /**
+         * Removes elements from the end of the collection
+         */
+        pop(): T;
+        /**
+         * Returns the count of the collection
+         */
+        count(): number;
+        /**
+         * Empties the collection
+         */
+        clear(): void;
+        /**
+         * Returns the size of the internal backing array
+         */
+        internalSize(): number;
+        /**
+         * Returns an element at a specific index
+         * @param index  Index of element to retrieve
+         */
+        elementAt(index: number): T;
+        /**
+         * Inserts an element at a specific index
+         * @param index  Index to insert the element
+         * @param value  Element to insert
+         */
+        insert(index: number, value: T): T;
+        /**
+         * Removes an element at a specific index
+         * @param index  Index of element to remove
+         */
+        remove(index: number): T;
+        /**
+         * Removes an element by reference
+         * @param element  Element to retrieve
+         */
+        removeElement(element: T): void;
+        /**
+         * Returns a array representing the collection
+         */
+        toArray(): T[];
+        /**
+         * Iterate over every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
+         */
+        forEach(func: (element: T, index: number) => any): void;
+        /**
+         * Mutate every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
+         * the collection
+         */
+        map(func: (element: T, index: number) => any): void;
+    }
+}
 declare module "Camera" {
     import { Engine } from "Engine";
     import { EasingFunction } from "Util/EasingFunctions";
     import { IPromise, Promise } from "Promises";
     import { Vector } from "Algebra";
     import { Actor } from "Actor";
+    /**
+     * Interface that describes a custom camera strategy for tracking targets
+     */
+    export interface ICameraStrategy<T> {
+        /**
+         * Target of the camera strategy that will be passed to the action
+         */
+        target: T;
+        /**
+         * Camera strategies perform an action to calculate a new focus returned out of the strategy
+         * @param target The target object to apply this camera strategy (if any)
+         * @param camera The current camera implementation in excalibur running the game
+         * @param engine The current engine running the game
+         * @param delta The elapsed time in milliseconds since the last frame
+         */
+        action: (target: T, camera: BaseCamera, engine: Engine, delta: number) => Vector;
+    }
+    /**
+     * Container to house convenience strategy methods
+     * @internal
+     */
+    export class StrategyContainer {
+        camera: BaseCamera;
+        constructor(camera: BaseCamera);
+        /**
+         * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
+         * @param actor The actor to lock the camera to
+         */
+        lockToActor(actor: Actor): void;
+        /**
+         * Creates and adds the [[LockCameraToActorAxisStrategy]] on the current camera
+         * @param actor The actor to lock the camera to
+         * @param axis The axis to follow the actor on
+         */
+        lockToActorAxis(actor: Actor, axis: Axis): void;
+        /**
+         * Creates and adds the [[ElasticToActorStrategy]] on the current camera
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        elasticToActor(actor: Actor, cameraElasticity: number, cameraFriction: number): void;
+        /**
+         * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        radiusAroundActor(actor: Actor, radius: number): void;
+    }
+    /**
+     * Camera axis enum
+     */
+    export enum Axis {
+        X = 0,
+        Y = 1,
+    }
+    /**
+     * Lock a camera to the exact x/y postition of an actor.
+     */
+    export class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+        action: (target: Actor, _cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Lock a camera to a specific axis around an actor.
+     */
+    export class LockCameraToActorAxisStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        axis: Axis;
+        constructor(target: Actor, axis: Axis);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
+     */
+    export class ElasticToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        cameraElasticity: number;
+        cameraFriction: number;
+        /**
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    export class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        radius: number;
+        /**
+         *
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        constructor(target: Actor, radius: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
     /**
      * Cameras
      *
@@ -580,6 +839,8 @@ declare module "Camera" {
      */
     export class BaseCamera {
         protected _follow: Actor;
+        private _cameraStrategies;
+        strategy: StrategyContainer;
         z: number;
         dx: number;
         dy: number;
@@ -624,6 +885,20 @@ declare module "Camera" {
          */
         y: number;
         /**
+         * Get the camera's position as a vector
+         */
+        /**
+         * Set the cameras position
+         */
+        pos: Vector;
+        /**
+         * Get the camera's velocity as a vector
+         */
+        /**
+         * Set the camera's velocity
+         */
+        vel: Vector;
+        /**
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
         getFocus(): Vector;
@@ -655,6 +930,20 @@ declare module "Camera" {
          * Gets the current zoom scale
          */
         getZoom(): number;
+        /**
+         * Adds a new camera strategy to this camera
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        addStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Removes a camera strategy by reference
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        removeStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Clears all camera strategies from the camera
+         */
+        clearAllStrategies(): void;
         update(_engine: Engine, delta: number): void;
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
@@ -669,6 +958,7 @@ declare module "Camera" {
      * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
      *
      * Common usages: platformers.
+     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActorAxis`
      */
     export class SideCamera extends BaseCamera {
         /**
@@ -684,6 +974,7 @@ declare module "Camera" {
      * center of the screen.
      *
      * Common usages: RPGs, adventure games, top-down games.
+     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActor`
      */
     export class LockedCamera extends BaseCamera {
         /**
@@ -922,148 +1213,6 @@ declare module "Drawing/Color" {
          * Transparent (#FFFFFF00)
          */
         static Transparent: Color;
-    }
-}
-declare module "Collision/Side" {
-    /**
-     * An enum that describes the sides of an Actor for collision
-     */
-    export enum Side {
-        None = 0,
-        Top = 1,
-        Bottom = 2,
-        Left = 3,
-        Right = 4,
-    }
-}
-declare module "Util/Util" {
-    import { Vector } from "Algebra";
-    import { Side } from "Collision/Side";
-    /**
-     * Two PI constant
-     */
-    export const TwoPI: number;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param deep Whether or not to do a deep clone
-     * @param target The target object to attach properties on
-     * @param objects The objects whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend(deep: boolean, target: any, ...objects: any[]): any;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param object2 The second object whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend<T1, T2>(target: T1, object2: T2): T1 & T2;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param object2 The second object whose properties to merge
-     * @param object3 The third object whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3): T1 & T2 & T3;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @param target The target object to attach properties on
-     * @param objects The objects whose properties to merge
-     * @returns Merged object with properties from other objects
-     */
-    export function extend(target: any, ...objects: any[]): any;
-    export function base64Encode(inputStr: string): string;
-    /**
-     * Clamps a value between a min and max inclusive
-     */
-    export function clamp(val: number, min: number, max: number): number;
-    export function randomInRange(min: number, max: number): number;
-    export function randomIntInRange(min: number, max: number): number;
-    export function canonicalizeAngle(angle: number): number;
-    export function toDegrees(radians: number): number;
-    export function toRadians(degrees: number): number;
-    export function getPosition(el: HTMLElement): Vector;
-    export function addItemToArray<T>(item: T, array: T[]): boolean;
-    export function removeItemFromArray<T>(item: T, array: T[]): boolean;
-    export function contains(array: Array<any>, obj: any): boolean;
-    export function getOppositeSide(side: Side): Side;
-    export function getSideFromVector(direction: Vector): Side;
-    /**
-     * Excalibur's dynamically resizing collection
-     */
-    export class Collection<T> {
-        /**
-         * Default collection size
-         */
-        static DefaultSize: number;
-        private _internalArray;
-        private _endPointer;
-        /**
-         * @param initialSize  Initial size of the internal backing array
-         */
-        constructor(initialSize?: number);
-        private _resize();
-        /**
-         * Push elements to the end of the collection
-         */
-        push(element: T): T;
-        /**
-         * Removes elements from the end of the collection
-         */
-        pop(): T;
-        /**
-         * Returns the count of the collection
-         */
-        count(): number;
-        /**
-         * Empties the collection
-         */
-        clear(): void;
-        /**
-         * Returns the size of the internal backing array
-         */
-        internalSize(): number;
-        /**
-         * Returns an element at a specific index
-         * @param index  Index of element to retrieve
-         */
-        elementAt(index: number): T;
-        /**
-         * Inserts an element at a specific index
-         * @param index  Index to insert the element
-         * @param value  Element to insert
-         */
-        insert(index: number, value: T): T;
-        /**
-         * Removes an element at a specific index
-         * @param index  Index of element to remove
-         */
-        remove(index: number): T;
-        /**
-         * Removes an element by reference
-         * @param element  Element to retrieve
-         */
-        removeElement(element: T): void;
-        /**
-         * Returns a array representing the collection
-         */
-        toArray(): T[];
-        /**
-         * Iterate over every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
-         */
-        forEach(func: (element: T, index: number) => any): void;
-        /**
-         * Mutate every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
-         * the collection
-         */
-        map(func: (element: T, index: number) => any): void;
     }
 }
 declare module "Collision/CollisionContact" {
@@ -1313,6 +1462,14 @@ declare module "Collision/PolygonArea" {
          * Find the point on the shape furthest in the direction specified
          */
         getFurthestPoint(direction: Vector): Vector;
+        /**
+         * Finds the closes face to the point using perpendicular distance
+         * @param point point to test against polygon
+         */
+        getClosestFace(point: Vector): {
+            distance: Vector;
+            face: Line;
+        };
         /**
          * Get the axis aligned bounding box for the polygon area
          */
@@ -5121,8 +5278,6 @@ declare module "Input/Pointer" {
         button: PointerButton;
         ev: any;
         /**
-         * @param x OBSOLETE: Will be removed in the 0.14.0 release. Use pos.x. The `x` coordinate of the event (in world coordinates).
-         * @param y OBSOLETE: Will be removed in the 0.14.0 release. Use pos.y. The `y` coordinate of the event (in world coordinates).
          * @param pageX        The `x` coordinate of the event (in document coordinates)
          * @param pageY        The `y` coordinate of the event (in document coordinates)
          * @param screenX      The `x` coordinate of the event (in screen coordinates)
@@ -5694,10 +5849,6 @@ declare module "Engine" {
          */
         readonly halfCanvasHeight: number;
         /**
-         * Returns the width of the engine's visible drawing surface in pixels including zoom including device pixel ratio.
-         */
-        getDrawWidth(): number;
-        /**
          * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         readonly drawWidth: number;
@@ -5705,10 +5856,6 @@ declare module "Engine" {
          * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         readonly halfDrawWidth: number;
-        /**
-         * Returns the height of the engine's visible drawing surface in pixels .
-         */
-        getDrawHeight(): number;
         /**
          * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
@@ -6344,7 +6491,6 @@ declare module "Events" {
     export type preframe = 'preframe';
     export type postframe = 'postframe';
     export type precollision = 'precollision';
-    export type collision = 'collision';
     export type collisionstart = 'collisionstart';
     export type collisionend = 'collisionend';
     export type postcollision = 'postcollision';
@@ -6458,8 +6604,7 @@ declare module "Events" {
         constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
     }
     /**
-     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends. This is equivalent to the obsolete 'update'
-     * event.
+     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends.
      */
     export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
         engine: Engine;
@@ -6556,23 +6701,6 @@ declare module "Events" {
     export class HiddenEvent extends GameEvent<Engine> {
         target: Engine;
         constructor(target: Engine);
-    }
-    /**
-     * OBSOLETE: Event thrown on an [[Actor|actor]] when a collision will occur this frame
-     * @deprecated Will be removed in v0.14, please use PreCollisionEvent
-     */
-    export class CollisionEvent extends GameEvent<Actor> {
-        actor: Actor;
-        other: Actor;
-        side: Side;
-        intersection: Vector;
-        /**
-         * @param actor         The actor the event was thrown on
-         * @param other         The actor that was collided with
-         * @param side          The side that was collided with
-         * @param intersection  Intersection vector
-         */
-        constructor(actor: Actor, other: Actor, side: Side, intersection: Vector);
     }
     /**
      * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
@@ -6768,7 +6896,7 @@ declare module "Actor" {
     import { Class } from "Class";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Texture } from "Resources/Texture";
-    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, CollisionEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent } from "Events";
+    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent } from "Events";
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { Sprite } from "Drawing/Sprite";
@@ -7052,7 +7180,6 @@ declare module "Actor" {
         on(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
         on(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
-        on(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
         on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
@@ -7071,7 +7198,6 @@ declare module "Actor" {
         once(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
         once(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
-        once(eventName: Events.collision, handler: (event?: CollisionEvent) => void): void;
         once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;

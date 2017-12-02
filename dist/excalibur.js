@@ -1,4 +1,4 @@
-/*! excalibur - v0.13.0-alpha.1922+f8e0195 - 2017-11-22
+/*! excalibur - v0.14.0-alpha.1962+7158b50 - 2017-12-02
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.13.0-alpha.1922+f8e0195 - 2017-11-22
+/*! excalibur - v0.14.0-alpha.1962+7158b50 - 2017-12-02
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -822,6 +822,12 @@ define("Algebra", ["require", "exports"], function (require, exports) {
             configurable: true
         });
         /**
+         * Gets the normal of the line
+         */
+        Line.prototype.normal = function () {
+            return this.end.sub(this.begin).normal();
+        };
+        /**
          * Returns the slope of the line in the form of a vector
          */
         Line.prototype.getSlope = function () {
@@ -837,6 +843,20 @@ define("Algebra", ["require", "exports"], function (require, exports) {
             var begin = this.begin;
             var end = this.end;
             var distance = begin.distance(end);
+            return distance;
+        };
+        /**
+         * Find the perpendicular distance from the line to a point
+         * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+         * @param point
+         */
+        Line.prototype.distanceToPoint = function (point) {
+            var x0 = point.x;
+            var y0 = point.y;
+            var l = this.getLength();
+            var dy = this.end.y - this.begin.y;
+            var dx = this.end.x - this.begin.x;
+            var distance = Math.abs(dy * x0 - dx * y0 + this.end.x * this.begin.y - this.end.y * this.begin.x) / l;
             return distance;
         };
         /**
@@ -1386,9 +1406,520 @@ define("Promises", ["require", "exports"], function (require, exports) {
     }());
     exports.Promise = Promise;
 });
-define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_2) {
+define("Collision/Side", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * An enum that describes the sides of an Actor for collision
+     */
+    var Side;
+    (function (Side) {
+        Side[Side["None"] = 0] = "None";
+        Side[Side["Top"] = 1] = "Top";
+        Side[Side["Bottom"] = 2] = "Bottom";
+        Side[Side["Left"] = 3] = "Left";
+        Side[Side["Right"] = 4] = "Right";
+    })(Side = exports.Side || (exports.Side = {}));
+});
+define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], function (require, exports, Algebra_2, Side_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Two PI constant
+     */
+    exports.TwoPI = Math.PI * 2;
+    /**
+     * Merges one or more objects into a single target object
+     *
+     * @returns Merged object with properties from other objects
+     * @credit https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
+     */
+    function extend() {
+        var extended = {};
+        var deep = false;
+        var i = 0;
+        var length = arguments.length;
+        // Check if a deep merge
+        if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+            deep = arguments[0];
+            i++;
+        }
+        // Merge the object into the extended object
+        var assignExists = typeof Object.assign === 'function';
+        var merge = null;
+        if (!assignExists) {
+            merge = function (obj) {
+                for (var prop in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                        // If deep merge and property is an object, merge properties
+                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+                            extended[prop] = extend(true, extended[prop], obj[prop]);
+                        }
+                        else {
+                            extended[prop] = obj[prop];
+                        }
+                    }
+                }
+            };
+        }
+        else {
+            merge = Object.assign;
+        }
+        // Loop through each object and conduct a merge
+        for (; i < length; i++) {
+            var obj = arguments[i];
+            if (!assignExists) {
+                merge(obj);
+            }
+            else {
+                merge(extended, obj);
+            }
+        }
+        return extended;
+    }
+    exports.extend = extend;
+    function base64Encode(inputStr) {
+        var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+        var outputStr = '';
+        var i = 0;
+        while (i < inputStr.length) {
+            //all three "& 0xff" added below are there to fix a known bug
+            //with bytes returned by xhr.responseText
+            var byte1 = inputStr.charCodeAt(i++) & 0xff;
+            var byte2 = inputStr.charCodeAt(i++) & 0xff;
+            var byte3 = inputStr.charCodeAt(i++) & 0xff;
+            var enc1 = byte1 >> 2;
+            var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
+            var enc3, enc4;
+            if (isNaN(byte2)) {
+                enc3 = enc4 = 64;
+            }
+            else {
+                enc3 = ((byte2 & 15) << 2) | (byte3 >> 6);
+                if (isNaN(byte3)) {
+                    enc4 = 64;
+                }
+                else {
+                    enc4 = byte3 & 63;
+                }
+            }
+            outputStr += b64.charAt(enc1) + b64.charAt(enc2) + b64.charAt(enc3) + b64.charAt(enc4);
+        }
+        return outputStr;
+    }
+    exports.base64Encode = base64Encode;
+    /**
+     * Clamps a value between a min and max inclusive
+     */
+    function clamp(val, min, max) {
+        return Math.min(Math.max(min, val), max);
+    }
+    exports.clamp = clamp;
+    function randomInRange(min, max) {
+        return min + Math.random() * (max - min);
+    }
+    exports.randomInRange = randomInRange;
+    function randomIntInRange(min, max) {
+        return Math.round(randomInRange(min, max));
+    }
+    exports.randomIntInRange = randomIntInRange;
+    function canonicalizeAngle(angle) {
+        var tmpAngle = angle;
+        if (angle > exports.TwoPI) {
+            while (tmpAngle > exports.TwoPI) {
+                tmpAngle -= exports.TwoPI;
+            }
+        }
+        if (angle < 0) {
+            while (tmpAngle < 0) {
+                tmpAngle += exports.TwoPI;
+            }
+        }
+        return tmpAngle;
+    }
+    exports.canonicalizeAngle = canonicalizeAngle;
+    function toDegrees(radians) {
+        return 180 / Math.PI * radians;
+    }
+    exports.toDegrees = toDegrees;
+    function toRadians(degrees) {
+        return degrees / 180 * Math.PI;
+    }
+    exports.toRadians = toRadians;
+    function getPosition(el) {
+        var oLeft = 0, oTop = 0;
+        var calcOffsetLeft = function (parent) {
+            oLeft += parent.offsetLeft;
+            if (parent.offsetParent) {
+                calcOffsetLeft(parent.offsetParent);
+            }
+        };
+        var calcOffsetTop = function (parent) {
+            oTop += parent.offsetTop;
+            if (parent.offsetParent) {
+                calcOffsetTop(parent.offsetParent);
+            }
+        };
+        calcOffsetLeft(el);
+        calcOffsetTop(el);
+        return new Algebra_2.Vector(oLeft, oTop);
+    }
+    exports.getPosition = getPosition;
+    function addItemToArray(item, array) {
+        if (array.indexOf(item) === -1) {
+            array.push(item);
+            return true;
+        }
+        return false;
+    }
+    exports.addItemToArray = addItemToArray;
+    function removeItemFromArray(item, array) {
+        var index = -1;
+        if ((index = array.indexOf(item)) > -1) {
+            array.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+    exports.removeItemFromArray = removeItemFromArray;
+    function contains(array, obj) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+    exports.contains = contains;
+    function getOppositeSide(side) {
+        if (side === Side_1.Side.Top) {
+            return Side_1.Side.Bottom;
+        }
+        if (side === Side_1.Side.Bottom) {
+            return Side_1.Side.Top;
+        }
+        if (side === Side_1.Side.Left) {
+            return Side_1.Side.Right;
+        }
+        if (side === Side_1.Side.Right) {
+            return Side_1.Side.Left;
+        }
+        return Side_1.Side.None;
+    }
+    exports.getOppositeSide = getOppositeSide;
+    function getSideFromVector(direction) {
+        var directions = [Algebra_2.Vector.Left, Algebra_2.Vector.Right, Algebra_2.Vector.Up, Algebra_2.Vector.Down];
+        var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
+        var max = -Number.MAX_VALUE;
+        var maxIndex = -1;
+        for (var i = 0; i < directions.length; i++) {
+            if (directions[i].dot(direction) > max) {
+                max = directions[i].dot(direction);
+                maxIndex = i;
+            }
+        }
+        return directionEnum[maxIndex];
+    }
+    exports.getSideFromVector = getSideFromVector;
+    /**
+     * Excalibur's dynamically resizing collection
+     */
+    var Collection = (function () {
+        /**
+         * @param initialSize  Initial size of the internal backing array
+         */
+        function Collection(initialSize) {
+            if (initialSize === void 0) { initialSize = Collection.DefaultSize; }
+            this._internalArray = null;
+            this._endPointer = 0;
+            this._internalArray = new Array(initialSize);
+        }
+        Collection.prototype._resize = function () {
+            var newSize = this._internalArray.length * 2;
+            var newArray = new Array(newSize);
+            var count = this.count();
+            for (var i = 0; i < count; i++) {
+                newArray[i] = this._internalArray[i];
+            }
+            delete this._internalArray;
+            this._internalArray = newArray;
+        };
+        /**
+         * Push elements to the end of the collection
+         */
+        Collection.prototype.push = function (element) {
+            if (this._endPointer === this._internalArray.length) {
+                this._resize();
+            }
+            return this._internalArray[this._endPointer++] = element;
+        };
+        /**
+         * Removes elements from the end of the collection
+         */
+        Collection.prototype.pop = function () {
+            this._endPointer = this._endPointer - 1 < 0 ? 0 : this._endPointer - 1;
+            return this._internalArray[this._endPointer];
+        };
+        /**
+         * Returns the count of the collection
+         */
+        Collection.prototype.count = function () {
+            return this._endPointer;
+        };
+        /**
+         * Empties the collection
+         */
+        Collection.prototype.clear = function () {
+            this._endPointer = 0;
+        };
+        /**
+         * Returns the size of the internal backing array
+         */
+        Collection.prototype.internalSize = function () {
+            return this._internalArray.length;
+        };
+        /**
+         * Returns an element at a specific index
+         * @param index  Index of element to retrieve
+         */
+        Collection.prototype.elementAt = function (index) {
+            if (index >= this.count()) {
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid index ' + index);
+            }
+            return this._internalArray[index];
+        };
+        /**
+         * Inserts an element at a specific index
+         * @param index  Index to insert the element
+         * @param value  Element to insert
+         */
+        Collection.prototype.insert = function (index, value) {
+            if (index >= this.count()) {
+                this._resize();
+            }
+            return this._internalArray[index] = value;
+        };
+        /**
+         * Removes an element at a specific index
+         * @param index  Index of element to remove
+         */
+        Collection.prototype.remove = function (index) {
+            var count = this.count();
+            if (count === 0) {
+                //Logger.getInstance().error('Invalid parameter: ' + index);
+                throw new Error('Invalid parameter ' + index);
+            }
+            // O(n) Shift
+            var removed = this._internalArray[index];
+            for (var i = index; i < count; i++) {
+                this._internalArray[i] = this._internalArray[i + 1];
+            }
+            this._endPointer--;
+            return removed;
+        };
+        /**
+         * Removes an element by reference
+         * @param element  Element to retrieve
+         */
+        Collection.prototype.removeElement = function (element) {
+            var index = this._internalArray.indexOf(element);
+            this.remove(index);
+        };
+        /**
+         * Returns a array representing the collection
+         */
+        Collection.prototype.toArray = function () {
+            return this._internalArray.slice(0, this._endPointer);
+        };
+        /**
+         * Iterate over every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
+         */
+        Collection.prototype.forEach = function (func) {
+            var i = 0, count = this.count();
+            for (i; i < count; i++) {
+                func.call(this, this._internalArray[i], i);
+            }
+        };
+        /**
+         * Mutate every element in the collection
+         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
+         * the collection
+         */
+        Collection.prototype.map = function (func) {
+            var count = this.count();
+            for (var i = 0; i < count; i++) {
+                this._internalArray[i] = func.call(this, this._internalArray[i], i);
+            }
+        };
+        return Collection;
+    }());
+    /**
+     * Default collection size
+     */
+    Collection.DefaultSize = 200;
+    exports.Collection = Collection;
+});
+define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra", "Util/Util"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_3, Util_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Container to house convenience strategy methods
+     * @internal
+     */
+    var StrategyContainer = (function () {
+        function StrategyContainer(camera) {
+            this.camera = camera;
+        }
+        /**
+         * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
+         * @param actor The actor to lock the camera to
+         */
+        StrategyContainer.prototype.lockToActor = function (actor) {
+            this.camera.addStrategy(new LockCameraToActorStrategy(actor));
+        };
+        /**
+         * Creates and adds the [[LockCameraToActorAxisStrategy]] on the current camera
+         * @param actor The actor to lock the camera to
+         * @param axis The axis to follow the actor on
+         */
+        StrategyContainer.prototype.lockToActorAxis = function (actor, axis) {
+            this.camera.addStrategy(new LockCameraToActorAxisStrategy(actor, axis));
+        };
+        /**
+         * Creates and adds the [[ElasticToActorStrategy]] on the current camera
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        StrategyContainer.prototype.elasticToActor = function (actor, cameraElasticity, cameraFriction) {
+            this.camera.addStrategy(new ElasticToActorStrategy(actor, cameraElasticity, cameraFriction));
+        };
+        /**
+         * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        StrategyContainer.prototype.radiusAroundActor = function (actor, radius) {
+            this.camera.addStrategy(new RadiusAroundActorStrategy(actor, radius));
+        };
+        return StrategyContainer;
+    }());
+    exports.StrategyContainer = StrategyContainer;
+    /**
+     * Camera axis enum
+     */
+    var Axis;
+    (function (Axis) {
+        Axis[Axis["X"] = 0] = "X";
+        Axis[Axis["Y"] = 1] = "Y";
+    })(Axis = exports.Axis || (exports.Axis = {}));
+    /**
+     * Lock a camera to the exact x/y postition of an actor.
+     */
+    var LockCameraToActorStrategy = (function () {
+        function LockCameraToActorStrategy(target) {
+            this.target = target;
+            this.action = function (target, _cam, _eng, _delta) {
+                var center = target.getCenter();
+                return center;
+            };
+        }
+        return LockCameraToActorStrategy;
+    }());
+    exports.LockCameraToActorStrategy = LockCameraToActorStrategy;
+    /**
+     * Lock a camera to a specific axis around an actor.
+     */
+    var LockCameraToActorAxisStrategy = (function () {
+        function LockCameraToActorAxisStrategy(target, axis) {
+            var _this = this;
+            this.target = target;
+            this.axis = axis;
+            this.action = function (target, cam, _eng, _delta) {
+                var center = target.getCenter();
+                var currentFocus = cam.getFocus();
+                if (_this.axis === Axis.X) {
+                    return new Algebra_3.Vector(center.x, currentFocus.y);
+                }
+                else {
+                    return new Algebra_3.Vector(currentFocus.x, center.y);
+                }
+            };
+        }
+        return LockCameraToActorAxisStrategy;
+    }());
+    exports.LockCameraToActorAxisStrategy = LockCameraToActorAxisStrategy;
+    /**
+     * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
+     */
+    var ElasticToActorStrategy = (function () {
+        /**
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
+         *
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
+         */
+        function ElasticToActorStrategy(target, cameraElasticity, cameraFriction) {
+            var _this = this;
+            this.target = target;
+            this.cameraElasticity = cameraElasticity;
+            this.cameraFriction = cameraFriction;
+            this.action = function (target, cam, _eng, _delta) {
+                var position = target.getCenter();
+                var focus = cam.getFocus();
+                var cameraVel = new Algebra_3.Vector(cam.dx, cam.dy);
+                // Calculate the strech vector, using the spring equation
+                // F = kX
+                // https://en.wikipedia.org/wiki/Hooke's_law
+                // Apply to the current camera velocity
+                var stretch = position.sub(focus).scale(_this.cameraElasticity); // stretch is X
+                cameraVel = cameraVel.add(stretch);
+                // Calculate the friction (-1 to apply a force in the opposition of motion)
+                // Apply to the current camera velocity
+                var friction = cameraVel.scale(-1).scale(_this.cameraFriction);
+                cameraVel = cameraVel.add(friction);
+                // Update position by velocity deltas
+                focus = focus.add(cameraVel);
+                return focus;
+            };
+        }
+        return ElasticToActorStrategy;
+    }());
+    exports.ElasticToActorStrategy = ElasticToActorStrategy;
+    var RadiusAroundActorStrategy = (function () {
+        /**
+         *
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        function RadiusAroundActorStrategy(target, radius) {
+            var _this = this;
+            this.target = target;
+            this.radius = radius;
+            this.action = function (target, cam, _eng, _delta) {
+                var position = target.getCenter();
+                var focus = cam.getFocus();
+                var direction = position.sub(focus);
+                var distance = direction.magnitude();
+                if (distance >= _this.radius) {
+                    var offset = distance - _this.radius;
+                    return focus.add(direction.normalize().scale(offset));
+                }
+                return focus;
+            };
+        }
+        return RadiusAroundActorStrategy;
+    }());
+    exports.RadiusAroundActorStrategy = RadiusAroundActorStrategy;
     /**
      * Cameras
      *
@@ -1400,6 +1931,8 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      */
     var BaseCamera = (function () {
         function BaseCamera() {
+            this._cameraStrategies = [];
+            this.strategy = new StrategyContainer(this);
             // camera physical quantities
             this.z = 1;
             this.dx = 0;
@@ -1466,11 +1999,45 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(BaseCamera.prototype, "pos", {
+            /**
+             * Get the camera's position as a vector
+             */
+            get: function () {
+                return new Algebra_3.Vector(this.x, this.y);
+            },
+            /**
+             * Set the cameras position
+             */
+            set: function (value) {
+                this.x = value.x;
+                this.y = value.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(BaseCamera.prototype, "vel", {
+            /**
+             * Get the camera's velocity as a vector
+             */
+            get: function () {
+                return new Algebra_3.Vector(this.dx, this.dy);
+            },
+            /**
+             * Set the camera's velocity
+             */
+            set: function (value) {
+                this.dx = value.x;
+                this.dy = value.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
         BaseCamera.prototype.getFocus = function () {
-            return new Algebra_2.Vector(this.x, this.y);
+            return new Algebra_3.Vector(this.x, this.y);
         };
         /**
          * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
@@ -1542,6 +2109,26 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         BaseCamera.prototype.getZoom = function () {
             return this.z;
         };
+        /**
+         * Adds a new camera strategy to this camera
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        BaseCamera.prototype.addStrategy = function (cameraStrategy) {
+            this._cameraStrategies.push(cameraStrategy);
+        };
+        /**
+         * Removes a camera strategy by reference
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        BaseCamera.prototype.removeStrategy = function (cameraStrategy) {
+            Util_1.removeItemFromArray(cameraStrategy, this._cameraStrategies);
+        };
+        /**
+         * Clears all camera strategies from the camera
+         */
+        BaseCamera.prototype.clearAllStrategies = function () {
+            this._cameraStrategies.length = 0;
+        };
         BaseCamera.prototype.update = function (_engine, delta) {
             // Update placements based on linear algebra
             this._x += this.dx * delta / 1000;
@@ -1609,6 +2196,10 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
                 this._xShake = (Math.random() * this._shakeMagnitudeX | 0) + 1;
                 this._yShake = (Math.random() * this._shakeMagnitudeY | 0) + 1;
             }
+            for (var _i = 0, _a = this._cameraStrategies; _i < _a.length; _i++) {
+                var s = _a[_i];
+                this.pos = s.action.call(s, s.target, this, _engine, delta);
+            }
         };
         /**
          * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
@@ -1650,6 +2241,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
      *
      * Common usages: platformers.
+     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActorAxis`
      */
     var SideCamera = (function (_super) {
         __extends(SideCamera, _super);
@@ -1665,7 +2257,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         };
         SideCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
+                return new Algebra_3.Vector(this._follow.pos.x + this._follow.getWidth() / 2, _super.prototype.getFocus.call(this).y);
             }
             else {
                 return _super.prototype.getFocus.call(this);
@@ -1680,6 +2272,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      * center of the screen.
      *
      * Common usages: RPGs, adventure games, top-down games.
+     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActor`
      */
     var LockedCamera = (function (_super) {
         __extends(LockedCamera, _super);
@@ -1695,7 +2288,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         };
         LockedCamera.prototype.getFocus = function () {
             if (this._follow) {
-                return new Algebra_2.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
+                return new Algebra_3.Vector(this._follow.pos.x + this._follow.getWidth() / 2, this._follow.pos.y + this._follow.getHeight() / 2);
             }
             else {
                 return _super.prototype.getFocus.call(this);
@@ -2083,361 +2676,6 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         return HSLColor;
     }());
 });
-define("Collision/Side", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * An enum that describes the sides of an Actor for collision
-     */
-    var Side;
-    (function (Side) {
-        Side[Side["None"] = 0] = "None";
-        Side[Side["Top"] = 1] = "Top";
-        Side[Side["Bottom"] = 2] = "Bottom";
-        Side[Side["Left"] = 3] = "Left";
-        Side[Side["Right"] = 4] = "Right";
-    })(Side = exports.Side || (exports.Side = {}));
-});
-define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], function (require, exports, Algebra_3, Side_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    /**
-     * Two PI constant
-     */
-    exports.TwoPI = Math.PI * 2;
-    /**
-     * Merges one or more objects into a single target object
-     *
-     * @returns Merged object with properties from other objects
-     * @credit https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
-     */
-    function extend() {
-        var extended = {};
-        var deep = false;
-        var i = 0;
-        var length = arguments.length;
-        // Check if a deep merge
-        if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
-            deep = arguments[0];
-            i++;
-        }
-        // Merge the object into the extended object
-        var assignExists = typeof Object.assign === 'function';
-        var merge = null;
-        if (!assignExists) {
-            merge = function (obj) {
-                for (var prop in obj) {
-                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                        // If deep merge and property is an object, merge properties
-                        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-                            extended[prop] = extend(true, extended[prop], obj[prop]);
-                        }
-                        else {
-                            extended[prop] = obj[prop];
-                        }
-                    }
-                }
-            };
-        }
-        else {
-            merge = Object.assign;
-        }
-        // Loop through each object and conduct a merge
-        for (; i < length; i++) {
-            var obj = arguments[i];
-            if (!assignExists) {
-                merge(obj);
-            }
-            else {
-                merge(extended, obj);
-            }
-        }
-        return extended;
-    }
-    exports.extend = extend;
-    function base64Encode(inputStr) {
-        var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-        var outputStr = '';
-        var i = 0;
-        while (i < inputStr.length) {
-            //all three "& 0xff" added below are there to fix a known bug
-            //with bytes returned by xhr.responseText
-            var byte1 = inputStr.charCodeAt(i++) & 0xff;
-            var byte2 = inputStr.charCodeAt(i++) & 0xff;
-            var byte3 = inputStr.charCodeAt(i++) & 0xff;
-            var enc1 = byte1 >> 2;
-            var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
-            var enc3, enc4;
-            if (isNaN(byte2)) {
-                enc3 = enc4 = 64;
-            }
-            else {
-                enc3 = ((byte2 & 15) << 2) | (byte3 >> 6);
-                if (isNaN(byte3)) {
-                    enc4 = 64;
-                }
-                else {
-                    enc4 = byte3 & 63;
-                }
-            }
-            outputStr += b64.charAt(enc1) + b64.charAt(enc2) + b64.charAt(enc3) + b64.charAt(enc4);
-        }
-        return outputStr;
-    }
-    exports.base64Encode = base64Encode;
-    /**
-     * Clamps a value between a min and max inclusive
-     */
-    function clamp(val, min, max) {
-        return Math.min(Math.max(min, val), max);
-    }
-    exports.clamp = clamp;
-    function randomInRange(min, max) {
-        return min + Math.random() * (max - min);
-    }
-    exports.randomInRange = randomInRange;
-    function randomIntInRange(min, max) {
-        return Math.round(randomInRange(min, max));
-    }
-    exports.randomIntInRange = randomIntInRange;
-    function canonicalizeAngle(angle) {
-        var tmpAngle = angle;
-        if (angle > exports.TwoPI) {
-            while (tmpAngle > exports.TwoPI) {
-                tmpAngle -= exports.TwoPI;
-            }
-        }
-        if (angle < 0) {
-            while (tmpAngle < 0) {
-                tmpAngle += exports.TwoPI;
-            }
-        }
-        return tmpAngle;
-    }
-    exports.canonicalizeAngle = canonicalizeAngle;
-    function toDegrees(radians) {
-        return 180 / Math.PI * radians;
-    }
-    exports.toDegrees = toDegrees;
-    function toRadians(degrees) {
-        return degrees / 180 * Math.PI;
-    }
-    exports.toRadians = toRadians;
-    function getPosition(el) {
-        var oLeft = 0, oTop = 0;
-        var calcOffsetLeft = function (parent) {
-            oLeft += parent.offsetLeft;
-            if (parent.offsetParent) {
-                calcOffsetLeft(parent.offsetParent);
-            }
-        };
-        var calcOffsetTop = function (parent) {
-            oTop += parent.offsetTop;
-            if (parent.offsetParent) {
-                calcOffsetTop(parent.offsetParent);
-            }
-        };
-        calcOffsetLeft(el);
-        calcOffsetTop(el);
-        return new Algebra_3.Vector(oLeft, oTop);
-    }
-    exports.getPosition = getPosition;
-    function addItemToArray(item, array) {
-        if (array.indexOf(item) === -1) {
-            array.push(item);
-            return true;
-        }
-        return false;
-    }
-    exports.addItemToArray = addItemToArray;
-    function removeItemFromArray(item, array) {
-        var index = -1;
-        if ((index = array.indexOf(item)) > -1) {
-            array.splice(index, 1);
-            return true;
-        }
-        return false;
-    }
-    exports.removeItemFromArray = removeItemFromArray;
-    function contains(array, obj) {
-        for (var i = 0; i < array.length; i++) {
-            if (array[i] === obj) {
-                return true;
-            }
-        }
-        return false;
-    }
-    exports.contains = contains;
-    function getOppositeSide(side) {
-        if (side === Side_1.Side.Top) {
-            return Side_1.Side.Bottom;
-        }
-        if (side === Side_1.Side.Bottom) {
-            return Side_1.Side.Top;
-        }
-        if (side === Side_1.Side.Left) {
-            return Side_1.Side.Right;
-        }
-        if (side === Side_1.Side.Right) {
-            return Side_1.Side.Left;
-        }
-        return Side_1.Side.None;
-    }
-    exports.getOppositeSide = getOppositeSide;
-    function getSideFromVector(direction) {
-        var directions = [Algebra_3.Vector.Left, Algebra_3.Vector.Right, Algebra_3.Vector.Up, Algebra_3.Vector.Down];
-        var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
-        var max = -Number.MAX_VALUE;
-        var maxIndex = -1;
-        for (var i = 0; i < directions.length; i++) {
-            if (directions[i].dot(direction) > max) {
-                max = directions[i].dot(direction);
-                maxIndex = i;
-            }
-        }
-        return directionEnum[maxIndex];
-    }
-    exports.getSideFromVector = getSideFromVector;
-    /**
-     * Excalibur's dynamically resizing collection
-     */
-    var Collection = (function () {
-        /**
-         * @param initialSize  Initial size of the internal backing array
-         */
-        function Collection(initialSize) {
-            if (initialSize === void 0) { initialSize = Collection.DefaultSize; }
-            this._internalArray = null;
-            this._endPointer = 0;
-            this._internalArray = new Array(initialSize);
-        }
-        Collection.prototype._resize = function () {
-            var newSize = this._internalArray.length * 2;
-            var newArray = new Array(newSize);
-            var count = this.count();
-            for (var i = 0; i < count; i++) {
-                newArray[i] = this._internalArray[i];
-            }
-            delete this._internalArray;
-            this._internalArray = newArray;
-        };
-        /**
-         * Push elements to the end of the collection
-         */
-        Collection.prototype.push = function (element) {
-            if (this._endPointer === this._internalArray.length) {
-                this._resize();
-            }
-            return this._internalArray[this._endPointer++] = element;
-        };
-        /**
-         * Removes elements from the end of the collection
-         */
-        Collection.prototype.pop = function () {
-            this._endPointer = this._endPointer - 1 < 0 ? 0 : this._endPointer - 1;
-            return this._internalArray[this._endPointer];
-        };
-        /**
-         * Returns the count of the collection
-         */
-        Collection.prototype.count = function () {
-            return this._endPointer;
-        };
-        /**
-         * Empties the collection
-         */
-        Collection.prototype.clear = function () {
-            this._endPointer = 0;
-        };
-        /**
-         * Returns the size of the internal backing array
-         */
-        Collection.prototype.internalSize = function () {
-            return this._internalArray.length;
-        };
-        /**
-         * Returns an element at a specific index
-         * @param index  Index of element to retrieve
-         */
-        Collection.prototype.elementAt = function (index) {
-            if (index >= this.count()) {
-                //Logger.getInstance().error('Invalid parameter: ' + index);
-                throw new Error('Invalid index ' + index);
-            }
-            return this._internalArray[index];
-        };
-        /**
-         * Inserts an element at a specific index
-         * @param index  Index to insert the element
-         * @param value  Element to insert
-         */
-        Collection.prototype.insert = function (index, value) {
-            if (index >= this.count()) {
-                this._resize();
-            }
-            return this._internalArray[index] = value;
-        };
-        /**
-         * Removes an element at a specific index
-         * @param index  Index of element to remove
-         */
-        Collection.prototype.remove = function (index) {
-            var count = this.count();
-            if (count === 0) {
-                //Logger.getInstance().error('Invalid parameter: ' + index);
-                throw new Error('Invalid parameter ' + index);
-            }
-            // O(n) Shift
-            var removed = this._internalArray[index];
-            for (var i = index; i < count; i++) {
-                this._internalArray[i] = this._internalArray[i + 1];
-            }
-            this._endPointer--;
-            return removed;
-        };
-        /**
-         * Removes an element by reference
-         * @param element  Element to retrieve
-         */
-        Collection.prototype.removeElement = function (element) {
-            var index = this._internalArray.indexOf(element);
-            this.remove(index);
-        };
-        /**
-         * Returns a array representing the collection
-         */
-        Collection.prototype.toArray = function () {
-            return this._internalArray.slice(0, this._endPointer);
-        };
-        /**
-         * Iterate over every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
-         */
-        Collection.prototype.forEach = function (func) {
-            var i = 0, count = this.count();
-            for (i; i < count; i++) {
-                func.call(this, this._internalArray[i], i);
-            }
-        };
-        /**
-         * Mutate every element in the collection
-         * @param func  Callback to call for each element passing a reference to the element and its index, any values returned mutate
-         * the collection
-         */
-        Collection.prototype.map = function (func) {
-            var count = this.count();
-            for (var i = 0; i < count; i++) {
-                this._internalArray[i] = func.call(this, this._internalArray[i], i);
-            }
-        };
-        return Collection;
-    }());
-    /**
-     * Default collection size
-     */
-    Collection.DefaultSize = 200;
-    exports.Collection = Collection;
-});
 define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Actor_1, Algebra_4, Physics_1, Events_1, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -2528,10 +2766,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             var side = Util.getSideFromVector(this.mtv);
             var mtv = this.mtv.negate();
             // Publish collision events on both participants
-            // Obsolete: Collison will be removed in v0.14
-            bodyA.emit('collision', new Events_1.CollisionEvent(bodyA, bodyB, side, mtv));
             bodyA.emit('precollision', new Events_1.PreCollisionEvent(bodyA, bodyB, side, mtv));
-            bodyB.emit('collision', new Events_1.CollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
             bodyB.emit('precollision', new Events_1.PreCollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
             this._applyBoxImpulse(bodyA, bodyB, mtv);
             this._applyBoxImpulse(bodyB, bodyA, mtv.negate());
@@ -2547,10 +2782,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
             }
             // Publish collision events on both participants
             var side = Util.getSideFromVector(this.mtv);
-            // Obsolete: Collision will be removed in v0.14
-            bodyA.actor.emit('collision', new Events_1.CollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
             bodyA.actor.emit('precollision', new Events_1.PreCollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-            bodyB.actor.emit('collision', new Events_1.CollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
             bodyB.actor.emit('precollision', new Events_1.PreCollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
             // If any of the participants are passive then short circuit
             if (bodyA.actor.collisionType === Actor_1.CollisionType.Passive ||
@@ -2878,7 +3110,7 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
                 verts.push(point2);
             }
             if (verts.length === 0) {
-                verts.push(point2);
+                return null;
             }
             return new CollisionContact_1.CollisionContact(circle, polygon, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
         },
@@ -2932,15 +3164,34 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
             return null;
         },
         CollidePolygonEdge: function (polygon, edge) {
+            // 3 cases:
+            // (1) Polygon lands on the full face
+            // (2) Polygon lands on the right point
+            // (3) Polygon lands on the left point
             var e = edge.end.sub(edge.begin);
             var edgeNormal = e.normal();
+            if (polygon.contains(edge.begin)) {
+                var _a = polygon.getClosestFace(edge.begin), mtv = _a.distance, face = _a.face;
+                if (mtv) {
+                    return new CollisionContact_1.CollisionContact(polygon, edge, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
+                }
+            }
+            if (polygon.contains(edge.end)) {
+                var _b = polygon.getClosestFace(edge.end), mtv = _b.distance, face = _b.face;
+                if (mtv) {
+                    return new CollisionContact_1.CollisionContact(polygon, edge, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
+                }
+            }
+            var pc = polygon.getCenter();
+            var ec = edge.getCenter();
+            var dir = ec.sub(pc).normalize();
             // build a temporary polygon from the edge to use SAT
             var linePoly = new PolygonArea_2.PolygonArea({
                 points: [
                     edge.begin,
                     edge.end,
-                    edge.end.sub(edgeNormal.scale(10)),
-                    edge.begin.sub(edgeNormal.scale(10))
+                    edge.end.add(dir.scale(30)),
+                    edge.begin.add(dir.scale(30))
                 ]
             });
             var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
@@ -2948,7 +3199,10 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
             if (!minAxis) {
                 return null;
             }
-            return new CollisionContact_1.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal.negate()), edgeNormal.negate());
+            // flip the normal and axis to always have positive collisions
+            edgeNormal = edgeNormal.dot(dir) < 0 ? edgeNormal.negate() : edgeNormal;
+            minAxis = minAxis.dot(dir) < 0 ? minAxis.negate() : minAxis;
+            return new CollisionContact_1.CollisionContact(polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal), edgeNormal);
         },
         CollidePolygonPolygon: function (polyA, polyB) {
             // do a SAT test to find a min axis if it exists
@@ -3105,6 +3359,31 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
                 }
             }
             return furthestPoint;
+        };
+        /**
+         * Finds the closes face to the point using perpendicular distance
+         * @param point point to test against polygon
+         */
+        PolygonArea.prototype.getClosestFace = function (point) {
+            var sides = this.getSides();
+            var min = Number.POSITIVE_INFINITY;
+            var faceIndex = -1;
+            var distance = -1;
+            for (var i = 0; i < sides.length; i++) {
+                var dist = sides[i].distanceToPoint(point);
+                if (dist < min) {
+                    min = dist;
+                    faceIndex = i;
+                    distance = dist;
+                }
+            }
+            if (faceIndex !== -1) {
+                return {
+                    distance: sides[faceIndex].normal().scale(distance),
+                    face: sides[faceIndex]
+                };
+            }
+            return null;
         };
         /**
          * Get the axis aligned bounding box for the polygon area
@@ -4243,7 +4522,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
         return Body;
     }());
     __decorate([
-        Decorators_1.obsolete({ message: 'will be removed in v0.14, use the collisionend event instead' })
+        Decorators_1.obsolete({ message: 'will be removed in v0.15, use the collisionend event instead' })
     ], Body.prototype, "wasTouching", null);
     exports.Body = Body;
 });
@@ -5549,7 +5828,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
     }(Resource_1.Resource));
     exports.Texture = Texture;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_4, Util_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Algebra", "Util/Log", "Util/Util"], function (require, exports, Effects, Color_9, Algebra_11, Log_4, Util_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5625,7 +5904,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
                 if (this.sheight > naturalHeight) {
                     this.logger.warn('The sprite height', this.sheight, 'exceeds the height', naturalHeight, 'of the backing texture', this._texture.path);
                 }
-                this._spriteCtx.drawImage(this._texture.image, Util_1.clamp(this.sx, 0, naturalWidth), Util_1.clamp(this.sy, 0, naturalHeight), Util_1.clamp(this.swidth, 0, naturalWidth), Util_1.clamp(this.sheight, 0, naturalHeight), 0, 0, this.swidth, this.sheight);
+                this._spriteCtx.drawImage(this._texture.image, Util_2.clamp(this.sx, 0, naturalWidth), Util_2.clamp(this.sy, 0, naturalHeight), Util_2.clamp(this.swidth, 0, naturalWidth), Util_2.clamp(this.sheight, 0, naturalHeight), 0, 0, this.swidth, this.sheight);
                 this._pixelsLoaded = true;
             }
         };
@@ -5729,7 +6008,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             var naturalWidth = this._texture.image.naturalWidth || 0;
             var naturalHeight = this._texture.image.naturalHeight || 0;
             this._spriteCtx.clearRect(0, 0, this.swidth, this.sheight);
-            this._spriteCtx.drawImage(this._texture.image, Util_1.clamp(this.sx, 0, naturalWidth), Util_1.clamp(this.sy, 0, naturalHeight), Util_1.clamp(this.swidth, 0, naturalWidth), Util_1.clamp(this.sheight, 0, naturalHeight), 0, 0, this.swidth, this.sheight);
+            this._spriteCtx.drawImage(this._texture.image, Util_2.clamp(this.sx, 0, naturalWidth), Util_2.clamp(this.sy, 0, naturalHeight), Util_2.clamp(this.swidth, 0, naturalWidth), Util_2.clamp(this.sheight, 0, naturalHeight), 0, 0, this.swidth, this.sheight);
             this._pixelData = this._spriteCtx.getImageData(0, 0, this.swidth, this.sheight);
             var i = 0, x = 0, y = 0, len = this.effects.length;
             for (i; i < len; i++) {
@@ -7810,8 +8089,6 @@ define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Coll
                             break;
                         }
                         side = actor.getSideFromIntersect(intersectMap);
-                        // OBSOLETE will be removed in v0.14
-                        eventDispatcher.emit('collision', new Events_4.CollisionEvent(actor, null, side, intersectMap));
                         eventDispatcher.emit('precollision', new Events_4.PreCollisionEvent(actor, null, side, intersectMap));
                         if (actor.collisionType === Actor_6.CollisionType.Active) {
                             actor.pos.y += intersectMap.y;
@@ -10717,8 +10994,6 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
     var PointerEvent = (function (_super) {
         __extends(PointerEvent, _super);
         /**
-         * @param x OBSOLETE: Will be removed in the 0.14.0 release. Use pos.x. The `x` coordinate of the event (in world coordinates).
-         * @param y OBSOLETE: Will be removed in the 0.14.0 release. Use pos.y. The `y` coordinate of the event (in world coordinates).
          * @param pageX        The `x` coordinate of the event (in document coordinates)
          * @param pageY        The `y` coordinate of the event (in document coordinates)
          * @param screenX      The `x` coordinate of the event (in screen coordinates)
@@ -11305,13 +11580,13 @@ define("Input/Index", ["require", "exports", "Input/Gamepad", "Input/Pointer", "
     __export(Pointer_1);
     __export(Keyboard_1);
 });
-define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], function (require, exports, Util_2, drawUtil) {
+define("Util/Index", ["require", "exports", "Util/Util", "Util/DrawUtil"], function (require, exports, Util_3, drawUtil) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    __export(Util_2);
+    __export(Util_3);
     exports.DrawUtil = drawUtil;
 });
 define("Util/Detector", ["require", "exports", "Util/Log"], function (require, exports, Log_12) {
@@ -11751,7 +12026,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.13.0-alpha.1922+f8e0195';
+    exports.EX_VERSION = '0.14.0-alpha.1962+7158b50';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_11);
@@ -11790,7 +12065,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     __export(Log_13);
     __export(SortedList_1);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox", "Util/Decorators"], function (require, exports, Index_7, Promises_8, Algebra_22, UIActor_3, Actor_12, Timer_2, TileMap_2, Loader_2, Detector_2, Events_12, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Util, BoundingBox_7, Decorators_3) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_7, Promises_8, Algebra_22, UIActor_3, Actor_12, Timer_2, TileMap_2, Loader_2, Detector_2, Events_12, Log_14, Color_19, Scene_2, Debug_2, Class_9, Input, Util, BoundingBox_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12018,12 +12293,6 @@ O|===|* >________________>\n\
             enumerable: true,
             configurable: true
         });
-        /**
-         * Returns the width of the engine's visible drawing surface in pixels including zoom including device pixel ratio.
-         */
-        Engine.prototype.getDrawWidth = function () {
-            return this.drawWidth;
-        };
         Object.defineProperty(Engine.prototype, "drawWidth", {
             /**
              * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
@@ -12047,12 +12316,6 @@ O|===|* >________________>\n\
             enumerable: true,
             configurable: true
         });
-        /**
-         * Returns the height of the engine's visible drawing surface in pixels .
-         */
-        Engine.prototype.getDrawHeight = function () {
-            return this.drawHeight;
-        };
         Object.defineProperty(Engine.prototype, "drawHeight", {
             /**
              * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
@@ -12559,8 +12822,6 @@ O|===|* >________________>\n\
             this.input.pointers.update();
             this.input.gamepads.update();
             // Publish update event
-            // TODO: Obsolete `update` event on Engine
-            this.eventDispatcher.emit('update', new Events_12.PostUpdateEvent(this, delta, this));
             this.emit('postupdate', new Events_12.PostUpdateEvent(this, delta, this));
         };
         /**
@@ -12739,16 +13000,6 @@ O|===|* >________________>\n\
         scrollPreventionMode: ScrollPreventionMode.Canvas,
         backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
     };
-    __decorate([
-        Decorators_3.obsolete({ message: 'getDrawWidth() will be removed in the 0.14 release',
-            alternateMethod: 'drawWidth property'
-        })
-    ], Engine.prototype, "getDrawWidth", null);
-    __decorate([
-        Decorators_3.obsolete({ message: 'getDrawHeight() will be removed in the 0.14 release',
-            alternateMethod: 'drawHeight property'
-        })
-    ], Engine.prototype, "getDrawHeight", null);
     exports.Engine = Engine;
     /**
      * @internal
@@ -12937,9 +13188,6 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
         Scene.prototype.update = function (engine, delta) {
             this.emit('preupdate', new Events_13.PreUpdateEvent(engine, delta, this));
             var i, len;
-            if (this.camera) {
-                this.camera.update(engine, delta);
-            }
             // Remove timers in the cancel queue before updating them
             for (i = 0, len = this._cancelQueue.length; i < len; i++) {
                 this.removeTimer(this._cancelQueue[i]);
@@ -12992,6 +13240,9 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
             engine.stats.currFrame.actors.killed = this._killQueue.length + this._triggerKillQueue.length;
             this._processKillQueue(this._killQueue, this.actors);
             this._processKillQueue(this._triggerKillQueue, this.triggers);
+            if (this.camera) {
+                this.camera.update(engine, delta);
+            }
             this.emit('postupdate', new Events_13.PostUpdateEvent(engine, delta, this));
         };
         Scene.prototype._processKillQueue = function (killQueue, collection) {
@@ -13402,8 +13653,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     }(GameEvent));
     exports.PreUpdateEvent = PreUpdateEvent;
     /**
-     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends. This is equivalent to the obsolete 'update'
-     * event.
+     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends.
      */
     var PostUpdateEvent = (function (_super) {
         __extends(PostUpdateEvent, _super);
@@ -13571,30 +13821,6 @@ define("Events", ["require", "exports"], function (require, exports) {
         return HiddenEvent;
     }(GameEvent));
     exports.HiddenEvent = HiddenEvent;
-    /**
-     * OBSOLETE: Event thrown on an [[Actor|actor]] when a collision will occur this frame
-     * @deprecated Will be removed in v0.14, please use PreCollisionEvent
-     */
-    var CollisionEvent = (function (_super) {
-        __extends(CollisionEvent, _super);
-        /**
-         * @param actor         The actor the event was thrown on
-         * @param other         The actor that was collided with
-         * @param side          The side that was collided with
-         * @param intersection  Intersection vector
-         */
-        function CollisionEvent(actor, other, side, intersection) {
-            var _this = _super.call(this) || this;
-            _this.actor = actor;
-            _this.other = other;
-            _this.side = side;
-            _this.intersection = intersection;
-            _this.target = actor;
-            return _this;
-        }
-        return CollisionEvent;
-    }(GameEvent));
-    exports.CollisionEvent = CollisionEvent;
     /**
      * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
      */
@@ -14751,8 +14977,6 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             for (var i = 0; i < this.children.length; i++) {
                 this.children[i].update(engine, delta);
             }
-            // TODO: Obsolete `update` event on Actor
-            this.eventDispatcher.emit('update', new Events_14.PostUpdateEvent(engine, delta, this));
             this.emit('postupdate', new Events_14.PostUpdateEvent(engine, delta, this));
         };
         /**

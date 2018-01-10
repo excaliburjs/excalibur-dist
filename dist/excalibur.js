@@ -1,6 +1,6 @@
-/*! excalibur - v0.14.0-alpha.1993+65a4a91 - 2017-12-21
+/*! excalibur - v0.14.0-alpha.2001+0101600 - 2018-01-10
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
+* Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
@@ -453,9 +453,9 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.14.0-alpha.1993+65a4a91 - 2017-12-21
+/*! excalibur - v0.14.0-alpha.2001+0101600 - 2018-01-10
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
+* Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -509,7 +509,7 @@ define("Algebra", ["require", "exports"], function (require, exports) {
     /**
      * A 2D vector on a plane.
      */
-    var Vector = (function () {
+    var Vector = /** @class */ (function () {
         /**
          * @param x  X component of the Vector
          * @param y  Y component of the Vector
@@ -712,41 +712,41 @@ define("Algebra", ["require", "exports"], function (require, exports) {
         Vector.prototype.toString = function () {
             return "(" + this.x + ", " + this.y + ")";
         };
+        /**
+         * A (0, 0) vector
+         */
+        Vector.Zero = new Vector(0, 0);
+        /**
+         * A (1, 1) vector
+         */
+        Vector.One = new Vector(1, 1);
+        /**
+         * A (0.5, 0.5) vector
+         */
+        Vector.Half = new Vector(0.5, 0.5);
+        /**
+         * A unit vector pointing up (0, -1)
+         */
+        Vector.Up = new Vector(0, -1);
+        /**
+         * A unit vector pointing down (0, 1)
+         */
+        Vector.Down = new Vector(0, 1);
+        /**
+         * A unit vector pointing left (-1, 0)
+         */
+        Vector.Left = new Vector(-1, 0);
+        /**
+         * A unit vector pointing right (1, 0)
+         */
+        Vector.Right = new Vector(1, 0);
         return Vector;
     }());
-    /**
-     * A (0, 0) vector
-     */
-    Vector.Zero = new Vector(0, 0);
-    /**
-     * A (1, 1) vector
-     */
-    Vector.One = new Vector(1, 1);
-    /**
-     * A (0.5, 0.5) vector
-     */
-    Vector.Half = new Vector(0.5, 0.5);
-    /**
-     * A unit vector pointing up (0, -1)
-     */
-    Vector.Up = new Vector(0, -1);
-    /**
-     * A unit vector pointing down (0, 1)
-     */
-    Vector.Down = new Vector(0, 1);
-    /**
-     * A unit vector pointing left (-1, 0)
-     */
-    Vector.Left = new Vector(-1, 0);
-    /**
-     * A unit vector pointing right (1, 0)
-     */
-    Vector.Right = new Vector(1, 0);
     exports.Vector = Vector;
     /**
      * A 2D ray that can be cast into the scene to do collision detection
      */
-    var Ray = (function () {
+    var Ray = /** @class */ (function () {
         /**
          * @param pos The starting position for the ray
          * @param dir The vector indicating the direction of the ray
@@ -792,7 +792,7 @@ define("Algebra", ["require", "exports"], function (require, exports) {
     /**
      * A 2D line segment
      */
-    var Line = (function () {
+    var Line = /** @class */ (function () {
         /**
          * @param begin  The starting point of the line segment
          * @param end  The ending point of the line segment
@@ -927,7 +927,7 @@ define("Algebra", ["require", "exports"], function (require, exports) {
     /**
      * A 1 dimensional projection on an axis, used to test overlaps
      */
-    var Projection = (function () {
+    var Projection = /** @class */ (function () {
         function Projection(min, max) {
             this.min = min;
             this.max = max;
@@ -991,7 +991,7 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
      * [[include:Physics.md]]
      */
     /* istanbul ignore next */
-    var Physics = (function () {
+    var Physics = /** @class */ (function () {
         function Physics() {
         }
         /**
@@ -1007,123 +1007,123 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
         Physics.useRigidBodyPhysics = function () {
             Physics.collisionResolutionStrategy = CollisionResolutionStrategy.RigidBody;
         };
+        /**
+         * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
+         * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
+         *
+         *
+         * This is a great way to globally simulate effects like gravity.
+         */
+        Physics.acc = new Algebra_1.Vector(0, 0);
+        /**
+         * Globally switches all Excalibur physics behavior on or off.
+         */
+        Physics.enabled = true;
+        /**
+         * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
+         *
+         * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
+         *
+         * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
+         * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
+         *
+         * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
+         * cost of performance.
+         *
+         * The default is set to 5 passes which is a good start.
+         */
+        Physics.collisionPasses = 5;
+        /**
+         * Gets or sets the broadphase pair identification strategy.
+         *
+         * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
+         * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
+         * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
+         */
+        Physics.broadphaseStrategy = BroadphaseStrategy.DynamicAABBTree;
+        /**
+         * Globally switches the debug information for the broadphase strategy
+         */
+        Physics.broadphaseDebug = false;
+        /**
+         * Show the normals as a result of collision on the screen.
+         */
+        Physics.showCollisionNormals = false;
+        /**
+         * Show the position, velocity, and acceleration as graphical vectors.
+         */
+        Physics.showMotionVectors = false;
+        /**
+         * Show the axis-aligned bounding boxes of the collision bodies on the screen.
+         */
+        Physics.showBounds = false;
+        /**
+         * Show the bounding collision area shapes
+         */
+        Physics.showArea = false;
+        /**
+         * Show points of collision interpreted by excalibur as a result of collision.
+         */
+        Physics.showContacts = false;
+        /**
+         * Show the surface normals of the collision areas.
+         */
+        Physics.showNormals = false;
+        /**
+         * Gets or sets the global collision resolution strategy (narrowphase).
+         *
+         * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
+         *
+         * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
+         * simulated physical interactions.
+         */
+        Physics.collisionResolutionStrategy = CollisionResolutionStrategy.Box;
+        /**
+         * The default mass to use if none is specified
+         */
+        Physics.defaultMass = 10;
+        /**
+         * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
+         */
+        Physics.integrator = Integrator.Euler;
+        /**
+         * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
+         * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
+         */
+        Physics.integrationSteps = 1;
+        /**
+         * Gets or sets whether rotation is allowed in a RigidBody collision resolution
+         */
+        Physics.allowRigidBodyRotation = true;
+        /**
+         * Small value to help collision passes settle themselves after the narrowphase.
+         */
+        Physics.collisionShift = .001;
+        /**
+         * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+         */
+        Physics.dynamicTreeVelocityMultiplyer = 2;
+        /**
+         * Pad RigidBody BoundingBox by a constant amount
+         */
+        Physics.boundsPadding = 5;
+        /**
+         * Surface epsilon is used to help deal with surface penatration
+         */
+        Physics.surfaceEpsilon = .1;
+        /**
+         * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
+         * bodies from tunneling through one another.
+         */
+        Physics.checkForFastBodies = true;
+        /**
+         * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
+         * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+         * Excalibur will always perform the fast body raycast regardless of speed.
+         */
+        Physics.disableMinimumSpeedForFastBody = false;
         return Physics;
     }());
-    /**
-     * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-     * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
-     *
-     *
-     * This is a great way to globally simulate effects like gravity.
-     */
-    Physics.acc = new Algebra_1.Vector(0, 0);
-    /**
-     * Globally switches all Excalibur physics behavior on or off.
-     */
-    Physics.enabled = true;
-    /**
-     * Gets or sets the number of collision passes for Excalibur to perform on physics bodies.
-     *
-     * Reducing collision passes may cause things not to collide as expected in your game, but may increase performance.
-     *
-     * More passes can improve the visual quality of collisions when many objects are on the screen. This can reduce jitter, improve the
-     * collision resolution of fast move objects, or the stability of large numbers of objects stacked together.
-     *
-     * Fewer passes will improve the performance of the game at the cost of collision quality, more passes will improve quality at the
-     * cost of performance.
-     *
-     * The default is set to 5 passes which is a good start.
-     */
-    Physics.collisionPasses = 5;
-    /**
-     * Gets or sets the broadphase pair identification strategy.
-     *
-     * The default strategy is [[BroadphaseStrategy.DynamicAABBTree]] which uses a binary tree of axis-aligned bounding boxes to identify
-     * potential collision pairs which is O(nlog(n)) faster. The other possible strategy is the [[BroadphaseStrategy.Naive]] strategy
-     * which loops over every object for every object in the scene to identify collision pairs which is O(n^2) slower.
-     */
-    Physics.broadphaseStrategy = BroadphaseStrategy.DynamicAABBTree;
-    /**
-     * Globally switches the debug information for the broadphase strategy
-     */
-    Physics.broadphaseDebug = false;
-    /**
-     * Show the normals as a result of collision on the screen.
-     */
-    Physics.showCollisionNormals = false;
-    /**
-     * Show the position, velocity, and acceleration as graphical vectors.
-     */
-    Physics.showMotionVectors = false;
-    /**
-     * Show the axis-aligned bounding boxes of the collision bodies on the screen.
-     */
-    Physics.showBounds = false;
-    /**
-     * Show the bounding collision area shapes
-     */
-    Physics.showArea = false;
-    /**
-     * Show points of collision interpreted by excalibur as a result of collision.
-     */
-    Physics.showContacts = false;
-    /**
-     * Show the surface normals of the collision areas.
-     */
-    Physics.showNormals = false;
-    /**
-     * Gets or sets the global collision resolution strategy (narrowphase).
-     *
-     * The default is [[CollisionResolutionStrategy.Box]] which performs simple axis aligned arcade style physics.
-     *
-     * More advanced rigid body physics are enabled by setting [[CollisionResolutionStrategy.RigidBody]] which allows for complicated
-     * simulated physical interactions.
-     */
-    Physics.collisionResolutionStrategy = CollisionResolutionStrategy.Box;
-    /**
-     * The default mass to use if none is specified
-     */
-    Physics.defaultMass = 10;
-    /**
-     * Gets or sets the position and velocity positional integrator, currently only Euler is supported.
-     */
-    Physics.integrator = Integrator.Euler;
-    /**
-     * Number of steps to use in integration. A higher number improves the positional accuracy over time. This can be useful to increase
-     * if you have fast moving objects in your simulation or you have a large number of objects and need to increase stability.
-     */
-    Physics.integrationSteps = 1;
-    /**
-     * Gets or sets whether rotation is allowed in a RigidBody collision resolution
-     */
-    Physics.allowRigidBodyRotation = true;
-    /**
-     * Small value to help collision passes settle themselves after the narrowphase.
-     */
-    Physics.collisionShift = .001;
-    /**
-     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
-     */
-    Physics.dynamicTreeVelocityMultiplyer = 2;
-    /**
-     * Pad RigidBody BoundingBox by a constant amount
-     */
-    Physics.boundsPadding = 5;
-    /**
-     * Surface epsilon is used to help deal with surface penatration
-     */
-    Physics.surfaceEpsilon = .1;
-    /**
-     * Enable fast moving body checking, this enables checking for collision pairs via raycast for fast moving objects to prevent
-     * bodies from tunneling through one another.
-     */
-    Physics.checkForFastBodies = true;
-    /**
-     * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
-     * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
-     * Excalibur will always perform the fast body raycast regardless of speed.
-     */
-    Physics.disableMinimumSpeedForFastBody = false;
     exports.Physics = Physics;
 });
 define("Util/EasingFunctions", ["require", "exports"], function (require, exports) {
@@ -1169,54 +1169,54 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
      * }
      * ```
      */
-    var EasingFunctions = (function () {
+    var EasingFunctions = /** @class */ (function () {
         function EasingFunctions() {
         }
+        EasingFunctions.Linear = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            return endValue * currentTime / duration + startValue;
+        };
+        EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration;
+            return endValue * currentTime * currentTime + startValue;
+        };
+        EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration;
+            return -endValue * currentTime * (currentTime - 2) + startValue;
+        };
+        EasingFunctions.EaseInOutQuad = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration / 2;
+            if (currentTime < 1) {
+                return endValue / 2 * currentTime * currentTime + startValue;
+            }
+            currentTime--;
+            return -endValue / 2 * (currentTime * (currentTime - 2) - 1) + startValue;
+        };
+        EasingFunctions.EaseInCubic = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration;
+            return endValue * currentTime * currentTime * currentTime + startValue;
+        };
+        EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration;
+            currentTime--;
+            return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
+        };
+        EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
+            endValue = (endValue - startValue);
+            currentTime /= duration / 2;
+            if (currentTime < 1) {
+                return endValue / 2 * currentTime * currentTime * currentTime + startValue;
+            }
+            currentTime -= 2;
+            return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
+        };
         return EasingFunctions;
     }());
-    EasingFunctions.Linear = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        return endValue * currentTime / duration + startValue;
-    };
-    EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration;
-        return endValue * currentTime * currentTime + startValue;
-    };
-    EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration;
-        return -endValue * currentTime * (currentTime - 2) + startValue;
-    };
-    EasingFunctions.EaseInOutQuad = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration / 2;
-        if (currentTime < 1) {
-            return endValue / 2 * currentTime * currentTime + startValue;
-        }
-        currentTime--;
-        return -endValue / 2 * (currentTime * (currentTime - 2) - 1) + startValue;
-    };
-    EasingFunctions.EaseInCubic = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration;
-        return endValue * currentTime * currentTime * currentTime + startValue;
-    };
-    EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration;
-        currentTime--;
-        return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
-    };
-    EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
-        endValue = (endValue - startValue);
-        currentTime /= duration / 2;
-        if (currentTime < 1) {
-            return endValue / 2 * currentTime * currentTime * currentTime + startValue;
-        }
-        currentTime -= 2;
-        return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
-    };
     exports.EasingFunctions = EasingFunctions;
 });
 // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
@@ -1239,7 +1239,7 @@ define("Promises", ["require", "exports"], function (require, exports) {
      *
      * [[include:Promises.md]]
      */
-    var Promise = (function () {
+    var Promise = /** @class */ (function () {
         function Promise() {
             this._state = PromiseState.Pending;
             this._successCallbacks = [];
@@ -1624,7 +1624,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
     /**
      * Excalibur's dynamically resizing collection
      */
-    var Collection = (function () {
+    var Collection = /** @class */ (function () {
         /**
          * @param initialSize  Initial size of the internal backing array
          */
@@ -1753,12 +1753,12 @@ define("Util/Util", ["require", "exports", "Algebra", "Collision/Side"], functio
                 this._internalArray[i] = func.call(this, this._internalArray[i], i);
             }
         };
+        /**
+         * Default collection size
+         */
+        Collection.DefaultSize = 200;
         return Collection;
     }());
-    /**
-     * Default collection size
-     */
-    Collection.DefaultSize = 200;
     exports.Collection = Collection;
 });
 define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra", "Util/Util"], function (require, exports, EasingFunctions_1, Promises_1, Algebra_3, Util_1) {
@@ -1768,7 +1768,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      * Container to house convenience strategy methods
      * @internal
      */
-    var StrategyContainer = (function () {
+    var StrategyContainer = /** @class */ (function () {
         function StrategyContainer(camera) {
             this.camera = camera;
         }
@@ -1822,7 +1822,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
     /**
      * Lock a camera to the exact x/y postition of an actor.
      */
-    var LockCameraToActorStrategy = (function () {
+    var LockCameraToActorStrategy = /** @class */ (function () {
         function LockCameraToActorStrategy(target) {
             this.target = target;
             this.action = function (target, _cam, _eng, _delta) {
@@ -1836,7 +1836,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
     /**
      * Lock a camera to a specific axis around an actor.
      */
-    var LockCameraToActorAxisStrategy = (function () {
+    var LockCameraToActorAxisStrategy = /** @class */ (function () {
         function LockCameraToActorAxisStrategy(target, axis) {
             var _this = this;
             this.target = target;
@@ -1858,7 +1858,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
     /**
      * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
      */
-    var ElasticToActorStrategy = (function () {
+    var ElasticToActorStrategy = /** @class */ (function () {
         /**
          * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
          * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
@@ -1895,7 +1895,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
         return ElasticToActorStrategy;
     }());
     exports.ElasticToActorStrategy = ElasticToActorStrategy;
-    var RadiusAroundActorStrategy = (function () {
+    var RadiusAroundActorStrategy = /** @class */ (function () {
         /**
          *
          * @param target Target actor to follow when it is "radius" pixels away
@@ -1929,7 +1929,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      *
      * [[include:Cameras.md]]
      */
-    var BaseCamera = (function () {
+    var BaseCamera = /** @class */ (function () {
         function BaseCamera() {
             this._cameraStrategies = [];
             this.strategy = new StrategyContainer(this);
@@ -2243,7 +2243,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      * Common usages: platformers.
      * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActorAxis`
      */
-    var SideCamera = (function (_super) {
+    var SideCamera = /** @class */ (function (_super) {
         __extends(SideCamera, _super);
         function SideCamera() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -2274,7 +2274,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
      * Common usages: RPGs, adventure games, top-down games.
      * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActor`
      */
-    var LockedCamera = (function (_super) {
+    var LockedCamera = /** @class */ (function (_super) {
         __extends(LockedCamera, _super);
         function LockedCamera() {
             return _super !== null && _super.apply(this, arguments) || this;
@@ -2312,7 +2312,7 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
      *
      * [[include:Colors.md]]
      */
-    var Color = (function () {
+    var Color = /** @class */ (function () {
         /**
          * Creates a new instance of Color from an r, g, b, a
          *
@@ -2518,84 +2518,84 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         Color.prototype.clone = function () {
             return new Color(this.r, this.g, this.b, this.a);
         };
+        /**
+         * Black (#000000)
+         */
+        Color.Black = Color.fromHex('#000000');
+        /**
+         * White (#FFFFFF)
+         */
+        Color.White = Color.fromHex('#FFFFFF');
+        /**
+         * Gray (#808080)
+         */
+        Color.Gray = Color.fromHex('#808080');
+        /**
+         * Light gray (#D3D3D3)
+         */
+        Color.LightGray = Color.fromHex('#D3D3D3');
+        /**
+         * Dark gray (#A9A9A9)
+         */
+        Color.DarkGray = Color.fromHex('#A9A9A9');
+        /**
+         * Yellow (#FFFF00)
+         */
+        Color.Yellow = Color.fromHex('#FFFF00');
+        /**
+         * Orange (#FFA500)
+         */
+        Color.Orange = Color.fromHex('#FFA500');
+        /**
+         * Red (#FF0000)
+         */
+        Color.Red = Color.fromHex('#FF0000');
+        /**
+         * Vermillion (#FF5B31)
+         */
+        Color.Vermillion = Color.fromHex('#FF5B31');
+        /**
+         * Rose (#FF007F)
+         */
+        Color.Rose = Color.fromHex('#FF007F');
+        /**
+         * Magenta (#FF00FF)
+         */
+        Color.Magenta = Color.fromHex('#FF00FF');
+        /**
+         * Violet (#7F00FF)
+         */
+        Color.Violet = Color.fromHex('#7F00FF');
+        /**
+         * Blue (#0000FF)
+         */
+        Color.Blue = Color.fromHex('#0000FF');
+        /**
+         * Azure (#007FFF)
+         */
+        Color.Azure = Color.fromHex('#007FFF');
+        /**
+         * Cyan (#00FFFF)
+         */
+        Color.Cyan = Color.fromHex('#00FFFF');
+        /**
+         * Viridian (#59978F)
+         */
+        Color.Viridian = Color.fromHex('#59978F');
+        /**
+         * Green (#00FF00)
+         */
+        Color.Green = Color.fromHex('#00FF00');
+        /**
+         * Chartreuse (#7FFF00)
+         */
+        Color.Chartreuse = Color.fromHex('#7FFF00');
+        /**
+         * Transparent (#FFFFFF00)
+         */
+        Color.Transparent = Color.fromHex('#FFFFFF00');
         return Color;
     }());
-    /**
-     * Black (#000000)
-     */
-    Color.Black = Color.fromHex('#000000');
-    /**
-     * White (#FFFFFF)
-     */
-    Color.White = Color.fromHex('#FFFFFF');
-    /**
-     * Gray (#808080)
-     */
-    Color.Gray = Color.fromHex('#808080');
-    /**
-     * Light gray (#D3D3D3)
-     */
-    Color.LightGray = Color.fromHex('#D3D3D3');
-    /**
-     * Dark gray (#A9A9A9)
-     */
-    Color.DarkGray = Color.fromHex('#A9A9A9');
-    /**
-     * Yellow (#FFFF00)
-     */
-    Color.Yellow = Color.fromHex('#FFFF00');
-    /**
-     * Orange (#FFA500)
-     */
-    Color.Orange = Color.fromHex('#FFA500');
-    /**
-     * Red (#FF0000)
-     */
-    Color.Red = Color.fromHex('#FF0000');
-    /**
-     * Vermillion (#FF5B31)
-     */
-    Color.Vermillion = Color.fromHex('#FF5B31');
-    /**
-     * Rose (#FF007F)
-     */
-    Color.Rose = Color.fromHex('#FF007F');
-    /**
-     * Magenta (#FF00FF)
-     */
-    Color.Magenta = Color.fromHex('#FF00FF');
-    /**
-     * Violet (#7F00FF)
-     */
-    Color.Violet = Color.fromHex('#7F00FF');
-    /**
-     * Blue (#0000FF)
-     */
-    Color.Blue = Color.fromHex('#0000FF');
-    /**
-     * Azure (#007FFF)
-     */
-    Color.Azure = Color.fromHex('#007FFF');
-    /**
-     * Cyan (#00FFFF)
-     */
-    Color.Cyan = Color.fromHex('#00FFFF');
-    /**
-     * Viridian (#59978F)
-     */
-    Color.Viridian = Color.fromHex('#59978F');
-    /**
-     * Green (#00FF00)
-     */
-    Color.Green = Color.fromHex('#00FF00');
-    /**
-     * Chartreuse (#7FFF00)
-     */
-    Color.Chartreuse = Color.fromHex('#7FFF00');
-    /**
-     * Transparent (#FFFFFF00)
-     */
-    Color.Transparent = Color.fromHex('#FFFFFF00');
     exports.Color = Color;
     /**
      * Internal HSL Color representation
@@ -2603,7 +2603,7 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
      * http://en.wikipedia.org/wiki/HSL_and_HSV
      * http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
      */
-    var HSLColor = (function () {
+    var HSLColor = /** @class */ (function () {
         function HSLColor(h, s, l, a) {
             this.h = h;
             this.s = s;
@@ -2683,7 +2683,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
      * Collision contacts are used internally by Excalibur to resolve collision between actors. This
      * Pair prevents collisions from being evaluated more than one time
      */
-    var CollisionContact = (function () {
+    var CollisionContact = /** @class */ (function () {
         function CollisionContact(bodyA, bodyB, mtv, point, normal) {
             this.bodyA = bodyA;
             this.bodyB = bodyB;
@@ -2899,7 +2899,7 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
     /**
      * This is a circle collision area for the excalibur rigid body physics simulation
      */
-    var CircleArea = (function () {
+    var CircleArea = /** @class */ (function () {
         function CircleArea(options) {
             /**
              * This is the center position of the circle, relative to the body position
@@ -3240,7 +3240,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
     /**
      * Polygon collision area for detecting collisions for actors, or independently
      */
-    var PolygonArea = (function () {
+    var PolygonArea = /** @class */ (function () {
         function PolygonArea(options) {
             this._transformedPoints = [];
             this._axes = [];
@@ -3536,7 +3536,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
     /**
      * Axis Aligned collision primitive for Excalibur.
      */
-    var BoundingBox = (function () {
+    var BoundingBox = /** @class */ (function () {
         /**
          * @param left    x coordinate of the left edge
          * @param top     y coordinate of the top edge
@@ -3737,7 +3737,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
 define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_3, CollisionJumpTable_3, CircleArea_2, PolygonArea_4, Algebra_8, Physics_4, Color_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var EdgeArea = (function () {
+    var EdgeArea = /** @class */ (function () {
         function EdgeArea(options) {
             this.begin = options.begin || Algebra_8.Vector.Zero.clone();
             this.end = options.end || Algebra_8.Vector.Zero.clone();
@@ -4053,7 +4053,7 @@ define("Util/Log", ["require", "exports"], function (require, exports) {
      *
      * [[include:Logger.md]]
      */
-    var Logger = (function () {
+    var Logger = /** @class */ (function () {
         function Logger() {
             this._appenders = [];
             /**
@@ -4161,14 +4161,14 @@ define("Util/Log", ["require", "exports"], function (require, exports) {
             }
             this._log(LogLevel.Fatal, args);
         };
+        Logger._instance = null;
         return Logger;
     }());
-    Logger._instance = null;
     exports.Logger = Logger;
     /**
      * Console appender for browsers (i.e. `console.log`)
      */
-    var ConsoleAppender = (function () {
+    var ConsoleAppender = /** @class */ (function () {
         function ConsoleAppender() {
         }
         /**
@@ -4221,7 +4221,7 @@ define("Util/Log", ["require", "exports"], function (require, exports) {
     /**
      * On-screen (canvas) appender
      */
-    var ScreenAppender = (function () {
+    var ScreenAppender = /** @class */ (function () {
         /**
          * @param width   Width of the screen appender in pixels
          * @param height  Height of the screen appender in pixels
@@ -4304,14 +4304,14 @@ define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], funct
 define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil", "Util/Decorators"], function (require, exports, Physics_5, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_9, Color_6, DrawUtil, Decorators_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var Body = (function () {
+    var Body = /** @class */ (function () {
         /**
          * Constructs a new physics body associated with an actor
          */
         function Body(actor) {
             this.actor = actor;
             /**
-             * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
+             * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
              */
             this.collisionArea = null;
             /**
@@ -4509,6 +4509,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          * Returns a boolean indicating true if this body COLLIDED with
          * the body of the other Actor in the last frame, and they are no longer touching
          * in this frame
+         * @obsolete will be removed in v0.15, use the collisionend event instead
          */
         Body.prototype.wasTouching = function (other, game) {
             var pair = new Pair_1.Pair(this, other.body);
@@ -4519,11 +4520,11 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
             var currentlyTouching = this.touching(other);
             return wasTouchingLastFrame && !currentlyTouching;
         };
+        __decorate([
+            Decorators_1.obsolete({ message: 'will be removed in v0.15, use the collisionend event instead' })
+        ], Body.prototype, "wasTouching", null);
         return Body;
     }());
-    __decorate([
-        Decorators_1.obsolete({ message: 'will be removed in v0.15, use the collisionend event instead' })
-    ], Body.prototype, "wasTouching", null);
     exports.Body = Body;
 });
 define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Actor", "Util/DrawUtil"], function (require, exports, Physics_6, Color_7, Actor_2, DrawUtil) {
@@ -4532,7 +4533,7 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Act
     /**
      * Models a potential collision between 2 bodies
      */
-    var Pair = (function () {
+    var Pair = /** @class */ (function () {
         function Pair(bodyA, bodyB) {
             this.bodyA = bodyA;
             this.bodyB = bodyB;
@@ -4608,7 +4609,7 @@ define("Debug", ["require", "exports"], function (require, exports) {
      * best to do so on the `postupdate` event for [[Engine]], after all values have been
      * updated during a frame.
      */
-    var Debug = (function () {
+    var Debug = /** @class */ (function () {
         function Debug() {
             /**
              * Performance statistics
@@ -4633,7 +4634,7 @@ define("Debug", ["require", "exports"], function (require, exports) {
      * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
      * creating instances of this every frame.
      */
-    var FrameStats = (function () {
+    var FrameStats = /** @class */ (function () {
         function FrameStats() {
             this._id = 0;
             this._delta = 0;
@@ -4773,7 +4774,7 @@ define("Debug", ["require", "exports"], function (require, exports) {
         return FrameStats;
     }());
     exports.FrameStats = FrameStats;
-    var PhysicsStats = (function () {
+    var PhysicsStats = /** @class */ (function () {
         function PhysicsStats() {
             this._pairs = 0;
             this._collisions = 0;
@@ -4902,7 +4903,7 @@ define("EventDispatcher", ["require", "exports", "Events"], function (require, e
      *
      * [[include:Events.md]]
      */
-    var EventDispatcher = (function () {
+    var EventDispatcher = /** @class */ (function () {
         /**
          * @param target  The object that will be the recipient of events from this event dispatcher
          */
@@ -5030,7 +5031,7 @@ define("Actions/ActionContext", ["require", "exports", "Actions/Action", "Promis
      *
      * [[include:Actions.md]]
      */
-    var ActionContext = (function () {
+    var ActionContext = /** @class */ (function () {
         function ActionContext() {
             this._actors = [];
             this._queues = [];
@@ -5337,7 +5338,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
      *
      * [[include:Groups.md]]
      */
-    var Group = (function (_super) {
+    var Group = /** @class */ (function (_super) {
         __extends(Group, _super);
         function Group(name, scene) {
             var _this = _super.call(this) || this;
@@ -5450,7 +5451,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Grayscale" effect to a sprite, removing color information.
      */
-    var Grayscale = (function () {
+    var Grayscale = /** @class */ (function () {
         function Grayscale() {
         }
         Grayscale.prototype.updatePixel = function (x, y, imageData) {
@@ -5467,7 +5468,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Invert" effect to a sprite, inverting the pixel colors.
      */
-    var Invert = (function () {
+    var Invert = /** @class */ (function () {
         function Invert() {
         }
         Invert.prototype.updatePixel = function (x, y, imageData) {
@@ -5483,7 +5484,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Opacity" effect to a sprite, setting the alpha of all pixels to a given value.
      */
-    var Opacity = (function () {
+    var Opacity = /** @class */ (function () {
         /**
          * @param opacity  The new opacity of the sprite from 0-1.0
          */
@@ -5504,7 +5505,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
      * Applies the "Colorize" effect to a sprite, changing the color channels of all the pixels to an
      * average of the original color and the provided color
      */
-    var Colorize = (function () {
+    var Colorize = /** @class */ (function () {
         /**
          * @param color  The color to apply to the sprite
          */
@@ -5526,7 +5527,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Lighten" effect to a sprite, changes the lightness of the color according to HSL
      */
-    var Lighten = (function () {
+    var Lighten = /** @class */ (function () {
         /**
          * @param factor  The factor of the effect between 0-1
          */
@@ -5549,7 +5550,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Darken" effect to a sprite, changes the darkness of the color according to HSL
      */
-    var Darken = (function () {
+    var Darken = /** @class */ (function () {
         /**
          * @param factor  The factor of the effect between 0-1
          */
@@ -5572,7 +5573,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Saturate" effect to a sprite, saturates the color according to HSL
      */
-    var Saturate = (function () {
+    var Saturate = /** @class */ (function () {
         /**
          * @param factor  The factor of the effect between 0-1
          */
@@ -5595,7 +5596,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
     /**
      * Applies the "Desaturate" effect to a sprite, desaturates the color according to HSL
      */
-    var Desaturate = (function () {
+    var Desaturate = /** @class */ (function () {
         /**
          * @param factor  The factor of the effect between 0-1
          */
@@ -5619,7 +5620,7 @@ define("Drawing/SpriteEffects", ["require", "exports", "Drawing/Color"], functio
      * Applies the "Fill" effect to a sprite, changing the color channels of all non-transparent pixels to match
      * a given color
      */
-    var Fill = (function () {
+    var Fill = /** @class */ (function () {
         /**
          * @param color  The color to apply to the sprite
          */
@@ -5656,7 +5657,7 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
      *
      * [[include:Resources.md]]
      */
-    var Resource = (function (_super) {
+    var Resource = /** @class */ (function (_super) {
         __extends(Resource, _super);
         /**
          * @param path          Path to the remote resource
@@ -5683,8 +5684,8 @@ define("Resources/Resource", ["require", "exports", "Class", "Promises", "Util/L
         Resource.prototype.isLoaded = function () {
             return this.data !== null;
         };
-        Resource.prototype.wireEngine = function (engine) {
-            this._engine = engine;
+        Resource.prototype.wireEngine = function (_engine) {
+            // override me
         };
         Resource.prototype._cacheBust = function (uri) {
             var query = /\?\w*=\w*/;
@@ -5772,7 +5773,7 @@ define("Resources/Texture", ["require", "exports", "Resources/Resource", "Promis
      *
      * [[include:Textures.md]]
      */
-    var Texture = (function (_super) {
+    var Texture = /** @class */ (function (_super) {
         __extends(Texture, _super);
         /**
          * @param path       Path to the image resource
@@ -5837,7 +5838,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
      *
      * [[include:Sprites.md]]
      */
-    var Sprite = (function () {
+    var Sprite = /** @class */ (function () {
         /**
          * @param image   The backing image texture to build the Sprite
          * @param sx      The x position of the sprite
@@ -6109,7 +6110,7 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
      *
      * [[include:Animations.md]]
      */
-    var Animation = (function () {
+    var Animation = /** @class */ (function () {
         /**
          * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
          *
@@ -6346,7 +6347,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
      *
      * [[include:SpriteSheets.md]]
      */
-    var SpriteSheet = (function () {
+    var SpriteSheet = /** @class */ (function () {
         /**
          * @param image     The backing image texture to build the SpriteSheet
          * @param columns   The number of columns in the image texture
@@ -6359,7 +6360,6 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
             this.columns = columns;
             this.rows = rows;
             this.sprites = [];
-            this._internalImage = image.image;
             this.sprites = new Array(columns * rows);
             // TODO: Inspect actual image dimensions with preloading
             /*if(spWidth * columns > this.internalImage.naturalWidth){
@@ -6444,7 +6444,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
      *
      * [[include:SpriteFonts.md]]
      */
-    var SpriteFont = (function (_super) {
+    var SpriteFont = /** @class */ (function (_super) {
         __extends(SpriteFont, _super);
         /**
          * @param image           The backing image texture to build the SpriteFont
@@ -6711,7 +6711,7 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
      *
      * [[include:Labels.md]]
      */
-    var Label = (function (_super) {
+    var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
         /**
          * @param text        The text of the label
@@ -6758,7 +6758,6 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             _this._textShadowOn = false;
             _this._shadowOffsetX = 0;
             _this._shadowOffsetY = 0;
-            _this._shadowColor = Color_11.Color.Black.clone();
             _this.text = text || '';
             _this.color = Color_11.Color.Black.clone();
             _this.spriteFont = spriteFont;
@@ -6866,29 +6865,9 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor"], function (requ
             this._textShadowOn = false;
             this._shadowOffsetX = 0;
             this._shadowOffsetY = 0;
-            this._shadowColor = Color_11.Color.Black.clone();
         };
         Label.prototype.update = function (engine, delta) {
             _super.prototype.update.call(this, engine, delta);
-            /*
-           if (this.spriteFont && (this._color !== this.color || this.previousOpacity !== this.opacity)) {
-              for (var character in this._textSprites) {
-                 this._textSprites[character].clearEffects();
-                 this._textSprites[character].fill(this.color.clone());
-                 this._textSprites[character].opacity(this.opacity);
-                 
-              }
-              this._color = this.color;
-              this.previousOpacity = this.opacity;
-           }
-      
-           if (this.spriteFont && this._textShadowOn && this._shadowColorDirty && this._shadowColor) {
-              for (var characterShadow in this._shadowSprites) {
-                 this._shadowSprites[characterShadow].clearEffects();
-                 this._shadowSprites[characterShadow].addEffect(new Effects.Fill(this._shadowColor.clone()));
-              }
-              this._shadowColorDirty = false;
-           }*/
         };
         Label.prototype.draw = function (ctx, delta) {
             ctx.save();
@@ -6969,7 +6948,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
     /**
      * An audio implementation for HTML5 audio.
      */
-    var AudioTag = (function () {
+    var AudioTag = /** @class */ (function () {
         function AudioTag() {
             this.responseType = 'blob';
         }
@@ -6992,7 +6971,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
     /**
      * An audio implementation for Web Audio API.
      */
-    var WebAudio = (function () {
+    var WebAudio = /** @class */ (function () {
         function WebAudio() {
             this._logger = Log_6.Logger.getInstance();
             this.responseType = 'arraybuffer';
@@ -7061,9 +7040,9 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
         WebAudio.isUnlocked = function () {
             return this._unlocked;
         };
+        WebAudio._unlocked = false;
         return WebAudio;
     }());
-    WebAudio._unlocked = false;
     exports.WebAudio = WebAudio;
     /**
      * Factory method that gets the audio implementation to use
@@ -7085,7 +7064,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      *
      * [[include:Sounds.md]]
      */
-    var Sound = (function () {
+    var Sound = /** @class */ (function () {
         /**
          * @param paths A list of audio sources (clip.wav, clip.mp3, clip.ogg) for this audio clip. This is done for browser compatibility.
          */
@@ -7348,12 +7327,11 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      * Internal class representing a HTML5 audio instance
      */
     /* istanbul ignore next */
-    var AudioTagInstance = (function () {
+    var AudioTagInstance = /** @class */ (function () {
         function AudioTagInstance(src) {
             this._isPlaying = false;
             this._isPaused = false;
             this._loop = false;
-            this._volume = 1.0;
             this._audioElement = new Audio(src);
         }
         AudioTagInstance.prototype.isPlaying = function () {
@@ -7372,7 +7350,6 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             this._wireUpOnEnded();
         };
         AudioTagInstance.prototype.setVolume = function (value) {
-            this._volume = value;
             this._audioElement.volume = Util.clamp(value, 0, 1.0);
         };
         AudioTagInstance.prototype.play = function () {
@@ -7436,14 +7413,13 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
      */
     /* istanbul ignore next */
-    var WebAudioInstance = (function () {
+    var WebAudioInstance = /** @class */ (function () {
         function WebAudioInstance(_buffer) {
             this._buffer = _buffer;
             this._volumeNode = audioContext.createGain();
             this._isPlaying = false;
             this._isPaused = false;
             this._loop = false;
-            this._volume = 1.0;
             /**
              * Current playback offset (in seconds)
              */
@@ -7453,7 +7429,6 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             return this._isPlaying;
         };
         WebAudioInstance.prototype.setVolume = function (value) {
-            this._volume = value;
             if (this._volumeNode.gain.setTargetAtTime) {
                 this._volumeNode.gain.setTargetAtTime(Util.clamp(value, 0, 1.0), audioContext.currentTime, 0);
             }
@@ -7594,7 +7569,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
      * });
      * ```
      */
-    var Loader = (function (_super) {
+    var Loader = /** @class */ (function (_super) {
         __extends(Loader, _super);
         /**
          * @param loadables  Optionally provide the list of resources you want to load at constructor time
@@ -7830,7 +7805,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
      * loader.addResource(...);
      * ```
      */
-    var PauseAfterLoader = (function (_super) {
+    var PauseAfterLoader = /** @class */ (function (_super) {
         __extends(PauseAfterLoader, _super);
         function PauseAfterLoader(triggerElementId, loadables) {
             var _this = _super.call(this, loadables) || this;
@@ -7855,7 +7830,6 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
             this._waitPromise = new Promises_6.Promise();
             // wait until user indicates to proceed before finishing load
             _super.prototype.load.call(this).then(function (value) {
-                _this._loaded = true;
                 _this._loadedValue = value;
                 // show element
                 _this._playTrigger.style.display = 'block';
@@ -7878,7 +7852,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
     /**
      * Propogates pointer events to the actor
      */
-    var CapturePointer = (function () {
+    var CapturePointer = /** @class */ (function () {
         function CapturePointer() {
         }
         CapturePointer.prototype.update = function (actor, engine) {
@@ -7897,7 +7871,7 @@ define("Traits/CapturePointer", ["require", "exports"], function (require, expor
 define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], function (require, exports, Physics_7, Actor_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var EulerMovement = (function () {
+    var EulerMovement = /** @class */ (function () {
         function EulerMovement() {
         }
         EulerMovement.prototype.update = function (actor, _engine, delta) {
@@ -7923,7 +7897,7 @@ define("Traits/EulerMovement", ["require", "exports", "Physics", "Actor"], funct
 define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_13, Color_13) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var CullingBox = (function () {
+    var CullingBox = /** @class */ (function () {
         function CullingBox() {
             this._topLeft = new Algebra_13.Vector(0, 0);
             this._topRight = new Algebra_13.Vector(0, 0);
@@ -8030,7 +8004,7 @@ define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], fu
 define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Algebra", "Events"], function (require, exports, CullingBox_1, Algebra_14, Events_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var OffscreenCulling = (function () {
+    var OffscreenCulling = /** @class */ (function () {
         function OffscreenCulling() {
             this.cullingBox = new CullingBox_1.CullingBox();
         }
@@ -8078,7 +8052,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
 define("Traits/TileMapCollisionDetection", ["require", "exports", "Actor", "Collision/Side", "Events"], function (require, exports, Actor_6, Side_2, Events_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var TileMapCollisionDetection = (function () {
+    var TileMapCollisionDetection = /** @class */ (function () {
         function TileMapCollisionDetection() {
         }
         TileMapCollisionDetection.prototype.update = function (actor, engine) {
@@ -8139,7 +8113,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
     /**
      * Particle is used in a [[ParticleEmitter]]
      */
-    var Particle = (function () {
+    var Particle = /** @class */ (function () {
         function Particle(emitter, life, opacity, beginColor, endColor, position, velocity, acceleration, startSize, endSize) {
             this.position = new Algebra_15.Vector(0, 0);
             this.velocity = new Algebra_15.Vector(0, 0);
@@ -8240,7 +8214,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
      *
      * [[include:Particles.md]]
      */
-    var ParticleEmitter = (function (_super) {
+    var ParticleEmitter = /** @class */ (function (_super) {
         __extends(ParticleEmitter, _super);
         /**
          * @param x       The x position of the emitter
@@ -8457,7 +8431,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
      *
      * [[include:TileMaps.md]]
      */
-    var TileMap = (function (_super) {
+    var TileMap = /** @class */ (function (_super) {
         __extends(TileMap, _super);
         /**
          * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
@@ -8659,7 +8633,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
     /**
      * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
      */
-    var TileSprite = (function () {
+    var TileSprite = /** @class */ (function () {
         /**
          * @param spriteSheetKey  The key of the spritesheet to use
          * @param spriteId        The index of the sprite in the [[SpriteSheet]]
@@ -8681,7 +8655,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
      * of the sprites in the array so the last one will be drawn on top. You can
      * use transparency to create layers this way.
      */
-    var Cell = (function () {
+    var Cell = /** @class */ (function () {
         /**
          * @param x       Gets or sets x coordinate of the cell in world coordinates
          * @param y       Gets or sets y coordinate of the cell in world coordinates
@@ -8747,7 +8721,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
      * The Excalibur timer hooks into the internal timer and fires callbacks,
      * after a certain interval, optionally repeating.
      */
-    var Timer = (function () {
+    var Timer = /** @class */ (function () {
         /**
          * @param fcn        The callback to be fired after the interval is complete.
          * @param interval   Interval length
@@ -8821,9 +8795,9 @@ define("Timer", ["require", "exports"], function (require, exports) {
                 this.scene.cancelTimer(this);
             }
         };
+        Timer.id = 0;
         return Timer;
     }());
-    Timer.id = 0;
     exports.Timer = Timer;
 });
 define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor", "Algebra", "Events", "Util/Util"], function (require, exports, Color_16, Action_1, EventDispatcher_1, Actor_8, Algebra_17, Events_5, Util) {
@@ -8845,7 +8819,7 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
      *
      * [[include:Triggers.md]]
      */
-    var Trigger = (function (_super) {
+    var Trigger = /** @class */ (function (_super) {
         __extends(Trigger, _super);
         /**
          *
@@ -8907,7 +8881,6 @@ define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "Eve
         });
         Trigger.prototype._initialize = function (engine) {
             _super.prototype._initialize.call(this, engine);
-            this._engine = engine;
         };
         Trigger.prototype._dispatchAction = function () {
             this.action.call(this);
@@ -8955,7 +8928,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
     /**
      * Dynamic Tree Node used for tracking bounds within the tree
      */
-    var TreeNode = (function () {
+    var TreeNode = /** @class */ (function () {
         function TreeNode(parent) {
             this.parent = parent;
             this.parent = parent || null;
@@ -8978,7 +8951,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
      * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
      * Every non-leaf node is a bounding box that contains child bounding boxes.
      */
-    var DynamicTree = (function () {
+    var DynamicTree = /** @class */ (function () {
         function DynamicTree(worldBounds) {
             if (worldBounds === void 0) { worldBounds = new BoundingBox_5.BoundingBox(-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE); }
             this.worldBounds = worldBounds;
@@ -9399,7 +9372,7 @@ define("Collision/ICollisionResolver", ["require", "exports"], function (require
 define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log", "Events"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_18, Actor_9, Log_10, Events_6) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var DynamicTreeCollisionBroadphase = (function () {
+    var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         function DynamicTreeCollisionBroadphase() {
             this._dynamicCollisionTree = new DynamicTree_1.DynamicTree();
             this._collisionHash = {};
@@ -9487,7 +9460,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                     }
                     ;
                     // Maximum travel distance next frame
-                    var updateDistance = (actor.vel.magnitude() * seconds) +
+                    var updateDistance = (actor.vel.magnitude() * seconds) + // velocity term 
                         (actor.acc.magnitude() * .5 * seconds * seconds); // acc term
                     // Find the minimum dimension
                     var minDimension = Math.min(actor.body.getBounds().getHeight(), actor.body.getBounds().getWidth());
@@ -9634,7 +9607,7 @@ define("Collision/IPhysics", ["require", "exports"], function (require, exports)
 define("Collision/NaiveCollisionBroadphase", ["require", "exports", "Physics", "Collision/CollisionContact", "Collision/Pair", "Actor", "Events"], function (require, exports, Physics_10, CollisionContact_2, Pair_3, Actor_10, Events_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var NaiveCollisionBroadphase = (function () {
+    var NaiveCollisionBroadphase = /** @class */ (function () {
         function NaiveCollisionBroadphase() {
             this._lastFramePairs = [];
             this._lastFramePairsHash = {};
@@ -9755,7 +9728,7 @@ define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, 
      *
      * @warning Use sparingly as Polygons are performance intensive
      */
-    var Polygon = (function () {
+    var Polygon = /** @class */ (function () {
         /**
          * @param points  The vectors to use to build the polygon in order
          */
@@ -9888,7 +9861,7 @@ define("Math/Random", ["require", "exports"], function (require, exports) {
      *
      * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
      */
-    var Random = (function () {
+    var Random = /** @class */ (function () {
         /**
          * If no seed is specified, the Date.now() is used
          */
@@ -10122,7 +10095,7 @@ define("Math/PerlinNoise", ["require", "exports", "Math/Random", "Drawing/Color"
      * Generates perlin noise based on the 2002 Siggraph paper http://mrl.nyu.edu/~perlin/noise/
      * Also https://flafla2.github.io/2014/08/09/perlinnoise.html
      */
-    var PerlinGenerator = (function () {
+    var PerlinGenerator = /** @class */ (function () {
         function PerlinGenerator(options) {
             this._perm = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
                 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26,
@@ -10269,7 +10242,7 @@ define("Math/PerlinNoise", ["require", "exports", "Math/Random", "Drawing/Color"
     /**
      * A helper to draw 2D perlin maps given a perlin generator and a function
      */
-    var PerlinDrawer2D = (function () {
+    var PerlinDrawer2D = /** @class */ (function () {
         /**
          * @param generator - An existing perlin generator
          * @param colorFcn - A color function that takes a value between [0, 255] derived from the perlin generator, and returns a color
@@ -10348,7 +10321,7 @@ define("PostProcessing/ColorBlindCorrector", ["require", "exports", "Util/Log"],
      *
      * [[include:ColorBlind.md]]
      */
-    var ColorBlindCorrector = (function () {
+    var ColorBlindCorrector = /** @class */ (function () {
         function ColorBlindCorrector(engine, simulate, colorMode) {
             if (simulate === void 0) { simulate = false; }
             if (colorMode === void 0) { colorMode = ColorBlindness.Protanope; }
@@ -10570,9 +10543,9 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
      *
      * [[include:Gamepads.md]]
      */
-    var Gamepads = (function (_super) {
+    var Gamepads = /** @class */ (function (_super) {
         __extends(Gamepads, _super);
-        function Gamepads(engine) {
+        function Gamepads() {
             var _this = _super.call(this) || this;
             /**
              * Whether or not to poll for Gamepad input (default: `false`)
@@ -10588,7 +10561,6 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
             _this._initSuccess = false;
             _this._navigator = navigator;
             _this._minimumConfiguration = null;
-            _this._engine = engine;
             return _this;
         }
         Gamepads.prototype.init = function () {
@@ -10781,18 +10753,18 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
             }
             return clonedPad;
         };
+        /**
+         * The minimum value an axis has to move before considering it a change
+         */
+        Gamepads.MinAxisMoveThreshold = 0.05;
         return Gamepads;
     }(Class_5.Class));
-    /**
-     * The minimum value an axis has to move before considering it a change
-     */
-    Gamepads.MinAxisMoveThreshold = 0.05;
     exports.Gamepads = Gamepads;
     /**
      * Gamepad holds state information for a connected controller. See [[Gamepads]]
      * for more information on handling controller input.
      */
-    var Gamepad = (function (_super) {
+    var Gamepad = /** @class */ (function (_super) {
         __extends(Gamepad, _super);
         function Gamepad() {
             var _this = _super.call(this) || this;
@@ -10996,7 +10968,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
      *
      * For mouse-based events, you can inspect [[PointerEvent.button]] to see what button was pressed.
      */
-    var PointerEvent = (function (_super) {
+    var PointerEvent = /** @class */ (function (_super) {
         __extends(PointerEvent, _super);
         /**
          * @param pageX        The `x` coordinate of the event (in document coordinates)
@@ -11040,7 +11012,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
      * Represents a mouse wheel event. See [[Pointers]] for more information on
      * handling point input.
      */
-    var WheelEvent = (function (_super) {
+    var WheelEvent = /** @class */ (function (_super) {
         __extends(WheelEvent, _super);
         /**
          * @param x            The `x` coordinate of the event (in world coordinates)
@@ -11082,7 +11054,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
      *
      * [[include:Pointers.md]]
      */
-    var Pointers = (function (_super) {
+    var Pointers = /** @class */ (function (_super) {
         __extends(Pointers, _super);
         function Pointers(engine) {
             var _this = _super.call(this) || this;
@@ -11360,7 +11332,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "UIActor", "A
     /**
      * Captures and dispatches PointerEvents
      */
-    var Pointer = (function (_super) {
+    var Pointer = /** @class */ (function (_super) {
         __extends(Pointer, _super);
         function Pointer() {
             var _this = _super.call(this) || this;
@@ -11447,7 +11419,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
     /**
      * Event thrown on a game object for a key event
      */
-    var KeyEvent = (function (_super) {
+    var KeyEvent = /** @class */ (function (_super) {
         __extends(KeyEvent, _super);
         /**
          * @param key  The key responsible for throwing the event
@@ -11465,14 +11437,13 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
      *
      * [[include:Keyboard.md]]
      */
-    var Keyboard = (function (_super) {
+    var Keyboard = /** @class */ (function (_super) {
         __extends(Keyboard, _super);
-        function Keyboard(engine) {
+        function Keyboard() {
             var _this = _super.call(this) || this;
             _this._keys = [];
             _this._keysUp = [];
             _this._keysDown = [];
-            _this._engine = engine;
             return _this;
         }
         Keyboard.prototype.on = function (eventName, handler) {
@@ -11553,7 +11524,7 @@ define("Input/Keyboard", ["require", "exports", "Class", "Events"], function (re
          */
         Keyboard.prototype._normalizeKeyCode = function (code) {
             switch (code) {
-                case 59:
+                case 59:// : ; in Firefox, Opera
                     return Keys.Semicolon;
                 default:
                     return code;
@@ -11609,7 +11580,7 @@ define("Util/Detector", ["require", "exports", "Util/Log"], function (require, e
     /**
      * Excalibur internal feature detection helper class
      */
-    var Detector = (function () {
+    var Detector = /** @class */ (function () {
         function Detector() {
             this._features = null;
             this.failedTests = [];
@@ -11776,7 +11747,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     /**
      * A sorted list implementation. NOTE: this implementation is not self-balancing
      */
-    var SortedList = (function () {
+    var SortedList = /** @class */ (function () {
         function SortedList(getComparable) {
             this._getComparable = getComparable;
         }
@@ -11968,7 +11939,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
     /**
      * A tree node part of [[SortedList]]
      */
-    var BinaryTreeNode = (function () {
+    var BinaryTreeNode = /** @class */ (function () {
         function BinaryTreeNode(key, data, left, right) {
             this._key = key;
             this._data = data;
@@ -12007,7 +11978,7 @@ define("Util/SortedList", ["require", "exports"], function (require, exports) {
      *
      * @internal
      */
-    var MockedElement = (function () {
+    var MockedElement = /** @class */ (function () {
         function MockedElement(key) {
             this._key = 0;
             this._key = key;
@@ -12031,7 +12002,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "D
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.14.0-alpha.1993+65a4a91';
+    exports.EX_VERSION = '0.14.0-alpha.2001+0101600';
     // This file is used as the bundle entrypoint and exports everything
     // that will be exposed as the `ex` global variable.
     __export(Actor_11);
@@ -12122,7 +12093,7 @@ define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor
      *
      * [[include:Engine.md]]
      */
-    var Engine = (function (_super) {
+    var Engine = /** @class */ (function (_super) {
         __extends(Engine, _super);
         /**
          * Creates a new game using the given [[IEngineOptions]]. By default, if no options are provided,
@@ -12653,9 +12624,9 @@ O|===|* >________________>\n\
             }
             // initialize inputs
             this.input = {
-                keyboard: new Input.Keyboard(this),
+                keyboard: new Input.Keyboard(),
                 pointers: new Input.Pointers(this),
-                gamepads: new Input.Gamepads(this)
+                gamepads: new Input.Gamepads()
             };
             this.input.keyboard.init();
             this.input.pointers.init(options && options.pointerScope === Input.PointerScope.Document ? document : this.canvas);
@@ -12989,27 +12960,27 @@ O|===|* >________________>\n\
             });
             return complete;
         };
+        /**
+         * Default [[IEngineOptions]]
+         */
+        Engine._DefaultEngineOptions = {
+            width: 0,
+            height: 0,
+            canvasElementId: '',
+            pointerScope: Input.PointerScope.Document,
+            suppressConsoleBootMessage: null,
+            suppressMinimumBrowserFeatureDetection: null,
+            suppressHiDPIScaling: null,
+            scrollPreventionMode: ScrollPreventionMode.Canvas,
+            backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
+        };
         return Engine;
     }(Class_9.Class));
-    /**
-     * Default [[IEngineOptions]]
-     */
-    Engine._DefaultEngineOptions = {
-        width: 0,
-        height: 0,
-        canvasElementId: '',
-        pointerScope: Input.PointerScope.Document,
-        suppressConsoleBootMessage: null,
-        suppressMinimumBrowserFeatureDetection: null,
-        suppressHiDPIScaling: null,
-        scrollPreventionMode: ScrollPreventionMode.Canvas,
-        backgroundColor: Color_19.Color.fromHex('#2185d0') // Excalibur blue
-    };
     exports.Engine = Engine;
     /**
      * @internal
      */
-    var AnimationNode = (function () {
+    var AnimationNode = /** @class */ (function () {
         function AnimationNode(animation, x, y) {
             this.animation = animation;
             this.x = x;
@@ -13025,7 +12996,7 @@ define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], fu
      * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
      * not participate in collisions. Drawn on top of all other actors.
      */
-    var UIActor = (function (_super) {
+    var UIActor = /** @class */ (function (_super) {
         __extends(UIActor, _super);
         /**
          * @param x       The starting x coordinate of the actor
@@ -13083,7 +13054,7 @@ define("Scene", ["require", "exports", "UIActor", "Physics", "Events", "Util/Log
      *
      * [[include:Scenes.md]]
      */
-    var Scene = (function (_super) {
+    var Scene = /** @class */ (function (_super) {
         __extends(Scene, _super);
         function Scene(engine) {
             var _this = _super.call(this) || this;
@@ -13535,7 +13506,7 @@ define("Events", ["require", "exports"], function (require, exports) {
      * some events are unique to a type, others are not.
      *
      */
-    var GameEvent = (function () {
+    var GameEvent = /** @class */ (function () {
         function GameEvent() {
         }
         return GameEvent;
@@ -13544,7 +13515,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
      */
-    var KillEvent = (function (_super) {
+    var KillEvent = /** @class */ (function (_super) {
         __extends(KillEvent, _super);
         function KillEvent(target) {
             var _this = _super.call(this) || this;
@@ -13557,7 +13528,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'start' event is emitted on engine when has started and is ready for interaction.
      */
-    var GameStartEvent = (function (_super) {
+    var GameStartEvent = /** @class */ (function (_super) {
         __extends(GameStartEvent, _super);
         function GameStartEvent(target) {
             var _this = _super.call(this) || this;
@@ -13570,7 +13541,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
      */
-    var GameStopEvent = (function (_super) {
+    var GameStopEvent = /** @class */ (function (_super) {
         __extends(GameStopEvent, _super);
         function GameStopEvent(target) {
             var _this = _super.call(this) || this;
@@ -13585,7 +13556,7 @@ define("Events", ["require", "exports"], function (require, exports) {
      * transform so that all drawing takes place with the actor as the origin.
      *
      */
-    var PreDrawEvent = (function (_super) {
+    var PreDrawEvent = /** @class */ (function (_super) {
         __extends(PreDrawEvent, _super);
         function PreDrawEvent(ctx, delta, target) {
             var _this = _super.call(this) || this;
@@ -13602,7 +13573,7 @@ define("Events", ["require", "exports"], function (require, exports) {
      * transform so that all drawing takes place with the actor as the origin.
      *
      */
-    var PostDrawEvent = (function (_super) {
+    var PostDrawEvent = /** @class */ (function (_super) {
         __extends(PostDrawEvent, _super);
         function PostDrawEvent(ctx, delta, target) {
             var _this = _super.call(this) || this;
@@ -13617,7 +13588,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
      */
-    var PreDebugDrawEvent = (function (_super) {
+    var PreDebugDrawEvent = /** @class */ (function (_super) {
         __extends(PreDebugDrawEvent, _super);
         function PreDebugDrawEvent(ctx, target) {
             var _this = _super.call(this) || this;
@@ -13631,7 +13602,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
      */
-    var PostDebugDrawEvent = (function (_super) {
+    var PostDebugDrawEvent = /** @class */ (function (_super) {
         __extends(PostDebugDrawEvent, _super);
         function PostDebugDrawEvent(ctx, target) {
             var _this = _super.call(this) || this;
@@ -13645,7 +13616,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'preupdate' event is emitted on actors, scenes, and engine before the update starts.
      */
-    var PreUpdateEvent = (function (_super) {
+    var PreUpdateEvent = /** @class */ (function (_super) {
         __extends(PreUpdateEvent, _super);
         function PreUpdateEvent(engine, delta, target) {
             var _this = _super.call(this) || this;
@@ -13660,7 +13631,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends.
      */
-    var PostUpdateEvent = (function (_super) {
+    var PostUpdateEvent = /** @class */ (function (_super) {
         __extends(PostUpdateEvent, _super);
         function PostUpdateEvent(engine, delta, target) {
             var _this = _super.call(this) || this;
@@ -13675,7 +13646,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'preframe' event is emitted on the engine, before the frame begins.
      */
-    var PreFrameEvent = (function (_super) {
+    var PreFrameEvent = /** @class */ (function (_super) {
         __extends(PreFrameEvent, _super);
         function PreFrameEvent(engine, prevStats) {
             var _this = _super.call(this) || this;
@@ -13690,7 +13661,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * The 'postframe' event is emitted on the engine, after a frame ends.
      */
-    var PostFrameEvent = (function (_super) {
+    var PostFrameEvent = /** @class */ (function (_super) {
         __extends(PostFrameEvent, _super);
         function PostFrameEvent(engine, stats) {
             var _this = _super.call(this) || this;
@@ -13705,7 +13676,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event received when a gamepad is connected to Excalibur. [[Gamepads]] receives this event.
      */
-    var GamepadConnectEvent = (function (_super) {
+    var GamepadConnectEvent = /** @class */ (function (_super) {
         __extends(GamepadConnectEvent, _super);
         function GamepadConnectEvent(index, gamepad) {
             var _this = _super.call(this) || this;
@@ -13720,7 +13691,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event received when a gamepad is disconnected from Excalibur. [[Gamepads]] receives this event.
      */
-    var GamepadDisconnectEvent = (function (_super) {
+    var GamepadDisconnectEvent = /** @class */ (function (_super) {
         __extends(GamepadDisconnectEvent, _super);
         function GamepadDisconnectEvent(index, gamepad) {
             var _this = _super.call(this) || this;
@@ -13735,7 +13706,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
      */
-    var GamepadButtonEvent = (function (_super) {
+    var GamepadButtonEvent = /** @class */ (function (_super) {
         __extends(GamepadButtonEvent, _super);
         /**
          * @param button  The Gamepad button
@@ -13754,7 +13725,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
      */
-    var GamepadAxisEvent = (function (_super) {
+    var GamepadAxisEvent = /** @class */ (function (_super) {
         __extends(GamepadAxisEvent, _super);
         /**
          * @param axis  The Gamepad axis
@@ -13774,7 +13745,7 @@ define("Events", ["require", "exports"], function (require, exports) {
      * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
      * [[EventDispatcher|event dispatchers]].
      */
-    var SubscribeEvent = (function (_super) {
+    var SubscribeEvent = /** @class */ (function (_super) {
         __extends(SubscribeEvent, _super);
         function SubscribeEvent(topic, handler) {
             var _this = _super.call(this) || this;
@@ -13789,7 +13760,7 @@ define("Events", ["require", "exports"], function (require, exports) {
      * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
      * [[EventDispatcher|event dispatchers]].
      */
-    var UnsubscribeEvent = (function (_super) {
+    var UnsubscribeEvent = /** @class */ (function (_super) {
         __extends(UnsubscribeEvent, _super);
         function UnsubscribeEvent(topic, handler) {
             var _this = _super.call(this) || this;
@@ -13803,7 +13774,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event received by the [[Engine]] when the browser window is visible on a screen.
      */
-    var VisibleEvent = (function (_super) {
+    var VisibleEvent = /** @class */ (function (_super) {
         __extends(VisibleEvent, _super);
         function VisibleEvent(target) {
             var _this = _super.call(this) || this;
@@ -13816,7 +13787,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event received by the [[Engine]] when the browser window is hidden from all screens.
      */
-    var HiddenEvent = (function (_super) {
+    var HiddenEvent = /** @class */ (function (_super) {
         __extends(HiddenEvent, _super);
         function HiddenEvent(target) {
             var _this = _super.call(this) || this;
@@ -13829,7 +13800,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
      */
-    var PreCollisionEvent = (function (_super) {
+    var PreCollisionEvent = /** @class */ (function (_super) {
         __extends(PreCollisionEvent, _super);
         /**
          * @param actor         The actor the event was thrown on
@@ -13852,7 +13823,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
      */
-    var PostCollisionEvent = (function (_super) {
+    var PostCollisionEvent = /** @class */ (function (_super) {
         __extends(PostCollisionEvent, _super);
         /**
          * @param actor         The actor the event was thrown on
@@ -13875,7 +13846,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
      */
-    var CollisionStartEvent = (function (_super) {
+    var CollisionStartEvent = /** @class */ (function (_super) {
         __extends(CollisionStartEvent, _super);
         /**
          *
@@ -13894,7 +13865,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown when the [[Actor|actor]] is no longer colliding with another
      */
-    var CollisionEndEvent = (function (_super) {
+    var CollisionEndEvent = /** @class */ (function (_super) {
         __extends(CollisionEndEvent, _super);
         /**
          *
@@ -13912,7 +13883,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
-    var InitializeEvent = (function (_super) {
+    var InitializeEvent = /** @class */ (function (_super) {
         __extends(InitializeEvent, _super);
         /**
          * @param engine  The reference to the current engine
@@ -13929,7 +13900,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on a [[Scene]] on activation
      */
-    var ActivateEvent = (function (_super) {
+    var ActivateEvent = /** @class */ (function (_super) {
         __extends(ActivateEvent, _super);
         /**
          * @param oldScene  The reference to the old scene
@@ -13946,7 +13917,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on a [[Scene]] on deactivation
      */
-    var DeactivateEvent = (function (_super) {
+    var DeactivateEvent = /** @class */ (function (_super) {
         __extends(DeactivateEvent, _super);
         /**
          * @param newScene  The reference to the new scene
@@ -13963,7 +13934,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
      */
-    var ExitViewPortEvent = (function (_super) {
+    var ExitViewPortEvent = /** @class */ (function (_super) {
         __extends(ExitViewPortEvent, _super);
         function ExitViewPortEvent(target) {
             var _this = _super.call(this) || this;
@@ -13976,7 +13947,7 @@ define("Events", ["require", "exports"], function (require, exports) {
     /**
      * Event thrown on an [[Actor]] when it completely leaves the screen.
      */
-    var EnterViewPortEvent = (function (_super) {
+    var EnterViewPortEvent = /** @class */ (function (_super) {
         __extends(EnterViewPortEvent, _super);
         function EnterViewPortEvent(target) {
             var _this = _super.call(this) || this;
@@ -13986,7 +13957,7 @@ define("Events", ["require", "exports"], function (require, exports) {
         return EnterViewPortEvent;
     }(GameEvent));
     exports.EnterViewPortEvent = EnterViewPortEvent;
-    var EnterTriggerEvent = (function (_super) {
+    var EnterTriggerEvent = /** @class */ (function (_super) {
         __extends(EnterTriggerEvent, _super);
         function EnterTriggerEvent(target, actor) {
             var _this = _super.call(this) || this;
@@ -13997,7 +13968,7 @@ define("Events", ["require", "exports"], function (require, exports) {
         return EnterTriggerEvent;
     }(GameEvent));
     exports.EnterTriggerEvent = EnterTriggerEvent;
-    var ExitTriggerEvent = (function (_super) {
+    var ExitTriggerEvent = /** @class */ (function (_super) {
         __extends(ExitTriggerEvent, _super);
         function ExitTriggerEvent(target, actor) {
             var _this = _super.call(this) || this;
@@ -14016,7 +13987,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
      * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
      * and extending abilities for vanilla Javascript projects
      */
-    var Class = (function () {
+    var Class = /** @class */ (function () {
         function Class() {
             this.eventDispatcher = new EventDispatcher_3.EventDispatcher(this);
         }
@@ -14128,7 +14099,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
      * [[include:Actors.md]]
      *
      */
-    var Actor = (function (_super) {
+    var Actor = /** @class */ (function (_super) {
         __extends(Actor, _super);
         /**
          * @param x       The starting x coordinate of the actor
@@ -15077,12 +15048,12 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             }
             this.emit('postdebugdraw', new Events_14.PostDebugDrawEvent(ctx, this));
         };
+        /**
+         * Indicates the next id to be set
+         */
+        Actor.maxId = 0;
         return Actor;
     }(Class_11.Class));
-    /**
-     * Indicates the next id to be set
-     */
-    Actor.maxId = 0;
     exports.Actor = Actor;
     /**
      * An enum that describes the types of collisions actors can participate in
@@ -15119,7 +15090,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
 define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_25, Log_17, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var EaseTo = (function () {
+    var EaseTo = /** @class */ (function () {
         function EaseTo(actor, x, y, duration, easingFcn) {
             this.actor = actor;
             this.easingFcn = easingFcn;
@@ -15182,7 +15153,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return EaseTo;
     }());
     exports.EaseTo = EaseTo;
-    var MoveTo = (function () {
+    var MoveTo = /** @class */ (function () {
         function MoveTo(actor, destx, desty, speed) {
             this._started = false;
             this._stopped = false;
@@ -15221,7 +15192,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return MoveTo;
     }());
     exports.MoveTo = MoveTo;
-    var MoveBy = (function () {
+    var MoveBy = /** @class */ (function () {
         function MoveBy(actor, destx, desty, time) {
             this._started = false;
             this._stopped = false;
@@ -15265,7 +15236,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return MoveBy;
     }());
     exports.MoveBy = MoveBy;
-    var Follow = (function () {
+    var Follow = /** @class */ (function () {
         function Follow(actor, actorToFollow, followDistance) {
             this._started = false;
             this._stopped = false;
@@ -15324,7 +15295,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Follow;
     }());
     exports.Follow = Follow;
-    var Meet = (function () {
+    var Meet = /** @class */ (function () {
         function Meet(actor, actorToMeet, speed) {
             this._started = false;
             this._stopped = false;
@@ -15378,7 +15349,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Meet;
     }());
     exports.Meet = Meet;
-    var RotateTo = (function () {
+    var RotateTo = /** @class */ (function () {
         function RotateTo(actor, angleRadians, speed, rotationType) {
             this._started = false;
             this._stopped = false;
@@ -15462,7 +15433,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return RotateTo;
     }());
     exports.RotateTo = RotateTo;
-    var RotateBy = (function () {
+    var RotateBy = /** @class */ (function () {
         function RotateBy(actor, angleRadians, time, rotationType) {
             this._started = false;
             this._stopped = false;
@@ -15547,7 +15518,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return RotateBy;
     }());
     exports.RotateBy = RotateBy;
-    var ScaleTo = (function () {
+    var ScaleTo = /** @class */ (function () {
         function ScaleTo(actor, scaleX, scaleY, speedX, speedY) {
             this._started = false;
             this._stopped = false;
@@ -15601,14 +15572,13 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return ScaleTo;
     }());
     exports.ScaleTo = ScaleTo;
-    var ScaleBy = (function () {
+    var ScaleBy = /** @class */ (function () {
         function ScaleBy(actor, scaleX, scaleY, time) {
             this._started = false;
             this._stopped = false;
             this._actor = actor;
             this._endX = scaleX;
             this._endY = scaleY;
-            this._time = time;
             this._speedX = (this._endX - this._actor.scale.x) / time * 1000;
             this._speedY = (this._endY - this._actor.scale.y) / time * 1000;
         }
@@ -15646,7 +15616,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return ScaleBy;
     }());
     exports.ScaleBy = ScaleBy;
-    var Delay = (function () {
+    var Delay = /** @class */ (function () {
         function Delay(actor, delay) {
             this._elapsedTime = 0;
             this._started = false;
@@ -15675,7 +15645,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Delay;
     }());
     exports.Delay = Delay;
-    var Blink = (function () {
+    var Blink = /** @class */ (function () {
         function Blink(actor, timeVisible, timeNotVisible, numBlinks) {
             if (numBlinks === void 0) { numBlinks = 1; }
             this._timeVisible = 0;
@@ -15722,7 +15692,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Blink;
     }());
     exports.Blink = Blink;
-    var Fade = (function () {
+    var Fade = /** @class */ (function () {
         function Fade(actor, endOpacity, speed) {
             this._multiplier = 1;
             this._started = false;
@@ -15763,7 +15733,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Fade;
     }());
     exports.Fade = Fade;
-    var Die = (function () {
+    var Die = /** @class */ (function () {
         function Die(actor) {
             this._stopped = false;
             this._actor = actor;
@@ -15781,7 +15751,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Die;
     }());
     exports.Die = Die;
-    var CallMethod = (function () {
+    var CallMethod = /** @class */ (function () {
         function CallMethod(actor, method) {
             this._method = null;
             this._actor = null;
@@ -15805,7 +15775,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return CallMethod;
     }());
     exports.CallMethod = CallMethod;
-    var Repeat = (function () {
+    var Repeat = /** @class */ (function () {
         function Repeat(actor, repeat, actions) {
             this._stopped = false;
             this._actor = actor;
@@ -15840,7 +15810,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         return Repeat;
     }());
     exports.Repeat = Repeat;
-    var RepeatForever = (function () {
+    var RepeatForever = /** @class */ (function () {
         function RepeatForever(actor, actions) {
             this._stopped = false;
             this._actor = actor;
@@ -15884,7 +15854,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
      * advanced users to adjust the actions currently being executed in the
      * queue.
      */
-    var ActionQueue = (function () {
+    var ActionQueue = /** @class */ (function () {
         function ActionQueue(actor) {
             this._actions = [];
             this._completedActions = [];

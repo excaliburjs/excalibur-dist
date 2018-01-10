@@ -1,6 +1,6 @@
-/*! excalibur - v0.14.0-alpha.1993+65a4a91 - 2017-12-21
+/*! excalibur - v0.14.0-alpha.2001+0101600 - 2018-01-10
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
+* Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
 /// <reference path="excalibur.amd.d.ts" />
 

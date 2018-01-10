@@ -1,6 +1,6 @@
-/*! excalibur - v0.14.0-alpha.1993+65a4a91 - 2017-12-21
+/*! excalibur - v0.14.0-alpha.2001+0101600 - 2018-01-10
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2017 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
+* Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
 declare module "Actions/RotationType" {
     /**
@@ -1868,7 +1868,7 @@ declare module "Collision/Body" {
          */
         constructor(actor: Actor);
         /**
-         * [ICollisionArea|Collision area] of this physics body, defines the shape for rigid body collision
+         * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
          */
         collisionArea: ICollisionArea;
         /**
@@ -1985,6 +1985,7 @@ declare module "Collision/Body" {
          * Returns a boolean indicating true if this body COLLIDED with
          * the body of the other Actor in the last frame, and they are no longer touching
          * in this frame
+         * @obsolete will be removed in v0.15, use the collisionend event instead
          */
         wasTouching(other: Actor, game: Engine): boolean;
     }
@@ -2794,7 +2795,6 @@ declare module "Resources/Resource" {
         bustCache: boolean;
         data: T;
         logger: Logger;
-        private _engine;
         /**
          * @param path          Path to the remote resource
          * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
@@ -2806,7 +2806,7 @@ declare module "Resources/Resource" {
          * to be drawn.
          */
         isLoaded(): boolean;
-        wireEngine(engine: Engine): void;
+        wireEngine(_engine: Engine): void;
         private _cacheBust(uri);
         private _start();
         /**
@@ -3173,7 +3173,6 @@ declare module "Drawing/SpriteSheet" {
         columns: number;
         rows: number;
         sprites: Sprite[];
-        private _internalImage;
         /**
          * @param image     The backing image texture to build the SpriteSheet
          * @param columns   The number of columns in the image texture
@@ -3441,7 +3440,6 @@ declare module "Label" {
         private _textShadowOn;
         private _shadowOffsetX;
         private _shadowOffsetY;
-        private _shadowColor;
         /**
          * @param text        The text of the label
          * @param x           The x position of the label
@@ -3524,7 +3522,7 @@ declare module "Interfaces/IAudioImplementation" {
         /**
          * XHR response type
          */
-        responseType: string;
+        responseType: XMLHttpRequestResponseType;
         /**
          * Processes raw data and transforms into sound data
          */
@@ -3545,7 +3543,7 @@ declare module "Resources/Sound" {
      * An audio implementation for HTML5 audio.
      */
     export class AudioTag implements IAudioImplementation {
-        responseType: string;
+        responseType: XMLHttpRequestResponseType;
         /**
          * Transforms raw Blob data into a object URL for use in audio tag
          */
@@ -3560,7 +3558,7 @@ declare module "Resources/Sound" {
      */
     export class WebAudio implements IAudioImplementation {
         private _logger;
-        responseType: string;
+        responseType: XMLHttpRequestResponseType;
         /**
          * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
          */
@@ -3853,7 +3851,6 @@ declare module "Loader" {
      * ```
      */
     export class PauseAfterLoader extends Loader {
-        private _loaded;
         private _loadedValue;
         private _waitPromise;
         private _playTrigger;
@@ -4334,7 +4331,6 @@ declare module "Trigger" {
      * [[include:Triggers.md]]
      */
     export class Trigger extends Actor {
-        private _engine;
         private _target;
         /**
          * Action to fire when triggered by collision
@@ -4989,7 +4985,6 @@ declare module "Resources/Index" {
     export * from "Resources/Texture";
 }
 declare module "Input/Gamepad" {
-    import { Engine } from "Engine";
     import { Class } from "Class";
     import { GameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent } from "Events";
     import * as Events from "Events";
@@ -5016,10 +5011,9 @@ declare module "Input/Gamepad" {
         private _oldPads;
         private _pads;
         private _initSuccess;
-        private _engine;
         private _navigator;
         private _minimumConfiguration;
-        constructor(engine: Engine);
+        constructor();
         init(): void;
         /**
          * Sets the minimum gamepad configuration, for example {axis: 4, buttons: 4} means
@@ -5402,7 +5396,6 @@ declare module "Input/Pointer" {
     }
 }
 declare module "Input/Keyboard" {
-    import { Engine } from "Engine";
     import { Class } from "Class";
     import { GameEvent } from "Events";
     import * as Events from "Events";
@@ -5476,8 +5469,7 @@ declare module "Input/Keyboard" {
         private _keys;
         private _keysUp;
         private _keysDown;
-        private _engine;
-        constructor(engine: Engine);
+        constructor();
         on(eventName: Events.press, handler: (event?: KeyEvent) => void): void;
         on(eventName: Events.release, handler: (event?: KeyEvent) => void): void;
         on(eventName: Events.hold, handler: (event?: KeyEvent) => void): void;
@@ -7625,7 +7617,6 @@ declare module "Actions/Action" {
         private _startY;
         private _endX;
         private _endY;
-        private _time;
         private _distanceX;
         private _distanceY;
         private _started;

@@ -1,4 +1,4 @@
-/*! excalibur - v0.14.0-alpha.2001+0101600 - 2018-01-10
+/*! excalibur - v0.14.0-alpha.2053+7ec6320 - 2018-02-17
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -573,6 +573,123 @@ declare module "Promises" {
         private _handleError(e);
     }
 }
+declare module "Math/Random" {
+    /**
+     * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence
+     * of numbers each time it is called.
+     * See https://en.wikipedia.org/wiki/Mersenne_Twister for more details.
+     * Uses the MT19937-32 (2002) implementation documented here http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html
+     *
+     * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
+     */
+    export class Random {
+        seed: number;
+        private _lowerMask;
+        private _upperMask;
+        private _w;
+        private _n;
+        private _m;
+        private _a;
+        private _u;
+        private _s;
+        private _b;
+        private _t;
+        private _c;
+        private _l;
+        private _f;
+        private _mt;
+        private _index;
+        /**
+         * If no seed is specified, the Date.now() is used
+         */
+        constructor(seed?: number);
+        /**
+         * Apply the twist
+         */
+        private _twist();
+        /**
+         * Return next 32 bit integer number in sequence
+         */
+        nextInt(): number;
+        /**
+         * Return a random floating point number between [0, 1)
+         */
+        next(): number;
+        /**
+         * Return a random floating point in range [min, max) min is included, max is not included
+         */
+        floating(min: number, max: number): number;
+        /**
+         * Return a random integer in range [min, max] min is included, max is included.
+         * Implemented with rejection sampling, see https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d#.i13tdiu5a
+         */
+        integer(min: number, max: number): number;
+        /**
+         * Returns true or false randomly with 50/50 odds by default.
+         * By default the likelihood of returning a true is .5 (50%).
+         * @param likelihood takes values between [0, 1]
+         */
+        bool(likelihood?: number): boolean;
+        /**
+         * Returns one element from an array at random
+         */
+        pickOne<T>(array: Array<T>): T;
+        /**
+         * Returns a new array random picking elements from the original
+         * @param array Original array to pick from
+         * @param numPicks can be any positive number
+         * @param allowDuplicates indicates whether the returned set is allowed duplicates (it does not mean there will always be duplicates
+         * just that it is possible)
+         */
+        pickSet<T>(array: Array<T>, numPicks: number, allowDuplicates?: boolean): Array<T>;
+        /**
+         * Returns a new array randomly picking elements in the original (not reused)
+         * @param numPicks must be less than or equal to the number of elements in the array.
+         */
+        private _pickSetWithoutDuplicates<T>(array, numPicks);
+        /**
+         * Returns a new array random picking elements from the original allowing duplicates
+         * @param numPicks can be any positive number
+         */
+        private _pickSetWithDuplicates<T>(array, numPicks);
+        /**
+         * Returns a new array that has its elements shuffled. Using the Fisher/Yates method
+         * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+         */
+        shuffle<T>(array: Array<T>): Array<T>;
+        /**
+         * Generate a list of random integer numbers
+         * @param length the length of the final array
+         * @param min the minimum integer number to generate inclusive
+         * @param max the maximum integer number to generate inclusive
+         */
+        range(length: number, min: number, max: number): Array<number>;
+        /**
+         * Returns the result of a d4 dice roll
+         */
+        d4(): number;
+        /**
+         * Returns the result of a d6 dice roll
+         */
+        d6(): number;
+        /**
+         * Returns the result of a d8 dice roll
+         */
+        d8(): number;
+        /**
+         * Returns the result of a d10 dice roll
+         */
+        d10(): number;
+        /**
+         * Returns the result of a d12 dice roll
+         */
+        d12(): number;
+        /**
+         * Returns the result of a d20 dice roll
+         */
+        d20(): number;
+    }
+}
 declare module "Collision/Side" {
     /**
      * An enum that describes the sides of an Actor for collision
@@ -587,6 +704,7 @@ declare module "Collision/Side" {
 }
 declare module "Util/Util" {
     import { Vector } from "Algebra";
+    import { Random } from "Math/Random";
     import { Side } from "Collision/Side";
     /**
      * Two PI constant
@@ -631,8 +749,8 @@ declare module "Util/Util" {
      * Clamps a value between a min and max inclusive
      */
     export function clamp(val: number, min: number, max: number): number;
-    export function randomInRange(min: number, max: number): number;
-    export function randomIntInRange(min: number, max: number): number;
+    export function randomInRange(min: number, max: number, random?: Random): number;
+    export function randomIntInRange(min: number, max: number, random?: Random): number;
     export function canonicalizeAngle(angle: number): number;
     export function toDegrees(radians: number): number;
     export function toRadians(degrees: number): number;
@@ -954,36 +1072,12 @@ declare module "Camera" {
         debugDraw(ctx: CanvasRenderingContext2D): void;
         private _isDoneShaking();
     }
-    /**
-     * An extension of [[BaseCamera]] that is locked vertically; it will only move side to side.
-     *
-     * Common usages: platformers.
-     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActorAxis`
-     */
-    export class SideCamera extends BaseCamera {
-        /**
-         * Sets the [[Actor]] to follow with the camera
-         * @param actor  The actor to follow
-         */
-        setActorToFollow(actor: Actor): void;
-        getFocus(): Vector;
-    }
-    /**
-     * An extension of [[BaseCamera]] that is locked to an [[Actor]] or
-     * [[LockedCamera.getFocus|focal point]]; the actor will appear in the
-     * center of the screen.
-     *
-     * Common usages: RPGs, adventure games, top-down games.
-     * @deprecated OBSOLETE: Will be removed in v0.15, please use `BaseCamera.strategy.lockToActor`
-     */
-    export class LockedCamera extends BaseCamera {
-        /**
-         * Sets the [[Actor]] to follow with the camera
-         * @param actor  The actor to follow
-         */
-        setActorToFollow(actor: Actor): void;
-        getFocus(): Vector;
-    }
+}
+declare module "Configurable" {
+    export type Constructor<T> = {
+        new (...args: any[]): T;
+    };
+    export function Configurable<T extends Constructor<{}>>(base: T): T;
 }
 declare module "DebugFlags" {
     export interface IDebugFlags {
@@ -1728,135 +1822,7 @@ declare module "Util/DrawUtil" {
     export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
     export function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;
 }
-declare module "Util/Log" {
-    /**
-     * Logging level that Excalibur will tag
-     */
-    export enum LogLevel {
-        Debug = 0,
-        Info = 1,
-        Warn = 2,
-        Error = 3,
-        Fatal = 4,
-    }
-    /**
-     * Static singleton that represents the logging facility for Excalibur.
-     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
-     * Derive from [[IAppender]] to create your own logging appenders.
-     *
-     * [[include:Logger.md]]
-     */
-    export class Logger {
-        private static _instance;
-        private _appenders;
-        constructor();
-        /**
-         * Gets or sets the default logging level. Excalibur will only log
-         * messages if equal to or above this level. Default: [[LogLevel.Info]]
-         */
-        defaultLevel: LogLevel;
-        /**
-         * Gets the current static instance of Logger
-         */
-        static getInstance(): Logger;
-        /**
-         * Adds a new [[IAppender]] to the list of appenders to write to
-         */
-        addAppender(appender: IAppender): void;
-        /**
-         * Clears all appenders from the logger
-         */
-        clearAppenders(): void;
-        /**
-         * Logs a message at a given LogLevel
-         * @param level  The LogLevel`to log the message at
-         * @param args   An array of arguments to write to an appender
-         */
-        private _log(level, args);
-        /**
-         * Writes a log message at the [[LogLevel.Debug]] level
-         * @param args  Accepts any number of arguments
-         */
-        debug(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Info]] level
-         * @param args  Accepts any number of arguments
-         */
-        info(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Warn]] level
-         * @param args  Accepts any number of arguments
-         */
-        warn(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Error]] level
-         * @param args  Accepts any number of arguments
-         */
-        error(...args: any[]): void;
-        /**
-         * Writes a log message at the [[LogLevel.Fatal]] level
-         * @param args  Accepts any number of arguments
-         */
-        fatal(...args: any[]): void;
-    }
-    /**
-     * Contract for any log appender (such as console/screen)
-     */
-    export interface IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * Console appender for browsers (i.e. `console.log`)
-     */
-    export class ConsoleAppender implements IAppender {
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-    /**
-     * On-screen (canvas) appender
-     */
-    export class ScreenAppender implements IAppender {
-        private _messages;
-        private _canvas;
-        private _ctx;
-        /**
-         * @param width   Width of the screen appender in pixels
-         * @param height  Height of the screen appender in pixels
-         */
-        constructor(width?: number, height?: number);
-        /**
-         * Logs a message at the given [[LogLevel]]
-         * @param level  Level to log at
-         * @param args   Arguments to log
-         */
-        log(level: LogLevel, args: any[]): void;
-    }
-}
-declare module "Util/Decorators" {
-    /**
-     * Obsolete decorator options
-     */
-    export interface IObsoleteOptions {
-        message?: string;
-        alternateMethod?: string;
-    }
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
-}
 declare module "Collision/Body" {
-    import { Engine } from "Engine";
     import { ICollisionArea } from "Collision/ICollisionArea";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Vector } from "Algebra";
@@ -1981,13 +1947,6 @@ declare module "Collision/Body" {
          * the body of the other [[Actor]]
          */
         touching(other: Actor): boolean;
-        /**
-         * Returns a boolean indicating true if this body COLLIDED with
-         * the body of the other Actor in the last frame, and they are no longer touching
-         * in this frame
-         * @obsolete will be removed in v0.15, use the collisionend event instead
-         */
-        wasTouching(other: Actor, game: Engine): boolean;
     }
 }
 declare module "Collision/Pair" {
@@ -2493,6 +2452,119 @@ declare module "Actions/ActionContext" {
         asPromise<T>(): Promise<T>;
     }
 }
+declare module "Util/Log" {
+    /**
+     * Logging level that Excalibur will tag
+     */
+    export enum LogLevel {
+        Debug = 0,
+        Info = 1,
+        Warn = 2,
+        Error = 3,
+        Fatal = 4,
+    }
+    /**
+     * Static singleton that represents the logging facility for Excalibur.
+     * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
+     * Derive from [[IAppender]] to create your own logging appenders.
+     *
+     * [[include:Logger.md]]
+     */
+    export class Logger {
+        private static _instance;
+        private _appenders;
+        constructor();
+        /**
+         * Gets or sets the default logging level. Excalibur will only log
+         * messages if equal to or above this level. Default: [[LogLevel.Info]]
+         */
+        defaultLevel: LogLevel;
+        /**
+         * Gets the current static instance of Logger
+         */
+        static getInstance(): Logger;
+        /**
+         * Adds a new [[IAppender]] to the list of appenders to write to
+         */
+        addAppender(appender: IAppender): void;
+        /**
+         * Clears all appenders from the logger
+         */
+        clearAppenders(): void;
+        /**
+         * Logs a message at a given LogLevel
+         * @param level  The LogLevel`to log the message at
+         * @param args   An array of arguments to write to an appender
+         */
+        private _log(level, args);
+        /**
+         * Writes a log message at the [[LogLevel.Debug]] level
+         * @param args  Accepts any number of arguments
+         */
+        debug(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Info]] level
+         * @param args  Accepts any number of arguments
+         */
+        info(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Warn]] level
+         * @param args  Accepts any number of arguments
+         */
+        warn(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Error]] level
+         * @param args  Accepts any number of arguments
+         */
+        error(...args: any[]): void;
+        /**
+         * Writes a log message at the [[LogLevel.Fatal]] level
+         * @param args  Accepts any number of arguments
+         */
+        fatal(...args: any[]): void;
+    }
+    /**
+     * Contract for any log appender (such as console/screen)
+     */
+    export interface IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * Console appender for browsers (i.e. `console.log`)
+     */
+    export class ConsoleAppender implements IAppender {
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+    /**
+     * On-screen (canvas) appender
+     */
+    export class ScreenAppender implements IAppender {
+        private _messages;
+        private _canvas;
+        private _ctx;
+        /**
+         * @param width   Width of the screen appender in pixels
+         * @param height  Height of the screen appender in pixels
+         */
+        constructor(width?: number, height?: number);
+        /**
+         * Logs a message at the given [[LogLevel]]
+         * @param level  Level to log at
+         * @param args   Arguments to log
+         */
+        log(level: LogLevel, args: any[]): void;
+    }
+}
 declare module "Actions/IActionable" {
     import { ActionContext } from "Actions/ActionContext";
     export interface IActionable {
@@ -2888,16 +2960,9 @@ declare module "Drawing/Sprite" {
     import { Vector } from "Algebra";
     import { Logger } from "Util/Log";
     /**
-     * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
-     * images or parts of images from a [[Texture]] resource to the screen.
-     *
-     * [[include:Sprites.md]]
+     * @hidden
      */
-    export class Sprite implements IDrawable {
-        sx: number;
-        sy: number;
-        swidth: number;
-        sheight: number;
+    export class SpriteImpl implements IDrawable {
         private _texture;
         rotation: number;
         anchor: Vector;
@@ -2914,6 +2979,10 @@ declare module "Drawing/Sprite" {
         width: number;
         height: number;
         effects: Effects.ISpriteEffect[];
+        sx: number;
+        sy: number;
+        swidth: number;
+        sheight: number;
         naturalWidth: number;
         naturalHeight: number;
         private _spriteCanvas;
@@ -2928,7 +2997,7 @@ declare module "Drawing/Sprite" {
          * @param swidth  The width of the sprite in pixels
          * @param sheight The height of the sprite in pixels
          */
-        constructor(image: Texture, sx: number, sy: number, swidth: number, sheight: number);
+        constructor(imageOrConfig: Texture | ISpriteArgs, sx: number, sy: number, swidth: number, sheight: number);
         private _loadPixels();
         /**
          * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
@@ -3002,23 +3071,46 @@ declare module "Drawing/Sprite" {
         /**
          * Produces a copy of the current sprite
          */
-        clone(): Sprite;
+        clone(): SpriteImpl;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ISpriteArgs extends Partial<SpriteImpl> {
+        image: Texture;
+        sx: number;
+        sy: number;
+        swidth: number;
+        sheight: number;
+        rotation?: number;
+        anchor?: Vector;
+        scale?: Vector;
+        flipVertical?: boolean;
+        flipHorizontal?: boolean;
+    }
+    /**
+     * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
+     * images or parts of images from a [[Texture]] resource to the screen.
+     *
+     * [[include:Sprites.md]]
+     */
+    export class Sprite extends SpriteImpl {
+        constructor(config: ISpriteArgs);
+        constructor(image: Texture, sx: number, sy: number, swidth: number, sheight: number);
     }
 }
 declare module "Drawing/Animation" {
     import { Sprite } from "Drawing/Sprite";
+    import { IAnimationArgs } from "Drawing/Animation";
     import * as Effects from "Drawing/SpriteEffects";
     import { Color } from "Drawing/Color";
     import { IDrawable } from "Interfaces/IDrawable";
     import { Vector } from "Algebra";
     import { Engine } from "Engine";
     /**
-     * Animations allow you to display a series of images one after another,
-     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
-     *
-     * [[include:Animations.md]]
+     * @hidden
      */
-    export class Animation implements IDrawable {
+    export class AnimationImpl implements IDrawable {
         /**
          * The sprite frames to play, in order. See [[SpriteSheet.getAnimationForAll]] to quickly
          * generate an [[Animation]].
@@ -3066,7 +3158,7 @@ declare module "Drawing/Animation" {
          * @param speed   The number in milliseconds to display each frame in the animation
          * @param loop    Indicates whether the animation should loop after it is completed
          */
-        constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
+        constructor(engineOrConfig: Engine | IAnimationArgs, sprites: Sprite[], speed: number, loop?: boolean);
         /**
          * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
          */
@@ -3153,6 +3245,32 @@ declare module "Drawing/Animation" {
          */
         play(x: number, y: number): void;
     }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface IAnimationArgs extends Partial<AnimationImpl> {
+        engine: Engine;
+        sprites: Sprite[];
+        speed: number;
+        loop?: boolean;
+        anchor?: Vector;
+        rotation?: number;
+        scale?: Vector;
+        flipVertical?: boolean;
+        flipHorizontal?: boolean;
+        width?: number;
+        height?: number;
+    }
+    /**
+     * Animations allow you to display a series of images one after another,
+     * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
+     *
+     * [[include:Animations.md]]
+     */
+    export class Animation extends AnimationImpl {
+        constructor(config: IAnimationArgs);
+        constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
+    }
 }
 declare module "Drawing/SpriteSheet" {
     import { Sprite } from "Drawing/Sprite";
@@ -3162,17 +3280,15 @@ declare module "Drawing/SpriteSheet" {
     import { Engine } from "Engine";
     import { TextAlign, BaseAlign } from "Label";
     /**
-     * Sprite sheets are a useful mechanism for slicing up image resources into
-     * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
-     * in row major order in the [[SpriteSheet]].
-     *
-     * [[include:SpriteSheets.md]]
+     * @hidden
      */
-    export class SpriteSheet {
+    export class SpriteSheetImpl {
+        sprites: Sprite[];
         image: Texture;
         columns: number;
         rows: number;
-        sprites: Sprite[];
+        spWidth: number;
+        spHeight: number;
         /**
          * @param image     The backing image texture to build the SpriteSheet
          * @param columns   The number of columns in the image texture
@@ -3180,7 +3296,7 @@ declare module "Drawing/SpriteSheet" {
          * @param spWidth   The width of each individual sprite in pixels
          * @param spHeight  The height of each individual sprite in pixels
          */
-        constructor(image: Texture, columns: number, rows: number, spWidth: number, spHeight: number);
+        constructor(imageOrConfigOrSprites: Texture | ISpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number);
         /**
          * Create an animation from the this SpriteSheet by listing out the
          * sprite indices. Sprites are organized in row major order in the SpriteSheet.
@@ -3191,10 +3307,11 @@ declare module "Drawing/SpriteSheet" {
         getAnimationByIndices(engine: Engine, indices: number[], speed: number): Animation;
         /**
          * Create an animation from the this SpriteSheet by specifing the range of
-         * images with the beginning and ending index
+         * images with the beginning (inclusive) and ending (exclusive) index
+         * For example `getAnimationBetween(engine, 0, 5, 200)` returns an animation with 5 frames.
          * @param engine      Reference to the current game Engine
-         * @param beginIndex  The index to start taking frames
-         * @param endIndex    The index to stop taking frames
+         * @param beginIndex  The index to start taking frames (inclusive)
+         * @param endIndex    The index to stop taking frames (exclusive)
          * @param speed       The number in milliseconds to display each frame in the animation
          */
         getAnimationBetween(engine: Engine, beginIndex: number, endIndex: number, speed: number): Animation;
@@ -3213,18 +3330,29 @@ declare module "Drawing/SpriteSheet" {
         getSprite(index: number): Sprite;
     }
     /**
-     * Sprite fonts are a used in conjunction with a [[Label]] to specify
-     * a particular bitmap as a font. Note that some font features are not
-     * supported by Sprite fonts.
-     *
-     * [[include:SpriteFonts.md]]
+     * [[include:Constructors.md]]
      */
-    export class SpriteFont extends SpriteSheet {
+    export interface ISpriteSheetArgs extends Partial<SpriteSheetImpl> {
         image: Texture;
-        private alphabet;
-        private caseInsensitive;
+        sprites?: Sprite[];
         spWidth: number;
         spHeight: number;
+        rows: number;
+        columns: number;
+    }
+    /**
+     * Sprite sheets are a useful mechanism for slicing up image resources into
+     * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
+     * in row major order in the [[SpriteSheet]].
+     *
+     * [[include:SpriteSheets.md]]
+     */
+    export class SpriteSheet extends SpriteSheetImpl {
+        constructor(config: ISpriteSheetArgs);
+        constructor(sprites: Sprite[]);
+        constructor(image: Texture, columns: number, rows: number, spWidth: number, spHeight: number);
+    }
+    export class SpriteFontImpl extends SpriteSheet {
         private _currentColor;
         private _currentOpacity;
         private _sprites;
@@ -3234,6 +3362,8 @@ declare module "Drawing/SpriteSheet" {
         private _textShadowSprites;
         private _shadowOffsetX;
         private _shadowOffsetY;
+        private _alphabet;
+        private _caseInsensitive;
         /**
          * @param image           The backing image texture to build the SpriteFont
          * @param alphabet        A string representing all the characters in the image, in row major order.
@@ -3243,7 +3373,7 @@ declare module "Drawing/SpriteSheet" {
          * @param spWidth         The width of each character in pixels
          * @param spHeight        The height of each character in pixels
          */
-        constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
+        constructor(imageOrConfig: Texture | ISpriteFontInitArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
         /**
          * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
          */
@@ -3279,12 +3409,36 @@ declare module "Drawing/SpriteSheet" {
         baseAlign?: BaseAlign;
         maxWidth?: number;
     }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ISpriteFontInitArgs extends ISpriteSheetArgs {
+        image: Texture;
+        columns: number;
+        rows: number;
+        spWidth: number;
+        spHeight: number;
+        alphabet: string;
+        caseInsensitive: boolean;
+    }
+    /**
+     * Sprite fonts are a used in conjunction with a [[Label]] to specify
+     * a particular bitmap as a font. Note that some font features are not
+     * supported by Sprite fonts.
+     *
+     * [[include:SpriteFonts.md]]
+     */
+    export class SpriteFont extends SpriteFontImpl {
+        constructor(config: ISpriteFontInitArgs);
+        constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
+    }
 }
 declare module "Label" {
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { SpriteFont } from "Drawing/SpriteSheet";
     import { Actor } from "Actor";
+    import { Vector } from "Algebra";
     /**
      * Enum representing the different font size units
      * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
@@ -3382,12 +3536,24 @@ declare module "Label" {
         Oblique = 2,
     }
     /**
-     * Labels are the way to draw small amounts of text to the screen. They are
-     * actors and inherit all of the benefits and capabilities.
-     *
-     * [[include:Labels.md]]
+     * [[include:Constructors.md]]
      */
-    export class Label extends Actor {
+    export interface ILabelArgs extends Partial<LabelImpl> {
+        text?: string;
+        bold?: boolean;
+        pos?: Vector;
+        spriteFont?: SpriteFont;
+        fontFamily?: string;
+        fontSize?: number;
+        fontStyle?: FontStyle;
+        fontUnit?: FontUnit;
+        textAlign?: TextAlign;
+        maxWidth?: number;
+    }
+    /**
+     * @hidden
+     */
+    export class LabelImpl extends Actor {
         /**
          * The text to draw.
          */
@@ -3448,7 +3614,7 @@ declare module "Label" {
          * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
          * over a css font.
          */
-        constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
+        constructor(textOrConfig?: string | Partial<LabelImpl>, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
         /**
          * Returns the width of the text in the label (in pixels);
          * @param ctx  Rendering context to measure the string with
@@ -3478,6 +3644,17 @@ declare module "Label" {
         private _fontDraw(ctx);
         protected readonly _fontString: string;
         debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+    /**
+     * Labels are the way to draw small amounts of text to the screen. They are
+     * actors and inherit all of the benefits and capabilities.
+     *
+     * [[include:Labels.md]]
+     */
+    export class Label extends LabelImpl {
+        constructor();
+        constructor(config?: ILabelArgs);
+        constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
     }
 }
 declare module "Interfaces/IAudio" {
@@ -3515,6 +3692,7 @@ declare module "Interfaces/IAudio" {
 declare module "Interfaces/IAudioImplementation" {
     import { Promise } from "Promises";
     import { IAudio } from "Interfaces/IAudio";
+    export type ExResponseType = '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
     /**
      * Represents an audio implementation like [[AudioTag]] or [[WebAudio]]
      */
@@ -3522,7 +3700,7 @@ declare module "Interfaces/IAudioImplementation" {
         /**
          * XHR response type
          */
-        responseType: XMLHttpRequestResponseType;
+        responseType: ExResponseType;
         /**
          * Processes raw data and transforms into sound data
          */
@@ -3535,7 +3713,7 @@ declare module "Interfaces/IAudioImplementation" {
 }
 declare module "Resources/Sound" {
     import { ILoadable } from "Interfaces/ILoadable";
-    import { IAudioImplementation } from "Interfaces/IAudioImplementation";
+    import { IAudioImplementation, ExResponseType } from "Interfaces/IAudioImplementation";
     import { IAudio } from "Interfaces/IAudio";
     import { Engine } from "Engine";
     import { Promise } from "Promises";
@@ -3543,7 +3721,7 @@ declare module "Resources/Sound" {
      * An audio implementation for HTML5 audio.
      */
     export class AudioTag implements IAudioImplementation {
-        responseType: XMLHttpRequestResponseType;
+        responseType: ExResponseType;
         /**
          * Transforms raw Blob data into a object URL for use in audio tag
          */
@@ -3558,7 +3736,7 @@ declare module "Resources/Sound" {
      */
     export class WebAudio implements IAudioImplementation {
         private _logger;
-        responseType: XMLHttpRequestResponseType;
+        responseType: ExResponseType;
         /**
          * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
          */
@@ -3947,6 +4125,7 @@ declare module "Particles" {
     import { Color } from "Drawing/Color";
     import { Vector } from "Algebra";
     import * as Util from "Util/Util";
+    import { Random } from "Math/Random";
     /**
      * An enum that represents the types of emitter nozzles
      */
@@ -3961,9 +4140,9 @@ declare module "Particles" {
         Rectangle = 1,
     }
     /**
-     * Particle is used in a [[ParticleEmitter]]
+     * @hidden
      */
-    export class Particle {
+    export class ParticleImpl {
         position: Vector;
         velocity: Vector;
         acceleration: Vector;
@@ -3988,21 +4167,41 @@ declare module "Particles" {
         endSize: number;
         sizeRate: number;
         elapsedMultiplier: number;
-        constructor(emitter: ParticleEmitter, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
+        constructor(emitterOrConfig: ParticleEmitter | IParticleArgs, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
         kill(): void;
         update(delta: number): void;
         draw(ctx: CanvasRenderingContext2D): void;
     }
     /**
-     * Using a particle emitter is a great way to create interesting effects
-     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
-     * extend [[Actor]] allowing you to use all of the features that come with.
-     *
-     * [[include:Particles.md]]
+     * [[include:Constructors.md]]
      */
-    export class ParticleEmitter extends Actor {
+    export interface IParticleArgs extends Partial<ParticleImpl> {
+        emitter: ParticleEmitter;
+        position?: Vector;
+        velocity?: Vector;
+        acceleration?: Vector;
+        particleRotationalVelocity?: number;
+        currentRotation?: number;
+        particleSize?: number;
+        particleSprite?: Sprite;
+    }
+    /**
+     * Particle is used in a [[ParticleEmitter]]
+     */
+    export class Particle extends ParticleImpl {
+        constructor(config: IParticleArgs);
+        constructor(emitter: ParticleEmitter, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
+    }
+    /**
+     * @hidden
+     */
+    export class ParticleEmitterImpl extends Actor {
         private _particlesToEmit;
         numParticles: number;
+        /**
+         * Random number generator
+         */
+        random: Random;
         /**
          * Gets or sets the isEmitting flag
          */
@@ -4104,7 +4303,7 @@ declare module "Particles" {
          * @param width   The width of the emitter
          * @param height  The height of the emitter
          */
-        constructor(x?: number, y?: number, width?: number, height?: number);
+        constructor(xOrConfig?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
         removeParticle(particle: Particle): void;
         /**
          * Causes the emitter to emit particles
@@ -4117,6 +4316,48 @@ declare module "Particles" {
         draw(ctx: CanvasRenderingContext2D): void;
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface IParticleEmitterArgs extends Partial<ParticleEmitterImpl> {
+        width?: number;
+        height?: number;
+        isEmitting?: boolean;
+        minVel?: number;
+        maxVel?: number;
+        acceleration?: Vector;
+        minAngle?: number;
+        maxAngle?: number;
+        emitRate?: number;
+        particleLife?: number;
+        opacity?: number;
+        fadeFlag?: boolean;
+        focus?: Vector;
+        focusAccel?: number;
+        startSize?: number;
+        endSize?: number;
+        minSize?: number;
+        maxSize?: number;
+        beginColor?: Color;
+        endColor?: Color;
+        particleSprite?: Sprite;
+        emitterType?: EmitterType;
+        radius?: number;
+        particleRotationalVelocity?: number;
+        randomRotation?: boolean;
+        random?: Random;
+    }
+    /**
+     * Using a particle emitter is a great way to create interesting effects
+     * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
+     * extend [[Actor]] allowing you to use all of the features that come with.
+     *
+     * [[include:Particles.md]]
+     */
+    export class ParticleEmitter extends ParticleEmitterImpl {
+        constructor(config?: IParticleEmitterArgs);
+        constructor(x?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
+    }
 }
 declare module "TileMap" {
     import { BoundingBox } from "Collision/BoundingBox";
@@ -4128,18 +4369,9 @@ declare module "TileMap" {
     import { SpriteSheet } from "Drawing/SpriteSheet";
     import * as Events from "Events";
     /**
-     * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
-     * without the overhead of actors.
-     *
-     * [[include:TileMaps.md]]
+     * @hidden
      */
-    export class TileMap extends Class {
-        x: number;
-        y: number;
-        cellWidth: number;
-        cellHeight: number;
-        rows: number;
-        cols: number;
+    export class TileMapImpl extends Class {
         private _collidingX;
         private _collidingY;
         private _onScreenXStart;
@@ -4149,6 +4381,12 @@ declare module "TileMap" {
         private _spriteSheets;
         logger: Logger;
         data: Cell[];
+        x: number;
+        y: number;
+        cellWidth: number;
+        cellHeight: number;
+        rows: number;
+        cols: number;
         on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
         on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
         on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
@@ -4162,7 +4400,7 @@ declare module "TileMap" {
          * @param rows          The number of rows in the TileMap (should not be changed once set)
          * @param cols          The number of cols in the TileMap (should not be changed once set)
          */
-        constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
+        constructor(xOrConfig: number | ITileMapArgs, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
         registerSpriteSheet(key: string, spriteSheet: SpriteSheet): void;
         /**
          * Returns the intersection vector that can be used to resolve collisions with actors. If there
@@ -4196,6 +4434,27 @@ declare module "TileMap" {
         debugDraw(ctx: CanvasRenderingContext2D): void;
     }
     /**
+     * [[include:Constructors.md]]
+     */
+    export interface ITileMapArgs extends Partial<TileMapImpl> {
+        x: number;
+        y: number;
+        cellWidth: number;
+        cellHeight: number;
+        rows: number;
+        cols: number;
+    }
+    /**
+     * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
+     * without the overhead of actors.
+     *
+     * [[include:TileMaps.md]]
+     */
+    export class TileMap extends TileMapImpl {
+        constructor(config: ITileMapArgs);
+        constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
+    }
+    /**
      * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
      */
     export class TileSprite {
@@ -4208,16 +4467,10 @@ declare module "TileMap" {
         constructor(spriteSheetKey: string, spriteId: number);
     }
     /**
-     * TileMap Cell
-     *
-     * A light-weight object that occupies a space in a collision map. Generally
-     * created by a [[TileMap]].
-     *
-     * Cells can draw multiple sprites. Note that the order of drawing is the order
-     * of the sprites in the array so the last one will be drawn on top. You can
-     * use transparency to create layers this way.
+     * @hidden
      */
-    export class Cell {
+    export class CellImpl {
+        private _bounds;
         x: number;
         y: number;
         width: number;
@@ -4225,7 +4478,6 @@ declare module "TileMap" {
         index: number;
         solid: boolean;
         sprites: TileSprite[];
-        private _bounds;
         /**
          * @param x       Gets or sets x coordinate of the cell in world coordinates
          * @param y       Gets or sets y coordinate of the cell in world coordinates
@@ -4235,7 +4487,7 @@ declare module "TileMap" {
          * @param solid   Gets or sets whether this cell is solid
          * @param sprites The list of tile sprites to use to draw in this cell (in order)
          */
-        constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
+        constructor(xOrConfig: number | ICellArgs, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
         /**
          * Returns the bounding box for this cell
          */
@@ -4256,6 +4508,32 @@ declare module "TileMap" {
          * Clear all sprites from this cell
          */
         clearSprites(): void;
+    }
+    /**
+     * [[include:Constructors.md]]
+     */
+    export interface ICellArgs extends Partial<CellImpl> {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        index: number;
+        solid?: boolean;
+        sprites?: TileSprite[];
+    }
+    /**
+     * TileMap Cell
+     *
+     * A light-weight object that occupies a space in a collision map. Generally
+     * created by a [[TileMap]].
+     *
+     * Cells can draw multiple sprites. Note that the order of drawing is the order
+     * of the sprites in the array so the last one will be drawn on top. You can
+     * use transparency to create layers this way.
+     */
+    export class Cell extends CellImpl {
+        constructor(config: ICellArgs);
+        constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
     }
 }
 declare module "Timer" {
@@ -4684,11 +4962,11 @@ declare module "Drawing/Polygon" {
     }
 }
 declare module "Drawing/Index" {
-    export * from "Drawing/Animation";
+    export { Animation, IAnimationArgs } from "Drawing/Animation";
     export * from "Drawing/Color";
     export * from "Drawing/Polygon";
-    export * from "Drawing/Sprite";
-    export * from "Drawing/SpriteSheet";
+    export { Sprite, ISpriteArgs } from "Drawing/Sprite";
+    export { SpriteSheet, SpriteFont, ISpriteSheetArgs, ISpriteFontInitArgs, ISpriteFontOptions } from "Drawing/SpriteSheet";
     import * as effects from "Drawing/SpriteEffects";
     export { effects as Effects };
 }
@@ -4700,123 +4978,6 @@ declare module "Interfaces/Index" {
     export * from "Interfaces/IEvented";
     export * from "Interfaces/ILoadable";
     export * from "Interfaces/ILoader";
-}
-declare module "Math/Random" {
-    /**
-     * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence
-     * of numbers each time it is called.
-     * See https://en.wikipedia.org/wiki/Mersenne_Twister for more details.
-     * Uses the MT19937-32 (2002) implementation documented here http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html
-     *
-     * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
-     */
-    export class Random {
-        seed: number;
-        private _lowerMask;
-        private _upperMask;
-        private _w;
-        private _n;
-        private _m;
-        private _a;
-        private _u;
-        private _s;
-        private _b;
-        private _t;
-        private _c;
-        private _l;
-        private _f;
-        private _mt;
-        private _index;
-        /**
-         * If no seed is specified, the Date.now() is used
-         */
-        constructor(seed?: number);
-        /**
-         * Apply the twist
-         */
-        private _twist();
-        /**
-         * Return next 32 bit integer number in sequence
-         */
-        nextInt(): number;
-        /**
-         * Return a random floating point number between [0, 1)
-         */
-        next(): number;
-        /**
-         * Return a random floating point in range [min, max) min is included, max is not included
-         */
-        floating(min: number, max: number): number;
-        /**
-         * Return a random integer in range [min, max] min is included, max is included.
-         * Implemented with rejection sampling, see https://medium.com/@betable/tifu-by-using-math-random-f1c308c4fd9d#.i13tdiu5a
-         */
-        integer(min: number, max: number): number;
-        /**
-         * Returns true or false randomly with 50/50 odds by default.
-         * By default the likelihood of returning a true is .5 (50%).
-         * @param likelihood takes values between [0, 1]
-         */
-        bool(likelihood?: number): boolean;
-        /**
-         * Returns one element from an array at random
-         */
-        pickOne<T>(array: Array<T>): T;
-        /**
-         * Returns a new array random picking elements from the original
-         * @param array Original array to pick from
-         * @param numPicks can be any positive number
-         * @param allowDuplicates indicates whether the returned set is allowed duplicates (it does not mean there will always be duplicates
-         * just that it is possible)
-         */
-        pickSet<T>(array: Array<T>, numPicks: number, allowDuplicates?: boolean): Array<T>;
-        /**
-         * Returns a new array randomly picking elements in the original (not reused)
-         * @param numPicks must be less than or equal to the number of elements in the array.
-         */
-        private _pickSetWithoutDuplicates<T>(array, numPicks);
-        /**
-         * Returns a new array random picking elements from the original allowing duplicates
-         * @param numPicks can be any positive number
-         */
-        private _pickSetWithDuplicates<T>(array, numPicks);
-        /**
-         * Returns a new array that has its elements shuffled. Using the Fisher/Yates method
-         * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-         */
-        shuffle<T>(array: Array<T>): Array<T>;
-        /**
-         * Generate a list of random integer numbers
-         * @param length the length of the final array
-         * @param min the minimum integer number to generate inclusive
-         * @param max the maximum integer number to generate inclusive
-         */
-        range(length: number, min: number, max: number): Array<number>;
-        /**
-         * Returns the result of a d4 dice roll
-         */
-        d4(): number;
-        /**
-         * Returns the result of a d6 dice roll
-         */
-        d6(): number;
-        /**
-         * Returns the result of a d8 dice roll
-         */
-        d8(): number;
-        /**
-         * Returns the result of a d10 dice roll
-         */
-        d10(): number;
-        /**
-         * Returns the result of a d12 dice roll
-         */
-        d12(): number;
-        /**
-         * Returns the result of a d20 dice roll
-         */
-        d20(): number;
-    }
 }
 declare module "Math/PerlinNoise" {
     import { Color } from "Drawing/Color";
@@ -5535,6 +5696,20 @@ declare module "Util/Index" {
     import * as drawUtil from "Util/DrawUtil";
     export { drawUtil as DrawUtil };
 }
+declare module "Util/Decorators" {
+    /**
+     * Obsolete decorator options
+     */
+    export interface IObsoleteOptions {
+        message?: string;
+        alternateMethod?: string;
+    }
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
+}
 declare module "Util/Detector" {
     /**
      * Interface for detected browser features matrix
@@ -5633,22 +5808,23 @@ declare module "Index" {
      * The current Excalibur version string
      */
     export var EX_VERSION: string;
-    export * from "Actor";
+    export { Actor, IActorArgs, CollisionType } from "Actor";
     export * from "Algebra";
     export * from "Camera";
     export * from "Class";
+    export * from "Configurable";
     export * from "Debug";
     export * from "Engine";
     export * from "EventDispatcher";
     export * from "Events";
     export * from "Group";
-    export * from "Label";
+    export { Label, FontStyle, FontUnit, TextAlign, BaseAlign } from "Label";
     export * from "Loader";
-    export * from "Particles";
+    export { Particle, ParticleEmitter, IParticleArgs, IParticleEmitterArgs, EmitterType } from "Particles";
     export * from "Physics";
     export * from "Promises";
     export * from "Scene";
-    export * from "TileMap";
+    export { TileMap, Cell, ITileMapArgs, ICellArgs, TileSprite } from "TileMap";
     export * from "Timer";
     export * from "Trigger";
     export * from "UIActor";
@@ -6200,20 +6376,16 @@ declare module "Engine" {
 }
 declare module "UIActor" {
     import { Engine } from "Engine";
-    import { Actor } from "Actor";
+    import { Actor, IActorArgs } from "Actor";
     /**
      * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
      * not participate in collisions. Drawn on top of all other actors.
      */
     export class UIActor extends Actor {
         protected _engine: Engine;
-        /**
-         * @param x       The starting x coordinate of the actor
-         * @param y       The starting y coordinate of the actor
-         * @param width   The starting width of the actor
-         * @param height  The starting height of the actor
-         */
-        constructor(x?: number, y?: number, width?: number, height?: number);
+        constructor();
+        constructor(xOrConfig?: number, y?: number, width?: number, height?: number);
+        constructor(config?: IActorArgs);
         onInitialize(engine: Engine): void;
         contains(x: number, y: number, useWorld?: boolean): boolean;
     }
@@ -6907,15 +7079,26 @@ declare module "Actor" {
     import * as Traits from "Traits/Index";
     import * as Events from "Events";
     /**
-     * The most important primitive in Excalibur is an `Actor`. Anything that
-     * can move on the screen, collide with another `Actor`, respond to events,
-     * or interact with the current scene, must be an actor. An `Actor` **must**
-     * be part of a [[Scene]] for it to be drawn to the screen.
-     *
-     * [[include:Actors.md]]
-     *
+     * [[include:Constructors.md]]
      */
-    export class Actor extends Class implements IActionable, IEvented {
+    export interface IActorArgs extends Partial<ActorImpl> {
+        width?: number;
+        height?: number;
+        pos?: Vector;
+        vel?: Vector;
+        acc?: Vector;
+        rotation?: number;
+        rx?: number;
+        z?: number;
+        color?: Color;
+        visible?: boolean;
+        body?: Body;
+        collisionType?: CollisionType;
+    }
+    /**
+     * @hidden
+     */
+    export class ActorImpl extends Class implements IActionable, IEvented {
         /**
          * Indicates the next id to be set
          */
@@ -7153,7 +7336,7 @@ declare module "Actor" {
          * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
          * initial [[opacity]].
          */
-        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
+        constructor(xOrConfig?: number | IActorArgs, y?: number, width?: number, height?: number, color?: Color);
         /**
          * This is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
@@ -7412,6 +7595,23 @@ declare module "Actor" {
          * @param ctx The rendering context
          */
         debugDraw(ctx: CanvasRenderingContext2D): void;
+    }
+    /**
+     * The most important primitive in Excalibur is an `Actor`. Anything that
+     * can move on the screen, collide with another `Actor`, respond to events,
+     * or interact with the current scene, must be an actor. An `Actor` **must**
+     * be part of a [[Scene]] for it to be drawn to the screen.
+     *
+     * [[include:Actors.md]]
+     *
+     *
+     * [[include:Constructors.md]]
+     *
+     */
+    export class Actor extends ActorImpl {
+        constructor();
+        constructor(config?: IActorArgs);
+        constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
     }
     /**
      * An enum that describes the types of collisions actors can participate in

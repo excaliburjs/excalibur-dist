@@ -1,4 +1,4 @@
-/*! excalibur - v0.14.0-alpha.2053+7ec6320 - 2018-02-17
+/*! excalibur - v0.14.0-alpha.2063+b8092ae - 2018-02-17
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.14.0-alpha.2053+7ec6320 - 2018-02-17
+/*! excalibur - v0.14.0-alpha.2063+b8092ae - 2018-02-17
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -6965,10 +6965,10 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor", "Configurable"]
          * over a css font.
          */
         function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-            var _this = _super.call(this, typeof textOrConfig === 'string' ? {
-                text: textOrConfig, x: x, y: y,
-                fontFamily: fontFamily, spriteFont: spriteFont
-            } : textOrConfig) || this;
+            var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? {
+                x: textOrConfig.x,
+                y: textOrConfig.y
+            } : { x: x, y: y }) || this;
             /**
              * Sets or gets the bold property of the label's text, by default it's false
              */
@@ -7001,7 +7001,16 @@ define("Label", ["require", "exports", "Drawing/Color", "Actor", "Configurable"]
              * Whether or not the [[SpriteFont]] will be case-sensitive when matching characters.
              */
             _this.caseInsensitive = true;
-            _this.text = textOrConfig || '';
+            var text = '';
+            if (textOrConfig && typeof textOrConfig === 'object') {
+                fontFamily = textOrConfig.fontFamily;
+                spriteFont = textOrConfig.spriteFont;
+                text = textOrConfig.text;
+            }
+            else {
+                text = textOrConfig;
+            }
+            _this.text = text || '';
             _this.color = Color_11.Color.Black.clone();
             _this.spriteFont = spriteFont;
             _this.collisionType = Actor_4.CollisionType.PreventCollision;
@@ -12135,7 +12144,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.14.0-alpha.2053+7ec6320';
+    exports.EX_VERSION = '0.14.0-alpha.2063+b8092ae';
     exports.Actor = Actor_11.Actor;
     exports.CollisionType = Actor_11.CollisionType;
     __export(Algebra_21);

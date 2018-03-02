@@ -1,4 +1,4 @@
-/*! excalibur - v0.15.0 - 2018-02-17
+/*! excalibur - v0.15.0-alpha.2084+06e1890 - 2018-03-02
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.15.0 - 2018-02-17
+/*! excalibur - v0.15.0-alpha.2084+06e1890 - 2018-03-02
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -12144,7 +12144,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.15.0';
+    exports.EX_VERSION = '0.15.0-alpha.2084+06e1890';
     exports.Actor = Actor_11.Actor;
     exports.CollisionType = Actor_11.CollisionType;
     __export(Algebra_21);

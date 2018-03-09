@@ -1,4 +1,4 @@
-/*! excalibur - v0.15.0-alpha.2084+06e1890 - 2018-03-02
+/*! excalibur - v0.15.0-alpha.2093+3e8af42 - 2018-03-09
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.15.0-alpha.2084+06e1890 - 2018-03-02
+/*! excalibur - v0.15.0-alpha.2093+3e8af42 - 2018-03-09
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1004,9 +1004,8 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
         return Physics;
     }());
     /**
-     * Global acceleration that is applied to all vanilla actors (it wont effect [[Label|labels]], [[UIActor|ui actors]], or
-     * [[Trigger|triggers]] in Excalibur that have an [[CollisionType.Active|active]] collision type).
-     *
+     * Global acceleration that is applied to all vanilla actors that have a [[CollisionType.Active|active]] collision type.
+     * Global acceleration won't effect [[Label|labels]], [[UIActor|ui actors]], or [[Trigger|triggers]] in Excalibur.
      *
      * This is a great way to globally simulate effects like gravity.
      */
@@ -12144,7 +12143,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.15.0-alpha.2084+06e1890';
+    exports.EX_VERSION = '0.15.0-alpha.2093+3e8af42';
     exports.Actor = Actor_11.Actor;
     exports.CollisionType = Actor_11.CollisionType;
     __export(Algebra_21);

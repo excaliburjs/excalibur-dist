@@ -1,4 +1,4 @@
-/*! excalibur - v0.15.0-alpha.2102+aad4d8e - 2018-03-23
+/*! excalibur - v0.15.0-alpha.2114+bf8a3fc - 2018-03-25
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.15.0-alpha.2102+aad4d8e - 2018-03-23
+/*! excalibur - v0.15.0-alpha.2114+bf8a3fc - 2018-03-25
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -9858,9 +9858,9 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
             }
         };
         Pointer.prototype._onPointerMove = function (ev) {
-            this.lastPagePos = new Algebra_18.Vector(ev.pageX, ev.pageY);
-            this.lastScreenPos = new Algebra_18.Vector(ev.screenX, ev.screenY);
-            this.lastWorldPos = new Algebra_18.Vector(ev.x, ev.y);
+            this.lastPagePos = new Algebra_18.Vector(ev.pagePos.x, ev.pagePos.y);
+            this.lastScreenPos = new Algebra_18.Vector(ev.screenPos.x, ev.screenPos.y);
+            this.lastWorldPos = new Algebra_18.Vector(ev.worldPos.x, ev.worldPos.y);
         };
         Pointer.prototype._onPointerDown = function () {
             this._isDown = true;
@@ -12832,7 +12832,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.15.0-alpha.2102+aad4d8e';
+    exports.EX_VERSION = '0.15.0-alpha.2114+bf8a3fc';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);

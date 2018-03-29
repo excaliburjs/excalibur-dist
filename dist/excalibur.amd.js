@@ -1,4 +1,4 @@
-/*! excalibur - v0.15.0-alpha.2125+4d9db01 - 2018-03-28
+/*! excalibur - v0.15.0-alpha.2128+122def8 - 2018-03-29
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -12377,7 +12377,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.15.0-alpha.2125+4d9db01';
+    exports.EX_VERSION = '0.15.0-alpha.2128+122def8';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);

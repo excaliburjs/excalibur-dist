@@ -1,4 +1,4 @@
-/*! excalibur - v0.15.0-alpha.2128+122def8 - 2018-03-29
+/*! excalibur - v0.15.0-alpha.2209+4709aee - 2018-04-06
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -423,246 +423,6 @@ declare module "Util/Util" {
         map(func: (element: T, index: number) => any): void;
     }
 }
-declare module "Camera" {
-    import { Engine } from "Engine";
-    import { EasingFunction } from "Util/EasingFunctions";
-    import { IPromise, Promise } from "Promises";
-    import { Vector } from "Algebra";
-    import { Actor } from "Actor";
-    /**
-     * Interface that describes a custom camera strategy for tracking targets
-     */
-    export interface ICameraStrategy<T> {
-        /**
-         * Target of the camera strategy that will be passed to the action
-         */
-        target: T;
-        /**
-         * Camera strategies perform an action to calculate a new focus returned out of the strategy
-         * @param target The target object to apply this camera strategy (if any)
-         * @param camera The current camera implementation in excalibur running the game
-         * @param engine The current engine running the game
-         * @param delta The elapsed time in milliseconds since the last frame
-         */
-        action: (target: T, camera: BaseCamera, engine: Engine, delta: number) => Vector;
-    }
-    /**
-     * Container to house convenience strategy methods
-     * @internal
-     */
-    export class StrategyContainer {
-        camera: BaseCamera;
-        constructor(camera: BaseCamera);
-        /**
-         * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
-         * @param actor The actor to lock the camera to
-         */
-        lockToActor(actor: Actor): void;
-        /**
-         * Creates and adds the [[LockCameraToActorAxisStrategy]] on the current camera
-         * @param actor The actor to lock the camera to
-         * @param axis The axis to follow the actor on
-         */
-        lockToActorAxis(actor: Actor, axis: Axis): void;
-        /**
-         * Creates and adds the [[ElasticToActorStrategy]] on the current camera
-         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
-         * correct and bounce around the target
-         *
-         * @param target Target actor to elastically follow
-         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
-         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
-         */
-        elasticToActor(actor: Actor, cameraElasticity: number, cameraFriction: number): void;
-        /**
-         * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
-         * @param target Target actor to follow when it is "radius" pixels away
-         * @param radius Number of pixels away before the camera will follow
-         */
-        radiusAroundActor(actor: Actor, radius: number): void;
-    }
-    /**
-     * Camera axis enum
-     */
-    export enum Axis {
-        X = 0,
-        Y = 1,
-    }
-    /**
-     * Lock a camera to the exact x/y postition of an actor.
-     */
-    export class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
-        target: Actor;
-        constructor(target: Actor);
-        action: (target: Actor, _cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
-    }
-    /**
-     * Lock a camera to a specific axis around an actor.
-     */
-    export class LockCameraToActorAxisStrategy implements ICameraStrategy<Actor> {
-        target: Actor;
-        axis: Axis;
-        constructor(target: Actor, axis: Axis);
-        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
-    }
-    /**
-     * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
-     */
-    export class ElasticToActorStrategy implements ICameraStrategy<Actor> {
-        target: Actor;
-        cameraElasticity: number;
-        cameraFriction: number;
-        /**
-         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
-         * correct and bounce around the target
-         *
-         * @param target Target actor to elastically follow
-         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
-         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
-         */
-        constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
-        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
-    }
-    export class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
-        target: Actor;
-        radius: number;
-        /**
-         *
-         * @param target Target actor to follow when it is "radius" pixels away
-         * @param radius Number of pixels away before the camera will follow
-         */
-        constructor(target: Actor, radius: number);
-        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
-    }
-    /**
-     * Cameras
-     *
-     * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
-     * to move around your game and set focus. They are used to determine
-     * what is "off screen" and can be used to scale the game.
-     *
-     * [[include:Cameras.md]]
-     */
-    export class BaseCamera {
-        protected _follow: Actor;
-        private _cameraStrategies;
-        strategy: StrategyContainer;
-        z: number;
-        dx: number;
-        dy: number;
-        dz: number;
-        ax: number;
-        ay: number;
-        az: number;
-        rotation: number;
-        rx: number;
-        private _x;
-        private _y;
-        private _cameraMoving;
-        private _currentLerpTime;
-        private _lerpDuration;
-        private _lerpStart;
-        private _lerpEnd;
-        private _lerpPromise;
-        protected _isShaking: boolean;
-        private _shakeMagnitudeX;
-        private _shakeMagnitudeY;
-        private _shakeDuration;
-        private _elapsedShakeTime;
-        private _xShake;
-        private _yShake;
-        protected _isZooming: boolean;
-        private _maxZoomScale;
-        private _zoomPromise;
-        private _zoomIncrement;
-        private _easing;
-        /**
-         * Get the camera's x position
-         */
-        /**
-         * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
-         */
-        x: number;
-        /**
-         * Get the camera's y position
-         */
-        /**
-         * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
-         */
-        y: number;
-        /**
-         * Get the camera's position as a vector
-         */
-        /**
-         * Set the cameras position
-         */
-        pos: Vector;
-        /**
-         * Get the camera's velocity as a vector
-         */
-        /**
-         * Set the camera's velocity
-         */
-        vel: Vector;
-        /**
-         * Returns the focal point of the camera, a new point giving the x and y position of the camera
-         */
-        getFocus(): Vector;
-        /**
-         * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
-         *
-         * @param pos The target position to move to
-         * @param duration The duration in milliseconds the move should last
-         * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
-         * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
-         *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
-         */
-        move(pos: Vector, duration: number, easingFn?: EasingFunction): IPromise<Vector>;
-        /**
-         * Sets the camera to shake at the specified magnitudes for the specified duration
-         * @param magnitudeX  The x magnitude of the shake
-         * @param magnitudeY  The y magnitude of the shake
-         * @param duration    The duration of the shake in milliseconds
-         */
-        shake(magnitudeX: number, magnitudeY: number, duration: number): void;
-        /**
-         * Zooms the camera in or out by the specified scale over the specified duration.
-         * If no duration is specified, it take effect immediately.
-         * @param scale    The scale of the zoom
-         * @param duration The duration of the zoom in milliseconds
-         */
-        zoom(scale: number, duration?: number): Promise<boolean>;
-        /**
-         * Gets the current zoom scale
-         */
-        getZoom(): number;
-        /**
-         * Adds a new camera strategy to this camera
-         * @param cameraStrategy Instance of an [[ICameraStrategy]]
-         */
-        addStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
-        /**
-         * Removes a camera strategy by reference
-         * @param cameraStrategy Instance of an [[ICameraStrategy]]
-         */
-        removeStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
-        /**
-         * Clears all camera strategies from the camera
-         */
-        clearAllStrategies(): void;
-        update(_engine: Engine, delta: number): void;
-        /**
-         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
-         * @param ctx    Canvas context to apply transformations
-         * @param delta  The number of milliseconds since the last update
-         */
-        draw(ctx: CanvasRenderingContext2D): void;
-        debugDraw(ctx: CanvasRenderingContext2D): void;
-        private _isDoneShaking();
-    }
-}
 declare module "Interfaces/IActorTrait" {
     import { Actor } from "Actor";
     import { Engine } from "Engine";
@@ -986,7 +746,7 @@ declare module "UIActor" {
         constructor();
         constructor(xOrConfig?: number, y?: number, width?: number, height?: number);
         constructor(config?: IActorArgs);
-        onInitialize(engine: Engine): void;
+        _initialize(engine: Engine): void;
         contains(x: number, y: number, useWorld?: boolean): boolean;
     }
 }
@@ -2447,7 +2207,7 @@ declare module "Interfaces/IEvented" {
          * @param handler    Optionally the specific handler to unsubscribe
          *
          */
-        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Once listens to an event once then auto unsubscribes from that event
          *
@@ -2461,6 +2221,142 @@ declare module "Actions/IActionable" {
     import { ActionContext } from "Actions/ActionContext";
     export interface IActionable {
         actions: ActionContext;
+    }
+}
+declare module "EventDispatcher" {
+    import { GameEvent } from "Events";
+    import { IEvented } from "Interfaces/IEvented";
+    /**
+     * Excalibur's internal event dispatcher implementation.
+     * Callbacks are fired immediately after an event is published.
+     * Typically you will use [[Class.eventDispatcher]] since most classes in
+     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
+     * yourself.
+     *
+     * [[include:Events.md]]
+     */
+    export class EventDispatcher implements IEvented {
+        private _handlers;
+        private _wiredEventDispatchers;
+        private _target;
+        /**
+         * @param target  The object that will be the recipient of events from this event dispatcher
+         */
+        constructor(target: any);
+        /**
+         * Emits an event for target
+         * @param eventName  The name of the event to publish
+         * @param event      Optionally pass an event data object to the handler
+         */
+        emit(eventName: string, event?: GameEvent<any>): void;
+        /**
+         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
+         * @param eventName  The name of the event to subscribe to
+         * @param handler    The handler callback to fire on this event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Unsubscribe an event handler(s) from an event. If a specific handler
+         * is specified for an event, only that handler will be unsubscribed.
+         * Otherwise all handlers will be unsubscribed for that event.
+         *
+         * @param eventName  The name of the event to unsubscribe
+         * @param handler    Optionally the specific handler to unsubscribe
+         *
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Wires this event dispatcher to also recieve events from another
+         */
+        wire(eventDispatcher: EventDispatcher): void;
+        /**
+         * Unwires this event dispatcher from another
+         */
+        unwire(eventDispatcher: EventDispatcher): void;
+    }
+}
+declare module "Class" {
+    import { GameEvent } from "Events";
+    import { EventDispatcher } from "EventDispatcher";
+    import { IEvented } from "Interfaces/IEvented";
+    /**
+     * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
+     * and extending abilities for vanilla Javascript projects
+     */
+    export class Class implements IEvented {
+        /**
+         * Direct access to the game object event dispatcher.
+         */
+        eventDispatcher: EventDispatcher;
+        constructor();
+        /**
+         * Alias for `addEventListener`. You can listen for a variety of
+         * events off of the engine; see the events section below for a complete list.
+         * @param eventName  Name of the event to listen for
+         * @param handler    Event handler for the thrown event
+         */
+        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * Alias for `removeEventListener`. If only the eventName is specified
+         * it will remove all handlers registered for that specific event. If the eventName
+         * and the handler instance are specified only that handler will be removed.
+         *
+         * @param eventName  Name of the event to listen for
+         * @param handler    Event handler for the thrown event
+         */
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * Emits a new event
+         * @param eventName   Name of the event to emit
+         * @param eventObject Data associated with this event
+         */
+        emit(eventName: string, eventObject?: GameEvent<any>): void;
+        /**
+         * Once listens to an event one time, then unsubscribes from that event
+         *
+         * @param eventName The name of the event to subscribe to once
+         * @param handler   The handler of the event that will be auto unsubscribed
+         */
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        /**
+         * You may wish to extend native Excalibur functionality in vanilla Javascript.
+         * Any method on a class inheriting [[Class]] may be extended to support
+         * additional functionality. In the example below we create a new type called `MyActor`.
+         *
+         *
+         * ```js
+         * var MyActor = Actor.extend({
+         *
+         *    constructor: function() {
+         *       this.newprop = 'something';
+         *       Actor.apply(this, arguments);
+         *    },
+         *
+         *    update: function(engine, delta) {
+         *       // Implement custom update
+         *       // Call super constructor update
+         *       Actor.prototype.update.call(this, engine, delta);
+         *
+         *       console.log("Something cool!");
+         *    }
+         * });
+         *
+         * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
+         * ```
+         *
+         * In TypeScript, you only need to use the `extends` syntax, you do not need
+         * to use this method of extension.
+         *
+         * @param methods A JSON object contain any methods/properties you want to extend
+         */
+        static extend(methods: any): any;
     }
 }
 declare module "Group" {
@@ -2634,19 +2530,19 @@ declare module "Interfaces/IDrawable" {
         /**
          * Indicates the current width of the drawing in pixels, factoring in the scale
          */
-        width: number;
+        drawWidth: number;
         /**
          * Indicates the current height of the drawing in pixels, factoring in the scale
          */
-        height: number;
+        drawHeight: number;
         /**
          * Indicates the natural width of the drawing in pixels, this is the original width of the source image
          */
-        naturalWidth: number;
+        width: number;
         /**
          * Indicates the natural height of the drawing in pixels, this is the original height of the source image
          */
-        naturalHeight: number;
+        height: number;
         /**
          * Adds a new [[ISpriteEffect]] to this drawing.
          * @param effect  Effect to add to the this drawing
@@ -2850,6 +2746,20 @@ declare module "Configurable" {
     };
     export function Configurable<T extends Constructor<{}>>(base: T): T;
 }
+declare module "Util/Decorators" {
+    /**
+     * Obsolete decorator options
+     */
+    export interface IObsoleteOptions {
+        message?: string;
+        alternateMethod?: string;
+    }
+    /**
+     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
+     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
+     */
+    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
+}
 declare module "Drawing/Sprite" {
     import * as Effects from "Drawing/SpriteEffects";
     import { Color } from "Drawing/Color";
@@ -2862,6 +2772,18 @@ declare module "Drawing/Sprite" {
      */
     export class SpriteImpl implements IDrawable {
         private _texture;
+        x: number;
+        y: number;
+        readonly drawWidth: number;
+        readonly drawHeight: number;
+        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
+        sx: number;
+        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
+        sy: number;
+        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
+        swidth: number;
+        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
+        sheight: number;
         rotation: number;
         anchor: Vector;
         scale: Vector;
@@ -2874,15 +2796,9 @@ declare module "Drawing/Sprite" {
          * Draws the sprite flipped horizontally
          */
         flipHorizontal: boolean;
+        effects: Effects.ISpriteEffect[];
         width: number;
         height: number;
-        effects: Effects.ISpriteEffect[];
-        sx: number;
-        sy: number;
-        swidth: number;
-        sheight: number;
-        naturalWidth: number;
-        naturalHeight: number;
         private _spriteCanvas;
         private _spriteCtx;
         private _pixelData;
@@ -2890,12 +2806,12 @@ declare module "Drawing/Sprite" {
         private _dirtyEffect;
         /**
          * @param image   The backing image texture to build the Sprite
-         * @param sx      The x position of the sprite
-         * @param sy      The y position of the sprite
-         * @param swidth  The width of the sprite in pixels
-         * @param sheight The height of the sprite in pixels
+         * @param x      The x position of the sprite
+         * @param y      The y position of the sprite
+         * @param width  The width of the sprite in pixels
+         * @param height The height of the sprite in pixels
          */
-        constructor(imageOrConfig: Texture | ISpriteArgs, sx: number, sy: number, swidth: number, sheight: number);
+        constructor(imageOrConfig: Texture | ISpriteArgs, x: number, y: number, width: number, height: number);
         private _loadPixels();
         /**
          * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
@@ -2975,11 +2891,19 @@ declare module "Drawing/Sprite" {
      * [[include:Constructors.md]]
      */
     export interface ISpriteArgs extends Partial<SpriteImpl> {
-        image: Texture;
-        sx: number;
-        sy: number;
-        swidth: number;
-        sheight: number;
+        image?: Texture;
+        x?: number;
+        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
+        sx?: number;
+        y?: number;
+        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
+        sy?: number;
+        width?: number;
+        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
+        swidth?: number;
+        height?: number;
+        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use ex.[[Sprite.height]] */
+        sheight?: number;
         rotation?: number;
         anchor?: Vector;
         scale?: Vector;
@@ -2994,7 +2918,7 @@ declare module "Drawing/Sprite" {
      */
     export class Sprite extends SpriteImpl {
         constructor(config: ISpriteArgs);
-        constructor(image: Texture, sx: number, sy: number, swidth: number, sheight: number);
+        constructor(image: Texture, x: number, y: number, width: number, height: number);
     }
 }
 declare module "Drawing/Animation" {
@@ -3044,10 +2968,10 @@ declare module "Drawing/Animation" {
          * Flip each frame horizontally. Sets [[Sprite.flipHorizontal]].
          */
         flipHorizontal: boolean;
+        drawWidth: number;
+        drawHeight: number;
         width: number;
         height: number;
-        naturalWidth: number;
-        naturalHeight: number;
         /**
          * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
          *
@@ -3395,7 +3319,7 @@ declare module "Label" {
     }
 }
 declare module "Drawing/SpriteSheet" {
-    import { Sprite } from "Drawing/Sprite";
+    import { Sprite, ISpriteArgs } from "Drawing/Sprite";
     import { Animation } from "Drawing/Animation";
     import { Color } from "Drawing/Color";
     import { Texture } from "Resources/Texture";
@@ -3450,6 +3374,15 @@ declare module "Drawing/SpriteSheet" {
          * @param index  The index of the sprite
          */
         getSprite(index: number): Sprite;
+        /**
+         * Get an animation with bespoke sprite coordinates. This is useful if the SpriteSheet is
+         * packed and not a uniform width or height. The resulting [[Animation]] will have the height and width of the
+         * largest dimension (width, height) from among the sprite coordinates
+         * @param engine
+         * @param spriteCoordinates
+         * @param speed
+         */
+        getAnimationByCoords(engine: Engine, spriteCoordinates: ISpriteArgs[], speed: number): Animation;
     }
     /**
      * [[include:Constructors.md]]
@@ -3732,65 +3665,6 @@ declare module "TileMap" {
         constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
     }
 }
-declare module "EventDispatcher" {
-    import { GameEvent } from "Events";
-    import { IEvented } from "Interfaces/IEvented";
-    /**
-     * Excalibur's internal event dispatcher implementation.
-     * Callbacks are fired immediately after an event is published.
-     * Typically you will use [[Class.eventDispatcher]] since most classes in
-     * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
-     * yourself.
-     *
-     * [[include:Events.md]]
-     */
-    export class EventDispatcher implements IEvented {
-        private _handlers;
-        private _wiredEventDispatchers;
-        private _target;
-        /**
-         * @param target  The object that will be the recipient of events from this event dispatcher
-         */
-        constructor(target: any);
-        /**
-         * Emits an event for target
-         * @param eventName  The name of the event to publish
-         * @param event      Optionally pass an event data object to the handler
-         */
-        emit(eventName: string, event?: GameEvent<any>): void;
-        /**
-         * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
-         * @param eventName  The name of the event to subscribe to
-         * @param handler    The handler callback to fire on this event
-         */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Unsubscribe an event handler(s) from an event. If a specific handler
-         * is specified for an event, only that handler will be unsubscribed.
-         * Otherwise all handlers will be unsubscribed for that event.
-         *
-         * @param eventName  The name of the event to unsubscribe
-         * @param handler    Optionally the specific handler to unsubscribe
-         *
-         */
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
-        /**
-         * Once listens to an event one time, then unsubscribes from that event
-         *
-         * @param eventName The name of the event to subscribe to once
-         * @param handler   The handler of the event that will be auto unsubscribed
-         */
-        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-        /**
-         * Wires this event dispatcher to also recieve events from another
-         */
-        wire(eventDispatcher: EventDispatcher): void;
-        /**
-         * Unwires this event dispatcher from another
-         */
-        unwire(eventDispatcher: EventDispatcher): void;
-    }
-}
 declare module "Trigger" {
     import { Engine } from "Engine";
     import { Actor } from "Actor";
@@ -3856,6 +3730,7 @@ declare module "Scene" {
     import { BaseCamera } from "Camera";
     import { Actor } from "Actor";
     import { Class } from "Class";
+    import { ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw } from "Interfaces/LifecycleEvents";
     import * as Events from "Events";
     import { Trigger } from "Trigger";
     /**
@@ -3867,7 +3742,7 @@ declare module "Scene" {
      *
      * [[include:Scenes.md]]
      */
-    export class Scene extends Class {
+    export class Scene extends Class implements ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw {
         /**
          * Gets or sets the current camera for the scene
          */
@@ -3917,21 +3792,65 @@ declare module "Scene" {
         on(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
         on(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
+        once(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
+        once(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: Events.predebugdraw, handler: (event?: PreDebugDrawEvent) => void): void;
+        once(eventName: Events.postdebugdraw, handler: (event?: PostDebugDrawEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: InitializeEvent) => void): void;
+        off(eventName: Events.activate, handler?: (event?: ActivateEvent) => void): void;
+        off(eventName: Events.deactivate, handler?: (event?: DeactivateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: PreDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: PostDrawEvent) => void): void;
+        off(eventName: Events.predebugdraw, handler?: (event?: PreDebugDrawEvent) => void): void;
+        off(eventName: Events.postdebugdraw, handler?: (event?: PostDebugDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
          */
-        onInitialize(engine: Engine): void;
+        onInitialize(_engine: Engine): void;
         /**
          * This is called when the scene is made active and started. It is meant to be overriden,
          * this is where you should setup any DOM UI or event handlers needed for the scene.
          */
-        onActivate(): void;
+        onActivate(_oldScene: Scene, _newScene: Scene): void;
         /**
          * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
          * this is where you should cleanup any DOM UI or event handlers needed for the scene.
          */
-        onDeactivate(): void;
+        onDeactivate(_oldScene: Scene, _newScene: Scene): void;
+        /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before a scene is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreDraw` is called directly before a scene is drawn.
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Safe to override onPostDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostDraw` is called directly after a scene is drawn.
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         /**
          * Initializes actors in the scene
          */
@@ -3941,11 +3860,57 @@ declare module "Scene" {
          */
         readonly isInitialized: boolean;
         /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
          * Initializes the scene before the first update, meant to be called by engine not by users of
          * Excalibur
          * @internal
          */
         _initialize(engine: Engine): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
+         * @internal
+         */
+        _activate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
+         * @internal
+         */
+        _deactivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(_engine: Engine, delta: number): void;
+        /**
+         *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(_engine: Engine, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _predraw handler for [[onPreDraw]] lifecycle event
+         *
+         * @internal
+         */
+        _predraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _postdraw handler for [[onPostDraw]] lifecycle event
+         *
+         * @internal
+         */
+        _postdraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         /**
          * Updates all the actors and timers in the scene. Called by the [[Engine]].
          * @param engine  Reference to the current Engine
@@ -4309,20 +4274,6 @@ declare module "Input/Gamepad" {
         axis: number;
         buttons: number;
     }
-}
-declare module "Util/Decorators" {
-    /**
-     * Obsolete decorator options
-     */
-    export interface IObsoleteOptions {
-        message?: string;
-        alternateMethod?: string;
-    }
-    /**
-     * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
-     * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
-     */
-    export function obsolete(options?: IObsoleteOptions): (target: any, property: string, descriptor: PropertyDescriptor) => any;
 }
 declare module "Input/Pointer" {
     import { Engine } from "Engine";
@@ -4696,8 +4647,10 @@ declare module "Events" {
     import { TileMap } from "TileMap";
     import { Side } from "Collision/Side";
     import * as Input from "Input/Index";
-    import { Pair } from "Index";
+    import { Pair, BaseCamera } from "Index";
     export type kill = 'kill';
+    export type prekill = 'prekill';
+    export type postkill = 'postkill';
     export type predraw = 'predraw';
     export type postdraw = 'postdraw';
     export type predebugdraw = 'predebugdraw';
@@ -4768,6 +4721,20 @@ declare module "Events" {
         constructor(target: Actor);
     }
     /**
+     * The 'prekill' event is emitted directly before an actor is killed.
+     */
+    export class PreKillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
+     * The 'postkill' event is emitted directly after the actor is killed.
+     */
+    export class PostKillEvent extends GameEvent<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+    }
+    /**
      * The 'start' event is emitted on engine when has started and is ready for interaction.
      */
     export class GameStartEvent extends GameEvent<Engine> {
@@ -4820,22 +4787,22 @@ declare module "Events" {
         constructor(ctx: CanvasRenderingContext2D, target: Actor | Scene | Engine);
     }
     /**
-     * The 'preupdate' event is emitted on actors, scenes, and engine before the update starts.
+     * The 'preupdate' event is emitted on actors, scenes, camera, and engine before the update starts.
      */
-    export class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
+    export class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
         engine: Engine;
         delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
+        target: Actor | Scene | Engine | TileMap | BaseCamera;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
     }
     /**
-     * The 'postupdate' event is emitted on actors, scenes, and engine after the update ends.
+     * The 'postupdate' event is emitted on actors, scenes, camera, and engine after the update ends.
      */
-    export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap> {
+    export class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
         engine: Engine;
         delta: number;
-        target: Actor | Scene | Engine | TileMap;
-        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap);
+        target: Actor | Scene | Engine | TileMap | BaseCamera;
+        constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
     }
     /**
      * The 'preframe' event is emitted on the engine, before the frame begins.
@@ -4985,13 +4952,13 @@ declare module "Events" {
     /**
      * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
      */
-    export class InitializeEvent extends GameEvent<Actor | Scene> {
+    export class InitializeEvent extends GameEvent<Actor | Scene | Engine | BaseCamera> {
         engine: Engine;
-        target: Actor | Scene;
+        target: Actor | Scene | Engine | BaseCamera;
         /**
          * @param engine  The reference to the current engine
          */
-        constructor(engine: Engine, target: Actor | Scene);
+        constructor(engine: Engine, target: Actor | Scene | Engine | BaseCamera);
     }
     /**
      * Event thrown on a [[Scene]] on activation
@@ -5040,81 +5007,400 @@ declare module "Events" {
         constructor(target: Trigger, actor: Actor);
     }
 }
-declare module "Class" {
-    import { GameEvent } from "Events";
-    import { EventDispatcher } from "EventDispatcher";
-    import { IEvented } from "Interfaces/IEvented";
+declare module "Interfaces/LifecycleEvents" {
+    import { Engine } from "Engine";
+    import * as Events from "Events";
+    import { Scene } from "Scene";
+    export interface ICanInitialize {
+        /**
+         * Overridable implementation
+         */
+        onInitialize(_engine: Engine): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        once(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+    }
+    export interface ICanActivate {
+        /**
+         * Overridable implementation
+         */
+        onActivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.activate, handler: (event?: Events.ActivateEvent) => void): void;
+        once(eventName: Events.activate, handler: (event?: Events.ActivateEvent) => void): void;
+        off(eventName: Events.activate, handler?: (event?: Events.ActivateEvent) => void): void;
+    }
+    export interface ICanDeactivate {
+        /**
+         * Overridable implementation
+         */
+        onDeactivate(oldScene: Scene, newScene: Scene): void;
+        /**
+         * Event signature
+         */
+        on(eventName: Events.deactivate, handler: (event?: Events.DeactivateEvent) => void): void;
+        once(eventName: Events.deactivate, handler: (event?: Events.DeactivateEvent) => void): void;
+        off(eventName: Events.deactivate, handler?: (event?: Events.DeactivateEvent) => void): void;
+    }
+    export interface ICanUpdate {
+        /**
+         * Overridable implementation
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Event signature
+         */
+        on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: Events.PreUpdateEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: Events.PostUpdateEvent) => void): void;
+    }
+    export interface ICanDraw {
+        /**
+         * Overridable implementation
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: Events.PreDrawEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
+    }
+    export interface ICanBeKilled {
+        /**
+         * Overridable implementation
+         */
+        onPreKill(_scene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        once(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        off(eventName: Events.prekill, handler: (event?: Events.PreKillEvent) => void): void;
+        /**
+         * Overridable implementation
+         */
+        onPostKill(_scene: Scene): void;
+        /**
+         * Event signatures
+         */
+        on(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+        once(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+        off(eventName: Events.postkill, handler: (event?: Events.PostKillEvent) => void): void;
+    }
+}
+declare module "Camera" {
+    import { Engine } from "Engine";
+    import { EasingFunction } from "Util/EasingFunctions";
+    import { IPromise, Promise } from "Promises";
+    import { Vector } from "Algebra";
+    import { Actor } from "Actor";
+    import { ICanUpdate, ICanInitialize } from "Interfaces/LifecycleEvents";
+    import { PreUpdateEvent, PostUpdateEvent, GameEvent, InitializeEvent } from "Events";
+    import { Class } from "Class";
     /**
-     * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
-     * and extending abilities for vanilla Javascript projects
+     * Interface that describes a custom camera strategy for tracking targets
      */
-    export class Class implements IEvented {
+    export interface ICameraStrategy<T> {
         /**
-         * Direct access to the game object event dispatcher.
+         * Target of the camera strategy that will be passed to the action
          */
-        eventDispatcher: EventDispatcher;
-        constructor();
+        target: T;
         /**
-         * Alias for `addEventListener`. You can listen for a variety of
-         * events off of the engine; see the events section below for a complete list.
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
+         * Camera strategies perform an action to calculate a new focus returned out of the strategy
+         * @param target The target object to apply this camera strategy (if any)
+         * @param camera The current camera implementation in excalibur running the game
+         * @param engine The current engine running the game
+         * @param delta The elapsed time in milliseconds since the last frame
          */
-        on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        action: (target: T, camera: BaseCamera, engine: Engine, delta: number) => Vector;
+    }
+    /**
+     * Container to house convenience strategy methods
+     * @internal
+     */
+    export class StrategyContainer {
+        camera: BaseCamera;
+        constructor(camera: BaseCamera);
         /**
-         * Alias for `removeEventListener`. If only the eventName is specified
-         * it will remove all handlers registered for that specific event. If the eventName
-         * and the handler instance are specified only that handler will be removed.
+         * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
+         * @param actor The actor to lock the camera to
+         */
+        lockToActor(actor: Actor): void;
+        /**
+         * Creates and adds the [[LockCameraToActorAxisStrategy]] on the current camera
+         * @param actor The actor to lock the camera to
+         * @param axis The axis to follow the actor on
+         */
+        lockToActorAxis(actor: Actor, axis: Axis): void;
+        /**
+         * Creates and adds the [[ElasticToActorStrategy]] on the current camera
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
          *
-         * @param eventName  Name of the event to listen for
-         * @param handler    Event handler for the thrown event
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
          */
-        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        elasticToActor(actor: Actor, cameraElasticity: number, cameraFriction: number): void;
         /**
-         * Emits a new event
-         * @param eventName   Name of the event to emit
-         * @param eventObject Data associated with this event
+         * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
          */
-        emit(eventName: string, eventObject?: GameEvent<any>): void;
+        radiusAroundActor(actor: Actor, radius: number): void;
+    }
+    /**
+     * Camera axis enum
+     */
+    export enum Axis {
+        X = 0,
+        Y = 1,
+    }
+    /**
+     * Lock a camera to the exact x/y postition of an actor.
+     */
+    export class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        constructor(target: Actor);
+        action: (target: Actor, _cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Lock a camera to a specific axis around an actor.
+     */
+    export class LockCameraToActorAxisStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        axis: Axis;
+        constructor(target: Actor, axis: Axis);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
+     */
+    export class ElasticToActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        cameraElasticity: number;
+        cameraFriction: number;
         /**
-         * Once listens to an event one time, then unsubscribes from that event
+         * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
+         * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+         * correct and bounce around the target
          *
-         * @param eventName The name of the event to subscribe to once
-         * @param handler   The handler of the event that will be auto unsubscribed
+         * @param target Target actor to elastically follow
+         * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
+         * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
          */
+        constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    export class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
+        target: Actor;
+        radius: number;
+        /**
+         *
+         * @param target Target actor to follow when it is "radius" pixels away
+         * @param radius Number of pixels away before the camera will follow
+         */
+        constructor(target: Actor, radius: number);
+        action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    }
+    /**
+     * Cameras
+     *
+     * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
+     * to move around your game and set focus. They are used to determine
+     * what is "off screen" and can be used to scale the game.
+     *
+     * [[include:Cameras.md]]
+     */
+    export class BaseCamera extends Class implements ICanUpdate, ICanInitialize {
+        protected _follow: Actor;
+        private _cameraStrategies;
+        strategy: StrategyContainer;
+        z: number;
+        dx: number;
+        dy: number;
+        dz: number;
+        ax: number;
+        ay: number;
+        az: number;
+        rotation: number;
+        rx: number;
+        private _x;
+        private _y;
+        private _cameraMoving;
+        private _currentLerpTime;
+        private _lerpDuration;
+        private _lerpStart;
+        private _lerpEnd;
+        private _lerpPromise;
+        protected _isShaking: boolean;
+        private _shakeMagnitudeX;
+        private _shakeMagnitudeY;
+        private _shakeDuration;
+        private _elapsedShakeTime;
+        private _xShake;
+        private _yShake;
+        protected _isZooming: boolean;
+        private _maxZoomScale;
+        private _zoomPromise;
+        private _zoomIncrement;
+        private _easing;
+        /**
+         * Get the camera's x position
+         */
+        /**
+         * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
+         */
+        x: number;
+        /**
+         * Get the camera's y position
+         */
+        /**
+         * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
+         */
+        y: number;
+        /**
+         * Get the camera's position as a vector
+         */
+        /**
+         * Set the cameras position
+         */
+        pos: Vector;
+        /**
+         * Get the camera's velocity as a vector
+         */
+        /**
+         * Set the camera's velocity
+         */
+        vel: Vector;
+        /**
+         * Returns the focal point of the camera, a new point giving the x and y position of the camera
+         */
+        getFocus(): Vector;
+        /**
+         * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
+         *
+         * @param pos The target position to move to
+         * @param duration The duration in milliseconds the move should last
+         * @param [easingFn] An optional easing function ([[ex.EasingFunctions.EaseInOutCubic]] by default)
+         * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
+         *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
+         */
+        move(pos: Vector, duration: number, easingFn?: EasingFunction): IPromise<Vector>;
+        /**
+         * Sets the camera to shake at the specified magnitudes for the specified duration
+         * @param magnitudeX  The x magnitude of the shake
+         * @param magnitudeY  The y magnitude of the shake
+         * @param duration    The duration of the shake in milliseconds
+         */
+        shake(magnitudeX: number, magnitudeY: number, duration: number): void;
+        /**
+         * Zooms the camera in or out by the specified scale over the specified duration.
+         * If no duration is specified, it take effect immediately.
+         * @param scale    The scale of the zoom
+         * @param duration The duration of the zoom in milliseconds
+         */
+        zoom(scale: number, duration?: number): Promise<boolean>;
+        /**
+         * Gets the current zoom scale
+         */
+        getZoom(): number;
+        /**
+         * Adds a new camera strategy to this camera
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        addStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Removes a camera strategy by reference
+         * @param cameraStrategy Instance of an [[ICameraStrategy]]
+         */
+        removeStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+        /**
+         * Clears all camera strategies from the camera
+         */
+        clearAllStrategies(): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(engine: Engine, delta: number): void;
+        /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before a scene is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(engine: Engine, delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        private _isInitialized;
+        readonly isInitialized: boolean;
+        _initialize(_engine: Engine): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after a scene is updated.
+         */
+        onInitialize(_engine: Engine): void;
+        on(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
+        on(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
+        on(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
+        off(eventName: 'initialize', handler?: (event?: InitializeEvent) => void): void;
+        off(eventName: 'preupdate', handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: 'postupdate', handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
+        once(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
         once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        update(_engine: Engine, delta: number): void;
         /**
-         * You may wish to extend native Excalibur functionality in vanilla Javascript.
-         * Any method on a class inheriting [[Class]] may be extended to support
-         * additional functionality. In the example below we create a new type called `MyActor`.
-         *
-         *
-         * ```js
-         * var MyActor = Actor.extend({
-         *
-         *    constructor: function() {
-         *       this.newprop = 'something';
-         *       Actor.apply(this, arguments);
-         *    },
-         *
-         *    update: function(engine, delta) {
-         *       // Implement custom update
-         *       // Call super constructor update
-         *       Actor.prototype.update.call(this, engine, delta);
-         *
-         *       console.log("Something cool!");
-         *    }
-         * });
-         *
-         * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
-         * ```
-         *
-         * In TypeScript, you only need to use the `extends` syntax, you do not need
-         * to use this method of extension.
-         *
-         * @param methods A JSON object contain any methods/properties you want to extend
+         * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
+         * @param ctx    Canvas context to apply transformations
+         * @param delta  The number of milliseconds since the last update
          */
-        static extend(methods: any): any;
+        draw(ctx: CanvasRenderingContext2D): void;
+        debugDraw(ctx: CanvasRenderingContext2D): void;
+        private _isDoneShaking();
     }
 }
 declare module "Interfaces/IAudio" {
@@ -5850,10 +6136,10 @@ declare module "Drawing/Polygon" {
     export class Polygon implements IDrawable {
         flipVertical: boolean;
         flipHorizontal: boolean;
+        drawWidth: number;
+        drawHeight: number;
         width: number;
         height: number;
-        naturalWidth: number;
-        naturalHeight: number;
         /**
          * The color to use for the lines of the polygon
          */
@@ -5907,6 +6193,48 @@ declare module "Drawing/Index" {
     import * as effects from "Drawing/SpriteEffects";
     export { effects as Effects };
 }
+declare module "Interfaces/IPointerEvents" {
+    import * as Events from "Events";
+    import { PointerEvent, WheelEvent, PointerDragEvent } from "Input/Pointer";
+    export interface IPointerEvents {
+        on(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        on(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        on(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        on(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerup, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerdown, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerenter, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerleave, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointermove, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointercancel, handler: (event?: PointerEvent) => void): void;
+        once(eventName: Events.pointerwheel, handler: (event?: WheelEvent) => void): void;
+        once(eventName: Events.pointerdragstart, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragend, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
+        once(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerup, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerdown, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerenter, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerleave, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointermove, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointercancel, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerwheel, handler?: (event?: WheelEvent) => void): void;
+        off(eventName: Events.pointerdragstart, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragend, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragenter, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragleave, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragmove, handler?: (event?: PointerDragEvent) => void): void;
+    }
+}
 declare module "Interfaces/Index" {
     export * from "Interfaces/IActorTrait";
     export * from "Interfaces/IAudio";
@@ -5915,6 +6243,8 @@ declare module "Interfaces/Index" {
     export * from "Interfaces/IEvented";
     export * from "Interfaces/ILoadable";
     export * from "Interfaces/ILoader";
+    export * from "Interfaces/LifecycleEvents";
+    export * from "Interfaces/IPointerEvents";
 }
 declare module "Math/PerlinNoise" {
     import { Color } from "Drawing/Color";
@@ -6177,6 +6507,7 @@ declare module "Index" {
     export * from "Util/SortedList";
 }
 declare module "Engine" {
+    import { ICanUpdate, ICanDraw, ICanInitialize } from "Interfaces/LifecycleEvents";
     import { ILoadable } from "Interfaces/ILoadable";
     import { Promise } from "Promises";
     import { Vector } from "Algebra";
@@ -6311,7 +6642,7 @@ declare module "Engine" {
      *
      * [[include:Engine.md]]
      */
-    export class Engine extends Class {
+    export class Engine extends Class implements ICanInitialize, ICanUpdate, ICanDraw {
         /**
          * Direct access to the engine's canvas element
          */
@@ -6402,6 +6733,7 @@ declare module "Engine" {
          * Indicates the current [[DisplayMode]] of the engine.
          */
         displayMode: DisplayMode;
+        private _suppressHiDPIScaling;
         /**
          * Returns the calculated pixel ration for use in rendering
          */
@@ -6438,6 +6770,8 @@ declare module "Engine" {
         private _timescale;
         private _loader;
         private _isLoading;
+        private _isInitialized;
+        on(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
         on(eventName: Events.visible, handler: (event?: VisibleEvent) => void): void;
         on(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): void;
         on(eventName: Events.start, handler: (event?: GameStartEvent) => void): void;
@@ -6449,6 +6783,30 @@ declare module "Engine" {
         on(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
         on(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
+        once(eventName: Events.visible, handler: (event?: VisibleEvent) => void): void;
+        once(eventName: Events.hidden, handler: (event?: HiddenEvent) => void): void;
+        once(eventName: Events.start, handler: (event?: GameStartEvent) => void): void;
+        once(eventName: Events.stop, handler: (event?: GameStopEvent) => void): void;
+        once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
+        once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
+        once(eventName: Events.preframe, handler: (event?: PreFrameEvent) => void): void;
+        once(eventName: Events.postframe, handler: (event?: PostFrameEvent) => void): void;
+        once(eventName: Events.predraw, handler: (event?: PreDrawEvent) => void): void;
+        once(eventName: Events.postdraw, handler: (event?: PostDrawEvent) => void): void;
+        once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.visible, handler?: (event?: VisibleEvent) => void): void;
+        off(eventName: Events.hidden, handler?: (event?: HiddenEvent) => void): void;
+        off(eventName: Events.start, handler?: (event?: GameStartEvent) => void): void;
+        off(eventName: Events.stop, handler?: (event?: GameStopEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: PreUpdateEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: PostUpdateEvent) => void): void;
+        off(eventName: Events.preframe, handler?: (event?: PreFrameEvent) => void): void;
+        off(eventName: Events.postframe, handler?: (event?: PostFrameEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: PreDrawEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: PostDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
         /**
          * Default [[IEngineOptions]]
          */
@@ -6647,6 +7005,7 @@ declare module "Engine" {
          * Initializes the internal canvas, rendering context, displaymode, and native event listeners
          */
         private _initialize(options?);
+        onInitialize(_engine: Engine): void;
         private _intializeDisplayModePosition(options);
         private _initializeHiDpi();
         /**
@@ -6661,15 +7020,40 @@ declare module "Engine" {
          */
         getAntialiasing(): boolean;
         /**
+         * Gets whether the actor is Initialized
+         */
+        readonly isInitialized: boolean;
+        private _overrideInitialize(engine);
+        /**
          * Updates the entire state of the game
          * @param delta  Number of milliseconds elapsed since the last update.
          */
         private _update(delta);
         /**
+         * @internal
+         */
+        _preupdate(delta: number): void;
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * @internal
+         */
+        _postupdate(delta: number): void;
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
          * Draws the entire game
          * @param delta  Number of milliseconds elapsed since the last draw.
          */
         private _draw(delta);
+        /**
+         * @internal
+         */
+        _predraw(_ctx: CanvasRenderingContext2D, delta: number): void;
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * @internal
+         */
+        _postdraw(_ctx: CanvasRenderingContext2D, delta: number): void;
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
         /**
          * Starts the internal game loop for Excalibur after loading
          * any provided assets.
@@ -7122,13 +7506,14 @@ declare module "Actor" {
     import { Class } from "Class";
     import { BoundingBox } from "Collision/BoundingBox";
     import { Texture } from "Resources/Texture";
-    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent } from "Events";
-    import { PointerEvent, PointerDragEvent } from "Input/Pointer";
+    import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent } from "Events";
+    import { PointerEvent, WheelEvent, PointerDragEvent } from "Input/Pointer";
     import { Engine } from "Engine";
     import { Color } from "Drawing/Color";
     import { Sprite } from "Drawing/Sprite";
     import { IActorTrait } from "Interfaces/IActorTrait";
     import { IDrawable } from "Interfaces/IDrawable";
+    import { ICanInitialize, ICanUpdate, ICanDraw, ICanBeKilled } from "Interfaces/LifecycleEvents";
     import { Scene } from "Scene";
     import { Logger } from "Util/Log";
     import { ActionContext } from "Actions/ActionContext";
@@ -7141,6 +7526,7 @@ declare module "Actor" {
     import { IActionable } from "Actions/IActionable";
     import * as Traits from "Traits/Index";
     import * as Events from "Events";
+    import { IPointerEvents } from "Interfaces/IPointerEvents";
     export type PointerEventName = 'pointerdragstart' | 'pointerdragend' | 'pointerdragmove' | 'pointerdragenter' | 'pointerdragleave' | 'pointermove' | 'pointerenter' | 'pointerleave' | 'pointerup' | 'pointerdown';
     /**
      * [[include:Constructors.md]]
@@ -7162,7 +7548,7 @@ declare module "Actor" {
     /**
      * @hidden
      */
-    export class ActorImpl extends Class implements IActionable, IEvented {
+    export class ActorImpl extends Class implements IActionable, IEvented, IPointerEvents, ICanInitialize, ICanUpdate, ICanDraw, ICanBeKilled {
         /**
          * Indicates the next id to be set
          */
@@ -7402,8 +7788,10 @@ declare module "Actor" {
          */
         constructor(xOrConfig?: number | IActorArgs, y?: number, width?: number, height?: number, color?: Color);
         /**
-         * This is called before the first update of the actor. This method is meant to be
+         * `onInitialize` is called before the first update of the actor. This method is meant to be
          * overridden. This is where initialization of child actors should take place.
+         *
+         * Synonymous with the event handler `.on('initialize', (evt) => {...})`
          */
         onInitialize(_engine: Engine): void;
         /**
@@ -7412,6 +7800,9 @@ declare module "Actor" {
         readonly isInitialized: boolean;
         /**
          * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
+         *
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
          * @internal
          */
         _initialize(engine: Engine): void;
@@ -7419,11 +7810,15 @@ declare module "Actor" {
         private _captureMoveEvents;
         private _captureDragEvents;
         private _checkForPointerOptIn(eventName);
+        on(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
+        on(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
         on(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
         on(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
         on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        on(eventName: Events.prekill, handler: (event?: PreKillEvent) => void): void;
+        on(eventName: Events.postkill, handler: (event?: PostKillEvent) => void): void;
         on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
         on(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
         on(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
@@ -7444,11 +7839,15 @@ declare module "Actor" {
         on(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
         on(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        once(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
+        once(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
         once(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
         once(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
         once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
         once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
+        once(eventName: Events.postkill, handler: (event?: PostKillEvent) => void): void;
+        once(eventName: Events.prekill, handler: (event?: PreKillEvent) => void): void;
         once(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
         once(eventName: Events.preupdate, handler: (event?: PreUpdateEvent) => void): void;
         once(eventName: Events.postupdate, handler: (event?: PostUpdateEvent) => void): void;
@@ -7469,6 +7868,54 @@ declare module "Actor" {
         once(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
         once(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
         once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+        off(eventName: Events.exittrigger, handler?: (evt: ExitTriggerEvent) => void): void;
+        off(eventName: Events.entertrigger, handler?: (evt: EnterTriggerEvent) => void): void;
+        off(eventName: Events.pointerup, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerdown, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerenter, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerleave, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointermove, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointercancel, handler?: (event?: PointerEvent) => void): void;
+        off(eventName: Events.pointerwheel, handler?: (event?: WheelEvent) => void): void;
+        off(eventName: Events.pointerdragstart, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragend, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragenter, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragleave, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.pointerdragmove, handler?: (event?: PointerDragEvent) => void): void;
+        off(eventName: Events.prekill, handler?: (event?: PreKillEvent) => void): void;
+        off(eventName: Events.postkill, handler?: (event?: PostKillEvent) => void): void;
+        off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
+        off(eventName: Events.postupdate, handler?: (event?: Events.PostUpdateEvent) => void): void;
+        off(eventName: Events.preupdate, handler?: (event?: Events.PreUpdateEvent) => void): void;
+        off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
+        off(eventName: Events.predraw, handler?: (event?: Events.PreDrawEvent) => void): void;
+        off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _prekill handler for [[onPreKill]] lifecycle event
+         * @internal
+         */
+        _prekill(_scene: Scene): void;
+        /**
+         * Safe to override onPreKill lifecycle event handler. Synonymous with `.on('prekill', (evt) =>{...})`
+         *
+         * `onPreKill` is called directly before an actor is killed and removed from its current [[Scene]].
+         */
+        onPreKill(_scene: Scene): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _prekill handler for [[onPostKill]] lifecycle event
+         * @internal
+         */
+        _postkill(_scene: Scene): void;
+        /**
+         * Safe to override onPostKill lifecycle event handler. Synonymous with `.on('postkill', (evt) => {...})`
+         *
+         * `onPostKill` is called directly after an actor is killed and remove from its current [[Scene]].
+         */
+        onPostKill(_scene: Scene): void;
         /**
          * If the current actor is a member of the scene, this will remove
          * it from the scene graph. It will no longer be drawn or updated.
@@ -7666,11 +8113,63 @@ declare module "Actor" {
          */
         update(engine: Engine, delta: number): void;
         /**
+         * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+         *
+         * `onPreUpdate` is called directly before an actor is updated.
+         */
+        onPreUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('postupdate', (evt) =>{...})`
+         *
+         * `onPostUpdate` is called directly after an actor is updated.
+         */
+        onPostUpdate(_engine: Engine, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+         * @internal
+         */
+        _preupdate(engine: Engine, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+         * @internal
+         */
+        _postupdate(engine: Engine, delta: number): void;
+        /**
          * Called by the Engine, draws the actor to the screen
          * @param ctx   The rendering context
          * @param delta The time since the last draw in milliseconds
          */
         draw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
+         * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('predraw', (evt) =>{...})`
+         *
+         * `onPreDraw` is called directly before an actor is drawn, but after local transforms are made.
+         */
+        onPreDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * Safe to override onPostDraw lifecycle event handler. Synonymous with `.on('postdraw', (evt) =>{...})`
+         *
+         * `onPostDraw` is called directly after an actor is drawn, and before local transforms are removed.
+         */
+        onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _predraw handler for [[onPreDraw]] lifecycle event
+         * @internal
+         */
+        _predraw(ctx: CanvasRenderingContext2D, delta: number): void;
+        /**
+         * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+         *
+         * Internal _postdraw handler for [[onPostDraw]] lifecycle event
+         * @internal
+         */
+        _postdraw(ctx: CanvasRenderingContext2D, delta: number): void;
         /**
          * Called by the Engine, draws the actors debugging to the screen
          * @param ctx The rendering context

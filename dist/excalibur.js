@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2213+b59df07 - 2018-04-06
+/*! excalibur - v0.16.0-alpha.2218+70b4573 - 2018-04-09
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.16.0-alpha.2213+b59df07 - 2018-04-06
+/*! excalibur - v0.16.0-alpha.2218+70b4573 - 2018-04-09
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -7691,6 +7691,12 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
                 rows = config.rows;
                 cols = config.cols;
             }
+            _this.x = xOrConfig;
+            _this.y = y;
+            _this.cellWidth = cellWidth;
+            _this.cellHeight = cellHeight;
+            _this.rows = rows;
+            _this.cols = cols;
             _this.data = new Array(rows * cols);
             for (var i = 0; i < cols; i++) {
                 for (var j = 0; j < rows; j++) {
@@ -13131,7 +13137,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2213+b59df07';
+    exports.EX_VERSION = '0.16.0-alpha.2218+70b4573';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);

@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2222+4297ca8 - 2018-04-13
+/*! excalibur - v0.16.0-alpha.2239+61037e9 - 2018-04-19
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.16.0-alpha.2222+4297ca8 - 2018-04-13
+/*! excalibur - v0.16.0-alpha.2239+61037e9 - 2018-04-19
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -11511,7 +11511,7 @@ define("Resources/Sound", ["require", "exports", "Util/Log", "Util/Util", "Promi
             this._bufferSource = audioContext.createBufferSource();
             this._bufferSource.buffer = this._buffer;
             this._bufferSource.loop = this._loop;
-            this._bufferSource.playbackRate.value = 1.0;
+            this._bufferSource.playbackRate.setValueAtTime(1.0, 0);
             this._bufferSource.connect(this._volumeNode);
         };
         WebAudioInstance.prototype.pause = function () {
@@ -13137,7 +13137,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2222+4297ca8';
+    exports.EX_VERSION = '0.16.0-alpha.2239+61037e9';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);

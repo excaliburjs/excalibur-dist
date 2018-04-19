@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2239+61037e9 - 2018-04-19
+/*! excalibur - v0.16.0-alpha.2250+70c78cb - 2018-04-19
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -12682,7 +12682,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2239+61037e9';
+    exports.EX_VERSION = '0.16.0-alpha.2250+70c78cb';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);
@@ -13031,6 +13031,9 @@ O|===|* >________________>\n\
              */
             get: function () {
                 if (this._suppressHiDPIScaling) {
+                    return 1;
+                }
+                if (window.devicePixelRatio < 1) {
                     return 1;
                 }
                 var devicePixelRatio = window.devicePixelRatio || 1;

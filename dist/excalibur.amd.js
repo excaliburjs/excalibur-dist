@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2259+db6740c - 2018-04-19
+/*! excalibur - v0.16.0-alpha.2280+32d9c31 - 2018-04-20
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -2824,7 +2824,8 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             return this.bottom - this.top;
         };
         /**
-         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default
+         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
+         * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
          */
         BoundingBox.prototype.rotate = function (angle, point) {
             if (point === void 0) { point = Algebra_8.Vector.Zero.clone(); }
@@ -3453,6 +3454,12 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          */
         Body.prototype.update = function () {
             if (this.collisionArea) {
+                // Update the geometry if needed
+                if (this.actor &&
+                    this.actor.isGeometryDirty &&
+                    this.collisionArea instanceof PolygonArea_5.PolygonArea) {
+                    this.collisionArea.points = this.actor.getRelativeGeometry();
+                }
                 this.collisionArea.recalc();
             }
         };
@@ -3465,7 +3472,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
             if (center === void 0) { center = Algebra_10.Vector.Zero.clone(); }
             this.collisionArea = new PolygonArea_5.PolygonArea({
                 body: this,
-                points: this.actor.getRelativeBounds().getPoints(),
+                points: this.actor.getRelativeGeometry(),
                 pos: center // position relative to actor
             });
             // in case of a nan moi, coalesce to a safe default
@@ -12682,7 +12689,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2259+db6740c';
+    exports.EX_VERSION = '0.16.0-alpha.2280+32d9c31';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);
@@ -14436,12 +14443,20 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              * acceleration, mass, inertia, etc.
              */
             _this.body = new Body_2.Body(_this);
+            /**
+             * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+             */
+            _this.oldAcc = Algebra_24.Vector.Zero.clone();
             _this._height = 0;
             _this._width = 0;
             /**
              * The scale vector of the actor
              */
-            _this.scale = new Algebra_24.Vector(1, 1);
+            _this.scale = Algebra_24.Vector.One.clone();
+            /**
+             * The scale of the actor last frame
+             */
+            _this.oldScale = Algebra_24.Vector.One.clone();
             /**
              * The x scalar velocity of the actor in scale/second
              */
@@ -14487,6 +14502,11 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
              */
             _this.collisionType = CollisionType.PreventCollision;
             _this.collisionGroups = [];
+            /**
+             * Flag to be set when any property change would result in a geometry recalculation
+             * @internal
+             */
+            _this._geometryDirty = false;
             _this._collisionHandlers = {};
             _this._isInitialized = false;
             _this.frames = {};
@@ -15064,6 +15084,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         ActorImpl.prototype.setWidth = function (width) {
             this._width = width / this.scale.x;
+            this._geometryDirty = true;
         };
         /**
          * Gets the calculated height of an actor, factoring in scale
@@ -15076,6 +15097,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         ActorImpl.prototype.setHeight = function (height) {
             this._height = height / this.scale.y;
+            this._geometryDirty = true;
         };
         /**
          * Gets the left edge of the actor
@@ -15162,20 +15184,46 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         /**
          * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
          */
-        ActorImpl.prototype.getBounds = function () {
+        ActorImpl.prototype.getBounds = function (rotated) {
+            if (rotated === void 0) { rotated = true; }
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
             var pos = this.getWorldPos();
-            return new BoundingBox_8.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y).rotate(this.rotation, pos);
+            var bb = new BoundingBox_8.BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y);
+            return rotated ? bb.rotate(this.rotation, pos) : bb;
         };
         /**
-         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         * Returns the actor's [[BoundingBox]] relative to the actor's position.
          */
-        ActorImpl.prototype.getRelativeBounds = function () {
+        ActorImpl.prototype.getRelativeBounds = function (rotated) {
+            if (rotated === void 0) { rotated = true; }
             // todo cache bounding box
             var anchor = this._getCalculatedAnchor();
-            return new BoundingBox_8.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y).rotate(this.rotation);
+            var bb = new BoundingBox_8.BoundingBox(-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y);
+            return rotated ? bb.rotate(this.rotation) : bb;
         };
+        /**
+         * Returns the actors unrotated geometry in world coordinates
+         */
+        ActorImpl.prototype.getGeometry = function () {
+            return this.getBounds(false).getPoints();
+        };
+        /**
+         * Return the actor's unrotated geometry relative to the actor's position
+         */
+        ActorImpl.prototype.getRelativeGeometry = function () {
+            return this.getRelativeBounds(false).getPoints();
+        };
+        Object.defineProperty(ActorImpl.prototype, "isGeometryDirty", {
+            /**
+             * Indicates that the actor's collision geometry needs to be recalculated for accurate collisions
+             */
+            get: function () {
+                return this._geometryDirty;
+            },
+            enumerable: true,
+            configurable: true
+        });
         /**
          * Tests whether the x/y specified are contained in the actor
          * @param x  X coordinate to test (in world coordinates)
@@ -15305,8 +15353,13 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             this.rotation += this.rx * seconds;
             this.scale.x += this.sx * delta / 1000;
             this.scale.y += this.sy * delta / 1000;
+            if (!this.scale.equals(this.oldScale)) {
+                // change in scale effects the geometry
+                this._geometryDirty = true;
+            }
             // Update physics body
             this.body.update();
+            this._geometryDirty = false;
         };
         /**
          * Called by the Engine, updates the state of the actor
@@ -15331,6 +15384,8 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             // Capture old values before integration step updates them
             this.oldVel.setTo(this.vel.x, this.vel.y);
             this.oldPos.setTo(this.pos.x, this.pos.y);
+            this.oldAcc.setTo(this.acc.x, this.acc.y);
+            this.oldScale.setTo(this.scale.x, this.scale.y);
             // Run Euler integration
             this.integrate(delta);
             // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)

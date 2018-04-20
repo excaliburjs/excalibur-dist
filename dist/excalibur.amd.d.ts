@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2259+db6740c - 2018-04-19
+/*! excalibur - v0.16.0-alpha.2280+32d9c31 - 2018-04-20
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1244,7 +1244,8 @@ declare module "Collision/BoundingBox" {
          */
         getHeight(): number;
         /**
-         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default
+         * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
+         * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
          */
         rotate(angle: number, point?: Vector): BoundingBox;
         /**
@@ -7614,6 +7615,10 @@ declare module "Actor" {
          */
         oldVel: Vector;
         /**
+         * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+         */
+        oldAcc: Vector;
+        /**
          * Gets the acceleration vector of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may be
          * useful to simulate a gravitational effect.
          */
@@ -7691,6 +7696,10 @@ declare module "Actor" {
          */
         scale: Vector;
         /**
+         * The scale of the actor last frame
+         */
+        oldScale: Vector;
+        /**
          * The x scalar velocity of the actor in scale/second
          */
         sx: number;
@@ -7742,6 +7751,11 @@ declare module "Actor" {
          */
         collisionType: CollisionType;
         collisionGroups: string[];
+        /**
+         * Flag to be set when any property change would result in a geometry recalculation
+         * @internal
+         */
+        private _geometryDirty;
         private _collisionHandlers;
         private _isInitialized;
         frames: {
@@ -8050,11 +8064,23 @@ declare module "Actor" {
         /**
          * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
          */
-        getBounds(): BoundingBox;
+        getBounds(rotated?: boolean): BoundingBox;
         /**
-         * Returns the actor's [[BoundingBox]] relative to the actors position.
+         * Returns the actor's [[BoundingBox]] relative to the actor's position.
          */
-        getRelativeBounds(): BoundingBox;
+        getRelativeBounds(rotated?: boolean): BoundingBox;
+        /**
+         * Returns the actors unrotated geometry in world coordinates
+         */
+        getGeometry(): Vector[];
+        /**
+         * Return the actor's unrotated geometry relative to the actor's position
+         */
+        getRelativeGeometry(): Vector[];
+        /**
+         * Indicates that the actor's collision geometry needs to be recalculated for accurate collisions
+         */
+        readonly isGeometryDirty: boolean;
         /**
          * Tests whether the x/y specified are contained in the actor
          * @param x  X coordinate to test (in world coordinates)

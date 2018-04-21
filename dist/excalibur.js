@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2315+578c78e - 2018-04-21
+/*! excalibur - v0.16.0-alpha.2318+7dd4812 - 2018-04-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -453,7 +453,7 @@ var requirejs, require, define;
         jQuery: true
     };
 }());
-/*! excalibur - v0.16.0-alpha.2315+578c78e - 2018-04-21
+/*! excalibur - v0.16.0-alpha.2318+7dd4812 - 2018-04-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -503,7 +503,7 @@ define("Actions/RotationType", ["require", "exports"], function (require, export
         RotationType[RotationType["CounterClockwise"] = 3] = "CounterClockwise";
     })(RotationType = exports.RotationType || (exports.RotationType = {}));
 });
-define("Util/EasingFunctions", ["require", "exports"], function (require, exports) {
+define("Util/EasingFunctions", ["require", "exports", "Algebra"], function (require, exports, Algebra_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -549,23 +549,38 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
     var EasingFunctions = (function () {
         function EasingFunctions() {
         }
+        EasingFunctions.CreateReversableEasingFunction = function (easing) {
+            return function (time, start, end, duration) {
+                if (end < start) {
+                    return start - (easing(time, end, start, duration) - end);
+                }
+                else {
+                    return easing(time, start, end, duration);
+                }
+            };
+        };
+        EasingFunctions.CreateVectorEasingFunction = function (easing) {
+            return function (time, start, end, duration) {
+                return new Algebra_1.Vector(easing(time, start.x, end.x, duration), easing(time, start.y, end.y, duration));
+            };
+        };
         return EasingFunctions;
     }());
-    EasingFunctions.Linear = function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.Linear = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         return endValue * currentTime / duration + startValue;
-    };
-    EasingFunctions.EaseInQuad = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseInQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration;
         return endValue * currentTime * currentTime + startValue;
-    };
-    EasingFunctions.EaseOutQuad = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseOutQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration;
         return -endValue * currentTime * (currentTime - 2) + startValue;
-    };
-    EasingFunctions.EaseInOutQuad = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseInOutQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration / 2;
         if (currentTime < 1) {
@@ -573,19 +588,19 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
         }
         currentTime--;
         return -endValue / 2 * (currentTime * (currentTime - 2) - 1) + startValue;
-    };
-    EasingFunctions.EaseInCubic = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseInCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration;
         return endValue * currentTime * currentTime * currentTime + startValue;
-    };
-    EasingFunctions.EaseOutCubic = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseOutCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration;
         currentTime--;
         return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
-    };
-    EasingFunctions.EaseInOutCubic = function (currentTime, startValue, endValue, duration) {
+    });
+    EasingFunctions.EaseInOutCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = (endValue - startValue);
         currentTime /= duration / 2;
         if (currentTime < 1) {
@@ -593,7 +608,7 @@ define("Util/EasingFunctions", ["require", "exports"], function (require, export
         }
         currentTime -= 2;
         return endValue / 2 * (currentTime * currentTime * currentTime + 2) + startValue;
-    };
+    });
     exports.EasingFunctions = EasingFunctions;
 });
 // Promises/A+ Spec http://promises-aplus.github.io/promises-spec/
@@ -1043,7 +1058,7 @@ define("Collision/Side", ["require", "exports"], function (require, exports) {
         Side[Side["Right"] = 4] = "Right";
     })(Side = exports.Side || (exports.Side = {}));
 });
-define("Util/Util", ["require", "exports", "Algebra", "Math/Random", "Collision/Side"], function (require, exports, Algebra_1, Random_1, Side_1) {
+define("Util/Util", ["require", "exports", "Algebra", "Math/Random", "Collision/Side"], function (require, exports, Algebra_2, Random_1, Side_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -1186,7 +1201,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Math/Random", "Collision/
         };
         calcOffsetLeft(el);
         calcOffsetTop(el);
-        return new Algebra_1.Vector(oLeft, oTop);
+        return new Algebra_2.Vector(oLeft, oTop);
     }
     exports.getPosition = getPosition;
     function addItemToArray(item, array) {
@@ -1232,7 +1247,7 @@ define("Util/Util", ["require", "exports", "Algebra", "Math/Random", "Collision/
     }
     exports.getOppositeSide = getOppositeSide;
     function getSideFromVector(direction) {
-        var directions = [Algebra_1.Vector.Left, Algebra_1.Vector.Right, Algebra_1.Vector.Up, Algebra_1.Vector.Down];
+        var directions = [Algebra_2.Vector.Left, Algebra_2.Vector.Right, Algebra_2.Vector.Up, Algebra_2.Vector.Down];
         var directionEnum = [Side_1.Side.Left, Side_1.Side.Right, Side_1.Side.Top, Side_1.Side.Bottom];
         var max = -Number.MAX_VALUE;
         var maxIndex = -1;
@@ -1811,15 +1826,15 @@ define("Drawing/Color", ["require", "exports"], function (require, exports) {
         return HSLColor;
     }());
 });
-define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_2, Color_1) {
+define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], function (require, exports, Algebra_3, Color_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var CullingBox = (function () {
         function CullingBox() {
-            this._topLeft = new Algebra_2.Vector(0, 0);
-            this._topRight = new Algebra_2.Vector(0, 0);
-            this._bottomLeft = new Algebra_2.Vector(0, 0);
-            this._bottomRight = new Algebra_2.Vector(0, 0);
+            this._topLeft = new Algebra_3.Vector(0, 0);
+            this._topRight = new Algebra_3.Vector(0, 0);
+            this._bottomLeft = new Algebra_3.Vector(0, 0);
+            this._bottomRight = new Algebra_3.Vector(0, 0);
         }
         CullingBox.prototype.isSpriteOffScreen = function (actor, engine) {
             var drawingWidth = actor.currentDrawing.drawWidth;
@@ -1852,17 +1867,17 @@ define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], fu
             this._yMin = Math.min.apply(null, this._yCoords);
             this._xMax = Math.max.apply(null, this._xCoords);
             this._yMax = Math.max.apply(null, this._yCoords);
-            var minWorld = engine.screenToWorldCoordinates(new Algebra_2.Vector(this._xMin, this._yMin));
-            var maxWorld = engine.screenToWorldCoordinates(new Algebra_2.Vector(this._xMax, this._yMax));
+            var minWorld = engine.screenToWorldCoordinates(new Algebra_3.Vector(this._xMin, this._yMin));
+            var maxWorld = engine.screenToWorldCoordinates(new Algebra_3.Vector(this._xMax, this._yMax));
             this._xMinWorld = minWorld.x;
             this._yMinWorld = minWorld.y;
             this._xMaxWorld = maxWorld.x;
             this._yMaxWorld = maxWorld.y;
             var boundingPoints = [
-                new Algebra_2.Vector(this._xMin, this._yMin),
-                new Algebra_2.Vector(this._xMax, this._yMin),
-                new Algebra_2.Vector(this._xMin, this._yMax),
-                new Algebra_2.Vector(this._xMax, this._yMax)
+                new Algebra_3.Vector(this._xMin, this._yMin),
+                new Algebra_3.Vector(this._xMax, this._yMin),
+                new Algebra_3.Vector(this._xMin, this._yMax),
+                new Algebra_3.Vector(this._xMax, this._yMax)
             ]; // bottomright
             // sprite can be wider than canvas screen (and still visible within canvas)
             // top or bottom of sprite must be within canvas
@@ -1918,7 +1933,7 @@ define("Util/CullingBox", ["require", "exports", "Algebra", "Drawing/Color"], fu
     }());
     exports.CullingBox = CullingBox;
 });
-define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Algebra", "Events"], function (require, exports, CullingBox_1, Algebra_3, Events_1) {
+define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Algebra", "Events"], function (require, exports, CullingBox_1, Algebra_4, Events_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var OffscreenCulling = (function () {
@@ -1932,7 +1947,7 @@ define("Traits/OffscreenCulling", ["require", "exports", "Util/CullingBox", "Alg
             var width = globalScale.x * actor.getWidth() / actor.scale.x;
             var height = globalScale.y * actor.getHeight() / actor.scale.y;
             var worldPos = actor.getWorldPos();
-            var actorScreenCoords = engine.worldToScreenCoordinates(new Algebra_3.Vector(worldPos.x - anchor.x * width, worldPos.y - anchor.y * height));
+            var actorScreenCoords = engine.worldToScreenCoordinates(new Algebra_4.Vector(worldPos.x - anchor.x * width, worldPos.y - anchor.y * height));
             var zoom = 1.0;
             if (actor.scene && actor.scene.camera) {
                 zoom = Math.abs(actor.scene.camera.getZoom());
@@ -2010,7 +2025,7 @@ define("Traits/Index", ["require", "exports", "Traits/CapturePointer", "Traits/E
     __export(OffscreenCulling_1);
     __export(TileMapCollisionDetection_1);
 });
-define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], function (require, exports, Algebra_4, Actor_3, Traits) {
+define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], function (require, exports, Algebra_5, Actor_3, Traits) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2049,7 +2064,7 @@ define("UIActor", ["require", "exports", "Algebra", "Actor", "Traits/Index"], fu
             if (useWorld) {
                 return _super.prototype.contains.call(this, x, y);
             }
-            var coords = this._engine.worldToScreenCoordinates(new Algebra_4.Vector(x, y));
+            var coords = this._engine.worldToScreenCoordinates(new Algebra_5.Vector(x, y));
             return _super.prototype.contains.call(this, coords.x, coords.y);
         };
         return UIActor;
@@ -2396,7 +2411,7 @@ define("Timer", ["require", "exports"], function (require, exports) {
     Timer.id = 0;
     exports.Timer = Timer;
 });
-define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Actor_4, Algebra_5, Physics_2, Events_3, Util) {
+define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", "Physics", "Events", "Util/Util"], function (require, exports, Actor_4, Algebra_6, Physics_2, Events_3, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2570,7 +2585,7 @@ define("Collision/CollisionContact", ["require", "exports", "Actor", "Algebra", 
                 var t = rv.sub(normal.scale(rv.dot(normal))).normalize();
                 // impulse in the direction of tangent force
                 var jt = rv.dot(t) / (invMassA + invMassB + raNormal * raNormal * invMoiA + rbNormal * rbNormal * invMoiB);
-                var frictionImpulse = new Algebra_5.Vector(0, 0);
+                var frictionImpulse = new Algebra_6.Vector(0, 0);
                 if (Math.abs(jt) <= impulse * coefFriction) {
                     frictionImpulse = t.scale(jt).negate();
                 }
@@ -2613,7 +2628,7 @@ define("Collision/ICollisionArea", ["require", "exports"], function (require, ex
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "Collision/PolygonArea", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_1, PolygonArea_1, EdgeArea_1, CollisionJumpTable_1, Algebra_6, Physics_3, Color_2) {
+define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "Collision/PolygonArea", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_1, PolygonArea_1, EdgeArea_1, CollisionJumpTable_1, Algebra_7, Physics_3, Color_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2624,8 +2639,8 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
             /**
              * This is the center position of the circle, relative to the body position
              */
-            this.pos = Algebra_6.Vector.Zero.clone();
-            this.pos = options.pos || Algebra_6.Vector.Zero.clone();
+            this.pos = Algebra_7.Vector.Zero.clone();
+            this.pos = options.pos || Algebra_7.Vector.Zero.clone();
             this.radius = options.radius || 0;
             this.body = options.body || null;
         }
@@ -2774,7 +2789,7 @@ define("Collision/CircleArea", ["require", "exports", "Collision/BoundingBox", "
             scalars.push(dotProduct);
             scalars.push(dotProduct + this.radius);
             scalars.push(dotProduct - this.radius);
-            return new Algebra_6.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
+            return new Algebra_7.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
         };
         /* istanbul ignore next */
         CircleArea.prototype.debugDraw = function (ctx, color) {
@@ -2954,7 +2969,7 @@ define("Collision/CollisionJumpTable", ["require", "exports", "Collision/Collisi
         }
     };
 });
-define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics", "Collision/BoundingBox", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Collision/CircleArea", "Algebra"], function (require, exports, Color_3, Physics_4, BoundingBox_2, EdgeArea_2, CollisionJumpTable_2, CircleArea_1, Algebra_7) {
+define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics", "Collision/BoundingBox", "Collision/EdgeArea", "Collision/CollisionJumpTable", "Collision/CircleArea", "Algebra"], function (require, exports, Color_3, Physics_4, BoundingBox_2, EdgeArea_2, CollisionJumpTable_2, CircleArea_1, Algebra_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -2965,7 +2980,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             this._transformedPoints = [];
             this._axes = [];
             this._sides = [];
-            this.pos = options.pos || Algebra_7.Vector.Zero.clone();
+            this.pos = options.pos || Algebra_8.Vector.Zero.clone();
             var winding = !!options.clockwiseWinding;
             this.points = (winding ? options.points.reverse() : options.points) || [];
             this.body = options.body || null;
@@ -3014,7 +3029,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
             var points = this.getTransformedPoints();
             var len = points.length;
             for (var i = 0; i < len; i++) {
-                lines.push(new Algebra_7.Line(points[i], points[(i - 1 + len) % len]));
+                lines.push(new Algebra_8.Line(points[i], points[(i - 1 + len) % len]));
             }
             this._sides = lines;
             return this._sides;
@@ -3033,7 +3048,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
         PolygonArea.prototype.contains = function (point) {
             // Always cast to the right, as long as we cast in a consitent fixed direction we
             // will be fine
-            var testRay = new Algebra_7.Ray(point, new Algebra_7.Vector(1, 0));
+            var testRay = new Algebra_8.Ray(point, new Algebra_8.Vector(1, 0));
             var intersectCount = this.getSides().reduce(function (accum, side) {
                 if (testRay.intersect(side) >= 0) {
                     return accum + 1;
@@ -3229,7 +3244,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
                 min = Math.min(min, scalar);
                 max = Math.max(max, scalar);
             }
-            return new Algebra_7.Projection(min, max);
+            return new Algebra_8.Projection(min, max);
         };
         /* istanbul ignore next */
         PolygonArea.prototype.debugDraw = function (ctx, color) {
@@ -3250,7 +3265,7 @@ define("Collision/PolygonArea", ["require", "exports", "Drawing/Color", "Physics
     }());
     exports.PolygonArea = PolygonArea;
 });
-define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", "Algebra", "Drawing/Color"], function (require, exports, PolygonArea_3, Algebra_8, Color_4) {
+define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", "Algebra", "Drawing/Color"], function (require, exports, PolygonArea_3, Algebra_9, Color_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -3311,7 +3326,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
          * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
          */
         BoundingBox.prototype.rotate = function (angle, point) {
-            if (point === void 0) { point = Algebra_8.Vector.Zero.clone(); }
+            if (point === void 0) { point = Algebra_9.Vector.Zero.clone(); }
             var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
             return BoundingBox.fromPoints(points);
         };
@@ -3325,10 +3340,10 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
         };
         BoundingBox.prototype.getPoints = function () {
             var results = [];
-            results.push(new Algebra_8.Vector(this.left, this.top));
-            results.push(new Algebra_8.Vector(this.right, this.top));
-            results.push(new Algebra_8.Vector(this.right, this.bottom));
-            results.push(new Algebra_8.Vector(this.left, this.bottom));
+            results.push(new Algebra_9.Vector(this.left, this.top));
+            results.push(new Algebra_9.Vector(this.right, this.top));
+            results.push(new Algebra_9.Vector(this.right, this.bottom));
+            results.push(new Algebra_9.Vector(this.left, this.bottom));
             return results;
         };
         /**
@@ -3338,7 +3353,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             return new PolygonArea_3.PolygonArea({
                 body: actor ? actor.body : null,
                 points: this.getPoints(),
-                pos: Algebra_8.Vector.Zero.clone()
+                pos: Algebra_9.Vector.Zero.clone()
             });
         };
         /**
@@ -3382,7 +3397,7 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
             return -1;
         };
         BoundingBox.prototype.contains = function (val) {
-            if (val instanceof Algebra_8.Vector) {
+            if (val instanceof Algebra_9.Vector) {
                 return (this.left <= val.x && this.top <= val.y && this.bottom >= val.y && this.right >= val.x);
             }
             else if (val instanceof BoundingBox) {
@@ -3433,10 +3448,10 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
                         overlapY = other.top - this.bottom;
                     }
                     if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                        return new Algebra_8.Vector(overlapX, 0);
+                        return new Algebra_9.Vector(overlapX, 0);
                     }
                     else {
-                        return new Algebra_8.Vector(0, overlapY);
+                        return new Algebra_9.Vector(0, overlapY);
                     }
                 }
                 else {
@@ -3455,13 +3470,13 @@ define("Collision/BoundingBox", ["require", "exports", "Collision/PolygonArea", 
     }());
     exports.BoundingBox = BoundingBox;
 });
-define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_3, CollisionJumpTable_3, CircleArea_2, PolygonArea_4, Algebra_9, Physics_5, Color_5) {
+define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Collision/CollisionJumpTable", "Collision/CircleArea", "Collision/PolygonArea", "Algebra", "Physics", "Drawing/Color"], function (require, exports, BoundingBox_3, CollisionJumpTable_3, CircleArea_2, PolygonArea_4, Algebra_10, Physics_5, Color_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EdgeArea = (function () {
         function EdgeArea(options) {
-            this.begin = options.begin || Algebra_9.Vector.Zero.clone();
-            this.end = options.end || Algebra_9.Vector.Zero.clone();
+            this.begin = options.begin || Algebra_10.Vector.Zero.clone();
+            this.end = options.end || Algebra_10.Vector.Zero.clone();
             this.body = options.body || null;
             this.pos = this.getCenter();
         }
@@ -3473,7 +3488,7 @@ define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Co
             return pos;
         };
         EdgeArea.prototype._getBodyPos = function () {
-            var bodyPos = Algebra_9.Vector.Zero.clone();
+            var bodyPos = Algebra_10.Vector.Zero.clone();
             if (this.body.pos) {
                 bodyPos = this.body.pos;
             }
@@ -3611,7 +3626,7 @@ define("Collision/EdgeArea", ["require", "exports", "Collision/BoundingBox", "Co
             for (var i = 0; i < len; i++) {
                 scalars.push(points[i].dot(axis));
             }
-            return new Algebra_9.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
+            return new Algebra_10.Projection(Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
         };
         /* istanbul ignore next */
         EdgeArea.prototype.debugDraw = function (ctx, color) {
@@ -3827,7 +3842,7 @@ define("Collision/Pair", ["require", "exports", "Physics", "Drawing/Color", "Act
     }());
     exports.Pair = Pair;
 });
-define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_7, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_10, Color_8, DrawUtil) {
+define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea", "Collision/CircleArea", "Collision/PolygonArea", "Collision/Pair", "Algebra", "Drawing/Color", "Util/DrawUtil"], function (require, exports, Physics_7, EdgeArea_3, CircleArea_3, PolygonArea_5, Pair_1, Algebra_11, Color_8, DrawUtil) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Body = (function () {
@@ -3845,24 +3860,24 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
              * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
              * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
              */
-            this.pos = new Algebra_10.Vector(0, 0);
+            this.pos = new Algebra_11.Vector(0, 0);
             /**
              * The position of the actor last frame (x, y) in pixels
              */
-            this.oldPos = new Algebra_10.Vector(0, 0);
+            this.oldPos = new Algebra_11.Vector(0, 0);
             /**
              * The current velocity vector (vx, vy) of the actor in pixels/second
              */
-            this.vel = new Algebra_10.Vector(0, 0);
+            this.vel = new Algebra_11.Vector(0, 0);
             /**
              * The velocity of the actor last frame (vx, vy) in pixels/second
              */
-            this.oldVel = new Algebra_10.Vector(0, 0);
+            this.oldVel = new Algebra_11.Vector(0, 0);
             /**
              * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
              * be useful to simulate a gravitational effect.
              */
-            this.acc = new Algebra_10.Vector(0, 0);
+            this.acc = new Algebra_11.Vector(0, 0);
             /**
              * The current torque applied to the actor
              */
@@ -3895,7 +3910,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
              * The rotational velocity of the actor in radians/second
              */
             this.rx = 0; //radians/sec
-            this._totalMtv = Algebra_10.Vector.Zero.clone();
+            this._totalMtv = Algebra_11.Vector.Zero.clone();
         }
         /**
          * Add minimum translation vectors accumulated during the current frame to resolve collisions.
@@ -3952,7 +3967,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
         Body.prototype.useBoxCollision = function (center) {
-            if (center === void 0) { center = Algebra_10.Vector.Zero.clone(); }
+            if (center === void 0) { center = Algebra_11.Vector.Zero.clone(); }
             this.collisionArea = new PolygonArea_5.PolygonArea({
                 body: this,
                 points: this.actor.getRelativeGeometry(),
@@ -3969,7 +3984,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
         Body.prototype.usePolygonCollision = function (points, center) {
-            if (center === void 0) { center = Algebra_10.Vector.Zero.clone(); }
+            if (center === void 0) { center = Algebra_11.Vector.Zero.clone(); }
             this.collisionArea = new PolygonArea_5.PolygonArea({
                 body: this,
                 points: points,
@@ -3984,7 +3999,7 @@ define("Collision/Body", ["require", "exports", "Physics", "Collision/EdgeArea",
          * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
          */
         Body.prototype.useCircleCollision = function (radius, center) {
-            if (center === void 0) { center = Algebra_10.Vector.Zero.clone(); }
+            if (center === void 0) { center = Algebra_11.Vector.Zero.clone(); }
             if (!radius) {
                 radius = this.actor.getWidth() / 2;
             }
@@ -4778,7 +4793,7 @@ define("Collision/DynamicTree", ["require", "exports", "Physics", "Collision/Bou
     }());
     exports.DynamicTree = DynamicTree;
 });
-define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log", "Events"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_11, Actor_6, Log_2, Events_4) {
+define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physics", "Collision/DynamicTree", "Collision/Pair", "Algebra", "Actor", "Util/Log", "Events"], function (require, exports, Physics_9, DynamicTree_1, Pair_2, Algebra_12, Actor_6, Log_2, Events_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DynamicTreeCollisionBroadphase = (function () {
@@ -4883,11 +4898,11 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                         var centerPoint = actor.body.collisionArea.getCenter();
                         var furthestPoint = actor.body.collisionArea.getFurthestPoint(actor.vel);
                         var origin = furthestPoint.sub(updateVec);
-                        var ray = new Algebra_11.Ray(origin, actor.vel);
+                        var ray = new Algebra_12.Ray(origin, actor.vel);
                         // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface 
                         ray.pos = ray.pos.add(ray.dir.scale(-2 * Physics_9.Physics.surfaceEpsilon));
                         var minBody;
-                        var minTranslate = new Algebra_11.Vector(Infinity, Infinity);
+                        var minTranslate = new Algebra_12.Vector(Infinity, Infinity);
                         this._dynamicCollisionTree.rayCastQuery(ray, updateDistance + Physics_9.Physics.surfaceEpsilon * 2, function (other) {
                             if (actor.body !== other && other.collisionArea) {
                                 var hitPoint = other.collisionArea.rayCast(ray, updateDistance + Physics_9.Physics.surfaceEpsilon * 10);
@@ -4901,7 +4916,7 @@ define("Collision/DynamicTreeCollisionBroadphase", ["require", "exports", "Physi
                             }
                             return false;
                         });
-                        if (minBody && Algebra_11.Vector.isValid(minTranslate)) {
+                        if (minBody && Algebra_12.Vector.isValid(minTranslate)) {
                             var pair = new Pair_2.Pair(actor.body, minBody);
                             if (!this._collisionHash[pair.id]) {
                                 this._collisionHash[pair.id] = true;
@@ -5810,7 +5825,7 @@ define("Class", ["require", "exports", "EventDispatcher"], function (require, ex
     }());
     exports.Class = Class;
 });
-define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_12, ActionContext_1, Actor_7, Log_3, Class_1) {
+define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Actor", "Util/Log", "Class"], function (require, exports, Algebra_13, ActionContext_1, Actor_7, Log_3, Class_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -5865,7 +5880,7 @@ define("Group", ["require", "exports", "Algebra", "Actions/ActionContext", "Acto
         };
         Group.prototype.move = function (args) {
             var i = 0, members = this.getMembers(), len = members.length;
-            if (arguments.length === 1 && args instanceof Algebra_12.Vector) {
+            if (arguments.length === 1 && args instanceof Algebra_13.Vector) {
                 for (i; i < len; i++) {
                     members[i].pos.x += args.x;
                     members[i].pos.y += args.y;
@@ -6387,7 +6402,7 @@ define("Util/Decorators", ["require", "exports", "Util/Log", "Util/Util"], funct
     }
     exports.obsolete = obsolete;
 });
-define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Resources/Texture", "Algebra", "Util/Log", "Util/Util", "Configurable", "Util/Decorators"], function (require, exports, Effects, Color_10, Texture_1, Algebra_13, Log_6, Util_1, Configurable_1, Decorators_1) {
+define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawing/Color", "Resources/Texture", "Algebra", "Util/Log", "Util/Util", "Configurable", "Util/Decorators"], function (require, exports, Effects, Color_10, Texture_1, Algebra_14, Log_6, Util_1, Configurable_1, Decorators_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6406,8 +6421,8 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
             this.x = 0;
             this.y = 0;
             this.rotation = 0.0;
-            this.anchor = new Algebra_13.Vector(0.0, 0.0);
-            this.scale = new Algebra_13.Vector(1, 1);
+            this.anchor = new Algebra_14.Vector(0.0, 0.0);
+            this.scale = new Algebra_14.Vector(1, 1);
             this.logger = Log_6.Logger.getInstance();
             /**
              * Draws the sprite flipped vertically
@@ -6743,7 +6758,7 @@ define("Drawing/Sprite", ["require", "exports", "Drawing/SpriteEffects", "Drawin
     }(Configurable_1.Configurable(SpriteImpl)));
     exports.Sprite = Sprite;
 });
-define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Algebra", "Engine", "Util/Util", "Configurable"], function (require, exports, Effects, Algebra_14, Engine_1, Util, Configurable_2) {
+define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Algebra", "Engine", "Util/Util", "Configurable"], function (require, exports, Effects, Algebra_15, Engine_1, Util, Configurable_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -6769,9 +6784,9 @@ define("Drawing/Animation", ["require", "exports", "Drawing/SpriteEffects", "Alg
              */
             this.currentFrame = 0;
             this._oldTime = Date.now();
-            this.anchor = new Algebra_14.Vector(0.0, 0.0);
+            this.anchor = new Algebra_15.Vector(0.0, 0.0);
             this.rotation = 0.0;
-            this.scale = new Algebra_14.Vector(1, 1);
+            this.scale = new Algebra_15.Vector(1, 1);
             /**
              * Indicates whether the animation should loop after it is completed
              */
@@ -7690,7 +7705,7 @@ define("Drawing/SpriteSheet", ["require", "exports", "Drawing/Sprite", "Drawing/
     }(Configurable_4.Configurable(SpriteFontImpl)));
     exports.SpriteFont = SpriteFont;
 });
-define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events", "Configurable"], function (require, exports, BoundingBox_5, Color_13, Class_3, Algebra_15, Log_8, Events, Configurable_5) {
+define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color", "Class", "Algebra", "Util/Log", "Events", "Configurable"], function (require, exports, BoundingBox_5, Color_13, Class_3, Algebra_16, Log_8, Events, Configurable_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -7784,7 +7799,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
                 if (Math.abs(accum.y) < Math.abs(next.y)) {
                     y = next.y;
                 }
-                return new Algebra_15.Vector(x, y);
+                return new Algebra_16.Vector(x, y);
             });
             return result;
         };
@@ -7818,8 +7833,8 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
         };
         TileMapImpl.prototype.update = function (engine, delta) {
             this.emit('preupdate', new Events.PreUpdateEvent(engine, delta, this));
-            var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Algebra_15.Vector(0, 0));
-            var worldCoordsLowerRight = engine.screenToWorldCoordinates(new Algebra_15.Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
+            var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Algebra_16.Vector(0, 0));
+            var worldCoordsLowerRight = engine.screenToWorldCoordinates(new Algebra_16.Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
             this._onScreenXStart = Math.max(Math.floor((worldCoordsUpperLeft.x - this.x) / this.cellWidth) - 2, 0);
             this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
             this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.x) / this.cellWidth) + 2, 0);
@@ -7982,7 +7997,7 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
          * Gets the center coordinate of this cell
          */
         CellImpl.prototype.getCenter = function () {
-            return new Algebra_15.Vector(this.x + this.width / 2, this.y + this.height / 2);
+            return new Algebra_16.Vector(this.x + this.width / 2, this.y + this.height / 2);
         };
         /**
          * Add another [[TileSprite]] to this cell
@@ -8027,11 +8042,11 @@ define("TileMap", ["require", "exports", "Collision/BoundingBox", "Drawing/Color
     }(Configurable_5.Configurable(CellImpl)));
     exports.Cell = Cell;
 });
-define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor", "Algebra", "Events", "Util/Util"], function (require, exports, Color_14, Action_1, EventDispatcher_2, Actor_9, Algebra_16, Events_6, Util) {
+define("Trigger", ["require", "exports", "Drawing/Color", "Actions/Action", "EventDispatcher", "Actor", "Algebra", "Events", "Util/Util"], function (require, exports, Color_14, Action_1, EventDispatcher_2, Actor_9, Algebra_17, Events_6, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var triggerDefaults = {
-        pos: Algebra_16.Vector.Zero.clone(),
+        pos: Algebra_17.Vector.Zero.clone(),
         width: 10,
         height: 10,
         visible: false,
@@ -9083,7 +9098,7 @@ define("Input/Gamepad", ["require", "exports", "Class", "Events"], function (req
         Axes[Axes["RightStickY"] = 3] = "RightStickY";
     })(Axes = exports.Axes || (exports.Axes = {}));
 });
-define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "Class", "Util/Actors", "Util/Util", "Util/Decorators"], function (require, exports, Engine_2, Events_9, Algebra_17, Class_6, Actors, Util, Decorators_2) {
+define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "Class", "Util/Actors", "Util/Util", "Util/Decorators"], function (require, exports, Engine_2, Events_9, Algebra_18, Class_6, Actors, Util, Decorators_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -9524,7 +9539,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
             return function (e) {
                 e.preventDefault();
                 var pointer = _this.at(0);
-                var coordinates = Algebra_17.GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
+                var coordinates = Algebra_18.GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
                 var pe = new PointerEvent(coordinates, pointer, 0, PointerType.Mouse, e.button, e);
                 eventArr.push(pe);
                 pointer.eventDispatcher.emit(eventName, pe);
@@ -9540,7 +9555,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
                         continue;
                     }
                     var pointer = _this.at(index);
-                    var coordinates = Algebra_17.GlobalCoordinates.fromPagePosition(e.changedTouches[i].pageX, e.changedTouches[i].pageY, _this._engine);
+                    var coordinates = Algebra_18.GlobalCoordinates.fromPagePosition(e.changedTouches[i].pageX, e.changedTouches[i].pageY, _this._engine);
                     var pe = new PointerEvent(coordinates, pointer, index, PointerType.Touch, PointerButton.Unknown, e);
                     eventArr.push(pe);
                     pointer.eventDispatcher.emit(eventName, pe);
@@ -9568,7 +9583,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
                     return;
                 }
                 var pointer = _this.at(index);
-                var coordinates = Algebra_17.GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
+                var coordinates = Algebra_18.GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
                 var pe = new PointerEvent(coordinates, pointer, index, _this._stringToPointerType(e.pointerType), e.button, e);
                 eventArr.push(pe);
                 pointer.eventDispatcher.emit(eventName, pe);
@@ -9595,7 +9610,7 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
                 }
                 var x = e.pageX - Util.getPosition(_this._engine.canvas).x;
                 var y = e.pageY - Util.getPosition(_this._engine.canvas).y;
-                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_17.Vector(x, y));
+                var transformedPoint = _this._engine.screenToWorldCoordinates(new Algebra_18.Vector(x, y));
                 // deltaX, deltaY, and deltaZ are the standard modern properties
                 // wheelDeltaX, wheelDeltaY, are legacy properties in webkit browsers and older IE
                 // e.detail is only used in opera
@@ -9720,9 +9735,9 @@ define("Input/Pointer", ["require", "exports", "Engine", "Events", "Algebra", "C
             }
         };
         Pointer.prototype._onPointerMove = function (ev) {
-            this.lastPagePos = new Algebra_17.Vector(ev.pagePos.x, ev.pagePos.y);
-            this.lastScreenPos = new Algebra_17.Vector(ev.screenPos.x, ev.screenPos.y);
-            this.lastWorldPos = new Algebra_17.Vector(ev.worldPos.x, ev.worldPos.y);
+            this.lastPagePos = new Algebra_18.Vector(ev.pagePos.x, ev.pagePos.y);
+            this.lastScreenPos = new Algebra_18.Vector(ev.screenPos.x, ev.screenPos.y);
+            this.lastWorldPos = new Algebra_18.Vector(ev.worldPos.x, ev.worldPos.y);
         };
         Pointer.prototype._onPointerDown = function () {
             this._isDown = true;
@@ -10442,7 +10457,7 @@ define("Interfaces/LifecycleEvents", ["require", "exports"], function (require, 
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
 });
-define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra", "Util/Util", "Events", "Class"], function (require, exports, EasingFunctions_2, Promises_4, Algebra_18, Util_2, Events_11, Class_8) {
+define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Algebra", "Util/Util", "Events", "Class"], function (require, exports, EasingFunctions_2, Promises_4, Algebra_19, Util_2, Events_11, Class_8) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -10526,10 +10541,10 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
                 var center = target.getCenter();
                 var currentFocus = cam.getFocus();
                 if (_this.axis === Axis.X) {
-                    return new Algebra_18.Vector(center.x, currentFocus.y);
+                    return new Algebra_19.Vector(center.x, currentFocus.y);
                 }
                 else {
-                    return new Algebra_18.Vector(currentFocus.x, center.y);
+                    return new Algebra_19.Vector(currentFocus.x, center.y);
                 }
             };
         }
@@ -10557,7 +10572,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this.action = function (target, cam, _eng, _delta) {
                 var position = target.getCenter();
                 var focus = cam.getFocus();
-                var cameraVel = new Algebra_18.Vector(cam.dx, cam.dy);
+                var cameraVel = new Algebra_19.Vector(cam.dx, cam.dy);
                 // Calculate the strech vector, using the spring equation
                 // F = kX
                 // https://en.wikipedia.org/wiki/Hooke's_law
@@ -10642,8 +10657,11 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             _this._xShake = 0;
             _this._yShake = 0;
             _this._isZooming = false;
-            _this._maxZoomScale = 1;
-            _this._zoomIncrement = 0.01;
+            _this._zoomStart = 1;
+            _this._zoomEnd = 1;
+            _this._currentZoomTime = 0;
+            _this._zoomDuration = 0;
+            _this._zoomEasing = EasingFunctions_2.EasingFunctions.EaseInOutCubic;
             _this._easing = EasingFunctions_2.EasingFunctions.EaseInOutCubic;
             _this._isInitialized = false;
             return _this;
@@ -10689,7 +10707,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
              * Get the camera's position as a vector
              */
             get: function () {
-                return new Algebra_18.Vector(this.x, this.y);
+                return new Algebra_19.Vector(this.x, this.y);
             },
             /**
              * Set the cameras position
@@ -10706,7 +10724,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
              * Get the camera's velocity as a vector
              */
             get: function () {
-                return new Algebra_18.Vector(this.dx, this.dy);
+                return new Algebra_19.Vector(this.dx, this.dy);
             },
             /**
              * Set the camera's velocity
@@ -10722,7 +10740,7 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
          * Returns the focal point of the camera, a new point giving the x and y position of the camera
          */
         BaseCamera.prototype.getFocus = function () {
-            return new Algebra_18.Vector(this.x, this.y);
+            return new Algebra_19.Vector(this.x, this.y);
         };
         /**
          * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
@@ -10773,13 +10791,17 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
          * @param scale    The scale of the zoom
          * @param duration The duration of the zoom in milliseconds
          */
-        BaseCamera.prototype.zoom = function (scale, duration) {
+        BaseCamera.prototype.zoom = function (scale, duration, easingFn) {
             if (duration === void 0) { duration = 0; }
+            if (easingFn === void 0) { easingFn = EasingFunctions_2.EasingFunctions.EaseInOutCubic; }
             this._zoomPromise = new Promises_4.Promise();
             if (duration) {
                 this._isZooming = true;
-                this._maxZoomScale = scale;
-                this._zoomIncrement = (scale - this.z) / duration;
+                this._zoomEasing = easingFn;
+                this._currentZoomTime = 0;
+                this._zoomDuration = duration;
+                this._zoomStart = this.z;
+                this._zoomEnd = scale;
             }
             else {
                 this._isZooming = false;
@@ -10893,47 +10915,36 @@ define("Camera", ["require", "exports", "Util/EasingFunctions", "Promises", "Alg
             this.dz += this.az * delta / 1000;
             this.rotation += this.rx * delta / 1000;
             if (this._isZooming) {
-                var newZoom = this.z + this._zoomIncrement * delta;
-                this.z = newZoom;
-                if (this._zoomIncrement > 0) {
-                    if (newZoom >= this._maxZoomScale) {
-                        this._isZooming = false;
-                        this.z = this._maxZoomScale;
-                        this._zoomPromise.resolve(true);
-                    }
+                if (this._currentZoomTime < this._zoomDuration) {
+                    var zoomEasing = this._zoomEasing;
+                    var newZoom = zoomEasing(this._currentZoomTime, this._zoomStart, this._zoomEnd, this._zoomDuration);
+                    this.z = newZoom;
+                    this._currentZoomTime += delta;
                 }
                 else {
-                    if (newZoom <= this._maxZoomScale) {
-                        this._isZooming = false;
-                        this.z = this._maxZoomScale;
-                        this._zoomPromise.resolve(true);
-                    }
+                    this._isZooming = false;
+                    this.z = this._zoomEnd;
+                    this._currentZoomTime = 0;
+                    this._zoomPromise.resolve(true);
                 }
             }
             if (this._cameraMoving) {
                 if (this._currentLerpTime < this._lerpDuration) {
-                    if (this._lerpEnd.x < this._lerpStart.x) {
-                        this._x = this._lerpStart.x - (this._easing(this._currentLerpTime, this._lerpEnd.x, this._lerpStart.x, this._lerpDuration) - this._lerpEnd.x);
-                    }
-                    else {
-                        this._x = this._easing(this._currentLerpTime, this._lerpStart.x, this._lerpEnd.x, this._lerpDuration);
-                    }
-                    if (this._lerpEnd.y < this._lerpStart.y) {
-                        this._y = this._lerpStart.y - (this._easing(this._currentLerpTime, this._lerpEnd.y, this._lerpStart.y, this._lerpDuration) - this._lerpEnd.y);
-                    }
-                    else {
-                        this._y = this._easing(this._currentLerpTime, this._lerpStart.y, this._lerpEnd.y, this._lerpDuration);
-                    }
+                    var moveEasing = EasingFunctions_2.EasingFunctions.CreateVectorEasingFunction(this._easing);
+                    var lerpPoint = moveEasing(this._currentLerpTime, this._lerpStart, this._lerpEnd, this._lerpDuration);
+                    this._x = lerpPoint.x;
+                    this._y = lerpPoint.y;
                     this._currentLerpTime += delta;
                 }
                 else {
                     this._x = this._lerpEnd.x;
                     this._y = this._lerpEnd.y;
-                    this._lerpPromise.resolve(this._lerpEnd);
                     this._lerpStart = null;
                     this._lerpEnd = null;
                     this._currentLerpTime = 0;
                     this._cameraMoving = false;
+                    // Order matters here, resolve should be last so any chain promises have a clean slate
+                    this._lerpPromise.resolve(this._lerpEnd);
                 }
             }
             if (this._isDoneShaking()) {
@@ -11906,7 +11917,7 @@ define("Loader", ["require", "exports", "Drawing/Color", "Resources/Sound", "Uti
     }(Loader));
     exports.PauseAfterLoader = PauseAfterLoader;
 });
-define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index", "Configurable", "Math/Random"], function (require, exports, Actor_11, Color_16, Algebra_19, Util, DrawUtil, Traits, Configurable_6, Random_2) {
+define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", "Util/Util", "Util/DrawUtil", "Traits/Index", "Configurable", "Math/Random"], function (require, exports, Actor_11, Color_16, Algebra_20, Util, DrawUtil, Traits, Configurable_6, Random_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -11928,9 +11939,9 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
      */
     var ParticleImpl = (function () {
         function ParticleImpl(emitterOrConfig, life, opacity, beginColor, endColor, position, velocity, acceleration, startSize, endSize) {
-            this.position = new Algebra_19.Vector(0, 0);
-            this.velocity = new Algebra_19.Vector(0, 0);
-            this.acceleration = new Algebra_19.Vector(0, 0);
+            this.position = new Algebra_20.Vector(0, 0);
+            this.velocity = new Algebra_20.Vector(0, 0);
+            this.acceleration = new Algebra_20.Vector(0, 0);
             this.particleRotationalVelocity = 0;
             this.currentRotation = 0;
             this.focus = null;
@@ -12082,7 +12093,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
             /**
              * Gets or sets the acceleration vector for all particles
              */
-            _this.acceleration = new Algebra_19.Vector(0, 0);
+            _this.acceleration = new Algebra_20.Vector(0, 0);
             /**
              * Gets or sets the minimum angle in radians
              */
@@ -12207,7 +12218,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
                 ranX = radius * Math.cos(angle) + this.pos.x;
                 ranY = radius * Math.sin(angle) + this.pos.y;
             }
-            var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new Algebra_19.Vector(ranX, ranY), new Algebra_19.Vector(dx, dy), this.acceleration, this.startSize, this.endSize);
+            var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new Algebra_20.Vector(ranX, ranY), new Algebra_20.Vector(dx, dy), this.acceleration, this.startSize, this.endSize);
             p.fadeFlag = this.fadeFlag;
             p.particleSize = size;
             if (this.particleSprite) {
@@ -12218,7 +12229,7 @@ define("Particles", ["require", "exports", "Actor", "Drawing/Color", "Algebra", 
                 p.currentRotation = Util.randomInRange(0, Math.PI * 2, this.random);
             }
             if (this.focus) {
-                p.focus = this.focus.add(new Algebra_19.Vector(this.pos.x, this.pos.y));
+                p.focus = this.focus.add(new Algebra_20.Vector(this.pos.x, this.pos.y));
                 p.focusAccel = this.focusAccel;
             }
             return p;
@@ -12404,7 +12415,7 @@ define("Collision/Index", ["require", "exports", "Collision/Body", "Collision/Bo
     __export(PolygonArea_6);
     __export(Side_3);
 });
-define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_20) {
+define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, exports, Algebra_21) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -12426,9 +12437,9 @@ define("Drawing/Polygon", ["require", "exports", "Algebra"], function (require, 
              */
             this.filled = false;
             this._points = [];
-            this.anchor = new Algebra_20.Vector(0, 0);
+            this.anchor = new Algebra_21.Vector(0, 0);
             this.rotation = 0;
-            this.scale = new Algebra_20.Vector(1, 1);
+            this.scale = new Algebra_21.Vector(1, 1);
             this._points = points;
             var minX = this._points.reduce(function (prev, curr) {
                 return Math.min(prev, curr.x);
@@ -13163,7 +13174,7 @@ define("Util/Detector", ["require", "exports", "Util/Log"], function (require, e
     }());
     exports.Detector = Detector;
 });
-define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Configurable", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_13, Algebra_21, Camera_2, Class_10, Configurable_7, Debug_1, Engine_3, EventDispatcher_3, Events_13, Group_2, Label_3, Loader_1, Particles_1, Physics_12, Promises_7, Scene_1, TileMap_2, Timer_2, Trigger_3, UIActor_3, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_3, Detector_1, CullingBox_2, EasingFunctions_3, Log_14, SortedList_2) {
+define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "Configurable", "Debug", "Engine", "EventDispatcher", "Events", "Group", "Label", "Loader", "Particles", "Physics", "Promises", "Scene", "TileMap", "Timer", "Trigger", "UIActor", "Actions/Index", "Collision/Index", "Drawing/Index", "Math/Index", "PostProcessing/Index", "Resources/Index", "Events", "Input/Index", "Traits/Index", "Util/Index", "Util/Decorators", "Util/Detector", "Util/CullingBox", "Util/EasingFunctions", "Util/Log", "Util/SortedList"], function (require, exports, Actor_13, Algebra_22, Camera_2, Class_10, Configurable_7, Debug_1, Engine_3, EventDispatcher_3, Events_13, Group_2, Label_3, Loader_1, Particles_1, Physics_12, Promises_7, Scene_1, TileMap_2, Timer_2, Trigger_3, UIActor_3, Index_1, Index_2, Index_3, Index_4, Index_5, Index_6, events, input, traits, util, Decorators_3, Detector_1, CullingBox_2, EasingFunctions_3, Log_14, SortedList_2) {
     "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
@@ -13172,10 +13183,10 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2315+578c78e';
+    exports.EX_VERSION = '0.16.0-alpha.2318+7dd4812';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
-    __export(Algebra_21);
+    __export(Algebra_22);
     __export(Camera_2);
     __export(Class_10);
     __export(Configurable_7);
@@ -13219,7 +13230,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     __export(Log_14);
     __export(SortedList_2);
 });
-define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_7, Promises_8, Algebra_22, UIActor_4, Actor_14, Timer_3, TileMap_3, Loader_2, Detector_2, Events_14, Log_15, Color_19, Scene_2, Debug_2, Class_11, Input, Util, BoundingBox_7) {
+define("Engine", ["require", "exports", "Index", "Promises", "Algebra", "UIActor", "Actor", "Timer", "TileMap", "Loader", "Util/Detector", "Events", "Util/Log", "Drawing/Color", "Scene", "Debug", "Class", "Input/Index", "Util/Util", "Collision/BoundingBox"], function (require, exports, Index_7, Promises_8, Algebra_23, UIActor_4, Actor_14, Timer_3, TileMap_3, Loader_2, Detector_2, Events_14, Log_15, Color_19, Scene_2, Debug_2, Class_11, Input, Util, BoundingBox_7) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -13547,8 +13558,8 @@ O|===|* >________________>\n\
          * and the bottom right corner of the screen.
          */
         Engine.prototype.getWorldBounds = function () {
-            var left = this.screenToWorldCoordinates(Algebra_22.Vector.Zero).x;
-            var top = this.screenToWorldCoordinates(Algebra_22.Vector.Zero).y;
+            var left = this.screenToWorldCoordinates(Algebra_23.Vector.Zero).x;
+            var top = this.screenToWorldCoordinates(Algebra_23.Vector.Zero).y;
             var right = left + this.drawWidth;
             var bottom = top + this.drawHeight;
             return new BoundingBox_7.BoundingBox(left, top, right, bottom);
@@ -13754,7 +13765,7 @@ O|===|* >________________>\n\
                 newX += focus.x;
                 newY += focus.y;
             }
-            return new Algebra_22.Vector(Math.floor(newX), Math.floor(newY));
+            return new Algebra_23.Vector(Math.floor(newX), Math.floor(newY));
         };
         /**
          * Transforms a world coordinate, to a screen coordinate
@@ -13775,7 +13786,7 @@ O|===|* >________________>\n\
             // transform back to screen space
             screenX = (screenX * this.canvas.clientWidth) / this.drawWidth;
             screenY = (screenY * this.canvas.clientHeight) / this.drawHeight;
-            return new Algebra_22.Vector(Math.floor(screenX), Math.floor(screenY));
+            return new Algebra_23.Vector(Math.floor(screenX), Math.floor(screenY));
         };
         /**
          * Sets the internal canvas height based on the selected display mode.
@@ -14723,7 +14734,7 @@ define("Algebra", ["require", "exports", "Util/Util"], function (require, export
     }());
     exports.GlobalCoordinates = GlobalCoordinates;
 });
-define("Physics", ["require", "exports", "Algebra"], function (require, exports, Algebra_23) {
+define("Physics", ["require", "exports", "Algebra"], function (require, exports, Algebra_24) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -14788,7 +14799,7 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
      *
      * This is a great way to globally simulate effects like gravity.
      */
-    Physics.acc = new Algebra_23.Vector(0, 0);
+    Physics.acc = new Algebra_24.Vector(0, 0);
     /**
      * Globally switches all Excalibur physics behavior on or off.
      */
@@ -14898,7 +14909,7 @@ define("Physics", ["require", "exports", "Algebra"], function (require, exports,
     Physics.disableMinimumSpeedForFastBody = false;
     exports.Physics = Physics;
 });
-define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Configurable", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_12, BoundingBox_8, Texture_4, Events_15, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_24, Body_2, Side_4, Configurable_8, Traits, Effects, Util) {
+define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBox", "Resources/Texture", "Events", "Drawing/Color", "Drawing/Sprite", "Util/Log", "Actions/ActionContext", "Actions/Action", "Algebra", "Collision/Body", "Collision/Side", "Configurable", "Traits/Index", "Drawing/SpriteEffects", "Util/Util"], function (require, exports, Physics_13, Class_12, BoundingBox_8, Texture_4, Events_15, Color_20, Sprite_4, Log_16, ActionContext_3, Action_2, Algebra_25, Body_2, Side_4, Configurable_8, Traits, Effects, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -14929,17 +14940,17 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             /**
              * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
              */
-            _this.oldAcc = Algebra_24.Vector.Zero.clone();
+            _this.oldAcc = Algebra_25.Vector.Zero.clone();
             _this._height = 0;
             _this._width = 0;
             /**
              * The scale vector of the actor
              */
-            _this.scale = Algebra_24.Vector.One.clone();
+            _this.scale = Algebra_25.Vector.One.clone();
             /**
              * The scale of the actor last frame
              */
-            _this.oldScale = Algebra_24.Vector.One.clone();
+            _this.oldScale = Algebra_25.Vector.One.clone();
             /**
              * The x scalar velocity of the actor in scale/second
              */
@@ -15057,7 +15068,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             _this.actionQueue = new Action_2.ActionQueue(_this);
             _this.actions = new ActionContext_3.ActionContext(_this);
             // default anchor is in the middle
-            _this.anchor = new Algebra_24.Vector(.5, .5);
+            _this.anchor = new Algebra_25.Vector(.5, .5);
             // Initialize default collision area to be box
             _this.body.useBoxCollision();
             return _this;
@@ -15554,7 +15565,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          * Get the center point of an actor
          */
         ActorImpl.prototype.getCenter = function () {
-            return new Algebra_24.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
+            return new Algebra_25.Vector(this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
         };
         /**
          * Gets the calculated width of an actor, factoring in scale
@@ -15651,17 +15662,17 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
             // rotate around root anchor
             var ra = root.getWorldPos(); // 10, 10
             var r = this.getWorldRotation();
-            return new Algebra_24.Vector(x, y).rotate(r, ra);
+            return new Algebra_25.Vector(x, y).rotate(r, ra);
         };
         /**
          * Gets the global scale of the Actor
          */
         ActorImpl.prototype.getGlobalScale = function () {
             if (!this.parent) {
-                return new Algebra_24.Vector(this.scale.x, this.scale.y);
+                return new Algebra_25.Vector(this.scale.x, this.scale.y);
             }
             var parentScale = this.parent.getGlobalScale();
-            return new Algebra_24.Vector(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+            return new Algebra_25.Vector(this.scale.x * parentScale.x, this.scale.y * parentScale.y);
         };
         // #region Collision
         /**
@@ -15715,7 +15726,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
          */
         ActorImpl.prototype.contains = function (x, y, recurse) {
             if (recurse === void 0) { recurse = false; }
-            var containment = this.getBounds().contains(new Algebra_24.Vector(x, y));
+            var containment = this.getBounds().contains(new Algebra_25.Vector(x, y));
             if (recurse) {
                 return containment || this.children.some(function (child) {
                     return child.contains(x, y, true);
@@ -15812,7 +15823,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         };
         // #endregion
         ActorImpl.prototype._getCalculatedAnchor = function () {
-            return new Algebra_24.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
+            return new Algebra_25.Vector(this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
         };
         ActorImpl.prototype._reapplyEffects = function (drawing) {
             drawing.removeEffect(this._opacityFx);
@@ -16109,7 +16120,7 @@ define("Actor", ["require", "exports", "Physics", "Class", "Collision/BoundingBo
         CollisionType[CollisionType["Fixed"] = 3] = "Fixed";
     })(CollisionType = exports.CollisionType || (exports.CollisionType = {}));
 });
-define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_25, Log_17, Util) {
+define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra", "Util/Log", "Util/Util"], function (require, exports, RotationType_2, Algebra_26, Log_17, Util) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var EaseTo = (function () {
@@ -16118,16 +16129,16 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this.easingFcn = easingFcn;
             this._currentLerpTime = 0;
             this._lerpDuration = 1 * 1000; // 1 second
-            this._lerpStart = new Algebra_25.Vector(0, 0);
-            this._lerpEnd = new Algebra_25.Vector(0, 0);
+            this._lerpStart = new Algebra_26.Vector(0, 0);
+            this._lerpEnd = new Algebra_26.Vector(0, 0);
             this._initialized = false;
             this._stopped = false;
             this._distance = 0;
             this._lerpDuration = duration;
-            this._lerpEnd = new Algebra_25.Vector(x, y);
+            this._lerpEnd = new Algebra_26.Vector(x, y);
         }
         EaseTo.prototype._initialize = function () {
-            this._lerpStart = new Algebra_25.Vector(this.actor.pos.x, this.actor.pos.y);
+            this._lerpStart = new Algebra_26.Vector(this.actor.pos.x, this.actor.pos.y);
             this._currentLerpTime = 0;
             this._distance = this._lerpStart.distance(this._lerpEnd);
         };
@@ -16164,7 +16175,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         EaseTo.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._lerpStart) >= this._distance;
+            return this._stopped || (new Algebra_26.Vector(actor.pos.x, actor.pos.y)).distance(this._lerpStart) >= this._distance;
         };
         EaseTo.prototype.reset = function () {
             this._initialized = false;
@@ -16180,13 +16191,13 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._started = false;
             this._stopped = false;
             this._actor = actor;
-            this._end = new Algebra_25.Vector(destx, desty);
+            this._end = new Algebra_26.Vector(destx, desty);
             this._speed = speed;
         }
         MoveTo.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
-                this._start = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
+                this._start = new Algebra_26.Vector(this._actor.pos.x, this._actor.pos.y);
                 this._distance = this._start.distance(this._end);
                 this._dir = this._end.sub(this._start).normalize();
             }
@@ -16201,7 +16212,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         MoveTo.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
+            return this._stopped || (new Algebra_26.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
         };
         MoveTo.prototype.stop = function () {
             this._actor.vel.y = 0;
@@ -16219,7 +16230,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._started = false;
             this._stopped = false;
             this._actor = actor;
-            this._end = new Algebra_25.Vector(destx, desty);
+            this._end = new Algebra_26.Vector(destx, desty);
             if (time <= 0) {
                 Log_17.Logger.getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
                 throw new Error('Cannot move in time <= 0');
@@ -16229,7 +16240,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
         MoveBy.prototype.update = function (_delta) {
             if (!this._started) {
                 this._started = true;
-                this._start = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
+                this._start = new Algebra_26.Vector(this._actor.pos.x, this._actor.pos.y);
                 this._distance = this._start.distance(this._end);
                 this._dir = this._end.sub(this._start).normalize();
                 this._speed = this._distance / (this._time / 1000);
@@ -16245,7 +16256,7 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             }
         };
         MoveBy.prototype.isComplete = function (actor) {
-            return this._stopped || (new Algebra_25.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
+            return this._stopped || (new Algebra_26.Vector(actor.pos.x, actor.pos.y)).distance(this._start) >= this._distance;
         };
         MoveBy.prototype.stop = function () {
             this._actor.vel.y = 0;
@@ -16264,8 +16275,8 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._stopped = false;
             this._actor = actor;
             this._actorToFollow = actorToFollow;
-            this._current = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
-            this._end = new Algebra_25.Vector(actorToFollow.pos.x, actorToFollow.pos.y);
+            this._current = new Algebra_26.Vector(this._actor.pos.x, this._actor.pos.y);
+            this._end = new Algebra_26.Vector(actorToFollow.pos.x, actorToFollow.pos.y);
             this._maximumDistance = (followDistance !== undefined) ? followDistance : this._current.distance(this._end);
             this._speed = 0;
         }
@@ -16324,8 +16335,8 @@ define("Actions/Action", ["require", "exports", "Actions/RotationType", "Algebra
             this._speedWasSpecified = false;
             this._actor = actor;
             this._actorToMeet = actorToMeet;
-            this._current = new Algebra_25.Vector(this._actor.pos.x, this._actor.pos.y);
-            this._end = new Algebra_25.Vector(actorToMeet.pos.x, actorToMeet.pos.y);
+            this._current = new Algebra_26.Vector(this._actor.pos.x, this._actor.pos.y);
+            this._end = new Algebra_26.Vector(actorToMeet.pos.x, actorToMeet.pos.y);
             this._speed = speed || 0;
             if (speed !== undefined) {
                 this._speedWasSpecified = true;

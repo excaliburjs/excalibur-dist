@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2315+578c78e - 2018-04-21
+/*! excalibur - v0.16.0-alpha.2318+7dd4812 - 2018-04-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -30,6 +30,7 @@ declare module "Actions/RotationType" {
     }
 }
 declare module "Util/EasingFunctions" {
+    import { Vector } from "Algebra";
     /**
      * A definition of an EasingFunction. See [[EasingFunctions]].
      */
@@ -77,8 +78,10 @@ declare module "Util/EasingFunctions" {
      * ```
      */
     export class EasingFunctions {
+        static CreateReversableEasingFunction(easing: EasingFunction): (time: number, start: number, end: number, duration: number) => number;
+        static CreateVectorEasingFunction(easing: EasingFunction): (time: number, start: Vector, end: Vector, duration: number) => Vector;
         static Linear: EasingFunction;
-        static EaseInQuad: (currentTime: number, startValue: number, endValue: number, duration: number) => number;
+        static EaseInQuad: (time: number, start: number, end: number, duration: number) => number;
         static EaseOutQuad: EasingFunction;
         static EaseInOutQuad: EasingFunction;
         static EaseInCubic: EasingFunction;
@@ -5274,9 +5277,12 @@ declare module "Camera" {
         private _xShake;
         private _yShake;
         protected _isZooming: boolean;
-        private _maxZoomScale;
+        private _zoomStart;
+        private _zoomEnd;
+        private _currentZoomTime;
+        private _zoomDuration;
         private _zoomPromise;
-        private _zoomIncrement;
+        private _zoomEasing;
         private _easing;
         /**
          * Get the camera's x position
@@ -5333,7 +5339,7 @@ declare module "Camera" {
          * @param scale    The scale of the zoom
          * @param duration The duration of the zoom in milliseconds
          */
-        zoom(scale: number, duration?: number): Promise<boolean>;
+        zoom(scale: number, duration?: number, easingFn?: EasingFunction): Promise<boolean>;
         /**
          * Gets the current zoom scale
          */

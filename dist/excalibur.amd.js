@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2280+32d9c31 - 2018-04-20
+/*! excalibur - v0.16.0-alpha.2315+578c78e - 2018-04-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -1839,17 +1839,26 @@ define("Timer", ["require", "exports"], function (require, exports) {
          * @param fcn        The callback to be fired after the interval is complete.
          * @param interval   Interval length
          * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
+         * @param numberOfRepeats Specifies a maximum number of times that this timer will execute.
          */
-        function Timer(fcn, interval, repeats) {
+        function Timer(fcn, interval, repeats, numberOfRepeats) {
             this.id = 0;
             this.interval = 10;
             this.fcn = function () { return; };
             this.repeats = false;
+            this.maxNumberOfRepeats = -1;
             this._elapsedTime = 0;
             this._totalTimeAlive = 0;
             this._paused = false;
+            this._numberOfTicks = 0;
             this.complete = false;
             this.scene = null;
+            if (!!numberOfRepeats && numberOfRepeats >= 0) {
+                this.maxNumberOfRepeats = numberOfRepeats;
+                if (!repeats) {
+                    throw new Error('repeats must be set to true if numberOfRepeats is set');
+                }
+            }
             this.id = Timer.id++;
             this.interval = interval || this.interval;
             this.fcn = fcn || this.fcn;
@@ -1863,8 +1872,12 @@ define("Timer", ["require", "exports"], function (require, exports) {
             if (!this._paused) {
                 this._totalTimeAlive += delta;
                 this._elapsedTime += delta;
+                if (this.maxNumberOfRepeats > -1 && this._numberOfTicks >= this.maxNumberOfRepeats) {
+                    this.complete = true;
+                }
                 if (!this.complete && this._elapsedTime >= this.interval) {
                     this.fcn.call(this);
+                    this._numberOfTicks++;
                     if (this.repeats) {
                         this._elapsedTime = 0;
                     }
@@ -1877,14 +1890,29 @@ define("Timer", ["require", "exports"], function (require, exports) {
         /**
          * Resets the timer so that it can be reused, and optionally reconfigure the timers interval.
          * @param newInterval If specified, sets a new non-negative interval in milliseconds to refire the callback
+         * @param newNumberOfRepeats If specified, sets a new non-negative upper limit to the number of time this timer executes
          */
-        Timer.prototype.reset = function (newInterval) {
+        Timer.prototype.reset = function (newInterval, newNumberOfRepeats) {
             if (!!newInterval && newInterval >= 0) {
                 this.interval = newInterval;
             }
+            if (!!this.maxNumberOfRepeats && this.maxNumberOfRepeats >= 0) {
+                this.maxNumberOfRepeats = newNumberOfRepeats;
+                if (!this.repeats) {
+                    throw new Error('repeats must be set to true if numberOfRepeats is set');
+                }
+            }
             this.complete = false;
             this._elapsedTime = 0;
+            this._numberOfTicks = 0;
         };
+        Object.defineProperty(Timer.prototype, "timesRepeated", {
+            get: function () {
+                return this._numberOfTicks;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Timer.prototype.getTimeRunning = function () {
             return this._totalTimeAlive;
         };
@@ -12689,7 +12717,7 @@ define("Index", ["require", "exports", "Actor", "Algebra", "Camera", "Class", "C
     /**
      * The current Excalibur version string
      */
-    exports.EX_VERSION = '0.16.0-alpha.2280+32d9c31';
+    exports.EX_VERSION = '0.16.0-alpha.2315+578c78e';
     exports.Actor = Actor_13.Actor;
     exports.CollisionType = Actor_13.CollisionType;
     __export(Algebra_21);

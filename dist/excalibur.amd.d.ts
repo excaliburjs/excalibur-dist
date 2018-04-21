@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2280+32d9c31 - 2018-04-20
+/*! excalibur - v0.16.0-alpha.2315+578c78e - 2018-04-21
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -875,17 +875,20 @@ declare module "Timer" {
         interval: number;
         fcn: () => void;
         repeats: boolean;
+        maxNumberOfRepeats: number;
         private _elapsedTime;
         private _totalTimeAlive;
         private _paused;
+        private _numberOfTicks;
         complete: boolean;
         scene: Scene;
         /**
          * @param fcn        The callback to be fired after the interval is complete.
          * @param interval   Interval length
          * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
+         * @param numberOfRepeats Specifies a maximum number of times that this timer will execute.
          */
-        constructor(fcn: () => void, interval: number, repeats?: boolean);
+        constructor(fcn: () => void, interval: number, repeats?: boolean, numberOfRepeats?: number);
         /**
          * Updates the timer after a certain number of milliseconds have elapsed. This is used internally by the engine.
          * @param delta  Number of elapsed milliseconds since the last update.
@@ -894,8 +897,10 @@ declare module "Timer" {
         /**
          * Resets the timer so that it can be reused, and optionally reconfigure the timers interval.
          * @param newInterval If specified, sets a new non-negative interval in milliseconds to refire the callback
+         * @param newNumberOfRepeats If specified, sets a new non-negative upper limit to the number of time this timer executes
          */
-        reset(newInterval?: number): void;
+        reset(newInterval?: number, newNumberOfRepeats?: number): void;
+        readonly timesRepeated: number;
         getTimeRunning(): number;
         /**
          * Pauses the timer so that no more time will be incremented towards the next call

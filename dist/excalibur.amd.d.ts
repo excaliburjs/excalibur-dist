@@ -1,4 +1,4 @@
-/*! excalibur - v0.16.0-alpha.2362+8cd6040 - 2018-05-04
+/*! excalibur - v0.16.0-alpha.2365+793dad9 - 2018-05-05
 * https://github.com/excaliburjs/Excalibur
 * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause
 * @preserve */
@@ -7837,9 +7837,40 @@ declare module "Actor" {
         private _checkForPointerOptIn(eventName);
         on(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
         on(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
+        /**
+         * The **collisionstart** event is fired when a [[Body|physics body]], usually attached to an actor,
+         *  first starts colliding with another [[Body|body]], and will not fire again while in contact until
+         *  the the pair separates and collides again.
+         * Use cases for the **collisionstart** event may be detecting when an actor has touched a surface
+         * (like landing) or if a item has been touched and needs to be picked up.
+         */
         on(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        /**
+         * The **collisionend** event is fired when two [[Body|physics bodies]] are no longer in contact.
+         * This event will not fire again until another collision and separation.
+         *
+         * Use cases for the **collisionend** event might be to detect when an actor has left a surface
+         * (like jumping) or has left an area.
+         */
         on(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
+        /**
+         * The **precollision** event is fired **every frame** where a collision pair is found and two
+         * bodies are intersecting.
+         *
+         * This event is useful for building in custom collision resolution logic in Passive-Passive or
+         * Active-Passive scenarios. For example in a breakout game you may want to tweak the angle of
+         * richochet of the ball depending on which side of the paddle you hit.
+         */
         on(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        /**
+         * The **postcollision** event is fired for **every frame** where collision resolution was performed.
+         * Collision resolution is when two bodies influence each other and cause a response like bouncing
+         * off one another. It is only possible to have *postcollision* event in Active-Active and Active-Fixed
+         * type collision pairs.
+         *
+         * Post collision would be useful if you need to know that collision resolution is happening or need to
+         * tweak the default resolution.
+         */
         on(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         on(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         on(eventName: Events.prekill, handler: (event?: PreKillEvent) => void): void;
@@ -7866,9 +7897,40 @@ declare module "Actor" {
         on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         once(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
         once(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
+        /**
+         * The **collisionstart** event is fired when a [[Body|physics body]], usually attached to an actor,
+         *  first starts colliding with another [[Body|body]], and will not fire again while in contact until
+         *  the the pair separates and collides again.
+         * Use cases for the **collisionstart** event may be detecting when an actor has touch a surface
+         * (like landing) or if a item has been touched and needs to be picked up.
+         */
         once(eventName: Events.collisionstart, handler: (event?: CollisionStartEvent) => void): void;
+        /**
+         * The **collisionend** event is fired when two [[Body|physics bodies]] are no longer in contact.
+         * This event will not fire again until another collision and separation.
+         *
+         * Use cases for the **collisionend** event might be to detect when an actor has left a surface
+         * (like jumping) or has left an area.
+         */
         once(eventName: Events.collisionend, handler: (event?: CollisionEndEvent) => void): void;
+        /**
+         * The **precollision** event is fired **every frame** where a collision pair is found and two
+         * bodies are intersecting.
+         *
+         * This event is useful for building in custom collision resolution logic in Passive-Passive or
+         * Active-Passive scenarios. For example in a breakout game you may want to tweak the angle of
+         * richochet of the ball depending on which side of the paddle you hit.
+         */
         once(eventName: Events.precollision, handler: (event?: PreCollisionEvent) => void): void;
+        /**
+         * The **postcollision** event is fired for **every frame** where collision resolution was performed.
+         * Collision resolution is when two bodies influence each other and cause a response like bouncing
+         * off one another. It is only possible to have *postcollision* event in Active-Active and Active-Fixed
+         * type collision pairs.
+         *
+         * Post collision would be useful if you need to know that collision resolution is happening or need to
+         * tweak the default resolution.
+         */
         once(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         once(eventName: Events.kill, handler: (event?: KillEvent) => void): void;
         once(eventName: Events.postkill, handler: (event?: PostKillEvent) => void): void;
@@ -7895,6 +7957,41 @@ declare module "Actor" {
         once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
         off(eventName: Events.exittrigger, handler?: (evt: ExitTriggerEvent) => void): void;
         off(eventName: Events.entertrigger, handler?: (evt: EnterTriggerEvent) => void): void;
+        /**
+         * The **collisionstart** event is fired when a [[Body|physics body]], usually attached to an actor,
+         *  first starts colliding with another [[Body|body]], and will not fire again while in contact until
+         *  the the pair separates and collides again.
+         * Use cases for the **collisionstart** event may be detecting when an actor has touch a surface
+         * (like landing) or if a item has been touched and needs to be picked up.
+         */
+        off(eventName: Events.collisionstart, handler?: (event?: CollisionStartEvent) => void): void;
+        /**
+         * The **collisionend** event is fired when two [[Body|physics bodies]] are no longer in contact.
+         * This event will not fire again until another collision and separation.
+         *
+         * Use cases for the **collisionend** event might be to detect when an actor has left a surface
+         * (like jumping) or has left an area.
+         */
+        off(eventName: Events.collisionend, handler?: (event?: CollisionEndEvent) => void): void;
+        /**
+         * The **precollision** event is fired **every frame** where a collision pair is found and two
+         * bodies are intersecting.
+         *
+         * This event is useful for building in custom collision resolution logic in Passive-Passive or
+         * Active-Passive scenarios. For example in a breakout game you may want to tweak the angle of
+         * richochet of the ball depending on which side of the paddle you hit.
+         */
+        off(eventName: Events.precollision, handler?: (event?: PreCollisionEvent) => void): void;
+        /**
+         * The **postcollision** event is fired for **every frame** where collision resolution was performed.
+         * Collision resolution is when two bodies influence each other and cause a response like bouncing
+         * off one another. It is only possible to have *postcollision* event in Active-Active and Active-Fixed
+         * type collision pairs.
+         *
+         * Post collision would be useful if you need to know that collision resolution is happening or need to
+         * tweak the default resolution.
+         */
+        off(eventName: Events.postcollision, handler: (event?: PostCollisionEvent) => void): void;
         off(eventName: Events.pointerup, handler?: (event?: PointerEvent) => void): void;
         off(eventName: Events.pointerdown, handler?: (event?: PointerEvent) => void): void;
         off(eventName: Events.pointerenter, handler?: (event?: PointerEvent) => void): void;

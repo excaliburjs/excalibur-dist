@@ -8,6 +8,8 @@ node_modules/
 /bower_components/
 coverage/
 
+/dist/.baseDir.*
+
 # Logs and databases #
 ######################
 *.log

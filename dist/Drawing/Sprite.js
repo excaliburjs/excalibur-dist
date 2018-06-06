@@ -8,12 +8,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
 import { Texture } from '../Resources/Texture';
@@ -21,7 +15,6 @@ import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
 import { clamp } from '../Util/Util';
 import { Configurable } from '../Configurable';
-import { obsolete } from '../Util/Decorators';
 /**
  * @hidden
  */
@@ -59,10 +52,10 @@ var SpriteImpl = /** @class */ (function () {
         this._dirtyEffect = false;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof Texture)) {
-            x = imageOrConfig.x || imageOrConfig.sx;
-            y = imageOrConfig.y || imageOrConfig.sy;
-            width = imageOrConfig.drawWidth || imageOrConfig.swidth;
-            height = imageOrConfig.drawHeight || imageOrConfig.sheight;
+            x = imageOrConfig.x || imageOrConfig.x;
+            y = imageOrConfig.y || imageOrConfig.y;
+            width = imageOrConfig.drawWidth || imageOrConfig.width;
+            height = imageOrConfig.drawHeight || imageOrConfig.height;
             image = imageOrConfig.image;
             if (!image) {
                 var message = 'An image texture is required to contsruct a sprite';
@@ -99,50 +92,6 @@ var SpriteImpl = /** @class */ (function () {
     Object.defineProperty(SpriteImpl.prototype, "drawHeight", {
         get: function () {
             return this.height * this.scale.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sx", {
-        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-        get: function () {
-            return this.x;
-        },
-        set: function (value) {
-            this.x = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sy", {
-        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-        get: function () {
-            return this.y;
-        },
-        set: function (value) {
-            this.y = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "swidth", {
-        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-        get: function () {
-            return this.width;
-        },
-        set: function (value) {
-            this.width = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sheight", {
-        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
-        get: function () {
-            return this.height;
-        },
-        set: function (value) {
-            this.height = value;
         },
         enumerable: true,
         configurable: true
@@ -343,22 +292,6 @@ var SpriteImpl = /** @class */ (function () {
         }
         return result;
     };
-    __decorate([
-        obsolete({ message: 'ex.Sprite.sx will be deprecated in 0.17.0', alternateMethod: 'x' })
-        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-    ], SpriteImpl.prototype, "sx", null);
-    __decorate([
-        obsolete({ message: 'ex.Sprite.sy will be deprecated in 0.17.0', alternateMethod: 'y' })
-        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-    ], SpriteImpl.prototype, "sy", null);
-    __decorate([
-        obsolete({ message: 'ex.Sprite.swidth will be deprecated in 0.17.0', alternateMethod: 'width' })
-        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-    ], SpriteImpl.prototype, "swidth", null);
-    __decorate([
-        obsolete({ message: 'ex.Sprite.sheight will be deprecated in 0.17.0', alternateMethod: 'height' })
-        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
-    ], SpriteImpl.prototype, "sheight", null);
     return SpriteImpl;
 }());
 export { SpriteImpl };

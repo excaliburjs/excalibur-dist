@@ -13,14 +13,6 @@ export declare class SpriteImpl implements IDrawable {
     y: number;
     readonly drawWidth: number;
     readonly drawHeight: number;
-    /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-    sx: number;
-    /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-    sy: number;
-    /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-    swidth: number;
-    /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
-    sheight: number;
     rotation: number;
     anchor: Vector;
     scale: Vector;
@@ -130,17 +122,8 @@ export declare class SpriteImpl implements IDrawable {
 export interface ISpriteArgs extends Partial<SpriteImpl> {
     image?: Texture;
     x?: number;
-    /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-    sx?: number;
-    y?: number;
-    /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-    sy?: number;
     width?: number;
-    /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-    swidth?: number;
     height?: number;
-    /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use ex.[[Sprite.height]] */
-    sheight?: number;
     rotation?: number;
     anchor?: Vector;
     scale?: Vector;

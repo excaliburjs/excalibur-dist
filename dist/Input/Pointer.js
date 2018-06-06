@@ -8,19 +8,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { ScrollPreventionMode } from './../Engine';
 import { GameEvent } from '../Events';
 import { Vector, GlobalCoordinates } from '../Algebra';
 import { Class } from '../Class';
 import * as Actors from '../Util/Actors';
 import * as Util from '../Util/Util';
-import { obsolete } from '../Util/Decorators';
 /**
  * The type of pointer for a [[PointerEvent]].
  */
@@ -97,70 +90,6 @@ var PointerEvent = /** @class */ (function (_super) {
         _this.ev = ev;
         return _this;
     }
-    Object.defineProperty(PointerEvent.prototype, "x", {
-        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-        get: function () {
-            return this.coordinates.worldPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "y", {
-        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-        get: function () {
-            return this.coordinates.worldPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "worldX", {
-        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-        get: function () {
-            return this.coordinates.worldPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "worldY", {
-        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-        get: function () {
-            return this.coordinates.worldPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "pageX", {
-        /** @obsolete Use [[PointerEvent]].pagePos.x instead. */
-        get: function () {
-            return this.coordinates.pagePos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "pageY", {
-        /** @obsolete Use [[PointerEvent]].pagePos.y instead. */
-        get: function () {
-            return this.coordinates.pagePos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "screenX", {
-        /** @obsolete Use [[PointerEvent]].screenPos.x instead. */
-        get: function () {
-            return this.coordinates.screenPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "screenY", {
-        /** @obsolete Use [[PointerEvent]].screenPos.y instead. */
-        get: function () {
-            return this.coordinates.screenPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(PointerEvent.prototype, "worldPos", {
         /** The world coordinates of the event. */
         get: function () {
@@ -204,30 +133,6 @@ var PointerEvent = /** @class */ (function (_super) {
         var actorPath = actor.getAncestors();
         this._path = actorPath.length > this._path.length ? actorPath : this._path;
     };
-    __decorate([
-        obsolete({ message: 'PointerEvent.x will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.x' })
-    ], PointerEvent.prototype, "x", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.y will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.y' })
-    ], PointerEvent.prototype, "y", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.worldX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.x' })
-    ], PointerEvent.prototype, "worldX", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.worldY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.y' })
-    ], PointerEvent.prototype, "worldY", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.pageX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.pagePos.x' })
-    ], PointerEvent.prototype, "pageX", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.pageY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.pagePos.y' })
-    ], PointerEvent.prototype, "pageY", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.screenX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.screenPos.x' })
-    ], PointerEvent.prototype, "screenX", null);
-    __decorate([
-        obsolete({ message: 'PointerEvent.screenY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.screenPos.y' })
-    ], PointerEvent.prototype, "screenY", null);
     return PointerEvent;
 }(GameEvent));
 export { PointerEvent };

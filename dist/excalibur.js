@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.16.0-alpha.2464+c2a8bb5 - 2018-6-5
+ * excalibur - 0.16.0-alpha.2467+abc6642 - 2018-6-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -7620,7 +7620,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Configurable */ "./Configurable.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -7631,13 +7630,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -7682,10 +7674,10 @@ var SpriteImpl = /** @class */ (function () {
         this._dirtyEffect = false;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"])) {
-            x = imageOrConfig.x || imageOrConfig.sx;
-            y = imageOrConfig.y || imageOrConfig.sy;
-            width = imageOrConfig.drawWidth || imageOrConfig.swidth;
-            height = imageOrConfig.drawHeight || imageOrConfig.sheight;
+            x = imageOrConfig.x || imageOrConfig.x;
+            y = imageOrConfig.y || imageOrConfig.y;
+            width = imageOrConfig.drawWidth || imageOrConfig.width;
+            height = imageOrConfig.drawHeight || imageOrConfig.height;
             image = imageOrConfig.image;
             if (!image) {
                 var message = 'An image texture is required to contsruct a sprite';
@@ -7722,50 +7714,6 @@ var SpriteImpl = /** @class */ (function () {
     Object.defineProperty(SpriteImpl.prototype, "drawHeight", {
         get: function () {
             return this.height * this.scale.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sx", {
-        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-        get: function () {
-            return this.x;
-        },
-        set: function (value) {
-            this.x = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sy", {
-        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-        get: function () {
-            return this.y;
-        },
-        set: function (value) {
-            this.y = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "swidth", {
-        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-        get: function () {
-            return this.width;
-        },
-        set: function (value) {
-            this.width = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(SpriteImpl.prototype, "sheight", {
-        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
-        get: function () {
-            return this.height;
-        },
-        set: function (value) {
-            this.height = value;
         },
         enumerable: true,
         configurable: true
@@ -7966,22 +7914,6 @@ var SpriteImpl = /** @class */ (function () {
         }
         return result;
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'ex.Sprite.sx will be deprecated in 0.17.0', alternateMethod: 'x' })
-        /** @obsolete ex.[[Sprite.sx]] will be deprecated in 0.17.0 use ex.[[Sprite.x]] */
-    ], SpriteImpl.prototype, "sx", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'ex.Sprite.sy will be deprecated in 0.17.0', alternateMethod: 'y' })
-        /** @obsolete ex.[[Sprite.sy]] will be deprecated in 0.17.0 use ex.[[Sprite.y]] */
-    ], SpriteImpl.prototype, "sy", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'ex.Sprite.swidth will be deprecated in 0.17.0', alternateMethod: 'width' })
-        /** @obsolete ex.[[Sprite.swidth]] will be deprecated in 0.17.0 use ex.[[Sprite.width]] */
-    ], SpriteImpl.prototype, "swidth", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'ex.Sprite.sheight will be deprecated in 0.17.0', alternateMethod: 'height' })
-        /** @obsolete ex.[[Sprite.sheight]] will be deprecated in 0.17.0 use [[Sprite.height]] */
-    ], SpriteImpl.prototype, "sheight", null);
     return SpriteImpl;
 }());
 
@@ -11416,7 +11348,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Class */ "./Class.ts");
 /* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Actors */ "./Util/Actors.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11427,13 +11358,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -11516,70 +11440,6 @@ var PointerEvent = /** @class */ (function (_super) {
         _this.ev = ev;
         return _this;
     }
-    Object.defineProperty(PointerEvent.prototype, "x", {
-        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-        get: function () {
-            return this.coordinates.worldPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "y", {
-        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-        get: function () {
-            return this.coordinates.worldPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "worldX", {
-        /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-        get: function () {
-            return this.coordinates.worldPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "worldY", {
-        /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-        get: function () {
-            return this.coordinates.worldPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "pageX", {
-        /** @obsolete Use [[PointerEvent]].pagePos.x instead. */
-        get: function () {
-            return this.coordinates.pagePos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "pageY", {
-        /** @obsolete Use [[PointerEvent]].pagePos.y instead. */
-        get: function () {
-            return this.coordinates.pagePos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "screenX", {
-        /** @obsolete Use [[PointerEvent]].screenPos.x instead. */
-        get: function () {
-            return this.coordinates.screenPos.x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PointerEvent.prototype, "screenY", {
-        /** @obsolete Use [[PointerEvent]].screenPos.y instead. */
-        get: function () {
-            return this.coordinates.screenPos.y;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(PointerEvent.prototype, "worldPos", {
         /** The world coordinates of the event. */
         get: function () {
@@ -11623,30 +11483,6 @@ var PointerEvent = /** @class */ (function (_super) {
         var actorPath = actor.getAncestors();
         this._path = actorPath.length > this._path.length ? actorPath : this._path;
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.x will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.x' })
-    ], PointerEvent.prototype, "x", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.y will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.y' })
-    ], PointerEvent.prototype, "y", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.worldX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.x' })
-    ], PointerEvent.prototype, "worldX", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.worldY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.worldPos.y' })
-    ], PointerEvent.prototype, "worldY", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.pageX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.pagePos.x' })
-    ], PointerEvent.prototype, "pageX", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.pageY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.pagePos.y' })
-    ], PointerEvent.prototype, "pageY", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.screenX will be removed in the 0.17 release', alternateMethod: 'PointerEvent.screenPos.x' })
-    ], PointerEvent.prototype, "screenX", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'PointerEvent.screenY will be removed in the 0.17 release', alternateMethod: 'PointerEvent.screenPos.y' })
-    ], PointerEvent.prototype, "screenY", null);
     return PointerEvent;
 }(_Events__WEBPACK_IMPORTED_MODULE_1__["GameEvent"]));
 
@@ -19402,7 +19238,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.16.0-alpha.2464+c2a8bb5";
+var EX_VERSION = "0.16.0-alpha.2467+abc6642";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

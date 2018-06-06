@@ -60,22 +60,6 @@ export declare class PointerEvent extends GameEvent<Actor> {
     pointerType: PointerType;
     button: PointerButton;
     ev: any;
-    /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-    readonly x: number;
-    /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-    readonly y: number;
-    /** @obsolete Use [[PointerEvent]].worldPos.x instead. */
-    readonly worldX: number;
-    /** @obsolete Use [[PointerEvent]].worldPos.y instead. */
-    readonly worldY: number;
-    /** @obsolete Use [[PointerEvent]].pagePos.x instead. */
-    readonly pageX: number;
-    /** @obsolete Use [[PointerEvent]].pagePos.y instead. */
-    readonly pageY: number;
-    /** @obsolete Use [[PointerEvent]].screenPos.x instead. */
-    readonly screenX: number;
-    /** @obsolete Use [[PointerEvent]].screenPos.y instead. */
-    readonly screenY: number;
     /** The world coordinates of the event. */
     readonly worldPos: Vector;
     /** The page coordinates of the event. */

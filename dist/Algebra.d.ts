@@ -115,7 +115,7 @@ export declare class Vector {
     dot(v: Vector): number;
     /**
      * Performs a 2D cross product with scalar. 2D cross products with a scalar return a vector.
-     * @param v  The vector to cross
+     * @param v  The scalar to cross
      */
     cross(v: number): Vector;
     /**

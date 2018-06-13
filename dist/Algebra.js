@@ -28,7 +28,7 @@ var Vector = /** @class */ (function () {
         if (isNaN(vec.x) || isNaN(vec.y)) {
             return false;
         }
-        if (vec.x === Infinity || vec.y === Infinity || vec.x === -Infinity || vec.y === Infinity) {
+        if (vec.x === Infinity || vec.y === Infinity || vec.x === -Infinity || vec.y === -Infinity) {
             return false;
         }
         return true;

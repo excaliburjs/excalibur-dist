@@ -493,12 +493,13 @@ var BaseCamera = /** @class */ (function (_super) {
             else {
                 this._x = this._lerpEnd.x;
                 this._y = this._lerpEnd.y;
+                var end = this._lerpEnd.clone();
                 this._lerpStart = null;
                 this._lerpEnd = null;
                 this._currentLerpTime = 0;
                 this._cameraMoving = false;
                 // Order matters here, resolve should be last so any chain promises have a clean slate
-                this._lerpPromise.resolve(this._lerpEnd);
+                this._lerpPromise.resolve(end);
             }
         }
         if (this._isDoneShaking()) {

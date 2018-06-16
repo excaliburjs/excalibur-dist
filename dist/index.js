@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.16.0-alpha.2490+2d3a491"` gets replaced by Webpack on build
+ * @description `"0.16.0-alpha.2498+c1fd5a0"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.16.0-alpha.2490+2d3a491";
+export var EX_VERSION = "0.16.0-alpha.2498+c1fd5a0";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 export * from './Engine';

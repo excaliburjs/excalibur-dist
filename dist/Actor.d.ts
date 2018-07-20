@@ -1,7 +1,7 @@
 import { Class } from './Class';
 import { BoundingBox } from './Collision/BoundingBox';
 import { Texture } from './Resources/Texture';
-import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent } from './Events';
+import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent, EnterViewPortEvent, ExitViewPortEvent } from './Events';
 import { PointerEvent, WheelEvent, PointerDragEvent } from './Input/Pointer';
 import { Engine } from './Engine';
 import { Color } from './Drawing/Color';
@@ -385,6 +385,8 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
     on(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
     on(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
     on(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+    on(eventName: Events.enterviewport, handler: (event?: EnterViewPortEvent) => void): void;
+    on(eventName: Events.exitviewport, handler: (event?: ExitViewPortEvent) => void): void;
     on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
     once(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
     once(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
@@ -445,6 +447,8 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
     once(eventName: Events.pointerdragenter, handler: (event?: PointerDragEvent) => void): void;
     once(eventName: Events.pointerdragleave, handler: (event?: PointerDragEvent) => void): void;
     once(eventName: Events.pointerdragmove, handler: (event?: PointerDragEvent) => void): void;
+    once(eventName: Events.enterviewport, handler: (event?: EnterViewPortEvent) => void): void;
+    once(eventName: Events.exitviewport, handler: (event?: ExitViewPortEvent) => void): void;
     once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
     off(eventName: Events.exittrigger, handler?: (evt: ExitTriggerEvent) => void): void;
     off(eventName: Events.entertrigger, handler?: (evt: EnterTriggerEvent) => void): void;
@@ -502,6 +506,8 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
     off(eventName: Events.preupdate, handler?: (event?: Events.PreUpdateEvent) => void): void;
     off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
     off(eventName: Events.predraw, handler?: (event?: Events.PreDrawEvent) => void): void;
+    off(eventName: Events.enterviewport, handler?: (event?: EnterViewPortEvent) => void): void;
+    off(eventName: Events.exitviewport, handler?: (event?: ExitViewPortEvent) => void): void;
     off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
     /**
      * It is not recommended that internal excalibur methods be overriden, do so at your own risk.

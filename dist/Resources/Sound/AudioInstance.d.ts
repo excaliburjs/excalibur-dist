@@ -20,10 +20,6 @@ export declare class AudioInstance implements IAudio {
     protected _isPaused: boolean;
     protected _instance: HTMLAudioElement | AudioBufferSourceNode;
     constructor(_src: string | AudioBuffer);
-    /** @obsolete will be removed in v0.18, use loop */
-    setLoop(loop: boolean): void;
-    /** @obsolete will be removed in v0.18, use volume */
-    setVolume(volume: number): void;
     isPlaying(): boolean;
     pause(): void;
     stop(): void;

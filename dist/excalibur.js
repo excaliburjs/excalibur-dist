@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.17.0-alpha.2533+175e725 - 2018-8-4
+ * excalibur - 0.17.0-alpha.2536+d762e46 - 2018-8-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -14967,7 +14967,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Promises */ "./Promises.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _AudioContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioContext */ "./Resources/Sound/AudioContext.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -14978,13 +14977,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -15043,14 +15035,6 @@ var AudioInstance = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /** @obsolete will be removed in v0.18, use loop */
-    AudioInstance.prototype.setLoop = function (loop) {
-        this.loop = loop;
-    };
-    /** @obsolete will be removed in v0.18, use volume */
-    AudioInstance.prototype.setVolume = function (volume) {
-        this.volume = volume;
-    };
     AudioInstance.prototype.isPlaying = function () {
         return this._isPlaying;
     };
@@ -15100,12 +15084,6 @@ var AudioInstance = /** @class */ (function () {
          * Override me
          */
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'will be removed in v0.18, use loop instead' })
-    ], AudioInstance.prototype, "setLoop", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'will be removed in v0.18, use volume instead' })
-    ], AudioInstance.prototype, "setVolume", null);
     return AudioInstance;
 }());
 
@@ -15310,9 +15288,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AudioInstance__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioInstance */ "./Resources/Sound/AudioInstance.ts");
 /* harmony import */ var _AudioContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AudioContext */ "./Resources/Sound/AudioContext.ts");
 /* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Events/MediaEvents */ "./Events/MediaEvents.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Promises */ "./Promises.ts");
-/* harmony import */ var _Util_Sound__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Util/Sound */ "./Util/Sound.ts");
+/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Promises */ "./Promises.ts");
+/* harmony import */ var _Util_Sound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Util/Sound */ "./Util/Sound.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -15323,13 +15300,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -15360,7 +15330,7 @@ var Sound = /** @class */ (function (_super) {
         _this._isPaused = false;
         _this._tracks = [];
         _this._wasPlayingOnHidden = false;
-        _this._processedData = new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]();
+        _this._processedData = new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]();
         _this._audioContext = _AudioContext__WEBPACK_IMPORTED_MODULE_3__["AudioContextFactory"].create();
         _this._detectResponseType();
         /* Chrome : MP3, WAV, Ogg
@@ -15370,7 +15340,7 @@ var Sound = /** @class */ (function (_super) {
              */
         for (var _a = 0, paths_1 = paths; _a < paths_1.length; _a++) {
             var path = paths_1[_a];
-            if (Object(_Util_Sound__WEBPACK_IMPORTED_MODULE_7__["canPlayFile"])(path)) {
+            if (Object(_Util_Sound__WEBPACK_IMPORTED_MODULE_6__["canPlayFile"])(path)) {
                 _this.path = path;
                 break;
             }
@@ -15427,14 +15397,6 @@ var Sound = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    /** @obsolete will be removed in v0.18, use loop */
-    Sound.prototype.setLoop = function (loop) {
-        this.loop = loop;
-    };
-    /** @obsolete will be removed in v0.18, use volume */
-    Sound.prototype.setVolume = function (volume) {
-        this.volume = volume;
-    };
     Sound.prototype.wireEngine = function (engine) {
         var _this = this;
         if (engine) {
@@ -15472,7 +15434,7 @@ var Sound = /** @class */ (function (_super) {
     Sound.prototype.play = function (volume) {
         if (!this.isLoaded()) {
             this.logger.warn('Cannot start playing. Resource', this.path, 'is not loaded yet');
-            return _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"].resolve(true);
+            return _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"].resolve(true);
         }
         this.volume = volume || this.volume;
         if (this._isPaused) {
@@ -15516,7 +15478,7 @@ var Sound = /** @class */ (function (_super) {
     Sound.prototype.setData = function (data) {
         this.emit('emptied', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this));
         this.data = data;
-        this._processedData = new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]();
+        this._processedData = new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]();
     };
     Sound.prototype.processData = function (data) {
         var _this = this;
@@ -15545,16 +15507,16 @@ var Sound = /** @class */ (function (_super) {
             this.emit('resume', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this));
             this.logger.debug('Resuming paused instances for sound', this.path, this._tracks);
             // resolve when resumed tracks are done
-            return _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"].join(resumed);
+            return _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"].join(resumed);
         }
         else {
-            return _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"].resolve(true);
+            return _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"].resolve(true);
         }
     };
     Sound.prototype._startPlayback = function () {
         var _this = this;
         var newTrack = this._createNewTrack();
-        var playPromise = new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]();
+        var playPromise = new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]();
         newTrack.then(function (track) {
             track.play().then(function (resolved) {
                 // when done, remove track
@@ -15570,7 +15532,7 @@ var Sound = /** @class */ (function (_super) {
     };
     Sound.prototype._processArrayBufferData = function (data) {
         var _this = this;
-        var complete = new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]();
+        var complete = new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]();
         this._audioContext.decodeAudioData(data, function (buffer) {
             complete.resolve(buffer);
         }, function () {
@@ -15582,14 +15544,14 @@ var Sound = /** @class */ (function (_super) {
         return complete;
     };
     Sound.prototype._processBlobData = function (data) {
-        return new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]().resolve(_super.prototype.processData.call(this, data));
+        return new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]().resolve(_super.prototype.processData.call(this, data));
     };
     Sound.prototype._setProcessedData = function (processedData) {
         this._processedData.resolve(processedData);
     };
     Sound.prototype._createNewTrack = function () {
         var _this = this;
-        var aiPromise = new _Promises__WEBPACK_IMPORTED_MODULE_6__["Promise"]();
+        var aiPromise = new _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"]();
         if (this._processedData.state() !== 0) {
             this.processData(this.data);
         }
@@ -15616,12 +15578,6 @@ var Sound = /** @class */ (function (_super) {
             this.responseType = _Interfaces_IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.blob;
         }
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'will be removed in v0.18, use loop instead' })
-    ], Sound.prototype, "setLoop", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'will be removed in v0.18, use volume instead' })
-    ], Sound.prototype, "setVolume", null);
     return Sound;
 }(_Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"]));
 
@@ -19250,7 +19206,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.17.0-alpha.2533+175e725";
+var EX_VERSION = "0.17.0-alpha.2536+d762e46";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

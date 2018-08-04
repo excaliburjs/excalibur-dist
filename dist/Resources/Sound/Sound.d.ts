@@ -34,10 +34,6 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements IAudi
      * @param paths A list of audio sources (clip.wav, clip.mp3, clip.ogg) for this audio clip. This is done for browser compatibility.
      */
     constructor(...paths: string[]);
-    /** @obsolete will be removed in v0.18, use loop */
-    setLoop(loop: boolean): void;
-    /** @obsolete will be removed in v0.18, use volume */
-    setVolume(volume: number): void;
     wireEngine(engine: Engine): void;
     /**
      * Returns how many instances of the sound are currently playing

@@ -8,18 +8,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { ExResponse } from '../../Interfaces/IAudioImplementation';
 import { Resource } from '../Resource';
 import { AudioInstanceFactory } from './AudioInstance';
 import { AudioContextFactory } from './AudioContext';
 import { NativeSoundEvent } from '../../Events/MediaEvents';
-import { obsolete } from '../../Util/Decorators';
 import { Promise } from '../../Promises';
 import { canPlayFile } from '../../Util/Sound';
 /**
@@ -112,14 +105,6 @@ var Sound = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    /** @obsolete will be removed in v0.18, use loop */
-    Sound.prototype.setLoop = function (loop) {
-        this.loop = loop;
-    };
-    /** @obsolete will be removed in v0.18, use volume */
-    Sound.prototype.setVolume = function (volume) {
-        this.volume = volume;
-    };
     Sound.prototype.wireEngine = function (engine) {
         var _this = this;
         if (engine) {
@@ -301,12 +286,6 @@ var Sound = /** @class */ (function (_super) {
             this.responseType = ExResponse.type.blob;
         }
     };
-    __decorate([
-        obsolete({ message: 'will be removed in v0.18, use loop instead' })
-    ], Sound.prototype, "setLoop", null);
-    __decorate([
-        obsolete({ message: 'will be removed in v0.18, use volume instead' })
-    ], Sound.prototype, "setVolume", null);
     return Sound;
 }(Resource));
 export { Sound };

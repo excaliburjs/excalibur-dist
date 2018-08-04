@@ -324,6 +324,10 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
      * Updates the given actor's position in the sorted drawing tree
      */
     updateDrawTree(actor: Actor): void;
+    /**
+     * Checks if an actor is in this scene's sorted draw tree
+     */
+    isActorInDrawTree(actor: Actor): boolean;
     isCurrentScene(): boolean;
     private _collectActorStats(engine);
 }

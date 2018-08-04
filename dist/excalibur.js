@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.17.0-alpha.2522+fa3142f - 2018-7-20
+ * excalibur - 0.17.0-alpha.2533+175e725 - 2018-8-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -16053,10 +16053,13 @@ var Scene = /** @class */ (function (_super) {
         var actorIndex;
         for (var _i = 0, killQueue_1 = killQueue; _i < killQueue_1.length; _i++) {
             var killed = killQueue_1[_i];
-            actorIndex = collection.indexOf(killed);
-            if (actorIndex > -1) {
-                this._sortedDrawingTree.removeByComparable(killed);
-                collection.splice(actorIndex, 1);
+            //don't remove actors that were readded during the same frame they were killed
+            if (killed.isKilled()) {
+                actorIndex = collection.indexOf(killed);
+                if (actorIndex > -1) {
+                    this._sortedDrawingTree.removeByComparable(killed);
+                    collection.splice(actorIndex, 1);
+                }
             }
         }
         killQueue.length = 0;
@@ -16303,6 +16306,12 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.updateDrawTree = function (actor) {
         this._sortedDrawingTree.add(actor);
+    };
+    /**
+     * Checks if an actor is in this scene's sorted draw tree
+     */
+    Scene.prototype.isActorInDrawTree = function (actor) {
+        return this._sortedDrawingTree.find(actor);
     };
     Scene.prototype.isCurrentScene = function () {
         if (this.engine) {
@@ -19241,7 +19250,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.17.0-alpha.2522+fa3142f";
+var EX_VERSION = "0.17.0-alpha.2533+175e725";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

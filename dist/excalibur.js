@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2552+78f46e9 - 2018-8-5
+ * excalibur - 0.18.0-alpha.2562+44ec4f3 - 2018-9-1
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -7675,10 +7675,10 @@ var SpriteImpl = /** @class */ (function () {
         this._dirtyEffect = false;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"])) {
-            x = imageOrConfig.x || imageOrConfig.x;
-            y = imageOrConfig.y || imageOrConfig.y;
-            width = imageOrConfig.drawWidth || imageOrConfig.width;
-            height = imageOrConfig.drawHeight || imageOrConfig.height;
+            x = imageOrConfig.x | 0;
+            y = imageOrConfig.y | 0;
+            width = imageOrConfig.width | 0;
+            height = imageOrConfig.height | 0;
             image = imageOrConfig.image;
             if (!image) {
                 var message = 'An image texture is required to contsruct a sprite';
@@ -7694,6 +7694,8 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCtx = this._spriteCanvas.getContext('2d');
         this._texture.loaded
             .then(function () {
+            _this.width = _this.width || _this._texture.image.naturalWidth;
+            _this.height = _this.height || _this._texture.image.naturalHeight;
             _this._spriteCanvas.width = _this._spriteCanvas.width || _this._texture.image.naturalWidth;
             _this._spriteCanvas.height = _this._spriteCanvas.height || _this._texture.image.naturalHeight;
             _this._loadPixels();
@@ -7726,8 +7728,14 @@ var SpriteImpl = /** @class */ (function () {
             if (this.width > naturalWidth) {
                 this.logger.warn("The sprite width " + this.width + " exceeds the width \n                              " + naturalWidth + " of the backing texture " + this._texture.path);
             }
+            if (this.width <= 0 || naturalWidth <= 0) {
+                throw new Error("The width of a sprite cannot be 0 or negative, sprite width: " + this.width + ", original width: " + naturalWidth);
+            }
             if (this.height > naturalHeight) {
                 this.logger.warn("The sprite height " + this.height + " exceeds the height \n                              " + naturalHeight + " of the backing texture " + this._texture.path);
+            }
+            if (this.height <= 0 || naturalHeight <= 0) {
+                throw new Error("The height of a sprite cannot be 0 or negative, sprite height: " + this.height + ", original height: " + naturalHeight);
             }
             this._spriteCtx.drawImage(this._texture.image, Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.x, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.y, 0, naturalHeight), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.width, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
             this._pixelsLoaded = true;
@@ -19206,7 +19214,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2552+78f46e9";
+var EX_VERSION = "0.18.0-alpha.2562+44ec4f3";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

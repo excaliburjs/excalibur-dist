@@ -52,10 +52,10 @@ var SpriteImpl = /** @class */ (function () {
         this._dirtyEffect = false;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof Texture)) {
-            x = imageOrConfig.x || imageOrConfig.x;
-            y = imageOrConfig.y || imageOrConfig.y;
-            width = imageOrConfig.drawWidth || imageOrConfig.width;
-            height = imageOrConfig.drawHeight || imageOrConfig.height;
+            x = imageOrConfig.x | 0;
+            y = imageOrConfig.y | 0;
+            width = imageOrConfig.width | 0;
+            height = imageOrConfig.height | 0;
             image = imageOrConfig.image;
             if (!image) {
                 var message = 'An image texture is required to contsruct a sprite';
@@ -71,6 +71,8 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCtx = this._spriteCanvas.getContext('2d');
         this._texture.loaded
             .then(function () {
+            _this.width = _this.width || _this._texture.image.naturalWidth;
+            _this.height = _this.height || _this._texture.image.naturalHeight;
             _this._spriteCanvas.width = _this._spriteCanvas.width || _this._texture.image.naturalWidth;
             _this._spriteCanvas.height = _this._spriteCanvas.height || _this._texture.image.naturalHeight;
             _this._loadPixels();
@@ -103,8 +105,14 @@ var SpriteImpl = /** @class */ (function () {
             if (this.width > naturalWidth) {
                 this.logger.warn("The sprite width " + this.width + " exceeds the width \n                              " + naturalWidth + " of the backing texture " + this._texture.path);
             }
+            if (this.width <= 0 || naturalWidth <= 0) {
+                throw new Error("The width of a sprite cannot be 0 or negative, sprite width: " + this.width + ", original width: " + naturalWidth);
+            }
             if (this.height > naturalHeight) {
                 this.logger.warn("The sprite height " + this.height + " exceeds the height \n                              " + naturalHeight + " of the backing texture " + this._texture.path);
+            }
+            if (this.height <= 0 || naturalHeight <= 0) {
+                throw new Error("The height of a sprite cannot be 0 or negative, sprite height: " + this.height + ", original height: " + naturalHeight);
             }
             this._spriteCtx.drawImage(this._texture.image, clamp(this.x, 0, naturalWidth), clamp(this.y, 0, naturalHeight), clamp(this.width, 0, naturalWidth), clamp(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
             this._pixelsLoaded = true;

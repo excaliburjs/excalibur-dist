@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2562+44ec4f3 - 2018-9-1
+ * excalibur - 0.18.0-alpha.2591+e823981 - 2018-9-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4549,48 +4549,12 @@ var CollisionContact = /** @class */ (function () {
             // Apply mtv
             bodyA.pos.y += mtv.y;
             bodyA.pos.x += mtv.x;
-            // non-zero intersection on the y axis
-            if (this.mtv.x !== 0) {
-                var velX = 0;
-                // both bodies are traveling in the same direction (negative or positive)
-                if (bodyA.vel.x < 0 && bodyB.vel.x < 0) {
-                    velX = Math.min(bodyA.vel.x, bodyB.vel.x);
-                }
-                else if (bodyA.vel.x > 0 && bodyB.vel.x > 0) {
-                    velX = Math.max(bodyA.vel.x, bodyB.vel.x);
-                }
-                else if (bodyB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
-                    // bodies are traveling in opposite directions
-                    if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
-                        velX = bodyA.vel.x;
-                    }
-                    else {
-                        // bodyA is heading towards b
-                        velX = bodyB.vel.x;
-                    }
-                }
-                bodyA.vel.x = velX;
-            }
-            if (this.mtv.y !== 0) {
-                var velY = 0;
-                // both bodies are traveling in the same direction (negative or positive)
-                if (bodyA.vel.y < 0 && bodyB.vel.y < 0) {
-                    velY = Math.min(bodyA.vel.y, bodyB.vel.y);
-                }
-                else if (bodyA.vel.y > 0 && bodyB.vel.y > 0) {
-                    velY = Math.max(bodyA.vel.y, bodyB.vel.y);
-                }
-                else if (bodyB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
-                    // bodies are traveling in opposite directions
-                    if (bodyA.pos.sub(bodyB.pos).dot(bodyA.vel) > 0) {
-                        velY = bodyA.vel.y;
-                    }
-                    else {
-                        // bodyA is heading towards b
-                        velY = bodyB.vel.y;
-                    }
-                }
-                bodyA.vel.y = velY;
+            var mtvDir = mtv.normalize();
+            // only adjust if velocity is opposite
+            if (mtvDir.dot(bodyA.vel) < 0) {
+                // Cancel out velocity in direction of mtv
+                var velAdj = mtvDir.scale(mtvDir.dot(bodyA.vel.negate()));
+                bodyA.vel = bodyA.vel.add(velAdj);
             }
             bodyA.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostCollisionEvent"](bodyA, bodyB, _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getSideFromVector"](mtv), mtv));
         }
@@ -19214,7 +19178,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2562+44ec4f3";
+var EX_VERSION = "0.18.0-alpha.2591+e823981";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

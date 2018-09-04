@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2591+e823981 - 2018-9-4
+ * excalibur - 0.18.0-alpha.2594+65226a1 - 2018-9-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5371,22 +5371,13 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         }
         this._dynamicCollisionTree.untrackBody(target);
     };
-    DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
+    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (actorA, actorB) {
         // if the collision pair has been calculated already short circuit
         var hash = _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].calculatePairHash(actorA.body, actorB.body);
         if (this._collisionHash[hash]) {
             return false; // pair exists easy exit return false
         }
-        // if both are fixed short circuit
-        if (actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed && actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed) {
-            return false;
-        }
-        // if the other is prevent collision or is dead short circuit
-        if (actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision || actorB.isKilled()) {
-            return false;
-        }
-        // they can collide
-        return true;
+        return _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].canCollide(actorA, actorB);
     };
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
@@ -5408,7 +5399,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             actor = potentialColliders[j];
             // Query the collision tree for potential colliders
             this._dynamicCollisionTree.query(actor.body, function (other) {
-                if (_this._canCollide(actor, other.actor)) {
+                if (_this._shouldGenerateCollisionPair(actor, other.actor)) {
                     var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor.body, other);
                     _this._collisionHash[pair.id] = true;
                     _this._collisionPairCache.push(pair);
@@ -5981,6 +5972,21 @@ var Pair = /** @class */ (function () {
         this.collision = null;
         this.id = Pair.calculatePairHash(bodyA, bodyB);
     }
+    Pair.canCollide = function (actorA, actorB) {
+        // if both are fixed short circuit
+        if (actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed && actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed) {
+            return false;
+        }
+        // if the either is prevent collision short circuit
+        if (actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision || actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision) {
+            return false;
+        }
+        // if either is dead short circuit
+        if (actorA.isKilled() || actorB.isKilled()) {
+            return false;
+        }
+        return true;
+    };
     Object.defineProperty(Pair.prototype, "canCollide", {
         /**
          * Returns whether or not it is possible for the pairs to collide
@@ -5988,15 +5994,7 @@ var Pair = /** @class */ (function () {
         get: function () {
             var actorA = this.bodyA.actor;
             var actorB = this.bodyB.actor;
-            // if both are fixed short circuit
-            if (actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed && actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed) {
-                return false;
-            }
-            // if the other is prevent collision or is dead short circuit
-            if (actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision || actorB.isKilled()) {
-                return false;
-            }
-            return true;
+            return Pair.canCollide(actorA, actorB);
         },
         enumerable: true,
         configurable: true
@@ -16094,9 +16092,6 @@ var Scene = /** @class */ (function (_super) {
         }
         if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
             this._removeChild(entity);
-            if (!entity.isKilled()) {
-                entity.kill();
-            }
         }
         if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_4__["Timer"]) {
             this.removeTimer(entity);
@@ -16156,11 +16151,17 @@ var Scene = /** @class */ (function (_super) {
      * Removes an actor from the scene, it will no longer be drawn or updated.
      */
     Scene.prototype._removeChild = function (actor) {
+        if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.actors, actor)) {
+            return;
+        }
         this._broadphase.untrack(actor.body);
         if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_14__["Trigger"]) {
             this._triggerKillQueue.push(actor);
         }
         else {
+            if (!actor.isKilled()) {
+                actor.kill();
+            }
             this._killQueue.push(actor);
         }
         actor.parent = null;
@@ -19178,7 +19179,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2591+e823981";
+var EX_VERSION = "0.18.0-alpha.2594+65226a1";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

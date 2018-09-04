@@ -13,6 +13,21 @@ var Pair = /** @class */ (function () {
         this.collision = null;
         this.id = Pair.calculatePairHash(bodyA, bodyB);
     }
+    Pair.canCollide = function (actorA, actorB) {
+        // if both are fixed short circuit
+        if (actorA.collisionType === CollisionType.Fixed && actorB.collisionType === CollisionType.Fixed) {
+            return false;
+        }
+        // if the either is prevent collision short circuit
+        if (actorB.collisionType === CollisionType.PreventCollision || actorA.collisionType === CollisionType.PreventCollision) {
+            return false;
+        }
+        // if either is dead short circuit
+        if (actorA.isKilled() || actorB.isKilled()) {
+            return false;
+        }
+        return true;
+    };
     Object.defineProperty(Pair.prototype, "canCollide", {
         /**
          * Returns whether or not it is possible for the pairs to collide
@@ -20,15 +35,7 @@ var Pair = /** @class */ (function () {
         get: function () {
             var actorA = this.bodyA.actor;
             var actorB = this.bodyB.actor;
-            // if both are fixed short circuit
-            if (actorA.collisionType === CollisionType.Fixed && actorB.collisionType === CollisionType.Fixed) {
-                return false;
-            }
-            // if the other is prevent collision or is dead short circuit
-            if (actorB.collisionType === CollisionType.PreventCollision || actorB.isKilled()) {
-                return false;
-            }
-            return true;
+            return Pair.canCollide(actorA, actorB);
         },
         enumerable: true,
         configurable: true

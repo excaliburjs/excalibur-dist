@@ -418,9 +418,6 @@ var Scene = /** @class */ (function (_super) {
         }
         if (entity instanceof Actor) {
             this._removeChild(entity);
-            if (!entity.isKilled()) {
-                entity.kill();
-            }
         }
         if (entity instanceof Timer) {
             this.removeTimer(entity);
@@ -480,11 +477,17 @@ var Scene = /** @class */ (function (_super) {
      * Removes an actor from the scene, it will no longer be drawn or updated.
      */
     Scene.prototype._removeChild = function (actor) {
+        if (!Util.contains(this.actors, actor)) {
+            return;
+        }
         this._broadphase.untrack(actor.body);
         if (actor instanceof Trigger) {
             this._triggerKillQueue.push(actor);
         }
         else {
+            if (!actor.isKilled()) {
+                actor.kill();
+            }
             this._killQueue.push(actor);
         }
         actor.parent = null;

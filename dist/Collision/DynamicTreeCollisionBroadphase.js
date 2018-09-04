@@ -33,22 +33,13 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         }
         this._dynamicCollisionTree.untrackBody(target);
     };
-    DynamicTreeCollisionBroadphase.prototype._canCollide = function (actorA, actorB) {
+    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (actorA, actorB) {
         // if the collision pair has been calculated already short circuit
         var hash = Pair.calculatePairHash(actorA.body, actorB.body);
         if (this._collisionHash[hash]) {
             return false; // pair exists easy exit return false
         }
-        // if both are fixed short circuit
-        if (actorA.collisionType === CollisionType.Fixed && actorB.collisionType === CollisionType.Fixed) {
-            return false;
-        }
-        // if the other is prevent collision or is dead short circuit
-        if (actorB.collisionType === CollisionType.PreventCollision || actorB.isKilled()) {
-            return false;
-        }
-        // they can collide
-        return true;
+        return Pair.canCollide(actorA, actorB);
     };
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
@@ -70,7 +61,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             actor = potentialColliders[j];
             // Query the collision tree for potential colliders
             this._dynamicCollisionTree.query(actor.body, function (other) {
-                if (_this._canCollide(actor, other.actor)) {
+                if (_this._shouldGenerateCollisionPair(actor, other.actor)) {
                     var pair = new Pair(actor.body, other);
                     _this._collisionHash[pair.id] = true;
                     _this._collisionPairCache.push(pair);

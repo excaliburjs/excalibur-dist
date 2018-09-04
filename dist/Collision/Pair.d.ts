@@ -1,5 +1,6 @@
 import { Body } from './Body';
 import { CollisionContact } from './CollisionContact';
+import { Actor } from '../Actor';
 import { CollisionResolutionStrategy } from '../Physics';
 /**
  * Models a potential collision between 2 bodies
@@ -10,6 +11,7 @@ export declare class Pair {
     id: string;
     collision: CollisionContact;
     constructor(bodyA: Body, bodyB: Body);
+    static canCollide(actorA: Actor, actorB: Actor): boolean;
     /**
      * Returns whether or not it is possible for the pairs to collide
      */

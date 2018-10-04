@@ -474,7 +474,7 @@ var ActorImpl = /** @class */ (function (_super) {
     };
     Object.defineProperty(ActorImpl.prototype, "isInitialized", {
         /**
-         * Gets wether the actor is Initialized
+         * Gets whether the actor is Initialized
          */
         get: function () {
             return this._isInitialized;

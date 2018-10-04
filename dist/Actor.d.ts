@@ -310,7 +310,7 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
      */
     onInitialize(_engine: Engine): void;
     /**
-     * Gets wether the actor is Initialized
+     * Gets whether the actor is Initialized
      */
     readonly isInitialized: boolean;
     /**

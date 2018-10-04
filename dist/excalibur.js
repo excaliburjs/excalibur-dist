@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2607+1565fa4 - 2018-10-2
+ * excalibur - 0.18.0-alpha.2614+2653548 - 2018-10-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -1838,7 +1838,7 @@ var ActorImpl = /** @class */ (function (_super) {
     };
     Object.defineProperty(ActorImpl.prototype, "isInitialized", {
         /**
-         * Gets wether the actor is Initialized
+         * Gets whether the actor is Initialized
          */
         get: function () {
             return this._isInitialized;
@@ -19179,7 +19179,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2607+1565fa4";
+var EX_VERSION = "0.18.0-alpha.2614+2653548";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

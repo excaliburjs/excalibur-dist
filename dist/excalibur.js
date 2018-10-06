@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2614+2653548 - 2018-10-4
+ * excalibur - 0.18.0-alpha.2635+3131a0a - 2018-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -8526,23 +8526,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrollPreventionMode", function() { return ScrollPreventionMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Engine", function() { return Engine; });
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ */ "./index.ts");
-/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
-/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Polyfill */ "./Polyfill.ts");
+/* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_Polyfill__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
+/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -8553,6 +8555,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -8651,7 +8654,7 @@ var Engine = /** @class */ (function (_super) {
         /**
          * Access Excalibur debugging functionality.
          */
-        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_13__["Debug"]();
+        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_14__["Debug"]();
         /**
          * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
          */
@@ -8678,20 +8681,20 @@ var Engine = /** @class */ (function (_super) {
          * Indicates whether the engine should draw with debug information
          */
         _this.isDebug = false;
-        _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_11__["Color"](255, 255, 255);
+        _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_12__["Color"](255, 255, 255);
         /**
          * The action to take when a fatal exception is thrown
          */
         _this.onFatalException = function (e) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_10__["Logger"].getInstance().fatal(e);
+            _Util_Log__WEBPACK_IMPORTED_MODULE_11__["Logger"].getInstance().fatal(e);
         };
         _this._isSmoothingEnabled = true;
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
-        options = _Util_Util__WEBPACK_IMPORTED_MODULE_16__["extend"]({}, Engine._DefaultEngineOptions, options);
+        options = _Util_Util__WEBPACK_IMPORTED_MODULE_17__["extend"]({}, Engine._DefaultEngineOptions, options);
         // Check compatibility
-        var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_8__["Detector"]();
+        var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_9__["Detector"]();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
             var message = document.createElement('div');
             message.innerText = 'Sorry, your browser does not support all the features needed for Excalibur';
@@ -8721,9 +8724,9 @@ O|===|* >________________>\n\
       \\|');
             console.log('Visit', 'http://excaliburjs.com', 'for more information');
         }
-        _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_10__["Logger"].getInstance();
+        _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_11__["Logger"].getInstance();
         // If debug is enabled, let's log browser features to the console.
-        if (_this._logger.defaultLevel === _Util_Log__WEBPACK_IMPORTED_MODULE_10__["LogLevel"].Debug) {
+        if (_this._logger.defaultLevel === _Util_Log__WEBPACK_IMPORTED_MODULE_11__["LogLevel"].Debug) {
             detector.logBrowserFeatures();
         }
         _this._logger.debug('Building engine...');
@@ -8751,9 +8754,9 @@ O|===|* >________________>\n\
         if (options.backgroundColor) {
             _this.backgroundColor = options.backgroundColor.clone();
         }
-        _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_7__["Loader"]();
+        _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_8__["Loader"]();
         _this._initialize(options);
-        _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_12__["Scene"](_this);
+        _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_13__["Scene"](_this);
         _this.addScene('root', _this.rootScene);
         _this.goToScene('root');
         return _this;
@@ -8898,11 +8901,11 @@ O|===|* >________________>\n\
      * and the bottom right corner of the screen.
      */
     Engine.prototype.getWorldBounds = function () {
-        var left = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero).x;
-        var top = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero).y;
+        var left = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero).x;
+        var top = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero).y;
         var right = left + this.drawWidth;
         var bottom = top + this.drawHeight;
-        return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__["BoundingBox"](left, top, right, bottom);
+        return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_18__["BoundingBox"](left, top, right, bottom);
     };
     Object.defineProperty(Engine.prototype, "timescale", {
         /**
@@ -8917,7 +8920,7 @@ O|===|* >________________>\n\
          */
         set: function (value) {
             if (value <= 0) {
-                _Util_Log__WEBPACK_IMPORTED_MODULE_10__["Logger"].getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
+                _Util_Log__WEBPACK_IMPORTED_MODULE_11__["Logger"].getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
                 return;
             }
             this._timescale = value;
@@ -8984,7 +8987,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype.removeScene = function (entity) {
-        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_12__["Scene"]) {
+        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_13__["Scene"]) {
             // remove scene
             for (var key in this.scenes) {
                 if (this.scenes.hasOwnProperty(key)) {
@@ -9000,17 +9003,17 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.add = function (entity) {
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_3__["UIActor"]) {
+        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_4__["UIActor"]) {
             this.currentScene.addUIActor(entity);
             return;
         }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_4__["Actor"]) {
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_5__["Actor"]) {
             this._addChild(entity);
         }
-        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_5__["Timer"]) {
+        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_6__["Timer"]) {
             this.addTimer(entity);
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_6__["TileMap"]) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
             this.addTileMap(entity);
         }
         if (arguments.length === 2) {
@@ -9018,20 +9021,20 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.remove = function (entity) {
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_3__["UIActor"]) {
+        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_4__["UIActor"]) {
             this.currentScene.removeUIActor(entity);
             return;
         }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_4__["Actor"]) {
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_5__["Actor"]) {
             this._removeChild(entity);
         }
-        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_5__["Timer"]) {
+        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_6__["Timer"]) {
             this.removeTimer(entity);
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_6__["TileMap"]) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
             this.removeTileMap(entity);
         }
-        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_12__["Scene"]) {
+        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_13__["Scene"]) {
             this.removeScene(entity);
         }
         if (typeof entity === 'string') {
@@ -9073,14 +9076,14 @@ O|===|* >________________>\n\
             // only deactivate when initialized
             if (this.currentScene.isInitialized) {
                 this.currentScene._deactivate.call(this.currentScene, [oldScene, newScene]);
-                this.currentScene.eventDispatcher.emit('deactivate', new _Events__WEBPACK_IMPORTED_MODULE_9__["DeactivateEvent"](newScene, this.currentScene));
+                this.currentScene.eventDispatcher.emit('deactivate', new _Events__WEBPACK_IMPORTED_MODULE_10__["DeactivateEvent"](newScene, this.currentScene));
             }
             // set current scene to new one
             this.currentScene = newScene;
             // initialize the current scene if has not been already
             this.currentScene._initialize(this);
             this.currentScene._activate.call(this.currentScene, [oldScene, newScene]);
-            this.currentScene.eventDispatcher.emit('activate', new _Events__WEBPACK_IMPORTED_MODULE_9__["ActivateEvent"](oldScene, this.currentScene));
+            this.currentScene.eventDispatcher.emit('activate', new _Events__WEBPACK_IMPORTED_MODULE_10__["ActivateEvent"](oldScene, this.currentScene));
         }
         else {
             this._logger.error('Scene', key, 'does not exist!');
@@ -9105,7 +9108,7 @@ O|===|* >________________>\n\
             newX += focus.x;
             newY += focus.y;
         }
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](Math.floor(newX), Math.floor(newY));
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Math.floor(newX), Math.floor(newY));
     };
     /**
      * Transforms a world coordinate, to a screen coordinate
@@ -9126,7 +9129,7 @@ O|===|* >________________>\n\
         // transform back to screen space
         screenX = (screenX * this.canvas.clientWidth) / this.drawWidth;
         screenY = (screenY * this.canvas.clientHeight) / this.drawHeight;
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](Math.floor(screenX), Math.floor(screenY));
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Math.floor(screenX), Math.floor(screenY));
     };
     /**
      * Sets the internal canvas height based on the selected display mode.
@@ -9166,12 +9169,12 @@ O|===|* >________________>\n\
         }
         // initialize inputs
         this.input = {
-            keyboard: new _Input_Index__WEBPACK_IMPORTED_MODULE_15__["Keyboard"](),
-            pointers: new _Input_Index__WEBPACK_IMPORTED_MODULE_15__["Pointers"](this),
-            gamepads: new _Input_Index__WEBPACK_IMPORTED_MODULE_15__["Gamepads"]()
+            keyboard: new _Input_Index__WEBPACK_IMPORTED_MODULE_16__["Keyboard"](),
+            pointers: new _Input_Index__WEBPACK_IMPORTED_MODULE_16__["Pointers"](this),
+            gamepads: new _Input_Index__WEBPACK_IMPORTED_MODULE_16__["Gamepads"]()
         };
         this.input.keyboard.init();
-        this.input.pointers.init(options && options.pointerScope === _Input_Index__WEBPACK_IMPORTED_MODULE_15__["PointerScope"].Document ? document : this.canvas);
+        this.input.pointers.init(options && options.pointerScope === _Input_Index__WEBPACK_IMPORTED_MODULE_16__["PointerScope"].Document ? document : this.canvas);
         this.input.gamepads.init();
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // Issue #385 make use of the visibility api
@@ -9192,11 +9195,11 @@ O|===|* >________________>\n\
         }
         document.addEventListener(visibilityChange, function () {
             if (document[hidden]) {
-                _this.eventDispatcher.emit('hidden', new _Events__WEBPACK_IMPORTED_MODULE_9__["HiddenEvent"](_this));
+                _this.eventDispatcher.emit('hidden', new _Events__WEBPACK_IMPORTED_MODULE_10__["HiddenEvent"](_this));
                 _this._logger.debug('Window hidden');
             }
             else {
-                _this.eventDispatcher.emit('visible', new _Events__WEBPACK_IMPORTED_MODULE_9__["VisibleEvent"](_this));
+                _this.eventDispatcher.emit('visible', new _Events__WEBPACK_IMPORTED_MODULE_10__["VisibleEvent"](_this));
                 _this._logger.debug('Window visible');
             }
         });
@@ -9331,7 +9334,7 @@ O|===|* >________________>\n\
     Engine.prototype._overrideInitialize = function (engine) {
         if (!this.isInitialized) {
             this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_9__["InitializeEvent"](engine, this));
+            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_10__["InitializeEvent"](engine, this));
             this._isInitialized = true;
         }
     };
@@ -9369,7 +9372,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._preupdate = function (delta) {
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_9__["PreUpdateEvent"](this, delta, this));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_10__["PreUpdateEvent"](this, delta, this));
         this.onPreUpdate(this, delta);
     };
     Engine.prototype.onPreUpdate = function (_engine, _delta) {
@@ -9379,7 +9382,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._postupdate = function (delta) {
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_9__["PostUpdateEvent"](this, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_10__["PostUpdateEvent"](this, delta, this));
         this.onPostUpdate(this, delta);
     };
     Engine.prototype.onPostUpdate = function (_engine, _delta) {
@@ -9412,7 +9415,7 @@ O|===|* >________________>\n\
             this.ctx.fillStyle = this.debugColor.toString();
             var keys = this.input.keyboard.getKeys();
             for (var j = 0; j < keys.length; j++) {
-                this.ctx.fillText(keys[j].toString() + ' : ' + (_Input_Index__WEBPACK_IMPORTED_MODULE_15__["Keys"][keys[j]] ? _Input_Index__WEBPACK_IMPORTED_MODULE_15__["Keys"][keys[j]] : 'Not Mapped'), 100, 10 * j + 10);
+                this.ctx.fillText(keys[j].toString() + ' : ' + (_Input_Index__WEBPACK_IMPORTED_MODULE_16__["Keys"][keys[j]] ? _Input_Index__WEBPACK_IMPORTED_MODULE_16__["Keys"][keys[j]] : 'Not Mapped'), 100, 10 * j + 10);
             }
             this.ctx.fillText('FPS:' + this.stats.currFrame.fps.toFixed(2).toString(), 10, 10);
         }
@@ -9426,7 +9429,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._predraw = function (_ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_9__["PreDrawEvent"](_ctx, delta, this));
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_10__["PreDrawEvent"](_ctx, delta, this));
         this.onPreDraw(_ctx, delta);
     };
     Engine.prototype.onPreDraw = function (_ctx, _delta) {
@@ -9436,7 +9439,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._postdraw = function (_ctx, delta) {
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_9__["PostDrawEvent"](_ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_10__["PostDrawEvent"](_ctx, delta, this));
         this.onPostDraw(_ctx, delta);
     };
     Engine.prototype.onPostDraw = function (_ctx, _delta) {
@@ -9451,7 +9454,7 @@ O|===|* >________________>\n\
     Engine.prototype.start = function (loader) {
         var _this = this;
         if (!this._compatible) {
-            var promise = new _Promises__WEBPACK_IMPORTED_MODULE_1__["Promise"]();
+            var promise = new _Promises__WEBPACK_IMPORTED_MODULE_2__["Promise"]();
             return promise.reject('Excalibur is incompatible with your browser');
         }
         var loadingComplete;
@@ -9461,10 +9464,10 @@ O|===|* >________________>\n\
             loadingComplete = this.load(this._loader);
         }
         else {
-            loadingComplete = _Promises__WEBPACK_IMPORTED_MODULE_1__["Promise"].resolve();
+            loadingComplete = _Promises__WEBPACK_IMPORTED_MODULE_2__["Promise"].resolve();
         }
         loadingComplete.then(function () {
-            _this.emit('start', new _Events__WEBPACK_IMPORTED_MODULE_9__["GameStartEvent"](_this));
+            _this.emit('start', new _Events__WEBPACK_IMPORTED_MODULE_10__["GameStartEvent"](_this));
         });
         if (!this._hasStarted) {
             this._hasStarted = true;
@@ -9485,7 +9488,7 @@ O|===|* >________________>\n\
             }
             try {
                 game._requestId = raf(mainloop);
-                game.emit('preframe', new _Events__WEBPACK_IMPORTED_MODULE_9__["PreFrameEvent"](game, game.stats.prevFrame));
+                game.emit('preframe', new _Events__WEBPACK_IMPORTED_MODULE_10__["PreFrameEvent"](game, game.stats.prevFrame));
                 // Get the time to calculate time-elapsed
                 var now = nowFn();
                 var elapsed = Math.floor(now - lastTime) || 1;
@@ -9512,7 +9515,7 @@ O|===|* >________________>\n\
                 game.stats.currFrame.duration.update = afterUpdate - beforeUpdate;
                 game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                 lastTime = now;
-                game.emit('postframe', new _Events__WEBPACK_IMPORTED_MODULE_9__["PostFrameEvent"](game, game.stats.currFrame));
+                game.emit('postframe', new _Events__WEBPACK_IMPORTED_MODULE_10__["PostFrameEvent"](game, game.stats.currFrame));
             }
             catch (e) {
                 window.cancelAnimationFrame(game._requestId);
@@ -9526,7 +9529,7 @@ O|===|* >________________>\n\
      */
     Engine.prototype.stop = function () {
         if (this._hasStarted) {
-            this.emit('stop', new _Events__WEBPACK_IMPORTED_MODULE_9__["GameStopEvent"](this));
+            this.emit('stop', new _Events__WEBPACK_IMPORTED_MODULE_10__["GameStopEvent"](this));
             this._hasStarted = false;
             this._logger.debug('Game stopped');
         }
@@ -9555,7 +9558,7 @@ O|===|* >________________>\n\
      */
     Engine.prototype.load = function (loader) {
         var _this = this;
-        var complete = new _Promises__WEBPACK_IMPORTED_MODULE_1__["Promise"]();
+        var complete = new _Promises__WEBPACK_IMPORTED_MODULE_2__["Promise"]();
         this._isLoading = true;
         loader.load().then(function () {
             setTimeout(function () {
@@ -9572,15 +9575,15 @@ O|===|* >________________>\n\
         width: 0,
         height: 0,
         canvasElementId: '',
-        pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_15__["PointerScope"].Document,
+        pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_16__["PointerScope"].Document,
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,
         suppressHiDPIScaling: null,
         scrollPreventionMode: ScrollPreventionMode.Canvas,
-        backgroundColor: _Drawing_Color__WEBPACK_IMPORTED_MODULE_11__["Color"].fromHex('#2185d0') // Excalibur blue
+        backgroundColor: _Drawing_Color__WEBPACK_IMPORTED_MODULE_12__["Color"].fromHex('#2185d0') // Excalibur blue
     };
     return Engine;
-}(_Class__WEBPACK_IMPORTED_MODULE_14__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_15__["Class"]));
 
 /**
  * @internal
@@ -14284,6 +14287,143 @@ var Physics = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./Polyfill.ts":
+/*!*********************!*\
+  !*** ./Polyfill.ts ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* istanbul ignore next */
+if (typeof window === 'undefined') {
+    window = {
+        audioContext: function () {
+            return;
+        }
+    };
+}
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && !window.requestAnimationFrame) {
+    window.requestAnimationFrame =
+        window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function (callback) {
+                window.setInterval(callback, 1000 / 60);
+            };
+}
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && !window.cancelAnimationFrame) {
+    window.cancelAnimationFrame =
+        window.webkitCancelAnimationFrame ||
+            window.mozCancelAnimationFrame ||
+            function () {
+                return;
+            };
+}
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && !window.AudioContext) {
+    window.AudioContext =
+        window.AudioContext ||
+            window.webkitAudioContext ||
+            window.mozAudioContext ||
+            window.msAudioContext ||
+            window.oAudioContext;
+}
+if (typeof window !== 'undefined' && !window.devicePixelRatio) {
+    window.devicePixelRatio = window.devicePixelRatio || 1;
+}
+// Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+// Production steps of ECMA-262, Edition 5, 15.4.4.18
+// Reference: http://es5.github.io/#x15.4.4.18
+/* istanbul ignore next */
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function (callback, thisArg) {
+        var T, k;
+        if (this == null) {
+            throw new TypeError('this is null or not defined');
+        }
+        // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
+        var O = Object(this);
+        // 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+        // 3. Let len be ToUint32(lenValue).
+        var len = O.length >>> 0;
+        // 4. If IsCallable(callback) is false, throw a TypeError exception.
+        // See: http://es5.github.com/#x9.11
+        if (typeof callback !== 'function') {
+            throw new TypeError(callback + ' is not a function');
+        }
+        // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+        if (arguments.length > 1) {
+            T = thisArg;
+        }
+        // 6. Let k be 0
+        k = 0;
+        // 7. Repeat, while k < len
+        while (k < len) {
+            var kValue;
+            // a. Let Pk be ToString(k).
+            //   This is implicit for LHS operands of the in operator
+            // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+            //   This step can be combined with c
+            // c. If kPresent is true, then
+            if (k in O) {
+                // i. Let kValue be the result of calling the Get internal method of O with argument Pk.
+                kValue = O[k];
+                // ii. Call the Call internal method of callback with T as the this value and
+                // argument list containing kValue, k, and O.
+                callback.call(T, kValue, k, O);
+            }
+            // d. Increase k by 1.
+            k++;
+        }
+        // 8. return undefined
+    };
+}
+// Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+/* istanbul ignore next */
+if (!Array.prototype.some) {
+    Array.prototype.some = function (fun /*, thisArg */) {
+        'use strict';
+        if (this === void 0 || this === null) {
+            throw new TypeError();
+        }
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== 'function') {
+            throw new TypeError();
+        }
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        for (var i = 0; i < len; i++) {
+            if (i in t && fun.call(thisArg, t[i], i, t)) {
+                return true;
+            }
+        }
+        return false;
+    };
+}
+// Polyfill from  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill
+/* istanbul ignore next */
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+        if (typeof this !== 'function') {
+            // closest thing possible to the ECMAScript 5
+            // internal IsCallable function
+            throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+        }
+        var aArgs = Array.prototype.slice.call(arguments, 1), fToBind = this, fNOP = function () {
+            return;
+        }, fBound = function () {
+            return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+        return fBound;
+    };
+}
+
+
+/***/ }),
+
 /***/ "./PostProcessing/ColorBlindCorrector.ts":
 /*!***********************************************!*\
   !*** ./PostProcessing/ColorBlindCorrector.ts ***!
@@ -14908,7 +15048,7 @@ var AudioContextFactory = /** @class */ (function () {
     AudioContextFactory.create = function () {
         if (!this._INSTANCE) {
             if (window.AudioContext || window.webkitAudioContext) {
-                this._INSTANCE = new window.AudioContext() || new window.webkitAudioContext();
+                this._INSTANCE = new window.AudioContext();
             }
         }
         return this._INSTANCE;
@@ -19179,7 +19319,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2614+2653548";
+var EX_VERSION = "0.18.0-alpha.2635+3131a0a";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

@@ -8,7 +8,7 @@ var AudioContextFactory = /** @class */ (function () {
     AudioContextFactory.create = function () {
         if (!this._INSTANCE) {
             if (window.AudioContext || window.webkitAudioContext) {
-                this._INSTANCE = new window.AudioContext() || new window.webkitAudioContext();
+                this._INSTANCE = new window.AudioContext();
             }
         }
         return this._INSTANCE;

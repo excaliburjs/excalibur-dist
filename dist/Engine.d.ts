@@ -1,3 +1,4 @@
+import './Polyfill';
 import { ICanUpdate, ICanDraw, ICanInitialize } from './Interfaces/LifecycleEvents';
 import { ILoadable } from './Interfaces/ILoadable';
 import { Promise } from './Promises';

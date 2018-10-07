@@ -36,10 +36,42 @@ import { Class } from './Class';
  *   console.log("Game started!");
  * });
  * ```
+ *
+ * ## Customize the Loader
+ *
+ * The loader can be customized to show different, text, logo, background color, and button.
+ *
+ * ```typescript
+ * var loader = new ex.Loader([playerTexture]);
+ *
+ * // The loaders button text can simply modified using this
+ * loader.playButtonText = 'Start the best game ever';
+ *
+ * // The logo can be changed by inserting a base64 image string here
+ *
+ * loader.logo = 'data:image/png;base64,iVBORw...';
+ * loader.logoWidth = 15;
+ * loader.logoHeight = 14;
+ *
+ * // The background color can be changed like so by supplying a valid CSS color string
+ *
+ * loader.backgroundColor = 'red'
+ * loader.backgroundColor = '#176BAA'
+ *
+ * // To build a completely new button
+ * loader.startButtonFactory = () => {
+ *     let myButton = document.createElement('button');
+ *     myButton.textContent = 'The best button';
+ *     return myButton;
+ * };
+ *
+ * engine.start(loader).then(() => {});
+ * ```
  */
 export declare class Loader extends Class implements ILoader {
     private _resourceList;
     private _index;
+    private _playButtonShown;
     private _resourceCount;
     private _numLoaded;
     private _progressCounts;
@@ -51,6 +83,21 @@ export declare class Loader extends Class implements ILoader {
     backgroundColor: string;
     protected _imageElement: HTMLImageElement;
     protected readonly _image: HTMLImageElement;
+    suppressPlayButton: boolean;
+    protected _playButtonRootElement: HTMLElement;
+    protected _playButtonElement: HTMLButtonElement;
+    protected _styleBlock: HTMLStyleElement;
+    /** Loads the css from Loader.css */
+    protected _playButtonStyles: string;
+    protected readonly _playButton: HTMLButtonElement;
+    /**
+     * Get/set play button text
+     */
+    playButtonText: string;
+    /**
+     * Return a html button element for excalibur to use as a play button
+     */
+    startButtonFactory: () => HTMLButtonElement;
     /**
      * @param loadables  Optionally provide the list of resources you want to load at constructor time
      */
@@ -70,6 +117,11 @@ export declare class Loader extends Class implements ILoader {
      * Returns true if the loader has completely loaded all resources
      */
     isLoaded(): boolean;
+    /**
+     * Shows the play button and returns a promise that resolves when clicked
+     */
+    showPlayButton(): Promise<any>;
+    hidePlayButton(): void;
     /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
@@ -94,6 +146,8 @@ export declare class Loader extends Class implements ILoader {
     onerror: () => void;
 }
 /**
+ * @obsolete Use [[Loader]] instead, this functionality has been made default
+ *
  * A [[Loader]] that pauses after loading to allow user
  * to proceed to play the game. Typically you will
  * want to use this loader for iOS to allow sounds

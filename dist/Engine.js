@@ -126,6 +126,7 @@ var Engine = /** @class */ (function (_super) {
          */
         _this.displayMode = DisplayMode.FullScreen;
         _this._suppressHiDPIScaling = false;
+        _this._suppressPlayButton = false;
         /**
          * Indicates whether audio should be paused when the game is no longer visible.
          */
@@ -176,6 +177,10 @@ var Engine = /** @class */ (function (_super) {
 O|===|* >________________>\n\
       \\|');
             console.log('Visit', 'http://excaliburjs.com', 'for more information');
+        }
+        // Suppress play button
+        if (options.suppressPlayButton) {
+            _this._suppressPlayButton = true;
         }
         _this._logger = Logger.getInstance();
         // If debug is enabled, let's log browser features to the console.
@@ -913,6 +918,7 @@ O|===|* >________________>\n\
         var loadingComplete;
         if (loader) {
             this._loader = loader;
+            this._loader.suppressPlayButton = this._suppressPlayButton;
             this._loader.wireEngine(this);
             loadingComplete = this.load(this._loader);
         }
@@ -1014,10 +1020,17 @@ O|===|* >________________>\n\
         var complete = new Promise();
         this._isLoading = true;
         loader.load().then(function () {
-            setTimeout(function () {
+            if (_this._suppressPlayButton) {
+                setTimeout(function () {
+                    _this._isLoading = false;
+                    complete.resolve();
+                    // Delay is to give the logo a chance to show, otherwise don't delay
+                }, 500);
+            }
+            else {
                 _this._isLoading = false;
                 complete.resolve();
-            }, 500);
+            }
         });
         return complete;
     };
@@ -1032,6 +1045,7 @@ O|===|* >________________>\n\
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,
         suppressHiDPIScaling: null,
+        suppressPlayButton: null,
         scrollPreventionMode: ScrollPreventionMode.Canvas,
         backgroundColor: Color.fromHex('#2185d0') // Excalibur blue
     };

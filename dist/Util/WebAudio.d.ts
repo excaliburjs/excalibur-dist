@@ -1,3 +1,9 @@
+import { Promise } from '../Promises';
+export interface LegacyWebAudioSource {
+    playbackState: string;
+    PLAYING_STATE: 'playing';
+    FINISHED_STATE: 'finished';
+}
 export declare class WebAudio {
     private static _unlocked;
     /**
@@ -5,6 +11,6 @@ export declare class WebAudio {
      * right after a user interaction event. Typically used by [[PauseAfterLoader]]
      * @source https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
      */
-    static unlock(): void;
+    static unlock(): Promise<boolean>;
     static isUnlocked(): boolean;
 }

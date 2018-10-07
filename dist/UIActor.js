@@ -25,7 +25,7 @@ var UIActor = /** @class */ (function (_super) {
      */
     function UIActor(xOrConfig, y, width, height) {
         var _this = this;
-        if (typeof (xOrConfig !== 'object')) {
+        if (typeof xOrConfig !== 'object') {
             _this = _super.call(this, xOrConfig, y, width, height) || this;
         }
         else {

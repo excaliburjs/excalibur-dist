@@ -108,6 +108,11 @@ export interface IEngineOptions {
      */
     suppressHiDPIScaling?: boolean;
     /**
+     * Suppress play button, it is not recommended users of excalibur switch this feature. Some browsers require a user gesture (like a click)
+     * for certain browser features to work like web audio.
+     */
+    suppressPlayButton?: boolean;
+    /**
      * Specify how the game window is to be positioned when the [[DisplayMode.Position]] is chosen. This option MUST be specified
      * if the DisplayMode is set as [[DisplayMode.Position]]. The position can be either a string or an [[IAbsolutePosition]].
      * String must be in the format of css style background-position. The vertical position must precede the horizontal position in strings.
@@ -226,6 +231,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      */
     displayMode: DisplayMode;
     private _suppressHiDPIScaling;
+    private _suppressPlayButton;
     /**
      * Returns the calculated pixel ration for use in rendering
      */

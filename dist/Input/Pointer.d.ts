@@ -298,6 +298,6 @@ export declare class Pointer extends Class {
      */
     hasActorUnderPointerInList(actor: Actor): boolean;
     private _onPointerMove(ev);
-    private _onPointerDown();
+    private _onPointerDown(ev);
     private _onPointerUp();
 }

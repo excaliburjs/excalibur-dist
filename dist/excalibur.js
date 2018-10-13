@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2681+0c2f7ed - 2018-10-12
+ * excalibur - 0.18.0-alpha.2688+1303192 - 2018-10-13
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -12243,7 +12243,10 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor for check;
      */
     Pointer.prototype.isActorUnderPointer = function (actor) {
-        return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isUIActor"](actor));
+        if (this.lastWorldPos) {
+            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isUIActor"](actor));
+        }
+        return false;
     };
     /**
      * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
@@ -12257,7 +12260,10 @@ var Pointer = /** @class */ (function (_super) {
         this.lastScreenPos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.screenPos.x, ev.screenPos.y);
         this.lastWorldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.worldPos.x, ev.worldPos.y);
     };
-    Pointer.prototype._onPointerDown = function () {
+    Pointer.prototype._onPointerDown = function (ev) {
+        this.lastPagePos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.pagePos.x, ev.pagePos.y);
+        this.lastScreenPos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.screenPos.x, ev.screenPos.y);
+        this.lastWorldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.worldPos.x, ev.worldPos.y);
         this._isDown = true;
     };
     Pointer.prototype._onPointerUp = function () {
@@ -19619,7 +19625,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2681+0c2f7ed";
+var EX_VERSION = "0.18.0-alpha.2688+1303192";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

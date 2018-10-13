@@ -799,7 +799,10 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor for check;
      */
     Pointer.prototype.isActorUnderPointer = function (actor) {
-        return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !Actors.isUIActor(actor));
+        if (this.lastWorldPos) {
+            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !Actors.isUIActor(actor));
+        }
+        return false;
     };
     /**
      * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
@@ -813,7 +816,10 @@ var Pointer = /** @class */ (function (_super) {
         this.lastScreenPos = new Vector(ev.screenPos.x, ev.screenPos.y);
         this.lastWorldPos = new Vector(ev.worldPos.x, ev.worldPos.y);
     };
-    Pointer.prototype._onPointerDown = function () {
+    Pointer.prototype._onPointerDown = function (ev) {
+        this.lastPagePos = new Vector(ev.pagePos.x, ev.pagePos.y);
+        this.lastScreenPos = new Vector(ev.screenPos.x, ev.screenPos.y);
+        this.lastWorldPos = new Vector(ev.worldPos.x, ev.worldPos.y);
         this._isDown = true;
     };
     Pointer.prototype._onPointerUp = function () {

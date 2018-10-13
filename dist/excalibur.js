@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.18.0-alpha.2688+1303192 - 2018-10-13
+ * excalibur - 0.18.0-alpha.2693+d1994a9 - 2018-10-13
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -15153,7 +15153,7 @@ var Promise = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Resources/Index.ts ***!
   \****************************/
-/*! exports provided: Resource, Texture, Sound */
+/*! exports provided: Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15163,6 +15163,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Sound_Index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Sound/Index */ "./Resources/Sound/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["Sound"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["AudioContextFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["AudioInstanceFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["AudioInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["AudioTagInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Sound_Index__WEBPACK_IMPORTED_MODULE_1__["WebAudioInstance"]; });
 
 /* harmony import */ var _Texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Texture */ "./Resources/Texture.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"]; });
@@ -15575,7 +15585,10 @@ var WebAudioInstance = /** @class */ (function (_super) {
             value = _Util_Util__WEBPACK_IMPORTED_MODULE_1__["clamp"](value, 0, 1.0);
             this._volume = value;
             if (this._volumeNode.gain.setTargetAtTime) {
-                this._volumeNode.gain.setTargetAtTime(value, this._audioContext.currentTime, 0);
+                // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
+                // After each .1 seconds timestep, the target value will ~63.2% closer to the target value.
+                // This exponential ramp provides a more pleasant trasition in gain
+                this._volumeNode.gain.setTargetAtTime(value, this._audioContext.currentTime, 0.1);
             }
             else {
                 this._volumeNode.gain.value = value;
@@ -15665,13 +15678,27 @@ var WebAudioInstance = /** @class */ (function (_super) {
 /*!**********************************!*\
   !*** ./Resources/Sound/Index.ts ***!
   \**********************************/
-/*! exports provided: Sound */
+/*! exports provided: Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Sound__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Sound */ "./Resources/Sound/Sound.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Sound__WEBPACK_IMPORTED_MODULE_0__["Sound"]; });
+
+/* harmony import */ var _AudioContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AudioContext */ "./Resources/Sound/AudioContext.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _AudioContext__WEBPACK_IMPORTED_MODULE_1__["AudioContextFactory"]; });
+
+/* harmony import */ var _AudioInstance__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioInstance */ "./Resources/Sound/AudioInstance.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _AudioInstance__WEBPACK_IMPORTED_MODULE_2__["AudioInstanceFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _AudioInstance__WEBPACK_IMPORTED_MODULE_2__["AudioInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _AudioInstance__WEBPACK_IMPORTED_MODULE_2__["AudioTagInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _AudioInstance__WEBPACK_IMPORTED_MODULE_2__["WebAudioInstance"]; });
+
+
 
 
 
@@ -19322,7 +19349,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, PauseAfterLoader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, PauseAfterLoader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19586,6 +19613,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["Sound"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["AudioContextFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["AudioInstanceFactory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["AudioInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["AudioTagInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_27__["WebAudioInstance"]; });
+
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_9__; });
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_28__; });
@@ -19625,7 +19662,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.18.0-alpha.2688+1303192";
+var EX_VERSION = "0.18.0-alpha.2693+d1994a9";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

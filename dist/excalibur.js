@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.19.1 - 2018-10-23
+ * excalibur - 0.19.1-alpha.2714+a8d4768 - 2018-10-23
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -8285,14 +8285,16 @@ var SpriteSheetImpl = /** @class */ (function () {
      * @param rows      The number of rows in the image texture
      * @param spWidth   The width of each individual sprite in pixels
      * @param spHeight  The height of each individual sprite in pixels
+     * @param spacing   The spacing between every sprite in a spritesheet
      */
-    function SpriteSheetImpl(imageOrConfigOrSprites, columns, rows, spWidth, spHeight) {
+    function SpriteSheetImpl(imageOrConfigOrSprites, columns, rows, spWidth, spHeight, spacing) {
         this.sprites = [];
         this.image = null;
         this.columns = 0;
         this.rows = 0;
         this.spWidth = 0;
         this.spHeight = 0;
+        this.spacing = 0;
         var loadFromImage = false;
         if (imageOrConfigOrSprites instanceof Array) {
             this.sprites = imageOrConfigOrSprites;
@@ -8304,6 +8306,7 @@ var SpriteSheetImpl = /** @class */ (function () {
                 this.spWidth = imageOrConfigOrSprites.spWidth;
                 this.spHeight = imageOrConfigOrSprites.spHeight;
                 this.image = imageOrConfigOrSprites.image;
+                this.spacing = imageOrConfigOrSprites.spacing || 0;
             }
             else {
                 this.image = imageOrConfigOrSprites;
@@ -8311,6 +8314,7 @@ var SpriteSheetImpl = /** @class */ (function () {
                 this.rows = rows;
                 this.spWidth = spWidth;
                 this.spHeight = spHeight;
+                this.spacing = spacing || 0;
             }
             this.sprites = new Array(this.columns * this.rows);
             loadFromImage = true;
@@ -8328,7 +8332,7 @@ var SpriteSheetImpl = /** @class */ (function () {
             var j = 0;
             for (i = 0; i < this.rows; i++) {
                 for (j = 0; j < this.columns; j++) {
-                    this.sprites[j + i * this.columns] = new _Sprite__WEBPACK_IMPORTED_MODULE_0__["Sprite"](this.image, j * this.spWidth, i * this.spHeight, this.spWidth, this.spHeight);
+                    this.sprites[j + i * this.columns] = new _Sprite__WEBPACK_IMPORTED_MODULE_0__["Sprite"](this.image, j * this.spWidth + this.spacing * j + this.spacing, i * this.spHeight + this.spacing * i + this.spacing, this.spWidth, this.spHeight);
                 }
             }
         }
@@ -8428,8 +8432,8 @@ var SpriteSheetImpl = /** @class */ (function () {
  */
 var SpriteSheet = /** @class */ (function (_super) {
     __extends(SpriteSheet, _super);
-    function SpriteSheet(imageOrConfigOrSprites, columns, rows, spWidth, spHeight) {
-        return _super.call(this, imageOrConfigOrSprites, columns, rows, spWidth, spHeight) || this;
+    function SpriteSheet(imageOrConfigOrSprites, columns, rows, spWidth, spHeight, spacing) {
+        return _super.call(this, imageOrConfigOrSprites, columns, rows, spWidth, spHeight, spacing) || this;
     }
     return SpriteSheet;
 }(Object(_Configurable__WEBPACK_IMPORTED_MODULE_7__["Configurable"])(SpriteSheetImpl)));
@@ -8445,14 +8449,15 @@ var SpriteFontImpl = /** @class */ (function (_super) {
      * @param spWidth         The width of each character in pixels
      * @param spHeight        The height of each character in pixels
      */
-    function SpriteFontImpl(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight) {
+    function SpriteFontImpl(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight, spacing) {
         var _this = _super.call(this, imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_4__["Texture"]
             ? {
                 image: imageOrConfig,
                 spWidth: spWidth,
                 spHeight: spHeight,
                 rows: rows,
-                columns: columns
+                columns: columns,
+                spacing: spacing || 0
             }
             : imageOrConfig) || this;
         _this._currentColor = _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black.clone();
@@ -8609,8 +8614,8 @@ var SpriteFontImpl = /** @class */ (function (_super) {
  */
 var SpriteFont = /** @class */ (function (_super) {
     __extends(SpriteFont, _super);
-    function SpriteFont(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight) {
-        return _super.call(this, imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight) || this;
+    function SpriteFont(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight, spacing) {
+        return _super.call(this, imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight, spacing) || this;
     }
     return SpriteFont;
 }(Object(_Configurable__WEBPACK_IMPORTED_MODULE_7__["Configurable"])(SpriteFontImpl)));
@@ -19662,7 +19667,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.19.1";
+var EX_VERSION = "0.19.1-alpha.2714+a8d4768";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

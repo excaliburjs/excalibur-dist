@@ -14,14 +14,16 @@ export declare class SpriteSheetImpl {
     rows: number;
     spWidth: number;
     spHeight: number;
+    spacing: number;
     /**
      * @param image     The backing image texture to build the SpriteSheet
      * @param columns   The number of columns in the image texture
      * @param rows      The number of rows in the image texture
      * @param spWidth   The width of each individual sprite in pixels
      * @param spHeight  The height of each individual sprite in pixels
+     * @param spacing   The spacing between every sprite in a spritesheet
      */
-    constructor(imageOrConfigOrSprites: Texture | ISpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number);
+    constructor(imageOrConfigOrSprites: Texture | ISpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number, spacing?: number);
     /**
      * Create an animation from the this SpriteSheet by listing out the
      * sprite indices. Sprites are organized in row major order in the SpriteSheet.
@@ -73,6 +75,7 @@ export interface ISpriteSheetArgs extends Partial<SpriteSheetImpl> {
     spHeight: number;
     rows: number;
     columns: number;
+    spacing?: number;
 }
 declare const SpriteSheet_base: typeof SpriteSheetImpl;
 /**
@@ -108,7 +111,7 @@ export declare class SpriteFontImpl extends SpriteSheet {
      * @param spWidth         The width of each character in pixels
      * @param spHeight        The height of each character in pixels
      */
-    constructor(imageOrConfig: Texture | ISpriteFontInitArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
+    constructor(imageOrConfig: Texture | ISpriteFontInitArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number, spacing?: number);
     /**
      * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
      */

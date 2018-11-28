@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.19.1-alpha.2723+cae5090 - 2018-10-27
+ * excalibur - 0.19.1-alpha.2727+d36ac14 - 2018-11-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -9870,11 +9870,12 @@ var EventDispatcher = /** @class */ (function () {
 /*!*******************!*\
   !*** ./Events.ts ***!
   \*******************/
-/*! exports provided: GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent */
+/*! exports provided: EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return EventTypes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return GameEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return KillEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PreKillEvent", function() { return PreKillEvent; });
@@ -9918,6 +9919,63 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var EventTypes;
+(function (EventTypes) {
+    EventTypes["Kill"] = "kill";
+    EventTypes["PreKill"] = "prekill";
+    EventTypes["PostKill"] = "postkill";
+    EventTypes["PreDraw"] = "predraw";
+    EventTypes["PostDraw"] = "postdraw";
+    EventTypes["PreDebugDraw"] = "predebugdraw";
+    EventTypes["PostDebugDraw"] = "postdebugdraw";
+    EventTypes["PreUpdate"] = "preupdate";
+    EventTypes["PostUpdate"] = "postupdate";
+    EventTypes["PreFrame"] = "preframe";
+    EventTypes["PostFrame"] = "postframe";
+    EventTypes["PreCollision"] = "precollision";
+    EventTypes["CollisionStart"] = "collisionstart";
+    EventTypes["CollisionEnd"] = "collisionend";
+    EventTypes["PostCollision"] = "postcollision";
+    EventTypes["Initialize"] = "initialize";
+    EventTypes["Activate"] = "activate";
+    EventTypes["Deactivate"] = "deactivate";
+    EventTypes["ExitViewport"] = "exitviewport";
+    EventTypes["EnterViewport"] = "enterviewport";
+    EventTypes["ExitTrigger"] = "exit";
+    EventTypes["EnterTrigger"] = "enter";
+    EventTypes["Connect"] = "connect";
+    EventTypes["Disconnect"] = "disconnect";
+    EventTypes["Button"] = "button";
+    EventTypes["Axis"] = "axis";
+    EventTypes["Subscribe"] = "subscribe";
+    EventTypes["Unsubscribe"] = "unsubscribe";
+    EventTypes["Visible"] = "visible";
+    EventTypes["Hidden"] = "hidden";
+    EventTypes["Start"] = "start";
+    EventTypes["Stop"] = "stop";
+    EventTypes["PointerUp"] = "pointerup";
+    EventTypes["PointerDown"] = "pointerdown";
+    EventTypes["PointerMove"] = "pointermove";
+    EventTypes["PointerEnter"] = "pointerenter";
+    EventTypes["PointerLeave"] = "pointerleave";
+    EventTypes["PointerCancel"] = "pointercancel";
+    EventTypes["PointerWheel"] = "pointerwheel";
+    EventTypes["Up"] = "up";
+    EventTypes["Down"] = "down";
+    EventTypes["Move"] = "move";
+    EventTypes["Enter"] = "enter";
+    EventTypes["Leave"] = "leave";
+    EventTypes["Cancel"] = "cancel";
+    EventTypes["Wheel"] = "wheel";
+    EventTypes["Press"] = "press";
+    EventTypes["Release"] = "release";
+    EventTypes["Hold"] = "hold";
+    EventTypes["PointerDragStart"] = "pointerdragstart";
+    EventTypes["PointerDragEnd"] = "pointerdragend";
+    EventTypes["PointerDragEnter"] = "pointerdragenter";
+    EventTypes["PointerDragLeave"] = "pointerdragleave";
+    EventTypes["PointerDragMove"] = "pointerdragmove";
+})(EventTypes || (EventTypes = {}));
 /**
  * Base event type in Excalibur that all other event types derive from. Not all event types are thrown on all Excalibur game objects,
  * some events are unique to a type, others are not.
@@ -19354,7 +19412,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, PauseAfterLoader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, PauseAfterLoader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19420,6 +19478,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_8__["NativeSoundEvent"]; });
 
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_9__["EventTypes"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_9__["GameEvent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_9__["KillEvent"]; });
@@ -19667,7 +19727,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.19.1-alpha.2723+cae5090";
+var EX_VERSION = "0.19.1-alpha.2727+d36ac14";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

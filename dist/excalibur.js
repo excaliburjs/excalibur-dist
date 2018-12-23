@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.19.1-alpha.2744+bd8ad14 - 2018-12-15
+ * excalibur - 0.19.1-alpha.2757+5e81eee - 2018-12-23
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2018 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -12802,24 +12802,22 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdQAAAB2CAYAAABx
 /*!*******************!*\
   !*** ./Loader.ts ***!
   \*******************/
-/*! exports provided: Loader, PauseAfterLoader */
+/*! exports provided: Loader */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return Loader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PauseAfterLoader", function() { return PauseAfterLoader; });
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util/WebAudio */ "./Util/WebAudio.ts");
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/DrawUtil */ "./Util/DrawUtil.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Loader.logo.png */ "./Loader.logo.png");
-/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_Loader_logo_png__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Loader.css */ "./Loader.css");
-/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_Loader_css__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader.logo.png */ "./Loader.logo.png");
+/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_Loader_logo_png__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Loader.css */ "./Loader.css");
+/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_Loader_css__WEBPACK_IMPORTED_MODULE_7__);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -12830,13 +12828,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -12926,13 +12917,13 @@ var Loader = /** @class */ (function (_super) {
         _this._totalCounts = {};
         // logo drawing stuff
         // base64 string encoding of the excalibur logo (logo-white.png)
-        _this.logo = _Loader_logo_png__WEBPACK_IMPORTED_MODULE_7___default.a;
+        _this.logo = _Loader_logo_png__WEBPACK_IMPORTED_MODULE_6___default.a;
         _this.logoWidth = 468;
         _this.logoHeight = 118;
         _this.backgroundColor = '#176BAA';
         _this.suppressPlayButton = false;
         /** Loads the css from Loader.css */
-        _this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_8___default.a.toString();
+        _this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_7___default.a.toString();
         /**
          * Get/set play button text
          */
@@ -13167,123 +13158,6 @@ var Loader = /** @class */ (function (_super) {
     };
     return Loader;
 }(_Class__WEBPACK_IMPORTED_MODULE_4__["Class"]));
-
-/**
- * @obsolete Use [[Loader]] instead, this functionality has been made default
- *
- * A [[Loader]] that pauses after loading to allow user
- * to proceed to play the game. Typically you will
- * want to use this loader for iOS to allow sounds
- * to play after loading (Apple Safari requires user
- * interaction to allow sounds, even for games)
- *
- * **Note:** Because Loader is not part of a Scene, you must
- * call `update` and `draw` manually on "child" objects.
- *
- * ## Implementing a Trigger
- *
- * The `PauseAfterLoader` requires an element to act as the trigger button
- * to start the game.
- *
- * For example, let's create an `<a>` tag to be our trigger and call it `tap-to-play`.
- *
- * ```html
- * <div id="wrapper">
- *    <canvas id="game"></canvas>
- *    <a id="tap-to-play" href='javascript:void(0);'>Tap to Play</a>
- * </div>
- * ```
- *
- * We've put it inside a wrapper to position it properly over the game canvas.
- *
- * Now let's add some CSS to style it (insert into `<head>`):
- *
- * ```html
- * <style>
- *     #wrapper {
- *         position: relative;
- *         width: 500px;
- *         height: 500px;
- *     }
- *     #tap-to-play {
- *         display: none;
- *         font-size: 24px;
- *         font-family: sans-serif;
- *         text-align: center;
- *         border: 3px solid white;
- *         position: absolute;
- *         color: white;
- *         width: 200px;
- *         height: 50px;
- *         line-height: 50px;
- *         text-decoration: none;
- *         left: 147px;
- *         top: 80%;
- *     }
- * </style>
- * ```
- *
- * Now we can create a `PauseAfterLoader` with a reference to our trigger button:
- *
- * ```ts
- * var loader = new ex.PauseAfterLoader('tap-to-play', [...]);
- * ```
- *
- * ## Use PauseAfterLoader for iOS
- *
- * The primary use case for pausing before starting the game is to
- * pass Apple's requirement of user interaction. The Web Audio context
- * in Safari is disabled by default until user interaction.
- *
- * Therefore, you can use this snippet to only use PauseAfterLoader when
- * iOS is detected (see [this thread](http://stackoverflow.com/questions/9038625/detect-if-device-is-ios)
- * for more techniques).
- *
- * ```ts
- * var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(<any>window).MSStream;
- * var loader: ex.Loader = iOS ? new ex.PauseAfterLoader('tap-to-play') : new ex.Loader();
- *
- * loader.addResource(...);
- * ```
- */
-var PauseAfterLoader = /** @class */ (function (_super) {
-    __extends(PauseAfterLoader, _super);
-    function PauseAfterLoader(triggerElementId, loadables) {
-        var _this = _super.call(this, loadables) || this;
-        _this._handleOnTrigger = function () {
-            if (_this._waitPromise.state() !== _Promises__WEBPACK_IMPORTED_MODULE_3__["PromiseState"].Pending) {
-                return false;
-            }
-            // unlock Safari WebAudio context
-            _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__["WebAudio"].unlock();
-            // continue to play game
-            _this._waitPromise.resolve(_this._loadedValue);
-            // hide DOM element
-            _this._playTrigger.style.display = 'none';
-            return false;
-        };
-        _this._playTrigger = document.getElementById(triggerElementId);
-        _this._playTrigger.addEventListener('click', _this._handleOnTrigger);
-        return _this;
-    }
-    PauseAfterLoader.prototype.load = function () {
-        var _this = this;
-        this._waitPromise = new _Promises__WEBPACK_IMPORTED_MODULE_3__["Promise"]();
-        // wait until user indicates to proceed before finishing load
-        _super.prototype.load.call(this).then(function (value) {
-            _this._loadedValue = value;
-            // show element
-            _this._playTrigger.style.display = 'block';
-        }, function (value) {
-            _this._waitPromise.reject(value);
-        });
-        return this._waitPromise;
-    };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: 'Deprecated in v0.20.0', alternateMethod: 'Use ex.Loader instead' })
-    ], PauseAfterLoader.prototype, "load", null);
-    return PauseAfterLoader;
-}(Loader));
 
 
 
@@ -19412,7 +19286,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, PauseAfterLoader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19562,8 +19436,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_12__["Loader"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PauseAfterLoader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_12__["PauseAfterLoader"]; });
 
 /* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_13__["Particle"]; });
@@ -19727,7 +19599,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.19.1-alpha.2744+bd8ad14";
+var EX_VERSION = "0.19.1-alpha.2757+5e81eee";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

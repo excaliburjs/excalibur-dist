@@ -8,19 +8,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { Color } from './Drawing/Color';
 import { WebAudio } from './Util/WebAudio';
 import { Logger } from './Util/Log';
 import { Promise, PromiseState } from './Promises';
 import { Class } from './Class';
 import * as DrawUtil from './Util/DrawUtil';
-import { obsolete } from './Util/Decorators';
 import logoImg from './Loader.logo.png';
 import loaderCss from './Loader.css';
 /**
@@ -346,121 +339,4 @@ var Loader = /** @class */ (function (_super) {
     return Loader;
 }(Class));
 export { Loader };
-/**
- * @obsolete Use [[Loader]] instead, this functionality has been made default
- *
- * A [[Loader]] that pauses after loading to allow user
- * to proceed to play the game. Typically you will
- * want to use this loader for iOS to allow sounds
- * to play after loading (Apple Safari requires user
- * interaction to allow sounds, even for games)
- *
- * **Note:** Because Loader is not part of a Scene, you must
- * call `update` and `draw` manually on "child" objects.
- *
- * ## Implementing a Trigger
- *
- * The `PauseAfterLoader` requires an element to act as the trigger button
- * to start the game.
- *
- * For example, let's create an `<a>` tag to be our trigger and call it `tap-to-play`.
- *
- * ```html
- * <div id="wrapper">
- *    <canvas id="game"></canvas>
- *    <a id="tap-to-play" href='javascript:void(0);'>Tap to Play</a>
- * </div>
- * ```
- *
- * We've put it inside a wrapper to position it properly over the game canvas.
- *
- * Now let's add some CSS to style it (insert into `<head>`):
- *
- * ```html
- * <style>
- *     #wrapper {
- *         position: relative;
- *         width: 500px;
- *         height: 500px;
- *     }
- *     #tap-to-play {
- *         display: none;
- *         font-size: 24px;
- *         font-family: sans-serif;
- *         text-align: center;
- *         border: 3px solid white;
- *         position: absolute;
- *         color: white;
- *         width: 200px;
- *         height: 50px;
- *         line-height: 50px;
- *         text-decoration: none;
- *         left: 147px;
- *         top: 80%;
- *     }
- * </style>
- * ```
- *
- * Now we can create a `PauseAfterLoader` with a reference to our trigger button:
- *
- * ```ts
- * var loader = new ex.PauseAfterLoader('tap-to-play', [...]);
- * ```
- *
- * ## Use PauseAfterLoader for iOS
- *
- * The primary use case for pausing before starting the game is to
- * pass Apple's requirement of user interaction. The Web Audio context
- * in Safari is disabled by default until user interaction.
- *
- * Therefore, you can use this snippet to only use PauseAfterLoader when
- * iOS is detected (see [this thread](http://stackoverflow.com/questions/9038625/detect-if-device-is-ios)
- * for more techniques).
- *
- * ```ts
- * var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(<any>window).MSStream;
- * var loader: ex.Loader = iOS ? new ex.PauseAfterLoader('tap-to-play') : new ex.Loader();
- *
- * loader.addResource(...);
- * ```
- */
-var PauseAfterLoader = /** @class */ (function (_super) {
-    __extends(PauseAfterLoader, _super);
-    function PauseAfterLoader(triggerElementId, loadables) {
-        var _this = _super.call(this, loadables) || this;
-        _this._handleOnTrigger = function () {
-            if (_this._waitPromise.state() !== PromiseState.Pending) {
-                return false;
-            }
-            // unlock Safari WebAudio context
-            WebAudio.unlock();
-            // continue to play game
-            _this._waitPromise.resolve(_this._loadedValue);
-            // hide DOM element
-            _this._playTrigger.style.display = 'none';
-            return false;
-        };
-        _this._playTrigger = document.getElementById(triggerElementId);
-        _this._playTrigger.addEventListener('click', _this._handleOnTrigger);
-        return _this;
-    }
-    PauseAfterLoader.prototype.load = function () {
-        var _this = this;
-        this._waitPromise = new Promise();
-        // wait until user indicates to proceed before finishing load
-        _super.prototype.load.call(this).then(function (value) {
-            _this._loadedValue = value;
-            // show element
-            _this._playTrigger.style.display = 'block';
-        }, function (value) {
-            _this._waitPromise.reject(value);
-        });
-        return this._waitPromise;
-    };
-    __decorate([
-        obsolete({ message: 'Deprecated in v0.20.0', alternateMethod: 'Use ex.Loader instead' })
-    ], PauseAfterLoader.prototype, "load", null);
-    return PauseAfterLoader;
-}(Loader));
-export { PauseAfterLoader };
 //# sourceMappingURL=Loader.js.map

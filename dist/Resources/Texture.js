@@ -51,20 +51,33 @@ var Texture = /** @class */ (function (_super) {
     Texture.prototype.load = function () {
         var _this = this;
         var complete = new Promise();
-        var loaded = _super.prototype.load.call(this);
-        loaded.then(function () {
-            _this.image = new Image();
-            _this.image.addEventListener('load', function () {
-                _this._isLoaded = true;
+        if (this.path.indexOf('data:image/') > -1) {
+            this.image = new Image();
+            this.image.addEventListener('load', function () {
                 _this.width = _this._sprite.width = _this.image.naturalWidth;
                 _this.height = _this._sprite.height = _this.image.naturalHeight;
+                _this._sprite = new Sprite(_this, 0, 0, _this.width, _this.height);
                 _this.loaded.resolve(_this.image);
                 complete.resolve(_this.image);
             });
-            _this.image.src = _super.prototype.getData.call(_this);
-        }, function () {
-            complete.reject('Error loading texture.');
-        });
+            this.image.src = this.path;
+        }
+        else {
+            var loaded = _super.prototype.load.call(this);
+            loaded.then(function () {
+                _this.image = new Image();
+                _this.image.addEventListener('load', function () {
+                    _this._isLoaded = true;
+                    _this.width = _this._sprite.width = _this.image.naturalWidth;
+                    _this.height = _this._sprite.height = _this.image.naturalHeight;
+                    _this.loaded.resolve(_this.image);
+                    complete.resolve(_this.image);
+                });
+                _this.image.src = _super.prototype.getData.call(_this);
+            }, function () {
+                complete.reject('Error loading texture.');
+            });
+        }
         return complete;
     };
     Texture.prototype.asSprite = function () {

@@ -15,6 +15,7 @@ export declare class Resource<T> extends Class implements ILoadable {
     bustCache: boolean;
     data: T;
     logger: Logger;
+    arrayBuffer: ArrayBuffer;
     /**
      * @param path          Path to the remote resource
      * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
@@ -37,6 +38,7 @@ export declare class Resource<T> extends Class implements ILoadable {
      * Returns the loaded data once the resource is loaded
      */
     getData(): any;
+    getArrayData(): any;
     /**
      * Sets the data for this resource directly
      */

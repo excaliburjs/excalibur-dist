@@ -32,6 +32,7 @@ var Resource = /** @class */ (function (_super) {
         _this.bustCache = bustCache;
         _this.data = null;
         _this.logger = Logger.getInstance();
+        _this.arrayBuffer = null;
         _this.onprogress = function () {
             return;
         };
@@ -108,6 +109,9 @@ var Resource = /** @class */ (function (_super) {
      */
     Resource.prototype.getData = function () {
         return this.data;
+    };
+    Resource.prototype.getArrayData = function () {
+        return this.arrayBuffer;
     };
     /**
      * Sets the data for this resource directly

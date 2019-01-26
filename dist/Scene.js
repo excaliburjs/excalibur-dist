@@ -34,7 +34,7 @@ import { Trigger } from './Trigger';
  */
 var Scene = /** @class */ (function (_super) {
     __extends(Scene, _super);
-    function Scene(engine) {
+    function Scene(_engine) {
         var _this = _super.call(this) || this;
         /**
          * The actors in the current scene
@@ -65,9 +65,10 @@ var Scene = /** @class */ (function (_super) {
         _this._cancelQueue = [];
         _this._logger = Logger.getInstance();
         _this.camera = new BaseCamera();
-        if (engine) {
-            _this.camera.x = engine.halfDrawWidth;
-            _this.camera.y = engine.halfDrawHeight;
+        _this._engine = _engine;
+        if (_engine) {
+            _this.camera.x = _engine.halfDrawWidth;
+            _this.camera.y = _engine.halfDrawHeight;
         }
         return _this;
     }
@@ -139,7 +140,7 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype._initializeChildren = function () {
         for (var _i = 0, _a = this.actors; _i < _a.length; _i++) {
             var child = _a[_i];
-            child._initialize(this.engine);
+            child._initialize(this._engine);
         }
     };
     Object.defineProperty(Scene.prototype, "isInitialized", {
@@ -161,6 +162,7 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype._initialize = function (engine) {
         if (!this.isInitialized) {
+            this._engine = engine;
             if (this.camera) {
                 this.camera.x = engine.halfDrawWidth;
                 this.camera.y = engine.halfDrawHeight;
@@ -338,7 +340,7 @@ var Scene = /** @class */ (function (_super) {
                 sortedChildren[i].draw(ctx, delta);
             }
         }
-        if (this.engine && this.engine.isDebug) {
+        if (this._engine && this._engine.isDebug) {
             ctx.strokeStyle = 'yellow';
             this.debugDraw(ctx);
         }
@@ -349,7 +351,7 @@ var Scene = /** @class */ (function (_super) {
                 this.uiActors[i].draw(ctx, delta);
             }
         }
-        if (this.engine && this.engine.isDebug) {
+        if (this._engine && this._engine.isDebug) {
             for (i = 0, len = this.uiActors.length; i < len; i++) {
                 this.uiActors[i].debugDraw(ctx);
             }
@@ -569,8 +571,8 @@ var Scene = /** @class */ (function (_super) {
         return this._sortedDrawingTree.find(actor);
     };
     Scene.prototype.isCurrentScene = function () {
-        if (this.engine) {
-            return this.engine.currentScene === this;
+        if (this._engine) {
+            return this._engine.currentScene === this;
         }
         return false;
     };

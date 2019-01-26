@@ -45,7 +45,7 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
     /**
      * Access to the Excalibur engine
      */
-    engine: Engine;
+    private _engine;
     /**
      * The [[UIActor]]s in a scene, if any; these are drawn last
      */
@@ -58,7 +58,7 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
     private _timers;
     private _cancelQueue;
     private _logger;
-    constructor(engine?: Engine);
+    constructor(_engine: Engine);
     on(eventName: Events.initialize, handler: (event?: InitializeEvent) => void): void;
     on(eventName: Events.activate, handler: (event?: ActivateEvent) => void): void;
     on(eventName: Events.deactivate, handler: (event?: DeactivateEvent) => void): void;

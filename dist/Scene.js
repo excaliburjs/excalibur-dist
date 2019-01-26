@@ -17,7 +17,7 @@ import { DynamicTreeCollisionBroadphase } from './Collision/DynamicTreeCollision
 import { SortedList } from './Util/SortedList';
 import { Group } from './Group';
 import { TileMap } from './TileMap';
-import { BaseCamera } from './Camera';
+import { Camera } from './Camera';
 import { Actor } from './Actor';
 import { Class } from './Class';
 import * as Util from './Util/Util';
@@ -64,7 +64,7 @@ var Scene = /** @class */ (function (_super) {
         _this._timers = [];
         _this._cancelQueue = [];
         _this._logger = Logger.getInstance();
-        _this.camera = new BaseCamera();
+        _this.camera = new Camera();
         _this._engine = _engine;
         if (_engine) {
             _this.camera.x = _engine.halfDrawWidth;

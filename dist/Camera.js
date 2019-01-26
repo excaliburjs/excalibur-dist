@@ -8,12 +8,19 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { EasingFunctions } from './Util/EasingFunctions';
 import { Promise, PromiseState } from './Promises';
 import { Vector } from './Algebra';
 import { removeItemFromArray } from './Util/Util';
 import { PreUpdateEvent, PostUpdateEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
+import { obsolete } from './Util/Decorators';
 /**
  * Container to house convenience strategy methods
  * @internal
@@ -173,15 +180,15 @@ export { RadiusAroundActorStrategy };
 /**
  * Cameras
  *
- * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
+ * [[Camera]] is the base class for all Excalibur cameras. Cameras are used
  * to move around your game and set focus. They are used to determine
  * what is "off screen" and can be used to scale the game.
  *
  * [[include:Cameras.md]]
  */
-var BaseCamera = /** @class */ (function (_super) {
-    __extends(BaseCamera, _super);
-    function BaseCamera() {
+var Camera = /** @class */ (function (_super) {
+    __extends(Camera, _super);
+    function Camera() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._cameraStrategies = [];
         _this.strategy = new StrategyContainer(_this);
@@ -220,7 +227,7 @@ var BaseCamera = /** @class */ (function (_super) {
         _this._isInitialized = false;
         return _this;
     }
-    Object.defineProperty(BaseCamera.prototype, "x", {
+    Object.defineProperty(Camera.prototype, "x", {
         /**
          * Get the camera's x position
          */
@@ -238,7 +245,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "y", {
+    Object.defineProperty(Camera.prototype, "y", {
         /**
          * Get the camera's y position
          */
@@ -256,7 +263,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "pos", {
+    Object.defineProperty(Camera.prototype, "pos", {
         /**
          * Get the camera's position as a vector
          */
@@ -273,7 +280,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "vel", {
+    Object.defineProperty(Camera.prototype, "vel", {
         /**
          * Get the camera's velocity as a vector
          */
@@ -293,7 +300,7 @@ var BaseCamera = /** @class */ (function (_super) {
     /**
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
      */
-    BaseCamera.prototype.getFocus = function () {
+    Camera.prototype.getFocus = function () {
         return new Vector(this.x, this.y);
     };
     /**
@@ -305,7 +312,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
      *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
      */
-    BaseCamera.prototype.move = function (pos, duration, easingFn) {
+    Camera.prototype.move = function (pos, duration, easingFn) {
         if (easingFn === void 0) { easingFn = EasingFunctions.EaseInOutCubic; }
         if (typeof easingFn !== 'function') {
             throw 'Please specify an EasingFunction';
@@ -333,7 +340,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param magnitudeY  The y magnitude of the shake
      * @param duration    The duration of the shake in milliseconds
      */
-    BaseCamera.prototype.shake = function (magnitudeX, magnitudeY, duration) {
+    Camera.prototype.shake = function (magnitudeX, magnitudeY, duration) {
         this._isShaking = true;
         this._shakeMagnitudeX = magnitudeX;
         this._shakeMagnitudeY = magnitudeY;
@@ -345,7 +352,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param scale    The scale of the zoom
      * @param duration The duration of the zoom in milliseconds
      */
-    BaseCamera.prototype.zoom = function (scale, duration, easingFn) {
+    Camera.prototype.zoom = function (scale, duration, easingFn) {
         if (duration === void 0) { duration = 0; }
         if (easingFn === void 0) { easingFn = EasingFunctions.EaseInOutCubic; }
         this._zoomPromise = new Promise();
@@ -367,27 +374,27 @@ var BaseCamera = /** @class */ (function (_super) {
     /**
      * Gets the current zoom scale
      */
-    BaseCamera.prototype.getZoom = function () {
+    Camera.prototype.getZoom = function () {
         return this.z;
     };
     /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    BaseCamera.prototype.addStrategy = function (cameraStrategy) {
+    Camera.prototype.addStrategy = function (cameraStrategy) {
         this._cameraStrategies.push(cameraStrategy);
     };
     /**
      * Removes a camera strategy by reference
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    BaseCamera.prototype.removeStrategy = function (cameraStrategy) {
+    Camera.prototype.removeStrategy = function (cameraStrategy) {
         removeItemFromArray(cameraStrategy, this._cameraStrategies);
     };
     /**
      * Clears all camera strategies from the camera
      */
-    BaseCamera.prototype.clearAllStrategies = function () {
+    Camera.prototype.clearAllStrategies = function () {
         this._cameraStrategies.length = 0;
     };
     /**
@@ -396,7 +403,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
      */
-    BaseCamera.prototype._preupdate = function (engine, delta) {
+    Camera.prototype._preupdate = function (engine, delta) {
         this.emit('preupdate', new PreUpdateEvent(engine, delta, this));
         this.onPreUpdate(engine, delta);
     };
@@ -405,7 +412,7 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPreUpdate` is called directly before a scene is updated.
      */
-    BaseCamera.prototype.onPreUpdate = function (_engine, _delta) {
+    Camera.prototype.onPreUpdate = function (_engine, _delta) {
         // Overridable
     };
     /**
@@ -414,7 +421,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
      */
-    BaseCamera.prototype._postupdate = function (engine, delta) {
+    Camera.prototype._postupdate = function (engine, delta) {
         this.emit('postupdate', new PostUpdateEvent(engine, delta, this));
         this.onPostUpdate(engine, delta);
     };
@@ -423,17 +430,17 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPostUpdate` is called directly after a scene is updated.
      */
-    BaseCamera.prototype.onPostUpdate = function (_engine, _delta) {
+    Camera.prototype.onPostUpdate = function (_engine, _delta) {
         // Overridable
     };
-    Object.defineProperty(BaseCamera.prototype, "isInitialized", {
+    Object.defineProperty(Camera.prototype, "isInitialized", {
         get: function () {
             return this._isInitialized;
         },
         enumerable: true,
         configurable: true
     });
-    BaseCamera.prototype._initialize = function (_engine) {
+    Camera.prototype._initialize = function (_engine) {
         if (!this.isInitialized) {
             this.onInitialize(_engine);
             _super.prototype.emit.call(this, 'initialize', new InitializeEvent(_engine, this));
@@ -445,19 +452,19 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPostUpdate` is called directly after a scene is updated.
      */
-    BaseCamera.prototype.onInitialize = function (_engine) {
+    Camera.prototype.onInitialize = function (_engine) {
         // Overridable
     };
-    BaseCamera.prototype.on = function (eventName, handler) {
+    Camera.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
-    BaseCamera.prototype.off = function (eventName, handler) {
+    Camera.prototype.off = function (eventName, handler) {
         _super.prototype.off.call(this, eventName, handler);
     };
-    BaseCamera.prototype.once = function (eventName, handler) {
+    Camera.prototype.once = function (eventName, handler) {
         _super.prototype.once.call(this, eventName, handler);
     };
-    BaseCamera.prototype.update = function (_engine, delta) {
+    Camera.prototype.update = function (_engine, delta) {
         this._initialize(_engine);
         this._preupdate(_engine, delta);
         // Update placements based on linear algebra
@@ -527,7 +534,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param ctx    Canvas context to apply transformations
      * @param delta  The number of milliseconds since the last update
      */
-    BaseCamera.prototype.draw = function (ctx) {
+    Camera.prototype.draw = function (ctx) {
         var focus = this.getFocus();
         var canvasWidth = ctx.canvas.width;
         var canvasHeight = ctx.canvas.height;
@@ -538,7 +545,7 @@ var BaseCamera = /** @class */ (function (_super) {
         ctx.scale(zoom, zoom);
         ctx.translate(-focus.x + newCanvasWidth / 2 + this._xShake, -focus.y + newCanvasHeight / 2 + this._yShake);
     };
-    BaseCamera.prototype.debugDraw = function (ctx) {
+    Camera.prototype.debugDraw = function (ctx) {
         var focus = this.getFocus();
         ctx.fillStyle = 'red';
         ctx.strokeStyle = 'white';
@@ -552,10 +559,24 @@ var BaseCamera = /** @class */ (function (_super) {
         ctx.closePath();
         ctx.stroke();
     };
-    BaseCamera.prototype._isDoneShaking = function () {
+    Camera.prototype._isDoneShaking = function () {
         return !this._isShaking || this._elapsedShakeTime >= this._shakeDuration;
     };
-    return BaseCamera;
+    return Camera;
 }(Class));
+export { Camera };
+/**
+ * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
+ */
+var BaseCamera = /** @class */ (function (_super) {
+    __extends(BaseCamera, _super);
+    function BaseCamera() {
+        return _super.call(this) || this;
+    }
+    BaseCamera = __decorate([
+        obsolete({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
+    ], BaseCamera);
+    return BaseCamera;
+}(Camera));
 export { BaseCamera };
 //# sourceMappingURL=Camera.js.map

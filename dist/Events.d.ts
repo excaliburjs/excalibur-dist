@@ -7,7 +7,7 @@ import { Engine } from './Engine';
 import { TileMap } from './TileMap';
 import { Side } from './Collision/Side';
 import * as Input from './Input/Index';
-import { Pair, BaseCamera } from './index';
+import { Pair, Camera } from './index';
 export declare enum EventTypes {
     Kill = "kill",
     PreKill = "prekill",
@@ -237,20 +237,20 @@ export declare class PostDebugDrawEvent extends GameEvent<Actor | Scene | Engine
 /**
  * The 'preupdate' event is emitted on actors, scenes, camera, and engine before the update starts.
  */
-export declare class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
+export declare class PreUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | Camera> {
     engine: Engine;
     delta: number;
-    target: Actor | Scene | Engine | TileMap | BaseCamera;
-    constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
+    target: Actor | Scene | Engine | TileMap | Camera;
+    constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | Camera);
 }
 /**
  * The 'postupdate' event is emitted on actors, scenes, camera, and engine after the update ends.
  */
-export declare class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | BaseCamera> {
+export declare class PostUpdateEvent extends GameEvent<Actor | Scene | Engine | TileMap | Camera> {
     engine: Engine;
     delta: number;
-    target: Actor | Scene | Engine | TileMap | BaseCamera;
-    constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | BaseCamera);
+    target: Actor | Scene | Engine | TileMap | Camera;
+    constructor(engine: Engine, delta: number, target: Actor | Scene | Engine | TileMap | Camera);
 }
 /**
  * The 'preframe' event is emitted on the engine, before the frame begins.
@@ -400,13 +400,13 @@ export declare class CollisionEndEvent extends GameEvent<Actor> {
 /**
  * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
  */
-export declare class InitializeEvent extends GameEvent<Actor | Scene | Engine | BaseCamera> {
+export declare class InitializeEvent extends GameEvent<Actor | Scene | Engine | Camera> {
     engine: Engine;
-    target: Actor | Scene | Engine | BaseCamera;
+    target: Actor | Scene | Engine | Camera;
     /**
      * @param engine  The reference to the current engine
      */
-    constructor(engine: Engine, target: Actor | Scene | Engine | BaseCamera);
+    constructor(engine: Engine, target: Actor | Scene | Engine | Camera);
 }
 /**
  * Event thrown on a [[Scene]] on activation

@@ -21,15 +21,15 @@ export interface ICameraStrategy<T> {
      * @param engine The current engine running the game
      * @param delta The elapsed time in milliseconds since the last frame
      */
-    action: (target: T, camera: BaseCamera, engine: Engine, delta: number) => Vector;
+    action: (target: T, camera: Camera, engine: Engine, delta: number) => Vector;
 }
 /**
  * Container to house convenience strategy methods
  * @internal
  */
 export declare class StrategyContainer {
-    camera: BaseCamera;
-    constructor(camera: BaseCamera);
+    camera: Camera;
+    constructor(camera: Camera);
     /**
      * Creates and adds the [[LockCameraToActorStrategy]] on the current camera.
      * @param actor The actor to lock the camera to
@@ -72,7 +72,7 @@ export declare enum Axis {
 export declare class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
     target: Actor;
     constructor(target: Actor);
-    action: (target: Actor, _cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    action: (target: Actor, _cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
 /**
  * Lock a camera to a specific axis around an actor.
@@ -81,7 +81,7 @@ export declare class LockCameraToActorAxisStrategy implements ICameraStrategy<Ac
     target: Actor;
     axis: Axis;
     constructor(target: Actor, axis: Axis);
-    action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    action: (target: Actor, cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
 /**
  * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
@@ -100,7 +100,7 @@ export declare class ElasticToActorStrategy implements ICameraStrategy<Actor> {
      * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
      */
     constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
-    action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    action: (target: Actor, cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
 export declare class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
     target: Actor;
@@ -111,18 +111,18 @@ export declare class RadiusAroundActorStrategy implements ICameraStrategy<Actor>
      * @param radius Number of pixels away before the camera will follow
      */
     constructor(target: Actor, radius: number);
-    action: (target: Actor, cam: BaseCamera, _eng: Engine, _delta: number) => Vector;
+    action: (target: Actor, cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
 /**
  * Cameras
  *
- * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
+ * [[Camera]] is the base class for all Excalibur cameras. Cameras are used
  * to move around your game and set focus. They are used to determine
  * what is "off screen" and can be used to scale the game.
  *
  * [[include:Cameras.md]]
  */
-export declare class BaseCamera extends Class implements ICanUpdate, ICanInitialize {
+export declare class Camera extends Class implements ICanUpdate, ICanInitialize {
     protected _follow: Actor;
     private _cameraStrategies;
     strategy: StrategyContainer;
@@ -287,4 +287,10 @@ export declare class BaseCamera extends Class implements ICanUpdate, ICanInitial
     draw(ctx: CanvasRenderingContext2D): void;
     debugDraw(ctx: CanvasRenderingContext2D): void;
     private _isDoneShaking();
+}
+/**
+ * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
+ */
+export declare class BaseCamera extends Camera {
+    constructor();
 }

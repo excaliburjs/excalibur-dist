@@ -4,7 +4,7 @@ import { Timer } from './Timer';
 import { Engine } from './Engine';
 import { Group } from './Group';
 import { TileMap } from './TileMap';
-import { BaseCamera } from './Camera';
+import { Camera } from './Camera';
 import { Actor } from './Actor';
 import { Class } from './Class';
 import { ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw } from './Interfaces/LifecycleEvents';
@@ -23,7 +23,7 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
     /**
      * Gets or sets the current camera for the scene
      */
-    camera: BaseCamera;
+    camera: Camera;
     /**
      * The actors in the current scene
      */

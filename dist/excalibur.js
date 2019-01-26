@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.20.0-alpha.2813+18044af - 2019-1-26
+ * excalibur - 0.20.0-alpha.2824+916a408 - 2019-1-26
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3251,7 +3251,7 @@ var GlobalCoordinates = /** @class */ (function () {
 /*!*******************!*\
   !*** ./Camera.ts ***!
   \*******************/
-/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera */
+/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3262,6 +3262,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return LockCameraToActorAxisStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return ElasticToActorStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return RadiusAroundActorStrategy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return Camera; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseCamera", function() { return BaseCamera; });
 /* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
@@ -3269,6 +3270,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3279,6 +3281,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -3444,15 +3453,15 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
 /**
  * Cameras
  *
- * [[BaseCamera]] is the base class for all Excalibur cameras. Cameras are used
+ * [[Camera]] is the base class for all Excalibur cameras. Cameras are used
  * to move around your game and set focus. They are used to determine
  * what is "off screen" and can be used to scale the game.
  *
  * [[include:Cameras.md]]
  */
-var BaseCamera = /** @class */ (function (_super) {
-    __extends(BaseCamera, _super);
-    function BaseCamera() {
+var Camera = /** @class */ (function (_super) {
+    __extends(Camera, _super);
+    function Camera() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._cameraStrategies = [];
         _this.strategy = new StrategyContainer(_this);
@@ -3491,7 +3500,7 @@ var BaseCamera = /** @class */ (function (_super) {
         _this._isInitialized = false;
         return _this;
     }
-    Object.defineProperty(BaseCamera.prototype, "x", {
+    Object.defineProperty(Camera.prototype, "x", {
         /**
          * Get the camera's x position
          */
@@ -3509,7 +3518,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "y", {
+    Object.defineProperty(Camera.prototype, "y", {
         /**
          * Get the camera's y position
          */
@@ -3527,7 +3536,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "pos", {
+    Object.defineProperty(Camera.prototype, "pos", {
         /**
          * Get the camera's position as a vector
          */
@@ -3544,7 +3553,7 @@ var BaseCamera = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(BaseCamera.prototype, "vel", {
+    Object.defineProperty(Camera.prototype, "vel", {
         /**
          * Get the camera's velocity as a vector
          */
@@ -3564,7 +3573,7 @@ var BaseCamera = /** @class */ (function (_super) {
     /**
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
      */
-    BaseCamera.prototype.getFocus = function () {
+    Camera.prototype.getFocus = function () {
         return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](this.x, this.y);
     };
     /**
@@ -3576,7 +3585,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
      *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
      */
-    BaseCamera.prototype.move = function (pos, duration, easingFn) {
+    Camera.prototype.move = function (pos, duration, easingFn) {
         if (easingFn === void 0) { easingFn = _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__["EasingFunctions"].EaseInOutCubic; }
         if (typeof easingFn !== 'function') {
             throw 'Please specify an EasingFunction';
@@ -3604,7 +3613,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param magnitudeY  The y magnitude of the shake
      * @param duration    The duration of the shake in milliseconds
      */
-    BaseCamera.prototype.shake = function (magnitudeX, magnitudeY, duration) {
+    Camera.prototype.shake = function (magnitudeX, magnitudeY, duration) {
         this._isShaking = true;
         this._shakeMagnitudeX = magnitudeX;
         this._shakeMagnitudeY = magnitudeY;
@@ -3616,7 +3625,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param scale    The scale of the zoom
      * @param duration The duration of the zoom in milliseconds
      */
-    BaseCamera.prototype.zoom = function (scale, duration, easingFn) {
+    Camera.prototype.zoom = function (scale, duration, easingFn) {
         if (duration === void 0) { duration = 0; }
         if (easingFn === void 0) { easingFn = _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__["EasingFunctions"].EaseInOutCubic; }
         this._zoomPromise = new _Promises__WEBPACK_IMPORTED_MODULE_1__["Promise"]();
@@ -3638,27 +3647,27 @@ var BaseCamera = /** @class */ (function (_super) {
     /**
      * Gets the current zoom scale
      */
-    BaseCamera.prototype.getZoom = function () {
+    Camera.prototype.getZoom = function () {
         return this.z;
     };
     /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    BaseCamera.prototype.addStrategy = function (cameraStrategy) {
+    Camera.prototype.addStrategy = function (cameraStrategy) {
         this._cameraStrategies.push(cameraStrategy);
     };
     /**
      * Removes a camera strategy by reference
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    BaseCamera.prototype.removeStrategy = function (cameraStrategy) {
+    Camera.prototype.removeStrategy = function (cameraStrategy) {
         Object(_Util_Util__WEBPACK_IMPORTED_MODULE_3__["removeItemFromArray"])(cameraStrategy, this._cameraStrategies);
     };
     /**
      * Clears all camera strategies from the camera
      */
-    BaseCamera.prototype.clearAllStrategies = function () {
+    Camera.prototype.clearAllStrategies = function () {
         this._cameraStrategies.length = 0;
     };
     /**
@@ -3667,7 +3676,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
      */
-    BaseCamera.prototype._preupdate = function (engine, delta) {
+    Camera.prototype._preupdate = function (engine, delta) {
         this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreUpdateEvent"](engine, delta, this));
         this.onPreUpdate(engine, delta);
     };
@@ -3676,7 +3685,7 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPreUpdate` is called directly before a scene is updated.
      */
-    BaseCamera.prototype.onPreUpdate = function (_engine, _delta) {
+    Camera.prototype.onPreUpdate = function (_engine, _delta) {
         // Overridable
     };
     /**
@@ -3685,7 +3694,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
      */
-    BaseCamera.prototype._postupdate = function (engine, delta) {
+    Camera.prototype._postupdate = function (engine, delta) {
         this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostUpdateEvent"](engine, delta, this));
         this.onPostUpdate(engine, delta);
     };
@@ -3694,17 +3703,17 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPostUpdate` is called directly after a scene is updated.
      */
-    BaseCamera.prototype.onPostUpdate = function (_engine, _delta) {
+    Camera.prototype.onPostUpdate = function (_engine, _delta) {
         // Overridable
     };
-    Object.defineProperty(BaseCamera.prototype, "isInitialized", {
+    Object.defineProperty(Camera.prototype, "isInitialized", {
         get: function () {
             return this._isInitialized;
         },
         enumerable: true,
         configurable: true
     });
-    BaseCamera.prototype._initialize = function (_engine) {
+    Camera.prototype._initialize = function (_engine) {
         if (!this.isInitialized) {
             this.onInitialize(_engine);
             _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_4__["InitializeEvent"](_engine, this));
@@ -3716,19 +3725,19 @@ var BaseCamera = /** @class */ (function (_super) {
      *
      * `onPostUpdate` is called directly after a scene is updated.
      */
-    BaseCamera.prototype.onInitialize = function (_engine) {
+    Camera.prototype.onInitialize = function (_engine) {
         // Overridable
     };
-    BaseCamera.prototype.on = function (eventName, handler) {
+    Camera.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
-    BaseCamera.prototype.off = function (eventName, handler) {
+    Camera.prototype.off = function (eventName, handler) {
         _super.prototype.off.call(this, eventName, handler);
     };
-    BaseCamera.prototype.once = function (eventName, handler) {
+    Camera.prototype.once = function (eventName, handler) {
         _super.prototype.once.call(this, eventName, handler);
     };
-    BaseCamera.prototype.update = function (_engine, delta) {
+    Camera.prototype.update = function (_engine, delta) {
         this._initialize(_engine);
         this._preupdate(_engine, delta);
         // Update placements based on linear algebra
@@ -3798,7 +3807,7 @@ var BaseCamera = /** @class */ (function (_super) {
      * @param ctx    Canvas context to apply transformations
      * @param delta  The number of milliseconds since the last update
      */
-    BaseCamera.prototype.draw = function (ctx) {
+    Camera.prototype.draw = function (ctx) {
         var focus = this.getFocus();
         var canvasWidth = ctx.canvas.width;
         var canvasHeight = ctx.canvas.height;
@@ -3809,7 +3818,7 @@ var BaseCamera = /** @class */ (function (_super) {
         ctx.scale(zoom, zoom);
         ctx.translate(-focus.x + newCanvasWidth / 2 + this._xShake, -focus.y + newCanvasHeight / 2 + this._yShake);
     };
-    BaseCamera.prototype.debugDraw = function (ctx) {
+    Camera.prototype.debugDraw = function (ctx) {
         var focus = this.getFocus();
         ctx.fillStyle = 'red';
         ctx.strokeStyle = 'white';
@@ -3823,11 +3832,25 @@ var BaseCamera = /** @class */ (function (_super) {
         ctx.closePath();
         ctx.stroke();
     };
-    BaseCamera.prototype._isDoneShaking = function () {
+    Camera.prototype._isDoneShaking = function () {
         return !this._isShaking || this._elapsedShakeTime >= this._shakeDuration;
     };
-    return BaseCamera;
+    return Camera;
 }(_Class__WEBPACK_IMPORTED_MODULE_5__["Class"]));
+
+/**
+ * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
+ */
+var BaseCamera = /** @class */ (function (_super) {
+    __extends(BaseCamera, _super);
+    function BaseCamera() {
+        return _super.call(this) || this;
+    }
+    BaseCamera = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
+    ], BaseCamera);
+    return BaseCamera;
+}(Camera));
 
 
 
@@ -16691,7 +16714,7 @@ var Scene = /** @class */ (function (_super) {
         _this._timers = [];
         _this._cancelQueue = [];
         _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_3__["Logger"].getInstance();
-        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_9__["BaseCamera"]();
+        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_9__["Camera"]();
         _this._engine = _engine;
         if (_engine) {
             _this.camera.x = _engine.halfDrawWidth;
@@ -18330,6 +18353,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return obsolete; });
 /* harmony import */ var _Log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Log */ "./Util/Log.ts");
 /* harmony import */ var _Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util */ "./Util/Util.ts");
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 
 
 /**
@@ -18337,29 +18368,40 @@ __webpack_require__.r(__webpack_exports__);
  * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
  */
 function obsolete(options) {
-    options = _Util__WEBPACK_IMPORTED_MODULE_1__["extend"]({}, { message: 'This method will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+    options = _Util__WEBPACK_IMPORTED_MODULE_1__["extend"]({}, { message: 'This feature will be removed in future versions of Excalibur.', alternateMethod: null }, options);
     return function (target, property, descriptor) {
-        if (!(typeof descriptor.value === 'function' || typeof descriptor.get === 'function' || typeof descriptor.set === 'function')) {
-            throw new SyntaxError('Only functions/getters/setters can be marked as obsolete');
+        if (descriptor &&
+            !(typeof descriptor.value === 'function' || typeof descriptor.get === 'function' || typeof descriptor.set === 'function')) {
+            throw new SyntaxError('Only classes/functions/getters/setters can be marked as obsolete');
         }
-        var methodSignature = "" + (target.name || '') + (target.name ? '.' : '') + property;
+        var methodSignature = "" + (target.name || '') + (target.name && property ? '.' : '') + (property ? property : '');
         var message = methodSignature + " is marked obsolete: " + options.message +
             (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
-        var method = _Util__WEBPACK_IMPORTED_MODULE_1__["extend"]({}, descriptor);
-        if (descriptor.value) {
+        // If descriptor is null it is a class
+        var method = descriptor ? __assign({}, descriptor) : target;
+        if (!descriptor) {
+            var constructor = function () {
+                var args = Array.prototype.slice.call(arguments);
+                _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+                return new (method.bind.apply(method, [void 0].concat(args)))();
+            };
+            constructor.prototype = method.prototype;
+            return constructor;
+        }
+        if (descriptor && descriptor.value) {
             method.value = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 return descriptor.value.apply(this, arguments);
             };
             return method;
         }
-        if (descriptor.get) {
+        if (descriptor && descriptor.get) {
             method.get = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 return descriptor.get.apply(this, arguments);
             };
         }
-        if (descriptor.set) {
+        if (descriptor && descriptor.set) {
             method.set = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 return descriptor.set.apply(this, arguments);
@@ -19842,7 +19884,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19883,6 +19925,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["ElasticToActorStrategy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["RadiusAroundActorStrategy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["Camera"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseCamera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["BaseCamera"]; });
 
@@ -20161,7 +20205,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.20.0-alpha.2813+18044af";
+var EX_VERSION = "0.20.0-alpha.2824+916a408";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

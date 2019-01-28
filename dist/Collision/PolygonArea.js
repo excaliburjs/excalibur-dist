@@ -13,7 +13,7 @@ var PolygonArea = /** @class */ (function () {
         this._transformedPoints = [];
         this._axes = [];
         this._sides = [];
-        this.pos = options.pos || Vector.Zero.clone();
+        this.pos = options.pos || Vector.Zero;
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.body = options.body || null;
@@ -280,7 +280,7 @@ var PolygonArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     PolygonArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = Color.Red.clone(); }
+        if (color === void 0) { color = Color.Red; }
         ctx.beginPath();
         ctx.strokeStyle = color.toString();
         // Iterate through the supplied points and construct a 'polygon'

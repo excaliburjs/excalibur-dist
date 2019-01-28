@@ -16,7 +16,7 @@ import { Vector } from './Algebra';
 import { ExitTriggerEvent, EnterTriggerEvent } from './Events';
 import * as Util from './Util/Util';
 var triggerDefaults = {
-    pos: Vector.Zero.clone(),
+    pos: Vector.Zero,
     width: 10,
     height: 10,
     visible: false,

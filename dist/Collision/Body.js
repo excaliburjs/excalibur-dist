@@ -71,7 +71,7 @@ var Body = /** @class */ (function () {
          * The rotational velocity of the actor in radians/second
          */
         this.rx = 0; //radians/sec
-        this._totalMtv = Vector.Zero.clone();
+        this._totalMtv = Vector.Zero;
     }
     /**
      * Add minimum translation vectors accumulated during the current frame to resolve collisions.
@@ -126,7 +126,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useBoxCollision = function (center) {
-        if (center === void 0) { center = Vector.Zero.clone(); }
+        if (center === void 0) { center = Vector.Zero; }
         this.collisionArea = new PolygonArea({
             body: this,
             points: this.actor.getRelativeGeometry(),
@@ -143,7 +143,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.usePolygonCollision = function (points, center) {
-        if (center === void 0) { center = Vector.Zero.clone(); }
+        if (center === void 0) { center = Vector.Zero; }
         this.collisionArea = new PolygonArea({
             body: this,
             points: points,
@@ -158,7 +158,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useCircleCollision = function (radius, center) {
-        if (center === void 0) { center = Vector.Zero.clone(); }
+        if (center === void 0) { center = Vector.Zero; }
         if (!radius) {
             radius = this.actor.getWidth() / 2;
         }

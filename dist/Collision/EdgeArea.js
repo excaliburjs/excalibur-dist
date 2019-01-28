@@ -7,8 +7,8 @@ import { Physics } from '../Physics';
 import { Color } from '../Drawing/Color';
 var EdgeArea = /** @class */ (function () {
     function EdgeArea(options) {
-        this.begin = options.begin || Vector.Zero.clone();
-        this.end = options.end || Vector.Zero.clone();
+        this.begin = options.begin || Vector.Zero;
+        this.end = options.end || Vector.Zero;
         this.body = options.body || null;
         this.pos = this.getCenter();
     }
@@ -20,7 +20,7 @@ var EdgeArea = /** @class */ (function () {
         return pos;
     };
     EdgeArea.prototype._getBodyPos = function () {
-        var bodyPos = Vector.Zero.clone();
+        var bodyPos = Vector.Zero;
         if (this.body.pos) {
             bodyPos = this.body.pos;
         }
@@ -162,7 +162,7 @@ var EdgeArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     EdgeArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = Color.Red.clone(); }
+        if (color === void 0) { color = Color.Red; }
         ctx.strokeStyle = color.toString();
         ctx.beginPath();
         ctx.moveTo(this.begin.x, this.begin.y);

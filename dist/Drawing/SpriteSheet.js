@@ -201,13 +201,13 @@ var SpriteFontImpl = /** @class */ (function (_super) {
                 spacing: spacing || 0
             }
             : imageOrConfig) || this;
-        _this._currentColor = Color.Black.clone();
+        _this._currentColor = Color.Black;
         _this._currentOpacity = 1.0;
         _this._sprites = {};
         // text shadow
         _this._textShadowOn = false;
         _this._textShadowDirty = true;
-        _this._textShadowColor = Color.Black.clone();
+        _this._textShadowColor = Color.Black;
         _this._textShadowSprites = {};
         _this._shadowOffsetX = 5;
         _this._shadowOffsetY = 5;
@@ -336,7 +336,7 @@ var SpriteFontImpl = /** @class */ (function (_super) {
         return {
             fontSize: options.fontSize || 10,
             letterSpacing: options.letterSpacing || 0,
-            color: options.color || Color.Black.clone(),
+            color: options.color || Color.Black,
             textAlign: typeof options.textAlign === undefined ? TextAlign.Left : options.textAlign,
             baseAlign: typeof options.baseAlign === undefined ? BaseAlign.Bottom : options.baseAlign,
             maxWidth: options.maxWidth || -1,

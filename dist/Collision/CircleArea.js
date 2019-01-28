@@ -13,8 +13,8 @@ var CircleArea = /** @class */ (function () {
         /**
          * This is the center position of the circle, relative to the body position
          */
-        this.pos = Vector.Zero.clone();
-        this.pos = options.pos || Vector.Zero.clone();
+        this.pos = Vector.Zero;
+        this.pos = options.pos || Vector.Zero;
         this.radius = options.radius || 0;
         this.body = options.body || null;
     }
@@ -165,7 +165,7 @@ var CircleArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     CircleArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = Color.Green.clone(); }
+        if (color === void 0) { color = Color.Green; }
         var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
         var rotation = this.body ? this.body.rotation : 0;
         ctx.beginPath();

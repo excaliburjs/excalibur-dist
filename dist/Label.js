@@ -173,7 +173,7 @@ var LabelImpl = /** @class */ (function (_super) {
             text = textOrConfig;
         }
         _this.text = text || '';
-        _this.color = Color.Black.clone();
+        _this.color = Color.Black;
         _this.spriteFont = spriteFont;
         _this.collisionType = CollisionType.PreventCollision;
         _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font

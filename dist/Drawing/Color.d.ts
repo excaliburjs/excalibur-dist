@@ -148,77 +148,77 @@ export declare class Color {
     /**
      * Black (#000000)
      */
-    static Black: Color;
+    static readonly Black: Color;
     /**
      * White (#FFFFFF)
      */
-    static White: Color;
+    static readonly White: Color;
     /**
      * Gray (#808080)
      */
-    static Gray: Color;
+    static readonly Gray: Color;
     /**
      * Light gray (#D3D3D3)
      */
-    static LightGray: Color;
+    static readonly LightGray: Color;
     /**
      * Dark gray (#A9A9A9)
      */
-    static DarkGray: Color;
+    static readonly DarkGray: Color;
     /**
      * Yellow (#FFFF00)
      */
-    static Yellow: Color;
+    static readonly Yellow: Color;
     /**
      * Orange (#FFA500)
      */
-    static Orange: Color;
+    static readonly Orange: Color;
     /**
      * Red (#FF0000)
      */
-    static Red: Color;
+    static readonly Red: Color;
     /**
      * Vermillion (#FF5B31)
      */
-    static Vermillion: Color;
+    static readonly Vermillion: Color;
     /**
      * Rose (#FF007F)
      */
-    static Rose: Color;
+    static readonly Rose: Color;
     /**
      * Magenta (#FF00FF)
      */
-    static Magenta: Color;
+    static readonly Magenta: Color;
     /**
      * Violet (#7F00FF)
      */
-    static Violet: Color;
+    static readonly Violet: Color;
     /**
      * Blue (#0000FF)
      */
-    static Blue: Color;
+    static readonly Blue: Color;
     /**
      * Azure (#007FFF)
      */
-    static Azure: Color;
+    static readonly Azure: Color;
     /**
      * Cyan (#00FFFF)
      */
-    static Cyan: Color;
+    static readonly Cyan: Color;
     /**
      * Viridian (#59978F)
      */
-    static Viridian: Color;
+    static readonly Viridian: Color;
     /**
      * Green (#00FF00)
      */
-    static Green: Color;
+    static readonly Green: Color;
     /**
      * Chartreuse (#7FFF00)
      */
-    static Chartreuse: Color;
+    static readonly Chartreuse: Color;
     /**
      * Transparent (#FFFFFF00)
      */
-    static Transparent: Color;
+    static readonly Transparent: Color;
 }

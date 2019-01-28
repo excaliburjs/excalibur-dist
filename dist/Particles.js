@@ -43,8 +43,8 @@ var ParticleImpl = /** @class */ (function () {
         this.focus = null;
         this.focusAccel = 0;
         this.opacity = 1;
-        this.beginColor = Color.White.clone();
-        this.endColor = Color.White.clone();
+        this.beginColor = Color.White;
+        this.endColor = Color.White;
         // Life is counted in ms
         this.life = 300;
         this.fadeFlag = false;
@@ -53,7 +53,7 @@ var ParticleImpl = /** @class */ (function () {
         this._gRate = 1;
         this._bRate = 1;
         this._aRate = 0;
-        this._currentColor = Color.White.clone();
+        this._currentColor = Color.White;
         this.emitter = null;
         this.particleSize = 5;
         this.particleSprite = null;
@@ -245,11 +245,11 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         /**
          * Gets or sets the beginning color of all particles
          */
-        _this.beginColor = Color.White.clone();
+        _this.beginColor = Color.White;
         /**
          * Gets or sets the ending color of all particles
          */
-        _this.endColor = Color.White.clone();
+        _this.endColor = Color.White;
         /**
          * Gets or sets the sprite that a particle should use
          * @warning Performance intensive

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.20.0-alpha.2824+916a408 - 2019-1-26
+ * excalibur - 0.20.0-alpha.2831+d890d8a - 2019-1-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -1538,17 +1538,17 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
          */
-        _this.oldAcc = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Zero.clone();
+        _this.oldAcc = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Zero;
         _this._height = 0;
         _this._width = 0;
         /**
          * The scale vector of the actor
          */
-        _this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One.clone();
+        _this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One;
         /**
          * The scale of the actor last frame
          */
-        _this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One.clone();
+        _this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One;
         /**
          * The x scalar velocity of the actor in scale/second
          */
@@ -2696,7 +2696,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * Indicates the next id to be set
      */
     ActorImpl.defaults = {
-        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Half.clone()
+        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Half
     };
     /**
      * Indicates the next id to be set
@@ -2788,6 +2788,76 @@ var Vector = /** @class */ (function () {
         this.x = x;
         this.y = y;
     }
+    Object.defineProperty(Vector, "Zero", {
+        /**
+         * A (0, 0) vector
+         */
+        get: function () {
+            return new Vector(0, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "One", {
+        /**
+         * A (1, 1) vector
+         */
+        get: function () {
+            return new Vector(1, 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Half", {
+        /**
+         * A (0.5, 0.5) vector
+         */
+        get: function () {
+            return new Vector(0.5, 0.5);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Up", {
+        /**
+         * A unit vector pointing up (0, -1)
+         */
+        get: function () {
+            return new Vector(0, -1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Down", {
+        /**
+         * A unit vector pointing down (0, 1)
+         */
+        get: function () {
+            return new Vector(0, 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Left", {
+        /**
+         * A unit vector pointing left (-1, 0)
+         */
+        get: function () {
+            return new Vector(-1, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Right", {
+        /**
+         * A unit vector pointing right (1, 0)
+         */
+        get: function () {
+            return new Vector(1, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns a vector of unit length in the direction of the specified angle in Radians.
      * @param angle The angle to generate the vector
@@ -2979,34 +3049,6 @@ var Vector = /** @class */ (function () {
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";
     };
-    /**
-     * A (0, 0) vector
-     */
-    Vector.Zero = new Vector(0, 0);
-    /**
-     * A (1, 1) vector
-     */
-    Vector.One = new Vector(1, 1);
-    /**
-     * A (0.5, 0.5) vector
-     */
-    Vector.Half = new Vector(0.5, 0.5);
-    /**
-     * A unit vector pointing up (0, -1)
-     */
-    Vector.Up = new Vector(0, -1);
-    /**
-     * A unit vector pointing down (0, 1)
-     */
-    Vector.Down = new Vector(0, 1);
-    /**
-     * A unit vector pointing left (-1, 0)
-     */
-    Vector.Left = new Vector(-1, 0);
-    /**
-     * A unit vector pointing right (1, 0)
-     */
-    Vector.Right = new Vector(1, 0);
     return Vector;
 }());
 
@@ -4070,7 +4112,7 @@ var Body = /** @class */ (function () {
          * The rotational velocity of the actor in radians/second
          */
         this.rx = 0; //radians/sec
-        this._totalMtv = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero.clone();
+        this._totalMtv = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero;
     }
     /**
      * Add minimum translation vectors accumulated during the current frame to resolve collisions.
@@ -4125,7 +4167,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useBoxCollision = function (center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero.clone(); }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
         this.collisionArea = new _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]({
             body: this,
             points: this.actor.getRelativeGeometry(),
@@ -4142,7 +4184,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.usePolygonCollision = function (points, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero.clone(); }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
         this.collisionArea = new _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]({
             body: this,
             points: points,
@@ -4157,7 +4199,7 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useCircleCollision = function (radius, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero.clone(); }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
         if (!radius) {
             radius = this.actor.getWidth() / 2;
         }
@@ -4291,7 +4333,7 @@ var BoundingBox = /** @class */ (function () {
      * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
      */
     BoundingBox.prototype.rotate = function (angle, point) {
-        if (point === void 0) { point = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero.clone(); }
+        if (point === void 0) { point = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero; }
         var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
         return BoundingBox.fromPoints(points);
     };
@@ -4318,7 +4360,7 @@ var BoundingBox = /** @class */ (function () {
         return new _PolygonArea__WEBPACK_IMPORTED_MODULE_0__["PolygonArea"]({
             body: actor ? actor.body : null,
             points: this.getPoints(),
-            pos: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero.clone()
+            pos: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero
         });
     };
     /**
@@ -4467,8 +4509,8 @@ var CircleArea = /** @class */ (function () {
         /**
          * This is the center position of the circle, relative to the body position
          */
-        this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone();
-        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone();
+        this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
+        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.radius = options.radius || 0;
         this.body = options.body || null;
     }
@@ -4619,7 +4661,7 @@ var CircleArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     CircleArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green.clone(); }
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
         var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
         var rotation = this.body ? this.body.rotation : 0;
         ctx.beginPath();
@@ -5737,8 +5779,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var EdgeArea = /** @class */ (function () {
     function EdgeArea(options) {
-        this.begin = options.begin || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone();
-        this.end = options.end || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone();
+        this.begin = options.begin || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
+        this.end = options.end || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.body = options.body || null;
         this.pos = this.getCenter();
     }
@@ -5750,7 +5792,7 @@ var EdgeArea = /** @class */ (function () {
         return pos;
     };
     EdgeArea.prototype._getBodyPos = function () {
-        var bodyPos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone();
+        var bodyPos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         if (this.body.pos) {
             bodyPos = this.body.pos;
         }
@@ -5892,7 +5934,7 @@ var EdgeArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     EdgeArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red.clone(); }
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red; }
         ctx.strokeStyle = color.toString();
         ctx.beginPath();
         ctx.moveTo(this.begin.x, this.begin.y);
@@ -6218,7 +6260,7 @@ var PolygonArea = /** @class */ (function () {
         this._transformedPoints = [];
         this._axes = [];
         this._sides = [];
-        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero.clone();
+        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero;
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.body = options.body || null;
@@ -6485,7 +6527,7 @@ var PolygonArea = /** @class */ (function () {
     };
     /* istanbul ignore next */
     PolygonArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red.clone(); }
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
         ctx.beginPath();
         ctx.strokeStyle = color.toString();
         // Iterate through the supplied points and construct a 'polygon'
@@ -7397,82 +7439,196 @@ var Color = /** @class */ (function () {
     Color.prototype.clone = function () {
         return new Color(this.r, this.g, this.b, this.a);
     };
-    /**
-     * Black (#000000)
-     */
-    Color.Black = Color.fromHex('#000000');
-    /**
-     * White (#FFFFFF)
-     */
-    Color.White = Color.fromHex('#FFFFFF');
-    /**
-     * Gray (#808080)
-     */
-    Color.Gray = Color.fromHex('#808080');
-    /**
-     * Light gray (#D3D3D3)
-     */
-    Color.LightGray = Color.fromHex('#D3D3D3');
-    /**
-     * Dark gray (#A9A9A9)
-     */
-    Color.DarkGray = Color.fromHex('#A9A9A9');
-    /**
-     * Yellow (#FFFF00)
-     */
-    Color.Yellow = Color.fromHex('#FFFF00');
-    /**
-     * Orange (#FFA500)
-     */
-    Color.Orange = Color.fromHex('#FFA500');
-    /**
-     * Red (#FF0000)
-     */
-    Color.Red = Color.fromHex('#FF0000');
-    /**
-     * Vermillion (#FF5B31)
-     */
-    Color.Vermillion = Color.fromHex('#FF5B31');
-    /**
-     * Rose (#FF007F)
-     */
-    Color.Rose = Color.fromHex('#FF007F');
-    /**
-     * Magenta (#FF00FF)
-     */
-    Color.Magenta = Color.fromHex('#FF00FF');
-    /**
-     * Violet (#7F00FF)
-     */
-    Color.Violet = Color.fromHex('#7F00FF');
-    /**
-     * Blue (#0000FF)
-     */
-    Color.Blue = Color.fromHex('#0000FF');
-    /**
-     * Azure (#007FFF)
-     */
-    Color.Azure = Color.fromHex('#007FFF');
-    /**
-     * Cyan (#00FFFF)
-     */
-    Color.Cyan = Color.fromHex('#00FFFF');
-    /**
-     * Viridian (#59978F)
-     */
-    Color.Viridian = Color.fromHex('#59978F');
-    /**
-     * Green (#00FF00)
-     */
-    Color.Green = Color.fromHex('#00FF00');
-    /**
-     * Chartreuse (#7FFF00)
-     */
-    Color.Chartreuse = Color.fromHex('#7FFF00');
-    /**
-     * Transparent (#FFFFFF00)
-     */
-    Color.Transparent = Color.fromHex('#FFFFFF00');
+    Object.defineProperty(Color, "Black", {
+        /**
+         * Black (#000000)
+         */
+        get: function () {
+            return Color.fromHex('#000000');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "White", {
+        /**
+         * White (#FFFFFF)
+         */
+        get: function () {
+            return Color.fromHex('#FFFFFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Gray", {
+        /**
+         * Gray (#808080)
+         */
+        get: function () {
+            return Color.fromHex('#808080');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "LightGray", {
+        /**
+         * Light gray (#D3D3D3)
+         */
+        get: function () {
+            return Color.fromHex('#D3D3D3');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "DarkGray", {
+        /**
+         * Dark gray (#A9A9A9)
+         */
+        get: function () {
+            return Color.fromHex('#A9A9A9');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Yellow", {
+        /**
+         * Yellow (#FFFF00)
+         */
+        get: function () {
+            return Color.fromHex('#FFFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Orange", {
+        /**
+         * Orange (#FFA500)
+         */
+        get: function () {
+            return Color.fromHex('#FFA500');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Red", {
+        /**
+         * Red (#FF0000)
+         */
+        get: function () {
+            return Color.fromHex('#FF0000');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Vermillion", {
+        /**
+         * Vermillion (#FF5B31)
+         */
+        get: function () {
+            return Color.fromHex('#FF5B31');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Rose", {
+        /**
+         * Rose (#FF007F)
+         */
+        get: function () {
+            return Color.fromHex('#FF007F');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Magenta", {
+        /**
+         * Magenta (#FF00FF)
+         */
+        get: function () {
+            return Color.fromHex('#FF00FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Violet", {
+        /**
+         * Violet (#7F00FF)
+         */
+        get: function () {
+            return Color.fromHex('#7F00FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Blue", {
+        /**
+         * Blue (#0000FF)
+         */
+        get: function () {
+            return Color.fromHex('#0000FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Azure", {
+        /**
+         * Azure (#007FFF)
+         */
+        get: function () {
+            return Color.fromHex('#007FFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Cyan", {
+        /**
+         * Cyan (#00FFFF)
+         */
+        get: function () {
+            return Color.fromHex('#00FFFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Viridian", {
+        /**
+         * Viridian (#59978F)
+         */
+        get: function () {
+            return Color.fromHex('#59978F');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Green", {
+        /**
+         * Green (#00FF00)
+         */
+        get: function () {
+            return Color.fromHex('#00FF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Chartreuse", {
+        /**
+         * Chartreuse (#7FFF00)
+         */
+        get: function () {
+            return Color.fromHex('#7FFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Transparent", {
+        /**
+         * Transparent (#FFFFFF00)
+         */
+        get: function () {
+            return Color.fromHex('#FFFFFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Color;
 }());
 
@@ -8498,13 +8654,13 @@ var SpriteFontImpl = /** @class */ (function (_super) {
                 spacing: spacing || 0
             }
             : imageOrConfig) || this;
-        _this._currentColor = _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black.clone();
+        _this._currentColor = _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black;
         _this._currentOpacity = 1.0;
         _this._sprites = {};
         // text shadow
         _this._textShadowOn = false;
         _this._textShadowDirty = true;
-        _this._textShadowColor = _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black.clone();
+        _this._textShadowColor = _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black;
         _this._textShadowSprites = {};
         _this._shadowOffsetX = 5;
         _this._shadowOffsetY = 5;
@@ -8633,7 +8789,7 @@ var SpriteFontImpl = /** @class */ (function (_super) {
         return {
             fontSize: options.fontSize || 10,
             letterSpacing: options.letterSpacing || 0,
-            color: options.color || _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black.clone(),
+            color: options.color || _Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Black,
             textAlign: typeof options.textAlign === undefined ? _Label__WEBPACK_IMPORTED_MODULE_6__["TextAlign"].Left : options.textAlign,
             baseAlign: typeof options.baseAlign === undefined ? _Label__WEBPACK_IMPORTED_MODULE_6__["BaseAlign"].Bottom : options.baseAlign,
             maxWidth: options.maxWidth || -1,
@@ -12615,7 +12771,7 @@ var LabelImpl = /** @class */ (function (_super) {
             text = textOrConfig;
         }
         _this.text = text || '';
-        _this.color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Black.clone();
+        _this.color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Black;
         _this.spriteFont = spriteFont;
         _this.collisionType = _Actor__WEBPACK_IMPORTED_MODULE_1__["CollisionType"].PreventCollision;
         _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
@@ -14023,8 +14179,8 @@ var ParticleImpl = /** @class */ (function () {
         this.focus = null;
         this.focusAccel = 0;
         this.opacity = 1;
-        this.beginColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White.clone();
-        this.endColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White.clone();
+        this.beginColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White;
+        this.endColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White;
         // Life is counted in ms
         this.life = 300;
         this.fadeFlag = false;
@@ -14033,7 +14189,7 @@ var ParticleImpl = /** @class */ (function () {
         this._gRate = 1;
         this._bRate = 1;
         this._aRate = 0;
-        this._currentColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White.clone();
+        this._currentColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White;
         this.emitter = null;
         this.particleSize = 5;
         this.particleSprite = null;
@@ -14225,11 +14381,11 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         /**
          * Gets or sets the beginning color of all particles
          */
-        _this.beginColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White.clone();
+        _this.beginColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White;
         /**
          * Gets or sets the ending color of all particles
          */
-        _this.endColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White.clone();
+        _this.endColor = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].White;
         /**
          * Gets or sets the sprite that a particle should use
          * @warning Performance intensive
@@ -17486,7 +17642,7 @@ var TileMapImpl = /** @class */ (function (_super) {
             ctx.lineTo(this.x + width, this.y + y * this.cellHeight);
             ctx.stroke();
         }
-        var solid = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Red.clone();
+        var solid = _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Red;
         solid.a = 0.3;
         this.data
             .filter(function (cell) {
@@ -18006,7 +18162,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 var triggerDefaults = {
-    pos: _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero.clone(),
+    pos: _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero,
     width: 10,
     height: 10,
     visible: false,
@@ -18628,7 +18784,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 /* istanbul ignore next */
 function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
-    if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red.clone(); }
+    if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
     if (thickness === void 0) { thickness = 1; }
     if (cap === void 0) { cap = 'butt'; }
     ctx.beginPath();
@@ -18645,7 +18801,7 @@ function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
  */
 /* istanbul ignore next */
 function point(ctx, color, point) {
-    if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red.clone(); }
+    if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
     ctx.beginPath();
     ctx.strokeStyle = color.toString();
     ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
@@ -20205,7 +20361,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.20.0-alpha.2824+916a408";
+var EX_VERSION = "0.20.0-alpha.2831+d890d8a";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

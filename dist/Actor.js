@@ -53,17 +53,17 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
          */
-        _this.oldAcc = Vector.Zero.clone();
+        _this.oldAcc = Vector.Zero;
         _this._height = 0;
         _this._width = 0;
         /**
          * The scale vector of the actor
          */
-        _this.scale = Vector.One.clone();
+        _this.scale = Vector.One;
         /**
          * The scale of the actor last frame
          */
-        _this.oldScale = Vector.One.clone();
+        _this.oldScale = Vector.One;
         /**
          * The x scalar velocity of the actor in scale/second
          */
@@ -1211,7 +1211,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * Indicates the next id to be set
      */
     ActorImpl.defaults = {
-        anchor: Vector.Half.clone()
+        anchor: Vector.Half
     };
     /**
      * Indicates the next id to be set

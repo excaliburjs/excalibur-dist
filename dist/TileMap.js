@@ -211,7 +211,7 @@ var TileMapImpl = /** @class */ (function (_super) {
             ctx.lineTo(this.x + width, this.y + y * this.cellHeight);
             ctx.stroke();
         }
-        var solid = Color.Red.clone();
+        var solid = Color.Red;
         solid.a = 0.3;
         this.data
             .filter(function (cell) {

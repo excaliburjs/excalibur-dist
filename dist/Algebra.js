@@ -11,6 +11,76 @@ var Vector = /** @class */ (function () {
         this.x = x;
         this.y = y;
     }
+    Object.defineProperty(Vector, "Zero", {
+        /**
+         * A (0, 0) vector
+         */
+        get: function () {
+            return new Vector(0, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "One", {
+        /**
+         * A (1, 1) vector
+         */
+        get: function () {
+            return new Vector(1, 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Half", {
+        /**
+         * A (0.5, 0.5) vector
+         */
+        get: function () {
+            return new Vector(0.5, 0.5);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Up", {
+        /**
+         * A unit vector pointing up (0, -1)
+         */
+        get: function () {
+            return new Vector(0, -1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Down", {
+        /**
+         * A unit vector pointing down (0, 1)
+         */
+        get: function () {
+            return new Vector(0, 1);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Left", {
+        /**
+         * A unit vector pointing left (-1, 0)
+         */
+        get: function () {
+            return new Vector(-1, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector, "Right", {
+        /**
+         * A unit vector pointing right (1, 0)
+         */
+        get: function () {
+            return new Vector(1, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns a vector of unit length in the direction of the specified angle in Radians.
      * @param angle The angle to generate the vector
@@ -202,34 +272,6 @@ var Vector = /** @class */ (function () {
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";
     };
-    /**
-     * A (0, 0) vector
-     */
-    Vector.Zero = new Vector(0, 0);
-    /**
-     * A (1, 1) vector
-     */
-    Vector.One = new Vector(1, 1);
-    /**
-     * A (0.5, 0.5) vector
-     */
-    Vector.Half = new Vector(0.5, 0.5);
-    /**
-     * A unit vector pointing up (0, -1)
-     */
-    Vector.Up = new Vector(0, -1);
-    /**
-     * A unit vector pointing down (0, 1)
-     */
-    Vector.Down = new Vector(0, 1);
-    /**
-     * A unit vector pointing left (-1, 0)
-     */
-    Vector.Left = new Vector(-1, 0);
-    /**
-     * A unit vector pointing right (1, 0)
-     */
-    Vector.Right = new Vector(1, 0);
     return Vector;
 }());
 export { Vector };

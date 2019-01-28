@@ -211,82 +211,196 @@ var Color = /** @class */ (function () {
     Color.prototype.clone = function () {
         return new Color(this.r, this.g, this.b, this.a);
     };
-    /**
-     * Black (#000000)
-     */
-    Color.Black = Color.fromHex('#000000');
-    /**
-     * White (#FFFFFF)
-     */
-    Color.White = Color.fromHex('#FFFFFF');
-    /**
-     * Gray (#808080)
-     */
-    Color.Gray = Color.fromHex('#808080');
-    /**
-     * Light gray (#D3D3D3)
-     */
-    Color.LightGray = Color.fromHex('#D3D3D3');
-    /**
-     * Dark gray (#A9A9A9)
-     */
-    Color.DarkGray = Color.fromHex('#A9A9A9');
-    /**
-     * Yellow (#FFFF00)
-     */
-    Color.Yellow = Color.fromHex('#FFFF00');
-    /**
-     * Orange (#FFA500)
-     */
-    Color.Orange = Color.fromHex('#FFA500');
-    /**
-     * Red (#FF0000)
-     */
-    Color.Red = Color.fromHex('#FF0000');
-    /**
-     * Vermillion (#FF5B31)
-     */
-    Color.Vermillion = Color.fromHex('#FF5B31');
-    /**
-     * Rose (#FF007F)
-     */
-    Color.Rose = Color.fromHex('#FF007F');
-    /**
-     * Magenta (#FF00FF)
-     */
-    Color.Magenta = Color.fromHex('#FF00FF');
-    /**
-     * Violet (#7F00FF)
-     */
-    Color.Violet = Color.fromHex('#7F00FF');
-    /**
-     * Blue (#0000FF)
-     */
-    Color.Blue = Color.fromHex('#0000FF');
-    /**
-     * Azure (#007FFF)
-     */
-    Color.Azure = Color.fromHex('#007FFF');
-    /**
-     * Cyan (#00FFFF)
-     */
-    Color.Cyan = Color.fromHex('#00FFFF');
-    /**
-     * Viridian (#59978F)
-     */
-    Color.Viridian = Color.fromHex('#59978F');
-    /**
-     * Green (#00FF00)
-     */
-    Color.Green = Color.fromHex('#00FF00');
-    /**
-     * Chartreuse (#7FFF00)
-     */
-    Color.Chartreuse = Color.fromHex('#7FFF00');
-    /**
-     * Transparent (#FFFFFF00)
-     */
-    Color.Transparent = Color.fromHex('#FFFFFF00');
+    Object.defineProperty(Color, "Black", {
+        /**
+         * Black (#000000)
+         */
+        get: function () {
+            return Color.fromHex('#000000');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "White", {
+        /**
+         * White (#FFFFFF)
+         */
+        get: function () {
+            return Color.fromHex('#FFFFFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Gray", {
+        /**
+         * Gray (#808080)
+         */
+        get: function () {
+            return Color.fromHex('#808080');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "LightGray", {
+        /**
+         * Light gray (#D3D3D3)
+         */
+        get: function () {
+            return Color.fromHex('#D3D3D3');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "DarkGray", {
+        /**
+         * Dark gray (#A9A9A9)
+         */
+        get: function () {
+            return Color.fromHex('#A9A9A9');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Yellow", {
+        /**
+         * Yellow (#FFFF00)
+         */
+        get: function () {
+            return Color.fromHex('#FFFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Orange", {
+        /**
+         * Orange (#FFA500)
+         */
+        get: function () {
+            return Color.fromHex('#FFA500');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Red", {
+        /**
+         * Red (#FF0000)
+         */
+        get: function () {
+            return Color.fromHex('#FF0000');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Vermillion", {
+        /**
+         * Vermillion (#FF5B31)
+         */
+        get: function () {
+            return Color.fromHex('#FF5B31');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Rose", {
+        /**
+         * Rose (#FF007F)
+         */
+        get: function () {
+            return Color.fromHex('#FF007F');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Magenta", {
+        /**
+         * Magenta (#FF00FF)
+         */
+        get: function () {
+            return Color.fromHex('#FF00FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Violet", {
+        /**
+         * Violet (#7F00FF)
+         */
+        get: function () {
+            return Color.fromHex('#7F00FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Blue", {
+        /**
+         * Blue (#0000FF)
+         */
+        get: function () {
+            return Color.fromHex('#0000FF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Azure", {
+        /**
+         * Azure (#007FFF)
+         */
+        get: function () {
+            return Color.fromHex('#007FFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Cyan", {
+        /**
+         * Cyan (#00FFFF)
+         */
+        get: function () {
+            return Color.fromHex('#00FFFF');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Viridian", {
+        /**
+         * Viridian (#59978F)
+         */
+        get: function () {
+            return Color.fromHex('#59978F');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Green", {
+        /**
+         * Green (#00FF00)
+         */
+        get: function () {
+            return Color.fromHex('#00FF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Chartreuse", {
+        /**
+         * Chartreuse (#7FFF00)
+         */
+        get: function () {
+            return Color.fromHex('#7FFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Transparent", {
+        /**
+         * Transparent (#FFFFFF00)
+         */
+        get: function () {
+            return Color.fromHex('#FFFFFF00');
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Color;
 }());
 export { Color };

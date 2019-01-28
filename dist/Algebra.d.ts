@@ -8,31 +8,31 @@ export declare class Vector {
     /**
      * A (0, 0) vector
      */
-    static Zero: Vector;
+    static readonly Zero: Vector;
     /**
      * A (1, 1) vector
      */
-    static One: Vector;
+    static readonly One: Vector;
     /**
      * A (0.5, 0.5) vector
      */
-    static Half: Vector;
+    static readonly Half: Vector;
     /**
      * A unit vector pointing up (0, -1)
      */
-    static Up: Vector;
+    static readonly Up: Vector;
     /**
      * A unit vector pointing down (0, 1)
      */
-    static Down: Vector;
+    static readonly Down: Vector;
     /**
      * A unit vector pointing left (-1, 0)
      */
-    static Left: Vector;
+    static readonly Left: Vector;
     /**
      * A unit vector pointing right (1, 0)
      */
-    static Right: Vector;
+    static readonly Right: Vector;
     /**
      * Returns a vector of unit length in the direction of the specified angle in Radians.
      * @param angle The angle to generate the vector

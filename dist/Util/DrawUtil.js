@@ -13,7 +13,7 @@ import { Color } from '../Drawing/Color';
  */
 /* istanbul ignore next */
 export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
-    if (color === void 0) { color = Color.Red.clone(); }
+    if (color === void 0) { color = Color.Red; }
     if (thickness === void 0) { thickness = 1; }
     if (cap === void 0) { cap = 'butt'; }
     ctx.beginPath();
@@ -30,7 +30,7 @@ export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
  */
 /* istanbul ignore next */
 export function point(ctx, color, point) {
-    if (color === void 0) { color = Color.Red.clone(); }
+    if (color === void 0) { color = Color.Red; }
     ctx.beginPath();
     ctx.strokeStyle = color.toString();
     ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);

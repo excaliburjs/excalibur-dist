@@ -59,7 +59,7 @@ var BoundingBox = /** @class */ (function () {
      * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
      */
     BoundingBox.prototype.rotate = function (angle, point) {
-        if (point === void 0) { point = Vector.Zero.clone(); }
+        if (point === void 0) { point = Vector.Zero; }
         var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
         return BoundingBox.fromPoints(points);
     };
@@ -86,7 +86,7 @@ var BoundingBox = /** @class */ (function () {
         return new PolygonArea({
             body: actor ? actor.body : null,
             points: this.getPoints(),
-            pos: Vector.Zero.clone()
+            pos: Vector.Zero
         });
     };
     /**

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.20.0-alpha.2838+b210b21 - 2019-1-28
+ * excalibur - 0.20.0-alpha.2841+6ae1e37 - 2019-1-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3312,7 +3312,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3329,6 +3330,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -3692,6 +3694,21 @@ var Camera = /** @class */ (function (_super) {
     Camera.prototype.getZoom = function () {
         return this.z;
     };
+    Object.defineProperty(Camera.prototype, "viewport", {
+        /**
+         * Gets the boundingbox of the viewport of this camera in world coordinates
+         */
+        get: function () {
+            if (this._engine) {
+                var halfWidth = this._engine.halfDrawWidth;
+                var halfHeight = this._engine.halfDrawHeight;
+                return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](this.x - halfHeight, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
+            }
+            return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](0, 0, 0, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
@@ -3760,6 +3777,7 @@ var Camera = /** @class */ (function (_super) {
             this.onInitialize(_engine);
             _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_4__["InitializeEvent"](_engine, this));
             this._isInitialized = true;
+            this._engine = _engine;
         }
     };
     /**
@@ -3889,7 +3907,7 @@ var BaseCamera = /** @class */ (function (_super) {
         return _super.call(this) || this;
     }
     BaseCamera = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_6__["obsolete"])({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
     ], BaseCamera);
     return BaseCamera;
 }(Camera));
@@ -4423,30 +4441,81 @@ var BoundingBox = /** @class */ (function () {
         var compositeBB = new BoundingBox(Math.min(this.left, other.left), Math.min(this.top, other.top), Math.max(this.right, other.right), Math.max(this.bottom, other.bottom));
         return compositeBB;
     };
+    Object.defineProperty(BoundingBox.prototype, "dimensions", {
+        get: function () {
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this.getWidth(), this.getHeight());
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Test wether this bounding box collides with another returning,
      * the intersection vector that can be used to resolve the collision. If there
      * is no collision null is returned.
+     *
+     * @returns A Vector in the direction of the current BoundingBox
      * @param collidable  Other collidable to test
      */
     BoundingBox.prototype.collides = function (collidable) {
         if (collidable instanceof BoundingBox) {
             var other = collidable;
             var totalBoundingBox = this.combine(other);
-            // If the total bounding box is less than the sum of the 2 bounds then there is collision
+            // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
             if (totalBoundingBox.getWidth() < other.getWidth() + this.getWidth() &&
-                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight()) {
+                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight() &&
+                !totalBoundingBox.dimensions.equals(other.dimensions) &&
+                !totalBoundingBox.dimensions.equals(this.dimensions)) {
                 // collision
                 var overlapX = 0;
+                // right edge is between the other's left and right edge
+                /**
+                 *     +-this-+
+                 *     |      |
+                 *     |    +-other-+
+                 *     +----|-+     |
+                 *          |       |
+                 *          +-------+
+                 *         <---
+                 *          ^ overlap
+                 */
                 if (this.right >= other.left && this.right <= other.right) {
                     overlapX = other.left - this.right;
+                    // right edge is past the other's right edge
+                    /**
+                     *     +-other-+
+                     *     |       |
+                     *     |    +-this-+
+                     *     +----|--+   |
+                     *          |      |
+                     *          +------+
+                     *          --->
+                     *          ^ overlap
+                     */
                 }
                 else {
                     overlapX = other.right - this.left;
                 }
                 var overlapY = 0;
+                // top edge is between the other's top and bottom edge
+                /**
+                 *     +-other-+
+                 *     |       |
+                 *     |    +-this-+   | <- overlap
+                 *     +----|--+   |   |
+                 *          |      |  \ /
+                 *          +------+   '
+                 */
                 if (this.top <= other.bottom && this.top >= other.top) {
                     overlapY = other.bottom - this.top;
+                    // top edge is above the other top edge
+                    /**
+                     *     +-this-+         .
+                     *     |      |        / \
+                     *     |    +-other-+   | <- overlap
+                     *     +----|-+     |   |
+                     *          |       |
+                     *          +-------+
+                     */
                 }
                 else {
                     overlapY = other.top - this.bottom;
@@ -4456,6 +4525,59 @@ var BoundingBox = /** @class */ (function () {
                 }
                 else {
                     return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
+                }
+                // Case of total containment of one bounding box by another
+            }
+            else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
+                var overlapX_1 = 0;
+                // this is wider than the other
+                if (this.getWidth() - other.getWidth() >= 0) {
+                    // This right edge is closest to the others right edge
+                    if (this.right - other.right <= other.left - this.left) {
+                        overlapX_1 = other.left - this.right;
+                        // This left edge is closest to the others left edge
+                    }
+                    else {
+                        overlapX_1 = other.right - this.left;
+                    }
+                    // other is wider than this
+                }
+                else {
+                    // This right edge is closest to the others right edge
+                    if (other.right - this.right <= this.left - other.left) {
+                        overlapX_1 = this.left - other.right;
+                        // This left edge is closest to the others left edge
+                    }
+                    else {
+                        overlapX_1 = this.right - other.left;
+                    }
+                }
+                var overlapY_1 = 0;
+                // this is taller than other
+                if (this.getHeight() - other.getHeight() >= 0) {
+                    // The bottom edge is closest to the others bottom edge
+                    if (this.bottom - other.bottom <= other.top - this.top) {
+                        overlapY_1 = other.top - this.bottom;
+                    }
+                    else {
+                        overlapY_1 = other.bottom - this.top;
+                    }
+                    // other is taller than this
+                }
+                else {
+                    // The bottom edge is closest to the others bottom edge
+                    if (other.bottom - this.bottom <= this.top - other.top) {
+                        overlapY_1 = this.top - other.bottom;
+                    }
+                    else {
+                        overlapY_1 = this.bottom - other.top;
+                    }
+                }
+                if (Math.abs(overlapX_1) < Math.abs(overlapY_1)) {
+                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX_1, 0);
+                }
+                else {
+                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY_1);
                 }
             }
             else {
@@ -17049,6 +17171,9 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.update = function (engine, delta) {
         this._preupdate(engine, delta);
+        if (this.camera) {
+            this.camera.update(engine, delta);
+        }
         var i, len;
         // Remove timers in the cancel queue before updating them
         for (i = 0, len = this._cancelQueue.length; i < len; i++) {
@@ -17103,9 +17228,6 @@ var Scene = /** @class */ (function (_super) {
         engine.stats.currFrame.actors.killed = this._killQueue.length + this._triggerKillQueue.length;
         this._processKillQueue(this._killQueue, this.actors);
         this._processKillQueue(this._triggerKillQueue, this.triggers);
-        if (this.camera) {
-            this.camera.update(engine, delta);
-        }
         this._postupdate(engine, delta);
     };
     Scene.prototype._processKillQueue = function (killQueue, collection) {
@@ -18023,9 +18145,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OffscreenCulling", function() { return OffscreenCulling; });
 /* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Events */ "./Events.ts");
-
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Events */ "./Events.ts");
 
 
 var OffscreenCulling = /** @class */ (function () {
@@ -18033,40 +18153,24 @@ var OffscreenCulling = /** @class */ (function () {
         this.cullingBox = new _Util_CullingBox__WEBPACK_IMPORTED_MODULE_0__["CullingBox"]();
     }
     OffscreenCulling.prototype.update = function (actor, engine) {
-        var eventDispatcher = actor.eventDispatcher;
-        var anchor = actor.anchor;
-        var globalScale = actor.getGlobalScale();
-        var width = (globalScale.x * actor.getWidth()) / actor.scale.x;
-        var height = (globalScale.y * actor.getHeight()) / actor.scale.y;
-        var cameraPos = engine.currentScene.camera.pos;
-        var worldPos = actor.getWorldPos();
-        var actorScreenCoords = engine.worldToScreenCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](worldPos.x - anchor.x * width, worldPos.y - anchor.y * height));
-        var cameraScreenCoords = engine.worldToScreenCoordinates(cameraPos);
-        var zoom = 1.0;
-        if (actor.scene && actor.scene.camera) {
-            zoom = Math.abs(actor.scene.camera.getZoom());
-        }
+        var events = actor.eventDispatcher;
         var isSpriteOffScreen = true;
         if (actor.currentDrawing != null) {
             isSpriteOffScreen = this.cullingBox.isSpriteOffScreen(actor, engine);
         }
+        var actorBoundsOffscreen = false;
+        if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport) {
+            actorBoundsOffscreen = !engine.currentScene.camera.viewport.collides(actor.getBounds(true));
+        }
         if (!actor.isOffScreen) {
-            if ((actorScreenCoords.x + width * zoom < 0 ||
-                actorScreenCoords.y + height * zoom < 0 ||
-                actorScreenCoords.x > engine.halfDrawWidth + cameraScreenCoords.x ||
-                actorScreenCoords.y > engine.halfDrawHeight + cameraScreenCoords.y) &&
-                isSpriteOffScreen) {
-                eventDispatcher.emit('exitviewport', new _Events__WEBPACK_IMPORTED_MODULE_2__["ExitViewPortEvent"](actor));
+            if (actorBoundsOffscreen && isSpriteOffScreen) {
+                events.emit('exitviewport', new _Events__WEBPACK_IMPORTED_MODULE_1__["ExitViewPortEvent"](actor));
                 actor.isOffScreen = true;
             }
         }
         else {
-            if ((actorScreenCoords.x + width * zoom > 0 &&
-                actorScreenCoords.y + height * zoom > 0 &&
-                actorScreenCoords.x < engine.halfDrawWidth + cameraScreenCoords.x &&
-                actorScreenCoords.y < engine.halfDrawHeight + cameraScreenCoords.y) ||
-                !isSpriteOffScreen) {
-                eventDispatcher.emit('enterviewport', new _Events__WEBPACK_IMPORTED_MODULE_2__["EnterViewPortEvent"](actor));
+            if (!actorBoundsOffscreen || !isSpriteOffScreen) {
+                events.emit('enterviewport', new _Events__WEBPACK_IMPORTED_MODULE_1__["EnterViewPortEvent"](actor));
                 actor.isOffScreen = false;
             }
         }
@@ -20372,7 +20476,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.20.0-alpha.2838+b210b21";
+var EX_VERSION = "0.20.0-alpha.2841+6ae1e37";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

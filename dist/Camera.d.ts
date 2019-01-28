@@ -6,6 +6,7 @@ import { Actor } from './Actor';
 import { ICanUpdate, ICanInitialize } from './Interfaces/LifecycleEvents';
 import { PreUpdateEvent, PostUpdateEvent, GameEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
+import { BoundingBox } from './Collision/BoundingBox';
 /**
  * Interface that describes a custom camera strategy for tracking targets
  */
@@ -219,6 +220,10 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      */
     getZoom(): number;
     /**
+     * Gets the boundingbox of the viewport of this camera in world coordinates
+     */
+    readonly viewport: BoundingBox;
+    /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
@@ -258,6 +263,7 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      * `onPostUpdate` is called directly after a scene is updated.
      */
     onPostUpdate(_engine: Engine, _delta: number): void;
+    private _engine;
     private _isInitialized;
     readonly isInitialized: boolean;
     _initialize(_engine: Engine): void;

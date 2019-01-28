@@ -20,6 +20,7 @@ import { Vector } from './Algebra';
 import { removeItemFromArray } from './Util/Util';
 import { PreUpdateEvent, PostUpdateEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
+import { BoundingBox } from './Collision/BoundingBox';
 import { obsolete } from './Util/Decorators';
 /**
  * Container to house convenience strategy methods
@@ -377,6 +378,21 @@ var Camera = /** @class */ (function (_super) {
     Camera.prototype.getZoom = function () {
         return this.z;
     };
+    Object.defineProperty(Camera.prototype, "viewport", {
+        /**
+         * Gets the boundingbox of the viewport of this camera in world coordinates
+         */
+        get: function () {
+            if (this._engine) {
+                var halfWidth = this._engine.halfDrawWidth;
+                var halfHeight = this._engine.halfDrawHeight;
+                return new BoundingBox(this.x - halfHeight, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
+            }
+            return new BoundingBox(0, 0, 0, 0);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
@@ -445,6 +461,7 @@ var Camera = /** @class */ (function (_super) {
             this.onInitialize(_engine);
             _super.prototype.emit.call(this, 'initialize', new InitializeEvent(_engine, this));
             this._isInitialized = true;
+            this._engine = _engine;
         }
     };
     /**

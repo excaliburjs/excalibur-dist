@@ -149,30 +149,81 @@ var BoundingBox = /** @class */ (function () {
         var compositeBB = new BoundingBox(Math.min(this.left, other.left), Math.min(this.top, other.top), Math.max(this.right, other.right), Math.max(this.bottom, other.bottom));
         return compositeBB;
     };
+    Object.defineProperty(BoundingBox.prototype, "dimensions", {
+        get: function () {
+            return new Vector(this.getWidth(), this.getHeight());
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Test wether this bounding box collides with another returning,
      * the intersection vector that can be used to resolve the collision. If there
      * is no collision null is returned.
+     *
+     * @returns A Vector in the direction of the current BoundingBox
      * @param collidable  Other collidable to test
      */
     BoundingBox.prototype.collides = function (collidable) {
         if (collidable instanceof BoundingBox) {
             var other = collidable;
             var totalBoundingBox = this.combine(other);
-            // If the total bounding box is less than the sum of the 2 bounds then there is collision
+            // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
             if (totalBoundingBox.getWidth() < other.getWidth() + this.getWidth() &&
-                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight()) {
+                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight() &&
+                !totalBoundingBox.dimensions.equals(other.dimensions) &&
+                !totalBoundingBox.dimensions.equals(this.dimensions)) {
                 // collision
                 var overlapX = 0;
+                // right edge is between the other's left and right edge
+                /**
+                 *     +-this-+
+                 *     |      |
+                 *     |    +-other-+
+                 *     +----|-+     |
+                 *          |       |
+                 *          +-------+
+                 *         <---
+                 *          ^ overlap
+                 */
                 if (this.right >= other.left && this.right <= other.right) {
                     overlapX = other.left - this.right;
+                    // right edge is past the other's right edge
+                    /**
+                     *     +-other-+
+                     *     |       |
+                     *     |    +-this-+
+                     *     +----|--+   |
+                     *          |      |
+                     *          +------+
+                     *          --->
+                     *          ^ overlap
+                     */
                 }
                 else {
                     overlapX = other.right - this.left;
                 }
                 var overlapY = 0;
+                // top edge is between the other's top and bottom edge
+                /**
+                 *     +-other-+
+                 *     |       |
+                 *     |    +-this-+   | <- overlap
+                 *     +----|--+   |   |
+                 *          |      |  \ /
+                 *          +------+   '
+                 */
                 if (this.top <= other.bottom && this.top >= other.top) {
                     overlapY = other.bottom - this.top;
+                    // top edge is above the other top edge
+                    /**
+                     *     +-this-+         .
+                     *     |      |        / \
+                     *     |    +-other-+   | <- overlap
+                     *     +----|-+     |   |
+                     *          |       |
+                     *          +-------+
+                     */
                 }
                 else {
                     overlapY = other.top - this.bottom;
@@ -182,6 +233,59 @@ var BoundingBox = /** @class */ (function () {
                 }
                 else {
                     return new Vector(0, overlapY);
+                }
+                // Case of total containment of one bounding box by another
+            }
+            else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
+                var overlapX_1 = 0;
+                // this is wider than the other
+                if (this.getWidth() - other.getWidth() >= 0) {
+                    // This right edge is closest to the others right edge
+                    if (this.right - other.right <= other.left - this.left) {
+                        overlapX_1 = other.left - this.right;
+                        // This left edge is closest to the others left edge
+                    }
+                    else {
+                        overlapX_1 = other.right - this.left;
+                    }
+                    // other is wider than this
+                }
+                else {
+                    // This right edge is closest to the others right edge
+                    if (other.right - this.right <= this.left - other.left) {
+                        overlapX_1 = this.left - other.right;
+                        // This left edge is closest to the others left edge
+                    }
+                    else {
+                        overlapX_1 = this.right - other.left;
+                    }
+                }
+                var overlapY_1 = 0;
+                // this is taller than other
+                if (this.getHeight() - other.getHeight() >= 0) {
+                    // The bottom edge is closest to the others bottom edge
+                    if (this.bottom - other.bottom <= other.top - this.top) {
+                        overlapY_1 = other.top - this.bottom;
+                    }
+                    else {
+                        overlapY_1 = other.bottom - this.top;
+                    }
+                    // other is taller than this
+                }
+                else {
+                    // The bottom edge is closest to the others bottom edge
+                    if (other.bottom - this.bottom <= this.top - other.top) {
+                        overlapY_1 = this.top - other.bottom;
+                    }
+                    else {
+                        overlapY_1 = this.bottom - other.top;
+                    }
+                }
+                if (Math.abs(overlapX_1) < Math.abs(overlapY_1)) {
+                    return new Vector(overlapX_1, 0);
+                }
+                else {
+                    return new Vector(0, overlapY_1);
                 }
             }
             else {

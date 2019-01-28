@@ -79,10 +79,13 @@ export declare class BoundingBox implements ICollidable {
      * @param other  The bounding box to combine
      */
     combine(other: BoundingBox): BoundingBox;
+    readonly dimensions: Vector;
     /**
      * Test wether this bounding box collides with another returning,
      * the intersection vector that can be used to resolve the collision. If there
      * is no collision null is returned.
+     *
+     * @returns A Vector in the direction of the current BoundingBox
      * @param collidable  Other collidable to test
      */
     collides(collidable: ICollidable): Vector;

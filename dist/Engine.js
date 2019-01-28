@@ -917,7 +917,7 @@ O|===|* >________________>\n\
         var loadingComplete;
         if (loader) {
             this._loader = loader;
-            this._loader.suppressPlayButton = this._suppressPlayButton;
+            this._loader.suppressPlayButton = this._suppressPlayButton || this._loader.suppressPlayButton;
             this._loader.wireEngine(this);
             loadingComplete = this.load(this._loader);
         }

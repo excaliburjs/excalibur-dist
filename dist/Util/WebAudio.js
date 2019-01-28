@@ -1,5 +1,6 @@
 import { AudioContextFactory } from '../Resources/Sound/AudioContext';
-import { Promise } from '../Promises';
+import { Promise, PromiseState } from '../Promises';
+import { Logger } from './Log';
 function isLegacyWebAudioSource(source) {
     return !!source.playbackState;
 }
@@ -16,6 +17,10 @@ var WebAudio = /** @class */ (function () {
         if (WebAudio._unlocked || !AudioContextFactory.create()) {
             return promise.resolve(true);
         }
+        var unlockTimeoutTimer = setTimeout(function () {
+            Logger.getInstance().warn('Excalibur was unable to unlock the audio context, audio probably will not play in this browser.');
+            promise.resolve();
+        }, 200);
         var audioContext = AudioContextFactory.create();
         audioContext.resume().then(function () {
             // create empty buffer and play it
@@ -45,9 +50,14 @@ var WebAudio = /** @class */ (function () {
                     }
                 }
             }, 0);
-            promise.resolve();
+            clearTimeout(unlockTimeoutTimer);
+            if (promise.state() === PromiseState.Pending) {
+                promise.resolve();
+            }
         }, function () {
-            promise.reject(false);
+            if (promise.state() === PromiseState.Pending) {
+                promise.reject(false);
+            }
         });
         return promise;
     };

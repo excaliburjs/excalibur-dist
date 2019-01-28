@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.20.0-alpha.2831+d890d8a - 2019-1-28
+ * excalibur - 0.20.0-alpha.2838+b210b21 - 2019-1-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -9769,7 +9769,7 @@ O|===|* >________________>\n\
         var loadingComplete;
         if (loader) {
             this._loader = loader;
-            this._loader.suppressPlayButton = this._suppressPlayButton;
+            this._loader.suppressPlayButton = this._suppressPlayButton || this._loader.suppressPlayButton;
             this._loader.wireEngine(this);
             loadingComplete = this.load(this._loader);
         }
@@ -19972,6 +19972,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WebAudio", function() { return WebAudio; });
 /* harmony import */ var _Resources_Sound_AudioContext__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Resources/Sound/AudioContext */ "./Resources/Sound/AudioContext.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Promises */ "./Promises.ts");
+/* harmony import */ var _Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Log */ "./Util/Log.ts");
+
 
 
 function isLegacyWebAudioSource(source) {
@@ -19990,6 +19992,10 @@ var WebAudio = /** @class */ (function () {
         if (WebAudio._unlocked || !_Resources_Sound_AudioContext__WEBPACK_IMPORTED_MODULE_0__["AudioContextFactory"].create()) {
             return promise.resolve(true);
         }
+        var unlockTimeoutTimer = setTimeout(function () {
+            _Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().warn('Excalibur was unable to unlock the audio context, audio probably will not play in this browser.');
+            promise.resolve();
+        }, 200);
         var audioContext = _Resources_Sound_AudioContext__WEBPACK_IMPORTED_MODULE_0__["AudioContextFactory"].create();
         audioContext.resume().then(function () {
             // create empty buffer and play it
@@ -20019,9 +20025,14 @@ var WebAudio = /** @class */ (function () {
                     }
                 }
             }, 0);
-            promise.resolve();
+            clearTimeout(unlockTimeoutTimer);
+            if (promise.state() === _Promises__WEBPACK_IMPORTED_MODULE_1__["PromiseState"].Pending) {
+                promise.resolve();
+            }
         }, function () {
-            promise.reject(false);
+            if (promise.state() === _Promises__WEBPACK_IMPORTED_MODULE_1__["PromiseState"].Pending) {
+                promise.reject(false);
+            }
         });
         return promise;
     };
@@ -20361,7 +20372,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.20.0-alpha.2831+d890d8a";
+var EX_VERSION = "0.20.0-alpha.2838+b210b21";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

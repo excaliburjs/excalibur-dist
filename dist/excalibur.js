@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.20.0-alpha.2845+8411d82 - 2019-2-2
+ * excalibur - 0.20.0-alpha.2848+051b0ef - 2019-2-2
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3702,7 +3702,7 @@ var Camera = /** @class */ (function (_super) {
             if (this._engine) {
                 var halfWidth = this._engine.halfDrawWidth;
                 var halfHeight = this._engine.halfDrawHeight;
-                return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](this.x - halfHeight, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
+                return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](this.x - halfWidth, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
             }
             return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](0, 0, 0, 0);
         },
@@ -3891,6 +3891,12 @@ var Camera = /** @class */ (function (_super) {
         ctx.arc(focus.x, focus.y, 5, 0, Math.PI * 2);
         ctx.closePath();
         ctx.stroke();
+        ctx.beginPath();
+        ctx.setLineDash([5, 15]);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.getWidth(), this.viewport.getHeight());
+        ctx.closePath();
     };
     Camera.prototype._isDoneShaking = function () {
         return !this._isShaking || this._elapsedShakeTime >= this._shakeDuration;
@@ -20476,7 +20482,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.20.0-alpha.2845+8411d82";
+var EX_VERSION = "0.20.0-alpha.2848+051b0ef";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

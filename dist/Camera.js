@@ -386,7 +386,7 @@ var Camera = /** @class */ (function (_super) {
             if (this._engine) {
                 var halfWidth = this._engine.halfDrawWidth;
                 var halfHeight = this._engine.halfDrawHeight;
-                return new BoundingBox(this.x - halfHeight, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
+                return new BoundingBox(this.x - halfWidth, this.y - halfHeight, this.x + halfWidth, this.y + halfHeight);
             }
             return new BoundingBox(0, 0, 0, 0);
         },
@@ -575,6 +575,12 @@ var Camera = /** @class */ (function (_super) {
         ctx.arc(focus.x, focus.y, 5, 0, Math.PI * 2);
         ctx.closePath();
         ctx.stroke();
+        ctx.beginPath();
+        ctx.setLineDash([5, 15]);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.getWidth(), this.viewport.getHeight());
+        ctx.closePath();
     };
     Camera.prototype._isDoneShaking = function () {
         return !this._isShaking || this._elapsedShakeTime >= this._shakeDuration;

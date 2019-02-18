@@ -80,6 +80,10 @@ export interface IEngineOptions {
      */
     height?: number;
     /**
+     * Optionally configure the native canvas transparent backdrop
+     */
+    enableCanvasTransparency?: boolean;
+    /**
      * Optionally specify the target canvas DOM element to render the game in
      */
     canvasElementId?: string;
@@ -254,6 +258,10 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      */
     backgroundColor: Color;
     /**
+     * Sets the Transparency for the engine.
+     */
+    enableCanvasTransparency: boolean;
+    /**
      * The action to take when a fatal exception is thrown
      */
     onFatalException: (e: any) => void;
@@ -320,6 +328,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * var game = new ex.Engine({
      *   width: 0, // the width of the canvas
      *   height: 0, // the height of the canvas
+     *   enableCanvasTransparency: true, // the transparencySection of the canvas
      *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
      *   displayMode: ex.DisplayMode.FullScreen, // the display mode
      *   pointerScope: ex.Input.PointerScope.Document, // the scope of capturing pointer (mouse/touch) events

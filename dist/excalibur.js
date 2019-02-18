@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0 - 2019-2-2
+ * excalibur - 0.21.0-alpha.2861+03f34b9 - 2019-2-18
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -9069,6 +9069,7 @@ var Engine = /** @class */ (function (_super) {
      * var game = new ex.Engine({
      *   width: 0, // the width of the canvas
      *   height: 0, // the height of the canvas
+     *   enableCanvasTransparency: true, // the transparencySection of the canvas
      *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
      *   displayMode: ex.DisplayMode.FullScreen, // the display mode
      *   pointerScope: ex.Input.PointerScope.Document, // the scope of capturing pointer (mouse/touch) events
@@ -9116,6 +9117,10 @@ var Engine = /** @class */ (function (_super) {
          */
         _this.isDebug = false;
         _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_12__["Color"](255, 255, 255);
+        /**
+         * Sets the Transparency for the engine.
+         */
+        _this.enableCanvasTransparency = true;
         /**
          * The action to take when a fatal exception is thrown
          */
@@ -9192,6 +9197,7 @@ O|===|* >________________>\n\
         if (options.backgroundColor) {
             _this.backgroundColor = options.backgroundColor.clone();
         }
+        _this.enableCanvasTransparency = options.enableCanvasTransparency;
         _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_8__["Loader"]();
         _this._initialize(options);
         _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_13__["Scene"](_this);
@@ -9640,7 +9646,7 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
         this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
         if (!options.suppressHiDPIScaling) {
             this._initializeHiDpi();
@@ -10019,6 +10025,7 @@ O|===|* >________________>\n\
     Engine._DefaultEngineOptions = {
         width: 0,
         height: 0,
+        enableCanvasTransparency: true,
         canvasElementId: '',
         pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_16__["PointerScope"].Document,
         suppressConsoleBootMessage: null,
@@ -20482,7 +20489,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0";
+var EX_VERSION = "0.21.0-alpha.2861+03f34b9";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

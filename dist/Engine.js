@@ -89,6 +89,7 @@ var Engine = /** @class */ (function (_super) {
      * var game = new ex.Engine({
      *   width: 0, // the width of the canvas
      *   height: 0, // the height of the canvas
+     *   enableCanvasTransparency: true, // the transparencySection of the canvas
      *   canvasElementId: '', // the DOM canvas element ID, if you are providing your own
      *   displayMode: ex.DisplayMode.FullScreen, // the display mode
      *   pointerScope: ex.Input.PointerScope.Document, // the scope of capturing pointer (mouse/touch) events
@@ -136,6 +137,10 @@ var Engine = /** @class */ (function (_super) {
          */
         _this.isDebug = false;
         _this.debugColor = new Color(255, 255, 255);
+        /**
+         * Sets the Transparency for the engine.
+         */
+        _this.enableCanvasTransparency = true;
         /**
          * The action to take when a fatal exception is thrown
          */
@@ -212,6 +217,7 @@ O|===|* >________________>\n\
         if (options.backgroundColor) {
             _this.backgroundColor = options.backgroundColor.clone();
         }
+        _this.enableCanvasTransparency = options.enableCanvasTransparency;
         _this._loader = new Loader();
         _this._initialize(options);
         _this.rootScene = _this.currentScene = new Scene(_this);
@@ -660,7 +666,7 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
         this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
         if (!options.suppressHiDPIScaling) {
             this._initializeHiDpi();
@@ -1039,6 +1045,7 @@ O|===|* >________________>\n\
     Engine._DefaultEngineOptions = {
         width: 0,
         height: 0,
+        enableCanvasTransparency: true,
         canvasElementId: '',
         pointerScope: Input.PointerScope.Document,
         suppressConsoleBootMessage: null,

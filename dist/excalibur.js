@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0-alpha.2861+03f34b9 - 2019-2-18
+ * excalibur - 0.21.0-alpha.2879+4f8947e - 2019-2-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -20489,7 +20489,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0-alpha.2861+03f34b9";
+var EX_VERSION = "0.21.0-alpha.2879+4f8947e";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

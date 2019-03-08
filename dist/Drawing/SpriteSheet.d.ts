@@ -133,7 +133,7 @@ export declare class SpriteFontImpl extends SpriteSheet {
      * Draws the current sprite font
      */
     draw(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, options: ISpriteFontOptions): void;
-    private _parseOptions(options);
+    private _parseOptions;
 }
 /**
  * Specify various font attributes for sprite fonts
@@ -171,3 +171,4 @@ export declare class SpriteFont extends SpriteFont_base {
     constructor(config: ISpriteFontInitArgs);
     constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
 }
+export {};

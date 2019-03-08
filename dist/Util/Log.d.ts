@@ -6,7 +6,7 @@ export declare enum LogLevel {
     Info = 1,
     Warn = 2,
     Error = 3,
-    Fatal = 4,
+    Fatal = 4
 }
 /**
  * Static singleton that represents the logging facility for Excalibur.
@@ -41,7 +41,7 @@ export declare class Logger {
      * @param level  The LogLevel`to log the message at
      * @param args   An array of arguments to write to an appender
      */
-    private _log(level, args);
+    private _log;
     /**
      * Writes a log message at the [[LogLevel.Debug]] level
      * @param args  Accepts any number of arguments

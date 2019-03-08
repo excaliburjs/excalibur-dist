@@ -40,7 +40,7 @@ export declare class Gif extends Resource<Texture[]> {
     images: HTMLImageElement;
     /**
      * @param path       Path to the image resource
-     * @param color      Optionally set the color to treat as transparent the gif, by default [[ex.Color.Magenta]]
+     * @param color      Optionally set the color to treat as transparent the gif, by default [[Color.Magenta]]
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path: string, color?: Color, bustCache?: boolean);

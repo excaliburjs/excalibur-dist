@@ -65,7 +65,7 @@ export declare class WebAudioInstance extends AudioInstance {
     protected _startPlayBack(): void;
     protected _resumePlayBack(): void;
     protected _handleOnEnded(): void;
-    private _rememberStartTime(amend?);
-    private _setPauseOffset();
-    private _createNewBufferSource();
+    private _rememberStartTime;
+    private _setPauseOffset;
+    private _createNewBufferSource;
 }

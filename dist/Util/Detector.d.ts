@@ -33,7 +33,7 @@ export declare class Detector {
      * Executes several IIFE's to get a constant reference to supported
      * features within the current execution context.
      */
-    private _loadBrowserFeatures();
+    private _loadBrowserFeatures;
     private _criticalTests;
     private _warningTest;
     test(): boolean;

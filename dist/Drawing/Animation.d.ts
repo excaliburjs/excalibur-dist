@@ -112,9 +112,9 @@ export declare class AnimationImpl implements IDrawable {
      * Clear all sprite effects
      */
     clearEffects(): void;
-    private _setAnchor(point);
-    private _setRotation(radians);
-    private _setScale(scale);
+    private _setAnchor;
+    private _setRotation;
+    private _setScale;
     /**
      * Resets the animation to first frame.
      */
@@ -129,7 +129,7 @@ export declare class AnimationImpl implements IDrawable {
      * @internal
      */
     tick(): void;
-    private _updateValues();
+    private _updateValues;
     /**
      * Skips ahead a specified number of frames in the animation
      * @param frames  Frames to skip ahead
@@ -170,3 +170,4 @@ export declare class Animation extends Animation_base {
     constructor(config: IAnimationArgs);
     constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
 }
+export {};

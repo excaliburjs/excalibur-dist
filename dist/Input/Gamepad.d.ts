@@ -38,11 +38,11 @@ export declare class Gamepads extends Class {
     /**
      * When implicitly enabled, set the enabled flag and run an update so information is updated
      */
-    private _enableAndUpdate();
+    private _enableAndUpdate;
     /**
      * Checks a navigator gamepad against the minimum configuration if present.
      */
-    private _isGamepadValid(pad);
+    private _isGamepadValid;
     on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): void;
     on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): void;
     on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): void;
@@ -65,11 +65,11 @@ export declare class Gamepads extends Class {
      * Gets the number of connected gamepads
      */
     count(): number;
-    private _clonePads(pads);
+    private _clonePads;
     /**
      * Fastest way to clone a known object is to do it yourself
      */
-    private _clonePad(pad);
+    private _clonePad;
 }
 /**
  * Gamepad holds state information for a connected controller. See [[Gamepads]]
@@ -166,7 +166,7 @@ export declare enum Buttons {
     /**
      * D-pad right
      */
-    DpadRight = 15,
+    DpadRight = 15
 }
 /**
  * Gamepad Axes enumeration
@@ -187,7 +187,7 @@ export declare enum Axes {
     /**
      * Right analogue stick Y direction
      */
-    RightStickY = 3,
+    RightStickY = 3
 }
 /**
  * @internal

@@ -41,7 +41,7 @@ export declare class SpriteImpl implements IDrawable {
      * @param height The height of the sprite in pixels
      */
     constructor(imageOrConfig: Texture | ISpriteArgs, x: number, y: number, width: number, height: number);
-    private _loadPixels();
+    private _loadPixels;
     /**
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
      */
@@ -94,7 +94,7 @@ export declare class SpriteImpl implements IDrawable {
      * @param index  Index of the effect to remove from this sprite
      */
     removeEffect(index: number): void;
-    private _applyEffects();
+    private _applyEffects;
     /**
      * Clears all effects from the drawing and return it to its original state.
      */
@@ -141,3 +141,4 @@ export declare class Sprite extends Sprite_base {
     constructor(config: ISpriteArgs);
     constructor(image: Texture, x: number, y: number, width: number, height: number);
 }
+export {};

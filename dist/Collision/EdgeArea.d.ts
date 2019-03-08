@@ -19,9 +19,9 @@ export declare class EdgeArea implements ICollisionArea {
      * Get the center of the collision area in world coordinates
      */
     getCenter(): Vector;
-    private _getBodyPos();
-    private _getTransformedBegin();
-    private _getTransformedEnd();
+    private _getBodyPos;
+    private _getTransformedBegin;
+    private _getTransformedEnd;
     /**
      * Returns the slope of the line in the form of a vector
      */

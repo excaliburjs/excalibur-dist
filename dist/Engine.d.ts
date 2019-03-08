@@ -37,7 +37,7 @@ export declare enum DisplayMode {
     /**
      * Allow the game to be positioned with the [[IEngineOptions.position]] option
      */
-    Position = 3,
+    Position = 3
 }
 /**
  * Enum representing the different mousewheel event bubble prevention
@@ -54,7 +54,7 @@ export declare enum ScrollPreventionMode {
     /**
      * Prevent all page scrolling via mouse wheel
      */
-    All = 2,
+    All = 2
 }
 /**
  * Interface describing the absolute CSS position of the game window. For use when [[DisplayMode.Position]]
@@ -351,9 +351,9 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
      */
     /**
-     * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
-     * when using time-based movement.
-     */
+    * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
+    * when using time-based movement.
+    */
     timescale: number;
     /**
      * Plays a sprite animation on the screen at the specified `x` and `y`
@@ -507,14 +507,14 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
     /**
      * Sets the internal canvas height based on the selected display mode.
      */
-    private _setHeightByDisplayMode(parent);
+    private _setHeightByDisplayMode;
     /**
      * Initializes the internal canvas, rendering context, displaymode, and native event listeners
      */
-    private _initialize(options?);
+    private _initialize;
     onInitialize(_engine: Engine): void;
-    private _intializeDisplayModePosition(options);
-    private _initializeHiDpi();
+    private _intializeDisplayModePosition;
+    private _initializeHiDpi;
     /**
      * If supported by the browser, this will set the antialiasing flag on the
      * canvas. Set this to `false` if you want a 'jagged' pixel art look to your
@@ -530,12 +530,12 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * Gets whether the actor is Initialized
      */
     readonly isInitialized: boolean;
-    private _overrideInitialize(engine);
+    private _overrideInitialize;
     /**
      * Updates the entire state of the game
      * @param delta  Number of milliseconds elapsed since the last update.
      */
-    private _update(delta);
+    private _update;
     /**
      * @internal
      */
@@ -550,7 +550,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * Draws the entire game
      * @param delta  Number of milliseconds elapsed since the last draw.
      */
-    private _draw(delta);
+    private _draw;
     /**
      * @internal
      */

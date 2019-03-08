@@ -80,19 +80,19 @@ export declare class PerlinGenerator {
      * by default the step will 1/(min(dimension))
      */
     grid(width: number, height: number, step?: number): number[];
-    private _gradient3d(hash, x, y, z);
-    private _gradient2d(hash, x, y);
-    private _gradient1d(hash, x);
-    private _noise1d(x);
-    private _noise2d(x, y);
-    private _noise3d(x, y, z);
+    private _gradient3d;
+    private _gradient2d;
+    private _gradient1d;
+    private _noise1d;
+    private _noise2d;
+    private _noise3d;
 }
 /**
  * A helper to draw 2D perlin maps given a perlin generator and a function
  */
 export declare class PerlinDrawer2D {
     generator: PerlinGenerator;
-    colorFcn: (val: number) => Color;
+    colorFcn?: (val: number) => Color;
     /**
      * @param generator - An existing perlin generator
      * @param colorFcn - A color function that takes a value between [0, 255] derived from the perlin generator, and returns a color

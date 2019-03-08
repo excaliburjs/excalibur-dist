@@ -43,6 +43,6 @@ export declare class Trigger extends Actor {
     constructor(opts: Partial<ITriggerOptions>);
     target: Actor;
     _initialize(engine: Engine): void;
-    private _dispatchAction();
+    private _dispatchAction;
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }

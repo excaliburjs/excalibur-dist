@@ -69,7 +69,7 @@ export declare class Collection<T> {
      * @param initialSize  Initial size of the internal backing array
      */
     constructor(initialSize?: number);
-    private _resize();
+    private _resize;
     /**
      * Push elements to the end of the collection
      */

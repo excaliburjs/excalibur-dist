@@ -124,7 +124,7 @@ export declare class Color {
      * @param c color component
      * @see https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
      */
-    private _componentToHex(c);
+    private _componentToHex;
     /**
      * Return Hex representation of a color.
      */

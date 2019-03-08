@@ -153,24 +153,24 @@ export declare class FrameStats implements IFrameStats {
      * Gets the frame's id
      */
     /**
-     * Sets the frame's id
-     */
+    * Sets the frame's id
+    */
     id: number;
     /**
      * Gets the frame's delta (time since last frame)
      */
     /**
-     * Sets the frame's delta (time since last frame). Internal use only.
-     * @internal
-     */
+    * Sets the frame's delta (time since last frame). Internal use only.
+    * @internal
+    */
     delta: number;
     /**
      * Gets the frame's frames-per-second (FPS)
      */
     /**
-     * Sets the frame's frames-per-second (FPS). Internal use only.
-     * @internal
-     */
+    * Sets the frame's frames-per-second (FPS). Internal use only.
+    * @internal
+    */
     fps: number;
     /**
      * Gets the frame's actor statistics

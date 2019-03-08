@@ -9,7 +9,7 @@ import { Vector } from './Algebra';
  */
 export declare enum CollisionResolutionStrategy {
     Box = 0,
-    RigidBody = 1,
+    RigidBody = 1
 }
 /**
  * Possible broadphase collision pair identification strategies
@@ -20,13 +20,13 @@ export declare enum CollisionResolutionStrategy {
  */
 export declare enum BroadphaseStrategy {
     Naive = 0,
-    DynamicAABBTree = 1,
+    DynamicAABBTree = 1
 }
 /**
  * Possible numerical integrators for position and velocity
  */
 export declare enum Integrator {
-    Euler = 0,
+    Euler = 0
 }
 /**
  * The [[Physics]] object is the global configuration object for all Excalibur physics.

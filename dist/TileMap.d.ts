@@ -175,3 +175,4 @@ export declare class Cell extends Cell_base {
     constructor(config: ICellArgs);
     constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
 }
+export {};

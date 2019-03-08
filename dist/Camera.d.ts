@@ -65,7 +65,7 @@ export declare class StrategyContainer {
  */
 export declare enum Axis {
     X = 0,
-    Y = 1,
+    Y = 1
 }
 /**
  * Lock a camera to the exact x/y postition of an actor.
@@ -163,29 +163,29 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      * Get the camera's x position
      */
     /**
-     * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
-     */
+    * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
+    */
     x: number;
     /**
      * Get the camera's y position
      */
     /**
-     * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
-     */
+    * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
+    */
     y: number;
     /**
      * Get the camera's position as a vector
      */
     /**
-     * Set the cameras position
-     */
+    * Set the cameras position
+    */
     pos: Vector;
     /**
      * Get the camera's velocity as a vector
      */
     /**
-     * Set the camera's velocity
-     */
+    * Set the camera's velocity
+    */
     vel: Vector;
     /**
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
@@ -292,7 +292,7 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      */
     draw(ctx: CanvasRenderingContext2D): void;
     debugDraw(ctx: CanvasRenderingContext2D): void;
-    private _isDoneShaking();
+    private _isDoneShaking;
 }
 /**
  * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead

@@ -15,7 +15,7 @@ export declare enum PointerType {
     Touch = 0,
     Mouse = 1,
     Pen = 2,
-    Unknown = 3,
+    Unknown = 3
 }
 /**
  * The mouse button being pressed.
@@ -24,12 +24,12 @@ export declare enum PointerButton {
     Left = 0,
     Middle = 1,
     Right = 2,
-    Unknown = 3,
+    Unknown = 3
 }
 export declare enum WheelDeltaMode {
     Pixel = 0,
     Line = 1,
-    Page = 2,
+    Page = 2
 }
 /**
  * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
@@ -43,7 +43,7 @@ export declare enum PointerScope {
     /**
      * Handles events on the entire document. All events will be handled by Excalibur.
      */
-    Document = 1,
+    Document = 1
 }
 /**
  * Pointer events
@@ -112,8 +112,8 @@ export declare class PointerMoveEvent extends PointerEvent {
      */
     layPath(actor: Actor): void;
     protected _onActionStart(actor: Actor): void;
-    private _onActorEnter(actor);
-    private _onActorLeave(actor);
+    private _onActorEnter;
+    private _onActorLeave;
 }
 export declare class PointerEnterEvent extends PointerEvent {
     protected _name: string;
@@ -215,21 +215,21 @@ export declare class Pointers extends Class {
      * @param actor  Actor to be revised
      */
     revisePointerEventsPaths(actor: Actor): void;
-    private _propagatePointerEvent(pointers);
-    private _revisePointerEventPath(actor, pointers);
-    private _validateWheelEventPath(pointers, actor);
-    private _propagateWheelEvent(eventName, pointers);
-    private _propagateWheelPointerEvent(wheelEvent);
-    private _handleMouseEvent(eventName, eventArr);
-    private _handleTouchEvent(eventName, eventArr);
-    private _handlePointerEvent(eventName, eventArr);
-    private _handleWheelEvent(eventName, eventArr);
+    private _propagatePointerEvent;
+    private _revisePointerEventPath;
+    private _validateWheelEventPath;
+    private _propagateWheelEvent;
+    private _propagateWheelPointerEvent;
+    private _handleMouseEvent;
+    private _handleTouchEvent;
+    private _handlePointerEvent;
+    private _handleWheelEvent;
     /**
      * Gets the index of the pointer specified for the given pointer ID or finds the next empty pointer slot available.
      * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
      */
-    private _getPointerIndex(pointerId);
-    private _stringToPointerType(s);
+    private _getPointerIndex;
+    private _stringToPointerType;
 }
 /**
  * Captures and dispatches PointerEvents
@@ -297,7 +297,7 @@ export declare class Pointer extends Class {
      * @param actor An Actor for check;
      */
     hasActorUnderPointerInList(actor: Actor): boolean;
-    private _onPointerMove(ev);
-    private _onPointerDown(ev);
-    private _onPointerUp();
+    private _onPointerMove;
+    private _onPointerDown;
+    private _onPointerUp;
 }

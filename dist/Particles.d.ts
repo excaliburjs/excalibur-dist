@@ -16,7 +16,7 @@ export declare enum EmitterType {
     /**
      * Constant for the rectangular emitter type
      */
-    Rectangle = 1,
+    Rectangle = 1
 }
 /**
  * @hidden
@@ -191,7 +191,7 @@ export declare class ParticleEmitterImpl extends Actor {
      */
     emitParticles(particleCount: number): void;
     clearParticles(): void;
-    private _createParticle();
+    private _createParticle;
     update(engine: Engine, delta: number): void;
     draw(ctx: CanvasRenderingContext2D): void;
     debugDraw(ctx: CanvasRenderingContext2D): void;
@@ -239,3 +239,4 @@ export declare class ParticleEmitter extends ParticleEmitter_base {
     constructor(config?: IParticleEmitterArgs);
     constructor(x?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
 }
+export {};

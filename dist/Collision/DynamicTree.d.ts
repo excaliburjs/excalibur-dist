@@ -5,7 +5,7 @@ import { Ray } from '../Algebra';
  * Dynamic Tree Node used for tracking bounds within the tree
  */
 export declare class TreeNode {
-    parent: TreeNode;
+    parent?: TreeNode;
     left: TreeNode;
     right: TreeNode;
     bounds: BoundingBox;
@@ -31,11 +31,11 @@ export declare class DynamicTree {
     /**
      * Inserts a node into the dynamic tree
      */
-    private _insert(leaf);
+    private _insert;
     /**
      * Removes a node from the dynamic tree
      */
-    private _remove(leaf);
+    private _remove;
     /**
      * Tracks a body in the dynamic tree
      */
@@ -51,7 +51,7 @@ export declare class DynamicTree {
     /**
      * Balances the tree about a node
      */
-    private _balance(node);
+    private _balance;
     /**
      * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
      */

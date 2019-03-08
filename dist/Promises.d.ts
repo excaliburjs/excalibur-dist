@@ -4,7 +4,7 @@
 export declare enum PromiseState {
     Resolved = 0,
     Rejected = 1,
-    Pending = 2,
+    Pending = 2
 }
 export interface IPromise<T> {
     then(successCallback?: (value?: T) => any, rejectCallback?: (value?: T) => any): IPromise<T>;
@@ -71,5 +71,5 @@ export declare class Promise<T> implements IPromise<T> {
      * Inspect the current state of a promise
      */
     state(): PromiseState;
-    private _handleError(e);
+    private _handleError;
 }

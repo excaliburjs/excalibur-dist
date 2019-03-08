@@ -63,12 +63,12 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements IAudi
      * @param track [[AudioInstance]] which Id is to be given
      */
     getTrackId(track: AudioInstance): number;
-    private _resumePlayback();
-    private _startPlayback();
-    private _processArrayBufferData(data);
-    private _processBlobData(data);
-    private _setProcessedData(processedData);
-    private _createNewTrack();
-    private _getTrackInstance(data);
-    private _detectResponseType();
+    private _resumePlayback;
+    private _startPlayback;
+    private _processArrayBufferData;
+    private _processBlobData;
+    private _setProcessedData;
+    private _createNewTrack;
+    private _getTrackInstance;
+    private _detectResponseType;
 }

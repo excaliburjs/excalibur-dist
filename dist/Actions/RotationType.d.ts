@@ -21,5 +21,5 @@ export declare enum RotationType {
      * Rotation via `CounterClockwise` will travel in a counterclockwise direction,
      * regardless of the starting and ending points.
      */
-    CounterClockwise = 3,
+    CounterClockwise = 3
 }

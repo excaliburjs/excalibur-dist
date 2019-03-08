@@ -62,7 +62,7 @@ export declare enum EventTypes {
     PointerDragEnd = "pointerdragend",
     PointerDragEnter = "pointerdragenter",
     PointerDragLeave = "pointerdragleave",
-    PointerDragMove = "pointerdragmove",
+    PointerDragMove = "pointerdragmove"
 }
 export declare type kill = 'kill';
 export declare type prekill = 'prekill';

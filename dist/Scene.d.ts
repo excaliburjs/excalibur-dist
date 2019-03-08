@@ -131,7 +131,7 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
     /**
      * Initializes actors in the scene
      */
-    private _initializeChildren();
+    private _initializeChildren;
     /**
      * Gets whether or not the [[Scene]] has been initialized
      */
@@ -194,7 +194,7 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
      * @param delta   The number of milliseconds since the last update
      */
     update(engine: Engine, delta: number): void;
-    private _processKillQueue(killQueue, collection);
+    private _processKillQueue;
     /**
      * Draws all the actors in the Scene. Called by the [[Engine]].
      * @param ctx    The current rendering context
@@ -329,5 +329,5 @@ export declare class Scene extends Class implements ICanInitialize, ICanActivate
      */
     isActorInDrawTree(actor: Actor): boolean;
     isCurrentScene(): boolean;
-    private _collectActorStats(engine);
+    private _collectActorStats;
 }

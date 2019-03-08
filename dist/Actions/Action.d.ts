@@ -20,7 +20,7 @@ export declare class EaseTo implements IAction {
     private _stopped;
     private _distance;
     constructor(actor: Actor, x: number, y: number, duration: number, easingFcn: (currentTime: number, startValue: number, endValue: number, duration: number) => number);
-    private _initialize();
+    private _initialize;
     update(delta: number): void;
     isComplete(actor: Actor): boolean;
     reset(): void;

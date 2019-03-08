@@ -8,7 +8,7 @@ export declare class ExResponse {
     static type: IExResponseTypesLookup;
 }
 /**
- * Represents an audio implementation like [[AudioTag]] or [[WebAudio]]
+ * Represents an audio implementation like [[AudioTagInstance]] or [[WebAudioInstance]]
  */
 export interface IAudioImplementation {
     /**

@@ -32,7 +32,7 @@ export declare class CollisionContact {
     normal: Vector;
     constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
     resolve(strategy: CollisionResolutionStrategy): void;
-    private _applyBoxImpulse(bodyA, bodyB, mtv);
-    private _resolveBoxCollision();
-    private _resolveRigidBodyCollision();
+    private _applyBoxImpulse;
+    private _resolveBoxCollision;
+    private _resolveRigidBodyCollision;
 }

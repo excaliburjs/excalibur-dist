@@ -9,15 +9,15 @@ export declare class MediaEvent extends GameEvent<Sound> {
      * Media event cannot bubble
      */
     /**
-     * Media event cannot bubble
-     */
+    * Media event cannot bubble
+    */
     bubbles: boolean;
     /**
      * Media event cannot bubble, so they have no path
      */
     /**
-     * Media event cannot bubble, so they have no path
-     */
+    * Media event cannot bubble, so they have no path
+    */
     protected _path: Actor[];
     constructor(target: Sound, _name?: string);
     /**
@@ -35,6 +35,6 @@ export declare class MediaEvent extends GameEvent<Sound> {
     layPath(_actor: Actor): void;
 }
 export declare class NativeSoundEvent extends MediaEvent {
-    track: AudioInstance;
+    track?: AudioInstance;
     constructor(target: Sound, track?: AudioInstance);
 }

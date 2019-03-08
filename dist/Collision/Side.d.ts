@@ -6,5 +6,5 @@ export declare enum Side {
     Top = 1,
     Bottom = 2,
     Left = 3,
-    Right = 4,
+    Right = 4
 }

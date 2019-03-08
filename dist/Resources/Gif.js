@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -24,7 +27,7 @@ var Gif = /** @class */ (function (_super) {
     __extends(Gif, _super);
     /**
      * @param path       Path to the image resource
-     * @param color      Optionally set the color to treat as transparent the gif, by default [[ex.Color.Magenta]]
+     * @param color      Optionally set the color to treat as transparent the gif, by default [[Color.Magenta]]
      * @param bustCache  Optionally load texture with cache busting
      */
     function Gif(path, color, bustCache) {

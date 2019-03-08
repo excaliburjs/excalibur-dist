@@ -1,4 +1,13 @@
 /**
+ * Pseudo-Random Utility
+ *
+ * A pseudo-random utility to add seeded random support for help in
+ * generating things like terrain or reproducible randomness. Uses the
+ * [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) algorithm.
+ *
+ * [[include:Random.md]]
+ */
+/**
  * Pseudo-random number generator following the Mersenne_Twister algorithm. Given a seed this generator will produce the same sequence
  * of numbers each time it is called.
  * See https://en.wikipedia.org/wiki/Mersenne_Twister for more details.
@@ -7,7 +16,7 @@
  * Api inspired by http://chancejs.com/# https://github.com/chancejs/chancejs
  */
 export declare class Random {
-    seed: number;
+    seed?: number;
     private _lowerMask;
     private _upperMask;
     private _w;
@@ -30,7 +39,7 @@ export declare class Random {
     /**
      * Apply the twist
      */
-    private _twist();
+    private _twist;
     /**
      * Return next 32 bit integer number in sequence
      */
@@ -70,12 +79,12 @@ export declare class Random {
      * Returns a new array randomly picking elements in the original (not reused)
      * @param numPicks must be less than or equal to the number of elements in the array.
      */
-    private _pickSetWithoutDuplicates<T>(array, numPicks);
+    private _pickSetWithoutDuplicates;
     /**
      * Returns a new array random picking elements from the original allowing duplicates
      * @param numPicks can be any positive number
      */
-    private _pickSetWithDuplicates<T>(array, numPicks);
+    private _pickSetWithDuplicates;
     /**
      * Returns a new array that has its elements shuffled. Using the Fisher/Yates method
      * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle

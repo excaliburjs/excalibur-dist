@@ -6,17 +6,17 @@ export declare class SortedList<T> {
     private _root;
     constructor(getComparable: () => any);
     find(element: any): boolean;
-    private _find(node, element);
+    private _find;
     get(key: number): any[];
-    private _get(node, key);
+    private _get;
     add(element: any): boolean;
-    private _insert(node, element);
+    private _insert;
     removeByComparable(element: any): void;
-    private _remove(node, element);
-    private _cleanup(node, element);
-    private _findMinNode(node);
+    private _remove;
+    private _cleanup;
+    private _findMinNode;
     list(): Array<T>;
-    private _list(treeNode, results);
+    private _list;
 }
 /**
  * A tree node part of [[SortedList]]

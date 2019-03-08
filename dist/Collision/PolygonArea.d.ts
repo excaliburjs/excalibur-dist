@@ -28,7 +28,7 @@ export declare class PolygonArea implements ICollisionArea {
     /**
      * Calculates the underlying transformation from the body relative space to world space
      */
-    private _calculateTransformation();
+    private _calculateTransformation;
     /**
      * Gets the points that make up the polygon in world space, from actor relative space (if specified)
      */

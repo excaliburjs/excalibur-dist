@@ -69,51 +69,51 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
      * [EdgeArea|edges].
      */
     /**
-     * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
-     * [EdgeArea|edges].
-     */
+    * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
+    * [EdgeArea|edges].
+    */
     collisionArea: ICollisionArea;
     /**
      * Gets the x position of the actor relative to it's parent (if any)
      */
     /**
-     * Sets the x position of the actor relative to it's parent (if any)
-     */
+    * Sets the x position of the actor relative to it's parent (if any)
+    */
     x: number;
     /**
      * Gets the y position of the actor relative to it's parent (if any)
      */
     /**
-     * Sets the y position of the actor relative to it's parent (if any)
-     */
+    * Sets the y position of the actor relative to it's parent (if any)
+    */
     y: number;
     /**
      * Gets the position vector of the actor in pixels
      */
     /**
-     * Sets the position vector of the actor in pixels
-     */
+    * Sets the position vector of the actor in pixels
+    */
     pos: Vector;
     /**
      * Gets the position vector of the actor from the last frame
      */
     /**
-     * Sets the position vector of the actor in the last frame
-     */
+    * Sets the position vector of the actor in the last frame
+    */
     oldPos: Vector;
     /**
      * Gets the velocity vector of the actor in pixels/sec
      */
     /**
-     * Sets the velocity vector of the actor in pixels/sec
-     */
+    * Sets the velocity vector of the actor in pixels/sec
+    */
     vel: Vector;
     /**
      * Gets the velocity vector of the actor from the last frame
      */
     /**
-     * Sets the velocity vector of the actor from the last frame
-     */
+    * Sets the velocity vector of the actor from the last frame
+    */
     oldVel: Vector;
     /**
      * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
@@ -124,59 +124,59 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
      * useful to simulate a gravitational effect.
      */
     /**
-     * Sets the acceleration vector of teh actor in pixels/second/second
-     */
+    * Sets the acceleration vector of teh actor in pixels/second/second
+    */
     acc: Vector;
     /**
      * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
      */
     /**
-     * Sets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
-     */
+    * Sets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
+    */
     rotation: number;
     /**
      * Gets the rotational velocity of the actor in radians/second
      */
     /**
-     * Sets the rotational velocity of the actor in radians/sec
-     */
+    * Sets the rotational velocity of the actor in radians/sec
+    */
     rx: number;
     /**
      * Gets the current torque applied to the actor. Torque can be thought of as rotational force
      */
     /**
-     * Sets the current torque applied to the actor. Torque can be thought of as rotational force
-     */
+    * Sets the current torque applied to the actor. Torque can be thought of as rotational force
+    */
     torque: number;
     /**
      * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
      */
     /**
-     * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
-     */
+    * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
+    */
     mass: number;
     /**
      * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
      */
     /**
-     * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
-     */
+    * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
+    */
     moi: number;
     /**
      * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
      */
     /**
-     * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
-     */
+    * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
+    */
     friction: number;
     /**
      * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
      * as bounciness.
      */
     /**
-     * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-     * as bounciness.
-     */
+    * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
+    * as bounciness.
+    */
     restitution: number;
     /**
      * The anchor to apply all actor related transformations like rotation,
@@ -321,11 +321,11 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
      * @internal
      */
     _initialize(engine: Engine): void;
-    private _initDefaults();
+    private _initDefaults;
     private _capturePointerEvents;
     private _captureMoveEvents;
     private _captureDragEvents;
-    private _checkForPointerOptIn(eventName);
+    private _checkForPointerOptIn;
     on(eventName: Events.exittrigger, handler: (evt: ExitTriggerEvent) => void): void;
     on(eventName: Events.entertrigger, handler: (evt: EnterTriggerEvent) => void): void;
     /**
@@ -731,7 +731,7 @@ export declare class ActorImpl extends Class implements IActionable, IEvented, I
      * @param distance  Distance in pixels to test
      */
     within(actor: Actor, distance: number): boolean;
-    private _getCalculatedAnchor();
+    private _getCalculatedAnchor;
     protected _reapplyEffects(drawing: IDrawable): void;
     /**
      * Perform euler integration at the specified time step
@@ -857,5 +857,6 @@ export declare enum CollisionType {
      * not be pushed or moved by each other, they will not interact except to throw
      * collision events.
      */
-    Fixed = 3,
+    Fixed = 3
 }
+export {};

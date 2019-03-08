@@ -18,7 +18,7 @@ export declare class DynamicTreeCollisionBroadphase implements ICollisionBroadph
      * Untracks a physics body
      */
     untrack(target: Body): void;
-    private _shouldGenerateCollisionPair(actorA, actorB);
+    private _shouldGenerateCollisionPair;
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
      */

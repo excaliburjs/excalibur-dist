@@ -27,7 +27,7 @@ export declare enum FontUnit {
     /**
      * Percent is a scalable unit similar to Em, the only difference is the Em units scale faster when Text-Size stuff
      */
-    Percent = 4,
+    Percent = 4
 }
 /**
  * Enum representing the different horizontal text alignments
@@ -54,7 +54,7 @@ export declare enum TextAlign {
      * The text is aligned at the normal end of the line (right-aligned for left-to-right locales,
      * left-aligned for right-to-left locales).
      */
-    End = 4,
+    End = 4
 }
 /**
  * Enum representing the different baseline text alignments
@@ -89,7 +89,7 @@ export declare enum BaseAlign {
      * from the ideographic baseline in that the ideographic baseline
      * doesn't consider descenders.
      */
-    Bottom = 5,
+    Bottom = 5
 }
 /**
  * Enum representing the different possible font styles
@@ -97,7 +97,7 @@ export declare enum BaseAlign {
 export declare enum FontStyle {
     Normal = 0,
     Italic = 1,
-    Oblique = 2,
+    Oblique = 2
 }
 /**
  * [[include:Constructors.md]]
@@ -184,10 +184,10 @@ export declare class LabelImpl extends Actor {
      * @param ctx  Rendering context to measure the string with
      */
     getTextWidth(ctx: CanvasRenderingContext2D): number;
-    private _lookupFontUnit(fontUnit);
-    private _lookupTextAlign(textAlign);
-    private _lookupBaseAlign(baseAlign);
-    private _lookupFontStyle(fontStyle);
+    private _lookupFontUnit;
+    private _lookupTextAlign;
+    private _lookupBaseAlign;
+    private _lookupFontStyle;
     /**
      * Sets the text shadow for sprite fonts
      * @param offsetX      The x offset in pixels to place the shadow
@@ -205,7 +205,7 @@ export declare class LabelImpl extends Actor {
     clearTextShadow(): void;
     update(engine: Engine, delta: number): void;
     draw(ctx: CanvasRenderingContext2D, delta: number): void;
-    private _fontDraw(ctx);
+    private _fontDraw;
     protected readonly _fontString: string;
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }
@@ -221,3 +221,4 @@ export declare class Label extends Label_base {
     constructor(config?: ILabelArgs);
     constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
 }
+export {};

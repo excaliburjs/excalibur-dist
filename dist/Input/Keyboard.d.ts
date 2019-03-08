@@ -50,7 +50,7 @@ export declare enum Keys {
     Left = 37,
     Right = 39,
     Space = 32,
-    Esc = 27,
+    Esc = 27
 }
 /**
  * Event thrown on a game object for a key event
@@ -105,5 +105,5 @@ export declare class Keyboard extends Class {
      * @param code Event keyCode
      * @see http://unixpapa.com/js/key.html
      */
-    private _normalizeKeyCode(code);
+    private _normalizeKeyCode;
 }

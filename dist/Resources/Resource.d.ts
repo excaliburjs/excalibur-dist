@@ -28,8 +28,8 @@ export declare class Resource<T> extends Class implements ILoadable {
      */
     isLoaded(): boolean;
     wireEngine(_engine: Engine): void;
-    private _cacheBust(uri);
-    private _start();
+    private _cacheBust;
+    private _start;
     /**
      * Begin loading the resource and returns a promise to be resolved on completion
      */

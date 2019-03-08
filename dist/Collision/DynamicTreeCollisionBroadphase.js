@@ -47,7 +47,6 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
     DynamicTreeCollisionBroadphase.prototype.broadphase = function (targets, delta, stats) {
         var _this = this;
         var seconds = delta / 1000;
-        // TODO optimization use only the actors that are moving to start
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
         var potentialColliders = targets.filter(function (other) {
             return !other.isKilled() && other.collisionType !== CollisionType.PreventCollision;

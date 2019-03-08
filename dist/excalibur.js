@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0-alpha.2890+fce7a86 - 2019-3-5
+ * excalibur - 0.21.0-alpha.2894+646951f - 2019-3-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -430,7 +430,6 @@ var Follow = /** @class */ (function () {
             this._actor.vel.y = 0;
         }
         if (this.isComplete()) {
-            // TODO this should never occur
             this._actor.pos.x = this._end.x;
             this._actor.pos.y = this._end.y;
             this._actor.vel.y = 0;
@@ -1583,7 +1582,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The parent of this actor
          */
         _this.parent = null;
-        // TODO: Replace this with the new actor collection once z-indexing is built
         /**
          * The children of this actor
          */
@@ -1673,8 +1671,6 @@ var ActorImpl = /** @class */ (function (_super) {
             _this.opacity = color.a;
         }
         // Build default pipeline
-        //this.traits.push(new ex.Traits.EulerMovement());
-        // TODO: TileMaps should be converted to a collision area
         _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["TileMapCollisionDetection"]());
         _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["OffscreenCulling"]());
         _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["CapturePointer"]());
@@ -5699,7 +5695,6 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
     DynamicTreeCollisionBroadphase.prototype.broadphase = function (targets, delta, stats) {
         var _this = this;
         var seconds = delta / 1000;
-        // TODO optimization use only the actors that are moving to start
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
         var potentialColliders = targets.filter(function (other) {
             return !other.isKilled() && other.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision;
@@ -8641,14 +8636,6 @@ var SpriteSheetImpl = /** @class */ (function () {
             this.sprites = new Array(this.columns * this.rows);
             loadFromImage = true;
         }
-        // TODO: Inspect actual image dimensions with preloading
-        /*if(spWidth * columns > this.internalImage.naturalWidth){
-             throw new Error("SpriteSheet specified is wider than image width");
-          }
-    
-          if(spHeight * rows > this.internalImage.naturalHeight){
-             throw new Error("SpriteSheet specified is higher than image height");
-          }*/
         if (loadFromImage) {
             var i = 0;
             var j = 0;
@@ -20489,7 +20476,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0-alpha.2890+fce7a86";
+var EX_VERSION = "0.21.0-alpha.2894+646951f";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

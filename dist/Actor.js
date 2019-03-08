@@ -98,7 +98,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The parent of this actor
          */
         _this.parent = null;
-        // TODO: Replace this with the new actor collection once z-indexing is built
         /**
          * The children of this actor
          */
@@ -188,8 +187,6 @@ var ActorImpl = /** @class */ (function (_super) {
             _this.opacity = color.a;
         }
         // Build default pipeline
-        //this.traits.push(new ex.Traits.EulerMovement());
-        // TODO: TileMaps should be converted to a collision area
         _this.traits.push(new Traits.TileMapCollisionDetection());
         _this.traits.push(new Traits.OffscreenCulling());
         _this.traits.push(new Traits.CapturePointer());

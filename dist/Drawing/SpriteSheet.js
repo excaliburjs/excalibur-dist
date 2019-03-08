@@ -60,14 +60,6 @@ var SpriteSheetImpl = /** @class */ (function () {
             this.sprites = new Array(this.columns * this.rows);
             loadFromImage = true;
         }
-        // TODO: Inspect actual image dimensions with preloading
-        /*if(spWidth * columns > this.internalImage.naturalWidth){
-             throw new Error("SpriteSheet specified is wider than image width");
-          }
-    
-          if(spHeight * rows > this.internalImage.naturalHeight){
-             throw new Error("SpriteSheet specified is higher than image height");
-          }*/
         if (loadFromImage) {
             var i = 0;
             var j = 0;

@@ -189,7 +189,6 @@ var Follow = /** @class */ (function () {
             this._actor.vel.y = 0;
         }
         if (this.isComplete()) {
-            // TODO this should never occur
             this._actor.pos.x = this._end.x;
             this._actor.pos.y = this._end.y;
             this._actor.vel.y = 0;

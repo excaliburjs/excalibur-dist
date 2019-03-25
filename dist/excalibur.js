@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0-alpha.2918+45f3c29 - 2019-3-23
+ * excalibur - 0.21.0-alpha.2920+0686917 - 2019-3-25
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -8623,6 +8623,7 @@ var SpriteSheetImpl = /** @class */ (function () {
      * @param spacing   The spacing between every sprite in a spritesheet
      */
     function SpriteSheetImpl(imageOrConfigOrSprites, columns, rows, spWidth, spHeight, spacing) {
+        var _this = this;
         this.sprites = [];
         this.image = null;
         this.columns = 0;
@@ -8653,6 +8654,25 @@ var SpriteSheetImpl = /** @class */ (function () {
             }
             this.sprites = new Array(this.columns * this.rows);
             loadFromImage = true;
+        }
+        // Inspect actual image dimensions with preloading
+        if (this.image instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_4__["Texture"]) {
+            var isWidthError_1 = false;
+            var isHeightError_1 = false;
+            this.image.loaded.then(function (image) {
+                isWidthError_1 = _this.spWidth * _this.columns > image.naturalWidth;
+                isHeightError_1 = _this.spHeight * _this.rows > image.naturalHeight;
+            });
+            if (isWidthError_1) {
+                throw new RangeError("SpriteSheet specified is wider, " +
+                    (this.columns + " cols x " + this.spWidth + " pixels > " + this.image.image.naturalWidth + " ") +
+                    "pixels than image width");
+            }
+            if (isHeightError_1) {
+                throw new RangeError("SpriteSheet specified is taller, " +
+                    (this.rows + " rows x " + this.spHeight + " pixels > " + this.image.image.naturalHeight + " ") +
+                    "pixels than image height");
+            }
         }
         if (loadFromImage) {
             var i = 0;
@@ -20554,7 +20574,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0-alpha.2918+45f3c29";
+var EX_VERSION = "0.21.0-alpha.2920+0686917";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

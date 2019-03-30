@@ -31,7 +31,7 @@ export declare class Logger {
     /**
      * Adds a new [[IAppender]] to the list of appenders to write to
      */
-    addAppender(appender: IAppender): void;
+    addAppender(appender: Appender): void;
     /**
      * Clears all appenders from the logger
      */
@@ -71,7 +71,7 @@ export declare class Logger {
 /**
  * Contract for any log appender (such as console/screen)
  */
-export interface IAppender {
+export interface Appender {
     /**
      * Logs a message at the given [[LogLevel]]
      * @param level  Level to log at
@@ -82,7 +82,7 @@ export interface IAppender {
 /**
  * Console appender for browsers (i.e. `console.log`)
  */
-export declare class ConsoleAppender implements IAppender {
+export declare class ConsoleAppender implements Appender {
     /**
      * Logs a message at the given [[LogLevel]]
      * @param level  Level to log at
@@ -93,7 +93,7 @@ export declare class ConsoleAppender implements IAppender {
 /**
  * On-screen (canvas) appender
  */
-export declare class ScreenAppender implements IAppender {
+export declare class ScreenAppender implements Appender {
     private _messages;
     private _canvas;
     private _ctx;

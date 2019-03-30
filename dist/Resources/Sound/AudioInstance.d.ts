@@ -1,4 +1,4 @@
-import { IAudio } from '../../Interfaces/IAudio';
+import { Audio } from '../../Interfaces/Audio';
 import { Promise } from '../../Promises';
 /**
  * Internal class for producing of AudioInstances
@@ -9,7 +9,7 @@ export declare class AudioInstanceFactory {
 /**
  * Internal class representing base AudioInstance implementation
  */
-export declare class AudioInstance implements IAudio {
+export declare class AudioInstance implements Audio {
     protected _src: string | AudioBuffer;
     loop: boolean;
     volume: number;

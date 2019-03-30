@@ -1,4 +1,4 @@
-import { ILoadable } from '../Interfaces/ILoadable';
+import { Loadable } from '../Interfaces/Loadable';
 import { Class } from '../Class';
 import { Engine } from '../Engine';
 import { Promise } from '../Promises';
@@ -9,7 +9,7 @@ import { Logger } from '../Util/Log';
  *
  * [[include:Resources.md]]
  */
-export declare class Resource<T> extends Class implements ILoadable {
+export declare class Resource<T> extends Class implements Loadable {
     path: string;
     responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
     bustCache: boolean;

@@ -102,7 +102,7 @@ export declare enum FontStyle {
 /**
  * [[include:Constructors.md]]
  */
-export interface ILabelArgs extends Partial<LabelImpl> {
+export interface LabelArgs extends Partial<LabelImpl> {
     text?: string;
     bold?: boolean;
     pos?: Vector;
@@ -218,7 +218,7 @@ declare const Label_base: typeof LabelImpl;
  */
 export declare class Label extends Label_base {
     constructor();
-    constructor(config?: ILabelArgs);
+    constructor(config?: LabelArgs);
     constructor(text?: string, x?: number, y?: number, fontFamily?: string, spriteFont?: SpriteFont);
 }
 export {};

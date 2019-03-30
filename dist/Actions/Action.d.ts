@@ -3,13 +3,13 @@ import { Actor } from '../Actor';
 /**
  * Used for implementing actions for the [[ActionContext|Action API]].
  */
-export interface IAction {
+export interface Action {
     update(delta: number): void;
     isComplete(actor: Actor): boolean;
     reset(): void;
     stop(): void;
 }
-export declare class EaseTo implements IAction {
+export declare class EaseTo implements Action {
     actor: Actor;
     easingFcn: (currentTime: number, startValue: number, endValue: number, duration: number) => number;
     private _currentLerpTime;
@@ -26,7 +26,7 @@ export declare class EaseTo implements IAction {
     reset(): void;
     stop(): void;
 }
-export declare class MoveTo implements IAction {
+export declare class MoveTo implements Action {
     private _actor;
     x: number;
     y: number;
@@ -43,7 +43,7 @@ export declare class MoveTo implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class MoveBy implements IAction {
+export declare class MoveBy implements Action {
     private _actor;
     x: number;
     y: number;
@@ -61,7 +61,7 @@ export declare class MoveBy implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class Follow implements IAction {
+export declare class Follow implements Action {
     private _actor;
     private _actorToFollow;
     x: number;
@@ -80,7 +80,7 @@ export declare class Follow implements IAction {
     isComplete(): boolean;
     reset(): void;
 }
-export declare class Meet implements IAction {
+export declare class Meet implements Action {
     private _actor;
     private _actorToMeet;
     x: number;
@@ -99,7 +99,7 @@ export declare class Meet implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class RotateTo implements IAction {
+export declare class RotateTo implements Action {
     private _actor;
     x: number;
     y: number;
@@ -120,7 +120,7 @@ export declare class RotateTo implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class RotateBy implements IAction {
+export declare class RotateBy implements Action {
     private _actor;
     x: number;
     y: number;
@@ -142,7 +142,7 @@ export declare class RotateBy implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class ScaleTo implements IAction {
+export declare class ScaleTo implements Action {
     private _actor;
     x: number;
     y: number;
@@ -162,7 +162,7 @@ export declare class ScaleTo implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class ScaleBy implements IAction {
+export declare class ScaleBy implements Action {
     private _actor;
     x: number;
     y: number;
@@ -182,7 +182,7 @@ export declare class ScaleBy implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class Delay implements IAction {
+export declare class Delay implements Action {
     x: number;
     y: number;
     private _actor;
@@ -196,7 +196,7 @@ export declare class Delay implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class Blink implements IAction {
+export declare class Blink implements Action {
     private _timeVisible;
     private _timeNotVisible;
     private _elapsedTime;
@@ -211,7 +211,7 @@ export declare class Blink implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class Fade implements IAction {
+export declare class Fade implements Action {
     x: number;
     y: number;
     private _actor;
@@ -226,7 +226,7 @@ export declare class Fade implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class Die implements IAction {
+export declare class Die implements Action {
     x: number;
     y: number;
     private _actor;
@@ -237,7 +237,7 @@ export declare class Die implements IAction {
     stop(): void;
     reset(): void;
 }
-export declare class CallMethod implements IAction {
+export declare class CallMethod implements Action {
     x: number;
     y: number;
     private _method;
@@ -249,7 +249,7 @@ export declare class CallMethod implements IAction {
     reset(): void;
     stop(): void;
 }
-export declare class Repeat implements IAction {
+export declare class Repeat implements Action {
     x: number;
     y: number;
     private _actor;
@@ -257,19 +257,19 @@ export declare class Repeat implements IAction {
     private _repeat;
     private _originalRepeat;
     private _stopped;
-    constructor(actor: Actor, repeat: number, actions: IAction[]);
+    constructor(actor: Actor, repeat: number, actions: Action[]);
     update(delta: number): void;
     isComplete(): boolean;
     stop(): void;
     reset(): void;
 }
-export declare class RepeatForever implements IAction {
+export declare class RepeatForever implements Action {
     x: number;
     y: number;
     private _actor;
     private _actionQueue;
     private _stopped;
-    constructor(actor: Actor, actions: IAction[]);
+    constructor(actor: Actor, actions: Action[]);
     update(delta: number): void;
     isComplete(): boolean;
     stop(): void;
@@ -291,10 +291,10 @@ export declare class ActionQueue {
     private _currentAction;
     private _completedActions;
     constructor(actor: Actor);
-    add(action: IAction): void;
-    remove(action: IAction): void;
+    add(action: Action): void;
+    remove(action: Action): void;
     clearActions(): void;
-    getActions(): IAction[];
+    getActions(): Action[];
     hasNext(): boolean;
     reset(): void;
     update(delta: number): void;

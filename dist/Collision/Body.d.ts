@@ -1,4 +1,4 @@
-import { ICollisionArea } from './ICollisionArea';
+import { CollisionArea } from './CollisionArea';
 import { BoundingBox } from './BoundingBox';
 import { Vector } from '../Algebra';
 import { Actor } from '../Actor';
@@ -11,7 +11,7 @@ export declare class Body {
     /**
      * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
      */
-    collisionArea: ICollisionArea;
+    collisionArea: CollisionArea;
     /**
      * The (x, y) position of the actor this will be in the middle of the actor if the
      * [[Actor.anchor]] is set to (0.5, 0.5) which is default.

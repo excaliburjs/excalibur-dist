@@ -4,7 +4,7 @@ import { Actor } from '../Actor';
 import { Vector, GlobalCoordinates } from '../Algebra';
 import { Class } from '../Class';
 import * as Events from '../Events';
-export interface IActorsUnderPointer {
+export interface ActorsUnderPointer {
     [ActorId: number]: Actor;
     length: number;
 }

@@ -1,7 +1,7 @@
 import { Pair } from './Pair';
 import { Actor } from './../Actor';
-import { ICollisionBroadphase } from './ICollisionResolver';
-export declare class NaiveCollisionBroadphase implements ICollisionBroadphase {
+import { CollisionBroadphase } from './CollisionResolver';
+export declare class NaiveCollisionBroadphase implements CollisionBroadphase {
     private _lastFramePairs;
     private _lastFramePairsHash;
     track(): void;

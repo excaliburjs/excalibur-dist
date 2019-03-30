@@ -1,2 +1,2 @@
-export * from './IAudioImplementation';
+export * from './AudioImplementation';
 //# sourceMappingURL=Index.js.map

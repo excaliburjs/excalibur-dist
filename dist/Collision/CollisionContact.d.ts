@@ -1,4 +1,4 @@
-import { ICollisionArea } from './ICollisionArea';
+import { CollisionArea } from './CollisionArea';
 import { Vector } from '../Algebra';
 import { CollisionResolutionStrategy } from '../Physics';
 /**
@@ -13,11 +13,11 @@ export declare class CollisionContact {
     /**
      * The first rigid body in the collision
      */
-    bodyA: ICollisionArea;
+    bodyA: CollisionArea;
     /**
      * The second rigid body in the collision
      */
-    bodyB: ICollisionArea;
+    bodyB: CollisionArea;
     /**
      * The minimum translation vector to resolve penetration, pointing away from bodyA
      */
@@ -30,7 +30,7 @@ export declare class CollisionContact {
      * The collision normal, pointing away from bodyA
      */
     normal: Vector;
-    constructor(bodyA: ICollisionArea, bodyB: ICollisionArea, mtv: Vector, point: Vector, normal: Vector);
+    constructor(bodyA: CollisionArea, bodyB: CollisionArea, mtv: Vector, point: Vector, normal: Vector);
     resolve(strategy: CollisionResolutionStrategy): void;
     private _applyBoxImpulse;
     private _resolveBoxCollision;

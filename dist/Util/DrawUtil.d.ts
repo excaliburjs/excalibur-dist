@@ -29,7 +29,7 @@ export declare function vector(ctx: CanvasRenderingContext2D, color: Color, orig
 /**
  * Represents border radius values
  */
-export interface IBorderRadius {
+export interface BorderRadius {
     /**
      * Top-left
      */
@@ -59,5 +59,5 @@ export interface IBorderRadius {
  * @param fill The [[Color]] to fill rectangle with
  * @param stroke The [[Color]] to stroke rectangle with
  */
-export declare function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | IBorderRadius, stroke?: Color, fill?: Color): void;
+export declare function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | BorderRadius, stroke?: Color, fill?: Color): void;
 export declare function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;

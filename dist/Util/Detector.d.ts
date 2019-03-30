@@ -1,7 +1,7 @@
 /**
  * Interface for detected browser features matrix
  */
-export interface IDetectedFeatures {
+export interface DetectedFeatures {
     readonly canvas: boolean;
     readonly arraybuffer: boolean;
     readonly dataurl: boolean;
@@ -23,7 +23,7 @@ export declare class Detector {
      * treats the features as a singleton and will only calculate feature
      * support if it has not previously been done.
      */
-    getBrowserFeatures(): IDetectedFeatures;
+    getBrowserFeatures(): DetectedFeatures;
     /**
      * Report on non-critical browser support for debugging purposes.
      * Use native browser console colors for visibility.

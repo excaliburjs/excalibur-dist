@@ -34,7 +34,7 @@ export declare class Gamepads extends Class {
      * all other controllers with more axis or buttons are valid as well. If no minimum
      * configuration is set all pads are valid.
      */
-    setMinimumGamepadConfiguration(config: IGamepadConfiguration): void;
+    setMinimumGamepadConfiguration(config: GamepadConfiguration): void;
     /**
      * When implicitly enabled, set the enabled flag and run an update so information is updated
      */
@@ -77,7 +77,7 @@ export declare class Gamepads extends Class {
  */
 export declare class Gamepad extends Class {
     connected: boolean;
-    navigatorGamepad: INavigatorGamepad;
+    navigatorGamepad: NavigatorGamepad;
     private _buttons;
     private _axes;
     constructor();
@@ -192,9 +192,15 @@ export declare enum Axes {
 /**
  * @internal
  */
-export interface INavigatorGamepad {
+export interface NavigatorGamepads {
+    getGamepads(): NavigatorGamepad[];
+}
+/**
+ * @internal
+ */
+export interface NavigatorGamepad {
     axes: number[];
-    buttons: INavigatorGamepadButton[];
+    buttons: NavigatorGamepadButton[];
     connected: boolean;
     id: string;
     index: number;
@@ -204,20 +210,20 @@ export interface INavigatorGamepad {
 /**
  * @internal
  */
-export interface INavigatorGamepadButton {
+export interface NavigatorGamepadButton {
     pressed: boolean;
     value: number;
 }
 /**
  * @internal
  */
-export interface INavigatorGamepadEvent {
-    gamepad: INavigatorGamepad;
+export interface NavigatorGamepadEvent {
+    gamepad: NavigatorGamepad;
 }
 /**
  * @internal
  */
-export interface IGamepadConfiguration {
+export interface GamepadConfiguration {
     axis: number;
     buttons: number;
 }

@@ -1,7 +1,7 @@
 import { Promise } from './Promises';
 import { Engine } from './Engine';
-import { ILoadable } from './Interfaces/ILoadable';
-import { ILoader } from './Interfaces/ILoader';
+import { Loadable } from './Interfaces/Loadable';
+import { CanLoad } from './Interfaces/Loader';
 import { Class } from './Class';
 /**
  * Pre-loading assets
@@ -68,7 +68,7 @@ import { Class } from './Class';
  * engine.start(loader).then(() => {});
  * ```
  */
-export declare class Loader extends Class implements ILoader {
+export declare class Loader extends Class implements CanLoad {
     private _resourceList;
     private _index;
     private _playButtonShown;
@@ -101,18 +101,18 @@ export declare class Loader extends Class implements ILoader {
     /**
      * @param loadables  Optionally provide the list of resources you want to load at constructor time
      */
-    constructor(loadables?: ILoadable[]);
+    constructor(loadables?: Loadable[]);
     wireEngine(engine: Engine): void;
     /**
      * Add a resource to the loader to load
      * @param loadable  Resource to add
      */
-    addResource(loadable: ILoadable): void;
+    addResource(loadable: Loadable): void;
     /**
      * Add a list of resources to the loader to load
      * @param loadables  The list of resources to load
      */
-    addResources(loadables: ILoadable[]): void;
+    addResources(loadables: Loadable[]): void;
     /**
      * Returns true if the loader has completely loaded all resources
      */

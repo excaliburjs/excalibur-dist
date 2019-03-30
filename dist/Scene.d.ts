@@ -7,7 +7,7 @@ import { TileMap } from './TileMap';
 import { Camera } from './Camera';
 import { Actor } from './Actor';
 import { Class } from './Class';
-import { ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw } from './Interfaces/LifecycleEvents';
+import { CanInitialize, CanActivate, CanDeactivate, CanUpdate, CanDraw } from './Interfaces/LifecycleEvents';
 import * as Events from './Events';
 import { Trigger } from './Trigger';
 /**
@@ -19,7 +19,7 @@ import { Trigger } from './Trigger';
  *
  * [[include:Scenes.md]]
  */
-export declare class Scene extends Class implements ICanInitialize, ICanActivate, ICanDeactivate, ICanUpdate, ICanDraw {
+export declare class Scene extends Class implements CanInitialize, CanActivate, CanDeactivate, CanUpdate, CanDraw {
     /**
      * Gets or sets the current camera for the scene
      */

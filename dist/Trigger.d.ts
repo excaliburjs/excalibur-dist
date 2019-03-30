@@ -4,7 +4,7 @@ import { Vector } from './Algebra';
 /**
  * ITriggerOptions
  */
-export interface ITriggerOptions {
+export interface TriggerOptions {
     pos: Vector;
     width: number;
     height: number;
@@ -40,7 +40,7 @@ export declare class Trigger extends Actor {
      *
      * @param opts Trigger options
      */
-    constructor(opts: Partial<ITriggerOptions>);
+    constructor(opts: Partial<TriggerOptions>);
     target: Actor;
     _initialize(engine: Engine): void;
     private _dispatchAction;

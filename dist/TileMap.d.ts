@@ -38,7 +38,7 @@ export declare class TileMapImpl extends Class {
      * @param rows          The number of rows in the TileMap (should not be changed once set)
      * @param cols          The number of cols in the TileMap (should not be changed once set)
      */
-    constructor(xOrConfig: number | ITileMapArgs, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
+    constructor(xOrConfig: number | TileMapArgs, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
     registerSpriteSheet(key: string, spriteSheet: SpriteSheet): void;
     /**
      * Returns the intersection vector that can be used to resolve collisions with actors. If there
@@ -74,7 +74,7 @@ export declare class TileMapImpl extends Class {
 /**
  * [[include:Constructors.md]]
  */
-export interface ITileMapArgs extends Partial<TileMapImpl> {
+export interface TileMapArgs extends Partial<TileMapImpl> {
     x: number;
     y: number;
     cellWidth: number;
@@ -90,7 +90,7 @@ declare const TileMap_base: typeof TileMapImpl;
  * [[include:TileMaps.md]]
  */
 export declare class TileMap extends TileMap_base {
-    constructor(config: ITileMapArgs);
+    constructor(config: TileMapArgs);
     constructor(x: number, y: number, cellWidth: number, cellHeight: number, rows: number, cols: number);
 }
 /**
@@ -126,7 +126,7 @@ export declare class CellImpl {
      * @param solid   Gets or sets whether this cell is solid
      * @param sprites The list of tile sprites to use to draw in this cell (in order)
      */
-    constructor(xOrConfig: number | ICellArgs, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
+    constructor(xOrConfig: number | CellArgs, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
     /**
      * Returns the bounding box for this cell
      */
@@ -151,7 +151,7 @@ export declare class CellImpl {
 /**
  * [[include:Constructors.md]]
  */
-export interface ICellArgs extends Partial<CellImpl> {
+export interface CellArgs extends Partial<CellImpl> {
     x: number;
     y: number;
     width: number;
@@ -172,7 +172,7 @@ declare const Cell_base: typeof CellImpl;
  * use transparency to create layers this way.
  */
 export declare class Cell extends Cell_base {
-    constructor(config: ICellArgs);
+    constructor(config: CellArgs);
     constructor(x: number, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
 }
 export {};

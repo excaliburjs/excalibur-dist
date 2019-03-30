@@ -1,14 +1,14 @@
 import { Sprite } from './Sprite';
-import { IAnimationArgs } from '../Drawing/Animation';
+import { AnimationArgs } from '../Drawing/Animation';
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
-import { IDrawable } from '../Interfaces/IDrawable';
+import { Drawable } from '../Interfaces/Drawable';
 import { Vector } from '../Algebra';
 import { Engine } from '../Engine';
 /**
  * @hidden
  */
-export declare class AnimationImpl implements IDrawable {
+export declare class AnimationImpl implements Drawable {
     /**
      * The sprite frames to play, in order. See [[SpriteSheet.getAnimationForAll]] to quickly
      * generate an [[Animation]].
@@ -56,7 +56,7 @@ export declare class AnimationImpl implements IDrawable {
      * @param speed   The number in milliseconds to display each frame in the animation
      * @param loop    Indicates whether the animation should loop after it is completed
      */
-    constructor(engineOrConfig: Engine | IAnimationArgs, sprites: Sprite[], speed: number, loop?: boolean);
+    constructor(engineOrConfig: Engine | AnimationArgs, sprites: Sprite[], speed: number, loop?: boolean);
     /**
      * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
      */
@@ -97,12 +97,12 @@ export declare class AnimationImpl implements IDrawable {
     /**
      * Add a [[ISpriteEffect]] manually
      */
-    addEffect(effect: Effects.ISpriteEffect): void;
+    addEffect(effect: Effects.SpriteEffect): void;
     /**
      * Removes an [[ISpriteEffect]] from this animation.
      * @param effect Effect to remove from this animation
      */
-    removeEffect(effect: Effects.ISpriteEffect): void;
+    removeEffect(effect: Effects.SpriteEffect): void;
     /**
      * Removes an effect given the index from this animation.
      * @param index  Index of the effect to remove from this animation
@@ -146,7 +146,7 @@ export declare class AnimationImpl implements IDrawable {
 /**
  * [[include:Constructors.md]]
  */
-export interface IAnimationArgs extends Partial<AnimationImpl> {
+export interface AnimationArgs extends Partial<AnimationImpl> {
     engine: Engine;
     sprites: Sprite[];
     speed: number;
@@ -167,7 +167,7 @@ declare const Animation_base: typeof AnimationImpl;
  * [[include:Animations.md]]
  */
 export declare class Animation extends Animation_base {
-    constructor(config: IAnimationArgs);
+    constructor(config: AnimationArgs);
     constructor(engine: Engine, images: Sprite[], speed: number, loop?: boolean);
 }
 export {};

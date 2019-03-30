@@ -2,7 +2,7 @@ import { Color } from '../Drawing/Color';
 /**
  * Options for the perlin noise generator
  */
-export interface IPerlinGeneratorOptions {
+export interface PerlinOptions {
     /**
      * Random number seed for the Perlin noise generator
      */
@@ -57,7 +57,7 @@ export declare class PerlinGenerator {
      * make it look more natural.
      */
     octaves: number;
-    constructor(options?: IPerlinGeneratorOptions);
+    constructor(options?: PerlinOptions);
     /**
      * Generates 1-Dimensional perlin noise given an x and generates noises values between [0, 1].
      */

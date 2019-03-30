@@ -46,7 +46,7 @@ export declare class ParticleImpl {
     endSize: number;
     sizeRate: number;
     elapsedMultiplier: number;
-    constructor(emitterOrConfig: ParticleEmitter | IParticleArgs, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
+    constructor(emitterOrConfig: ParticleEmitter | ParticleArgs, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
     kill(): void;
     update(delta: number): void;
     draw(ctx: CanvasRenderingContext2D): void;
@@ -54,7 +54,7 @@ export declare class ParticleImpl {
 /**
  * [[include:Constructors.md]]
  */
-export interface IParticleArgs extends Partial<ParticleImpl> {
+export interface ParticleArgs extends Partial<ParticleImpl> {
     emitter: ParticleEmitter;
     position?: Vector;
     velocity?: Vector;
@@ -69,7 +69,7 @@ declare const Particle_base: typeof ParticleImpl;
  * Particle is used in a [[ParticleEmitter]]
  */
 export declare class Particle extends Particle_base {
-    constructor(config: IParticleArgs);
+    constructor(config: ParticleArgs);
     constructor(emitter: ParticleEmitter, life?: number, opacity?: number, beginColor?: Color, endColor?: Color, position?: Vector, velocity?: Vector, acceleration?: Vector, startSize?: number, endSize?: number);
 }
 /**
@@ -183,7 +183,7 @@ export declare class ParticleEmitterImpl extends Actor {
      * @param width   The width of the emitter
      * @param height  The height of the emitter
      */
-    constructor(xOrConfig?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
+    constructor(xOrConfig?: number | ParticleEmitterArgs, y?: number, width?: number, height?: number);
     removeParticle(particle: Particle): void;
     /**
      * Causes the emitter to emit particles
@@ -199,7 +199,7 @@ export declare class ParticleEmitterImpl extends Actor {
 /**
  * [[include:Constructors.md]]
  */
-export interface IParticleEmitterArgs extends Partial<ParticleEmitterImpl> {
+export interface ParticleEmitterArgs extends Partial<ParticleEmitterImpl> {
     width?: number;
     height?: number;
     isEmitting?: boolean;
@@ -236,7 +236,7 @@ declare const ParticleEmitter_base: typeof ParticleEmitterImpl;
  * [[include:Particles.md]]
  */
 export declare class ParticleEmitter extends ParticleEmitter_base {
-    constructor(config?: IParticleEmitterArgs);
-    constructor(x?: number | IParticleEmitterArgs, y?: number, width?: number, height?: number);
+    constructor(config?: ParticleEmitterArgs);
+    constructor(x?: number | ParticleEmitterArgs, y?: number, width?: number, height?: number);
 }
 export {};

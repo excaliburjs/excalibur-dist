@@ -1,4 +1,4 @@
-import { Sprite, ISpriteArgs } from './Sprite';
+import { Sprite, SpriteArgs } from './Sprite';
 import { Animation } from './Animation';
 import { Color } from './Color';
 import { Texture } from '../Resources/Texture';
@@ -23,7 +23,7 @@ export declare class SpriteSheetImpl {
      * @param spHeight  The height of each individual sprite in pixels
      * @param spacing   The spacing between every sprite in a spritesheet
      */
-    constructor(imageOrConfigOrSprites: Texture | ISpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number, spacing?: number);
+    constructor(imageOrConfigOrSprites: Texture | SpriteSheetArgs | Sprite[], columns?: number, rows?: number, spWidth?: number, spHeight?: number, spacing?: number);
     /**
      * Create an animation from the this SpriteSheet by listing out the
      * sprite indices. Sprites are organized in row major order in the SpriteSheet.
@@ -63,12 +63,12 @@ export declare class SpriteSheetImpl {
      * @param spriteCoordinates
      * @param speed
      */
-    getAnimationByCoords(engine: Engine, spriteCoordinates: ISpriteArgs[], speed: number): Animation;
+    getAnimationByCoords(engine: Engine, spriteCoordinates: SpriteArgs[], speed: number): Animation;
 }
 /**
  * [[include:Constructors.md]]
  */
-export interface ISpriteSheetArgs extends Partial<SpriteSheetImpl> {
+export interface SpriteSheetArgs extends Partial<SpriteSheetImpl> {
     image: Texture;
     sprites?: Sprite[];
     spWidth: number;
@@ -86,7 +86,7 @@ declare const SpriteSheet_base: typeof SpriteSheetImpl;
  * [[include:SpriteSheets.md]]
  */
 export declare class SpriteSheet extends SpriteSheet_base {
-    constructor(config: ISpriteSheetArgs);
+    constructor(config: SpriteSheetArgs);
     constructor(sprites: Sprite[]);
     constructor(image: Texture, columns: number, rows: number, spWidth: number, spHeight: number);
 }
@@ -111,7 +111,7 @@ export declare class SpriteFontImpl extends SpriteSheet {
      * @param spWidth         The width of each character in pixels
      * @param spHeight        The height of each character in pixels
      */
-    constructor(imageOrConfig: Texture | ISpriteFontInitArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number, spacing?: number);
+    constructor(imageOrConfig: Texture | SpriteFontArgs, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number, spacing?: number);
     /**
      * Returns a dictionary that maps each character in the alphabet to the appropriate [[Sprite]].
      */
@@ -132,13 +132,13 @@ export declare class SpriteFontImpl extends SpriteSheet {
     /**
      * Draws the current sprite font
      */
-    draw(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, options: ISpriteFontOptions): void;
+    draw(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, options: SpriteFontOptions): void;
     private _parseOptions;
 }
 /**
  * Specify various font attributes for sprite fonts
  */
-export interface ISpriteFontOptions {
+export interface SpriteFontOptions {
     color?: Color;
     opacity?: number;
     fontSize?: number;
@@ -150,7 +150,7 @@ export interface ISpriteFontOptions {
 /**
  * [[include:Constructors.md]]
  */
-export interface ISpriteFontInitArgs extends ISpriteSheetArgs {
+export interface SpriteFontArgs extends SpriteSheetArgs {
     image: Texture;
     columns: number;
     rows: number;
@@ -168,7 +168,7 @@ declare const SpriteFont_base: typeof SpriteFontImpl;
  * [[include:SpriteFonts.md]]
  */
 export declare class SpriteFont extends SpriteFont_base {
-    constructor(config: ISpriteFontInitArgs);
+    constructor(config: SpriteFontArgs);
     constructor(image: Texture, alphabet: string, caseInsensitive: boolean, columns: number, rows: number, spWidth: number, spHeight: number);
 }
 export {};

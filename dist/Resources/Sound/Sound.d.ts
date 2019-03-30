@@ -1,4 +1,4 @@
-import { IAudio } from '../../Interfaces/IAudio';
+import { Audio } from '../../Interfaces/Audio';
 import { Engine } from '../../Engine';
 import { Resource } from '../Resource';
 import { AudioInstance } from './AudioInstance';
@@ -10,7 +10,7 @@ import { Promise } from '../../Promises';
  *
  * [[include:Sounds.md]]
  */
-export declare class Sound extends Resource<Blob | ArrayBuffer> implements IAudio {
+export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio {
     /**
      * Indicates whether the clip should loop when complete
      * @param value  Set the looping flag

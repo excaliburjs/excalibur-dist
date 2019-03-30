@@ -1,20 +1,20 @@
 import { Body } from './Body';
 import { BoundingBox } from './BoundingBox';
 import { CollisionContact } from './CollisionContact';
-import { ICollisionArea } from './ICollisionArea';
+import { CollisionArea } from './CollisionArea';
 import { Vector, Ray, Projection } from '../Algebra';
 import { Color } from '../Drawing/Color';
-export interface IEdgeAreaOptions {
+export interface EdgeAreaOptions {
     begin?: Vector;
     end?: Vector;
     body?: Body;
 }
-export declare class EdgeArea implements ICollisionArea {
+export declare class EdgeArea implements CollisionArea {
     body: Body;
     pos: Vector;
     begin: Vector;
     end: Vector;
-    constructor(options: IEdgeAreaOptions);
+    constructor(options: EdgeAreaOptions);
     /**
      * Get the center of the collision area in world coordinates
      */
@@ -41,7 +41,7 @@ export declare class EdgeArea implements ICollisionArea {
     /**
      * @inheritdoc
      */
-    collide(area: ICollisionArea): CollisionContact;
+    collide(area: CollisionArea): CollisionContact;
     /**
      * Find the point on the shape furthest in the direction specified
      */

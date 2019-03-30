@@ -1,4 +1,4 @@
-import { IPostProcessor } from './IPostProcessor';
+import { PostProcessor } from './PostProcessor';
 import { Engine } from '../Engine';
 export declare enum ColorBlindness {
     Protanope = 0,
@@ -13,7 +13,7 @@ export declare enum ColorBlindness {
  *
  * [[include:ColorBlind.md]]
  */
-export declare class ColorBlindCorrector implements IPostProcessor {
+export declare class ColorBlindCorrector implements PostProcessor {
     engine: Engine;
     simulate: boolean;
     colorMode: ColorBlindness;

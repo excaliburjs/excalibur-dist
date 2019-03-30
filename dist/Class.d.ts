@@ -1,11 +1,11 @@
 import { GameEvent } from './Events';
 import { EventDispatcher } from './EventDispatcher';
-import { IEvented } from './Interfaces/IEvented';
+import { Eventable } from './Interfaces/Evented';
 /**
  * Excalibur base class that provides basic functionality such as [[EventDispatcher]]
  * and extending abilities for vanilla Javascript projects
  */
-export declare class Class implements IEvented {
+export declare class Class implements Eventable {
     /**
      * Direct access to the game object event dispatcher.
      */

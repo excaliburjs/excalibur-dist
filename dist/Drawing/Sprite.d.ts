@@ -1,13 +1,13 @@
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
-import { IDrawable } from '../Interfaces/IDrawable';
+import { Drawable } from '../Interfaces/Drawable';
 import { Texture } from '../Resources/Texture';
 import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
 /**
  * @hidden
  */
-export declare class SpriteImpl implements IDrawable {
+export declare class SpriteImpl implements Drawable {
     private _texture;
     x: number;
     y: number;
@@ -25,7 +25,7 @@ export declare class SpriteImpl implements IDrawable {
      * Draws the sprite flipped horizontally
      */
     flipHorizontal: boolean;
-    effects: Effects.ISpriteEffect[];
+    effects: Effects.SpriteEffect[];
     width: number;
     height: number;
     private _spriteCanvas;
@@ -40,7 +40,7 @@ export declare class SpriteImpl implements IDrawable {
      * @param width  The width of the sprite in pixels
      * @param height The height of the sprite in pixels
      */
-    constructor(imageOrConfig: Texture | ISpriteArgs, x: number, y: number, width: number, height: number);
+    constructor(imageOrConfig: Texture | SpriteArgs, x: number, y: number, width: number, height: number);
     private _loadPixels;
     /**
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
@@ -83,12 +83,12 @@ export declare class SpriteImpl implements IDrawable {
      * Adds a new [[ISpriteEffect]] to this drawing.
      * @param effect  Effect to add to the this drawing
      */
-    addEffect(effect: Effects.ISpriteEffect): void;
+    addEffect(effect: Effects.SpriteEffect): void;
     /**
      * Removes a [[ISpriteEffect]] from this sprite.
      * @param effect  Effect to remove from this sprite
      */
-    removeEffect(effect: Effects.ISpriteEffect): void;
+    removeEffect(effect: Effects.SpriteEffect): void;
     /**
      * Removes an effect given the index from this sprite.
      * @param index  Index of the effect to remove from this sprite
@@ -119,7 +119,7 @@ export declare class SpriteImpl implements IDrawable {
 /**
  * [[include:Constructors.md]]
  */
-export interface ISpriteArgs extends Partial<SpriteImpl> {
+export interface SpriteArgs extends Partial<SpriteImpl> {
     image?: Texture;
     x?: number;
     width?: number;
@@ -138,7 +138,7 @@ declare const Sprite_base: typeof SpriteImpl;
  * [[include:Sprites.md]]
  */
 export declare class Sprite extends Sprite_base {
-    constructor(config: ISpriteArgs);
+    constructor(config: SpriteArgs);
     constructor(image: Texture, x: number, y: number, width: number, height: number);
 }
 export {};

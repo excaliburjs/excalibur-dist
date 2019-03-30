@@ -1,7 +1,7 @@
 import { Engine } from './../Engine';
 import * as Events from './../Events';
 import { Scene } from '../Scene';
-export interface ICanInitialize {
+export interface CanInitialize {
     /**
      * Overridable implementation
      */
@@ -13,7 +13,7 @@ export interface ICanInitialize {
     once(eventName: Events.initialize, handler: (event?: Events.InitializeEvent) => void): void;
     off(eventName: Events.initialize, handler?: (event?: Events.InitializeEvent) => void): void;
 }
-export interface ICanActivate {
+export interface CanActivate {
     /**
      * Overridable implementation
      */
@@ -25,7 +25,7 @@ export interface ICanActivate {
     once(eventName: Events.activate, handler: (event?: Events.ActivateEvent) => void): void;
     off(eventName: Events.activate, handler?: (event?: Events.ActivateEvent) => void): void;
 }
-export interface ICanDeactivate {
+export interface CanDeactivate {
     /**
      * Overridable implementation
      */
@@ -37,7 +37,7 @@ export interface ICanDeactivate {
     once(eventName: Events.deactivate, handler: (event?: Events.DeactivateEvent) => void): void;
     off(eventName: Events.deactivate, handler?: (event?: Events.DeactivateEvent) => void): void;
 }
-export interface ICanUpdate {
+export interface CanUpdate {
     /**
      * Overridable implementation
      */
@@ -59,7 +59,7 @@ export interface ICanUpdate {
     once(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
     off(eventName: Events.postupdate, handler?: (event?: Events.PostUpdateEvent) => void): void;
 }
-export interface ICanDraw {
+export interface CanDraw {
     /**
      * Overridable implementation
      */
@@ -81,7 +81,7 @@ export interface ICanDraw {
     once(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
     off(eventName: Events.postdraw, handler?: (event?: Events.PostDrawEvent) => void): void;
 }
-export interface ICanBeKilled {
+export interface CanBeKilled {
     /**
      * Overridable implementation
      */

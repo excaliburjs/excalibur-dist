@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0-alpha.2920+0686917 - 2019-3-25
+ * excalibur - 0.21.0-alpha.2923+bf74444 - 2019-3-30
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -7057,6 +7057,17 @@ var PhysicsStats = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./Deprecated.ts":
+/*!***********************!*\
+  !*** ./Deprecated.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./Drawing/Animation.ts":
 /*!******************************!*\
   !*** ./Drawing/Animation.ts ***!
@@ -12714,10 +12725,10 @@ var Pointer = /** @class */ (function (_super) {
 
 /***/ }),
 
-/***/ "./Interfaces/IAudioImplementation.ts":
-/*!********************************************!*\
-  !*** ./Interfaces/IAudioImplementation.ts ***!
-  \********************************************/
+/***/ "./Interfaces/AudioImplementation.ts":
+/*!*******************************************!*\
+  !*** ./Interfaces/AudioImplementation.ts ***!
+  \*******************************************/
 /*! exports provided: ExResponse */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -12751,8 +12762,8 @@ var ExResponse = /** @class */ (function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./IAudioImplementation */ "./Interfaces/IAudioImplementation.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"]; });
+/* harmony import */ var _AudioImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AudioImplementation */ "./Interfaces/AudioImplementation.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"]; });
 
 
 
@@ -16571,7 +16582,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return Sound; });
-/* harmony import */ var _Interfaces_IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Interfaces/IAudioImplementation */ "./Interfaces/IAudioImplementation.ts");
+/* harmony import */ var _Interfaces_AudioImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Interfaces/AudioImplementation */ "./Interfaces/AudioImplementation.ts");
 /* harmony import */ var _Resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Resource */ "./Resources/Resource.ts");
 /* harmony import */ var _AudioInstance__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioInstance */ "./Resources/Sound/AudioInstance.ts");
 /* harmony import */ var _AudioContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AudioContext */ "./Resources/Sound/AudioContext.ts");
@@ -16863,10 +16874,10 @@ var Sound = /** @class */ (function (_super) {
     };
     Sound.prototype._detectResponseType = function () {
         if (window.AudioContext) {
-            this.responseType = _Interfaces_IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.arraybuffer;
+            this.responseType = _Interfaces_AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.arraybuffer;
         }
         else {
-            this.responseType = _Interfaces_IAudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.blob;
+            this.responseType = _Interfaces_AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.blob;
         }
     };
     return Sound;
@@ -20253,7 +20264,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20570,11 +20581,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_36__["MockedElement"]; });
 
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_37___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_37__);
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_37__; });
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0-alpha.2920+0686917";
+var EX_VERSION = "0.21.0-alpha.2923+bf74444";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 
@@ -20621,6 +20635,9 @@ var EX_VERSION = "0.21.0-alpha.2920+0686917";
 
 
 
+
+
+// ex.Deprecated
 
 
 

@@ -1,22 +1,22 @@
-import { IDebugFlags } from './DebugFlags';
+import { DebugFlags } from './DebugFlags';
 import { Pair } from './Collision/Pair';
 /**
  * Debug stats containing current and previous frame statistics
  */
-export interface IDebugStats {
+export interface DebugStats {
     currFrame: FrameStats;
     prevFrame: FrameStats;
 }
 /**
  * Hash containing the [[Pair.id]]s of pairs that collided in a frame
  */
-export interface ICollidersHash {
+export interface CollidersHash {
     [pairId: string]: Pair;
 }
 /**
  * Represents a frame's individual statistics
  */
-export interface IFrameStats {
+export interface FrameStatistics {
     /**
      * The number of the frame
      */
@@ -32,20 +32,20 @@ export interface IFrameStats {
     /**
      * Duration statistics (in ms)
      */
-    duration: IFrameDurationStats;
+    duration: FrameDurationStats;
     /**
      * Actor statistics
      */
-    actors: IFrameActorStats;
+    actors: FrameActorStats;
     /**
      * Physics statistics
      */
-    physics: IPhysicsStats;
+    physics: PhysicsStatistics;
 }
 /**
  * Represents actor stats for a frame
  */
-export interface IFrameActorStats {
+export interface FrameActorStats {
     /**
      * Gets the frame's number of actors (alive)
      */
@@ -70,7 +70,7 @@ export interface IFrameActorStats {
 /**
  * Represents duration stats for a frame
  */
-export interface IFrameDurationStats {
+export interface FrameDurationStats {
     /**
      * Gets the frame's total time to run the update function (in ms)
      */
@@ -87,7 +87,7 @@ export interface IFrameDurationStats {
 /**
  * Represents physics stats for the current frame
  */
-export interface IPhysicsStats {
+export interface PhysicsStatistics {
     /**
      * Gets the number of broadphase collision pairs which
      */
@@ -99,7 +99,7 @@ export interface IPhysicsStats {
     /**
      * A Hash storing the [[Pair.id]]s of [[Pair]]s that collided in the frame
      */
-    collidersHash: ICollidersHash;
+    collidersHash: CollidersHash;
     /**
      * Gets the number of fast moving bodies using raycast continuous collisions in the scene
      */
@@ -122,17 +122,17 @@ export interface IPhysicsStats {
  * best to do so on the `postupdate` event for [[Engine]], after all values have been
  * updated during a frame.
  */
-export declare class Debug implements IDebugFlags {
+export declare class Debug implements DebugFlags {
     /**
      * Performance statistics
      */
-    stats: IDebugStats;
+    stats: DebugStats;
 }
 /**
  * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
  * creating instances of this every frame.
  */
-export declare class FrameStats implements IFrameStats {
+export declare class FrameStats implements FrameStatistics {
     private _id;
     private _delta;
     private _fps;
@@ -144,7 +144,7 @@ export declare class FrameStats implements IFrameStats {
      *
      * @param [otherStats] Optional stats to clone
      */
-    reset(otherStats?: IFrameStats): void;
+    reset(otherStats?: FrameStatistics): void;
     /**
      * Provides a clone of this instance.
      */
@@ -175,17 +175,17 @@ export declare class FrameStats implements IFrameStats {
     /**
      * Gets the frame's actor statistics
      */
-    readonly actors: IFrameActorStats;
+    readonly actors: FrameActorStats;
     /**
      * Gets the frame's duration statistics
      */
-    readonly duration: IFrameDurationStats;
+    readonly duration: FrameDurationStats;
     /**
      * Gets the frame's physics statistics
      */
     readonly physics: PhysicsStats;
 }
-export declare class PhysicsStats implements IPhysicsStats {
+export declare class PhysicsStats implements PhysicsStatistics {
     private _pairs;
     private _collisions;
     private _collidersHash;
@@ -198,14 +198,14 @@ export declare class PhysicsStats implements IPhysicsStats {
      *
      * @param [otherStats] Optional stats to clone
      */
-    reset(otherStats?: IPhysicsStats): void;
+    reset(otherStats?: PhysicsStatistics): void;
     /**
      * Provides a clone of this instance.
      */
-    clone(): IPhysicsStats;
+    clone(): PhysicsStatistics;
     pairs: number;
     collisions: number;
-    collidersHash: ICollidersHash;
+    collidersHash: CollidersHash;
     fastBodies: number;
     fastBodyCollisions: number;
     broadphase: number;

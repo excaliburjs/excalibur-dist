@@ -1,5 +1,5 @@
 import { GameEvent } from './Events';
-import { IEvented } from './Interfaces/IEvented';
+import { Eventable } from './Interfaces/Evented';
 /**
  * Excalibur's internal event dispatcher implementation.
  * Callbacks are fired immediately after an event is published.
@@ -9,7 +9,7 @@ import { IEvented } from './Interfaces/IEvented';
  *
  * [[include:Events.md]]
  */
-export declare class EventDispatcher implements IEvented {
+export declare class EventDispatcher implements Eventable {
     private _handlers;
     private _wiredEventDispatchers;
     private _target;

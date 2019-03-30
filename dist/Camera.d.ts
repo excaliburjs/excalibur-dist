@@ -1,16 +1,16 @@
 import { Engine } from './Engine';
 import { EasingFunction } from './Util/EasingFunctions';
-import { IPromise, Promise } from './Promises';
+import { PromiseLike, Promise } from './Promises';
 import { Vector } from './Algebra';
 import { Actor } from './Actor';
-import { ICanUpdate, ICanInitialize } from './Interfaces/LifecycleEvents';
+import { CanUpdate, CanInitialize } from './Interfaces/LifecycleEvents';
 import { PreUpdateEvent, PostUpdateEvent, GameEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
 import { BoundingBox } from './Collision/BoundingBox';
 /**
  * Interface that describes a custom camera strategy for tracking targets
  */
-export interface ICameraStrategy<T> {
+export interface CameraStrategy<T> {
     /**
      * Target of the camera strategy that will be passed to the action
      */
@@ -70,7 +70,7 @@ export declare enum Axis {
 /**
  * Lock a camera to the exact x/y postition of an actor.
  */
-export declare class LockCameraToActorStrategy implements ICameraStrategy<Actor> {
+export declare class LockCameraToActorStrategy implements CameraStrategy<Actor> {
     target: Actor;
     constructor(target: Actor);
     action: (target: Actor, _cam: Camera, _eng: Engine, _delta: number) => Vector;
@@ -78,7 +78,7 @@ export declare class LockCameraToActorStrategy implements ICameraStrategy<Actor>
 /**
  * Lock a camera to a specific axis around an actor.
  */
-export declare class LockCameraToActorAxisStrategy implements ICameraStrategy<Actor> {
+export declare class LockCameraToActorAxisStrategy implements CameraStrategy<Actor> {
     target: Actor;
     axis: Axis;
     constructor(target: Actor, axis: Axis);
@@ -87,7 +87,7 @@ export declare class LockCameraToActorAxisStrategy implements ICameraStrategy<Ac
 /**
  * Using [Hook's law](https://en.wikipedia.org/wiki/Hooke's_law), elastically move the camera towards the target actor.
  */
-export declare class ElasticToActorStrategy implements ICameraStrategy<Actor> {
+export declare class ElasticToActorStrategy implements CameraStrategy<Actor> {
     target: Actor;
     cameraElasticity: number;
     cameraFriction: number;
@@ -103,7 +103,7 @@ export declare class ElasticToActorStrategy implements ICameraStrategy<Actor> {
     constructor(target: Actor, cameraElasticity: number, cameraFriction: number);
     action: (target: Actor, cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
-export declare class RadiusAroundActorStrategy implements ICameraStrategy<Actor> {
+export declare class RadiusAroundActorStrategy implements CameraStrategy<Actor> {
     target: Actor;
     radius: number;
     /**
@@ -123,7 +123,7 @@ export declare class RadiusAroundActorStrategy implements ICameraStrategy<Actor>
  *
  * [[include:Cameras.md]]
  */
-export declare class Camera extends Class implements ICanUpdate, ICanInitialize {
+export declare class Camera extends Class implements CanUpdate, CanInitialize {
     protected _follow: Actor;
     private _cameraStrategies;
     strategy: StrategyContainer;
@@ -200,7 +200,7 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
      *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
      */
-    move(pos: Vector, duration: number, easingFn?: EasingFunction): IPromise<Vector>;
+    move(pos: Vector, duration: number, easingFn?: EasingFunction): PromiseLike<Vector>;
     /**
      * Sets the camera to shake at the specified magnitudes for the specified duration
      * @param magnitudeX  The x magnitude of the shake
@@ -227,12 +227,12 @@ export declare class Camera extends Class implements ICanUpdate, ICanInitialize 
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    addStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+    addStrategy<T>(cameraStrategy: CameraStrategy<T>): void;
     /**
      * Removes a camera strategy by reference
      * @param cameraStrategy Instance of an [[ICameraStrategy]]
      */
-    removeStrategy<T>(cameraStrategy: ICameraStrategy<T>): void;
+    removeStrategy<T>(cameraStrategy: CameraStrategy<T>): void;
     /**
      * Clears all camera strategies from the camera
      */

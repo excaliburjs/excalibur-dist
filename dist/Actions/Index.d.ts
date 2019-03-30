@@ -1,5 +1,5 @@
 export * from './ActionContext';
-export * from './IActionable';
+export * from './Actionable';
 export * from './RotationType';
 import * as actions from './Action';
 export { actions as Actions };

@@ -1,10 +1,10 @@
 import { Color } from './../Drawing/Color';
 import { BoundingBox } from './BoundingBox';
 import { CollisionContact } from './CollisionContact';
-import { ICollisionArea } from './ICollisionArea';
+import { CollisionArea } from './CollisionArea';
 import { Body } from './Body';
 import { Vector, Line, Ray, Projection } from './../Algebra';
-export interface IPolygonAreaOptions {
+export interface PolygonAreaOptions {
     pos?: Vector;
     points?: Vector[];
     clockwiseWinding?: boolean;
@@ -13,14 +13,14 @@ export interface IPolygonAreaOptions {
 /**
  * Polygon collision area for detecting collisions for actors, or independently
  */
-export declare class PolygonArea implements ICollisionArea {
+export declare class PolygonArea implements CollisionArea {
     pos: Vector;
     points: Vector[];
     body: Body;
     private _transformedPoints;
     private _axes;
     private _sides;
-    constructor(options: IPolygonAreaOptions);
+    constructor(options: PolygonAreaOptions);
     /**
      * Get the center of the collision area in world coordinates
      */
@@ -47,7 +47,7 @@ export declare class PolygonArea implements ICollisionArea {
      * return null.
      * @param area
      */
-    collide(area: ICollisionArea): CollisionContact;
+    collide(area: CollisionArea): CollisionContact;
     /**
      * Find the point on the shape furthest in the direction specified
      */

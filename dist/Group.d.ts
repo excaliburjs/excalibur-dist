@@ -4,8 +4,8 @@ import { Vector } from './Algebra';
 import { Scene } from './Scene';
 import { ActionContext } from './Actions/ActionContext';
 import { Actor } from './Actor';
-import { IEvented } from './Interfaces/IEvented';
-import { IActionable } from './Actions/IActionable';
+import { Eventable } from './Interfaces/Evented';
+import { Actionable } from './Actions/Actionable';
 import { Class } from './Class';
 /**
  * Groups are used for logically grouping Actors so they can be acted upon
@@ -13,7 +13,7 @@ import { Class } from './Class';
  *
  * [[include:Groups.md]]
  */
-export declare class Group extends Class implements IActionable, IEvented {
+export declare class Group extends Class implements Actionable, Eventable {
     name: string;
     scene: Scene;
     private _logger;

@@ -1,2 +1,2 @@
-export interface IDebugFlags {
+export interface DebugFlags {
 }

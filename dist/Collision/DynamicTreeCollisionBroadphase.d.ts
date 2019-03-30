@@ -1,10 +1,10 @@
-import { ICollisionBroadphase } from './ICollisionResolver';
+import { CollisionBroadphase } from './CollisionResolver';
 import { Pair } from './Pair';
 import { Body } from './Body';
 import { Actor } from '../Actor';
 import { FrameStats } from '../Debug';
 import { CollisionResolutionStrategy } from '../Physics';
-export declare class DynamicTreeCollisionBroadphase implements ICollisionBroadphase {
+export declare class DynamicTreeCollisionBroadphase implements CollisionBroadphase {
     private _dynamicCollisionTree;
     private _collisionHash;
     private _collisionPairCache;

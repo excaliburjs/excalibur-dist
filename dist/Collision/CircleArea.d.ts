@@ -1,11 +1,11 @@
 import { Body } from './Body';
 import { BoundingBox } from './BoundingBox';
-import { ICollisionArea } from './ICollisionArea';
+import { CollisionArea } from './CollisionArea';
 import { PolygonArea } from './PolygonArea';
 import { CollisionContact } from './CollisionContact';
 import { Vector, Ray, Projection } from '../Algebra';
 import { Color } from '../Drawing/Color';
-export interface ICircleAreaOptions {
+export interface CircleAreaOptions {
     pos?: Vector;
     radius?: number;
     body?: Body;
@@ -13,7 +13,7 @@ export interface ICircleAreaOptions {
 /**
  * This is a circle collision area for the excalibur rigid body physics simulation
  */
-export declare class CircleArea implements ICollisionArea {
+export declare class CircleArea implements CollisionArea {
     /**
      * This is the center position of the circle, relative to the body position
      */
@@ -26,7 +26,7 @@ export declare class CircleArea implements ICollisionArea {
      * The actor associated with this collision area
      */
     body: Body;
-    constructor(options: ICircleAreaOptions);
+    constructor(options: CircleAreaOptions);
     /**
      * Get the center of the collision area in world coordinates
      */
@@ -43,7 +43,7 @@ export declare class CircleArea implements ICollisionArea {
     /**
      * @inheritdoc
      */
-    collide(area: ICollisionArea): CollisionContact;
+    collide(area: CollisionArea): CollisionContact;
     /**
      * Find the point on the shape furthest in the direction specified
      */

@@ -1,13 +1,13 @@
 import { Color } from './Color';
 import * as Effects from './SpriteEffects';
-import { IDrawable } from '../Interfaces/IDrawable';
+import { Drawable } from '../Interfaces/Drawable';
 import { Vector } from '../Algebra';
 /**
  * Creates a closed polygon drawing given a list of [[Vector]]s.
  *
  * @warning Use sparingly as Polygons are performance intensive
  */
-export declare class Polygon implements IDrawable {
+export declare class Polygon implements Drawable {
     flipVertical: boolean;
     flipHorizontal: boolean;
     drawWidth: number;
@@ -49,7 +49,7 @@ export declare class Polygon implements IDrawable {
     /**
      * @notimplemented Effects are not supported on `Polygon`
      */
-    removeEffect(effect: Effects.ISpriteEffect): void;
+    removeEffect(effect: Effects.SpriteEffect): void;
     /**
      * @notimplemented Effects are not supported on `Polygon`
      */

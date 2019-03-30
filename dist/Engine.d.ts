@@ -1,6 +1,6 @@
 import './Polyfill';
-import { ICanUpdate, ICanDraw, ICanInitialize } from './Interfaces/LifecycleEvents';
-import { ILoadable } from './Interfaces/ILoadable';
+import { CanUpdate, CanDraw, CanInitialize } from './Interfaces/LifecycleEvents';
+import { Loadable } from './Interfaces/Loadable';
 import { Promise } from './Promises';
 import { Vector } from './Algebra';
 import { UIActor } from './UIActor';
@@ -9,11 +9,11 @@ import { Timer } from './Timer';
 import { TileMap } from './TileMap';
 import { Animation } from './Drawing/Animation';
 import { VisibleEvent, HiddenEvent, GameStartEvent, GameStopEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GameEvent, PreDrawEvent, PostDrawEvent } from './Events';
-import { ILoader } from './Interfaces/ILoader';
+import { CanLoad } from './Interfaces/Loader';
 import { Color } from './Drawing/Color';
 import { Scene } from './Scene';
-import { IPostProcessor } from './PostProcessing/IPostProcessor';
-import { Debug, IDebugStats } from './Debug';
+import { PostProcessor } from './PostProcessing/PostProcessor';
+import { Debug, DebugStats } from './Debug';
 import { Class } from './Class';
 import * as Input from './Input/Index';
 import * as Events from './Events';
@@ -61,7 +61,7 @@ export declare enum ScrollPreventionMode {
  * is specified and when the user wants to define exact pixel spacing of the window.
  * When a number is given, the value is interpreted as pixels
  */
-export interface IAbsolutePosition {
+export interface AbsolutePosition {
     top?: number | string;
     left?: number | string;
     right?: number | string;
@@ -70,7 +70,7 @@ export interface IAbsolutePosition {
 /**
  * Defines the available options to configure the Excalibur engine at constructor time.
  */
-export interface IEngineOptions {
+export interface EngineOptions {
     /**
      * Optionally configure the native canvas width of the game
      */
@@ -124,7 +124,7 @@ export interface IEngineOptions {
      * Valid String examples: "top left", "top", "bottom", "middle", "middle center", "bottom right"
      * Valid [[IAbsolutePosition]] examples: `{top: 5, right: 10%}`, `{bottom: 49em, left: 10px}`, `{left: 10, bottom: 40}`
      */
-    position?: string | IAbsolutePosition;
+    position?: string | AbsolutePosition;
     /**
      * Scroll prevention method.
      */
@@ -143,7 +143,7 @@ export interface IEngineOptions {
  *
  * [[include:Engine.md]]
  */
-export declare class Engine extends Class implements ICanInitialize, ICanUpdate, ICanDraw {
+export declare class Engine extends Class implements CanInitialize, CanUpdate, CanDraw {
     /**
      * Direct access to the engine's canvas element
      */
@@ -197,7 +197,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
     /**
      * Access engine input like pointer, keyboard, or gamepad
      */
-    input: Input.IEngineInput;
+    input: Input.EngineInput;
     private _hasStarted;
     /**
      * Access Excalibur debugging functionality.
@@ -206,11 +206,11 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
     /**
      * Access [[stats]] that holds frame statistics.
      */
-    readonly stats: IDebugStats;
+    readonly stats: DebugStats;
     /**
      * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
      */
-    postProcessors: IPostProcessor[];
+    postProcessors: PostProcessor[];
     /**
      * The current [[Scene]] being drawn and updated on screen
      */
@@ -243,7 +243,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
     /**
      * Indicates the current position of the engine. Valid only when DisplayMode is DisplayMode.Position
      */
-    position: string | IAbsolutePosition;
+    position: string | AbsolutePosition;
     /**
      * Indicates whether audio should be paused when the game is no longer visible.
      */
@@ -341,7 +341,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * });
      * ```
      */
-    constructor(options?: IEngineOptions);
+    constructor(options?: EngineOptions);
     /**
      * Returns a BoundingBox of the top left corner of the screen
      * and the bottom right corner of the screen.
@@ -567,7 +567,7 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * @param loader  Optional [[ILoader]] to use to load resources. The default loader is [[Loader]], override to provide your own
      * custom loader.
      */
-    start(loader?: ILoader): Promise<any>;
+    start(loader?: CanLoad): Promise<any>;
     static createMainLoop(game: Engine, raf: (func: Function) => number, nowFn: () => number): () => void;
     /**
      * Stops Excalibur's main loop, useful for pausing the game.
@@ -588,5 +588,5 @@ export declare class Engine extends Class implements ICanInitialize, ICanUpdate,
      * will appear.
      * @param loader  Some [[ILoadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
      */
-    load(loader: ILoadable): Promise<any>;
+    load(loader: Loadable): Promise<any>;
 }

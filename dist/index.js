@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.21.0-alpha.2920+0686917"` gets replaced by Webpack on build
+ * @description `"0.21.0-alpha.2923+bf74444"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.21.0-alpha.2920+0686917";
+export var EX_VERSION = "0.21.0-alpha.2923+bf74444";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 export * from './Engine';
@@ -51,4 +51,7 @@ export * from './Util/CullingBox';
 export * from './Util/EasingFunctions';
 export * from './Util/Log';
 export * from './Util/SortedList';
+// ex.Deprecated
+import * as deprecated from './Deprecated';
+export { deprecated as Deprecated };
 //# sourceMappingURL=index.js.map

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { ExResponse } from '../../Interfaces/IAudioImplementation';
+import { ExResponse } from '../../Interfaces/AudioImplementation';
 import { Resource } from '../Resource';
 import { AudioInstanceFactory } from './AudioInstance';
 import { AudioContextFactory } from './AudioContext';

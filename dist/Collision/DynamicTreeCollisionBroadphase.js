@@ -75,34 +75,32 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         // Check dynamic tree for fast moving objects
         // Fast moving objects are those moving at least there smallest bound per frame
         if (Physics.checkForFastBodies) {
-            for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
-                var actor = potentialColliders_1[_i];
+            var _loop_1 = function (actor_1) {
                 // Skip non-active objects. Does not make sense on other collison types
-                if (actor.collisionType !== CollisionType.Active) {
-                    continue;
+                if (actor_1.collisionType !== CollisionType.Active) {
+                    return "continue";
                 }
                 // Maximum travel distance next frame
-                var updateDistance = actor.vel.magnitude() * seconds + // velocity term
-                    actor.acc.magnitude() * 0.5 * seconds * seconds; // acc term
+                updateDistance = actor_1.vel.magnitude() * seconds + // velocity term
+                    actor_1.acc.magnitude() * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
-                var minDimension = Math.min(actor.body.getBounds().getHeight(), actor.body.getBounds().getWidth());
+                minDimension = Math.min(actor_1.body.getBounds().getHeight(), actor_1.body.getBounds().getWidth());
                 if (Physics.disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
                     if (stats) {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
                     // objects resting on a surface may be slightly penatrating in the current position
-                    var updateVec = actor.pos.sub(actor.oldPos);
-                    var centerPoint = actor.body.collisionArea.getCenter();
-                    var furthestPoint = actor.body.collisionArea.getFurthestPoint(actor.vel);
-                    var origin = furthestPoint.sub(updateVec);
-                    var ray = new Ray(origin, actor.vel);
+                    updateVec = actor_1.pos.sub(actor_1.oldPos);
+                    centerPoint = actor_1.body.collisionArea.getCenter();
+                    furthestPoint = actor_1.body.collisionArea.getFurthestPoint(actor_1.vel);
+                    origin = furthestPoint.sub(updateVec);
+                    ray = new Ray(origin, actor_1.vel);
                     // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface
                     ray.pos = ray.pos.add(ray.dir.scale(-2 * Physics.surfaceEpsilon));
-                    var minBody;
-                    var minTranslate = new Vector(Infinity, Infinity);
-                    this._dynamicCollisionTree.rayCastQuery(ray, updateDistance + Physics.surfaceEpsilon * 2, function (other) {
-                        if (actor.body !== other && other.collisionArea) {
+                    minTranslate = new Vector(Infinity, Infinity);
+                    this_1._dynamicCollisionTree.rayCastQuery(ray, updateDistance + Physics.surfaceEpsilon * 2, function (other) {
+                        if (actor_1.body !== other && other.collisionArea) {
                             var hitPoint = other.collisionArea.rayCast(ray, updateDistance + Physics.surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin);
@@ -115,24 +113,29 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         return false;
                     });
                     if (minBody && Vector.isValid(minTranslate)) {
-                        var pair = new Pair(actor.body, minBody);
-                        if (!this._collisionHash[pair.id]) {
-                            this._collisionHash[pair.id] = true;
-                            this._collisionPairCache.push(pair);
+                        pair = new Pair(actor_1.body, minBody);
+                        if (!this_1._collisionHash[pair.id]) {
+                            this_1._collisionHash[pair.id] = true;
+                            this_1._collisionPairCache.push(pair);
                         }
                         // move the fast moving object to the other body
                         // need to push into the surface by ex.Physics.surfaceEpsilon
-                        var shift = centerPoint.sub(furthestPoint);
-                        actor.pos = origin
+                        shift = centerPoint.sub(furthestPoint);
+                        actor_1.pos = origin
                             .add(shift)
                             .add(minTranslate)
                             .add(ray.dir.scale(2 * Physics.surfaceEpsilon));
-                        actor.body.collisionArea.recalc();
+                        actor_1.body.collisionArea.recalc();
                         if (stats) {
                             stats.physics.fastBodyCollisions++;
                         }
                     }
                 }
+            };
+            var this_1 = this, updateDistance, minDimension, updateVec, centerPoint, furthestPoint, origin, ray, minBody, minTranslate, pair, shift;
+            for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
+                var actor_1 = potentialColliders_1[_i];
+                _loop_1(actor_1);
             }
         }
         // return cache

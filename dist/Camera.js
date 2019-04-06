@@ -11,12 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { EasingFunctions } from './Util/EasingFunctions';
 import { Promise, PromiseState } from './Promises';
 import { Vector } from './Algebra';
@@ -24,7 +18,6 @@ import { removeItemFromArray } from './Util/Util';
 import { PreUpdateEvent, PostUpdateEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
 import { BoundingBox } from './Collision/BoundingBox';
-import { obsolete } from './Util/Decorators';
 /**
  * Container to house convenience strategy methods
  * @internal
@@ -591,18 +584,4 @@ var Camera = /** @class */ (function (_super) {
     return Camera;
 }(Class));
 export { Camera };
-/**
- * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
- */
-var BaseCamera = /** @class */ (function (_super) {
-    __extends(BaseCamera, _super);
-    function BaseCamera() {
-        return _super.call(this) || this;
-    }
-    BaseCamera = __decorate([
-        obsolete({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
-    ], BaseCamera);
-    return BaseCamera;
-}(Camera));
-export { BaseCamera };
 //# sourceMappingURL=Camera.js.map

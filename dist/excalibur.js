@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.21.0-alpha.2929+7cd7b01 - 2019-3-31
+ * excalibur - 0.21.0-alpha.2938+8189beb - 2019-4-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3292,7 +3292,7 @@ var GlobalCoordinates = /** @class */ (function () {
 /*!*******************!*\
   !*** ./Camera.ts ***!
   \*******************/
-/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera */
+/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3304,7 +3304,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return ElasticToActorStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return RadiusAroundActorStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return Camera; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseCamera", function() { return BaseCamera; });
 /* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
@@ -3312,7 +3311,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3326,13 +3324,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -3905,20 +3896,6 @@ var Camera = /** @class */ (function (_super) {
     };
     return Camera;
 }(_Class__WEBPACK_IMPORTED_MODULE_5__["Class"]));
-
-/**
- * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
- */
-var BaseCamera = /** @class */ (function (_super) {
-    __extends(BaseCamera, _super);
-    function BaseCamera() {
-        return _super.call(this) || this;
-    }
-    BaseCamera = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: '`BaseCamera` is obsolete and will be removed in v0.22.0', alternateMethod: 'use `Camera` instead.' })
-    ], BaseCamera);
-    return BaseCamera;
-}(Camera));
 
 
 
@@ -20267,7 +20244,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, BaseCamera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20310,8 +20287,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["RadiusAroundActorStrategy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["Camera"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseCamera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_3__["BaseCamera"]; });
 
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _Class__WEBPACK_IMPORTED_MODULE_4__["Class"]; });
@@ -20591,7 +20566,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.21.0-alpha.2929+7cd7b01";
+var EX_VERSION = "0.21.0-alpha.2938+8189beb";
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 

@@ -294,9 +294,3 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     debugDraw(ctx: CanvasRenderingContext2D): void;
     private _isDoneShaking;
 }
-/**
- * @obsolete `BaseCamera` renamed to `Camera`. Use [[Camera]] instead
- */
-export declare class BaseCamera extends Camera {
-    constructor();
-}

@@ -299,8 +299,8 @@ var Loader = /** @class */ (function (_super) {
      * to customize the drawing, or just override entire method.
      */
     Loader.prototype.draw = function (ctx) {
-        var canvasHeight = this._engine.canvasHeight / window.devicePixelRatio;
-        var canvasWidth = this._engine.canvasWidth / window.devicePixelRatio;
+        var canvasHeight = this._engine.canvasHeight / this._engine.pixelRatio;
+        var canvasWidth = this._engine.canvasWidth / this._engine.pixelRatio;
         if (this._playButtonRootElement) {
             var left = ctx.canvas.offsetLeft;
             var top_1 = ctx.canvas.offsetTop;

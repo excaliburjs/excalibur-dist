@@ -12,7 +12,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { EX_VERSION } from './';
-import './Polyfill';
+import { polyfill } from './Polyfill';
+polyfill();
 import { Promise } from './Promises';
 import { Vector } from './Algebra';
 import { UIActor } from './UIActor';

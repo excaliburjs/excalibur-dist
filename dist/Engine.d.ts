@@ -1,4 +1,3 @@
-import './Polyfill';
 import { CanUpdate, CanDraw, CanInitialize } from './Interfaces/LifecycleEvents';
 import { Loadable } from './Interfaces/Loadable';
 import { Promise } from './Promises';

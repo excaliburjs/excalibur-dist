@@ -4,6 +4,7 @@ import { Sprite } from '../Drawing/Sprite';
 import { Texture } from './Texture';
 import { Color } from '../Drawing/Color';
 import { SpriteSheet } from '../Drawing/SpriteSheet';
+import { Animation } from '../Drawing/Animation';
 import { Engine } from '../Engine';
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
@@ -55,7 +56,7 @@ export declare class Gif extends Resource<Texture[]> {
     load(): Promise<Texture[]>;
     asSprite(id?: number): Sprite;
     asSpriteSheet(): SpriteSheet;
-    asAnimation(engine: Engine, speed: number): ex.Animation;
+    asAnimation(engine: Engine, speed: number): Animation;
     readonly readCheckBytes: number[];
 }
 export interface Frame {

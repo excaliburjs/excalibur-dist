@@ -34,7 +34,7 @@ export declare enum DisplayMode {
      */
     Fixed = 2,
     /**
-     * Allow the game to be positioned with the [[IEngineOptions.position]] option
+     * Allow the game to be positioned with the [[EngineOptions.position]] option
      */
     Position = 3
 }
@@ -313,13 +313,13 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     off(eventName: Events.postdraw, handler?: (event?: PostDrawEvent) => void): void;
     off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
     /**
-     * Default [[IEngineOptions]]
+     * Default [[EngineOptions]]
      */
     private static _DefaultEngineOptions;
     /**
-     * Creates a new game using the given [[IEngineOptions]]. By default, if no options are provided,
+     * Creates a new game using the given [[EngineOptions]]. By default, if no options are provided,
      * the game will be rendered full screen (taking up all available browser window space).
-     * You can customize the game rendering through [[IEngineOptions]].
+     * You can customize the game rendering through [[EngineOptions]].
      *
      * Example:
      *

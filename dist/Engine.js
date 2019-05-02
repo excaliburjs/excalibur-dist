@@ -49,7 +49,7 @@ export var DisplayMode;
      */
     DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
     /**
-     * Allow the game to be positioned with the [[IEngineOptions.position]] option
+     * Allow the game to be positioned with the [[EngineOptions.position]] option
      */
     DisplayMode[DisplayMode["Position"] = 3] = "Position";
 })(DisplayMode || (DisplayMode = {}));
@@ -83,9 +83,9 @@ export var ScrollPreventionMode;
 var Engine = /** @class */ (function (_super) {
     __extends(Engine, _super);
     /**
-     * Creates a new game using the given [[IEngineOptions]]. By default, if no options are provided,
+     * Creates a new game using the given [[EngineOptions]]. By default, if no options are provided,
      * the game will be rendered full screen (taking up all available browser window space).
-     * You can customize the game rendering through [[IEngineOptions]].
+     * You can customize the game rendering through [[EngineOptions]].
      *
      * Example:
      *
@@ -1044,7 +1044,7 @@ O|===|* >________________>\n\
         return complete;
     };
     /**
-     * Default [[IEngineOptions]]
+     * Default [[EngineOptions]]
      */
     Engine._DefaultEngineOptions = {
         width: 0,

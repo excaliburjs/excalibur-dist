@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3033+6721400 - 2019-5-2
+ * excalibur - 0.22.0-alpha.3037+3c0e62a - 2019-5-2
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -9044,7 +9044,7 @@ var DisplayMode;
      */
     DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
     /**
-     * Allow the game to be positioned with the [[IEngineOptions.position]] option
+     * Allow the game to be positioned with the [[EngineOptions.position]] option
      */
     DisplayMode[DisplayMode["Position"] = 3] = "Position";
 })(DisplayMode || (DisplayMode = {}));
@@ -9078,9 +9078,9 @@ var ScrollPreventionMode;
 var Engine = /** @class */ (function (_super) {
     __extends(Engine, _super);
     /**
-     * Creates a new game using the given [[IEngineOptions]]. By default, if no options are provided,
+     * Creates a new game using the given [[EngineOptions]]. By default, if no options are provided,
      * the game will be rendered full screen (taking up all available browser window space).
-     * You can customize the game rendering through [[IEngineOptions]].
+     * You can customize the game rendering through [[EngineOptions]].
      *
      * Example:
      *
@@ -10039,7 +10039,7 @@ O|===|* >________________>\n\
         return complete;
     };
     /**
-     * Default [[IEngineOptions]]
+     * Default [[EngineOptions]]
      */
     Engine._DefaultEngineOptions = {
         width: 0,
@@ -20572,7 +20572,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3033+6721400";
+var EX_VERSION = "0.22.0-alpha.3037+3c0e62a";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

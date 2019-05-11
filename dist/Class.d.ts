@@ -17,7 +17,7 @@ export declare class Class implements Eventable {
      * @param eventName  Name of the event to listen for
      * @param handler    Event handler for the thrown event
      */
-    on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
     /**
      * Alias for `removeEventListener`. If only the eventName is specified
      * it will remove all handlers registered for that specific event. If the eventName
@@ -26,20 +26,20 @@ export declare class Class implements Eventable {
      * @param eventName  Name of the event to listen for
      * @param handler    Event handler for the thrown event
      */
-    off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+    off(eventName: string, handler?: (event: GameEvent<any>) => void): void;
     /**
      * Emits a new event
      * @param eventName   Name of the event to emit
      * @param eventObject Data associated with this event
      */
-    emit(eventName: string, eventObject?: GameEvent<any>): void;
+    emit(eventName: string, eventObject: GameEvent<any>): void;
     /**
      * Once listens to an event one time, then unsubscribes from that event
      *
      * @param eventName The name of the event to subscribe to once
      * @param handler   The handler of the event that will be auto unsubscribed
      */
-    once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    once(eventName: string, handler: (event: GameEvent<any>) => void): void;
     /**
      * You may wish to extend native Excalibur functionality in vanilla Javascript.
      * Any method on a class inheriting [[Class]] may be extended to support

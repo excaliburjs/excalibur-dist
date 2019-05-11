@@ -316,8 +316,8 @@ export declare class GamepadAxisEvent extends GameEvent<Input.Gamepad> {
  */
 export declare class SubscribeEvent<T> extends GameEvent<T> {
     topic: string;
-    handler: (event?: GameEvent<T>) => void;
-    constructor(topic: string, handler: (event?: GameEvent<T>) => void);
+    handler: (event: GameEvent<T>) => void;
+    constructor(topic: string, handler: (event: GameEvent<T>) => void);
 }
 /**
  * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
@@ -325,8 +325,8 @@ export declare class SubscribeEvent<T> extends GameEvent<T> {
  */
 export declare class UnsubscribeEvent<T> extends GameEvent<T> {
     topic: string;
-    handler: (event?: GameEvent<T>) => void;
-    constructor(topic: string, handler: (event?: GameEvent<T>) => void);
+    handler: (event: GameEvent<T>) => void;
+    constructor(topic: string, handler: (event: GameEvent<T>) => void);
 }
 /**
  * Event received by the [[Engine]] when the browser window is visible on a screen.

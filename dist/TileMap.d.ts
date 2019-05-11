@@ -25,11 +25,11 @@ export declare class TileMapImpl extends Class {
     cellHeight: number;
     rows: number;
     cols: number;
-    on(eventName: Events.preupdate, handler: (event?: Events.PreUpdateEvent) => void): void;
-    on(eventName: Events.postupdate, handler: (event?: Events.PostUpdateEvent) => void): void;
-    on(eventName: Events.predraw, handler: (event?: Events.PreDrawEvent) => void): void;
-    on(eventName: Events.postdraw, handler: (event?: Events.PostDrawEvent) => void): void;
-    on(eventName: string, handler: (event?: Events.GameEvent<any>) => void): void;
+    on(eventName: Events.preupdate, handler: (event: Events.PreUpdateEvent) => void): void;
+    on(eventName: Events.postupdate, handler: (event: Events.PostUpdateEvent) => void): void;
+    on(eventName: Events.predraw, handler: (event: Events.PreDrawEvent) => void): void;
+    on(eventName: Events.postdraw, handler: (event: Events.PostDrawEvent) => void): void;
+    on(eventName: string, handler: (event: Events.GameEvent<any>) => void): void;
     /**
      * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
      * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)

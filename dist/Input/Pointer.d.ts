@@ -193,14 +193,14 @@ export declare class Pointers extends Class {
     private _pointers;
     private _activePointers;
     constructor(engine: Engine);
-    on(eventName: Events.up, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.down, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.move, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.enter, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.leave, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.cancel, handler: (event?: PointerEvent) => void): void;
-    on(eventName: Events.wheel, handler: (event?: WheelEvent) => void): void;
-    on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    on(eventName: Events.up, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.down, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.move, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.enter, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.leave, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.cancel, handler: (event: PointerEvent) => void): void;
+    on(eventName: Events.wheel, handler: (event: WheelEvent) => void): void;
+    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
     /**
      * Primary pointer (mouse, 1 finger, stylus, etc.)
      */

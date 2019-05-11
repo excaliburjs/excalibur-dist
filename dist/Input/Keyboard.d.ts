@@ -72,10 +72,10 @@ export declare class Keyboard extends Class {
     private _keysUp;
     private _keysDown;
     constructor();
-    on(eventName: Events.press, handler: (event?: KeyEvent) => void): void;
-    on(eventName: Events.release, handler: (event?: KeyEvent) => void): void;
-    on(eventName: Events.hold, handler: (event?: KeyEvent) => void): void;
-    on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    on(eventName: Events.press, handler: (event: KeyEvent) => void): void;
+    on(eventName: Events.release, handler: (event: KeyEvent) => void): void;
+    on(eventName: Events.hold, handler: (event: KeyEvent) => void): void;
+    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
     /**
      * Initialize Keyboard event listeners
      */

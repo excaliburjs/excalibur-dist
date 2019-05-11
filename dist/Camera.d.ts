@@ -273,17 +273,17 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      * `onPostUpdate` is called directly after a scene is updated.
      */
     onInitialize(_engine: Engine): void;
-    on(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
-    on(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
-    on(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
-    off(eventName: 'initialize', handler?: (event?: InitializeEvent) => void): void;
-    off(eventName: 'preupdate', handler?: (event?: PreUpdateEvent) => void): void;
-    off(eventName: 'postupdate', handler?: (event?: PostUpdateEvent) => void): void;
-    off(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-    once(eventName: 'initialize', handler: (event?: InitializeEvent) => void): void;
-    once(eventName: 'preupdate', handler: (event?: PreUpdateEvent) => void): void;
-    once(eventName: 'postupdate', handler: (event?: PostUpdateEvent) => void): void;
-    once(eventName: string, handler: (event?: GameEvent<any>) => void): void;
+    on(eventName: 'initialize', handler: (event: InitializeEvent) => void): void;
+    on(eventName: 'preupdate', handler: (event: PreUpdateEvent) => void): void;
+    on(eventName: 'postupdate', handler: (event: PostUpdateEvent) => void): void;
+    off(eventName: 'initialize', handler?: (event: InitializeEvent) => void): void;
+    off(eventName: 'preupdate', handler?: (event: PreUpdateEvent) => void): void;
+    off(eventName: 'postupdate', handler?: (event: PostUpdateEvent) => void): void;
+    off(eventName: string, handler: (event: GameEvent<Camera>) => void): void;
+    once(eventName: 'initialize', handler: (event: InitializeEvent) => void): void;
+    once(eventName: 'preupdate', handler: (event: PreUpdateEvent) => void): void;
+    once(eventName: 'postupdate', handler: (event: PostUpdateEvent) => void): void;
+    once(eventName: string, handler: (event: GameEvent<Camera>) => void): void;
     update(_engine: Engine, delta: number): void;
     /**
      * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera

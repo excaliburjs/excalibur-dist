@@ -26,9 +26,9 @@ export declare class Group extends Class implements Actionable, Eventable {
     move(vector: Vector): void;
     move(dx: number, dy: number): void;
     rotate(angle: number): void;
-    on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-    off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
-    emit(topic: string, event?: GameEvent<any>): void;
+    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
+    off(eventName: string, handler?: (event: GameEvent<any>) => void): void;
+    emit(topic: string, event: GameEvent<any>): void;
     contains(actor: Actor): boolean;
     getMembers(): Actor[];
     getRandomMember(): Actor;

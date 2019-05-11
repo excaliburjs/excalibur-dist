@@ -43,12 +43,12 @@ export declare class Gamepads extends Class {
      * Checks a navigator gamepad against the minimum configuration if present.
      */
     private _isGamepadValid;
-    on(eventName: Events.connect, handler: (event?: GamepadConnectEvent) => void): void;
-    on(eventName: Events.disconnect, handler: (event?: GamepadDisconnectEvent) => void): void;
-    on(eventName: Events.button, handler: (event?: GamepadButtonEvent) => void): void;
-    on(eventName: Events.axis, handler: (event?: GamepadAxisEvent) => void): void;
-    on(eventName: string, handler: (event?: GameEvent<any>) => void): void;
-    off(eventName: string, handler?: (event?: GameEvent<any>) => void): void;
+    on(eventName: Events.connect, handler: (event: GamepadConnectEvent) => void): void;
+    on(eventName: Events.disconnect, handler: (event: GamepadDisconnectEvent) => void): void;
+    on(eventName: Events.button, handler: (event: GamepadButtonEvent) => void): void;
+    on(eventName: Events.axis, handler: (event: GamepadAxisEvent) => void): void;
+    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
+    off(eventName: string, handler?: (event: GameEvent<any>) => void): void;
     /**
      * Updates Gamepad state and publishes Gamepad events
      */

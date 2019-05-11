@@ -70,7 +70,8 @@ var Polygon = /** @class */ (function () {
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this._points[0];
         ctx.moveTo(firstPoint.x, firstPoint.y);
-        var i = 0, len = this._points.length;
+        var i = 0;
+        var len = this._points.length;
         for (i; i < len; i++) {
             ctx.lineTo(this._points[i].x, this._points[i].y);
         }

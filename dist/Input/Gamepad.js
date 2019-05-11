@@ -133,7 +133,7 @@ var Gamepads = /** @class */ (function (_super) {
             // Add reference to navigator gamepad
             this.at(i).navigatorGamepad = gamepads[i];
             // Buttons
-            var b, bi, a, ai, value;
+            var b = void 0, bi = void 0, a = void 0, ai = void 0, value = void 0;
             for (b in Buttons) {
                 bi = Buttons[b];
                 if (typeof bi === 'number') {
@@ -242,11 +242,10 @@ var Gamepad = /** @class */ (function (_super) {
         _this.connected = false;
         _this._buttons = new Array(16);
         _this._axes = new Array(4);
-        var i;
-        for (i = 0; i < _this._buttons.length; i++) {
+        for (var i = 0; i < _this._buttons.length; i++) {
             _this._buttons[i] = 0;
         }
-        for (i = 0; i < _this._axes.length; i++) {
+        for (var i = 0; i < _this._axes.length; i++) {
             _this._axes[i] = 0;
         }
         return _this;

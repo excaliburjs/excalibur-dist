@@ -237,55 +237,55 @@ var BoundingBox = /** @class */ (function () {
                 // Case of total containment of one bounding box by another
             }
             else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
-                var overlapX_1 = 0;
+                var overlapX = 0;
                 // this is wider than the other
                 if (this.getWidth() - other.getWidth() >= 0) {
                     // This right edge is closest to the others right edge
                     if (this.right - other.right <= other.left - this.left) {
-                        overlapX_1 = other.left - this.right;
+                        overlapX = other.left - this.right;
                         // This left edge is closest to the others left edge
                     }
                     else {
-                        overlapX_1 = other.right - this.left;
+                        overlapX = other.right - this.left;
                     }
                     // other is wider than this
                 }
                 else {
                     // This right edge is closest to the others right edge
                     if (other.right - this.right <= this.left - other.left) {
-                        overlapX_1 = this.left - other.right;
+                        overlapX = this.left - other.right;
                         // This left edge is closest to the others left edge
                     }
                     else {
-                        overlapX_1 = this.right - other.left;
+                        overlapX = this.right - other.left;
                     }
                 }
-                var overlapY_1 = 0;
+                var overlapY = 0;
                 // this is taller than other
                 if (this.getHeight() - other.getHeight() >= 0) {
                     // The bottom edge is closest to the others bottom edge
                     if (this.bottom - other.bottom <= other.top - this.top) {
-                        overlapY_1 = other.top - this.bottom;
+                        overlapY = other.top - this.bottom;
                     }
                     else {
-                        overlapY_1 = other.bottom - this.top;
+                        overlapY = other.bottom - this.top;
                     }
                     // other is taller than this
                 }
                 else {
                     // The bottom edge is closest to the others bottom edge
                     if (other.bottom - this.bottom <= this.top - other.top) {
-                        overlapY_1 = this.top - other.bottom;
+                        overlapY = this.top - other.bottom;
                     }
                     else {
-                        overlapY_1 = this.bottom - other.top;
+                        overlapY = this.bottom - other.top;
                     }
                 }
-                if (Math.abs(overlapX_1) < Math.abs(overlapY_1)) {
-                    return new Vector(overlapX_1, 0);
+                if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                    return new Vector(overlapX, 0);
                 }
                 else {
-                    return new Vector(0, overlapY_1);
+                    return new Vector(0, overlapY);
                 }
             }
             else {

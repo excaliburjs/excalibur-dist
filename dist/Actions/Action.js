@@ -701,8 +701,8 @@ var Repeat = /** @class */ (function () {
         this._actionQueue = new ActionQueue(actor);
         this._repeat = repeat;
         this._originalRepeat = repeat;
-        var i = 0, len = actions.length;
-        for (i; i < len; i++) {
+        var len = actions.length;
+        for (var i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
@@ -733,8 +733,8 @@ var RepeatForever = /** @class */ (function () {
         this._stopped = false;
         this._actor = actor;
         this._actionQueue = new ActionQueue(actor);
-        var i = 0, len = actions.length;
-        for (i; i < len; i++) {
+        var len = actions.length;
+        for (var i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
@@ -801,8 +801,8 @@ var ActionQueue = /** @class */ (function () {
     };
     ActionQueue.prototype.reset = function () {
         this._actions = this.getActions();
-        var i = 0, len = this._actions.length;
-        for (i; i < len; i++) {
+        var len = this._actions.length;
+        for (var i = 0; i < len; i++) {
             this._actions[i].reset();
         }
         this._completedActions = [];

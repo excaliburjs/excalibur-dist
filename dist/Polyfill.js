@@ -65,7 +65,7 @@ export function polyfill() {
             k = 0;
             // 7. Repeat, while k < len
             while (k < len) {
-                var kValue;
+                var kValue = void 0;
                 // a. Let Pk be ToString(k).
                 //   This is implicit for LHS operands of the in operator
                 // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.

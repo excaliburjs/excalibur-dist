@@ -59,8 +59,8 @@ var Random = /** @class */ (function () {
      */
     Random.prototype._twist = function () {
         var mag01 = [0x0, this._a];
-        var y = 0;
-        for (var i = 0; i < this._n - this._m; i++) {
+        var y = 0, i = 0;
+        for (; i < this._n - this._m; i++) {
             y = (this._mt[i] & this._upperMask) | (this._mt[i + 1] & this._lowerMask);
             this._mt[i] = this._mt[i + this._m] ^ (y >>> 1) ^ (mag01[y & 0x1] & BITMASK32);
         }

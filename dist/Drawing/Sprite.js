@@ -223,12 +223,10 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCtx.clearRect(0, 0, this.width, this.height);
         this._spriteCtx.drawImage(this._texture.image, clamp(this.x, 0, naturalWidth), clamp(this.y, 0, naturalHeight), clamp(this.width, 0, naturalWidth), clamp(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
         this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
-        var i = 0, x = 0, y = 0, len = this.effects.length;
-        for (i; i < len; i++) {
-            y = 0;
-            for (y; y < this.height; y++) {
-                x = 0;
-                for (x; x < this.width; x++) {
+        var len = this.effects.length;
+        for (var i = 0; i < len; i++) {
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
                     this.effects[i].updatePixel(x, y, this._pixelData);
                 }
             }
@@ -297,8 +295,8 @@ var SpriteImpl = /** @class */ (function () {
         result.rotation = this.rotation;
         result.flipHorizontal = this.flipHorizontal;
         result.flipVertical = this.flipVertical;
-        var i = 0, len = this.effects.length;
-        for (i; i < len; i++) {
+        var len = this.effects.length;
+        for (var i = 0; i < len; i++) {
             result.addEffect(this.effects[i]);
         }
         return result;

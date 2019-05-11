@@ -58,7 +58,7 @@ import loaderCss from './Loader.css';
  * The loader can be customized to show different, text, logo, background color, and button.
  *
  * ```typescript
- * var loader = new ex.Loader([playerTexture]);
+ * const loader = new ex.Loader([playerTexture]);
  *
  * // The loaders button text can simply modified using this
  * loader.playButtonText = 'Start the best game ever';
@@ -196,7 +196,8 @@ var Loader = /** @class */ (function (_super) {
      * @param loadables  The list of resources to load
      */
     Loader.prototype.addResources = function (loadables) {
-        var i = 0, len = loadables.length;
+        var i = 0;
+        var len = loadables.length;
         for (i; i < len; i++) {
             this.addResource(loadables[i]);
         }

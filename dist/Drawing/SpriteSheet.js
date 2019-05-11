@@ -84,10 +84,8 @@ var SpriteSheetImpl = /** @class */ (function () {
             }
         }
         if (loadFromImage) {
-            var i = 0;
-            var j = 0;
-            for (i = 0; i < this.rows; i++) {
-                for (j = 0; j < this.columns; j++) {
+            for (var i = 0; i < this.rows; i++) {
+                for (var j = 0; j < this.columns; j++) {
                     this.sprites[j + i * this.columns] = new Sprite(this.image, j * this.spWidth + this.spacing * j + this.spacing, i * this.spHeight + this.spacing * i + this.spacing, this.spWidth, this.spHeight);
                 }
             }

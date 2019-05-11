@@ -440,7 +440,8 @@ var HSLColor = /** @class */ (function () {
         g /= 255;
         b /= 255;
         var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
+        var h, s;
+        var l = (max + min) / 2;
         if (max === min) {
             h = s = 0; // achromatic
         }

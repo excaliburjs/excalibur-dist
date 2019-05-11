@@ -66,7 +66,7 @@ export function base64Encode(inputStr) {
         var byte3 = inputStr.charCodeAt(i++) & 0xff;
         var enc1 = byte1 >> 2;
         var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
-        var enc3, enc4;
+        var enc3 = void 0, enc4 = void 0;
         if (isNaN(byte2)) {
             enc3 = enc4 = 64;
         }
@@ -302,7 +302,8 @@ var Collection = /** @class */ (function () {
      * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
      */
     Collection.prototype.forEach = function (func) {
-        var i = 0, count = this.count();
+        var i = 0;
+        var count = this.count();
         for (i; i < count; i++) {
             func.call(this, this._internalArray[i], i);
         }

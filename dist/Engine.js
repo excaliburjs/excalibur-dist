@@ -571,9 +571,9 @@ O|===|* >________________>\n\
         newY = newY - this.halfDrawHeight;
         // shift by focus
         if (this.currentScene && this.currentScene.camera) {
-            var focus = this.currentScene.camera.getFocus();
-            newX += focus.x;
-            newY += focus.y;
+            var focus_1 = this.currentScene.camera.getFocus();
+            newX += focus_1.x;
+            newY += focus_1.y;
         }
         return new Vector(Math.floor(newX), Math.floor(newY));
     };
@@ -586,9 +586,9 @@ O|===|* >________________>\n\
         var screenY = point.y;
         // shift by focus
         if (this.currentScene && this.currentScene.camera) {
-            var focus = this.currentScene.camera.getFocus();
-            screenX -= focus.x;
-            screenY -= focus.y;
+            var focus_2 = this.currentScene.camera.getFocus();
+            screenX -= focus_2.x;
+            screenY -= focus_2.y;
         }
         // transform back on zoom
         screenX = screenX + this.halfDrawWidth;
@@ -622,12 +622,12 @@ O|===|* >________________>\n\
             this.displayMode = options.displayMode;
         }
         if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
-            var parent = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
-            this._setHeightByDisplayMode(parent);
+            var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
+            this._setHeightByDisplayMode(parent_1);
             window.addEventListener('resize', function () {
                 _this._logger.debug('View port resized');
-                _this._setHeightByDisplayMode(parent);
-                _this._logger.info('parent.clientHeight ' + parent.clientHeight);
+                _this._setHeightByDisplayMode(parent_1);
+                _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
                 _this.setAntialiasing(_this._isSmoothingEnabled);
             });
         }
@@ -872,7 +872,8 @@ O|===|* >________________>\n\
         ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.currentScene.draw(this.ctx, delta);
         // todo needs to be a better way of doing this
-        var a = 0, len = this._animations.length;
+        var a = 0;
+        var len = this._animations.length;
         for (a; a < len; a++) {
             this._animations[a].animation.draw(ctx, this._animations[a].x, this._animations[a].y);
         }

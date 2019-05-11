@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3054+faf8a54 - 2019-5-11
+ * excalibur - 0.22.0-alpha.3057+b0f85f6 - 2019-5-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -942,8 +942,8 @@ var Repeat = /** @class */ (function () {
         this._actionQueue = new ActionQueue(actor);
         this._repeat = repeat;
         this._originalRepeat = repeat;
-        var i = 0, len = actions.length;
-        for (i; i < len; i++) {
+        var len = actions.length;
+        for (var i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
@@ -974,8 +974,8 @@ var RepeatForever = /** @class */ (function () {
         this._stopped = false;
         this._actor = actor;
         this._actionQueue = new ActionQueue(actor);
-        var i = 0, len = actions.length;
-        for (i; i < len; i++) {
+        var len = actions.length;
+        for (var i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
@@ -1042,8 +1042,8 @@ var ActionQueue = /** @class */ (function () {
     };
     ActionQueue.prototype.reset = function () {
         this._actions = this.getActions();
-        var i = 0, len = this._actions.length;
-        for (i; i < len; i++) {
+        var len = this._actions.length;
+        for (var i = 0; i < len; i++) {
             this._actions[i].reset();
         }
         this._completedActions = [];
@@ -1103,8 +1103,8 @@ var ActionContext = /** @class */ (function () {
      * Clears all queued actions from the Actor
      */
     ActionContext.prototype.clearActions = function () {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].clearActions();
         }
     };
@@ -1131,8 +1131,8 @@ var ActionContext = /** @class */ (function () {
      */
     ActionContext.prototype.easeTo = function (x, y, duration, easingFcn) {
         if (easingFcn === void 0) { easingFcn = _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_2__["EasingFunctions"].Linear; }
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["EaseTo"](this._actors[i], x, y, duration, easingFcn));
         }
         return this;
@@ -1146,8 +1146,8 @@ var ActionContext = /** @class */ (function () {
      * @param speed  The speed in pixels per second to move
      */
     ActionContext.prototype.moveTo = function (x, y, speed) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["MoveTo"](this._actors[i], x, y, speed));
         }
         return this;
@@ -1161,8 +1161,8 @@ var ActionContext = /** @class */ (function () {
      * @param time  The time it should take the actor to move to the new location in milliseconds
      */
     ActionContext.prototype.moveBy = function (x, y, time) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["MoveBy"](this._actors[i], x, y, time));
         }
         return this;
@@ -1176,8 +1176,8 @@ var ActionContext = /** @class */ (function () {
      * @param rotationType  The [[RotationType]] to use for this rotation
      */
     ActionContext.prototype.rotateTo = function (angleRadians, speed, rotationType) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["RotateTo"](this._actors[i], angleRadians, speed, rotationType));
         }
         return this;
@@ -1191,8 +1191,8 @@ var ActionContext = /** @class */ (function () {
      * @param rotationType  The [[RotationType]] to use for this rotation
      */
     ActionContext.prototype.rotateBy = function (angleRadians, time, rotationType) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["RotateBy"](this._actors[i], angleRadians, time, rotationType));
         }
         return this;
@@ -1208,8 +1208,8 @@ var ActionContext = /** @class */ (function () {
      * @param speedY  The speed of scaling specified in magnitude increase per second on Y axis
      */
     ActionContext.prototype.scaleTo = function (sizeX, sizeY, speedX, speedY) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["ScaleTo"](this._actors[i], sizeX, sizeY, speedX, speedY));
         }
         return this;
@@ -1223,8 +1223,8 @@ var ActionContext = /** @class */ (function () {
      * @param time    The time it should take to complete the scaling in milliseconds
      */
     ActionContext.prototype.scaleBy = function (sizeX, sizeY, time) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["ScaleBy"](this._actors[i], sizeX, sizeY, time));
         }
         return this;
@@ -1240,8 +1240,8 @@ var ActionContext = /** @class */ (function () {
      */
     ActionContext.prototype.blink = function (timeVisible, timeNotVisible, numBlinks) {
         if (numBlinks === void 0) { numBlinks = 1; }
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Blink"](this._actors[i], timeVisible, timeNotVisible, numBlinks));
         }
         return this;
@@ -1254,8 +1254,8 @@ var ActionContext = /** @class */ (function () {
      * @param time     The time it should take to fade the actor (in milliseconds)
      */
     ActionContext.prototype.fade = function (opacity, time) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Fade"](this._actors[i], opacity, time));
         }
         return this;
@@ -1267,8 +1267,8 @@ var ActionContext = /** @class */ (function () {
      * @param time  The amount of time to delay the next action in the queue from executing in milliseconds
      */
     ActionContext.prototype.delay = function (time) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Delay"](this._actors[i], time));
         }
         return this;
@@ -1279,8 +1279,8 @@ var ActionContext = /** @class */ (function () {
      * action queue after this action will not be executed.
      */
     ActionContext.prototype.die = function () {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Die"](this._actors[i]));
         }
         return this;
@@ -1291,8 +1291,8 @@ var ActionContext = /** @class */ (function () {
      * action, i.e An actor arrives at a destination after traversing a path
      */
     ActionContext.prototype.callMethod = function (method) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["CallMethod"](this._actors[i], method));
         }
         return this;
@@ -1310,8 +1310,8 @@ var ActionContext = /** @class */ (function () {
             this.repeatForever();
             return this;
         }
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Repeat"](this._actors[i], times, this._actors[i].actionQueue.getActions()));
         }
         return this;
@@ -1322,8 +1322,8 @@ var ActionContext = /** @class */ (function () {
      * fluent API allowing action chaining.
      */
     ActionContext.prototype.repeatForever = function () {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["RepeatForever"](this._actors[i], this._actors[i].actionQueue.getActions()));
         }
         return this;
@@ -1334,8 +1334,8 @@ var ActionContext = /** @class */ (function () {
      * @param followDistance  The distance to maintain when following, if not specified the actor will follow at the current distance.
      */
     ActionContext.prototype.follow = function (actor, followDistance) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             if (followDistance === undefined) {
                 this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Follow"](this._actors[i], actor));
             }
@@ -1352,8 +1352,8 @@ var ActionContext = /** @class */ (function () {
      * @param speed  The speed in pixels per second to move, if not specified it will match the speed of the other actor
      */
     ActionContext.prototype.meet = function (actor, speed) {
-        var i = 0, len = this._queues.length;
-        for (i; i < len; i++) {
+        var len = this._queues.length;
+        for (var i = 0; i < len; i++) {
             if (speed === undefined) {
                 this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["Meet"](this._actors[i], actor));
             }
@@ -4514,55 +4514,55 @@ var BoundingBox = /** @class */ (function () {
                 // Case of total containment of one bounding box by another
             }
             else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
-                var overlapX_1 = 0;
+                var overlapX = 0;
                 // this is wider than the other
                 if (this.getWidth() - other.getWidth() >= 0) {
                     // This right edge is closest to the others right edge
                     if (this.right - other.right <= other.left - this.left) {
-                        overlapX_1 = other.left - this.right;
+                        overlapX = other.left - this.right;
                         // This left edge is closest to the others left edge
                     }
                     else {
-                        overlapX_1 = other.right - this.left;
+                        overlapX = other.right - this.left;
                     }
                     // other is wider than this
                 }
                 else {
                     // This right edge is closest to the others right edge
                     if (other.right - this.right <= this.left - other.left) {
-                        overlapX_1 = this.left - other.right;
+                        overlapX = this.left - other.right;
                         // This left edge is closest to the others left edge
                     }
                     else {
-                        overlapX_1 = this.right - other.left;
+                        overlapX = this.right - other.left;
                     }
                 }
-                var overlapY_1 = 0;
+                var overlapY = 0;
                 // this is taller than other
                 if (this.getHeight() - other.getHeight() >= 0) {
                     // The bottom edge is closest to the others bottom edge
                     if (this.bottom - other.bottom <= other.top - this.top) {
-                        overlapY_1 = other.top - this.bottom;
+                        overlapY = other.top - this.bottom;
                     }
                     else {
-                        overlapY_1 = other.bottom - this.top;
+                        overlapY = other.bottom - this.top;
                     }
                     // other is taller than this
                 }
                 else {
                     // The bottom edge is closest to the others bottom edge
                     if (other.bottom - this.bottom <= this.top - other.top) {
-                        overlapY_1 = this.top - other.bottom;
+                        overlapY = this.top - other.bottom;
                     }
                     else {
-                        overlapY_1 = this.bottom - other.top;
+                        overlapY = this.bottom - other.top;
                     }
                 }
-                if (Math.abs(overlapX_1) < Math.abs(overlapY_1)) {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX_1, 0);
+                if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX, 0);
                 }
                 else {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY_1);
+                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
                 }
             }
             else {
@@ -5089,16 +5089,17 @@ var CollisionJumpTable = {
         // (1) Polygon lands on the full face
         // (2) Polygon lands on the right point
         // (3) Polygon lands on the left point
+        var _a, _b;
         var e = edge.end.sub(edge.begin);
         var edgeNormal = e.normal();
         if (polygon.contains(edge.begin)) {
-            var _a = polygon.getClosestFace(edge.begin), mtv = _a.distance, face = _a.face;
+            var mtv = (_a = polygon.getClosestFace(edge.begin), _a.distance), face = _a.face;
             if (mtv) {
                 return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon, edge, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
             }
         }
         if (polygon.contains(edge.end)) {
-            var _b = polygon.getClosestFace(edge.end), mtv = _b.distance, face = _b.face;
+            var mtv = (_b = polygon.getClosestFace(edge.end), _b.distance), face = _b.face;
             if (mtv) {
                 return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon, edge, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
             }
@@ -5229,8 +5230,8 @@ var DynamicTree = /** @class */ (function () {
             // Cost of descending
             var leftCost = 0;
             var leftCombined = leafAABB.combine(left.bounds);
-            var newArea;
-            var oldArea;
+            var newArea = void 0;
+            var oldArea = void 0;
             if (left.isLeaf()) {
                 leftCost = leftCombined.getPerimeter() + inheritanceCost;
             }
@@ -5712,50 +5713,51 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     return "continue";
                 }
                 // Maximum travel distance next frame
-                updateDistance = actor_1.vel.magnitude() * seconds + // velocity term
+                var updateDistance = actor_1.vel.magnitude() * seconds + // velocity term
                     actor_1.acc.magnitude() * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
-                minDimension = Math.min(actor_1.body.getBounds().getHeight(), actor_1.body.getBounds().getWidth());
+                var minDimension = Math.min(actor_1.body.getBounds().getHeight(), actor_1.body.getBounds().getWidth());
                 if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
                     if (stats) {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
                     // objects resting on a surface may be slightly penatrating in the current position
-                    updateVec = actor_1.pos.sub(actor_1.oldPos);
-                    centerPoint = actor_1.body.collisionArea.getCenter();
-                    furthestPoint = actor_1.body.collisionArea.getFurthestPoint(actor_1.vel);
-                    origin = furthestPoint.sub(updateVec);
-                    ray = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Ray"](origin, actor_1.vel);
+                    var updateVec = actor_1.pos.sub(actor_1.oldPos);
+                    var centerPoint = actor_1.body.collisionArea.getCenter();
+                    var furthestPoint = actor_1.body.collisionArea.getFurthestPoint(actor_1.vel);
+                    var origin_1 = furthestPoint.sub(updateVec);
+                    var ray_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Ray"](origin_1, actor_1.vel);
                     // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface
-                    ray.pos = ray.pos.add(ray.dir.scale(-2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
-                    minTranslate = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Infinity, Infinity);
-                    this_1._dynamicCollisionTree.rayCastQuery(ray, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 2, function (other) {
+                    ray_1.pos = ray_1.pos.add(ray_1.dir.scale(-2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
+                    var minBody_1;
+                    var minTranslate_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Infinity, Infinity);
+                    this_1._dynamicCollisionTree.rayCastQuery(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 2, function (other) {
                         if (actor_1.body !== other && other.collisionArea) {
-                            var hitPoint = other.collisionArea.rayCast(ray, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
+                            var hitPoint = other.collisionArea.rayCast(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
                             if (hitPoint) {
-                                var translate = hitPoint.sub(origin);
-                                if (translate.magnitude() < minTranslate.magnitude()) {
-                                    minTranslate = translate;
-                                    minBody = other;
+                                var translate = hitPoint.sub(origin_1);
+                                if (translate.magnitude() < minTranslate_1.magnitude()) {
+                                    minTranslate_1 = translate;
+                                    minBody_1 = other;
                                 }
                             }
                         }
                         return false;
                     });
-                    if (minBody && _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].isValid(minTranslate)) {
-                        pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor_1.body, minBody);
+                    if (minBody_1 && _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].isValid(minTranslate_1)) {
+                        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor_1.body, minBody_1);
                         if (!this_1._collisionHash[pair.id]) {
                             this_1._collisionHash[pair.id] = true;
                             this_1._collisionPairCache.push(pair);
                         }
                         // move the fast moving object to the other body
                         // need to push into the surface by ex.Physics.surfaceEpsilon
-                        shift = centerPoint.sub(furthestPoint);
-                        actor_1.pos = origin
+                        var shift = centerPoint.sub(furthestPoint);
+                        actor_1.pos = origin_1
                             .add(shift)
-                            .add(minTranslate)
-                            .add(ray.dir.scale(2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
+                            .add(minTranslate_1)
+                            .add(ray_1.dir.scale(2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
                         actor_1.body.collisionArea.recalc();
                         if (stats) {
                             stats.physics.fastBodyCollisions++;
@@ -5763,7 +5765,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     }
                 }
             };
-            var this_1 = this, updateDistance, minDimension, updateVec, centerPoint, furthestPoint, origin, ray, minBody, minTranslate, pair, shift;
+            var this_1 = this;
             for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
                 var actor_1 = potentialColliders_1[_i];
                 _loop_1(actor_1);
@@ -5835,8 +5837,9 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
      * Update the dynamic tree positions
      */
     DynamicTreeCollisionBroadphase.prototype.update = function (targets) {
-        var updated = 0, i = 0, len = targets.length;
-        for (i; i < len; i++) {
+        var updated = 0;
+        var len = targets.length;
+        for (var i = 0; i < len; i++) {
             if (this._dynamicCollisionTree.updateBody(targets[i].body)) {
                 updated++;
             }
@@ -6165,18 +6168,21 @@ var NaiveCollisionBroadphase = /** @class */ (function () {
         var collisionPairs = [];
         for (var j = 0, l = potentialColliders.length; j < l; j++) {
             actor1 = potentialColliders[j];
-            for (var i = j + 1; i < l; i++) {
+            var _loop_1 = function (i) {
                 actor2 = potentialColliders[i];
-                var minimumTranslationVector;
+                var minimumTranslationVector = void 0;
                 if ((minimumTranslationVector = actor1.collides(actor2))) {
-                    var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor1.body, actor2.body);
-                    pair.collision = new _CollisionContact__WEBPACK_IMPORTED_MODULE_1__["CollisionContact"](actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
+                    var pair_1 = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor1.body, actor2.body);
+                    pair_1.collision = new _CollisionContact__WEBPACK_IMPORTED_MODULE_1__["CollisionContact"](actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                     if (!collisionPairs.some(function (cp) {
-                        return cp.id === pair.id;
+                        return cp.id === pair_1.id;
                     })) {
-                        collisionPairs.push(pair);
+                        collisionPairs.push(pair_1);
                     }
                 }
+            };
+            for (var i = j + 1; i < l; i++) {
+                _loop_1(i);
             }
         }
         return collisionPairs;
@@ -7794,7 +7800,8 @@ var HSLColor = /** @class */ (function () {
         g /= 255;
         b /= 255;
         var max = Math.max(r, g, b), min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
+        var h, s;
+        var l = (max + min) / 2;
         if (max === min) {
             h = s = 0; // achromatic
         }
@@ -7962,7 +7969,8 @@ var Polygon = /** @class */ (function () {
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this._points[0];
         ctx.moveTo(firstPoint.x, firstPoint.y);
-        var i = 0, len = this._points.length;
+        var i = 0;
+        var len = this._points.length;
         for (i; i < len; i++) {
             ctx.lineTo(this._points[i].x, this._points[i].y);
         }
@@ -8234,12 +8242,10 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCtx.clearRect(0, 0, this.width, this.height);
         this._spriteCtx.drawImage(this._texture.image, Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.x, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.y, 0, naturalHeight), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.width, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
         this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
-        var i = 0, x = 0, y = 0, len = this.effects.length;
-        for (i; i < len; i++) {
-            y = 0;
-            for (y; y < this.height; y++) {
-                x = 0;
-                for (x; x < this.width; x++) {
+        var len = this.effects.length;
+        for (var i = 0; i < len; i++) {
+            for (var y = 0; y < this.height; y++) {
+                for (var x = 0; x < this.width; x++) {
                     this.effects[i].updatePixel(x, y, this._pixelData);
                 }
             }
@@ -8308,8 +8314,8 @@ var SpriteImpl = /** @class */ (function () {
         result.rotation = this.rotation;
         result.flipHorizontal = this.flipHorizontal;
         result.flipVertical = this.flipVertical;
-        var i = 0, len = this.effects.length;
-        for (i; i < len; i++) {
+        var len = this.effects.length;
+        for (var i = 0; i < len; i++) {
             result.addEffect(this.effects[i]);
         }
         return result;
@@ -8666,10 +8672,8 @@ var SpriteSheetImpl = /** @class */ (function () {
             }
         }
         if (loadFromImage) {
-            var i = 0;
-            var j = 0;
-            for (i = 0; i < this.rows; i++) {
-                for (j = 0; j < this.columns; j++) {
+            for (var i = 0; i < this.rows; i++) {
+                for (var j = 0; j < this.columns; j++) {
                     this.sprites[j + i * this.columns] = new _Sprite__WEBPACK_IMPORTED_MODULE_0__["Sprite"](this.image, j * this.spWidth + this.spacing * j + this.spacing, i * this.spHeight + this.spacing * i + this.spacing, this.spWidth, this.spHeight);
                 }
             }
@@ -9566,9 +9570,9 @@ O|===|* >________________>\n\
         newY = newY - this.halfDrawHeight;
         // shift by focus
         if (this.currentScene && this.currentScene.camera) {
-            var focus = this.currentScene.camera.getFocus();
-            newX += focus.x;
-            newY += focus.y;
+            var focus_1 = this.currentScene.camera.getFocus();
+            newX += focus_1.x;
+            newY += focus_1.y;
         }
         return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Math.floor(newX), Math.floor(newY));
     };
@@ -9581,9 +9585,9 @@ O|===|* >________________>\n\
         var screenY = point.y;
         // shift by focus
         if (this.currentScene && this.currentScene.camera) {
-            var focus = this.currentScene.camera.getFocus();
-            screenX -= focus.x;
-            screenY -= focus.y;
+            var focus_2 = this.currentScene.camera.getFocus();
+            screenX -= focus_2.x;
+            screenY -= focus_2.y;
         }
         // transform back on zoom
         screenX = screenX + this.halfDrawWidth;
@@ -9617,12 +9621,12 @@ O|===|* >________________>\n\
             this.displayMode = options.displayMode;
         }
         if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
-            var parent = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
-            this._setHeightByDisplayMode(parent);
+            var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
+            this._setHeightByDisplayMode(parent_1);
             window.addEventListener('resize', function () {
                 _this._logger.debug('View port resized');
-                _this._setHeightByDisplayMode(parent);
-                _this._logger.info('parent.clientHeight ' + parent.clientHeight);
+                _this._setHeightByDisplayMode(parent_1);
+                _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
                 _this.setAntialiasing(_this._isSmoothingEnabled);
             });
         }
@@ -9867,7 +9871,8 @@ O|===|* >________________>\n\
         ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.currentScene.draw(this.ctx, delta);
         // todo needs to be a better way of doing this
-        var a = 0, len = this._animations.length;
+        var a = 0;
+        var len = this._animations.length;
         for (a; a < len; a++) {
             this._animations[a].animation.draw(ctx, this._animations[a].x, this._animations[a].y);
         }
@@ -11079,8 +11084,9 @@ var Group = /** @class */ (function (_super) {
         if (actorOrActors instanceof _Actor__WEBPACK_IMPORTED_MODULE_2__["Actor"]) {
             actorOrActors = [].concat(actorOrActors);
         }
-        var i = 0, len = actorOrActors.length, groupIdx;
-        for (i; i < len; i++) {
+        var groupIdx;
+        var len = actorOrActors.length;
+        for (var i = 0; i < len; i++) {
             groupIdx = this.getMembers().indexOf(actorOrActors[i]);
             if (groupIdx === -1) {
                 this._members.push(actorOrActors[i]);
@@ -11099,9 +11105,10 @@ var Group = /** @class */ (function (_super) {
         }
     };
     Group.prototype.move = function (args) {
-        var i = 0, members = this.getMembers(), len = members.length;
+        var members = this.getMembers();
+        var len = members.length;
         if (arguments.length === 1 && args instanceof _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"]) {
-            for (i; i < len; i++) {
+            for (var i = 0; i < len; i++) {
                 members[i].pos.x += args.x;
                 members[i].pos.y += args.y;
             }
@@ -11109,7 +11116,7 @@ var Group = /** @class */ (function (_super) {
         else if (typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
             var x = arguments[0];
             var y = arguments[1];
-            for (i; i < len; i++) {
+            for (var i = 0; i < len; i++) {
                 members[i].pos.x += x;
                 members[i].pos.y += y;
             }
@@ -11310,7 +11317,7 @@ var Gamepads = /** @class */ (function (_super) {
             // Add reference to navigator gamepad
             this.at(i).navigatorGamepad = gamepads[i];
             // Buttons
-            var b, bi, a, ai, value;
+            var b = void 0, bi = void 0, a = void 0, ai = void 0, value = void 0;
             for (b in Buttons) {
                 bi = Buttons[b];
                 if (typeof bi === 'number') {
@@ -11419,11 +11426,10 @@ var Gamepad = /** @class */ (function (_super) {
         _this.connected = false;
         _this._buttons = new Array(16);
         _this._axes = new Array(4);
-        var i;
-        for (i = 0; i < _this._buttons.length; i++) {
+        for (var i = 0; i < _this._buttons.length; i++) {
             _this._buttons[i] = 0;
         }
-        for (i = 0; i < _this._axes.length; i++) {
+        for (var i = 0; i < _this._axes.length; i++) {
             _this._axes[i] = 0;
         }
         return _this;
@@ -13273,7 +13279,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * The loader can be customized to show different, text, logo, background color, and button.
  *
  * ```typescript
- * var loader = new ex.Loader([playerTexture]);
+ * const loader = new ex.Loader([playerTexture]);
  *
  * // The loaders button text can simply modified using this
  * loader.playButtonText = 'Start the best game ever';
@@ -13411,7 +13417,8 @@ var Loader = /** @class */ (function (_super) {
      * @param loadables  The list of resources to load
      */
     Loader.prototype.addResources = function (loadables) {
-        var i = 0, len = loadables.length;
+        var i = 0;
+        var len = loadables.length;
         for (i; i < len; i++) {
             this.addResource(loadables[i]);
         }
@@ -14133,8 +14140,8 @@ var Random = /** @class */ (function () {
      */
     Random.prototype._twist = function () {
         var mag01 = [0x0, this._a];
-        var y = 0;
-        for (var i = 0; i < this._n - this._m; i++) {
+        var y = 0, i = 0;
+        for (; i < this._n - this._m; i++) {
             y = (this._mt[i] & this._upperMask) | (this._mt[i + 1] & this._lowerMask);
             this._mt[i] = this._mt[i + this._m] ^ (y >>> 1) ^ (mag01[y & 0x1] & BITMASK32);
         }
@@ -14997,7 +15004,7 @@ function polyfill() {
             k = 0;
             // 7. Repeat, while k < len
             while (k < len) {
-                var kValue;
+                var kValue = void 0;
                 // a. Let Pk be ToString(k).
                 //   This is implicit for LHS operands of the in operator
                 // b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
@@ -17720,13 +17727,19 @@ var TileMapImpl = /** @class */ (function (_super) {
         _this.rows = rows;
         _this.cols = cols;
         _this.data = new Array(rows * cols);
-        for (var i = 0; i < cols; i++) {
-            for (var j = 0; j < rows; j++) {
+        var _loop_1 = function (i) {
+            var _loop_2 = function (j) {
                 (function () {
                     var cd = new Cell(i * cellWidth + xOrConfig, j * cellHeight + y, cellWidth, cellHeight, i + j * cols);
                     _this.data[i + j * cols] = cd;
                 })();
+            };
+            for (var j = 0; j < rows; j++) {
+                _loop_2(j);
             }
+        };
+        for (var i = 0; i < cols; i++) {
+            _loop_1(i);
         }
         return _this;
     }
@@ -18318,7 +18331,7 @@ var TileMapCollisionDetection = /** @class */ (function () {
         if (actor.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
             for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
                 var map = engine.currentScene.tileMaps[j];
-                var intersectMap;
+                var intersectMap = void 0;
                 var side = _Collision_Side__WEBPACK_IMPORTED_MODULE_1__["Side"].None;
                 var max = 2;
                 while ((intersectMap = map.collides(actor))) {
@@ -19366,8 +19379,8 @@ var Logger = /** @class */ (function () {
         if (level == null) {
             level = this.defaultLevel;
         }
-        var i = 0, len = this._appenders.length;
-        for (i; i < len; i++) {
+        var len = this._appenders.length;
+        for (var i = 0; i < len; i++) {
             if (level >= this.defaultLevel) {
                 this._appenders[i].log(level, args);
             }
@@ -19925,7 +19938,7 @@ function base64Encode(inputStr) {
         var byte3 = inputStr.charCodeAt(i++) & 0xff;
         var enc1 = byte1 >> 2;
         var enc2 = ((byte1 & 3) << 4) | (byte2 >> 4);
-        var enc3, enc4;
+        var enc3 = void 0, enc4 = void 0;
         if (isNaN(byte2)) {
             enc3 = enc4 = 64;
         }
@@ -20161,7 +20174,8 @@ var Collection = /** @class */ (function () {
      * @param func  Callback to call for each element passing a reference to the element and its index, returned values are ignored
      */
     Collection.prototype.forEach = function (func) {
-        var i = 0, count = this.count();
+        var i = 0;
+        var count = this.count();
         for (i; i < count; i++) {
             func.call(this, this._internalArray[i], i);
         }
@@ -20608,7 +20622,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3054+faf8a54";
+var EX_VERSION = "0.22.0-alpha.3057+b0f85f6";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

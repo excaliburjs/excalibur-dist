@@ -47,8 +47,9 @@ var Group = /** @class */ (function (_super) {
         if (actorOrActors instanceof Actor) {
             actorOrActors = [].concat(actorOrActors);
         }
-        var i = 0, len = actorOrActors.length, groupIdx;
-        for (i; i < len; i++) {
+        var groupIdx;
+        var len = actorOrActors.length;
+        for (var i = 0; i < len; i++) {
             groupIdx = this.getMembers().indexOf(actorOrActors[i]);
             if (groupIdx === -1) {
                 this._members.push(actorOrActors[i]);
@@ -67,9 +68,10 @@ var Group = /** @class */ (function (_super) {
         }
     };
     Group.prototype.move = function (args) {
-        var i = 0, members = this.getMembers(), len = members.length;
+        var members = this.getMembers();
+        var len = members.length;
         if (arguments.length === 1 && args instanceof Vector) {
-            for (i; i < len; i++) {
+            for (var i = 0; i < len; i++) {
                 members[i].pos.x += args.x;
                 members[i].pos.y += args.y;
             }
@@ -77,7 +79,7 @@ var Group = /** @class */ (function (_super) {
         else if (typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
             var x = arguments[0];
             var y = arguments[1];
-            for (i; i < len; i++) {
+            for (var i = 0; i < len; i++) {
                 members[i].pos.x += x;
                 members[i].pos.y += y;
             }

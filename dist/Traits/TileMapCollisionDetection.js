@@ -9,7 +9,7 @@ var TileMapCollisionDetection = /** @class */ (function () {
         if (actor.collisionType !== CollisionType.PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
             for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
                 var map = engine.currentScene.tileMaps[j];
-                var intersectMap;
+                var intersectMap = void 0;
                 var side = Side.None;
                 var max = 2;
                 while ((intersectMap = map.collides(actor))) {

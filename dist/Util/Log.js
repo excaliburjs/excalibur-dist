@@ -62,8 +62,8 @@ var Logger = /** @class */ (function () {
         if (level == null) {
             level = this.defaultLevel;
         }
-        var i = 0, len = this._appenders.length;
-        for (i; i < len; i++) {
+        var len = this._appenders.length;
+        for (var i = 0; i < len; i++) {
             if (level >= this.defaultLevel) {
                 this._appenders[i].log(level, args);
             }

@@ -58,13 +58,19 @@ var TileMapImpl = /** @class */ (function (_super) {
         _this.rows = rows;
         _this.cols = cols;
         _this.data = new Array(rows * cols);
-        for (var i = 0; i < cols; i++) {
-            for (var j = 0; j < rows; j++) {
+        var _loop_1 = function (i) {
+            var _loop_2 = function (j) {
                 (function () {
                     var cd = new Cell(i * cellWidth + xOrConfig, j * cellHeight + y, cellWidth, cellHeight, i + j * cols);
                     _this.data[i + j * cols] = cd;
                 })();
+            };
+            for (var j = 0; j < rows; j++) {
+                _loop_2(j);
             }
+        };
+        for (var i = 0; i < cols; i++) {
+            _loop_1(i);
         }
         return _this;
     }

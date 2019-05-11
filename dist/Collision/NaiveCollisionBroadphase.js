@@ -27,18 +27,21 @@ var NaiveCollisionBroadphase = /** @class */ (function () {
         var collisionPairs = [];
         for (var j = 0, l = potentialColliders.length; j < l; j++) {
             actor1 = potentialColliders[j];
-            for (var i = j + 1; i < l; i++) {
+            var _loop_1 = function (i) {
                 actor2 = potentialColliders[i];
-                var minimumTranslationVector;
+                var minimumTranslationVector = void 0;
                 if ((minimumTranslationVector = actor1.collides(actor2))) {
-                    var pair = new Pair(actor1.body, actor2.body);
-                    pair.collision = new CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
+                    var pair_1 = new Pair(actor1.body, actor2.body);
+                    pair_1.collision = new CollisionContact(actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
                     if (!collisionPairs.some(function (cp) {
-                        return cp.id === pair.id;
+                        return cp.id === pair_1.id;
                     })) {
-                        collisionPairs.push(pair);
+                        collisionPairs.push(pair_1);
                     }
                 }
+            };
+            for (var i = j + 1; i < l; i++) {
+                _loop_1(i);
             }
         }
         return collisionPairs;

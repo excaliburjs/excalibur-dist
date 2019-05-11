@@ -60,8 +60,8 @@ var DynamicTree = /** @class */ (function () {
             // Cost of descending
             var leftCost = 0;
             var leftCombined = leafAABB.combine(left.bounds);
-            var newArea;
-            var oldArea;
+            var newArea = void 0;
+            var oldArea = void 0;
             if (left.isLeaf()) {
                 leftCost = leftCombined.getPerimeter() + inheritanceCost;
             }

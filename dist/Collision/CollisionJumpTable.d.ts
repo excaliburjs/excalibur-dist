@@ -2,7 +2,7 @@ import { CircleArea } from './CircleArea';
 import { CollisionContact } from './CollisionContact';
 import { PolygonArea } from './PolygonArea';
 import { EdgeArea } from './EdgeArea';
-export declare var CollisionJumpTable: {
+export declare let CollisionJumpTable: {
     CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
     CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
     CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;

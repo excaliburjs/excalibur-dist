@@ -22,7 +22,6 @@ import { Actionable } from './Actions/Actionable';
 import * as Traits from './Traits/Index';
 import * as Events from './Events';
 import { PointerEvents } from './Interfaces/PointerEvents';
-export declare type PointerEventName = 'pointerdragstart' | 'pointerdragend' | 'pointerdragmove' | 'pointerdragenter' | 'pointerdragleave' | 'pointermove' | 'pointerenter' | 'pointerleave' | 'pointerup' | 'pointerdown';
 /**
  * [[include:Constructors.md]]
  */

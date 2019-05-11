@@ -325,4 +325,10 @@ var Collection = /** @class */ (function () {
     return Collection;
 }());
 export { Collection };
+/**
+ * Used for exhaustive checks at compile time
+ */
+export function fail(message) {
+    throw new Error(message);
+}
 //# sourceMappingURL=Util.js.map

@@ -12,24 +12,33 @@ export interface ActorsUnderPointer {
  * The type of pointer for a [[PointerEvent]].
  */
 export declare enum PointerType {
-    Touch = 0,
-    Mouse = 1,
-    Pen = 2,
+    Touch = "Touch",
+    Mouse = "Mouse",
+    Pen = "Pen",
+    Unknown = "Unknown"
+}
+/**
+ * Native browser button enumeration
+ */
+export declare enum NativePointerButton {
+    Left = 0,
+    Middle = 1,
+    Right = 2,
     Unknown = 3
 }
 /**
  * The mouse button being pressed.
  */
 export declare enum PointerButton {
-    Left = 0,
-    Middle = 1,
-    Right = 2,
-    Unknown = 3
+    Left = "Left",
+    Middle = "Middle",
+    Right = "Right",
+    Unknown = "Unknown"
 }
 export declare enum WheelDeltaMode {
-    Pixel = 0,
-    Line = 1,
-    Page = 2
+    Pixel = "Pixel",
+    Line = "Line",
+    Page = "Page"
 }
 /**
  * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
@@ -39,12 +48,16 @@ export declare enum PointerScope {
      * Handle events on the `canvas` element only. Events originating outside the
      * `canvas` will not be handled.
      */
-    Canvas = 0,
+    Canvas = "Canvas",
     /**
      * Handles events on the entire document. All events will be handled by Excalibur.
      */
-    Document = 1
+    Document = "Document"
 }
+/**
+ * Type that indicates Excalibur's valid synthetic pointer events
+ */
+export declare type PointerEventName = 'pointerdragstart' | 'pointerdragend' | 'pointerdragmove' | 'pointerdragenter' | 'pointerdragleave' | 'pointermove' | 'pointerenter' | 'pointerleave' | 'pointerup' | 'pointerdown';
 /**
  * Pointer events
  *
@@ -229,6 +242,7 @@ export declare class Pointers extends Class {
      * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
      */
     private _getPointerIndex;
+    private _nativeButtonToPointerButton;
     private _stringToPointerType;
 }
 /**

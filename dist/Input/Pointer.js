@@ -22,26 +22,36 @@ import * as Util from '../Util/Util';
  */
 export var PointerType;
 (function (PointerType) {
-    PointerType[PointerType["Touch"] = 0] = "Touch";
-    PointerType[PointerType["Mouse"] = 1] = "Mouse";
-    PointerType[PointerType["Pen"] = 2] = "Pen";
-    PointerType[PointerType["Unknown"] = 3] = "Unknown";
+    PointerType["Touch"] = "Touch";
+    PointerType["Mouse"] = "Mouse";
+    PointerType["Pen"] = "Pen";
+    PointerType["Unknown"] = "Unknown";
 })(PointerType || (PointerType = {}));
+/**
+ * Native browser button enumeration
+ */
+export var NativePointerButton;
+(function (NativePointerButton) {
+    NativePointerButton[NativePointerButton["Left"] = 0] = "Left";
+    NativePointerButton[NativePointerButton["Middle"] = 1] = "Middle";
+    NativePointerButton[NativePointerButton["Right"] = 2] = "Right";
+    NativePointerButton[NativePointerButton["Unknown"] = 3] = "Unknown";
+})(NativePointerButton || (NativePointerButton = {}));
 /**
  * The mouse button being pressed.
  */
 export var PointerButton;
 (function (PointerButton) {
-    PointerButton[PointerButton["Left"] = 0] = "Left";
-    PointerButton[PointerButton["Middle"] = 1] = "Middle";
-    PointerButton[PointerButton["Right"] = 2] = "Right";
-    PointerButton[PointerButton["Unknown"] = 3] = "Unknown";
+    PointerButton["Left"] = "Left";
+    PointerButton["Middle"] = "Middle";
+    PointerButton["Right"] = "Right";
+    PointerButton["Unknown"] = "Unknown";
 })(PointerButton || (PointerButton = {}));
 export var WheelDeltaMode;
 (function (WheelDeltaMode) {
-    WheelDeltaMode[WheelDeltaMode["Pixel"] = 0] = "Pixel";
-    WheelDeltaMode[WheelDeltaMode["Line"] = 1] = "Line";
-    WheelDeltaMode[WheelDeltaMode["Page"] = 2] = "Page";
+    WheelDeltaMode["Pixel"] = "Pixel";
+    WheelDeltaMode["Line"] = "Line";
+    WheelDeltaMode["Page"] = "Page";
 })(WheelDeltaMode || (WheelDeltaMode = {}));
 /**
  * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
@@ -52,11 +62,11 @@ export var PointerScope;
      * Handle events on the `canvas` element only. Events originating outside the
      * `canvas` will not be handled.
      */
-    PointerScope[PointerScope["Canvas"] = 0] = "Canvas";
+    PointerScope["Canvas"] = "Canvas";
     /**
      * Handles events on the entire document. All events will be handled by Excalibur.
      */
-    PointerScope[PointerScope["Document"] = 1] = "Document";
+    PointerScope["Document"] = "Document";
 })(PointerScope || (PointerScope = {}));
 /**
  * A constant used to normalize wheel events across different browsers
@@ -560,7 +570,7 @@ var Pointers = /** @class */ (function (_super) {
             e.preventDefault();
             var pointer = _this.at(0);
             var coordinates = GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
-            var pe = createPointerEventByName(eventName, coordinates, pointer, 0, PointerType.Mouse, e.button, e);
+            var pe = createPointerEventByName(eventName, coordinates, pointer, 0, PointerType.Mouse, _this._nativeButtonToPointerButton(e.button), e);
             eventArr.push(pe);
             pointer.eventDispatcher.emit(eventName, pe);
         };
@@ -604,7 +614,7 @@ var Pointers = /** @class */ (function (_super) {
             }
             var pointer = _this.at(index);
             var coordinates = GlobalCoordinates.fromPagePosition(e.pageX, e.pageY, _this._engine);
-            var pe = createPointerEventByName(eventName, coordinates, pointer, index, _this._stringToPointerType(e.pointerType), e.button, e);
+            var pe = createPointerEventByName(eventName, coordinates, pointer, index, _this._stringToPointerType(e.pointerType), _this._nativeButtonToPointerButton(e.button), e);
             eventArr.push(pe);
             pointer.eventDispatcher.emit(eventName, pe);
             // only with multi-pointer
@@ -667,6 +677,20 @@ var Pointers = /** @class */ (function (_super) {
         }
         // ignore pointer because game isn't watching
         return -1;
+    };
+    Pointers.prototype._nativeButtonToPointerButton = function (s) {
+        switch (s) {
+            case NativePointerButton.Left:
+                return PointerButton.Left;
+            case NativePointerButton.Middle:
+                return PointerButton.Middle;
+            case NativePointerButton.Right:
+                return PointerButton.Right;
+            case NativePointerButton.Unknown:
+                return PointerButton.Unknown;
+            default:
+                return Util.fail(s);
+        }
     };
     Pointers.prototype._stringToPointerType = function (s) {
         switch (s) {

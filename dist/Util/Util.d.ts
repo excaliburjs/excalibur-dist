@@ -127,3 +127,7 @@ export declare class Collection<T> {
      */
     map(func: (element: T, index: number) => any): void;
 }
+/**
+ * Used for exhaustive checks at compile time
+ */
+export declare function fail(message: never): never;

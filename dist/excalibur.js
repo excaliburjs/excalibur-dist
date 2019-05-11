@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3037+3c0e62a - 2019-5-2
+ * excalibur - 0.22.0-alpha.3051+94b882b - 2019-5-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -11565,7 +11565,7 @@ var Axes;
 /*!************************!*\
   !*** ./Input/Index.ts ***!
   \************************/
-/*! exports provided: Gamepads, Gamepad, Buttons, Axes, PointerType, PointerButton, WheelDeltaMode, PointerScope, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, Pointers, Pointer, Keys, KeyEvent, Keyboard */
+/*! exports provided: Gamepads, Gamepad, Buttons, Axes, PointerType, NativePointerButton, PointerButton, WheelDeltaMode, PointerScope, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, Pointers, Pointer, Keys, KeyEvent, Keyboard */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11581,6 +11581,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Pointer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pointer */ "./Input/Pointer.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PointerType", function() { return _Pointer__WEBPACK_IMPORTED_MODULE_1__["PointerType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativePointerButton", function() { return _Pointer__WEBPACK_IMPORTED_MODULE_1__["NativePointerButton"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PointerButton", function() { return _Pointer__WEBPACK_IMPORTED_MODULE_1__["PointerButton"]; });
 
@@ -11840,12 +11842,13 @@ var Keyboard = /** @class */ (function (_super) {
 /*!**************************!*\
   !*** ./Input/Pointer.ts ***!
   \**************************/
-/*! exports provided: PointerType, PointerButton, WheelDeltaMode, PointerScope, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, Pointers, Pointer */
+/*! exports provided: PointerType, NativePointerButton, PointerButton, WheelDeltaMode, PointerScope, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, Pointers, Pointer */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PointerType", function() { return PointerType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NativePointerButton", function() { return NativePointerButton; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PointerButton", function() { return PointerButton; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WheelDeltaMode", function() { return WheelDeltaMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PointerScope", function() { return PointerScope; });
@@ -11891,26 +11894,36 @@ var __extends = (undefined && undefined.__extends) || (function () {
  */
 var PointerType;
 (function (PointerType) {
-    PointerType[PointerType["Touch"] = 0] = "Touch";
-    PointerType[PointerType["Mouse"] = 1] = "Mouse";
-    PointerType[PointerType["Pen"] = 2] = "Pen";
-    PointerType[PointerType["Unknown"] = 3] = "Unknown";
+    PointerType["Touch"] = "Touch";
+    PointerType["Mouse"] = "Mouse";
+    PointerType["Pen"] = "Pen";
+    PointerType["Unknown"] = "Unknown";
 })(PointerType || (PointerType = {}));
+/**
+ * Native browser button enumeration
+ */
+var NativePointerButton;
+(function (NativePointerButton) {
+    NativePointerButton[NativePointerButton["Left"] = 0] = "Left";
+    NativePointerButton[NativePointerButton["Middle"] = 1] = "Middle";
+    NativePointerButton[NativePointerButton["Right"] = 2] = "Right";
+    NativePointerButton[NativePointerButton["Unknown"] = 3] = "Unknown";
+})(NativePointerButton || (NativePointerButton = {}));
 /**
  * The mouse button being pressed.
  */
 var PointerButton;
 (function (PointerButton) {
-    PointerButton[PointerButton["Left"] = 0] = "Left";
-    PointerButton[PointerButton["Middle"] = 1] = "Middle";
-    PointerButton[PointerButton["Right"] = 2] = "Right";
-    PointerButton[PointerButton["Unknown"] = 3] = "Unknown";
+    PointerButton["Left"] = "Left";
+    PointerButton["Middle"] = "Middle";
+    PointerButton["Right"] = "Right";
+    PointerButton["Unknown"] = "Unknown";
 })(PointerButton || (PointerButton = {}));
 var WheelDeltaMode;
 (function (WheelDeltaMode) {
-    WheelDeltaMode[WheelDeltaMode["Pixel"] = 0] = "Pixel";
-    WheelDeltaMode[WheelDeltaMode["Line"] = 1] = "Line";
-    WheelDeltaMode[WheelDeltaMode["Page"] = 2] = "Page";
+    WheelDeltaMode["Pixel"] = "Pixel";
+    WheelDeltaMode["Line"] = "Line";
+    WheelDeltaMode["Page"] = "Page";
 })(WheelDeltaMode || (WheelDeltaMode = {}));
 /**
  * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
@@ -11921,11 +11934,11 @@ var PointerScope;
      * Handle events on the `canvas` element only. Events originating outside the
      * `canvas` will not be handled.
      */
-    PointerScope[PointerScope["Canvas"] = 0] = "Canvas";
+    PointerScope["Canvas"] = "Canvas";
     /**
      * Handles events on the entire document. All events will be handled by Excalibur.
      */
-    PointerScope[PointerScope["Document"] = 1] = "Document";
+    PointerScope["Document"] = "Document";
 })(PointerScope || (PointerScope = {}));
 /**
  * A constant used to normalize wheel events across different browsers
@@ -12429,7 +12442,7 @@ var Pointers = /** @class */ (function (_super) {
             e.preventDefault();
             var pointer = _this.at(0);
             var coordinates = _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"].fromPagePosition(e.pageX, e.pageY, _this._engine);
-            var pe = createPointerEventByName(eventName, coordinates, pointer, 0, PointerType.Mouse, e.button, e);
+            var pe = createPointerEventByName(eventName, coordinates, pointer, 0, PointerType.Mouse, _this._nativeButtonToPointerButton(e.button), e);
             eventArr.push(pe);
             pointer.eventDispatcher.emit(eventName, pe);
         };
@@ -12473,7 +12486,7 @@ var Pointers = /** @class */ (function (_super) {
             }
             var pointer = _this.at(index);
             var coordinates = _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"].fromPagePosition(e.pageX, e.pageY, _this._engine);
-            var pe = createPointerEventByName(eventName, coordinates, pointer, index, _this._stringToPointerType(e.pointerType), e.button, e);
+            var pe = createPointerEventByName(eventName, coordinates, pointer, index, _this._stringToPointerType(e.pointerType), _this._nativeButtonToPointerButton(e.button), e);
             eventArr.push(pe);
             pointer.eventDispatcher.emit(eventName, pe);
             // only with multi-pointer
@@ -12536,6 +12549,20 @@ var Pointers = /** @class */ (function (_super) {
         }
         // ignore pointer because game isn't watching
         return -1;
+    };
+    Pointers.prototype._nativeButtonToPointerButton = function (s) {
+        switch (s) {
+            case NativePointerButton.Left:
+                return PointerButton.Left;
+            case NativePointerButton.Middle:
+                return PointerButton.Middle;
+            case NativePointerButton.Right:
+                return PointerButton.Right;
+            case NativePointerButton.Unknown:
+                return PointerButton.Unknown;
+            default:
+                return _Util_Util__WEBPACK_IMPORTED_MODULE_5__["fail"](s);
+        }
     };
     Pointers.prototype._stringToPointerType = function (s) {
         switch (s) {
@@ -19213,7 +19240,7 @@ var EasingFunctions = /** @class */ (function () {
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection */
+/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19250,6 +19277,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getSideFromVector"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["Collection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["fail"]; });
 
 /* harmony import */ var _DrawUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawUtil */ "./Util/DrawUtil.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "DrawUtil", function() { return _DrawUtil__WEBPACK_IMPORTED_MODULE_1__; });
@@ -19803,7 +19832,7 @@ function canPlayFile(file) {
 /*!**********************!*\
   !*** ./Util/Util.ts ***!
   \**********************/
-/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection */
+/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19824,6 +19853,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOppositeSide", function() { return getOppositeSide; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return getSideFromVector; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return Collection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return fail; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Math_Random__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Math/Random */ "./Math/Random.ts");
 /* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Collision/Side */ "./Collision/Side.ts");
@@ -20154,6 +20184,12 @@ var Collection = /** @class */ (function () {
     return Collection;
 }());
 
+/**
+ * Used for exhaustive checks at compile time
+ */
+function fail(message) {
+    throw new Error(message);
+}
 
 
 /***/ }),
@@ -20572,7 +20608,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3037+3c0e62a";
+var EX_VERSION = "0.22.0-alpha.3051+94b882b";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

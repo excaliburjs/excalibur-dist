@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3057+b0f85f6 - 2019-5-11
+ * excalibur - 0.22.0-alpha.3093+baaf0b9 - 2019-5-20
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -7434,7 +7434,7 @@ var Color = /** @class */ (function () {
     Color.prototype.lighten = function (factor) {
         if (factor === void 0) { factor = 0.1; }
         var temp = HSLColor.fromRGBA(this.r, this.g, this.b, this.a);
-        temp.l += temp.l * factor;
+        temp.l += (1 - temp.l) * factor;
         return temp.toRGBA();
     };
     /**
@@ -20622,7 +20622,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3057+b0f85f6";
+var EX_VERSION = "0.22.0-alpha.3093+baaf0b9";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

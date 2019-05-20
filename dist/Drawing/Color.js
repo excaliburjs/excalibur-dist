@@ -74,7 +74,7 @@ var Color = /** @class */ (function () {
     Color.prototype.lighten = function (factor) {
         if (factor === void 0) { factor = 0.1; }
         var temp = HSLColor.fromRGBA(this.r, this.g, this.b, this.a);
-        temp.l += temp.l * factor;
+        temp.l += (1 - temp.l) * factor;
         return temp.toRGBA();
     };
     /**

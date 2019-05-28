@@ -1,7 +1,6 @@
 import { Body } from './Body';
 import { FrameStats } from '../Debug';
 import { Pair } from './Pair';
-import { Actor } from '../Actor';
 import { CollisionResolutionStrategy } from '../Physics';
 /**
  * Definition for collision broadphase
@@ -18,7 +17,7 @@ export interface CollisionBroadphase {
     /**
      * Detect potential collision pairs
      */
-    broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+    broadphase(targets: Body[], delta: number, stats?: FrameStats): Pair[];
     /**
      * Identify actual collisions from those pairs, and calculate collision impulse
      */
@@ -34,7 +33,7 @@ export interface CollisionBroadphase {
     /**
      * Update the internal structures to track bodies
      */
-    update(targets: Actor[], delta: number): number;
+    update(targets: Body[], delta: number): number;
     /**
      * Draw any debug information
      */

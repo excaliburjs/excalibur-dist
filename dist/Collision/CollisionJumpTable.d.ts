@@ -1,12 +1,12 @@
-import { CircleArea } from './CircleArea';
+import { Circle } from './Circle';
 import { CollisionContact } from './CollisionContact';
-import { PolygonArea } from './PolygonArea';
-import { EdgeArea } from './EdgeArea';
+import { ConvexPolygon } from './ConvexPolygon';
+import { Edge } from './Edge';
 export declare let CollisionJumpTable: {
-    CollideCircleCircle(circleA: CircleArea, circleB: CircleArea): CollisionContact;
-    CollideCirclePolygon(circle: CircleArea, polygon: PolygonArea): CollisionContact;
-    CollideCircleEdge(circle: CircleArea, edge: EdgeArea): CollisionContact;
+    CollideCircleCircle(circleA: Circle, circleB: Circle): CollisionContact;
+    CollideCirclePolygon(circle: Circle, polygon: ConvexPolygon): CollisionContact;
+    CollideCircleEdge(circle: Circle, edge: Edge): CollisionContact;
     CollideEdgeEdge(): CollisionContact;
-    CollidePolygonEdge(polygon: PolygonArea, edge: EdgeArea): CollisionContact;
-    CollidePolygonPolygon(polyA: PolygonArea, polyB: PolygonArea): CollisionContact;
+    CollidePolygonEdge(polygon: ConvexPolygon, edge: Edge): CollisionContact;
+    CollidePolygonPolygon(polyA: ConvexPolygon, polyB: ConvexPolygon): CollisionContact;
 };

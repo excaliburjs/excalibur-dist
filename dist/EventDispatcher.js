@@ -18,6 +18,13 @@ var EventDispatcher = /** @class */ (function () {
         this._target = target;
     }
     /**
+     * Clears any existing handlers or wired event dispatchers on this event dispatcher
+     */
+    EventDispatcher.prototype.clear = function () {
+        this._handlers = {};
+        this._wiredEventDispatchers = [];
+    };
+    /**
      * Emits an event for target
      * @param eventName  The name of the event to publish
      * @param event      Optionally pass an event data object to the handler

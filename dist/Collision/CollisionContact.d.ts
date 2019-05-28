@@ -1,8 +1,8 @@
-import { CollisionArea } from './CollisionArea';
 import { Vector } from '../Algebra';
 import { CollisionResolutionStrategy } from '../Physics';
+import { Collider } from './Collider';
 /**
- * Collision contacts are used internally by Excalibur to resolve collision between actors. This
+ * Collision contacts are used internally by Excalibur to resolve collision between colliders. This
  * Pair prevents collisions from being evaluated more than one time
  */
 export declare class CollisionContact {
@@ -11,26 +11,26 @@ export declare class CollisionContact {
      */
     id: string;
     /**
-     * The first rigid body in the collision
+     * The first collider in the collision
      */
-    bodyA: CollisionArea;
+    colliderA: Collider;
     /**
-     * The second rigid body in the collision
+     * The second collider in the collision
      */
-    bodyB: CollisionArea;
+    colliderB: Collider;
     /**
-     * The minimum translation vector to resolve penetration, pointing away from bodyA
+     * The minimum translation vector to resolve penetration, pointing away from colliderA
      */
     mtv: Vector;
     /**
-     * The point of collision shared between bodyA and bodyB
+     * The point of collision shared between colliderA and colliderB
      */
     point: Vector;
     /**
-     * The collision normal, pointing away from bodyA
+     * The collision normal, pointing away from colliderA
      */
     normal: Vector;
-    constructor(bodyA: CollisionArea, bodyB: CollisionArea, mtv: Vector, point: Vector, normal: Vector);
+    constructor(colliderA: Collider, colliderB: Collider, mtv: Vector, point: Vector, normal: Vector);
     resolve(strategy: CollisionResolutionStrategy): void;
     private _applyBoxImpulse;
     private _resolveBoxCollision;

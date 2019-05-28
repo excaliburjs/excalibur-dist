@@ -14,7 +14,7 @@ import { Logger } from './Util/Log';
 import { ActionContext } from './Actions/ActionContext';
 import { ActionQueue } from './Actions/Action';
 import { Vector } from './Algebra';
-import { CollisionArea } from './Collision/CollisionArea';
+import { CollisionShape } from './Collision/CollisionShape';
 import { Body } from './Collision/Body';
 import { Side } from './Collision/Side';
 import { Eventable } from './Interfaces/Evented';
@@ -22,6 +22,8 @@ import { Actionable } from './Actions/Actionable';
 import * as Traits from './Traits/Index';
 import * as Events from './Events';
 import { PointerEvents } from './Interfaces/PointerEvents';
+import { CollisionType } from './Collision/CollisionType';
+export declare function isActor(x: any): x is Actor;
 /**
  * [[include:Constructors.md]]
  */
@@ -37,7 +39,6 @@ export interface ActorArgs extends Partial<ActorImpl> {
     color?: Color;
     visible?: boolean;
     body?: Body;
-    collisionType?: CollisionType;
 }
 export interface ActorDefaults {
     anchor: Vector;
@@ -63,27 +64,34 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * acceleration, mass, inertia, etc.
      */
     body: Body;
+    private _body;
     /**
-     * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
-     * [EdgeArea|edges].
+     * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
+     * [Edge|edges].
+     * @obsolete Use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
      */
     /**
-    * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
-    * [EdgeArea|edges].
+    * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
+    * [Edge|edges].
+    * @obsolete use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
     */
-    collisionArea: CollisionArea;
+    collisionArea: CollisionShape;
     /**
      * Gets the x position of the actor relative to it's parent (if any)
+     * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
      */
     /**
     * Sets the x position of the actor relative to it's parent (if any)
+    * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
     */
     x: number;
     /**
      * Gets the y position of the actor relative to it's parent (if any)
+     * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
      */
     /**
     * Sets the y position of the actor relative to it's parent (if any)
+    * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
     */
     y: number;
     /**
@@ -115,10 +123,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     */
     oldVel: Vector;
     /**
-     * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
-     */
-    oldAcc: Vector;
-    /**
      * Gets the acceleration vector of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may be
      * useful to simulate a gravitational effect.
      */
@@ -126,6 +130,13 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     * Sets the acceleration vector of teh actor in pixels/second/second
     */
     acc: Vector;
+    /**
+     * Sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+     */
+    /**
+    * Gets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+    */
+    oldAcc: Vector;
     /**
      * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
      */
@@ -142,27 +153,34 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     rx: number;
     /**
      * Gets the current torque applied to the actor. Torque can be thought of as rotational force
+     * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
      */
     /**
     * Sets the current torque applied to the actor. Torque can be thought of as rotational force
+    * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
     */
     torque: number;
     /**
      * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
+     * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
      */
     /**
     * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
+    * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
     */
     mass: number;
     /**
      * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
+     * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
      */
     /**
     * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
+    * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
     */
     moi: number;
     /**
      * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
+     * @obsolete ex.Actor.friction will be removed in v0.24.0, use ex.Actor.body.collider.friction
      */
     /**
     * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
@@ -171,10 +189,12 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     /**
      * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
      * as bounciness.
+     * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
      */
     /**
     * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
     * as bounciness.
+    * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
     */
     restitution: number;
     /**
@@ -192,20 +212,32 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     private _height;
     private _width;
     /**
-     * The scale vector of the actor
+     * Gets the scale vector of the actor
      */
+    /**
+    * Sets the scale vector of the actor
+    */
     scale: Vector;
     /**
-     * The scale of the actor last frame
+     * Gets the old scale of the actor last frame
      */
+    /**
+    * Sets the the old scale of the acotr last frame
+    */
     oldScale: Vector;
     /**
-     * The x scalar velocity of the actor in scale/second
+     * Gets the x scalar velocity of the actor in scale/second
      */
+    /**
+    * Sets the x scalar velocity of the actor in scale/second
+    */
     sx: number;
     /**
-     * The y scalar velocity of the actor in scale/second
+     * Gets the y scalar velocity of the actor in scale/second
      */
+    /**
+    * Sets the y scale velocity of the actor in scale/second
+    */
     sy: number;
     /**
      * Indicates whether the actor is physically in the viewport
@@ -248,14 +280,15 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     /**
      * Gets or sets the current collision type of this actor. By
      * default it is ([[CollisionType.PreventCollision]]).
+     * @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
      */
+    /**
+    * Gets or sets the current collision type of this actor. By
+    * default it is ([[CollisionType.PreventCollision]]).
+    *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
+    */
     collisionType: CollisionType;
     collisionGroups: string[];
-    /**
-     * Flag to be set when any property change would result in a geometry recalculation
-     * @internal
-     */
-    private _geometryDirty;
     private _collisionHandlers;
     private _isInitialized;
     frames: {
@@ -618,6 +651,11 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     getCenter(): Vector;
     /**
+     * Get the center point of an actor
+     */
+    readonly center: Vector;
+    width: number;
+    /**
      * Gets the calculated width of an actor, factoring in scale
      */
     getWidth(): number;
@@ -625,6 +663,7 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * Sets the width of an actor, factoring in the current scale
      */
     setWidth(width: number): void;
+    height: number;
     /**
      * Gets the calculated height of an actor, factoring in scale
      */
@@ -682,10 +721,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     getRelativeGeometry(): Vector[];
     /**
-     * Indicates that the actor's collision geometry needs to be recalculated for accurate collisions
-     */
-    readonly isGeometryDirty: boolean;
-    /**
      * Tests whether the x/y specified are contained in the actor
      * @param x  X coordinate to test (in world coordinates)
      * @param y  Y coordinate to test (in world coordinates)
@@ -695,17 +730,21 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     /**
      * Returns the side of the collision based on the intersection
      * @param intersect The displacement vector returned by a collision
+     * @obsolete Actor.getSideFromIntersect will be removed in v0.24.0, use [[BoundingBox.sideFromIntersection]]
      */
     getSideFromIntersect(intersect: Vector): Side;
     /**
      * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
      * @param actor The other actor to test
+     * @obsolete Actor.collidesWithSide will be removed in v0.24.0, use [[Actor.bounds.intersectWithSide]]
      */
     collidesWithSide(actor: Actor): Side;
     /**
      * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
      * `null` when there is no collision;
      * @param actor The other actor to test
+     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.interesect]] to get boudings intersection,
+     * or [[Actor.body.collider.collide]] to collide with another collider
      */
     collides(actor: Actor): Vector;
     /**
@@ -732,10 +771,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     within(actor: Actor, distance: number): boolean;
     private _getCalculatedAnchor;
     protected _reapplyEffects(drawing: Drawable): void;
-    /**
-     * Perform euler integration at the specified time step
-     */
-    integrate(delta: number): void;
     /**
      * Called by the Engine, updates the state of the actor
      * @param engine The reference to the current game engine
@@ -827,35 +862,5 @@ export declare class Actor extends Actor_base {
     constructor();
     constructor(config?: ActorArgs);
     constructor(x?: number, y?: number, width?: number, height?: number, color?: Color);
-}
-/**
- * An enum that describes the types of collisions actors can participate in
- */
-export declare enum CollisionType {
-    /**
-     * Actors with the `PreventCollision` setting do not participate in any
-     * collisions and do not raise collision events.
-     */
-    PreventCollision = 0,
-    /**
-     * Actors with the `Passive` setting only raise collision events, but are not
-     * influenced or moved by other actors and do not influence or move other actors.
-     */
-    Passive = 1,
-    /**
-     * Actors with the `Active` setting raise collision events and participate
-     * in collisions with other actors and will be push or moved by actors sharing
-     * the `Active` or `Fixed` setting.
-     */
-    Active = 2,
-    /**
-     * Actors with the `Fixed` setting raise collision events and participate in
-     * collisions with other actors. Actors with the `Fixed` setting will not be
-     * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
-     * actors as "immovable/onstoppable" objects. If two `Fixed` actors meet they will
-     * not be pushed or moved by each other, they will not interact except to throw
-     * collision events.
-     */
-    Fixed = 3
 }
 export {};

@@ -131,10 +131,12 @@ export declare class CellImpl {
      * Returns the bounding box for this cell
      */
     getBounds(): BoundingBox;
+    readonly bounds: BoundingBox;
     /**
      * Gets the center coordinate of this cell
      */
     getCenter(): Vector;
+    readonly center: Vector;
     /**
      * Add another [[TileSprite]] to this cell
      */

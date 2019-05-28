@@ -1,14 +1,15 @@
 /**
  * The current Excalibur version string
- * @description `"0.22.0-alpha.3093+baaf0b9"` gets replaced by Webpack on build
+ * @description `"0.22.0-alpha.3138+ce1c19d"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.22.0-alpha.3093+baaf0b9";
+export var EX_VERSION = "0.22.0-alpha.3138+ce1c19d";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
 export * from './Engine';
-export { Actor, CollisionType } from './Actor';
+export { Actor } from './Actor';
+export { CollisionType } from './Collision/CollisionType';
 export * from './Algebra';
 export * from './Camera';
 export * from './Class';

@@ -1,6 +1,14 @@
-import { PolygonArea } from './PolygonArea';
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { ConvexPolygon } from './ConvexPolygon';
 import { Vector } from '../Algebra';
 import { Color } from '../Drawing/Color';
+import { obsolete } from '../Util/Decorators';
+import { Side } from './Side';
 /**
  * Axis Aligned collision primitive for Excalibur.
  */
@@ -21,6 +29,30 @@ var BoundingBox = /** @class */ (function () {
         this.right = right;
         this.bottom = bottom;
     }
+    /**
+     * Given bounding box A & B, returns the side relative to A when intersection is performed.
+     * @param intersection Intersection vector between 2 bounding boxes
+     */
+    BoundingBox.getSideFromIntersection = function (intersection) {
+        if (!intersection) {
+            return Side.None;
+        }
+        if (intersection) {
+            if (Math.abs(intersection.x) > Math.abs(intersection.y)) {
+                if (intersection.x < 0) {
+                    return Side.Right;
+                }
+                return Side.Left;
+            }
+            else {
+                if (intersection.y < 0) {
+                    return Side.Bottom;
+                }
+                return Side.Top;
+            }
+        }
+        return Side.None;
+    };
     BoundingBox.fromPoints = function (points) {
         var minX = Infinity;
         var minY = Infinity;
@@ -42,17 +74,61 @@ var BoundingBox = /** @class */ (function () {
         }
         return new BoundingBox(minX, minY, maxX, maxY);
     };
+    BoundingBox.fromDimension = function (width, height, anchor, pos) {
+        if (anchor === void 0) { anchor = Vector.Half; }
+        if (pos === void 0) { pos = Vector.Zero; }
+        return new BoundingBox(-width * anchor.x + pos.x, -height * anchor.y + pos.y, width - width * anchor.x + pos.x, height - height * anchor.y + pos.y);
+    };
     /**
      * Returns the calculated width of the bounding box
      */
     BoundingBox.prototype.getWidth = function () {
-        return this.right - this.left;
+        return this.width;
     };
+    Object.defineProperty(BoundingBox.prototype, "width", {
+        /**
+         * Returns the calculated width of the bounding box
+         */
+        get: function () {
+            return this.right - this.left;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns the calculated height of the bounding box
      */
     BoundingBox.prototype.getHeight = function () {
-        return this.bottom - this.top;
+        return this.height;
+    };
+    Object.defineProperty(BoundingBox.prototype, "height", {
+        /**
+         * Returns the calculated height of the bounding box
+         */
+        get: function () {
+            return this.bottom - this.top;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Returns the center of the bounding box
+     */
+    BoundingBox.prototype.getCenter = function () {
+        return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+    };
+    Object.defineProperty(BoundingBox.prototype, "center", {
+        /**
+         * Returns the center of the bounding box
+         */
+        get: function () {
+            return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BoundingBox.prototype.translate = function (pos) {
+        return new BoundingBox(this.left + pos.x, this.top + pos.y, this.right + pos.x, this.bottom + pos.y);
     };
     /**
      * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
@@ -63,12 +139,17 @@ var BoundingBox = /** @class */ (function () {
         var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
         return BoundingBox.fromPoints(points);
     };
+    BoundingBox.prototype.scale = function (scale, point) {
+        if (point === void 0) { point = Vector.Zero; }
+        var shifted = this.translate(point);
+        return new BoundingBox(shifted.left * scale.x, shifted.top * scale.y, shifted.right * scale.x, shifted.bottom * scale.y);
+    };
     /**
      * Returns the perimeter of the bounding box
      */
     BoundingBox.prototype.getPerimeter = function () {
-        var wx = this.getWidth();
-        var wy = this.getHeight();
+        var wx = this.width;
+        var wy = this.height;
         return 2 * (wx + wy);
     };
     BoundingBox.prototype.getPoints = function () {
@@ -83,7 +164,7 @@ var BoundingBox = /** @class */ (function () {
      * Creates a Polygon collision area from the points of the bounding box
      */
     BoundingBox.prototype.toPolygon = function (actor) {
-        return new PolygonArea({
+        return new ConvexPolygon({
             body: actor ? actor.body : null,
             points: this.getPoints(),
             pos: Vector.Zero
@@ -151,155 +232,183 @@ var BoundingBox = /** @class */ (function () {
     };
     Object.defineProperty(BoundingBox.prototype, "dimensions", {
         get: function () {
-            return new Vector(this.getWidth(), this.getHeight());
+            return new Vector(this.width, this.height);
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Test wether this bounding box intersects with another returning
+     * the intersection vector that can be used to resolve the collision. If there
+     * is no intersection null is returned.
+     *
+     * @param other  Other [[BoundingBox]] to test intersection with
+     * @returns A Vector in the direction of the current BoundingBox, this <- other
+     */
+    BoundingBox.prototype.intersect = function (other) {
+        var totalBoundingBox = this.combine(other);
+        // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
+        if (totalBoundingBox.width < other.width + this.width &&
+            totalBoundingBox.height < other.height + this.height &&
+            !totalBoundingBox.dimensions.equals(other.dimensions) &&
+            !totalBoundingBox.dimensions.equals(this.dimensions)) {
+            // collision
+            var overlapX = 0;
+            // right edge is between the other's left and right edge
+            /**
+             *     +-this-+
+             *     |      |
+             *     |    +-other-+
+             *     +----|-+     |
+             *          |       |
+             *          +-------+
+             *         <---
+             *          ^ overlap
+             */
+            if (this.right >= other.left && this.right <= other.right) {
+                overlapX = other.left - this.right;
+                // right edge is past the other's right edge
+                /**
+                 *     +-other-+
+                 *     |       |
+                 *     |    +-this-+
+                 *     +----|--+   |
+                 *          |      |
+                 *          +------+
+                 *          --->
+                 *          ^ overlap
+                 */
+            }
+            else {
+                overlapX = other.right - this.left;
+            }
+            var overlapY = 0;
+            // top edge is between the other's top and bottom edge
+            /**
+             *     +-other-+
+             *     |       |
+             *     |    +-this-+   | <- overlap
+             *     +----|--+   |   |
+             *          |      |  \ /
+             *          +------+   '
+             */
+            if (this.top <= other.bottom && this.top >= other.top) {
+                overlapY = other.bottom - this.top;
+                // top edge is above the other top edge
+                /**
+                 *     +-this-+         .
+                 *     |      |        / \
+                 *     |    +-other-+   | <- overlap
+                 *     +----|-+     |   |
+                 *          |       |
+                 *          +-------+
+                 */
+            }
+            else {
+                overlapY = other.top - this.bottom;
+            }
+            if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                return new Vector(overlapX, 0);
+            }
+            else {
+                return new Vector(0, overlapY);
+            }
+            // Case of total containment of one bounding box by another
+        }
+        else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
+            var overlapX = 0;
+            // this is wider than the other
+            if (this.width - other.width >= 0) {
+                // This right edge is closest to the others right edge
+                if (this.right - other.right <= other.left - this.left) {
+                    overlapX = other.left - this.right;
+                    // This left edge is closest to the others left edge
+                }
+                else {
+                    overlapX = other.right - this.left;
+                }
+                // other is wider than this
+            }
+            else {
+                // This right edge is closest to the others right edge
+                if (other.right - this.right <= this.left - other.left) {
+                    overlapX = this.left - other.right;
+                    // This left edge is closest to the others left edge
+                }
+                else {
+                    overlapX = this.right - other.left;
+                }
+            }
+            var overlapY = 0;
+            // this is taller than other
+            if (this.height - other.height >= 0) {
+                // The bottom edge is closest to the others bottom edge
+                if (this.bottom - other.bottom <= other.top - this.top) {
+                    overlapY = other.top - this.bottom;
+                }
+                else {
+                    overlapY = other.bottom - this.top;
+                }
+                // other is taller than this
+            }
+            else {
+                // The bottom edge is closest to the others bottom edge
+                if (other.bottom - this.bottom <= this.top - other.top) {
+                    overlapY = this.top - other.bottom;
+                }
+                else {
+                    overlapY = this.bottom - other.top;
+                }
+            }
+            if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                return new Vector(overlapX, 0);
+            }
+            else {
+                return new Vector(0, overlapY);
+            }
+        }
+        else {
+            return null;
+        }
+    };
+    /**
+     * Test whether the bounding box has intersected with another bounding box, returns the side of the current bb that intersected.
+     * @param bb The other actor to test
+     */
+    BoundingBox.prototype.intersectWithSide = function (bb) {
+        var intersect = this.intersect(bb);
+        return BoundingBox.getSideFromIntersection(intersect);
+    };
     /**
      * Test wether this bounding box collides with another returning,
      * the intersection vector that can be used to resolve the collision. If there
      * is no collision null is returned.
      *
      * @returns A Vector in the direction of the current BoundingBox
-     * @param collidable  Other collidable to test
+     * @param boundingBox  Other collidable to test
+     * @obsolete BoundingBox.collides will be removed in v0.24.0, use BoundingBox.intersect
      */
-    BoundingBox.prototype.collides = function (collidable) {
-        if (collidable instanceof BoundingBox) {
-            var other = collidable;
-            var totalBoundingBox = this.combine(other);
-            // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
-            if (totalBoundingBox.getWidth() < other.getWidth() + this.getWidth() &&
-                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight() &&
-                !totalBoundingBox.dimensions.equals(other.dimensions) &&
-                !totalBoundingBox.dimensions.equals(this.dimensions)) {
-                // collision
-                var overlapX = 0;
-                // right edge is between the other's left and right edge
-                /**
-                 *     +-this-+
-                 *     |      |
-                 *     |    +-other-+
-                 *     +----|-+     |
-                 *          |       |
-                 *          +-------+
-                 *         <---
-                 *          ^ overlap
-                 */
-                if (this.right >= other.left && this.right <= other.right) {
-                    overlapX = other.left - this.right;
-                    // right edge is past the other's right edge
-                    /**
-                     *     +-other-+
-                     *     |       |
-                     *     |    +-this-+
-                     *     +----|--+   |
-                     *          |      |
-                     *          +------+
-                     *          --->
-                     *          ^ overlap
-                     */
-                }
-                else {
-                    overlapX = other.right - this.left;
-                }
-                var overlapY = 0;
-                // top edge is between the other's top and bottom edge
-                /**
-                 *     +-other-+
-                 *     |       |
-                 *     |    +-this-+   | <- overlap
-                 *     +----|--+   |   |
-                 *          |      |  \ /
-                 *          +------+   '
-                 */
-                if (this.top <= other.bottom && this.top >= other.top) {
-                    overlapY = other.bottom - this.top;
-                    // top edge is above the other top edge
-                    /**
-                     *     +-this-+         .
-                     *     |      |        / \
-                     *     |    +-other-+   | <- overlap
-                     *     +----|-+     |   |
-                     *          |       |
-                     *          +-------+
-                     */
-                }
-                else {
-                    overlapY = other.top - this.bottom;
-                }
-                if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                    return new Vector(overlapX, 0);
-                }
-                else {
-                    return new Vector(0, overlapY);
-                }
-                // Case of total containment of one bounding box by another
-            }
-            else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
-                var overlapX = 0;
-                // this is wider than the other
-                if (this.getWidth() - other.getWidth() >= 0) {
-                    // This right edge is closest to the others right edge
-                    if (this.right - other.right <= other.left - this.left) {
-                        overlapX = other.left - this.right;
-                        // This left edge is closest to the others left edge
-                    }
-                    else {
-                        overlapX = other.right - this.left;
-                    }
-                    // other is wider than this
-                }
-                else {
-                    // This right edge is closest to the others right edge
-                    if (other.right - this.right <= this.left - other.left) {
-                        overlapX = this.left - other.right;
-                        // This left edge is closest to the others left edge
-                    }
-                    else {
-                        overlapX = this.right - other.left;
-                    }
-                }
-                var overlapY = 0;
-                // this is taller than other
-                if (this.getHeight() - other.getHeight() >= 0) {
-                    // The bottom edge is closest to the others bottom edge
-                    if (this.bottom - other.bottom <= other.top - this.top) {
-                        overlapY = other.top - this.bottom;
-                    }
-                    else {
-                        overlapY = other.bottom - this.top;
-                    }
-                    // other is taller than this
-                }
-                else {
-                    // The bottom edge is closest to the others bottom edge
-                    if (other.bottom - this.bottom <= this.top - other.top) {
-                        overlapY = this.top - other.bottom;
-                    }
-                    else {
-                        overlapY = this.bottom - other.top;
-                    }
-                }
-                if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                    return new Vector(overlapX, 0);
-                }
-                else {
-                    return new Vector(0, overlapY);
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        return null;
+    BoundingBox.prototype.collides = function (boundingBox) {
+        return this.intersect(boundingBox);
     };
     /* istanbul ignore next */
     BoundingBox.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = Color.Yellow; }
         ctx.strokeStyle = color.toString();
-        ctx.strokeRect(this.left, this.top, this.getWidth(), this.getHeight());
+        ctx.strokeRect(this.left, this.top, this.width, this.height);
     };
+    __decorate([
+        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.width' })
+    ], BoundingBox.prototype, "getWidth", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.height' })
+    ], BoundingBox.prototype, "getHeight", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
+    ], BoundingBox.prototype, "getCenter", null);
+    __decorate([
+        obsolete({ message: 'BoundingBox.collides will be removed in v0.24.0', alternateMethod: 'BoundingBox.intersect' })
+    ], BoundingBox.prototype, "collides", null);
     return BoundingBox;
 }());
 export { BoundingBox };

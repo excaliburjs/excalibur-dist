@@ -471,13 +471,22 @@ var PreCollisionEvent = /** @class */ (function (_super) {
      */
     function PreCollisionEvent(actor, other, side, intersection) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.side = side;
         _this.intersection = intersection;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(PreCollisionEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return PreCollisionEvent;
 }(GameEvent));
 export { PreCollisionEvent };
@@ -494,13 +503,22 @@ var PostCollisionEvent = /** @class */ (function (_super) {
      */
     function PostCollisionEvent(actor, other, side, intersection) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.side = side;
         _this.intersection = intersection;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(PostCollisionEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return PostCollisionEvent;
 }(GameEvent));
 export { PostCollisionEvent };
@@ -511,15 +529,27 @@ var CollisionStartEvent = /** @class */ (function (_super) {
     __extends(CollisionStartEvent, _super);
     /**
      *
+     * @param actor
+     * @param other
+     * @param pair
      */
     function CollisionStartEvent(actor, other, pair) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.pair = pair;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(CollisionStartEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return CollisionStartEvent;
 }(GameEvent));
 export { CollisionStartEvent };
@@ -533,11 +563,20 @@ var CollisionEndEvent = /** @class */ (function (_super) {
      */
     function CollisionEndEvent(actor, other) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(CollisionEndEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return CollisionEndEvent;
 }(GameEvent));
 export { CollisionEndEvent };

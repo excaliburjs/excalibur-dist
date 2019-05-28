@@ -80,7 +80,7 @@ var LockCameraToActorStrategy = /** @class */ (function () {
     function LockCameraToActorStrategy(target) {
         this.target = target;
         this.action = function (target, _cam, _eng, _delta) {
-            var center = target.getCenter();
+            var center = target.center;
             return center;
         };
     }
@@ -96,7 +96,7 @@ var LockCameraToActorAxisStrategy = /** @class */ (function () {
         this.target = target;
         this.axis = axis;
         this.action = function (target, cam, _eng, _delta) {
-            var center = target.getCenter();
+            var center = target.center;
             var currentFocus = cam.getFocus();
             if (_this.axis === Axis.X) {
                 return new Vector(center.x, currentFocus.y);
@@ -128,7 +128,7 @@ var ElasticToActorStrategy = /** @class */ (function () {
         this.cameraElasticity = cameraElasticity;
         this.cameraFriction = cameraFriction;
         this.action = function (target, cam, _eng, _delta) {
-            var position = target.getCenter();
+            var position = target.center;
             var focus = cam.getFocus();
             var cameraVel = new Vector(cam.dx, cam.dy);
             // Calculate the strech vector, using the spring equation
@@ -160,7 +160,7 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
         this.target = target;
         this.radius = radius;
         this.action = function (target, cam, _eng, _delta) {
-            var position = target.getCenter();
+            var position = target.center;
             var focus = cam.getFocus();
             var direction = position.sub(focus);
             var distance = direction.magnitude();
@@ -575,7 +575,7 @@ var Camera = /** @class */ (function (_super) {
         ctx.setLineDash([5, 15]);
         ctx.lineWidth = 5;
         ctx.strokeStyle = 'white';
-        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.getWidth(), this.viewport.getHeight());
+        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.width, this.viewport.height);
         ctx.closePath();
     };
     Camera.prototype._isDoneShaking = function () {

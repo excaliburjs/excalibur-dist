@@ -177,26 +177,26 @@ var DynamicTree = /** @class */ (function () {
     DynamicTree.prototype.trackBody = function (body) {
         var node = new TreeNode();
         node.body = body;
-        node.bounds = body.getBounds();
+        node.bounds = body.collider.bounds;
         node.bounds.left -= 2;
         node.bounds.top -= 2;
         node.bounds.right += 2;
         node.bounds.bottom += 2;
-        this.nodes[body.actor.id] = node;
+        this.nodes[body.id] = node;
         this._insert(node);
     };
     /**
      * Updates the dynamic tree given the current bounds of each body being tracked
      */
     DynamicTree.prototype.updateBody = function (body) {
-        var node = this.nodes[body.actor.id];
+        var node = this.nodes[body.id];
         if (!node) {
             return false;
         }
-        var b = body.getBounds();
+        var b = body.collider.bounds;
         // if the body is outside the world no longer update it
         if (!this.worldBounds.contains(b)) {
-            Logger.getInstance().warn('Actor with id ' + body.actor.id + ' is outside the world bounds and will no longer be tracked for physics');
+            Logger.getInstance().warn('Collider with id ' + body.id + ' is outside the world bounds and will no longer be tracked for physics');
             this.untrackBody(body);
             return false;
         }
@@ -230,13 +230,13 @@ var DynamicTree = /** @class */ (function () {
      * Untracks a body from the dynamic tree
      */
     DynamicTree.prototype.untrackBody = function (body) {
-        var node = this.nodes[body.actor.id];
+        var node = this.nodes[body.collider.id];
         if (!node) {
             return;
         }
         this._remove(node);
-        this.nodes[body.actor.id] = null;
-        delete this.nodes[body.actor.id];
+        this.nodes[body.collider.id] = null;
+        delete this.nodes[body.collider.id];
     };
     /**
      * Balances the tree about a node
@@ -359,9 +359,9 @@ var DynamicTree = /** @class */ (function () {
      * the tree until all possible colliders have been returned.
      */
     DynamicTree.prototype.query = function (body, callback) {
-        var bounds = body.getBounds();
+        var bounds = body.collider.bounds;
         var helper = function (currentNode) {
-            if (currentNode && currentNode.bounds.collides(bounds)) {
+            if (currentNode && currentNode.bounds.intersect(bounds)) {
                 if (currentNode.isLeaf() && currentNode.body !== body) {
                     if (callback.call(body, currentNode.body)) {
                         return true;

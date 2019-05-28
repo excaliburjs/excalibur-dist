@@ -12,8 +12,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { Vector } from './Algebra';
-import { Actor, CollisionType } from './Actor';
+import { Actor } from './Actor';
 import * as Traits from './Traits/Index';
+import { CollisionType } from './Collision/CollisionType';
+import { Shape } from './Collision/Shape';
 /**
  * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
  * not participate in collisions. Drawn on top of all other actors.
@@ -37,7 +39,8 @@ var UIActor = /** @class */ (function (_super) {
         _this.traits = [];
         _this.traits.push(new Traits.CapturePointer());
         _this.anchor.setTo(0, 0);
-        _this.collisionType = CollisionType.PreventCollision;
+        _this.body.collider.type = CollisionType.PreventCollision;
+        _this.body.collider.shape = Shape.Box(_this.width, _this.height, _this.anchor);
         _this.enableCapturePointer = true;
         return _this;
     }

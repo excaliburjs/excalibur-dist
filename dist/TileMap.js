@@ -11,6 +11,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { BoundingBox } from './Collision/BoundingBox';
 import { Color } from './Drawing/Color';
 import { Class } from './Class';
@@ -18,6 +24,7 @@ import { Vector } from './Algebra';
 import { Logger } from './Util/Log';
 import * as Events from './Events';
 import { Configurable } from './Configurable';
+import { obsolete } from './Util/Decorators';
 /**
  * @hidden
  */
@@ -85,17 +92,17 @@ var TileMapImpl = /** @class */ (function (_super) {
      * is no collision null is returned.
      */
     TileMapImpl.prototype.collides = function (actor) {
-        var width = actor.pos.x + actor.getWidth();
-        var height = actor.pos.y + actor.getHeight();
-        var actorBounds = actor.getBounds();
+        var width = actor.pos.x + actor.width;
+        var height = actor.pos.y + actor.height;
+        var actorBounds = actor.body.collider.bounds;
         var overlaps = [];
         // trace points for overlap
-        for (var x = actorBounds.left; x <= width; x += Math.min(actor.getWidth() / 2, this.cellWidth / 2)) {
-            for (var y = actorBounds.top; y <= height; y += Math.min(actor.getHeight() / 2, this.cellHeight / 2)) {
+        for (var x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
+            for (var y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {
                 var cell = this.getCellByPoint(x, y);
                 if (cell && cell.solid) {
-                    var overlap = actorBounds.collides(cell.getBounds());
-                    var dir = actor.getCenter().sub(cell.getCenter());
+                    var overlap = actorBounds.intersect(cell.bounds);
+                    var dir = actor.center.sub(cell.center);
                     if (overlap && overlap.dot(dir) > 0) {
                         overlaps.push(overlap);
                     }
@@ -311,12 +318,26 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.getBounds = function () {
         return this._bounds;
     };
+    Object.defineProperty(CellImpl.prototype, "bounds", {
+        get: function () {
+            return this._bounds;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Gets the center coordinate of this cell
      */
     CellImpl.prototype.getCenter = function () {
         return new Vector(this.x + this.width / 2, this.y + this.height / 2);
     };
+    Object.defineProperty(CellImpl.prototype, "center", {
+        get: function () {
+            return new Vector(this.x + this.width / 2, this.y + this.height / 2);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Add another [[TileSprite]] to this cell
      */
@@ -338,6 +359,12 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.clearSprites = function () {
         this.sprites.length = 0;
     };
+    __decorate([
+        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.bounds' })
+    ], CellImpl.prototype, "getBounds", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
+    ], CellImpl.prototype, "getCenter", null);
     return CellImpl;
 }());
 export { CellImpl };

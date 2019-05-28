@@ -29,6 +29,10 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     actors: Actor[];
     /**
+     * Physics bodies in the current scene
+     */
+    private _bodies;
+    /**
      * The triggers in the current scene
      */
     triggers: Trigger[];

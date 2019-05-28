@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3093+baaf0b9 - 2019-5-20
+ * excalibur - 0.22.0-alpha.3138+ce1c19d - 2019-5-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -1457,31 +1457,34 @@ var RotationType;
 /*!******************!*\
   !*** ./Actor.ts ***!
   \******************/
-/*! exports provided: ActorImpl, Actor, CollisionType */
+/*! exports provided: isActor, ActorImpl, Actor */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isActor", function() { return isActor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActorImpl", function() { return ActorImpl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return Actor; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return CollisionType; });
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
-/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
-/* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Collision/Side */ "./Collision/Side.ts");
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony import */ var _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Drawing/SpriteEffects */ "./Drawing/SpriteEffects.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
+/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
+/* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Collision/Side */ "./Collision/Side.ts");
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony import */ var _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Drawing/SpriteEffects */ "./Drawing/SpriteEffects.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1495,6 +1498,12 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
@@ -1512,6 +1521,12 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
+
+
+
+function isActor(x) {
+    return x instanceof Actor;
+}
 /**
  * @hidden
  */
@@ -1532,33 +1547,8 @@ var ActorImpl = /** @class */ (function (_super) {
          * The unique identifier for the actor
          */
         _this.id = ActorImpl.maxId++;
-        /**
-         * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
-         * acceleration, mass, inertia, etc.
-         */
-        _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_11__["Body"](_this);
-        /**
-         * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
-         */
-        _this.oldAcc = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Zero;
         _this._height = 0;
         _this._width = 0;
-        /**
-         * The scale vector of the actor
-         */
-        _this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One;
-        /**
-         * The scale of the actor last frame
-         */
-        _this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].One;
-        /**
-         * The x scalar velocity of the actor in scale/second
-         */
-        _this.sx = 0; //scale/sec
-        /**
-         * The y scalar velocity of the actor in scale/second
-         */
-        _this.sy = 0; //scale/sec
         /**
          * Indicates whether the actor is physically in the viewport
          */
@@ -1576,7 +1566,7 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Convenience reference to the global logger
          */
-        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_7__["Logger"].getInstance();
+        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance();
         /**
          * The scene that the actor is in
          */
@@ -1589,17 +1579,7 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
-        /**
-         * Gets or sets the current collision type of this actor. By
-         * default it is ([[CollisionType.PreventCollision]]).
-         */
-        _this.collisionType = CollisionType.PreventCollision;
         _this.collisionGroups = [];
-        /**
-         * Flag to be set when any property change would result in a geometry recalculation
-         * @internal
-         */
-        _this._geometryDirty = false;
         _this._collisionHandlers = {};
         _this._isInitialized = false;
         _this.frames = {};
@@ -1628,7 +1608,7 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         _this._zIndex = 0;
         _this._isKilled = false;
-        _this._opacityFx = new _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_15__["Opacity"](_this.opacity);
+        _this._opacityFx = new _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_14__["Opacity"](_this.opacity);
         // #region Events
         _this._capturePointerEvents = [
             'pointerup',
@@ -1657,49 +1637,80 @@ var ActorImpl = /** @class */ (function (_super) {
             'pointerdragenter',
             'pointerdragleave'
         ];
+        var shouldInitializeBody = true;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             xOrConfig = config.pos ? config.pos.x : config.x;
             y = config.pos ? config.pos.y : config.y;
             width = config.width;
             height = config.height;
+            if (config.body) {
+                shouldInitializeBody = false;
+                _this.body = config.body;
+            }
         }
-        _this.pos.x = xOrConfig || 0;
-        _this.pos.y = y || 0;
+        // initialize default options
+        _this._initDefaults();
+        // Body and collider bounds are still determined by actor width/height
         _this._width = width || 0;
         _this._height = height || 0;
+        // Initialize default collider to be a box
+        if (shouldInitializeBody) {
+            _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_10__["Body"]({
+                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_18__["Collider"]({
+                    type: _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__["CollisionType"].Passive,
+                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(_this._width, _this._height, _this.anchor)
+                })
+            });
+        }
+        // Position uses body to store values must be initialized after body
+        _this.pos.x = xOrConfig || 0;
+        _this.pos.y = y || 0;
         if (color) {
             _this.color = color;
             // set default opacity of an actor to the color
             _this.opacity = color.a;
         }
         // Build default pipeline
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["TileMapCollisionDetection"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["OffscreenCulling"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["CapturePointer"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["TileMapCollisionDetection"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["OffscreenCulling"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["CapturePointer"]());
         // Build the action queue
-        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_9__["ActionQueue"](_this);
-        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_8__["ActionContext"](_this);
-        // initialize default options
-        _this._initDefaults();
-        // Initialize default collision area to be box
-        _this.body.useBoxCollision();
+        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_8__["ActionQueue"](_this);
+        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__["ActionContext"](_this);
         return _this;
     }
-    Object.defineProperty(ActorImpl.prototype, "collisionArea", {
+    Object.defineProperty(ActorImpl.prototype, "body", {
         /**
-         * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
-         * [EdgeArea|edges].
+         * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
+         * acceleration, mass, inertia, etc.
          */
         get: function () {
-            return this.body.collisionArea;
+            return this._body;
+        },
+        set: function (body) {
+            this._body = body;
+            this._body.actor = this;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "collisionArea", {
+        /**
+         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
+         * [Edge|edges].
+         * @obsolete Use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
+         */
+        get: function () {
+            return this.body.collider.shape;
         },
         /**
-         * Gets the collision area shape to use for collision possible options are [CircleArea|circles], [PolygonArea|polygons], and
-         * [EdgeArea|edges].
+         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
+         * [Edge|edges].
+         * @obsolete use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
          */
         set: function (area) {
-            this.body.collisionArea = area;
+            this.body.collider.shape = area;
         },
         enumerable: true,
         configurable: true
@@ -1707,12 +1718,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "x", {
         /**
          * Gets the x position of the actor relative to it's parent (if any)
+         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
          */
         get: function () {
             return this.body.pos.x;
         },
         /**
          * Sets the x position of the actor relative to it's parent (if any)
+         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
          */
         set: function (theX) {
             this.body.pos.x = theX;
@@ -1723,12 +1736,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "y", {
         /**
          * Gets the y position of the actor relative to it's parent (if any)
+         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
          */
         get: function () {
             return this.body.pos.y;
         },
         /**
          * Sets the y position of the actor relative to it's parent (if any)
+         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
          */
         set: function (theY) {
             this.body.pos.y = theY;
@@ -1817,6 +1832,22 @@ var ActorImpl = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ActorImpl.prototype, "oldAcc", {
+        /**
+         * Gets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+         */
+        get: function () {
+            return this.body.oldAcc;
+        },
+        /**
+         * Sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+         */
+        set: function (theAcc) {
+            this.body.oldAcc.setTo(theAcc.x, theAcc.y);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(ActorImpl.prototype, "rotation", {
         /**
          * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
@@ -1852,12 +1883,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "torque", {
         /**
          * Gets the current torque applied to the actor. Torque can be thought of as rotational force
+         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
          */
         get: function () {
             return this.body.torque;
         },
         /**
          * Sets the current torque applied to the actor. Torque can be thought of as rotational force
+         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
          */
         set: function (theTorque) {
             this.body.torque = theTorque;
@@ -1868,15 +1901,17 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "mass", {
         /**
          * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
+         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
          */
         get: function () {
-            return this.body.mass;
+            return this.body.collider.mass;
         },
         /**
          * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
+         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
          */
         set: function (theMass) {
-            this.body.mass = theMass;
+            this.body.collider.mass = theMass;
         },
         enumerable: true,
         configurable: true
@@ -1884,15 +1919,17 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "moi", {
         /**
          * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
+         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
          */
         get: function () {
-            return this.body.moi;
+            return this.body.collider.inertia;
         },
         /**
          * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
+         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
          */
         set: function (theMoi) {
-            this.body.moi = theMoi;
+            this.body.collider.inertia = theMoi;
         },
         enumerable: true,
         configurable: true
@@ -1900,15 +1937,16 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "friction", {
         /**
          * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
+         * @obsolete ex.Actor.friction will be removed in v0.24.0, use ex.Actor.body.collider.friction
          */
         get: function () {
-            return this.body.friction;
+            return this.body.collider.friction;
         },
         /**
          * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
          */
         set: function (theFriction) {
-            this.body.friction = theFriction;
+            this.body.collider.friction = theFriction;
         },
         enumerable: true,
         configurable: true
@@ -1917,16 +1955,103 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
          * as bounciness.
+         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
          */
         get: function () {
-            return this.body.restitution;
+            return this.body.collider.bounciness;
         },
         /**
          * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
          * as bounciness.
+         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
          */
         set: function (theRestitution) {
-            this.body.restitution = theRestitution;
+            this.body.collider.bounciness = theRestitution;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "scale", {
+        /**
+         * Gets the scale vector of the actor
+         */
+        get: function () {
+            return this.body.scale;
+        },
+        /**
+         * Sets the scale vector of the actor
+         */
+        set: function (scale) {
+            this.body.scale = scale;
+            this.width = this.width;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "oldScale", {
+        /**
+         * Gets the old scale of the actor last frame
+         */
+        get: function () {
+            return this.body.oldScale;
+        },
+        /**
+         * Sets the the old scale of the acotr last frame
+         */
+        set: function (scale) {
+            this.body.oldScale = scale;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "sx", {
+        /**
+         * Gets the x scalar velocity of the actor in scale/second
+         */
+        get: function () {
+            return this.body.sx;
+        },
+        /**
+         * Sets the x scalar velocity of the actor in scale/second
+         */
+        set: function (scalePerSecondX) {
+            this.body.sx = scalePerSecondX;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "sy", {
+        /**
+         * Gets the y scalar velocity of the actor in scale/second
+         */
+        get: function () {
+            return this.body.sy;
+        },
+        /**
+         * Sets the y scale velocity of the actor in scale/second
+         */
+        set: function (scalePerSecondY) {
+            this.body.sy = scalePerSecondY;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "collisionType", {
+        /**
+         * Gets or sets the current collision type of this actor. By
+         * default it is ([[CollisionType.PreventCollision]]).
+         * @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
+         */
+        get: function () {
+            return this.body.collider.type;
+        },
+        /**
+         * Gets or sets the current collision type of this actor. By
+         * default it is ([[CollisionType.PreventCollision]]).
+         *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
+         */
+        set: function (type) {
+            this.body.collider.type = type;
         },
         enumerable: true,
         configurable: true
@@ -1976,7 +2101,7 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype._initialize = function (engine) {
         if (!this.isInitialized) {
             this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_4__["InitializeEvent"](engine, this));
+            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_3__["InitializeEvent"](engine, this));
             this._isInitialized = true;
         }
         for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
@@ -2020,7 +2145,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._prekill = function (_scene) {
-        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreKillEvent"](this));
+        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreKillEvent"](this));
         this.onPreKill(_scene);
     };
     /**
@@ -2038,7 +2163,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postkill = function (_scene) {
-        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostKillEvent"](this));
+        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostKillEvent"](this));
         this.onPostKill(_scene);
     };
     /**
@@ -2056,7 +2181,7 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.kill = function () {
         if (this.scene) {
             this._prekill(this.scene);
-            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_4__["KillEvent"](this));
+            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_3__["KillEvent"](this));
             this._isKilled = true;
             this.scene.remove(this);
             this._postkill(this.scene);
@@ -2084,8 +2209,8 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to add
      */
     ActorImpl.prototype.add = function (actor) {
-        actor.collisionType = CollisionType.PreventCollision;
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_16__["addItemToArray"](actor, this.children)) {
+        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__["CollisionType"].PreventCollision;
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_15__["addItemToArray"](actor, this.children)) {
             actor.parent = this;
         }
     };
@@ -2094,7 +2219,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to remove
      */
     ActorImpl.prototype.remove = function (actor) {
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_16__["removeItemFromArray"](actor, this.children)) {
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_15__["removeItemFromArray"](actor, this.children)) {
             actor.parent = null;
         }
     };
@@ -2106,7 +2231,7 @@ var ActorImpl = /** @class */ (function (_super) {
                 this.currentDrawing = this.frames[key];
             }
             else {
-                _Util_Log__WEBPACK_IMPORTED_MODULE_7__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
+                _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
             }
         }
     };
@@ -2119,10 +2244,10 @@ var ActorImpl = /** @class */ (function (_super) {
             this._effectsDirty = true;
         }
         else {
-            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_6__["Sprite"]) {
+            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_5__["Sprite"]) {
                 this.addDrawing('default', arguments[0]);
             }
-            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_3__["Texture"]) {
+            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"]) {
                 this.addDrawing('default', arguments[0].asSprite());
             }
         }
@@ -2181,33 +2306,65 @@ var ActorImpl = /** @class */ (function (_super) {
      * Get the center point of an actor
      */
     ActorImpl.prototype.getCenter = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](this.pos.x + this.getWidth() / 2 - this.anchor.x * this.getWidth(), this.pos.y + this.getHeight() / 2 - this.anchor.y * this.getHeight());
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
     };
+    Object.defineProperty(ActorImpl.prototype, "center", {
+        /**
+         * Get the center point of an actor
+         */
+        get: function () {
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "width", {
+        get: function () {
+            return this._width * this.getGlobalScale().x;
+        },
+        set: function (width) {
+            this._width = width / this.scale.x;
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.markCollisionShapeDirty();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Gets the calculated width of an actor, factoring in scale
      */
     ActorImpl.prototype.getWidth = function () {
-        return this._width * this.getGlobalScale().x;
+        return this.width;
     };
     /**
      * Sets the width of an actor, factoring in the current scale
      */
     ActorImpl.prototype.setWidth = function (width) {
-        this._width = width / this.scale.x;
-        this._geometryDirty = true;
+        this.width = width;
     };
+    Object.defineProperty(ActorImpl.prototype, "height", {
+        get: function () {
+            return this._height * this.getGlobalScale().y;
+        },
+        set: function (height) {
+            this._height = height / this.scale.y;
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.markCollisionShapeDirty();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Gets the calculated height of an actor, factoring in scale
      */
     ActorImpl.prototype.getHeight = function () {
-        return this._height * this.getGlobalScale().y;
+        return this.height;
     };
     /**
      * Sets the height of an actor, factoring in the current scale
      */
     ActorImpl.prototype.setHeight = function (height) {
-        this._height = height / this.scale.y;
-        this._geometryDirty = true;
+        this.height = height;
     };
     /**
      * Gets the left edge of the actor
@@ -2278,17 +2435,17 @@ var ActorImpl = /** @class */ (function (_super) {
         // rotate around root anchor
         var ra = root.getWorldPos(); // 10, 10
         var r = this.getWorldRotation();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](x, y).rotate(r, ra);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y).rotate(r, ra);
     };
     /**
      * Gets the global scale of the Actor
      */
     ActorImpl.prototype.getGlobalScale = function () {
         if (!this.parent) {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](this.scale.x, this.scale.y);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x, this.scale.y);
         }
         var parentScale = this.parent.getGlobalScale();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
     };
     // #region Collision
     /**
@@ -2299,7 +2456,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // todo cache bounding box
         var anchor = this._getCalculatedAnchor();
         var pos = this.getWorldPos();
-        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"](pos.x - anchor.x, pos.y - anchor.y, pos.x + this.getWidth() - anchor.x, pos.y + this.getHeight() - anchor.y);
+        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__["BoundingBox"](pos.x - anchor.x, pos.y - anchor.y, pos.x + this.width - anchor.x, pos.y + this.height - anchor.y);
         return rotated ? bb.rotate(this.rotation, pos) : bb;
     };
     /**
@@ -2309,7 +2466,7 @@ var ActorImpl = /** @class */ (function (_super) {
         if (rotated === void 0) { rotated = true; }
         // todo cache bounding box
         var anchor = this._getCalculatedAnchor();
-        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"](-anchor.x, -anchor.y, this.getWidth() - anchor.x, this.getHeight() - anchor.y);
+        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__["BoundingBox"](-anchor.x, -anchor.y, this.width - anchor.x, this.height - anchor.y);
         return rotated ? bb.rotate(this.rotation) : bb;
     };
     /**
@@ -2324,16 +2481,6 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.getRelativeGeometry = function () {
         return this.getRelativeBounds(false).getPoints();
     };
-    Object.defineProperty(ActorImpl.prototype, "isGeometryDirty", {
-        /**
-         * Indicates that the actor's collision geometry needs to be recalculated for accurate collisions
-         */
-        get: function () {
-            return this._geometryDirty;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
      * Tests whether the x/y specified are contained in the actor
      * @param x  X coordinate to test (in world coordinates)
@@ -2342,7 +2489,10 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     ActorImpl.prototype.contains = function (x, y, recurse) {
         if (recurse === void 0) { recurse = false; }
-        var containment = this.getBounds().contains(new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](x, y));
+        // These shenanigans are to handle child actor containment,
+        // the only time getWorldPos and pos are different is a child actor
+        var childShift = this.getWorldPos().sub(this.pos);
+        var containment = this.body.collider.bounds.translate(childShift).contains(new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y));
         if (recurse) {
             return (containment ||
                 this.children.some(function (child) {
@@ -2354,47 +2504,49 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Returns the side of the collision based on the intersection
      * @param intersect The displacement vector returned by a collision
+     * @obsolete Actor.getSideFromIntersect will be removed in v0.24.0, use [[BoundingBox.sideFromIntersection]]
      */
     ActorImpl.prototype.getSideFromIntersect = function (intersect) {
         if (intersect) {
             if (Math.abs(intersect.x) > Math.abs(intersect.y)) {
                 if (intersect.x < 0) {
-                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Right;
+                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Right;
                 }
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Left;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Left;
             }
             else {
                 if (intersect.y < 0) {
-                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Bottom;
+                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Bottom;
                 }
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Top;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Top;
             }
         }
-        return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].None;
+        return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].None;
     };
     /**
      * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
      * @param actor The other actor to test
+     * @obsolete Actor.collidesWithSide will be removed in v0.24.0, use [[Actor.bounds.intersectWithSide]]
      */
     ActorImpl.prototype.collidesWithSide = function (actor) {
         var separationVector = this.collides(actor);
         if (!separationVector) {
-            return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].None;
+            return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].None;
         }
         if (Math.abs(separationVector.x) > Math.abs(separationVector.y)) {
             if (this.pos.x < actor.pos.x) {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Right;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Right;
             }
             else {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Left;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Left;
             }
         }
         else {
             if (this.pos.y < actor.pos.y) {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Bottom;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Bottom;
             }
             else {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_12__["Side"].Top;
+                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Top;
             }
         }
     };
@@ -2402,11 +2554,13 @@ var ActorImpl = /** @class */ (function (_super) {
      * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
      * `null` when there is no collision;
      * @param actor The other actor to test
+     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.interesect]] to get boudings intersection,
+     * or [[Actor.body.collider.collide]] to collide with another collider
      */
     ActorImpl.prototype.collides = function (actor) {
-        var bounds = this.getBounds();
-        var otherBounds = actor.getBounds();
-        var intersect = bounds.collides(otherBounds);
+        var bounds = this.body.collider.bounds;
+        var otherBounds = actor.body.collider.bounds;
+        var intersect = bounds.intersect(otherBounds);
         return intersect;
     };
     /**
@@ -2440,38 +2594,13 @@ var ActorImpl = /** @class */ (function (_super) {
     };
     // #endregion
     ActorImpl.prototype._getCalculatedAnchor = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"](this.getWidth() * this.anchor.x, this.getHeight() * this.anchor.y);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y);
     };
     ActorImpl.prototype._reapplyEffects = function (drawing) {
         drawing.removeEffect(this._opacityFx);
         drawing.addEffect(this._opacityFx);
     };
     // #region Update
-    /**
-     * Perform euler integration at the specified time step
-     */
-    ActorImpl.prototype.integrate = function (delta) {
-        // Update placements based on linear algebra
-        var seconds = delta / 1000;
-        var totalAcc = this.acc.clone();
-        // Only active vanilla actors are affected by global acceleration
-        if (this.collisionType === CollisionType.Active) {
-            totalAcc.addEqual(_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].acc);
-        }
-        this.vel.addEqual(totalAcc.scale(seconds));
-        this.pos.addEqual(this.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
-        this.rx += this.torque * (1.0 / this.moi) * seconds;
-        this.rotation += this.rx * seconds;
-        this.scale.x += (this.sx * delta) / 1000;
-        this.scale.y += (this.sy * delta) / 1000;
-        if (!this.scale.equals(this.oldScale)) {
-            // change in scale effects the geometry
-            this._geometryDirty = true;
-        }
-        // Update physics body
-        this.body.update();
-        this._geometryDirty = false;
-    };
     /**
      * Called by the Engine, updates the state of the actor
      * @param engine The reference to the current game engine
@@ -2492,13 +2621,10 @@ var ActorImpl = /** @class */ (function (_super) {
             this._opacityFx.opacity = this.opacity;
             this._effectsDirty = true;
         }
-        // Capture old values before integration step updates them
-        this.oldVel.setTo(this.vel.x, this.vel.y);
-        this.oldPos.setTo(this.pos.x, this.pos.y);
-        this.oldAcc.setTo(this.acc.x, this.acc.y);
-        this.oldScale.setTo(this.scale.x, this.scale.y);
+        // capture old transform
+        this.body.captureOldTransform();
         // Run Euler integration
-        this.integrate(delta);
+        this.body.integrate(delta);
         // Update actor pipeline (movement, collision detection, event propagation, offscreen culling)
         for (var _i = 0, _a = this.traits; _i < _a.length; _i++) {
             var trait = _a[_i];
@@ -2533,7 +2659,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._preupdate = function (engine, delta) {
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreUpdateEvent"](engine, delta, this));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreUpdateEvent"](engine, delta, this));
         this.onPreUpdate(engine, delta);
     };
     /**
@@ -2543,7 +2669,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postupdate = function (engine, delta) {
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreUpdateEvent"](engine, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreUpdateEvent"](engine, delta, this));
         this.onPostUpdate(engine, delta);
     };
     // endregion
@@ -2574,9 +2700,8 @@ var ActorImpl = /** @class */ (function (_super) {
             this.currentDrawing.draw(ctx, offsetX, offsetY);
         }
         else {
-            if (this.color) {
-                ctx.fillStyle = this.color.toString();
-                ctx.fillRect(0, 0, this._width, this._height);
+            if (this.color && this.body && this.body.collider && this.body.collider.shape) {
+                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
             }
         }
         ctx.restore();
@@ -2612,7 +2737,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._predraw = function (ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreDrawEvent"](ctx, delta, this));
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDrawEvent"](ctx, delta, this));
         this.onPreDraw(ctx, delta);
     };
     /**
@@ -2622,7 +2747,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postdraw = function (ctx, delta) {
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreDrawEvent"](ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDrawEvent"](ctx, delta, this));
         this.onPostDraw(ctx, delta);
     };
     /**
@@ -2631,29 +2756,29 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     /* istanbul ignore next */
     ActorImpl.prototype.debugDraw = function (ctx) {
-        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreDebugDrawEvent"](ctx, this));
-        this.body.debugDraw(ctx);
+        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDebugDrawEvent"](ctx, this));
+        this.body.collider.debugDraw(ctx);
         // Draw actor bounding box
-        var bb = this.getBounds();
+        var bb = this.body.collider.bounds;
         bb.debugDraw(ctx);
         // Draw actor Id
         ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
         // Draw actor anchor Vector
-        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_5__["Color"].Yellow.toString();
+        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
         ctx.beginPath();
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, 3, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
         // Culling Box debug draw
         for (var j = 0; j < this.traits.length; j++) {
-            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_14__["OffscreenCulling"]) {
+            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["OffscreenCulling"]) {
                 this.traits[j].cullingBox.debugDraw(ctx);
             }
         }
         // Unit Circle debug draw
-        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_5__["Color"].Yellow.toString();
+        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
         ctx.beginPath();
-        var radius = Math.min(this.getWidth(), this.getHeight());
+        var radius = Math.min(this.width, this.height);
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, radius, 0, Math.PI * 2);
         ctx.closePath();
         ctx.stroke();
@@ -2665,7 +2790,7 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         var oldFont = ctx.font;
         for (var tick in ticks) {
-            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_5__["Color"].Yellow.toString();
+            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
             ctx.font = '14px';
             ctx.textAlign = 'center';
             ctx.fillText(tick, this.getWorldPos().x + Math.cos(ticks[tick]) * (radius + 10), this.getWorldPos().y + Math.sin(ticks[tick]) * (radius + 10));
@@ -2675,7 +2800,7 @@ var ActorImpl = /** @class */ (function (_super) {
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].debugDraw(ctx);
         }
-        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostDebugDrawEvent"](ctx, this));
+        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostDebugDrawEvent"](ctx, this));
     };
     /**
      * Returns the full array of ancestors
@@ -2695,14 +2820,89 @@ var ActorImpl = /** @class */ (function (_super) {
      * Indicates the next id to be set
      */
     ActorImpl.defaults = {
-        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_10__["Vector"].Half
+        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"].Half
     };
     /**
      * Indicates the next id to be set
      */
     ActorImpl.maxId = 0;
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collisionArea will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.shape' })
+    ], ActorImpl.prototype, "collisionArea", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.x will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.x, or ex.Actor.body.pos.x' })
+    ], ActorImpl.prototype, "x", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.y will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.y, or ex.Actor.body.pos.y' })
+    ], ActorImpl.prototype, "y", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.torque will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.torque' })
+    ], ActorImpl.prototype, "torque", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.mass will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.mass' })
+    ], ActorImpl.prototype, "mass", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.moi will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.inertia' })
+    ], ActorImpl.prototype, "moi", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.friction will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.friction' })
+    ], ActorImpl.prototype, "friction", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.restitution will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.bounciness' })
+    ], ActorImpl.prototype, "restitution", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
+    ], ActorImpl.prototype, "collisionType", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.center' })
+    ], ActorImpl.prototype, "getCenter", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
+    ], ActorImpl.prototype, "getWidth", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
+    ], ActorImpl.prototype, "setWidth", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
+    ], ActorImpl.prototype, "getHeight", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
+    ], ActorImpl.prototype, "setHeight", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.left' })
+    ], ActorImpl.prototype, "getLeft", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.right' })
+    ], ActorImpl.prototype, "getRight", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.top' })
+    ], ActorImpl.prototype, "getTop", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.bottom' })
+    ], ActorImpl.prototype, "getBottom", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds' })
+    ], ActorImpl.prototype, "getBounds", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds' })
+    ], ActorImpl.prototype, "getRelativeBounds", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.getPoints()' })
+    ], ActorImpl.prototype, "getGeometry", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds.getPoints()' })
+    ], ActorImpl.prototype, "getRelativeGeometry", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getSideFromIntersect will be removed in v0.24.0', alternateMethod: 'BoundingBox.sideFromIntersection' })
+    ], ActorImpl.prototype, "getSideFromIntersect", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collidesWithSide will be removed in v0.24.0', alternateMethod: 'Actor.bounds.intersectWithSide' })
+    ], ActorImpl.prototype, "collidesWithSide", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collides will be removed  in v0.24.0', alternateMethod: 'Actor.bounds.intersect or Actor.' })
+    ], ActorImpl.prototype, "collides", null);
     return ActorImpl;
-}(_Class__WEBPACK_IMPORTED_MODULE_1__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
 
 /**
  * The most important primitive in Excalibur is an `Actor`. Anything that
@@ -2722,39 +2922,8 @@ var Actor = /** @class */ (function (_super) {
         return _super.call(this, xOrConfig, y, width, height, color) || this;
     }
     return Actor;
-}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_13__["Configurable"])(ActorImpl)));
+}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_12__["Configurable"])(ActorImpl)));
 
-/**
- * An enum that describes the types of collisions actors can participate in
- */
-var CollisionType;
-(function (CollisionType) {
-    /**
-     * Actors with the `PreventCollision` setting do not participate in any
-     * collisions and do not raise collision events.
-     */
-    CollisionType[CollisionType["PreventCollision"] = 0] = "PreventCollision";
-    /**
-     * Actors with the `Passive` setting only raise collision events, but are not
-     * influenced or moved by other actors and do not influence or move other actors.
-     */
-    CollisionType[CollisionType["Passive"] = 1] = "Passive";
-    /**
-     * Actors with the `Active` setting raise collision events and participate
-     * in collisions with other actors and will be push or moved by actors sharing
-     * the `Active` or `Fixed` setting.
-     */
-    CollisionType[CollisionType["Active"] = 2] = "Active";
-    /**
-     * Actors with the `Fixed` setting raise collision events and participate in
-     * collisions with other actors. Actors with the `Fixed` setting will not be
-     * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
-     * actors as "immovable/onstoppable" objects. If two `Fixed` actors meet they will
-     * not be pushed or moved by each other, they will not interact except to throw
-     * collision events.
-     */
-    CollisionType[CollisionType["Fixed"] = 3] = "Fixed";
-})(CollisionType || (CollisionType = {}));
 
 
 /***/ }),
@@ -2936,12 +3105,13 @@ var Vector = /** @class */ (function () {
     Vector.prototype.average = function (vec) {
         return this.add(vec).scale(0.5);
     };
-    /**
-     * Scales a vector's by a factor of size
-     * @param size  The factor to scale the magnitude by
-     */
-    Vector.prototype.scale = function (size) {
-        return new Vector(this.x * size, this.y * size);
+    Vector.prototype.scale = function (sizeOrScale) {
+        if (sizeOrScale instanceof Vector) {
+            return new Vector(this.x * sizeOrScale.x, this.y * sizeOrScale.y);
+        }
+        else {
+            return new Vector(this.x * sizeOrScale, this.y * sizeOrScale);
+        }
     };
     /**
      * Adds one vector to another
@@ -3393,7 +3563,7 @@ var LockCameraToActorStrategy = /** @class */ (function () {
     function LockCameraToActorStrategy(target) {
         this.target = target;
         this.action = function (target, _cam, _eng, _delta) {
-            var center = target.getCenter();
+            var center = target.center;
             return center;
         };
     }
@@ -3409,7 +3579,7 @@ var LockCameraToActorAxisStrategy = /** @class */ (function () {
         this.target = target;
         this.axis = axis;
         this.action = function (target, cam, _eng, _delta) {
-            var center = target.getCenter();
+            var center = target.center;
             var currentFocus = cam.getFocus();
             if (_this.axis === Axis.X) {
                 return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](center.x, currentFocus.y);
@@ -3441,7 +3611,7 @@ var ElasticToActorStrategy = /** @class */ (function () {
         this.cameraElasticity = cameraElasticity;
         this.cameraFriction = cameraFriction;
         this.action = function (target, cam, _eng, _delta) {
-            var position = target.getCenter();
+            var position = target.center;
             var focus = cam.getFocus();
             var cameraVel = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](cam.dx, cam.dy);
             // Calculate the strech vector, using the spring equation
@@ -3473,7 +3643,7 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
         this.target = target;
         this.radius = radius;
         this.action = function (target, cam, _eng, _delta) {
-            var position = target.getCenter();
+            var position = target.center;
             var focus = cam.getFocus();
             var direction = position.sub(focus);
             var distance = direction.magnitude();
@@ -3888,7 +4058,7 @@ var Camera = /** @class */ (function (_super) {
         ctx.setLineDash([5, 15]);
         ctx.lineWidth = 5;
         ctx.strokeStyle = 'white';
-        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.getWidth(), this.viewport.getHeight());
+        ctx.strokeRect(this.viewport.left, this.viewport.top, this.viewport.width, this.viewport.height);
         ctx.closePath();
     };
     Camera.prototype._isDoneShaking = function () {
@@ -4034,89 +4204,154 @@ var Class = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return Body; });
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Physics */ "./Physics.ts");
-/* harmony import */ var _EdgeArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EdgeArea */ "./Collision/EdgeArea.ts");
-/* harmony import */ var _CircleArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CircleArea */ "./Collision/CircleArea.ts");
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Util/DrawUtil */ "./Util/DrawUtil.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
 
 
 
-
-
+/**
+ * Body describes all the physical properties pos, vel, acc, rotation, angular velocity
+ */
 var Body = /** @class */ (function () {
     /**
      * Constructs a new physics body associated with an actor
      */
-    function Body(actor) {
-        this.actor = actor;
-        /**
-         * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
-         */
-        this.collisionArea = null;
+    function Body(_a) {
+        var actor = _a.actor, collider = _a.collider;
         /**
          * The (x, y) position of the actor this will be in the middle of the actor if the
          * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
          * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
          */
-        this.pos = new _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"](0, 0);
+        this.pos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
         /**
          * The position of the actor last frame (x, y) in pixels
          */
-        this.oldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"](0, 0);
+        this.oldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
         /**
          * The current velocity vector (vx, vy) of the actor in pixels/second
          */
-        this.vel = new _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"](0, 0);
+        this.vel = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
         /**
          * The velocity of the actor last frame (vx, vy) in pixels/second
          */
-        this.oldVel = new _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"](0, 0);
+        this.oldVel = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
         /**
          * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
          * be useful to simulate a gravitational effect.
          */
-        this.acc = new _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"](0, 0);
+        this.acc = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
+        /**
+         * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+         */
+        this.oldAcc = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero;
         /**
          * The current torque applied to the actor
          */
         this.torque = 0;
         /**
-         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
-         */
-        this.mass = 1.0;
-        /**
-         * The current moment of inertia, moi can be thought of as the resistance to rotation.
-         */
-        this.moi = 1000;
-        /**
          * The current "motion" of the actor, used to calculated sleep in the physics simulation
          */
         this.motion = 10;
         /**
-         * The coefficient of friction on this actor
+         * Gets/sets the rotation of the body from the last frame.
          */
-        this.friction = 0.99;
-        /**
-         * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
-         */
-        this.restitution = 0.2;
+        this.oldRotation = 0; // radians
         /**
          * The rotation of the actor in radians
          */
         this.rotation = 0; // radians
         /**
+         * The scale vector of the actor
+         */
+        this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
+        /**
+         * The scale of the actor last frame
+         */
+        this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
+        /**
+         * The x scalar velocity of the actor in scale/second
+         */
+        this.sx = 0; //scale/sec
+        /**
+         * The y scalar velocity of the actor in scale/second
+         */
+        this.sy = 0; //scale/sec
+        /**
          * The rotational velocity of the actor in radians/second
          */
         this.rx = 0; //radians/sec
-        this._totalMtv = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero;
+        this._geometryDirty = false;
+        this._totalMtv = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero;
+        if (!actor && !collider) {
+            throw new Error('An actor or collider are required to create a body');
+        }
+        this.actor = actor;
+        if (!collider && actor) {
+            this.collider = this.useBoxCollider(actor.width, actor.height, actor.anchor);
+        }
+        else {
+            this.collider = collider;
+        }
     }
+    Object.defineProperty(Body.prototype, "id", {
+        get: function () {
+            return this.actor ? this.actor.id : -1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Returns a clone of this body, not associated with any actor
+     */
+    Body.prototype.clone = function () {
+        return new Body({
+            actor: null,
+            collider: this.collider.clone()
+        });
+    };
+    Object.defineProperty(Body.prototype, "active", {
+        get: function () {
+            return this.actor ? !this.actor.isKilled() : false;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "center", {
+        get: function () {
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "collider", {
+        get: function () {
+            return this._collider;
+        },
+        // TODO allow multiple colliders for a single body
+        set: function (collider) {
+            if (collider) {
+                this._collider = collider;
+                this._collider.body = this;
+                this._wireColliderEventsToActor();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Add minimum translation vectors accumulated during the current frame to resolve collisions.
      */
@@ -4131,130 +4366,163 @@ var Body = /** @class */ (function () {
         this._totalMtv.setTo(0, 0);
     };
     /**
-     * Returns the body's [[BoundingBox]] calculated for this instant in world space.
+     * Flags the shape dirty and must be recalculated in world space
      */
-    Body.prototype.getBounds = function () {
-        if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionResolutionStrategy === _Physics__WEBPACK_IMPORTED_MODULE_0__["CollisionResolutionStrategy"].Box) {
-            return this.actor.getBounds();
-        }
-        else {
-            return this.collisionArea.getBounds();
-        }
+    Body.prototype.markCollisionShapeDirty = function () {
+        this._geometryDirty = true;
+    };
+    Object.defineProperty(Body.prototype, "isColliderShapeDirty", {
+        get: function () {
+            return this._geometryDirty;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Sets the old versions of pos, vel, acc, and scale.
+     */
+    Body.prototype.captureOldTransform = function () {
+        // Capture old values before integration step updates them
+        this.oldVel.setTo(this.vel.x, this.vel.y);
+        this.oldPos.setTo(this.pos.x, this.pos.y);
+        this.oldAcc.setTo(this.acc.x, this.acc.y);
+        this.oldScale.setTo(this.scale.x, this.scale.y);
+        this.oldRotation = this.rotation;
     };
     /**
-     * Returns the actor's [[BoundingBox]] relative to the actors position.
+     * Perform euler integration at the specified time step
      */
-    Body.prototype.getRelativeBounds = function () {
-        if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionResolutionStrategy === _Physics__WEBPACK_IMPORTED_MODULE_0__["CollisionResolutionStrategy"].Box) {
-            return this.actor.getRelativeBounds();
+    Body.prototype.integrate = function (delta) {
+        // Update placements based on linear algebra
+        var seconds = delta / 1000;
+        var totalAcc = this.acc.clone();
+        // Only active vanilla actors are affected by global acceleration
+        if (this.collider.type === _CollisionType__WEBPACK_IMPORTED_MODULE_1__["CollisionType"].Active) {
+            totalAcc.addEqual(_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].acc);
         }
-        else {
-            return this.actor.getRelativeBounds();
+        this.vel.addEqual(totalAcc.scale(seconds));
+        this.pos.addEqual(this.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
+        this.rx += this.torque * (1.0 / this.collider.inertia) * seconds;
+        this.rotation += this.rx * seconds;
+        this.scale.x += (this.sx * delta) / 1000;
+        this.scale.y += (this.sy * delta) / 1000;
+        if (!this.scale.equals(this.oldScale)) {
+            // change in scale effects the geometry
+            this._geometryDirty = true;
         }
+        // Update colliders
+        this.collider.update();
+        this._geometryDirty = false;
     };
     /**
-     * Updates the collision area geometry and internal caches
-     */
-    Body.prototype.update = function () {
-        if (this.collisionArea) {
-            // Update the geometry if needed
-            if (this.actor && this.actor.isGeometryDirty && this.collisionArea instanceof _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]) {
-                this.collisionArea.points = this.actor.getRelativeGeometry();
-            }
-            this.collisionArea.recalc();
-        }
-    };
-    /**
-     * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
+     * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useBoxCollision = function (center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
-        this.collisionArea = new _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]({
-            body: this,
-            points: this.actor.getRelativeGeometry(),
-            pos: center // position relative to actor
-        });
-        // in case of a nan moi, coalesce to a safe default
-        this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+    Body.prototype.useBoxCollider = function (width, height, anchor, center) {
+        if (anchor === void 0) { anchor = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Half; }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Box(width, height, anchor, center);
+        return this.collider;
     };
     /**
-     * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+     * @obsolete Body.useBoxCollision will be removed in v0.24.0 use [[Body.useBoxCollider]]
+     */
+    Body.prototype.useBoxCollision = function (center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.useBoxCollider(this.actor.width, this.actor.height, this.actor.anchor, center);
+    };
+    /**
+     * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
+     *  to the anchor of the associated actor
+     * of this physics body.
      *
      * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.usePolygonCollision = function (points, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
-        this.collisionArea = new _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]({
-            body: this,
-            points: points,
-            pos: center // position relative to actor
-        });
-        // in case of a nan moi, collesce to a safe default
-        this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+    Body.prototype.usePolygonCollider = function (points, center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Polygon(points, false, center);
+        return this.collider;
     };
     /**
-     * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+     * @obsolete Body.usePolygonCollision will be removed in v0.24.0 use [[Body.usePolygonCollider]]
+     */
+    Body.prototype.usePolygonCollision = function (points, center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.usePolygonCollider(points, center);
+    };
+    /**
+     * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useCircleCollision = function (radius, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"].Zero; }
-        if (!radius) {
-            radius = this.actor.getWidth() / 2;
-        }
-        this.collisionArea = new _CircleArea__WEBPACK_IMPORTED_MODULE_2__["CircleArea"]({
-            body: this,
-            radius: radius,
-            pos: center
-        });
-        this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
+    Body.prototype.useCircleCollider = function (radius, center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Circle(radius, center);
+        return this.collider;
     };
     /**
-     * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+     * @obsolete Body.useCircleCollision will be removed in v0.24.0, use [[Body.useCircleCollider]]
+     */
+    Body.prototype.useCircleCollision = function (radius, center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
+        this.useCircleCollider(radius, center);
+    };
+    /**
+     * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
      * of this physics body.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useEdgeCollision = function (begin, end) {
-        this.collisionArea = new _EdgeArea__WEBPACK_IMPORTED_MODULE_1__["EdgeArea"]({
-            begin: begin,
-            end: end,
-            body: this
-        });
-        this.moi = this.collisionArea.getMomentOfInertia() || this.moi;
-    };
-    /* istanbul ignore next */
-    Body.prototype.debugDraw = function (ctx) {
-        // Draw motion vectors
-        if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].showMotionVectors) {
-            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_7__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Yellow, this.pos, this.acc.add(_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].acc));
-            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_7__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red, this.pos, this.vel);
-            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_7__["point"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red, this.pos);
-        }
-        if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].showBounds) {
-            this.getBounds().debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Yellow);
-        }
-        if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].showArea) {
-            this.collisionArea.debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green);
-        }
+    Body.prototype.useEdgeCollider = function (begin, end) {
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Edge(begin, end);
+        return this.collider;
     };
     /**
-     * Returns a boolean indicating whether this body collided with
-     * or was in stationary contact with
-     * the body of the other [[Actor]]
+     * @obsolete Body.useEdgeCollision will be removed in v0.24.0, use [[Body.useEdgeCollider]]
      */
-    Body.prototype.touching = function (other) {
-        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_4__["Pair"](this, other.body);
-        pair.collide();
-        if (pair.collision) {
-            return true;
-        }
-        return false;
+    Body.prototype.useEdgeCollision = function (begin, end) {
+        this.useEdgeCollider(begin, end);
     };
+    // TODO remove this, eventually events will stay local to the thing they are around
+    Body.prototype._wireColliderEventsToActor = function () {
+        var _this = this;
+        this.collider.clear();
+        this.collider.on('precollision', function (evt) {
+            if (_this.actor) {
+                _this.actor.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+            }
+        });
+        this.collider.on('postcollision', function (evt) {
+            if (_this.actor) {
+                _this.actor.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+            }
+        });
+        this.collider.on('collisionstart', function (evt) {
+            if (_this.actor) {
+                _this.actor.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionStartEvent"](evt.target.body.actor, evt.other.body.actor, evt.pair));
+            }
+        });
+        this.collider.on('collisionend', function (evt) {
+            if (_this.actor) {
+                _this.actor.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionEndEvent"](evt.target.body.actor, evt.other.body.actor));
+            }
+        });
+    };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useBoxCollider' })
+    ], Body.prototype, "useBoxCollision", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.usePolygonCollider' })
+    ], Body.prototype, "usePolygonCollision", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useCircleCollider' })
+    ], Body.prototype, "useCircleCollision", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useEdgeCollider' })
+    ], Body.prototype, "useEdgeCollision", null);
     return Body;
 }());
 
@@ -4272,9 +4540,19 @@ var Body = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return BoundingBox; });
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
 
 
 
@@ -4298,6 +4576,30 @@ var BoundingBox = /** @class */ (function () {
         this.right = right;
         this.bottom = bottom;
     }
+    /**
+     * Given bounding box A & B, returns the side relative to A when intersection is performed.
+     * @param intersection Intersection vector between 2 bounding boxes
+     */
+    BoundingBox.getSideFromIntersection = function (intersection) {
+        if (!intersection) {
+            return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].None;
+        }
+        if (intersection) {
+            if (Math.abs(intersection.x) > Math.abs(intersection.y)) {
+                if (intersection.x < 0) {
+                    return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Right;
+                }
+                return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Left;
+            }
+            else {
+                if (intersection.y < 0) {
+                    return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Bottom;
+                }
+                return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Top;
+            }
+        }
+        return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].None;
+    };
     BoundingBox.fromPoints = function (points) {
         var minX = Infinity;
         var minY = Infinity;
@@ -4319,17 +4621,61 @@ var BoundingBox = /** @class */ (function () {
         }
         return new BoundingBox(minX, minY, maxX, maxY);
     };
+    BoundingBox.fromDimension = function (width, height, anchor, pos) {
+        if (anchor === void 0) { anchor = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Half; }
+        if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero; }
+        return new BoundingBox(-width * anchor.x + pos.x, -height * anchor.y + pos.y, width - width * anchor.x + pos.x, height - height * anchor.y + pos.y);
+    };
     /**
      * Returns the calculated width of the bounding box
      */
     BoundingBox.prototype.getWidth = function () {
-        return this.right - this.left;
+        return this.width;
     };
+    Object.defineProperty(BoundingBox.prototype, "width", {
+        /**
+         * Returns the calculated width of the bounding box
+         */
+        get: function () {
+            return this.right - this.left;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns the calculated height of the bounding box
      */
     BoundingBox.prototype.getHeight = function () {
-        return this.bottom - this.top;
+        return this.height;
+    };
+    Object.defineProperty(BoundingBox.prototype, "height", {
+        /**
+         * Returns the calculated height of the bounding box
+         */
+        get: function () {
+            return this.bottom - this.top;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Returns the center of the bounding box
+     */
+    BoundingBox.prototype.getCenter = function () {
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"]((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+    };
+    Object.defineProperty(BoundingBox.prototype, "center", {
+        /**
+         * Returns the center of the bounding box
+         */
+        get: function () {
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"]((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BoundingBox.prototype.translate = function (pos) {
+        return new BoundingBox(this.left + pos.x, this.top + pos.y, this.right + pos.x, this.bottom + pos.y);
     };
     /**
      * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
@@ -4340,12 +4686,17 @@ var BoundingBox = /** @class */ (function () {
         var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
         return BoundingBox.fromPoints(points);
     };
+    BoundingBox.prototype.scale = function (scale, point) {
+        if (point === void 0) { point = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero; }
+        var shifted = this.translate(point);
+        return new BoundingBox(shifted.left * scale.x, shifted.top * scale.y, shifted.right * scale.x, shifted.bottom * scale.y);
+    };
     /**
      * Returns the perimeter of the bounding box
      */
     BoundingBox.prototype.getPerimeter = function () {
-        var wx = this.getWidth();
-        var wy = this.getHeight();
+        var wx = this.width;
+        var wy = this.height;
         return 2 * (wx + wy);
     };
     BoundingBox.prototype.getPoints = function () {
@@ -4360,7 +4711,7 @@ var BoundingBox = /** @class */ (function () {
      * Creates a Polygon collision area from the points of the bounding box
      */
     BoundingBox.prototype.toPolygon = function (actor) {
-        return new _PolygonArea__WEBPACK_IMPORTED_MODULE_0__["PolygonArea"]({
+        return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
             body: actor ? actor.body : null,
             points: this.getPoints(),
             pos: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero
@@ -4428,155 +4779,183 @@ var BoundingBox = /** @class */ (function () {
     };
     Object.defineProperty(BoundingBox.prototype, "dimensions", {
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this.getWidth(), this.getHeight());
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this.width, this.height);
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Test wether this bounding box intersects with another returning
+     * the intersection vector that can be used to resolve the collision. If there
+     * is no intersection null is returned.
+     *
+     * @param other  Other [[BoundingBox]] to test intersection with
+     * @returns A Vector in the direction of the current BoundingBox, this <- other
+     */
+    BoundingBox.prototype.intersect = function (other) {
+        var totalBoundingBox = this.combine(other);
+        // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
+        if (totalBoundingBox.width < other.width + this.width &&
+            totalBoundingBox.height < other.height + this.height &&
+            !totalBoundingBox.dimensions.equals(other.dimensions) &&
+            !totalBoundingBox.dimensions.equals(this.dimensions)) {
+            // collision
+            var overlapX = 0;
+            // right edge is between the other's left and right edge
+            /**
+             *     +-this-+
+             *     |      |
+             *     |    +-other-+
+             *     +----|-+     |
+             *          |       |
+             *          +-------+
+             *         <---
+             *          ^ overlap
+             */
+            if (this.right >= other.left && this.right <= other.right) {
+                overlapX = other.left - this.right;
+                // right edge is past the other's right edge
+                /**
+                 *     +-other-+
+                 *     |       |
+                 *     |    +-this-+
+                 *     +----|--+   |
+                 *          |      |
+                 *          +------+
+                 *          --->
+                 *          ^ overlap
+                 */
+            }
+            else {
+                overlapX = other.right - this.left;
+            }
+            var overlapY = 0;
+            // top edge is between the other's top and bottom edge
+            /**
+             *     +-other-+
+             *     |       |
+             *     |    +-this-+   | <- overlap
+             *     +----|--+   |   |
+             *          |      |  \ /
+             *          +------+   '
+             */
+            if (this.top <= other.bottom && this.top >= other.top) {
+                overlapY = other.bottom - this.top;
+                // top edge is above the other top edge
+                /**
+                 *     +-this-+         .
+                 *     |      |        / \
+                 *     |    +-other-+   | <- overlap
+                 *     +----|-+     |   |
+                 *          |       |
+                 *          +-------+
+                 */
+            }
+            else {
+                overlapY = other.top - this.bottom;
+            }
+            if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX, 0);
+            }
+            else {
+                return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
+            }
+            // Case of total containment of one bounding box by another
+        }
+        else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
+            var overlapX = 0;
+            // this is wider than the other
+            if (this.width - other.width >= 0) {
+                // This right edge is closest to the others right edge
+                if (this.right - other.right <= other.left - this.left) {
+                    overlapX = other.left - this.right;
+                    // This left edge is closest to the others left edge
+                }
+                else {
+                    overlapX = other.right - this.left;
+                }
+                // other is wider than this
+            }
+            else {
+                // This right edge is closest to the others right edge
+                if (other.right - this.right <= this.left - other.left) {
+                    overlapX = this.left - other.right;
+                    // This left edge is closest to the others left edge
+                }
+                else {
+                    overlapX = this.right - other.left;
+                }
+            }
+            var overlapY = 0;
+            // this is taller than other
+            if (this.height - other.height >= 0) {
+                // The bottom edge is closest to the others bottom edge
+                if (this.bottom - other.bottom <= other.top - this.top) {
+                    overlapY = other.top - this.bottom;
+                }
+                else {
+                    overlapY = other.bottom - this.top;
+                }
+                // other is taller than this
+            }
+            else {
+                // The bottom edge is closest to the others bottom edge
+                if (other.bottom - this.bottom <= this.top - other.top) {
+                    overlapY = this.top - other.bottom;
+                }
+                else {
+                    overlapY = this.bottom - other.top;
+                }
+            }
+            if (Math.abs(overlapX) < Math.abs(overlapY)) {
+                return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX, 0);
+            }
+            else {
+                return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
+            }
+        }
+        else {
+            return null;
+        }
+    };
+    /**
+     * Test whether the bounding box has intersected with another bounding box, returns the side of the current bb that intersected.
+     * @param bb The other actor to test
+     */
+    BoundingBox.prototype.intersectWithSide = function (bb) {
+        var intersect = this.intersect(bb);
+        return BoundingBox.getSideFromIntersection(intersect);
+    };
     /**
      * Test wether this bounding box collides with another returning,
      * the intersection vector that can be used to resolve the collision. If there
      * is no collision null is returned.
      *
      * @returns A Vector in the direction of the current BoundingBox
-     * @param collidable  Other collidable to test
+     * @param boundingBox  Other collidable to test
+     * @obsolete BoundingBox.collides will be removed in v0.24.0, use BoundingBox.intersect
      */
-    BoundingBox.prototype.collides = function (collidable) {
-        if (collidable instanceof BoundingBox) {
-            var other = collidable;
-            var totalBoundingBox = this.combine(other);
-            // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
-            if (totalBoundingBox.getWidth() < other.getWidth() + this.getWidth() &&
-                totalBoundingBox.getHeight() < other.getHeight() + this.getHeight() &&
-                !totalBoundingBox.dimensions.equals(other.dimensions) &&
-                !totalBoundingBox.dimensions.equals(this.dimensions)) {
-                // collision
-                var overlapX = 0;
-                // right edge is between the other's left and right edge
-                /**
-                 *     +-this-+
-                 *     |      |
-                 *     |    +-other-+
-                 *     +----|-+     |
-                 *          |       |
-                 *          +-------+
-                 *         <---
-                 *          ^ overlap
-                 */
-                if (this.right >= other.left && this.right <= other.right) {
-                    overlapX = other.left - this.right;
-                    // right edge is past the other's right edge
-                    /**
-                     *     +-other-+
-                     *     |       |
-                     *     |    +-this-+
-                     *     +----|--+   |
-                     *          |      |
-                     *          +------+
-                     *          --->
-                     *          ^ overlap
-                     */
-                }
-                else {
-                    overlapX = other.right - this.left;
-                }
-                var overlapY = 0;
-                // top edge is between the other's top and bottom edge
-                /**
-                 *     +-other-+
-                 *     |       |
-                 *     |    +-this-+   | <- overlap
-                 *     +----|--+   |   |
-                 *          |      |  \ /
-                 *          +------+   '
-                 */
-                if (this.top <= other.bottom && this.top >= other.top) {
-                    overlapY = other.bottom - this.top;
-                    // top edge is above the other top edge
-                    /**
-                     *     +-this-+         .
-                     *     |      |        / \
-                     *     |    +-other-+   | <- overlap
-                     *     +----|-+     |   |
-                     *          |       |
-                     *          +-------+
-                     */
-                }
-                else {
-                    overlapY = other.top - this.bottom;
-                }
-                if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX, 0);
-                }
-                else {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
-                }
-                // Case of total containment of one bounding box by another
-            }
-            else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
-                var overlapX = 0;
-                // this is wider than the other
-                if (this.getWidth() - other.getWidth() >= 0) {
-                    // This right edge is closest to the others right edge
-                    if (this.right - other.right <= other.left - this.left) {
-                        overlapX = other.left - this.right;
-                        // This left edge is closest to the others left edge
-                    }
-                    else {
-                        overlapX = other.right - this.left;
-                    }
-                    // other is wider than this
-                }
-                else {
-                    // This right edge is closest to the others right edge
-                    if (other.right - this.right <= this.left - other.left) {
-                        overlapX = this.left - other.right;
-                        // This left edge is closest to the others left edge
-                    }
-                    else {
-                        overlapX = this.right - other.left;
-                    }
-                }
-                var overlapY = 0;
-                // this is taller than other
-                if (this.getHeight() - other.getHeight() >= 0) {
-                    // The bottom edge is closest to the others bottom edge
-                    if (this.bottom - other.bottom <= other.top - this.top) {
-                        overlapY = other.top - this.bottom;
-                    }
-                    else {
-                        overlapY = other.bottom - this.top;
-                    }
-                    // other is taller than this
-                }
-                else {
-                    // The bottom edge is closest to the others bottom edge
-                    if (other.bottom - this.bottom <= this.top - other.top) {
-                        overlapY = this.top - other.bottom;
-                    }
-                    else {
-                        overlapY = this.bottom - other.top;
-                    }
-                }
-                if (Math.abs(overlapX) < Math.abs(overlapY)) {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](overlapX, 0);
-                }
-                else {
-                    return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, overlapY);
-                }
-            }
-            else {
-                return null;
-            }
-        }
-        return null;
+    BoundingBox.prototype.collides = function (boundingBox) {
+        return this.intersect(boundingBox);
     };
     /* istanbul ignore next */
     BoundingBox.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Yellow; }
         ctx.strokeStyle = color.toString();
-        ctx.strokeRect(this.left, this.top, this.getWidth(), this.getHeight());
+        ctx.strokeRect(this.left, this.top, this.width, this.height);
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.width' })
+    ], BoundingBox.prototype, "getWidth", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.height' })
+    ], BoundingBox.prototype, "getHeight", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
+    ], BoundingBox.prototype, "getCenter", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'BoundingBox.collides will be removed in v0.24.0', alternateMethod: 'BoundingBox.intersect' })
+    ], BoundingBox.prototype, "collides", null);
     return BoundingBox;
 }());
 
@@ -4584,23 +4963,37 @@ var BoundingBox = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./Collision/CircleArea.ts":
-/*!*********************************!*\
-  !*** ./Collision/CircleArea.ts ***!
-  \*********************************/
-/*! exports provided: CircleArea */
+/***/ "./Collision/Circle.ts":
+/*!*****************************!*\
+  !*** ./Collision/Circle.ts ***!
+  \*****************************/
+/*! exports provided: Circle, CircleArea */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return Circle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return CircleArea; });
 /* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
-/* harmony import */ var _EdgeArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EdgeArea */ "./Collision/EdgeArea.ts");
-/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
+/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
 
@@ -4609,45 +5002,83 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * This is a circle collision area for the excalibur rigid body physics simulation
+ * This is a circle collision shape for the excalibur rigid body physics simulation
+ *
+ * Example:
+ * [[include:CircleShape.md]]
  */
-var CircleArea = /** @class */ (function () {
-    function CircleArea(options) {
+var Circle = /** @class */ (function () {
+    function Circle(options) {
         /**
-         * This is the center position of the circle, relative to the body position
+         * Position of the circle relative to the collider, by default (0, 0) meaning the shape is positioned on top of the collider.
          */
         this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.radius = options.radius || 0;
-        this.body = options.body || null;
-    }
-    /**
-     * Get the center of the collision area in world coordinates
-     */
-    CircleArea.prototype.getCenter = function () {
-        if (this.body) {
-            return this.pos.add(this.body.pos);
+        this.collider = options.collider || null;
+        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
+        if (options.body) {
+            this.collider = options.body.collider;
+            this.body = this.collider.body;
         }
-        return this.pos;
-    };
+        // ==================================
+    }
+    Object.defineProperty(Circle.prototype, "worldPos", {
+        get: function () {
+            if (this.collider && this.collider.body) {
+                return this.collider.body.pos.add(this.pos);
+            }
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
-     * Tests if a point is contained in this collision area
+     * Returns a clone of this shape, not associated with any collider
      */
-    CircleArea.prototype.contains = function (point) {
-        var distance = this.body.pos.distance(point);
+    Circle.prototype.clone = function () {
+        return new Circle({
+            pos: this.pos.clone(),
+            radius: this.radius,
+            collider: null,
+            body: null
+        });
+    };
+    Object.defineProperty(Circle.prototype, "center", {
+        /**
+         * Get the center of the collision shape in world coordinates
+         */
+        get: function () {
+            if (this.collider && this.collider.body) {
+                return this.pos.add(this.collider.body.pos);
+            }
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Tests if a point is contained in this collision shape
+     */
+    Circle.prototype.contains = function (point) {
+        var pos = this.pos;
+        if (this.collider && this.collider.body) {
+            pos = this.collider.body.pos;
+        }
+        var distance = pos.distance(point);
         if (distance <= this.radius) {
             return true;
         }
         return false;
     };
     /**
-     * Casts a ray at the CircleArea and returns the nearest point of collision
+     * Casts a ray at the Circl shape and returns the nearest point of collision
      * @param ray
      */
-    CircleArea.prototype.rayCast = function (ray, max) {
+    Circle.prototype.rayCast = function (ray, max) {
         if (max === void 0) { max = Infinity; }
         //https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
-        var c = this.getCenter();
+        var c = this.center;
         var dir = ray.dir;
         var orig = ray.pos;
         var discriminant = Math.sqrt(Math.pow(dir.dot(orig.sub(c)), 2) - Math.pow(orig.sub(c).distance(), 2) + Math.pow(this.radius, 2));
@@ -4678,52 +5109,78 @@ var CircleArea = /** @class */ (function () {
     /**
      * @inheritdoc
      */
-    CircleArea.prototype.collide = function (area) {
-        if (area instanceof CircleArea) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_3__["CollisionJumpTable"].CollideCircleCircle(this, area);
+    Circle.prototype.collide = function (shape) {
+        if (shape instanceof Circle) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideCircleCircle(this, shape);
         }
-        else if (area instanceof _PolygonArea__WEBPACK_IMPORTED_MODULE_1__["PolygonArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_3__["CollisionJumpTable"].CollideCirclePolygon(this, area);
+        else if (shape instanceof _ConvexPolygon__WEBPACK_IMPORTED_MODULE_2__["ConvexPolygon"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideCirclePolygon(this, shape);
         }
-        else if (area instanceof _EdgeArea__WEBPACK_IMPORTED_MODULE_2__["EdgeArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_3__["CollisionJumpTable"].CollideCircleEdge(this, area);
+        else if (shape instanceof _Edge__WEBPACK_IMPORTED_MODULE_3__["Edge"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideCircleEdge(this, shape);
         }
         else {
-            throw new Error("Circle could not collide with unknown ICollisionArea " + typeof area);
+            throw new Error("Circle could not collide with unknown CollisionShape " + typeof shape);
         }
     };
     /**
      * Find the point on the shape furthest in the direction specified
      */
-    CircleArea.prototype.getFurthestPoint = function (direction) {
-        return this.getCenter().add(direction.normalize().scale(this.radius));
+    Circle.prototype.getFurthestPoint = function (direction) {
+        return this.center.add(direction.normalize().scale(this.radius));
     };
-    /**
-     * Get the axis aligned bounding box for the circle area
-     */
-    CircleArea.prototype.getBounds = function () {
-        return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.pos.x + this.body.pos.x - this.radius, this.pos.y + this.body.pos.y - this.radius, this.pos.x + this.body.pos.x + this.radius, this.pos.y + this.body.pos.y + this.radius);
-    };
-    /**
-     * Get axis not implemented on circles, since there are infinite axis in a circle
-     */
-    CircleArea.prototype.getAxes = function () {
-        return null;
-    };
-    /**
-     * Returns the moment of inertia of a circle given it's mass
-     * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-     */
-    CircleArea.prototype.getMomentOfInertia = function () {
-        var mass = this.body ? this.body.mass : _Physics__WEBPACK_IMPORTED_MODULE_5__["Physics"].defaultMass;
-        return (mass * this.radius * this.radius) / 2;
-    };
+    Object.defineProperty(Circle.prototype, "bounds", {
+        /**
+         * Get the axis aligned bounding box for the circle shape in world coordinates
+         */
+        get: function () {
+            var bodyPos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
+            if (this.collider && this.collider.body) {
+                bodyPos = this.collider.body.pos;
+            }
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.pos.x + bodyPos.x - this.radius, this.pos.y + bodyPos.y - this.radius, this.pos.x + bodyPos.x + this.radius, this.pos.y + bodyPos.y + this.radius);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "localBounds", {
+        /**
+         * Get the axis aligned bounding box for the circle shape in local coordinates
+         */
+        get: function () {
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.pos.x - this.radius, this.pos.y - this.radius, this.pos.x + this.radius, this.pos.y + this.radius);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "axes", {
+        /**
+         * Get axis not implemented on circles, since there are infinite axis in a circle
+         */
+        get: function () {
+            return null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "inertia", {
+        /**
+         * Returns the moment of inertia of a circle given it's mass
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        get: function () {
+            var mass = this.collider ? this.collider.mass : _Physics__WEBPACK_IMPORTED_MODULE_5__["Physics"].defaultMass;
+            return (mass * this.radius * this.radius) / 2;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Tests the separating axis theorem for circles against polygons
      */
-    CircleArea.prototype.testSeparatingAxisTheorem = function (polygon) {
-        var axes = polygon.getAxes();
-        var pc = polygon.getCenter();
+    Circle.prototype.testSeparatingAxisTheorem = function (polygon) {
+        var axes = polygon.axes;
+        var pc = polygon.center;
         // Special SAT with circles
         var closestPointOnPoly = polygon.getFurthestPoint(this.pos.sub(pc));
         axes.push(this.pos.sub(closestPointOnPoly).normalize());
@@ -4751,26 +5208,37 @@ var CircleArea = /** @class */ (function () {
         return minAxis.normalize().scale(minOverlap);
     };
     /* istanbul ignore next */
-    CircleArea.prototype.recalc = function () {
+    Circle.prototype.recalc = function () {
         // circles don't cache
     };
     /**
      * Project the circle along a specified axis
      */
-    CircleArea.prototype.project = function (axis) {
+    Circle.prototype.project = function (axis) {
         var scalars = [];
-        var point = this.getCenter();
+        var point = this.center;
         var dotProduct = point.dot(axis);
         scalars.push(dotProduct);
         scalars.push(dotProduct + this.radius);
         scalars.push(dotProduct - this.radius);
         return new _Algebra__WEBPACK_IMPORTED_MODULE_4__["Projection"](Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
     };
-    /* istanbul ignore next */
-    CircleArea.prototype.debugDraw = function (ctx, color) {
+    Circle.prototype.draw = function (ctx, color, pos) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
-        var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
-        var rotation = this.body ? this.body.rotation : 0;
+        if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        var newPos = pos.add(this.pos);
+        ctx.beginPath();
+        ctx.fillStyle = color.toString();
+        ctx.arc(newPos.x, newPos.y, this.radius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+    };
+    /* istanbul ignore next */
+    Circle.prototype.debugDraw = function (ctx, color) {
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
+        var body = this.collider.body;
+        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var rotation = body ? body.rotation : 0;
         ctx.beginPath();
         ctx.strokeStyle = color.toString();
         ctx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
@@ -4782,7 +5250,249 @@ var CircleArea = /** @class */ (function () {
         ctx.closePath();
         ctx.stroke();
     };
+    return Circle;
+}());
+
+/**
+ * @obsolete Use [[Circle]], CircleArea will be removed in v0.24.0
+ */
+var CircleArea = /** @class */ (function (_super) {
+    __extends(CircleArea, _super);
+    function CircleArea() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
     return CircleArea;
+}(Circle));
+
+
+
+/***/ }),
+
+/***/ "./Collision/Collider.ts":
+/*!*******************************!*\
+  !*** ./Collision/Collider.ts ***!
+  \*******************************/
+/*! exports provided: isCollider, Collider */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return isCollider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return Collider; });
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/DrawUtil */ "./Util/DrawUtil.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
+/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../EventDispatcher */ "./EventDispatcher.ts");
+/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+
+
+
+
+
+
+
+/**
+ * Type guard function to determine whether something is a Collider
+ */
+function isCollider(x) {
+    return x instanceof Collider;
+}
+/**
+ * Collider describes material properties like shape,
+ * bounds, friction of the physics object. Only **one** collider can be associated with a body at a time
+ */
+var Collider = /** @class */ (function () {
+    function Collider(_a) {
+        var body = _a.body, type = _a.type, shape = _a.shape, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
+        this._events = new _EventDispatcher__WEBPACK_IMPORTED_MODULE_5__["EventDispatcher"](this);
+        /**
+         * Gets or sets the current collision type of this collider. By
+         * default it is ([[CollisionType.PreventCollision]]).
+         */
+        this.type = _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision;
+        /**
+         * The current mass of the actor, mass can be thought of as the resistance to acceleration.
+         */
+        this.mass = 1.0;
+        /**
+         * The current moment of inertia, moment of inertia can be thought of as the resistance to rotation.
+         */
+        this.inertia = 1000;
+        /**
+         * The coefficient of friction on this actor
+         */
+        this.friction = 0.99;
+        /**
+         * The also known as coefficient of restitution of this actor, represents the amount of energy preserved after collision or the
+         * bounciness. If 1, it is 100% bouncy, 0 it completely absorbs.
+         */
+        this.bounciness = 0.2;
+        // If shape is not supplied see if the body has an existing collider with a shape
+        if (body && body.collider && !shape) {
+            this._shape = body.collider.shape;
+        }
+        else {
+            this._shape = shape;
+            this.body = body;
+        }
+        this.useShapeInertia = useShapeInertia;
+        this._shape.collider = this;
+        this.type = type;
+    }
+    /**
+     * Returns a clone of the current collider, not associated with any body
+     */
+    Collider.prototype.clone = function () {
+        return new Collider({
+            body: null,
+            type: this.type,
+            shape: this._shape.clone()
+        });
+    };
+    Object.defineProperty(Collider.prototype, "id", {
+        /**
+         * Get the unique id of the collider
+         */
+        get: function () {
+            return this.body ? this.body.id : -1;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Collider.prototype, "shape", {
+        /**
+         * Get the shape of the collider as a [[CollisionShape]]
+         */
+        get: function () {
+            return this._shape;
+        },
+        /**
+         * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
+         */
+        set: function (shape) {
+            this._shape = shape;
+            this._shape.collider = this;
+            if (this.useShapeInertia) {
+                this.inertia = isNaN(this._shape.inertia) ? this.inertia : this._shape.inertia;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Collider.prototype, "center", {
+        /**
+         * The center of the collider in world space
+         */
+        get: function () {
+            return this.bounds.center;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Collider.prototype, "active", {
+        /**
+         * Is this collider active, if false it wont collide
+         */
+        get: function () {
+            return this.body.active;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Collide 2 colliders and product a collision contact if there is a collision, null if none
+     *
+     * Collision vector is in the direction of the other collider. Away from this collider, this -> other.
+     * @param other
+     */
+    Collider.prototype.collide = function (other) {
+        return this.shape.collide(other.shape);
+    };
+    /**
+     * Returns a boolean indicating whether this body collided with
+     * or was in stationary contact with
+     * the body of the other [[Collider]]
+     */
+    Collider.prototype.touching = function (other) {
+        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_6__["Pair"](this, other);
+        pair.collide();
+        if (pair.collision) {
+            return true;
+        }
+        return false;
+    };
+    Object.defineProperty(Collider.prototype, "bounds", {
+        /**
+         * Returns the collider's [[BoundingBox]] calculated for this instant in world space.
+         * If there is no shape, a point bounding box is returned
+         */
+        get: function () {
+            if (this.shape) {
+                return this.shape.bounds;
+            }
+            if (this.body) {
+                return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]().translate(this.body.pos);
+            }
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Collider.prototype, "localBounds", {
+        /**
+         * Returns the collider's [[BoundingBox]] relative to the body's position.
+         * If there is no shape, a point boudning box is returned
+         */
+        get: function () {
+            if (this.shape) {
+                return this.shape.localBounds;
+            }
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Updates the collision shapes geometry and internal caches if needed
+     */
+    Collider.prototype.update = function () {
+        if (this.shape) {
+            this.shape.recalc();
+        }
+    };
+    Collider.prototype.emit = function (eventName, event) {
+        this._events.emit(eventName, event);
+    };
+    Collider.prototype.on = function (eventName, handler) {
+        this._events.on(eventName, handler);
+    };
+    Collider.prototype.off = function (eventName, handler) {
+        this._events.off(eventName, handler);
+    };
+    Collider.prototype.once = function (eventName, handler) {
+        this._events.once(eventName, handler);
+    };
+    Collider.prototype.clear = function () {
+        this._events.clear();
+    };
+    /* istanbul ignore next */
+    Collider.prototype.debugDraw = function (ctx) {
+        // Draw motion vectors
+        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showMotionVectors) {
+            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Yellow, this.body.pos, this.body.acc.add(_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].acc));
+            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red, this.body.pos, this.body.vel);
+            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["point"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red, this.body.pos);
+        }
+        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showBounds) {
+            this.bounds.debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Yellow);
+        }
+        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showArea) {
+            this.shape.debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Green);
+        }
+    };
+    return Collider;
 }());
 
 
@@ -4799,99 +5509,97 @@ var CircleArea = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return CollisionContact; });
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Actor */ "./Actor.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Events */ "./Events.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
 
 
 
 
 
 /**
- * Collision contacts are used internally by Excalibur to resolve collision between actors. This
+ * Collision contacts are used internally by Excalibur to resolve collision between colliders. This
  * Pair prevents collisions from being evaluated more than one time
  */
 var CollisionContact = /** @class */ (function () {
-    function CollisionContact(bodyA, bodyB, mtv, point, normal) {
-        this.bodyA = bodyA;
-        this.bodyB = bodyB;
+    function CollisionContact(colliderA, colliderB, mtv, point, normal) {
+        this.colliderA = colliderA;
+        this.colliderB = colliderB;
         this.mtv = mtv;
         this.point = point;
         this.normal = normal;
     }
     CollisionContact.prototype.resolve = function (strategy) {
-        if (strategy === _Physics__WEBPACK_IMPORTED_MODULE_2__["CollisionResolutionStrategy"].RigidBody) {
+        if (strategy === _Physics__WEBPACK_IMPORTED_MODULE_1__["CollisionResolutionStrategy"].RigidBody) {
             this._resolveRigidBodyCollision();
         }
-        else if (strategy === _Physics__WEBPACK_IMPORTED_MODULE_2__["CollisionResolutionStrategy"].Box) {
+        else if (strategy === _Physics__WEBPACK_IMPORTED_MODULE_1__["CollisionResolutionStrategy"].Box) {
             this._resolveBoxCollision();
         }
         else {
             throw new Error('Unknown collision resolution strategy');
         }
     };
-    CollisionContact.prototype._applyBoxImpulse = function (bodyA, bodyB, mtv) {
-        if (bodyA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Active && bodyB.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Passive) {
+    CollisionContact.prototype._applyBoxImpulse = function (colliderA, colliderB, mtv) {
+        if (colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Active && colliderB.type !== _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Passive) {
             // Resolve overlaps
-            if (bodyA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Active && bodyB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Active) {
+            if (colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Active && colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Active) {
                 // split overlaps if both are Active
                 mtv = mtv.scale(0.5);
             }
             // Apply mtv
-            bodyA.pos.y += mtv.y;
-            bodyA.pos.x += mtv.x;
+            colliderA.body.pos.y += mtv.y;
+            colliderA.body.pos.x += mtv.x;
             var mtvDir = mtv.normalize();
             // only adjust if velocity is opposite
-            if (mtvDir.dot(bodyA.vel) < 0) {
+            if (mtvDir.dot(colliderA.body.vel) < 0) {
                 // Cancel out velocity in direction of mtv
-                var velAdj = mtvDir.scale(mtvDir.dot(bodyA.vel.negate()));
-                bodyA.vel = bodyA.vel.add(velAdj);
+                var velAdj = mtvDir.scale(mtvDir.dot(colliderA.body.vel.negate()));
+                colliderA.body.vel = colliderA.body.vel.add(velAdj);
             }
-            bodyA.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostCollisionEvent"](bodyA, bodyB, _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getSideFromVector"](mtv), mtv));
+            colliderA.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostCollisionEvent"](colliderA, colliderB, _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getSideFromDirection"](mtv), mtv));
         }
     };
     CollisionContact.prototype._resolveBoxCollision = function () {
-        var bodyA = this.bodyA.body.actor;
-        var bodyB = this.bodyB.body.actor;
-        var side = _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getSideFromVector"](this.mtv);
+        var side = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getSideFromDirection"](this.mtv);
         var mtv = this.mtv.negate();
         // Publish collision events on both participants
-        bodyA.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreCollisionEvent"](bodyA, bodyB, side, mtv));
-        bodyB.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreCollisionEvent"](bodyB, bodyA, _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getOppositeSide"](side), mtv.negate()));
-        this._applyBoxImpulse(bodyA, bodyB, mtv);
-        this._applyBoxImpulse(bodyB, bodyA, mtv.negate());
+        this.colliderA.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreCollisionEvent"](this.colliderA, this.colliderB, side, mtv));
+        this.colliderB.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreCollisionEvent"](this.colliderB, this.colliderA, _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getOppositeSide"](side), mtv.negate()));
+        this._applyBoxImpulse(this.colliderA, this.colliderB, mtv);
+        this._applyBoxImpulse(this.colliderB, this.colliderA, mtv.negate());
     };
     CollisionContact.prototype._resolveRigidBodyCollision = function () {
         // perform collison on bounding areas
-        var bodyA = this.bodyA.body;
-        var bodyB = this.bodyB.body;
-        var mtv = this.mtv; // normal pointing away from bodyA
-        var normal = this.normal; // normal pointing away from bodyA
-        if (bodyA.actor === bodyB.actor) {
+        var bodyA = this.colliderA.body;
+        var bodyB = this.colliderB.body;
+        var mtv = this.mtv; // normal pointing away from colliderA
+        var normal = this.normal; // normal pointing away from colliderA
+        if (bodyA === bodyB) {
             // sanity check for existing pairs
             return;
         }
         // Publish collision events on both participants
-        var side = _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getSideFromVector"](this.mtv);
-        bodyA.actor.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreCollisionEvent"](this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-        bodyB.actor.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreCollisionEvent"](this.bodyB.body.actor, this.bodyA.body.actor, _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getOppositeSide"](side), this.mtv.negate()));
+        var side = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getSideFromDirection"](this.mtv);
+        this.colliderA.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreCollisionEvent"](this.colliderA, this.colliderB, side, this.mtv));
+        this.colliderB.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreCollisionEvent"](this.colliderB, this.colliderA, _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getOppositeSide"](side), this.mtv.negate()));
         // If any of the participants are passive then short circuit
-        if (bodyA.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Passive || bodyB.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Passive) {
+        if (this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Passive || this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Passive) {
             return;
         }
-        var invMassA = bodyA.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed ? 0 : 1 / bodyA.mass;
-        var invMassB = bodyB.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed ? 0 : 1 / bodyB.mass;
-        var invMoiA = bodyA.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed ? 0 : 1 / bodyA.moi;
-        var invMoiB = bodyB.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed ? 0 : 1 / bodyB.moi;
+        var invMassA = this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderA.mass;
+        var invMassB = this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderB.mass;
+        var invMoiA = this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderA.inertia;
+        var invMoiB = this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderB.inertia;
         // average restitution more relistic
-        var coefRestitution = Math.min(bodyA.restitution, bodyB.restitution);
-        var coefFriction = Math.min(bodyA.friction, bodyB.friction);
+        var coefRestitution = Math.min(this.colliderA.bounciness, this.colliderB.bounciness);
+        var coefFriction = Math.min(this.colliderA.friction, this.colliderB.friction);
         normal = normal.normalize();
         var tangent = normal.normal().normalize();
-        var ra = this.point.sub(this.bodyA.getCenter()); // point relative to bodyA position
-        var rb = this.point.sub(this.bodyB.getCenter()); /// point relative to bodyB
+        var ra = this.point.sub(this.colliderA.center); // point relative to colliderA position
+        var rb = this.point.sub(this.colliderB.center); /// point relative to colliderB
         // Relative velocity in linear terms
         // Angular to linear velocity formula -> omega = v/r
         var rv = bodyB.vel.add(rb.cross(-bodyB.rx)).sub(bodyA.vel.sub(ra.cross(bodyA.rx)));
@@ -4908,16 +5616,16 @@ var CollisionContact = /** @class */ (function () {
         // Collision impulse formula from Chris Hecker
         // https://en.wikipedia.org/wiki/Collision_response
         var impulse = -((1 + coefRestitution) * rvNormal) / (invMassA + invMassB + invMoiA * raTangent * raTangent + invMoiB * rbTangent * rbTangent);
-        if (bodyA.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
+        if (this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed) {
             bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
-            if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+            if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                 bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
             }
             bodyB.addMtv(mtv);
         }
-        else if (bodyB.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
+        else if (this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed) {
             bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
-            if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+            if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                 bodyA.rx += impulse * invMoiA * -ra.cross(normal);
             }
             bodyA.addMtv(mtv.negate());
@@ -4925,7 +5633,7 @@ var CollisionContact = /** @class */ (function () {
         else {
             bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
             bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
-            if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+            if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                 bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
                 bodyA.rx += impulse * invMoiA * -ra.cross(normal);
             }
@@ -4941,24 +5649,24 @@ var CollisionContact = /** @class */ (function () {
             var t = rv.sub(normal.scale(rv.dot(normal))).normalize();
             // impulse in the direction of tangent force
             var jt = rv.dot(t) / (invMassA + invMassB + raNormal * raNormal * invMoiA + rbNormal * rbNormal * invMoiB);
-            var frictionImpulse = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0, 0);
+            var frictionImpulse = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
             if (Math.abs(jt) <= impulse * coefFriction) {
                 frictionImpulse = t.scale(jt).negate();
             }
             else {
                 frictionImpulse = t.scale(-impulse * coefFriction);
             }
-            if (bodyA.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
+            if (this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed) {
                 // apply frictional impulse
                 bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
-                if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+                if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                     bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
                 }
             }
-            else if (bodyB.actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Fixed) {
+            else if (this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed) {
                 // apply frictional impulse
                 bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
-                if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+                if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                     bodyA.rx -= frictionImpulse.dot(t) * invMoiA * ra.cross(t);
                 }
             }
@@ -4967,14 +5675,14 @@ var CollisionContact = /** @class */ (function () {
                 bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
                 bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
                 // apply frictional impulse
-                if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].allowRigidBodyRotation) {
+                if (_Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].allowRigidBodyRotation) {
                     bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
                     bodyA.rx -= frictionImpulse.dot(t) * invMoiA * ra.cross(t);
                 }
             }
         }
-        bodyA.actor.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostCollisionEvent"](this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-        bodyB.actor.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostCollisionEvent"](this.bodyB.body.actor, this.bodyA.body.actor, _Util_Util__WEBPACK_IMPORTED_MODULE_4__["getOppositeSide"](side), this.mtv.negate()));
+        this.colliderA.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostCollisionEvent"](this.colliderA, this.colliderB, side, this.mtv));
+        this.colliderB.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostCollisionEvent"](this.colliderB, this.colliderA, _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getOppositeSide"](side), this.mtv.negate()));
     };
     return CollisionContact;
 }());
@@ -4994,21 +5702,21 @@ var CollisionContact = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return CollisionJumpTable; });
 /* harmony import */ var _CollisionContact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CollisionContact */ "./Collision/CollisionContact.ts");
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
 
 
 var CollisionJumpTable = {
     CollideCircleCircle: function (circleA, circleB) {
         var radius = circleA.radius + circleB.radius;
-        var circleAPos = circleA.body.pos.add(circleA.pos);
-        var circleBPos = circleB.body.pos.add(circleB.pos);
+        var circleAPos = circleA.worldPos;
+        var circleBPos = circleB.worldPos;
         if (circleAPos.distance(circleBPos) > radius) {
             return null;
         }
         var axisOfCollision = circleBPos.sub(circleAPos).normalize();
         var mvt = axisOfCollision.scale(radius - circleBPos.distance(circleAPos));
         var pointOfCollision = circleA.getFurthestPoint(axisOfCollision);
-        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circleA, circleB, mvt, pointOfCollision, axisOfCollision);
+        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circleA.collider, circleB.collider, mvt, pointOfCollision, axisOfCollision);
     },
     CollideCirclePolygon: function (circle, polygon) {
         var minAxis = circle.testSeparatingAxisTheorem(polygon);
@@ -5016,7 +5724,7 @@ var CollisionJumpTable = {
             return null;
         }
         // make sure that the minAxis is pointing away from circle
-        var samedir = minAxis.dot(polygon.getCenter().sub(circle.getCenter()));
+        var samedir = minAxis.dot(polygon.center.sub(circle.center));
         minAxis = samedir < 0 ? minAxis.negate() : minAxis;
         var verts = [];
         var point1 = polygon.getFurthestPoint(minAxis.negate());
@@ -5030,11 +5738,11 @@ var CollisionJumpTable = {
         if (verts.length === 0) {
             return null;
         }
-        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle, polygon, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
+        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle.collider, polygon.collider, minAxis, verts.length === 2 ? verts[0].average(verts[1]) : verts[0], minAxis.normalize());
     },
     CollideCircleEdge: function (circle, edge) {
         // center of the circle
-        var cc = circle.getCenter();
+        var cc = circle.center;
         // vector in the direction of the edge
         var e = edge.end.sub(edge.begin);
         // amount of overlap with the circle's center along the edge direction
@@ -5048,7 +5756,7 @@ var CollisionJumpTable = {
             if (dda > circle.radius * circle.radius) {
                 return null; // no collision
             }
-            return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle, edge, da.normalize().scale(circle.radius - Math.sqrt(dda)), edge.begin, da.normalize());
+            return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle.collider, edge.collider, da.normalize().scale(circle.radius - Math.sqrt(dda)), edge.begin, da.normalize());
         }
         // Potential region B collision (circle is on the right side of the edge, after the end)
         if (u <= 0) {
@@ -5057,7 +5765,7 @@ var CollisionJumpTable = {
             if (ddb > circle.radius * circle.radius) {
                 return null;
             }
-            return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle, edge, db.normalize().scale(circle.radius - Math.sqrt(ddb)), edge.end, db.normalize());
+            return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle.collider, edge.collider, db.normalize().scale(circle.radius - Math.sqrt(ddb)), edge.end, db.normalize());
         }
         // Otherwise potential region AB collision (circle is in the middle of the edge between the beginning and end)
         var den = e.dot(e);
@@ -5078,7 +5786,7 @@ var CollisionJumpTable = {
         }
         n = n.normalize();
         var mvt = n.scale(Math.abs(circle.radius - Math.sqrt(dd)));
-        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle, edge, mvt.negate(), pointOnEdge, n.negate());
+        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](circle.collider, edge.collider, mvt.negate(), pointOnEdge, n.negate());
     },
     CollideEdgeEdge: function () {
         // Edge-edge collision doesn't make sense
@@ -5095,20 +5803,21 @@ var CollisionJumpTable = {
         if (polygon.contains(edge.begin)) {
             var mtv = (_a = polygon.getClosestFace(edge.begin), _a.distance), face = _a.face;
             if (mtv) {
-                return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon, edge, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
+                return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon.collider, edge.collider, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
             }
         }
         if (polygon.contains(edge.end)) {
             var mtv = (_b = polygon.getClosestFace(edge.end), _b.distance), face = _b.face;
             if (mtv) {
-                return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon, edge, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
+                return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon.collider, edge.collider, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
             }
         }
-        var pc = polygon.getCenter();
-        var ec = edge.getCenter();
+        var pc = polygon.center;
+        var ec = edge.center;
         var dir = ec.sub(pc).normalize();
         // build a temporary polygon from the edge to use SAT
-        var linePoly = new _PolygonArea__WEBPACK_IMPORTED_MODULE_1__["PolygonArea"]({
+        var linePoly = new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_1__["ConvexPolygon"]({
+            collider: edge.collider,
             points: [edge.begin, edge.end, edge.end.add(dir.scale(30)), edge.begin.add(dir.scale(30))]
         });
         var minAxis = polygon.testSeparatingAxisTheorem(linePoly);
@@ -5119,7 +5828,7 @@ var CollisionJumpTable = {
         // flip the normal and axis to always have positive collisions
         edgeNormal = edgeNormal.dot(dir) < 0 ? edgeNormal.negate() : edgeNormal;
         minAxis = minAxis.dot(dir) < 0 ? minAxis.negate() : minAxis;
-        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon, edge, minAxis, polygon.getFurthestPoint(edgeNormal), edgeNormal);
+        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon.collider, edge.collider, minAxis, polygon.getFurthestPoint(edgeNormal), edgeNormal);
     },
     CollidePolygonPolygon: function (polyA, polyB) {
         // do a SAT test to find a min axis if it exists
@@ -5129,7 +5838,7 @@ var CollisionJumpTable = {
             return null;
         }
         // make sure that minAxis is pointing from A -> B
-        var sameDir = minAxis.dot(polyB.getCenter().sub(polyA.getCenter()));
+        var sameDir = minAxis.dot(polyB.center.sub(polyA.center));
         minAxis = sameDir < 0 ? minAxis.negate() : minAxis;
         // find rough point of collision
         // todo this could be better
@@ -5147,9 +5856,466 @@ var CollisionJumpTable = {
             verts.push(pointB);
         }
         var contact = verts.length === 2 ? verts[0].add(verts[1]).scale(0.5) : verts[0];
-        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polyA, polyB, minAxis, contact, minAxis.normalize());
+        return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polyA.collider, polyB.collider, minAxis, contact, minAxis.normalize());
     }
 };
+
+
+/***/ }),
+
+/***/ "./Collision/CollisionType.ts":
+/*!************************************!*\
+  !*** ./Collision/CollisionType.ts ***!
+  \************************************/
+/*! exports provided: CollisionType */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return CollisionType; });
+/**
+ * An enum that describes the types of collisions actors can participate in
+ */
+var CollisionType;
+(function (CollisionType) {
+    /**
+     * Actors with the `PreventCollision` setting do not participate in any
+     * collisions and do not raise collision events.
+     */
+    CollisionType["PreventCollision"] = "PreventCollision";
+    /**
+     * Actors with the `Passive` setting only raise collision events, but are not
+     * influenced or moved by other actors and do not influence or move other actors.
+     */
+    CollisionType["Passive"] = "Passive";
+    /**
+     * Actors with the `Active` setting raise collision events and participate
+     * in collisions with other actors and will be push or moved by actors sharing
+     * the `Active` or `Fixed` setting.
+     */
+    CollisionType["Active"] = "Active";
+    /**
+     * Actors with the `Fixed` setting raise collision events and participate in
+     * collisions with other actors. Actors with the `Fixed` setting will not be
+     * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
+     * actors as "immovable/onstoppable" objects. If two `Fixed` actors meet they will
+     * not be pushed or moved by each other, they will not interact except to throw
+     * collision events.
+     */
+    CollisionType["Fixed"] = "Fixed";
+})(CollisionType || (CollisionType = {}));
+
+
+/***/ }),
+
+/***/ "./Collision/ConvexPolygon.ts":
+/*!************************************!*\
+  !*** ./Collision/ConvexPolygon.ts ***!
+  \************************************/
+/*! exports provided: ConvexPolygon, PolygonArea */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return ConvexPolygon; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return PolygonArea; });
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
+/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
+/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
+/* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+
+/**
+ * Polygon collision shape for detecting collisions
+ *
+ * Example:
+ * [[include:BoxAndPolygonShape.md]]
+ */
+var ConvexPolygon = /** @class */ (function () {
+    function ConvexPolygon(options) {
+        this._transformedPoints = [];
+        this._axes = [];
+        this._sides = [];
+        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero;
+        var winding = !!options.clockwiseWinding;
+        this.points = (winding ? options.points.reverse() : options.points) || [];
+        this.collider = this.collider = options.collider || null;
+        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
+        if (options.body) {
+            this.collider = options.body.collider;
+            this.body = this.collider.body;
+        }
+        // ==================================
+        // calculate initial transformation
+        this._calculateTransformation();
+    }
+    /**
+     * Returns a clone of this ConvexPolygon, not associated with any collider
+     */
+    ConvexPolygon.prototype.clone = function () {
+        return new ConvexPolygon({
+            pos: this.pos.clone(),
+            points: this.points.map(function (p) { return p.clone(); }),
+            collider: null,
+            body: null
+        });
+    };
+    Object.defineProperty(ConvexPolygon.prototype, "worldPos", {
+        get: function () {
+            if (this.collider && this.collider.body) {
+                return this.collider.body.pos.add(this.pos);
+            }
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ConvexPolygon.prototype, "center", {
+        /**
+         * Get the center of the collision shape in world coordinates
+         */
+        get: function () {
+            var body = this.collider ? this.collider.body : null;
+            if (body) {
+                return body.pos.add(this.pos);
+            }
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Calculates the underlying transformation from the body relative space to world space
+     */
+    ConvexPolygon.prototype._calculateTransformation = function () {
+        var body = this.collider ? this.collider.body : null;
+        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var angle = body ? body.rotation : 0;
+        var scale = body ? body.scale : _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].One;
+        var len = this.points.length;
+        this._transformedPoints.length = 0; // clear out old transform
+        for (var i = 0; i < len; i++) {
+            this._transformedPoints[i] = this.points[i]
+                .scale(scale)
+                .rotate(angle)
+                .add(pos);
+        }
+    };
+    /**
+     * Gets the points that make up the polygon in world space, from actor relative space (if specified)
+     */
+    ConvexPolygon.prototype.getTransformedPoints = function () {
+        // only recalculate geometry if, hasn't been calculated
+        if (!this._transformedPoints.length ||
+            // or the position or rotation has changed in world space
+            (this.collider &&
+                this.collider.body &&
+                (!this.collider.body.oldPos.equals(this.collider.body.pos) ||
+                    this.collider.body.oldRotation !== this.collider.body.rotation ||
+                    this.collider.body.oldScale !== this.collider.body.scale))) {
+            this._calculateTransformation();
+        }
+        return this._transformedPoints;
+    };
+    /**
+     * Gets the sides of the polygon in world space
+     */
+    ConvexPolygon.prototype.getSides = function () {
+        if (this._sides.length) {
+            return this._sides;
+        }
+        var lines = [];
+        var points = this.getTransformedPoints();
+        var len = points.length;
+        for (var i = 0; i < len; i++) {
+            lines.push(new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Line"](points[i], points[(i - 1 + len) % len]));
+        }
+        this._sides = lines;
+        return this._sides;
+    };
+    ConvexPolygon.prototype.recalc = function () {
+        this._sides.length = 0;
+        this._axes.length = 0;
+        this._transformedPoints.length = 0;
+        this.getTransformedPoints();
+        this.getSides();
+    };
+    /**
+     * Tests if a point is contained in this collision shape in world space
+     */
+    ConvexPolygon.prototype.contains = function (point) {
+        // Always cast to the right, as long as we cast in a consitent fixed direction we
+        // will be fine
+        var testRay = new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Ray"](point, new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"](1, 0));
+        var intersectCount = this.getSides().reduce(function (accum, side) {
+            if (testRay.intersect(side) >= 0) {
+                return accum + 1;
+            }
+            return accum;
+        }, 0);
+        if (intersectCount % 2 === 0) {
+            return false;
+        }
+        return true;
+    };
+    /**
+     * Returns a collision contact if the 2 collision shapes collide, otherwise collide will
+     * return null.
+     * @param shape
+     */
+    ConvexPolygon.prototype.collide = function (shape) {
+        if (shape instanceof _Circle__WEBPACK_IMPORTED_MODULE_5__["Circle"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollideCirclePolygon(shape, this);
+        }
+        else if (shape instanceof ConvexPolygon) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollidePolygonPolygon(this, shape);
+        }
+        else if (shape instanceof _Edge__WEBPACK_IMPORTED_MODULE_3__["Edge"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollidePolygonEdge(this, shape);
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
+        }
+    };
+    /**
+     * Find the point on the shape furthest in the direction specified
+     */
+    ConvexPolygon.prototype.getFurthestPoint = function (direction) {
+        var pts = this.getTransformedPoints();
+        var furthestPoint = null;
+        var maxDistance = -Number.MAX_VALUE;
+        for (var i = 0; i < pts.length; i++) {
+            var distance = direction.dot(pts[i]);
+            if (distance > maxDistance) {
+                maxDistance = distance;
+                furthestPoint = pts[i];
+            }
+        }
+        return furthestPoint;
+    };
+    /**
+     * Finds the closes face to the point using perpendicular distance
+     * @param point point to test against polygon
+     */
+    ConvexPolygon.prototype.getClosestFace = function (point) {
+        var sides = this.getSides();
+        var min = Number.POSITIVE_INFINITY;
+        var faceIndex = -1;
+        var distance = -1;
+        for (var i = 0; i < sides.length; i++) {
+            var dist = sides[i].distanceToPoint(point);
+            if (dist < min) {
+                min = dist;
+                faceIndex = i;
+                distance = dist;
+            }
+        }
+        if (faceIndex !== -1) {
+            return {
+                distance: sides[faceIndex].normal().scale(distance),
+                face: sides[faceIndex]
+            };
+        }
+        return null;
+    };
+    Object.defineProperty(ConvexPolygon.prototype, "bounds", {
+        /**
+         * Get the axis aligned bounding box for the polygon shape in world coordinates
+         */
+        get: function () {
+            var points = this.getTransformedPoints();
+            return _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"].fromPoints(points);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ConvexPolygon.prototype, "localBounds", {
+        /**
+         * Get the axis aligned bounding box for the polygon shape in local coordinates
+         */
+        get: function () {
+            return _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"].fromPoints(this.points);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ConvexPolygon.prototype, "inertia", {
+        /**
+         * Get the moment of inertia for an arbitrary polygon
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        get: function () {
+            var mass = this.collider ? this.collider.mass : _Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].defaultMass;
+            var numerator = 0;
+            var denominator = 0;
+            for (var i = 0; i < this.points.length; i++) {
+                var iplusone = (i + 1) % this.points.length;
+                var crossTerm = this.points[iplusone].cross(this.points[i]);
+                numerator +=
+                    crossTerm *
+                        (this.points[i].dot(this.points[i]) + this.points[i].dot(this.points[iplusone]) + this.points[iplusone].dot(this.points[iplusone]));
+                denominator += crossTerm;
+            }
+            return (mass / 6) * (numerator / denominator);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
+     */
+    ConvexPolygon.prototype.rayCast = function (ray, max) {
+        if (max === void 0) { max = Infinity; }
+        // find the minimum contact time greater than 0
+        // contact times less than 0 are behind the ray and we don't want those
+        var sides = this.getSides();
+        var len = sides.length;
+        var minContactTime = Number.MAX_VALUE;
+        var contactIndex = -1;
+        for (var i = 0; i < len; i++) {
+            var contactTime = ray.intersect(sides[i]);
+            if (contactTime >= 0 && contactTime < minContactTime && contactTime <= max) {
+                minContactTime = contactTime;
+                contactIndex = i;
+            }
+        }
+        // contact was found
+        if (contactIndex >= 0) {
+            return ray.getPoint(minContactTime);
+        }
+        // no contact found
+        return null;
+    };
+    Object.defineProperty(ConvexPolygon.prototype, "axes", {
+        /**
+         * Get the axis associated with the convex polygon
+         */
+        get: function () {
+            if (this._axes.length) {
+                return this._axes;
+            }
+            var axes = [];
+            var points = this.getTransformedPoints();
+            var len = points.length;
+            for (var i = 0; i < len; i++) {
+                axes.push(points[i].sub(points[(i + 1) % len]).normal());
+            }
+            this._axes = axes;
+            return this._axes;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Perform Separating Axis test against another polygon, returns null if no overlap in polys
+     * Reference http://www.dyn4j.org/2010/01/sat/
+     */
+    ConvexPolygon.prototype.testSeparatingAxisTheorem = function (other) {
+        var poly1 = this;
+        var poly2 = other;
+        var axes = poly1.axes.concat(poly2.axes);
+        var minOverlap = Number.MAX_VALUE;
+        var minAxis = null;
+        var minIndex = -1;
+        for (var i = 0; i < axes.length; i++) {
+            var proj1 = poly1.project(axes[i]);
+            var proj2 = poly2.project(axes[i]);
+            var overlap = proj1.getOverlap(proj2);
+            if (overlap <= 0) {
+                return null;
+            }
+            else {
+                if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    minAxis = axes[i];
+                    minIndex = i;
+                }
+            }
+        }
+        // Sanity check
+        if (minIndex === -1) {
+            return null;
+        }
+        return minAxis.normalize().scale(minOverlap);
+    };
+    /**
+     * Project the edges of the polygon along a specified axis
+     */
+    ConvexPolygon.prototype.project = function (axis) {
+        var points = this.getTransformedPoints();
+        var len = points.length;
+        var min = Number.MAX_VALUE;
+        var max = -Number.MAX_VALUE;
+        for (var i = 0; i < len; i++) {
+            var scalar = points[i].dot(axis);
+            min = Math.min(min, scalar);
+            max = Math.max(max, scalar);
+        }
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Projection"](min, max);
+    };
+    ConvexPolygon.prototype.draw = function (ctx, color, pos) {
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Green; }
+        if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero; }
+        ctx.beginPath();
+        ctx.fillStyle = color.toString();
+        var newPos = pos.add(this.pos);
+        // Iterate through the supplied points and construct a 'polygon'
+        var firstPoint = this.points[0].add(newPos);
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        this.points.map(function (p) { return p.add(newPos); }).forEach(function (point) {
+            ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.closePath();
+        ctx.fill();
+    };
+    /* istanbul ignore next */
+    ConvexPolygon.prototype.debugDraw = function (ctx, color) {
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
+        ctx.beginPath();
+        ctx.strokeStyle = color.toString();
+        // Iterate through the supplied points and construct a 'polygon'
+        var firstPoint = this.getTransformedPoints()[0];
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        this.getTransformedPoints().forEach(function (point) {
+            ctx.lineTo(point.x, point.y);
+        });
+        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.closePath();
+        ctx.stroke();
+    };
+    return ConvexPolygon;
+}());
+
+var PolygonArea = /** @class */ (function (_super) {
+    __extends(PolygonArea, _super);
+    function PolygonArea() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return PolygonArea;
+}(ConvexPolygon));
+
 
 
 /***/ }),
@@ -5347,26 +6513,26 @@ var DynamicTree = /** @class */ (function () {
     DynamicTree.prototype.trackBody = function (body) {
         var node = new TreeNode();
         node.body = body;
-        node.bounds = body.getBounds();
+        node.bounds = body.collider.bounds;
         node.bounds.left -= 2;
         node.bounds.top -= 2;
         node.bounds.right += 2;
         node.bounds.bottom += 2;
-        this.nodes[body.actor.id] = node;
+        this.nodes[body.id] = node;
         this._insert(node);
     };
     /**
      * Updates the dynamic tree given the current bounds of each body being tracked
      */
     DynamicTree.prototype.updateBody = function (body) {
-        var node = this.nodes[body.actor.id];
+        var node = this.nodes[body.id];
         if (!node) {
             return false;
         }
-        var b = body.getBounds();
+        var b = body.collider.bounds;
         // if the body is outside the world no longer update it
         if (!this.worldBounds.contains(b)) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().warn('Actor with id ' + body.actor.id + ' is outside the world bounds and will no longer be tracked for physics');
+            _Util_Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().warn('Collider with id ' + body.id + ' is outside the world bounds and will no longer be tracked for physics');
             this.untrackBody(body);
             return false;
         }
@@ -5400,13 +6566,13 @@ var DynamicTree = /** @class */ (function () {
      * Untracks a body from the dynamic tree
      */
     DynamicTree.prototype.untrackBody = function (body) {
-        var node = this.nodes[body.actor.id];
+        var node = this.nodes[body.collider.id];
         if (!node) {
             return;
         }
         this._remove(node);
-        this.nodes[body.actor.id] = null;
-        delete this.nodes[body.actor.id];
+        this.nodes[body.collider.id] = null;
+        delete this.nodes[body.collider.id];
     };
     /**
      * Balances the tree about a node
@@ -5529,9 +6695,9 @@ var DynamicTree = /** @class */ (function () {
      * the tree until all possible colliders have been returned.
      */
     DynamicTree.prototype.query = function (body, callback) {
-        var bounds = body.getBounds();
+        var bounds = body.collider.bounds;
         var helper = function (currentNode) {
-            if (currentNode && currentNode.bounds.collides(bounds)) {
+            if (currentNode && currentNode.bounds.intersect(bounds)) {
                 if (currentNode.isLeaf() && currentNode.body !== body) {
                     if (callback.call(body, currentNode.body)) {
                         return true;
@@ -5627,9 +6793,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
 /* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Actor */ "./Actor.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
 
 
 
@@ -5650,7 +6816,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
      */
     DynamicTreeCollisionBroadphase.prototype.track = function (target) {
         if (!target) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance().warn('Cannot track null physics body');
+            _Util_Log__WEBPACK_IMPORTED_MODULE_4__["Logger"].getInstance().warn('Cannot track null physics body');
             return;
         }
         this._dynamicCollisionTree.trackBody(target);
@@ -5660,18 +6826,18 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
      */
     DynamicTreeCollisionBroadphase.prototype.untrack = function (target) {
         if (!target) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance().warn('Cannot untrack a null physics body');
+            _Util_Log__WEBPACK_IMPORTED_MODULE_4__["Logger"].getInstance().warn('Cannot untrack a null physics body');
             return;
         }
         this._dynamicCollisionTree.untrackBody(target);
     };
-    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (actorA, actorB) {
+    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (colliderA, colliderB) {
         // if the collision pair has been calculated already short circuit
-        var hash = _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].calculatePairHash(actorA.body, actorB.body);
+        var hash = _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].calculatePairHash(colliderA, colliderB);
         if (this._collisionHash[hash]) {
             return false; // pair exists easy exit return false
         }
-        return _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].canCollide(actorA, actorB);
+        return _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].canCollide(colliderA, colliderB);
     };
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
@@ -5680,20 +6846,20 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var _this = this;
         var seconds = delta / 1000;
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
-        var potentialColliders = targets.filter(function (other) {
-            return !other.isKilled() && other.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision;
+        var potentialColliders = targets.map(function (t) { return t.collider; }).filter(function (other) {
+            return other.active && other.type !== _CollisionType__WEBPACK_IMPORTED_MODULE_6__["CollisionType"].PreventCollision;
         });
         // clear old list of collision pairs
         this._collisionPairCache = [];
         this._collisionHash = {};
         // check for normal collision pairs
-        var actor;
+        var collider;
         for (var j = 0, l = potentialColliders.length; j < l; j++) {
-            actor = potentialColliders[j];
+            collider = potentialColliders[j];
             // Query the collision tree for potential colliders
-            this._dynamicCollisionTree.query(actor.body, function (other) {
-                if (_this._shouldGenerateCollisionPair(actor, other.actor)) {
-                    var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor.body, other);
+            this._dynamicCollisionTree.query(collider.body, function (other) {
+                if (_this._shouldGenerateCollisionPair(collider, other.collider)) {
+                    var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](collider, other.collider);
                     _this._collisionHash[pair.id] = true;
                     _this._collisionPairCache.push(pair);
                 }
@@ -5707,34 +6873,34 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         // Check dynamic tree for fast moving objects
         // Fast moving objects are those moving at least there smallest bound per frame
         if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].checkForFastBodies) {
-            var _loop_1 = function (actor_1) {
+            var _loop_1 = function (collider_1) {
                 // Skip non-active objects. Does not make sense on other collison types
-                if (actor_1.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Active) {
+                if (collider_1.type !== _CollisionType__WEBPACK_IMPORTED_MODULE_6__["CollisionType"].Active) {
                     return "continue";
                 }
                 // Maximum travel distance next frame
-                var updateDistance = actor_1.vel.magnitude() * seconds + // velocity term
-                    actor_1.acc.magnitude() * 0.5 * seconds * seconds; // acc term
+                var updateDistance = collider_1.body.vel.magnitude() * seconds + // velocity term
+                    collider_1.body.acc.magnitude() * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
-                var minDimension = Math.min(actor_1.body.getBounds().getHeight(), actor_1.body.getBounds().getWidth());
+                var minDimension = Math.min(collider_1.bounds.height, collider_1.bounds.width);
                 if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
                     if (stats) {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
                     // objects resting on a surface may be slightly penatrating in the current position
-                    var updateVec = actor_1.pos.sub(actor_1.oldPos);
-                    var centerPoint = actor_1.body.collisionArea.getCenter();
-                    var furthestPoint = actor_1.body.collisionArea.getFurthestPoint(actor_1.vel);
+                    var updateVec = collider_1.body.pos.sub(collider_1.body.oldPos);
+                    var centerPoint = collider_1.shape.center;
+                    var furthestPoint = collider_1.shape.getFurthestPoint(collider_1.body.vel);
                     var origin_1 = furthestPoint.sub(updateVec);
-                    var ray_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Ray"](origin_1, actor_1.vel);
+                    var ray_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Ray"](origin_1, collider_1.body.vel);
                     // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface
                     ray_1.pos = ray_1.pos.add(ray_1.dir.scale(-2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
                     var minBody_1;
                     var minTranslate_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Infinity, Infinity);
                     this_1._dynamicCollisionTree.rayCastQuery(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 2, function (other) {
-                        if (actor_1.body !== other && other.collisionArea) {
-                            var hitPoint = other.collisionArea.rayCast(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
+                        if (collider_1.body !== other && other.collider.shape) {
+                            var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);
                                 if (translate.magnitude() < minTranslate_1.magnitude()) {
@@ -5746,7 +6912,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         return false;
                     });
                     if (minBody_1 && _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].isValid(minTranslate_1)) {
-                        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor_1.body, minBody_1);
+                        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](collider_1, minBody_1.collider);
                         if (!this_1._collisionHash[pair.id]) {
                             this_1._collisionHash[pair.id] = true;
                             this_1._collisionPairCache.push(pair);
@@ -5754,11 +6920,11 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         // move the fast moving object to the other body
                         // need to push into the surface by ex.Physics.surfaceEpsilon
                         var shift = centerPoint.sub(furthestPoint);
-                        actor_1.pos = origin_1
+                        collider_1.body.pos = origin_1
                             .add(shift)
                             .add(minTranslate_1)
                             .add(ray_1.dir.scale(2 * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon));
-                        actor_1.body.collisionArea.recalc();
+                        collider_1.shape.recalc();
                         if (stats) {
                             stats.physics.fastBodyCollisions++;
                         }
@@ -5767,8 +6933,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             };
             var this_1 = this;
             for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
-                var actor_1 = potentialColliders_1[_i];
-                _loop_1(actor_1);
+                var collider_1 = potentialColliders_1[_i];
+                _loop_1(collider_1);
             }
         }
         // return cache
@@ -5796,11 +6962,11 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             var pair = pairs_1[_i];
             pair.resolve(strategy);
             if (pair.collision) {
-                pair.bodyA.applyMtv();
-                pair.bodyB.applyMtv();
+                pair.colliderA.body.applyMtv();
+                pair.colliderB.body.applyMtv();
                 // todo still don't like this, this is a small integration step to resolve narrowphase collisions
-                pair.bodyA.actor.integrate(delta * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionShift);
-                pair.bodyB.actor.integrate(delta * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionShift);
+                pair.colliderA.body.integrate(delta * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionShift);
+                pair.colliderB.body.integrate(delta * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionShift);
             }
         }
         return pairs.filter(function (p) { return p.canCollide; });
@@ -5813,20 +6979,20 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             currentFrameHash[p.id] = p;
             // find all new collisions
             if (!this._lastFramePairsHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
-                actor1.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_6__["CollisionStartEvent"](actor1, actor2, p));
-                actor2.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_6__["CollisionStartEvent"](actor2, actor1, p));
+                var actor1 = p.colliderA;
+                var actor2 = p.colliderB;
+                actor1.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_5__["CollisionStartEvent"](actor1, actor2, p));
+                actor2.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_5__["CollisionStartEvent"](actor2, actor1, p));
             }
         }
         // find all old collisions
         for (var _a = 0, _b = this._lastFramePairs; _a < _b.length; _a++) {
             var p = _b[_a];
             if (!currentFrameHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
-                actor1.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_6__["CollisionEndEvent"](actor1, actor2));
-                actor2.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_6__["CollisionEndEvent"](actor2, actor1));
+                var actor1 = p.colliderA;
+                var actor2 = p.colliderB;
+                actor1.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_5__["CollisionEndEvent"](actor1, actor2));
+                actor2.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_5__["CollisionEndEvent"](actor2, actor1));
             }
         }
         // reset the last frame cache
@@ -5840,7 +7006,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var updated = 0;
         var len = targets.length;
         for (var i = 0; i < len; i++) {
-            if (this._dynamicCollisionTree.updateBody(targets[i].body)) {
+            if (this._dynamicCollisionTree.updateBody(targets[i])) {
                 updated++;
             }
         }
@@ -5865,23 +7031,37 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./Collision/EdgeArea.ts":
-/*!*******************************!*\
-  !*** ./Collision/EdgeArea.ts ***!
-  \*******************************/
-/*! exports provided: EdgeArea */
+/***/ "./Collision/Edge.ts":
+/*!***************************!*\
+  !*** ./Collision/Edge.ts ***!
+  \***************************/
+/*! exports provided: Edge, EdgeArea */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return Edge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return EdgeArea; });
 /* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
-/* harmony import */ var _CircleArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CircleArea */ "./Collision/CircleArea.ts");
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
+/* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 
 
 
@@ -5889,39 +7069,78 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var EdgeArea = /** @class */ (function () {
-    function EdgeArea(options) {
+/**
+ * Edge is a single line collision shape to create collisions with a single line.
+ *
+ * Example:
+ * [[include:EdgeShape.md]]
+ */
+var Edge = /** @class */ (function () {
+    function Edge(options) {
         this.begin = options.begin || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.end = options.end || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
-        this.body = options.body || null;
-        this.pos = this.getCenter();
+        this.collider = options.collider || null;
+        this.pos = this.center;
+        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
+        if (options.body) {
+            this.collider = options.body.collider;
+            this.body = this.collider.body;
+        }
+        // ==================================
     }
     /**
-     * Get the center of the collision area in world coordinates
+     * Returns a clone of this Edge, not associated with any collider
      */
-    EdgeArea.prototype.getCenter = function () {
-        var pos = this.begin.average(this.end).add(this._getBodyPos());
-        return pos;
+    Edge.prototype.clone = function () {
+        return new Edge({
+            begin: this.begin.clone(),
+            end: this.end.clone(),
+            collider: null,
+            body: null
+        });
     };
-    EdgeArea.prototype._getBodyPos = function () {
+    Object.defineProperty(Edge.prototype, "worldPos", {
+        get: function () {
+            if (this.collider && this.collider.body) {
+                return this.collider.body.pos.add(this.pos);
+            }
+            return this.pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Edge.prototype, "center", {
+        /**
+         * Get the center of the collision area in world coordinates
+         */
+        get: function () {
+            var pos = this.begin.average(this.end).add(this._getBodyPos());
+            return pos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Edge.prototype._getBodyPos = function () {
         var bodyPos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
-        if (this.body.pos) {
-            bodyPos = this.body.pos;
+        if (this.collider && this.collider.body) {
+            bodyPos = this.collider.body.pos;
         }
         return bodyPos;
     };
-    EdgeArea.prototype._getTransformedBegin = function () {
-        var angle = this.body ? this.body.rotation : 0;
+    Edge.prototype._getTransformedBegin = function () {
+        var body = this.collider ? this.collider.body : null;
+        var angle = body ? body.rotation : 0;
         return this.begin.rotate(angle).add(this._getBodyPos());
     };
-    EdgeArea.prototype._getTransformedEnd = function () {
-        var angle = this.body ? this.body.rotation : 0;
+    Edge.prototype._getTransformedEnd = function () {
+        var body = this.collider ? this.collider.body : null;
+        var angle = body ? body.rotation : 0;
         return this.end.rotate(angle).add(this._getBodyPos());
     };
     /**
      * Returns the slope of the line in the form of a vector
      */
-    EdgeArea.prototype.getSlope = function () {
+    Edge.prototype.getSlope = function () {
         var begin = this._getTransformedBegin();
         var end = this._getTransformedEnd();
         var distance = begin.distance(end);
@@ -5930,7 +7149,7 @@ var EdgeArea = /** @class */ (function () {
     /**
      * Returns the length of the line segment in pixels
      */
-    EdgeArea.prototype.getLength = function () {
+    Edge.prototype.getLength = function () {
         var begin = this._getTransformedBegin();
         var end = this._getTransformedEnd();
         var distance = begin.distance(end);
@@ -5939,13 +7158,13 @@ var EdgeArea = /** @class */ (function () {
     /**
      * Tests if a point is contained in this collision area
      */
-    EdgeArea.prototype.contains = function () {
+    Edge.prototype.contains = function () {
         return false;
     };
     /**
      * @inheritdoc
      */
-    EdgeArea.prototype.rayCast = function (ray, max) {
+    Edge.prototype.rayCast = function (ray, max) {
         if (max === void 0) { max = Infinity; }
         var numerator = this._getTransformedBegin().sub(ray.pos);
         // Test is line and ray are parallel and non intersecting
@@ -5969,24 +7188,24 @@ var EdgeArea = /** @class */ (function () {
     /**
      * @inheritdoc
      */
-    EdgeArea.prototype.collide = function (area) {
-        if (area instanceof _CircleArea__WEBPACK_IMPORTED_MODULE_2__["CircleArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideCircleEdge(area, this);
+    Edge.prototype.collide = function (shape) {
+        if (shape instanceof _Circle__WEBPACK_IMPORTED_MODULE_2__["Circle"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideCircleEdge(shape, this);
         }
-        else if (area instanceof _PolygonArea__WEBPACK_IMPORTED_MODULE_3__["PolygonArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollidePolygonEdge(area, this);
+        else if (shape instanceof _ConvexPolygon__WEBPACK_IMPORTED_MODULE_3__["ConvexPolygon"]) {
+            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollidePolygonEdge(shape, this);
         }
-        else if (area instanceof EdgeArea) {
+        else if (shape instanceof Edge) {
             return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__["CollisionJumpTable"].CollideEdgeEdge();
         }
         else {
-            throw new Error("Edge could not collide with unknown ICollisionArea " + typeof area);
+            throw new Error("Edge could not collide with unknown CollisionShape " + typeof shape);
         }
     };
     /**
      * Find the point on the shape furthest in the direction specified
      */
-    EdgeArea.prototype.getFurthestPoint = function (direction) {
+    Edge.prototype.getFurthestPoint = function (direction) {
         var transformedBegin = this._getTransformedBegin();
         var transformedEnd = this._getTransformedEnd();
         if (direction.dot(transformedBegin) > 0) {
@@ -5996,46 +7215,68 @@ var EdgeArea = /** @class */ (function () {
             return transformedEnd;
         }
     };
-    /**
-     * Get the axis aligned bounding box for the circle area
-     */
-    EdgeArea.prototype.getBounds = function () {
-        var transformedBegin = this._getTransformedBegin();
-        var transformedEnd = this._getTransformedEnd();
-        return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](Math.min(transformedBegin.x, transformedEnd.x), Math.min(transformedBegin.y, transformedEnd.y), Math.max(transformedBegin.x, transformedEnd.x), Math.max(transformedBegin.y, transformedEnd.y));
+    Edge.prototype._boundsFromBeginEnd = function (begin, end) {
+        return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](Math.min(begin.x, end.x), Math.min(begin.y, end.y), Math.max(begin.x, end.x), Math.max(begin.y, end.y));
     };
-    /**
-     * Get the axis associated with the edge
-     */
-    EdgeArea.prototype.getAxes = function () {
-        var e = this._getTransformedEnd().sub(this._getTransformedBegin());
-        var edgeNormal = e.normal();
-        var axes = [];
-        axes.push(edgeNormal);
-        axes.push(edgeNormal.negate());
-        axes.push(edgeNormal.normal());
-        axes.push(edgeNormal.normal().negate());
-        return axes;
-    };
-    /**
-     * Get the moment of inertia for an edge
-     * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-     */
-    EdgeArea.prototype.getMomentOfInertia = function () {
-        var mass = this.body ? this.body.mass : _Physics__WEBPACK_IMPORTED_MODULE_5__["Physics"].defaultMass;
-        var length = this.end.sub(this.begin).distance() / 2;
-        return mass * length * length;
-    };
+    Object.defineProperty(Edge.prototype, "bounds", {
+        /**
+         * Get the axis aligned bounding box for the edge shape in world space
+         */
+        get: function () {
+            var transformedBegin = this._getTransformedBegin();
+            var transformedEnd = this._getTransformedEnd();
+            return this._boundsFromBeginEnd(transformedBegin, transformedEnd);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Edge.prototype, "localBounds", {
+        get: function () {
+            return this._boundsFromBeginEnd(this.begin, this.end);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Edge.prototype, "axes", {
+        /**
+         * Get the axis associated with the edge
+         */
+        get: function () {
+            var e = this._getTransformedEnd().sub(this._getTransformedBegin());
+            var edgeNormal = e.normal();
+            var axes = [];
+            axes.push(edgeNormal);
+            axes.push(edgeNormal.negate());
+            axes.push(edgeNormal.normal());
+            axes.push(edgeNormal.normal().negate());
+            return axes;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Edge.prototype, "inertia", {
+        /**
+         * Get the moment of inertia for an edge
+         * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+         */
+        get: function () {
+            var mass = this.collider ? this.collider.mass : _Physics__WEBPACK_IMPORTED_MODULE_5__["Physics"].defaultMass;
+            var length = this.end.sub(this.begin).distance() / 2;
+            return mass * length * length;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * @inheritdoc
      */
-    EdgeArea.prototype.recalc = function () {
+    Edge.prototype.recalc = function () {
         // edges don't have any cached data
     };
     /**
      * Project the edge along a specified axis
      */
-    EdgeArea.prototype.project = function (axis) {
+    Edge.prototype.project = function (axis) {
         var scalars = [];
         var points = [this._getTransformedBegin(), this._getTransformedEnd()];
         var len = points.length;
@@ -6044,8 +7285,20 @@ var EdgeArea = /** @class */ (function () {
         }
         return new _Algebra__WEBPACK_IMPORTED_MODULE_4__["Projection"](Math.min.apply(Math, scalars), Math.max.apply(Math, scalars));
     };
+    Edge.prototype.draw = function (ctx, color, pos) {
+        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
+        if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        var begin = this.begin.add(pos);
+        var end = this.end.add(pos);
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(begin.x, begin.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.closePath();
+        ctx.stroke();
+    };
     /* istanbul ignore next */
-    EdgeArea.prototype.debugDraw = function (ctx, color) {
+    Edge.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red; }
         ctx.strokeStyle = color.toString();
         ctx.beginPath();
@@ -6054,8 +7307,19 @@ var EdgeArea = /** @class */ (function () {
         ctx.closePath();
         ctx.stroke();
     };
-    return EdgeArea;
+    return Edge;
 }());
+
+/**
+ * @obsolete Use [[Edge]], EdgeArea will be removed in v0.24.0
+ */
+var EdgeArea = /** @class */ (function (_super) {
+    __extends(EdgeArea, _super);
+    function EdgeArea() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return EdgeArea;
+}(Edge));
 
 
 
@@ -6065,7 +7329,7 @@ var EdgeArea = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! exports provided: Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side */
+/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6073,41 +7337,51 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Body__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Body */ "./Collision/Body.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Body__WEBPACK_IMPORTED_MODULE_0__["Body"]; });
 
-/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _BoundingBox__WEBPACK_IMPORTED_MODULE_1__["BoundingBox"]; });
+/* harmony import */ var _Collider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collider */ "./Collision/Collider.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collider__WEBPACK_IMPORTED_MODULE_1__["isCollider"]; });
 
-/* harmony import */ var _CircleArea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CircleArea */ "./Collision/CircleArea.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _CircleArea__WEBPACK_IMPORTED_MODULE_2__["CircleArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collider__WEBPACK_IMPORTED_MODULE_1__["Collider"]; });
 
-/* harmony import */ var _CollisionContact__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CollisionContact */ "./Collision/CollisionContact.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _CollisionContact__WEBPACK_IMPORTED_MODULE_3__["CollisionContact"]; });
+/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"]; });
 
-/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"]; });
+/* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Circle__WEBPACK_IMPORTED_MODULE_3__["Circle"]; });
 
-/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_5__["TreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _Circle__WEBPACK_IMPORTED_MODULE_3__["CircleArea"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_5__["DynamicTree"]; });
+/* harmony import */ var _CollisionContact__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionContact */ "./Collision/CollisionContact.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _CollisionContact__WEBPACK_IMPORTED_MODULE_4__["CollisionContact"]; });
 
-/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_6__["DynamicTreeCollisionBroadphase"]; });
+/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__["CollisionJumpTable"]; });
 
-/* harmony import */ var _EdgeArea__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./EdgeArea */ "./Collision/EdgeArea.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _EdgeArea__WEBPACK_IMPORTED_MODULE_7__["EdgeArea"]; });
+/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_6__["TreeNode"]; });
 
-/* harmony import */ var _NaiveCollisionBroadphase__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./NaiveCollisionBroadphase */ "./Collision/NaiveCollisionBroadphase.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NaiveCollisionBroadphase", function() { return _NaiveCollisionBroadphase__WEBPACK_IMPORTED_MODULE_8__["NaiveCollisionBroadphase"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_6__["DynamicTree"]; });
+
+/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_7__["DynamicTreeCollisionBroadphase"]; });
+
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_8__["Edge"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_8__["EdgeArea"]; });
 
 /* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_9__["Pair"]; });
 
-/* harmony import */ var _PolygonArea__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./PolygonArea */ "./Collision/PolygonArea.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _PolygonArea__WEBPACK_IMPORTED_MODULE_10__["PolygonArea"]; });
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__["ConvexPolygon"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__["PolygonArea"]; });
 
 /* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_11__["Side"]; });
 
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_12__["Shape"]; });
 
 
 
@@ -6121,124 +7395,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-/***/ }),
-
-/***/ "./Collision/NaiveCollisionBroadphase.ts":
-/*!***********************************************!*\
-  !*** ./Collision/NaiveCollisionBroadphase.ts ***!
-  \***********************************************/
-/*! exports provided: NaiveCollisionBroadphase */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NaiveCollisionBroadphase", function() { return NaiveCollisionBroadphase; });
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Physics */ "./Physics.ts");
-/* harmony import */ var _CollisionContact__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionContact */ "./Collision/CollisionContact.ts");
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Actor */ "./Actor.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Events */ "./Events.ts");
-
-
-
-
-
-var NaiveCollisionBroadphase = /** @class */ (function () {
-    function NaiveCollisionBroadphase() {
-        this._lastFramePairs = [];
-        this._lastFramePairsHash = {};
-    }
-    NaiveCollisionBroadphase.prototype.track = function () {
-        // pass
-    };
-    NaiveCollisionBroadphase.prototype.untrack = function () {
-        // pass
-    };
-    /**
-     * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
-     */
-    NaiveCollisionBroadphase.prototype.broadphase = function (targets) {
-        // Retrieve the list of potential colliders, exclude killed, prevented, and self
-        var potentialColliders = targets.filter(function (other) {
-            return !other.isKilled() && other.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
-        });
-        var actor1;
-        var actor2;
-        var collisionPairs = [];
-        for (var j = 0, l = potentialColliders.length; j < l; j++) {
-            actor1 = potentialColliders[j];
-            var _loop_1 = function (i) {
-                actor2 = potentialColliders[i];
-                var minimumTranslationVector = void 0;
-                if ((minimumTranslationVector = actor1.collides(actor2))) {
-                    var pair_1 = new _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"](actor1.body, actor2.body);
-                    pair_1.collision = new _CollisionContact__WEBPACK_IMPORTED_MODULE_1__["CollisionContact"](actor1.collisionArea, actor2.collisionArea, minimumTranslationVector, actor1.pos, minimumTranslationVector);
-                    if (!collisionPairs.some(function (cp) {
-                        return cp.id === pair_1.id;
-                    })) {
-                        collisionPairs.push(pair_1);
-                    }
-                }
-            };
-            for (var i = j + 1; i < l; i++) {
-                _loop_1(i);
-            }
-        }
-        return collisionPairs;
-    };
-    /**
-     * Identify actual collisions from those pairs, and calculate collision impulse
-     */
-    NaiveCollisionBroadphase.prototype.narrowphase = function (pairs) {
-        return pairs;
-    };
-    NaiveCollisionBroadphase.prototype.runCollisionStartEnd = function (pairs) {
-        var currentFrameHash = {};
-        for (var _i = 0, pairs_1 = pairs; _i < pairs_1.length; _i++) {
-            var p = pairs_1[_i];
-            // load currentFrameHash
-            currentFrameHash[p.id] = p;
-            // find all new collisions
-            if (!this._lastFramePairsHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
-                actor1.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionStartEvent"](actor1, actor2, p));
-                actor2.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionStartEvent"](actor2, actor1, p));
-            }
-        }
-        // find all old collisions
-        for (var _a = 0, _b = this._lastFramePairs; _a < _b.length; _a++) {
-            var p = _b[_a];
-            if (!currentFrameHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
-                actor1.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionEndEvent"](actor1, actor2));
-                actor2.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionEndEvent"](actor2, actor1));
-            }
-        }
-        // reset the last frame cache
-        this._lastFramePairs = pairs;
-        this._lastFramePairsHash = currentFrameHash;
-    };
-    /**
-     * Resolve the position and velocity of the physics bodies
-     */
-    NaiveCollisionBroadphase.prototype.resolve = function (pairs) {
-        for (var _i = 0, pairs_2 = pairs; _i < pairs_2.length; _i++) {
-            var pair = pairs_2[_i];
-            pair.resolve(_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].collisionResolutionStrategy);
-        }
-        return pairs.filter(function (p) { return p.canCollide; });
-    };
-    NaiveCollisionBroadphase.prototype.update = function () {
-        return 0;
-    };
-    NaiveCollisionBroadphase.prototype.debugDraw = function () {
-        return;
-    };
-    return NaiveCollisionBroadphase;
-}());
 
 
 
@@ -6256,8 +7412,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return Pair; });
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Actor */ "./Actor.ts");
-/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/DrawUtil */ "./Util/DrawUtil.ts");
+/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Util/DrawUtil */ "./Util/DrawUtil.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
 
 
 
@@ -6266,24 +7422,24 @@ __webpack_require__.r(__webpack_exports__);
  * Models a potential collision between 2 bodies
  */
 var Pair = /** @class */ (function () {
-    function Pair(bodyA, bodyB) {
-        this.bodyA = bodyA;
-        this.bodyB = bodyB;
+    function Pair(colliderA, colliderB) {
+        this.colliderA = colliderA;
+        this.colliderB = colliderB;
         this.id = null;
         this.collision = null;
-        this.id = Pair.calculatePairHash(bodyA, bodyB);
+        this.id = Pair.calculatePairHash(colliderA, colliderB);
     }
-    Pair.canCollide = function (actorA, actorB) {
+    Pair.canCollide = function (colliderA, colliderB) {
         // if both are fixed short circuit
-        if (actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed && actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Fixed) {
+        if (colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].Fixed && colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].Fixed) {
             return false;
         }
         // if the either is prevent collision short circuit
-        if (actorB.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision || actorA.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision) {
+        if (colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision || colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision) {
             return false;
         }
         // if either is dead short circuit
-        if (actorA.isKilled() || actorB.isKilled()) {
+        if (!colliderA.active || !colliderB.active) {
             return false;
         }
         return true;
@@ -6293,8 +7449,8 @@ var Pair = /** @class */ (function () {
          * Returns whether or not it is possible for the pairs to collide
          */
         get: function () {
-            var actorA = this.bodyA.actor;
-            var actorB = this.bodyB.actor;
+            var actorA = this.colliderA;
+            var actorB = this.colliderB;
             return Pair.canCollide(actorA, actorB);
         },
         enumerable: true,
@@ -6304,7 +7460,7 @@ var Pair = /** @class */ (function () {
      * Runs the collison intersection logic on the members of this pair
      */
     Pair.prototype.collide = function () {
-        this.collision = this.bodyA.collisionArea.collide(this.bodyB.collisionArea);
+        this.collision = this.colliderA.collide(this.colliderB);
     };
     /**
      * Resovles the collision body position and velocity if a collision occured
@@ -6317,22 +7473,22 @@ var Pair = /** @class */ (function () {
     /**
      * Calculates the unique pair hash id for this collision pair
      */
-    Pair.calculatePairHash = function (bodyA, bodyB) {
-        if (bodyA.actor.id < bodyB.actor.id) {
-            return "#" + bodyA.actor.id + "+" + bodyB.actor.id;
+    Pair.calculatePairHash = function (colliderA, colliderB) {
+        if (colliderA.id < colliderB.id) {
+            return "#" + colliderA.id + "+" + colliderB.id;
         }
         else {
-            return "#" + bodyB.actor.id + "+" + bodyA.actor.id;
+            return "#" + colliderB.id + "+" + colliderA.id;
         }
     };
     /* istanbul ignore next */
     Pair.prototype.debugDraw = function (ctx) {
         if (this.collision) {
             if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].showContacts) {
-                _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__["point"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Red, this.collision.point);
+                _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_2__["point"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Red, this.collision.point);
             }
             if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].showCollisionNormals) {
-                _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Cyan, this.collision.point, this.collision.normal, 30);
+                _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_2__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Cyan, this.collision.point, this.collision.normal, 30);
             }
         }
     };
@@ -6343,319 +7499,86 @@ var Pair = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./Collision/PolygonArea.ts":
-/*!**********************************!*\
-  !*** ./Collision/PolygonArea.ts ***!
-  \**********************************/
-/*! exports provided: PolygonArea */
+/***/ "./Collision/Shape.ts":
+/*!****************************!*\
+  !*** ./Collision/Shape.ts ***!
+  \****************************/
+/*! exports provided: Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return PolygonArea; });
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../Physics */ "./Physics.ts");
-/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _EdgeArea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EdgeArea */ "./Collision/EdgeArea.ts");
-/* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
-/* harmony import */ var _CircleArea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CircleArea */ "./Collision/CircleArea.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../Algebra */ "./Algebra.ts");
-
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return Shape; });
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
+/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 
 
 
 
 
 /**
- * Polygon collision area for detecting collisions for actors, or independently
+ * Excalibur shape helper for defining collision shapes quickly
  */
-var PolygonArea = /** @class */ (function () {
-    function PolygonArea(options) {
-        this._transformedPoints = [];
-        this._axes = [];
-        this._sides = [];
-        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero;
-        var winding = !!options.clockwiseWinding;
-        this.points = (winding ? options.points.reverse() : options.points) || [];
-        this.body = options.body || null;
-        // calculate initial transformation
-        this._calculateTransformation();
+var Shape = /** @class */ (function () {
+    function Shape() {
     }
     /**
-     * Get the center of the collision area in world coordinates
+     * Creates a box collision shape, under the hood defines a [[ConvexPolygon]] collision shape
+     * @param width Width of the box
+     * @param height Height of the box
+     * @param anchor Anchor of the box (default (.5, .5)) which positions the box relative to the center of the collider's position
+     * @param center Optional offset relative to the collider in local coordinates
      */
-    PolygonArea.prototype.getCenter = function () {
-        if (this.body) {
-            return this.body.pos.add(this.pos);
-        }
-        return this.pos;
-    };
-    /**
-     * Calculates the underlying transformation from the body relative space to world space
-     */
-    PolygonArea.prototype._calculateTransformation = function () {
-        var pos = this.body ? this.body.pos.add(this.pos) : this.pos;
-        var angle = this.body ? this.body.rotation : 0;
-        var len = this.points.length;
-        this._transformedPoints.length = 0; // clear out old transform
-        for (var i = 0; i < len; i++) {
-            this._transformedPoints[i] = this.points[i].rotate(angle).add(pos);
-        }
-    };
-    /**
-     * Gets the points that make up the polygon in world space, from actor relative space (if specified)
-     */
-    PolygonArea.prototype.getTransformedPoints = function () {
-        if (!this._transformedPoints.length) {
-            this._calculateTransformation();
-        }
-        return this._transformedPoints;
-    };
-    /**
-     * Gets the sides of the polygon in world space
-     */
-    PolygonArea.prototype.getSides = function () {
-        if (this._sides.length) {
-            return this._sides;
-        }
-        var lines = [];
-        var points = this.getTransformedPoints();
-        var len = points.length;
-        for (var i = 0; i < len; i++) {
-            lines.push(new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Line"](points[i], points[(i - 1 + len) % len]));
-        }
-        this._sides = lines;
-        return this._sides;
-    };
-    PolygonArea.prototype.recalc = function () {
-        this._sides.length = 0;
-        this._axes.length = 0;
-        this._transformedPoints.length = 0;
-        this.getTransformedPoints();
-        this.getAxes();
-        this.getSides();
-    };
-    /**
-     * Tests if a point is contained in this collision area in world space
-     */
-    PolygonArea.prototype.contains = function (point) {
-        // Always cast to the right, as long as we cast in a consitent fixed direction we
-        // will be fine
-        var testRay = new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Ray"](point, new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"](1, 0));
-        var intersectCount = this.getSides().reduce(function (accum, side) {
-            if (testRay.intersect(side) >= 0) {
-                return accum + 1;
-            }
-            return accum;
-        }, 0);
-        if (intersectCount % 2 === 0) {
-            return false;
-        }
-        return true;
-    };
-    /**
-     * Returns a collision contact if the 2 collision areas collide, otherwise collide will
-     * return null.
-     * @param area
-     */
-    PolygonArea.prototype.collide = function (area) {
-        if (area instanceof _CircleArea__WEBPACK_IMPORTED_MODULE_5__["CircleArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollideCirclePolygon(area, this);
-        }
-        else if (area instanceof PolygonArea) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollidePolygonPolygon(this, area);
-        }
-        else if (area instanceof _EdgeArea__WEBPACK_IMPORTED_MODULE_3__["EdgeArea"]) {
-            return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__["CollisionJumpTable"].CollidePolygonEdge(this, area);
-        }
-        else {
-            throw new Error("Polygon could not collide with unknown ICollisionArea " + typeof area);
-        }
-    };
-    /**
-     * Find the point on the shape furthest in the direction specified
-     */
-    PolygonArea.prototype.getFurthestPoint = function (direction) {
-        var pts = this.getTransformedPoints();
-        var furthestPoint = null;
-        var maxDistance = -Number.MAX_VALUE;
-        for (var i = 0; i < pts.length; i++) {
-            var distance = direction.dot(pts[i]);
-            if (distance > maxDistance) {
-                maxDistance = distance;
-                furthestPoint = pts[i];
-            }
-        }
-        return furthestPoint;
-    };
-    /**
-     * Finds the closes face to the point using perpendicular distance
-     * @param point point to test against polygon
-     */
-    PolygonArea.prototype.getClosestFace = function (point) {
-        var sides = this.getSides();
-        var min = Number.POSITIVE_INFINITY;
-        var faceIndex = -1;
-        var distance = -1;
-        for (var i = 0; i < sides.length; i++) {
-            var dist = sides[i].distanceToPoint(point);
-            if (dist < min) {
-                min = dist;
-                faceIndex = i;
-                distance = dist;
-            }
-        }
-        if (faceIndex !== -1) {
-            return {
-                distance: sides[faceIndex].normal().scale(distance),
-                face: sides[faceIndex]
-            };
-        }
-        return null;
-    };
-    /**
-     * Get the axis aligned bounding box for the polygon area
-     */
-    PolygonArea.prototype.getBounds = function () {
-        // todo there is a faster way to do this
-        var points = this.getTransformedPoints();
-        var minX = points.reduce(function (prev, curr) {
-            return Math.min(prev, curr.x);
-        }, 999999999);
-        var maxX = points.reduce(function (prev, curr) {
-            return Math.max(prev, curr.x);
-        }, -99999999);
-        var minY = points.reduce(function (prev, curr) {
-            return Math.min(prev, curr.y);
-        }, 9999999999);
-        var maxY = points.reduce(function (prev, curr) {
-            return Math.max(prev, curr.y);
-        }, -9999999999);
-        return new _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"](minX, minY, maxX, maxY);
-    };
-    /**
-     * Get the moment of inertia for an arbitrary polygon
-     * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-     */
-    PolygonArea.prototype.getMomentOfInertia = function () {
-        var mass = this.body ? this.body.mass : _Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].defaultMass;
-        var numerator = 0;
-        var denominator = 0;
-        for (var i = 0; i < this.points.length; i++) {
-            var iplusone = (i + 1) % this.points.length;
-            var crossTerm = this.points[iplusone].cross(this.points[i]);
-            numerator +=
-                crossTerm *
-                    (this.points[i].dot(this.points[i]) + this.points[i].dot(this.points[iplusone]) + this.points[iplusone].dot(this.points[iplusone]));
-            denominator += crossTerm;
-        }
-        return (mass / 6) * (numerator / denominator);
-    };
-    /**
-     * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
-     */
-    PolygonArea.prototype.rayCast = function (ray, max) {
-        if (max === void 0) { max = Infinity; }
-        // find the minimum contact time greater than 0
-        // contact times less than 0 are behind the ray and we don't want those
-        var sides = this.getSides();
-        var len = sides.length;
-        var minContactTime = Number.MAX_VALUE;
-        var contactIndex = -1;
-        for (var i = 0; i < len; i++) {
-            var contactTime = ray.intersect(sides[i]);
-            if (contactTime >= 0 && contactTime < minContactTime && contactTime <= max) {
-                minContactTime = contactTime;
-                contactIndex = i;
-            }
-        }
-        // contact was found
-        if (contactIndex >= 0) {
-            return ray.getPoint(minContactTime);
-        }
-        // no contact found
-        return null;
-    };
-    /**
-     * Get the axis associated with the edge
-     */
-    PolygonArea.prototype.getAxes = function () {
-        if (this._axes.length) {
-            return this._axes;
-        }
-        var axes = [];
-        var points = this.getTransformedPoints();
-        var len = points.length;
-        for (var i = 0; i < len; i++) {
-            axes.push(points[i].sub(points[(i + 1) % len]).normal());
-        }
-        this._axes = axes;
-        return this._axes;
-    };
-    /**
-     * Perform Separating Axis test against another polygon, returns null if no overlap in polys
-     * Reference http://www.dyn4j.org/2010/01/sat/
-     */
-    PolygonArea.prototype.testSeparatingAxisTheorem = function (other) {
-        var poly1 = this;
-        var poly2 = other;
-        var axes = poly1.getAxes().concat(poly2.getAxes());
-        var minOverlap = Number.MAX_VALUE;
-        var minAxis = null;
-        var minIndex = -1;
-        for (var i = 0; i < axes.length; i++) {
-            var proj1 = poly1.project(axes[i]);
-            var proj2 = poly2.project(axes[i]);
-            var overlap = proj1.getOverlap(proj2);
-            if (overlap <= 0) {
-                return null;
-            }
-            else {
-                if (overlap < minOverlap) {
-                    minOverlap = overlap;
-                    minAxis = axes[i];
-                    minIndex = i;
-                }
-            }
-        }
-        // Sanity check
-        if (minIndex === -1) {
-            return null;
-        }
-        return minAxis.normalize().scale(minOverlap);
-    };
-    /**
-     * Project the edges of the polygon along a specified axis
-     */
-    PolygonArea.prototype.project = function (axis) {
-        var points = this.getTransformedPoints();
-        var len = points.length;
-        var min = Number.MAX_VALUE;
-        var max = -Number.MAX_VALUE;
-        for (var i = 0; i < len; i++) {
-            var scalar = points[i].dot(axis);
-            min = Math.min(min, scalar);
-            max = Math.max(max, scalar);
-        }
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Projection"](min, max);
-    };
-    /* istanbul ignore next */
-    PolygonArea.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
-        ctx.beginPath();
-        ctx.strokeStyle = color.toString();
-        // Iterate through the supplied points and construct a 'polygon'
-        var firstPoint = this.getTransformedPoints()[0];
-        ctx.moveTo(firstPoint.x, firstPoint.y);
-        this.getTransformedPoints().forEach(function (point) {
-            ctx.lineTo(point.x, point.y);
+    Shape.Box = function (width, height, anchor, center) {
+        if (anchor === void 0) { anchor = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Half; }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
+            points: new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"](-width * anchor.x, -height * anchor.y, width - width * anchor.x, height - height * anchor.y).getPoints(),
+            pos: center
         });
-        ctx.lineTo(firstPoint.x, firstPoint.y);
-        ctx.closePath();
-        ctx.stroke();
     };
-    return PolygonArea;
+    /**
+     * Creates a new [[arbitrary polygon|ConvexPolygon]] collision shape
+     * @param points Points specified in counter clockwise
+     * @param clockwiseWinding Optionally changed the winding of points, by default false meaning counter-clockwise winding.
+     * @param center Optional offset relative to the collider in local coordinates
+     */
+    Shape.Polygon = function (points, clockwiseWinding, center) {
+        if (clockwiseWinding === void 0) { clockwiseWinding = false; }
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
+            points: points,
+            pos: center,
+            clockwiseWinding: clockwiseWinding
+        });
+    };
+    /**
+     * Creates a new [[circle|Circle]] collision shape
+     * @param radius Radius of the circle shape
+     * @param center Optional offset relative to the collider in local coordinates
+     */
+    Shape.Circle = function (radius, center) {
+        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        return new _Circle__WEBPACK_IMPORTED_MODULE_1__["Circle"]({
+            radius: radius,
+            pos: center
+        });
+    };
+    /**
+     * Creates a new [[edge|Edge]] collision shape
+     * @param begin Beginning of the edge in local coordinates to the collider
+     * @param end Ending of the edge in local coordinates to the collider
+     */
+    Shape.Edge = function (begin, end) {
+        return new _Edge__WEBPACK_IMPORTED_MODULE_2__["Edge"]({
+            begin: begin,
+            end: end
+        });
+    };
+    return Shape;
 }());
 
 
@@ -6677,11 +7600,11 @@ __webpack_require__.r(__webpack_exports__);
  */
 var Side;
 (function (Side) {
-    Side[Side["None"] = 0] = "None";
-    Side[Side["Top"] = 1] = "Top";
-    Side[Side["Bottom"] = 2] = "Bottom";
-    Side[Side["Left"] = 3] = "Left";
-    Side[Side["Right"] = 4] = "Right";
+    Side["None"] = "None";
+    Side["Top"] = "Top";
+    Side["Bottom"] = "Bottom";
+    Side["Left"] = "Left";
+    Side["Right"] = "Right";
 })(Side || (Side = {}));
 
 
@@ -10108,6 +11031,13 @@ var EventDispatcher = /** @class */ (function () {
         this._target = target;
     }
     /**
+     * Clears any existing handlers or wired event dispatchers on this event dispatcher
+     */
+    EventDispatcher.prototype.clear = function () {
+        this._handlers = {};
+        this._wiredEventDispatchers = [];
+    };
+    /**
      * Emits an event for target
      * @param eventName  The name of the event to publish
      * @param event      Optionally pass an event data object to the handler
@@ -10734,13 +11664,22 @@ var PreCollisionEvent = /** @class */ (function (_super) {
      */
     function PreCollisionEvent(actor, other, side, intersection) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.side = side;
         _this.intersection = intersection;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(PreCollisionEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return PreCollisionEvent;
 }(GameEvent));
 
@@ -10757,13 +11696,22 @@ var PostCollisionEvent = /** @class */ (function (_super) {
      */
     function PostCollisionEvent(actor, other, side, intersection) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.side = side;
         _this.intersection = intersection;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(PostCollisionEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return PostCollisionEvent;
 }(GameEvent));
 
@@ -10774,15 +11722,27 @@ var CollisionStartEvent = /** @class */ (function (_super) {
     __extends(CollisionStartEvent, _super);
     /**
      *
+     * @param actor
+     * @param other
+     * @param pair
      */
     function CollisionStartEvent(actor, other, pair) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.pair = pair;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(CollisionStartEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return CollisionStartEvent;
 }(GameEvent));
 
@@ -10796,11 +11756,20 @@ var CollisionEndEvent = /** @class */ (function (_super) {
      */
     function CollisionEndEvent(actor, other) {
         var _this = _super.call(this) || this;
-        _this.actor = actor;
         _this.other = other;
         _this.target = actor;
         return _this;
     }
+    Object.defineProperty(CollisionEndEvent.prototype, "actor", {
+        get: function () {
+            return this.target;
+        },
+        set: function (actor) {
+            this.target = actor;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return CollisionEndEvent;
 }(GameEvent));
 
@@ -12801,6 +13770,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12814,6 +13784,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -12981,7 +13952,7 @@ var LabelImpl = /** @class */ (function (_super) {
         _this.text = text || '';
         _this.color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Black;
         _this.spriteFont = spriteFont;
-        _this.collisionType = _Actor__WEBPACK_IMPORTED_MODULE_1__["CollisionType"].PreventCollision;
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
         _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
         _this._textShadowOn = false;
         _this._shadowOffsetX = 0;
@@ -14346,6 +15317,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
 /* harmony import */ var _Math_Random__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Math/Random */ "./Math/Random.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -14359,6 +15331,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -14623,7 +15596,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
          */
         _this.randomRotation = false;
         _this._particlesToEmit = 0;
-        _this.collisionType = _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].PreventCollision;
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_8__["CollisionType"].PreventCollision;
         _this.particles = new _Util_Util__WEBPACK_IMPORTED_MODULE_3__["Collection"]();
         _this.deadParticles = new _Util_Util__WEBPACK_IMPORTED_MODULE_3__["Collection"]();
         _this.random = new _Math_Random__WEBPACK_IMPORTED_MODULE_7__["Random"]();
@@ -14661,8 +15634,8 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         var dx = vel * Math.cos(angle);
         var dy = vel * Math.sin(angle);
         if (this.emitterType === EmitterType.Rectangle) {
-            ranX = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.x, this.pos.x + this.getWidth(), this.random);
-            ranY = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.y, this.pos.y + this.getHeight(), this.random);
+            ranX = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.x, this.pos.x + this.width, this.random);
+            ranY = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.y, this.pos.y + this.height, this.random);
         }
         else if (this.emitterType === EmitterType.Circle) {
             var radius = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](0, this.radius, this.random);
@@ -14711,7 +15684,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         ctx.fillText('Particles: ' + this.particles.count(), this.pos.x, this.pos.y + 20);
         if (this.focus) {
             ctx.fillRect(this.focus.x + this.pos.x, this.focus.y + this.pos.y, 3, 3);
-            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_4__["line"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
+            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_4__["line"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__["Color"].Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, this.center.x, this.center.y);
             ctx.fillText('Focus', this.focus.x + this.pos.x, this.focus.y + this.pos.y);
         }
     };
@@ -17085,6 +18058,10 @@ var Scene = /** @class */ (function (_super) {
          */
         _this.actors = [];
         /**
+         * Physics bodies in the current scene
+         */
+        _this._bodies = [];
+        /**
          * The triggers in the current scene
          */
         _this.triggers = [];
@@ -17312,6 +18289,7 @@ var Scene = /** @class */ (function (_super) {
         // Cycle through actors updating actors
         for (i = 0, len = this.actors.length; i < len; i++) {
             this.actors[i].update(engine, delta);
+            this._bodies[i] = this.actors[i].body;
         }
         // Cycle through triggers updating
         for (i = 0, len = this.triggers.length; i < len; i++) {
@@ -17323,8 +18301,8 @@ var Scene = /** @class */ (function (_super) {
         // Run the broadphase and narrowphase
         if (this._broadphase && _Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].enabled) {
             var beforeBroadphase = Date.now();
-            this._broadphase.update(this.actors, delta);
-            var pairs = this._broadphase.broadphase(this.actors, delta, engine.stats.currFrame);
+            this._broadphase.update(this._bodies, delta);
+            var pairs = this._broadphase.broadphase(this._bodies, delta, engine.stats.currFrame);
             var afterBroadphase = Date.now();
             var beforeNarrowphase = Date.now();
             var iter = _Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].collisionPasses;
@@ -17667,6 +18645,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17680,6 +18659,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -17754,17 +18740,17 @@ var TileMapImpl = /** @class */ (function (_super) {
      * is no collision null is returned.
      */
     TileMapImpl.prototype.collides = function (actor) {
-        var width = actor.pos.x + actor.getWidth();
-        var height = actor.pos.y + actor.getHeight();
-        var actorBounds = actor.getBounds();
+        var width = actor.pos.x + actor.width;
+        var height = actor.pos.y + actor.height;
+        var actorBounds = actor.body.collider.bounds;
         var overlaps = [];
         // trace points for overlap
-        for (var x = actorBounds.left; x <= width; x += Math.min(actor.getWidth() / 2, this.cellWidth / 2)) {
-            for (var y = actorBounds.top; y <= height; y += Math.min(actor.getHeight() / 2, this.cellHeight / 2)) {
+        for (var x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
+            for (var y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {
                 var cell = this.getCellByPoint(x, y);
                 if (cell && cell.solid) {
-                    var overlap = actorBounds.collides(cell.getBounds());
-                    var dir = actor.getCenter().sub(cell.getCenter());
+                    var overlap = actorBounds.intersect(cell.bounds);
+                    var dir = actor.center.sub(cell.center);
                     if (overlap && overlap.dot(dir) > 0) {
                         overlaps.push(overlap);
                     }
@@ -17980,12 +18966,26 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.getBounds = function () {
         return this._bounds;
     };
+    Object.defineProperty(CellImpl.prototype, "bounds", {
+        get: function () {
+            return this._bounds;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Gets the center coordinate of this cell
      */
     CellImpl.prototype.getCenter = function () {
         return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
     };
+    Object.defineProperty(CellImpl.prototype, "center", {
+        get: function () {
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Add another [[TileSprite]] to this cell
      */
@@ -18007,6 +19007,12 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.clearSprites = function () {
         this.sprites.length = 0;
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.bounds' })
+    ], CellImpl.prototype, "getBounds", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
+    ], CellImpl.prototype, "getCenter", null);
     return CellImpl;
 }());
 
@@ -18190,51 +19196,11 @@ var CapturePointer = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./Traits/EulerMovement.ts":
-/*!*********************************!*\
-  !*** ./Traits/EulerMovement.ts ***!
-  \*********************************/
-/*! exports provided: EulerMovement */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EulerMovement", function() { return EulerMovement; });
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Physics */ "./Physics.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Actor */ "./Actor.ts");
-
-
-var EulerMovement = /** @class */ (function () {
-    function EulerMovement() {
-    }
-    EulerMovement.prototype.update = function (actor, _engine, delta) {
-        // Update placements based on linear algebra
-        var seconds = delta / 1000;
-        var totalAcc = actor.acc.clone();
-        // Only active vanilla actors are affected by global acceleration
-        if (actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_1__["CollisionType"].Active) {
-            totalAcc.addEqual(_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].acc);
-        }
-        actor.oldVel = actor.vel;
-        actor.vel.addEqual(totalAcc.scale(seconds));
-        actor.pos.addEqual(actor.vel.scale(seconds)).addEqual(totalAcc.scale(0.5 * seconds * seconds));
-        actor.rx += actor.torque * (1.0 / actor.moi) * seconds;
-        actor.rotation += actor.rx * seconds;
-        actor.scale.x += (actor.sx * delta) / 1000;
-        actor.scale.y += (actor.sy * delta) / 1000;
-    };
-    return EulerMovement;
-}());
-
-
-
-/***/ }),
-
 /***/ "./Traits/Index.ts":
 /*!*************************!*\
   !*** ./Traits/Index.ts ***!
   \*************************/
-/*! exports provided: CapturePointer, EulerMovement, OffscreenCulling, TileMapCollisionDetection */
+/*! exports provided: CapturePointer, OffscreenCulling, TileMapCollisionDetection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18242,15 +19208,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CapturePointer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CapturePointer */ "./Traits/CapturePointer.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CapturePointer", function() { return _CapturePointer__WEBPACK_IMPORTED_MODULE_0__["CapturePointer"]; });
 
-/* harmony import */ var _EulerMovement__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EulerMovement */ "./Traits/EulerMovement.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EulerMovement", function() { return _EulerMovement__WEBPACK_IMPORTED_MODULE_1__["EulerMovement"]; });
+/* harmony import */ var _OffscreenCulling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OffscreenCulling */ "./Traits/OffscreenCulling.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "OffscreenCulling", function() { return _OffscreenCulling__WEBPACK_IMPORTED_MODULE_1__["OffscreenCulling"]; });
 
-/* harmony import */ var _OffscreenCulling__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./OffscreenCulling */ "./Traits/OffscreenCulling.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "OffscreenCulling", function() { return _OffscreenCulling__WEBPACK_IMPORTED_MODULE_2__["OffscreenCulling"]; });
-
-/* harmony import */ var _TileMapCollisionDetection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TileMapCollisionDetection */ "./Traits/TileMapCollisionDetection.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMapCollisionDetection", function() { return _TileMapCollisionDetection__WEBPACK_IMPORTED_MODULE_3__["TileMapCollisionDetection"]; });
-
+/* harmony import */ var _TileMapCollisionDetection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TileMapCollisionDetection */ "./Traits/TileMapCollisionDetection.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMapCollisionDetection", function() { return _TileMapCollisionDetection__WEBPACK_IMPORTED_MODULE_2__["TileMapCollisionDetection"]; });
 
 
 
@@ -18285,7 +19247,7 @@ var OffscreenCulling = /** @class */ (function () {
         }
         var actorBoundsOffscreen = false;
         if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport) {
-            actorBoundsOffscreen = !engine.currentScene.camera.viewport.collides(actor.getBounds(true));
+            actorBoundsOffscreen = !engine.currentScene.camera.viewport.intersect(actor.body.collider.bounds);
         }
         if (!actor.isOffScreen) {
             if (actorBoundsOffscreen && isSpriteOffScreen) {
@@ -18317,9 +19279,11 @@ var OffscreenCulling = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TileMapCollisionDetection", function() { return TileMapCollisionDetection; });
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Actor */ "./Actor.ts");
-/* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Collision/Side */ "./Collision/Side.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Collision/Side */ "./Collision/Side.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Collision/Index */ "./Collision/Index.ts");
+
 
 
 
@@ -18328,22 +19292,22 @@ var TileMapCollisionDetection = /** @class */ (function () {
     }
     TileMapCollisionDetection.prototype.update = function (actor, engine) {
         var eventDispatcher = actor.eventDispatcher;
-        if (actor.collisionType !== _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
+        if (actor.body.collider.type !== _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].PreventCollision && engine.currentScene && engine.currentScene.tileMaps) {
             for (var j = 0; j < engine.currentScene.tileMaps.length; j++) {
                 var map = engine.currentScene.tileMaps[j];
                 var intersectMap = void 0;
-                var side = _Collision_Side__WEBPACK_IMPORTED_MODULE_1__["Side"].None;
+                var side = _Collision_Side__WEBPACK_IMPORTED_MODULE_0__["Side"].None;
                 var max = 2;
                 while ((intersectMap = map.collides(actor))) {
                     if (max-- < 0) {
                         break;
                     }
-                    side = actor.getSideFromIntersect(intersectMap);
-                    eventDispatcher.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreCollisionEvent"](actor, null, side, intersectMap));
-                    if (actor.collisionType === _Actor__WEBPACK_IMPORTED_MODULE_0__["CollisionType"].Active) {
+                    side = _Collision_Index__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"].getSideFromIntersection(intersectMap);
+                    eventDispatcher.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreCollisionEvent"](actor, null, side, intersectMap));
+                    if (actor.body.collider.type === _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_2__["CollisionType"].Active) {
                         actor.pos.y += intersectMap.y;
                         actor.pos.x += intersectMap.x;
-                        eventDispatcher.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostCollisionEvent"](actor, null, side, intersectMap));
+                        eventDispatcher.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_1__["PostCollisionEvent"](actor, null, side, intersectMap));
                     }
                 }
             }
@@ -18373,6 +19337,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18386,6 +19351,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -18442,11 +19408,11 @@ var Trigger = /** @class */ (function (_super) {
             _this.target = opts.target;
         }
         _this.visible = opts.visible;
-        _this.collisionType = _Actor__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].Passive;
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_7__["CollisionType"].Passive;
         _this.eventDispatcher = new _EventDispatcher__WEBPACK_IMPORTED_MODULE_2__["EventDispatcher"](_this);
         _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_1__["ActionQueue"](_this);
         _this.on('collisionstart', function (evt) {
-            if (_this.filter(evt.other)) {
+            if (Object(_Actor__WEBPACK_IMPORTED_MODULE_3__["isActor"])(evt.other) && _this.filter(evt.other)) {
                 _this.emit('enter', new _Events__WEBPACK_IMPORTED_MODULE_5__["EnterTriggerEvent"](_this, evt.other));
                 _this._dispatchAction();
                 // remove trigger if its done, -1 repeat forever
@@ -18456,7 +19422,7 @@ var Trigger = /** @class */ (function (_super) {
             }
         });
         _this.on('collisionend', function (evt) {
-            if (_this.filter(evt.other)) {
+            if (Object(_Actor__WEBPACK_IMPORTED_MODULE_3__["isActor"])(evt.other) && _this.filter(evt.other)) {
                 _this.emit('exit', new _Events__WEBPACK_IMPORTED_MODULE_5__["ExitTriggerEvent"](_this, evt.other));
             }
         });
@@ -18486,7 +19452,7 @@ var Trigger = /** @class */ (function (_super) {
         // Meant to draw debug information about actors
         ctx.save();
         ctx.translate(this.pos.x, this.pos.y);
-        var bb = this.getBounds();
+        var bb = this.body.collider.bounds;
         var wp = this.getWorldPos();
         bb.left = bb.left - wp.x;
         bb.right = bb.right - wp.x;
@@ -18520,6 +19486,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18533,6 +19501,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
 
 
 
@@ -18559,7 +19529,8 @@ var UIActor = /** @class */ (function (_super) {
         _this.traits = [];
         _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_2__["CapturePointer"]());
         _this.anchor.setTo(0, 0);
-        _this.collisionType = _Actor__WEBPACK_IMPORTED_MODULE_1__["CollisionType"].PreventCollision;
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
+        _this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Box(_this.width, _this.height, _this.anchor);
         _this.enableCapturePointer = true;
         return _this;
     }
@@ -18634,7 +19605,7 @@ var CullingBox = /** @class */ (function () {
         var drawingWidth = actor.currentDrawing.drawWidth;
         var drawingHeight = actor.currentDrawing.drawHeight;
         var rotation = actor.rotation;
-        var anchor = actor.getCenter();
+        var anchor = actor.center;
         var worldPos = actor.getWorldPos();
         this._topLeft.x = worldPos.x - drawingWidth / 2;
         this._topLeft.y = worldPos.y - drawingHeight / 2;
@@ -18777,6 +19748,11 @@ function obsolete(options) {
             var constructor = function () {
                 var args = Array.prototype.slice.call(arguments);
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return new (method.bind.apply(method, [void 0].concat(args)))();
             };
             constructor.prototype = method.prototype;
@@ -18785,6 +19761,11 @@ function obsolete(options) {
         if (descriptor && descriptor.value) {
             method.value = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return descriptor.value.apply(this, arguments);
             };
             return method;
@@ -18792,6 +19773,11 @@ function obsolete(options) {
         if (descriptor && descriptor.get) {
             method.get = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return descriptor.get.apply(this, arguments);
             };
         }
@@ -19253,7 +20239,7 @@ var EasingFunctions = /** @class */ (function () {
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection, fail */
+/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19288,6 +20274,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getOppositeSide", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getOppositeSide"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getSideFromVector"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSideFromDirection", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getSideFromDirection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["Collection"]; });
 
@@ -19845,7 +20833,7 @@ function canPlayFile(file) {
 /*!**********************!*\
   !*** ./Util/Util.ts ***!
   \**********************/
-/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, Collection, fail */
+/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19865,6 +20853,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return contains; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOppositeSide", function() { return getOppositeSide; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return getSideFromVector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromDirection", function() { return getSideFromDirection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return Collection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return fail; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
@@ -20045,7 +21034,17 @@ function getOppositeSide(side) {
     }
     return _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].None;
 }
+/**
+ * @obsolete use Util.getSideFromDirection
+ */
 function getSideFromVector(direction) {
+    return getSideFromDirection(direction);
+}
+/**
+ * Returns the side in the direction of the vector supplied
+ * @param direction Vector to check
+ */
+function getSideFromDirection(direction) {
     var directions = [_Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Left, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Right, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Up, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Down];
     var directionEnum = [_Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Left, _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Right, _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Top, _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Bottom];
     var max = -Number.MAX_VALUE;
@@ -20299,7 +21298,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, BoundingBox, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, EdgeArea, NaiveCollisionBroadphase, Pair, PolygonArea, Side, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20316,317 +21315,329 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return _Actor__WEBPACK_IMPORTED_MODULE_2__["Actor"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return _Actor__WEBPACK_IMPORTED_MODULE_2__["CollisionType"]; });
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"]; });
 
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"]; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ray", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_3__["Ray"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ray", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Ray"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_3__["Line"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Line"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Projection", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_3__["Projection"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Projection", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Projection"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GlobalCoordinates", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_3__["GlobalCoordinates"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GlobalCoordinates", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["GlobalCoordinates"]; });
 
-/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StrategyContainer", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["StrategyContainer"]; });
+/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StrategyContainer", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["StrategyContainer"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Axis", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["Axis"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Axis", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["Axis"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["LockCameraToActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LockCameraToActorStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["LockCameraToActorAxisStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LockCameraToActorAxisStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["ElasticToActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["ElasticToActorStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["RadiusAroundActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["RadiusAroundActorStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_4__["Camera"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["Camera"]; });
 
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _Class__WEBPACK_IMPORTED_MODULE_5__["Class"]; });
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _Class__WEBPACK_IMPORTED_MODULE_6__["Class"]; });
 
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Configurable", function() { return _Configurable__WEBPACK_IMPORTED_MODULE_6__["Configurable"]; });
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Configurable", function() { return _Configurable__WEBPACK_IMPORTED_MODULE_7__["Configurable"]; });
 
-/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return _Debug__WEBPACK_IMPORTED_MODULE_7__["Debug"]; });
+/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["Debug"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FrameStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_7__["FrameStats"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FrameStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["FrameStats"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PhysicsStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_7__["PhysicsStats"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PhysicsStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["PhysicsStats"]; });
 
-/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./EventDispatcher */ "./EventDispatcher.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventDispatcher", function() { return _EventDispatcher__WEBPACK_IMPORTED_MODULE_8__["EventDispatcher"]; });
+/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./EventDispatcher */ "./EventDispatcher.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventDispatcher", function() { return _EventDispatcher__WEBPACK_IMPORTED_MODULE_9__["EventDispatcher"]; });
 
-/* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Events/MediaEvents */ "./Events/MediaEvents.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_9__["MediaEvent"]; });
+/* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Events/MediaEvents */ "./Events/MediaEvents.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["MediaEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_9__["NativeSoundEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["NativeSoundEvent"]; });
 
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["EventTypes"]; });
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EventTypes"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["KillEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["KillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreKillEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreKillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostKillEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostKillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GameStartEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameStartEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStopEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GameStopEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStopEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameStopEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreDebugDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreDebugDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostDebugDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostDebugDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreUpdateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreUpdateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostUpdateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostUpdateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreFrameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreFrameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostFrameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostFrameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadConnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GamepadConnectEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadConnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadConnectEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadDisconnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GamepadDisconnectEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadDisconnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadDisconnectEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadButtonEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GamepadButtonEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadButtonEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadButtonEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadAxisEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["GamepadAxisEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadAxisEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadAxisEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["SubscribeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["SubscribeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UnsubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["UnsubscribeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UnsubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["UnsubscribeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VisibleEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["VisibleEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VisibleEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["VisibleEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HiddenEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["HiddenEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HiddenEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["HiddenEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PreCollisionEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreCollisionEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["PostCollisionEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostCollisionEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["CollisionStartEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["CollisionStartEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionEndEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["CollisionEndEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionEndEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["CollisionEndEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "InitializeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["InitializeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "InitializeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["InitializeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["ActivateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ActivateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DeactivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["DeactivateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DeactivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["DeactivateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["ExitViewPortEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ExitViewPortEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["EnterViewPortEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EnterViewPortEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["EnterTriggerEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EnterTriggerEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__["ExitTriggerEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ExitTriggerEvent"]; });
 
-/* harmony import */ var _Group__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Group */ "./Group.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _Group__WEBPACK_IMPORTED_MODULE_11__["Group"]; });
+/* harmony import */ var _Group__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Group */ "./Group.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _Group__WEBPACK_IMPORTED_MODULE_12__["Group"]; });
 
-/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Label */ "./Label.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["Label"]; });
+/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Label */ "./Label.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["Label"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontStyle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontStyle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontUnit"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontUnit"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["TextAlign"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["TextAlign"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["BaseAlign"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["BaseAlign"]; });
 
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_13__["Loader"]; });
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_14__["Loader"]; });
 
-/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["Particle"]; });
+/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["Particle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["ParticleEmitter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["ParticleEmitter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["EmitterType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["EmitterType"]; });
 
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["CollisionResolutionStrategy"]; });
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["CollisionResolutionStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["BroadphaseStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["BroadphaseStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Integrator"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Integrator"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Physics"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Physics"]; });
 
-/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["PromiseState"]; });
+/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["PromiseState"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["Promise"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["Promise"]; });
 
-/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_17__["Scene"]; });
+/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_18__["Scene"]; });
 
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileMap"]; });
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileMap"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["Cell"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["Cell"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileSprite"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileSprite"]; });
 
-/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_19__["Timer"]; });
+/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_20__["Timer"]; });
 
-/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_20__["Trigger"]; });
+/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_21__["Trigger"]; });
 
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _UIActor__WEBPACK_IMPORTED_MODULE_21__["UIActor"]; });
+/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _UIActor__WEBPACK_IMPORTED_MODULE_22__["UIActor"]; });
 
-/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Actions"]; });
+/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Actions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Internal"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Internal"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["ActionContext"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["ActionContext"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["RotationType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["RotationType"]; });
 
-/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Body"]; });
+/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Body"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["BoundingBox"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["isCollider"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CircleArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Collider"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionContact"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["BoundingBox"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionJumpTable"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Circle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["TreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CircleArea"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTree"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionContact"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTreeCollisionBroadphase"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionJumpTable"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["EdgeArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["TreeNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NaiveCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["NaiveCollisionBroadphase"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTree"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Pair"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTreeCollisionBroadphase"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["PolygonArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Edge"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Side"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["EdgeArea"]; });
 
-/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Animation"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Pair"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Sprite"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ConvexPolygon"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteSheet"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["PolygonArea"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteFont"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Side"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Effects"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Shape"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Color"]; });
+/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Animation"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Polygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Sprite"]; });
 
-/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__["ExResponse"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteSheet"]; });
 
-/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinGenerator"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteFont"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinDrawer2D"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Effects"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["Random"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Color"]; });
 
-/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindness"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Polygon"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindCorrector"]; });
+/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["ExResponse"]; });
 
-/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Resource"]; });
+/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinGenerator"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Texture"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinDrawer2D"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Gif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["Random"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Stream"]; });
+/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindness"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["ParseGif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindCorrector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Sound"]; });
+/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Resource"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioContextFactory"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Texture"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstanceFactory"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Gif"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Stream"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioTagInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["ParseGif"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["WebAudioInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Sound"]; });
 
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_10__; });
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_29__; });
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_30__; });
-/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_31__; });
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_32__["obsolete"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioContextFactory"]; });
 
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_33__["Detector"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstanceFactory"]; });
 
-/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_34__["CullingBox"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstance"]; });
 
-/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_35__["EasingFunctions"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioTagInstance"]; });
 
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_36__["LogLevel"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["WebAudioInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_36__["Logger"]; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__; });
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_30__; });
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_31__; });
+/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_32__; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["obsolete"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_36__["ConsoleAppender"]; });
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_34__["Detector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_36__["ScreenAppender"]; });
+/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__["CullingBox"]; });
 
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_37__["SortedList"]; });
+/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__["EasingFunctions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_37__["BinaryTreeNode"]; });
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["LogLevel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_37__["MockedElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["Logger"]; });
 
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_38___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_38__);
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_38__; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ConsoleAppender"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ScreenAppender"]; });
+
+/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["SortedList"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["BinaryTreeNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["MockedElement"]; });
+
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_39__);
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_39__; });
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3093+baaf0b9";
+var EX_VERSION = "0.22.0-alpha.3138+ce1c19d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything
 // that will be exposed as the `ex` global variable.
+
 
 
 

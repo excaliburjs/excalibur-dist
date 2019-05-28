@@ -1,29 +1,29 @@
 import { Physics } from './../Physics';
 import { Color } from './../Drawing/Color';
-import { CollisionType } from '../Actor';
 import * as DrawUtil from '../Util/DrawUtil';
+import { CollisionType } from './CollisionType';
 /**
  * Models a potential collision between 2 bodies
  */
 var Pair = /** @class */ (function () {
-    function Pair(bodyA, bodyB) {
-        this.bodyA = bodyA;
-        this.bodyB = bodyB;
+    function Pair(colliderA, colliderB) {
+        this.colliderA = colliderA;
+        this.colliderB = colliderB;
         this.id = null;
         this.collision = null;
-        this.id = Pair.calculatePairHash(bodyA, bodyB);
+        this.id = Pair.calculatePairHash(colliderA, colliderB);
     }
-    Pair.canCollide = function (actorA, actorB) {
+    Pair.canCollide = function (colliderA, colliderB) {
         // if both are fixed short circuit
-        if (actorA.collisionType === CollisionType.Fixed && actorB.collisionType === CollisionType.Fixed) {
+        if (colliderA.type === CollisionType.Fixed && colliderB.type === CollisionType.Fixed) {
             return false;
         }
         // if the either is prevent collision short circuit
-        if (actorB.collisionType === CollisionType.PreventCollision || actorA.collisionType === CollisionType.PreventCollision) {
+        if (colliderB.type === CollisionType.PreventCollision || colliderA.type === CollisionType.PreventCollision) {
             return false;
         }
         // if either is dead short circuit
-        if (actorA.isKilled() || actorB.isKilled()) {
+        if (!colliderA.active || !colliderB.active) {
             return false;
         }
         return true;
@@ -33,8 +33,8 @@ var Pair = /** @class */ (function () {
          * Returns whether or not it is possible for the pairs to collide
          */
         get: function () {
-            var actorA = this.bodyA.actor;
-            var actorB = this.bodyB.actor;
+            var actorA = this.colliderA;
+            var actorB = this.colliderB;
             return Pair.canCollide(actorA, actorB);
         },
         enumerable: true,
@@ -44,7 +44,7 @@ var Pair = /** @class */ (function () {
      * Runs the collison intersection logic on the members of this pair
      */
     Pair.prototype.collide = function () {
-        this.collision = this.bodyA.collisionArea.collide(this.bodyB.collisionArea);
+        this.collision = this.colliderA.collide(this.colliderB);
     };
     /**
      * Resovles the collision body position and velocity if a collision occured
@@ -57,12 +57,12 @@ var Pair = /** @class */ (function () {
     /**
      * Calculates the unique pair hash id for this collision pair
      */
-    Pair.calculatePairHash = function (bodyA, bodyB) {
-        if (bodyA.actor.id < bodyB.actor.id) {
-            return "#" + bodyA.actor.id + "+" + bodyB.actor.id;
+    Pair.calculatePairHash = function (colliderA, colliderB) {
+        if (colliderA.id < colliderB.id) {
+            return "#" + colliderA.id + "+" + colliderB.id;
         }
         else {
-            return "#" + bodyB.actor.id + "+" + bodyA.actor.id;
+            return "#" + colliderB.id + "+" + colliderA.id;
         }
     };
     /* istanbul ignore next */

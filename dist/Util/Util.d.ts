@@ -54,7 +54,15 @@ export declare function addItemToArray<T>(item: T, array: T[]): boolean;
 export declare function removeItemFromArray<T>(item: T, array: T[]): boolean;
 export declare function contains(array: Array<any>, obj: any): boolean;
 export declare function getOppositeSide(side: Side): Side;
+/**
+ * @obsolete use Util.getSideFromDirection
+ */
 export declare function getSideFromVector(direction: Vector): Side;
+/**
+ * Returns the side in the direction of the vector supplied
+ * @param direction Vector to check
+ */
+export declare function getSideFromDirection(direction: Vector): Side;
 /**
  * Excalibur's dynamically resizing collection
  */

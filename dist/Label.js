@@ -12,8 +12,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { Color } from './Drawing/Color';
-import { Actor, CollisionType } from './Actor';
+import { Actor } from './Actor';
 import { Configurable } from './Configurable';
+import { CollisionType } from './Collision/CollisionType';
 /**
  * Enum representing the different font size units
  * https://developer.mozilla.org/en-US/docs/Web/CSS/font-size
@@ -178,7 +179,7 @@ var LabelImpl = /** @class */ (function (_super) {
         _this.text = text || '';
         _this.color = Color.Black;
         _this.spriteFont = spriteFont;
-        _this.collisionType = CollisionType.PreventCollision;
+        _this.body.collider.type = CollisionType.PreventCollision;
         _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
         _this._textShadowOn = false;
         _this._shadowOffsetX = 0;

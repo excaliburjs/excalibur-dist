@@ -1,7 +1,6 @@
 import { CollisionBroadphase } from './CollisionResolver';
 import { Pair } from './Pair';
 import { Body } from './Body';
-import { Actor } from '../Actor';
 import { FrameStats } from '../Debug';
 import { CollisionResolutionStrategy } from '../Physics';
 export declare class DynamicTreeCollisionBroadphase implements CollisionBroadphase {
@@ -22,7 +21,7 @@ export declare class DynamicTreeCollisionBroadphase implements CollisionBroadpha
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
      */
-    broadphase(targets: Actor[], delta: number, stats?: FrameStats): Pair[];
+    broadphase(targets: Body[], delta: number, stats?: FrameStats): Pair[];
     /**
      * Applies narrow phase on collision pairs to find actual area intersections
      * Adds actual colliding pairs to stats' Frame data
@@ -36,6 +35,6 @@ export declare class DynamicTreeCollisionBroadphase implements CollisionBroadpha
     /**
      * Update the dynamic tree positions
      */
-    update(targets: Actor[]): number;
+    update(targets: Body[]): number;
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }

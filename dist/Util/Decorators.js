@@ -31,6 +31,11 @@ export function obsolete(options) {
             var constructor = function () {
                 var args = Array.prototype.slice.call(arguments);
                 Logger.getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return new (method.bind.apply(method, [void 0].concat(args)))();
             };
             constructor.prototype = method.prototype;
@@ -39,6 +44,11 @@ export function obsolete(options) {
         if (descriptor && descriptor.value) {
             method.value = function () {
                 Logger.getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return descriptor.value.apply(this, arguments);
             };
             return method;
@@ -46,6 +56,11 @@ export function obsolete(options) {
         if (descriptor && descriptor.get) {
             method.get = function () {
                 Logger.getInstance().warn(message);
+                // tslint:disable-next-line: no-console
+                if (console.trace) {
+                    // tslint:disable-next-line: no-console
+                    console.trace();
+                }
                 return descriptor.get.apply(this, arguments);
             };
         }

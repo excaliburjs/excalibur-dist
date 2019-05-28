@@ -1,17 +1,35 @@
-import { CollisionArea } from './CollisionArea';
-import { BoundingBox } from './BoundingBox';
 import { Vector } from '../Algebra';
 import { Actor } from '../Actor';
-export declare class Body {
+import { Collider } from './Collider';
+import { Clonable } from '../Interfaces/Clonable';
+export interface BodyOptions {
+    /**
+     * Optionally the actory associated with this body
+     */
+    actor?: Actor;
+    /**
+     * An optional collider to use in this body, if none is specified a default Box collider will be created.
+     */
+    collider?: Collider;
+}
+/**
+ * Body describes all the physical properties pos, vel, acc, rotation, angular velocity
+ */
+export declare class Body implements Clonable<Body> {
+    private _collider;
     actor: Actor;
     /**
      * Constructs a new physics body associated with an actor
      */
-    constructor(actor: Actor);
+    constructor({ actor, collider }: BodyOptions);
+    readonly id: number;
     /**
-     * [[ICollisionArea|Collision area]] of this physics body, defines the shape for rigid body collision
+     * Returns a clone of this body, not associated with any actor
      */
-    collisionArea: CollisionArea;
+    clone(): Body;
+    readonly active: boolean;
+    readonly center: Vector;
+    collider: Collider;
     /**
      * The (x, y) position of the actor this will be in the middle of the actor if the
      * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
@@ -36,37 +54,46 @@ export declare class Body {
      */
     acc: Vector;
     /**
+     * Gets/sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+     */
+    oldAcc: Vector;
+    /**
      * The current torque applied to the actor
      */
     torque: number;
-    /**
-     * The current mass of the actor, mass can be thought of as the resistance to acceleration.
-     */
-    mass: number;
-    /**
-     * The current moment of inertia, moi can be thought of as the resistance to rotation.
-     */
-    moi: number;
     /**
      * The current "motion" of the actor, used to calculated sleep in the physics simulation
      */
     motion: number;
     /**
-     * The coefficient of friction on this actor
+     * Gets/sets the rotation of the body from the last frame.
      */
-    friction: number;
-    /**
-     * The coefficient of restitution of this actor, represents the amount of energy preserved after collision
-     */
-    restitution: number;
+    oldRotation: number;
     /**
      * The rotation of the actor in radians
      */
     rotation: number;
     /**
+     * The scale vector of the actor
+     */
+    scale: Vector;
+    /**
+     * The scale of the actor last frame
+     */
+    oldScale: Vector;
+    /**
+     * The x scalar velocity of the actor in scale/second
+     */
+    sx: number;
+    /**
+     * The y scalar velocity of the actor in scale/second
+     */
+    sy: number;
+    /**
      * The rotational velocity of the actor in radians/second
      */
     rx: number;
+    private _geometryDirty;
     private _totalMtv;
     /**
      * Add minimum translation vectors accumulated during the current frame to resolve collisions.
@@ -77,49 +104,62 @@ export declare class Body {
      */
     applyMtv(): void;
     /**
-     * Returns the body's [[BoundingBox]] calculated for this instant in world space.
+     * Flags the shape dirty and must be recalculated in world space
      */
-    getBounds(): BoundingBox;
+    markCollisionShapeDirty(): void;
+    readonly isColliderShapeDirty: boolean;
     /**
-     * Returns the actor's [[BoundingBox]] relative to the actors position.
+     * Sets the old versions of pos, vel, acc, and scale.
      */
-    getRelativeBounds(): BoundingBox;
+    captureOldTransform(): void;
     /**
-     * Updates the collision area geometry and internal caches
+     * Perform euler integration at the specified time step
      */
-    update(): void;
+    integrate(delta: number): void;
     /**
-     * Sets up a box collision area based on the current bounds of the associated actor of this physics body.
+     * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
+    useBoxCollider(width: number, height: number, anchor?: Vector, center?: Vector): Collider;
+    /**
+     * @obsolete Body.useBoxCollision will be removed in v0.24.0 use [[Body.useBoxCollider]]
+     */
     useBoxCollision(center?: Vector): void;
     /**
-     * Sets up a polygon collision area based on a list of of points relative to the anchor of the associated actor of this physics body.
+     * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
+     *  to the anchor of the associated actor
+     * of this physics body.
      *
      * Only [convex polygon](https://en.wikipedia.org/wiki/Convex_polygon) definitions are supported.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
+    usePolygonCollider(points: Vector[], center?: Vector): Collider;
+    /**
+     * @obsolete Body.usePolygonCollision will be removed in v0.24.0 use [[Body.usePolygonCollider]]
+     */
     usePolygonCollision(points: Vector[], center?: Vector): void;
     /**
-     * Sets up a [[CircleArea|circle collision area]] with a specified radius in pixels.
+     * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
+    useCircleCollider(radius: number, center?: Vector): Collider;
+    /**
+     * @obsolete Body.useCircleCollision will be removed in v0.24.0, use [[Body.useCircleCollider]]
+     */
     useCircleCollision(radius?: number, center?: Vector): void;
     /**
-     * Sets up an [[EdgeArea|edge collision]] with a start point and an end point relative to the anchor of the associated actor
+     * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
      * of this physics body.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    useEdgeCollision(begin: Vector, end: Vector): void;
-    debugDraw(ctx: CanvasRenderingContext2D): void;
+    useEdgeCollider(begin: Vector, end: Vector): Collider;
     /**
-     * Returns a boolean indicating whether this body collided with
-     * or was in stationary contact with
-     * the body of the other [[Actor]]
+     * @obsolete Body.useEdgeCollision will be removed in v0.24.0, use [[Body.useEdgeCollider]]
      */
-    touching(other: Actor): boolean;
+    useEdgeCollision(begin: Vector, end: Vector): void;
+    private _wireColliderEventsToActor;
 }

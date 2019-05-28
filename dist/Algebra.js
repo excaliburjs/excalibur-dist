@@ -160,12 +160,13 @@ var Vector = /** @class */ (function () {
     Vector.prototype.average = function (vec) {
         return this.add(vec).scale(0.5);
     };
-    /**
-     * Scales a vector's by a factor of size
-     * @param size  The factor to scale the magnitude by
-     */
-    Vector.prototype.scale = function (size) {
-        return new Vector(this.x * size, this.y * size);
+    Vector.prototype.scale = function (sizeOrScale) {
+        if (sizeOrScale instanceof Vector) {
+            return new Vector(this.x * sizeOrScale.x, this.y * sizeOrScale.y);
+        }
+        else {
+            return new Vector(this.x * sizeOrScale, this.y * sizeOrScale);
+        }
     };
     /**
      * Adds one vector to another

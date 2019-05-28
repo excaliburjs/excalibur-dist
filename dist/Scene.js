@@ -44,6 +44,10 @@ var Scene = /** @class */ (function (_super) {
          */
         _this.actors = [];
         /**
+         * Physics bodies in the current scene
+         */
+        _this._bodies = [];
+        /**
          * The triggers in the current scene
          */
         _this.triggers = [];
@@ -271,6 +275,7 @@ var Scene = /** @class */ (function (_super) {
         // Cycle through actors updating actors
         for (i = 0, len = this.actors.length; i < len; i++) {
             this.actors[i].update(engine, delta);
+            this._bodies[i] = this.actors[i].body;
         }
         // Cycle through triggers updating
         for (i = 0, len = this.triggers.length; i < len; i++) {
@@ -282,8 +287,8 @@ var Scene = /** @class */ (function (_super) {
         // Run the broadphase and narrowphase
         if (this._broadphase && Physics.enabled) {
             var beforeBroadphase = Date.now();
-            this._broadphase.update(this.actors, delta);
-            var pairs = this._broadphase.broadphase(this.actors, delta, engine.stats.currFrame);
+            this._broadphase.update(this._bodies, delta);
+            var pairs = this._broadphase.broadphase(this._bodies, delta, engine.stats.currFrame);
             var afterBroadphase = Date.now();
             var beforeNarrowphase = Date.now();
             var iter = Physics.collisionPasses;

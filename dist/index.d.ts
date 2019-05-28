@@ -4,7 +4,8 @@
  */
 export declare let EX_VERSION: string;
 export * from './Engine';
-export { Actor, ActorArgs as IActorArgs, CollisionType } from './Actor';
+export { Actor, ActorArgs as IActorArgs } from './Actor';
+export { CollisionType } from './Collision/CollisionType';
 export * from './Algebra';
 export * from './Camera';
 export * from './Class';

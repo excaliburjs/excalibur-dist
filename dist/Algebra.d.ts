@@ -1,8 +1,9 @@
 import { Engine } from './Engine';
+import { Clonable } from './Interfaces/Clonable';
 /**
  * A 2D vector on a plane.
  */
-export declare class Vector {
+export declare class Vector implements Clonable<Vector> {
     x: number;
     y: number;
     /**
@@ -83,6 +84,7 @@ export declare class Vector {
      * Scales a vector's by a factor of size
      * @param size  The factor to scale the magnitude by
      */
+    scale(scale: Vector): Vector;
     scale(size: number): Vector;
     /**
      * Adds one vector to another

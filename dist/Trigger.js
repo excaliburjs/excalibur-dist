@@ -14,10 +14,11 @@ var __extends = (this && this.__extends) || (function () {
 import { Color } from './Drawing/Color';
 import { ActionQueue } from './Actions/Action';
 import { EventDispatcher } from './EventDispatcher';
-import { Actor, CollisionType } from './Actor';
+import { Actor, isActor } from './Actor';
 import { Vector } from './Algebra';
 import { ExitTriggerEvent, EnterTriggerEvent } from './Events';
 import * as Util from './Util/Util';
+import { CollisionType } from './Collision/CollisionType';
 var triggerDefaults = {
     pos: Vector.Zero,
     width: 10,
@@ -67,11 +68,11 @@ var Trigger = /** @class */ (function (_super) {
             _this.target = opts.target;
         }
         _this.visible = opts.visible;
-        _this.collisionType = CollisionType.Passive;
+        _this.body.collider.type = CollisionType.Passive;
         _this.eventDispatcher = new EventDispatcher(_this);
         _this.actionQueue = new ActionQueue(_this);
         _this.on('collisionstart', function (evt) {
-            if (_this.filter(evt.other)) {
+            if (isActor(evt.other) && _this.filter(evt.other)) {
                 _this.emit('enter', new EnterTriggerEvent(_this, evt.other));
                 _this._dispatchAction();
                 // remove trigger if its done, -1 repeat forever
@@ -81,7 +82,7 @@ var Trigger = /** @class */ (function (_super) {
             }
         });
         _this.on('collisionend', function (evt) {
-            if (_this.filter(evt.other)) {
+            if (isActor(evt.other) && _this.filter(evt.other)) {
                 _this.emit('exit', new ExitTriggerEvent(_this, evt.other));
             }
         });
@@ -111,7 +112,7 @@ var Trigger = /** @class */ (function (_super) {
         // Meant to draw debug information about actors
         ctx.save();
         ctx.translate(this.pos.x, this.pos.y);
-        var bb = this.getBounds();
+        var bb = this.body.collider.bounds;
         var wp = this.getWorldPos();
         bb.left = bb.left - wp.x;
         bb.right = bb.right - wp.x;

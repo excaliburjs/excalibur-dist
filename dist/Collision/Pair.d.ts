@@ -1,17 +1,16 @@
-import { Body } from './Body';
 import { CollisionContact } from './CollisionContact';
-import { Actor } from '../Actor';
 import { CollisionResolutionStrategy } from '../Physics';
+import { Collider } from './Collider';
 /**
  * Models a potential collision between 2 bodies
  */
 export declare class Pair {
-    bodyA: Body;
-    bodyB: Body;
+    colliderA: Collider;
+    colliderB: Collider;
     id: string;
     collision: CollisionContact;
-    constructor(bodyA: Body, bodyB: Body);
-    static canCollide(actorA: Actor, actorB: Actor): boolean;
+    constructor(colliderA: Collider, colliderB: Collider);
+    static canCollide(colliderA: Collider, colliderB: Collider): boolean;
     /**
      * Returns whether or not it is possible for the pairs to collide
      */
@@ -27,6 +26,6 @@ export declare class Pair {
     /**
      * Calculates the unique pair hash id for this collision pair
      */
-    static calculatePairHash(bodyA: Body, bodyB: Body): string;
+    static calculatePairHash(colliderA: Collider, colliderB: Collider): string;
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }

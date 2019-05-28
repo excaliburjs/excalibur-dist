@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { Actor, CollisionType } from './Actor';
+import { Actor } from './Actor';
 import { Color } from './Drawing/Color';
 import { Vector } from './Algebra';
 import * as Util from './Util/Util';
@@ -19,6 +19,7 @@ import * as DrawUtil from './Util/DrawUtil';
 import * as Traits from './Traits/Index';
 import { Configurable } from './Configurable';
 import { Random } from './Math/Random';
+import { CollisionType } from './Collision/CollisionType';
 /**
  * An enum that represents the types of emitter nozzles
  */
@@ -275,7 +276,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
          */
         _this.randomRotation = false;
         _this._particlesToEmit = 0;
-        _this.collisionType = CollisionType.PreventCollision;
+        _this.body.collider.type = CollisionType.PreventCollision;
         _this.particles = new Util.Collection();
         _this.deadParticles = new Util.Collection();
         _this.random = new Random();
@@ -313,8 +314,8 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         var dx = vel * Math.cos(angle);
         var dy = vel * Math.sin(angle);
         if (this.emitterType === EmitterType.Rectangle) {
-            ranX = Util.randomInRange(this.pos.x, this.pos.x + this.getWidth(), this.random);
-            ranY = Util.randomInRange(this.pos.y, this.pos.y + this.getHeight(), this.random);
+            ranX = Util.randomInRange(this.pos.x, this.pos.x + this.width, this.random);
+            ranY = Util.randomInRange(this.pos.y, this.pos.y + this.height, this.random);
         }
         else if (this.emitterType === EmitterType.Circle) {
             var radius = Util.randomInRange(0, this.radius, this.random);
@@ -363,7 +364,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         ctx.fillText('Particles: ' + this.particles.count(), this.pos.x, this.pos.y + 20);
         if (this.focus) {
             ctx.fillRect(this.focus.x + this.pos.x, this.focus.y + this.pos.y, 3, 3);
-            DrawUtil.line(ctx, Color.Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, _super.prototype.getCenter.call(this).x, _super.prototype.getCenter.call(this).y);
+            DrawUtil.line(ctx, Color.Yellow, this.focus.x + this.pos.x, this.focus.y + this.pos.y, this.center.x, this.center.y);
             ctx.fillText('Focus', this.focus.x + this.pos.x, this.focus.y + this.pos.y);
         }
     };

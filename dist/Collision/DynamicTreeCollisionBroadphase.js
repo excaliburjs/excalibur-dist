@@ -2,9 +2,9 @@ import { Physics } from './../Physics';
 import { DynamicTree } from './DynamicTree';
 import { Pair } from './Pair';
 import { Vector, Ray } from '../Algebra';
-import { CollisionType } from '../Actor';
 import { Logger } from '../Util/Log';
 import { CollisionStartEvent, CollisionEndEvent } from '../Events';
+import { CollisionType } from './CollisionType';
 var DynamicTreeCollisionBroadphase = /** @class */ (function () {
     function DynamicTreeCollisionBroadphase() {
         this._dynamicCollisionTree = new DynamicTree();
@@ -33,13 +33,13 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         }
         this._dynamicCollisionTree.untrackBody(target);
     };
-    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (actorA, actorB) {
+    DynamicTreeCollisionBroadphase.prototype._shouldGenerateCollisionPair = function (colliderA, colliderB) {
         // if the collision pair has been calculated already short circuit
-        var hash = Pair.calculatePairHash(actorA.body, actorB.body);
+        var hash = Pair.calculatePairHash(colliderA, colliderB);
         if (this._collisionHash[hash]) {
             return false; // pair exists easy exit return false
         }
-        return Pair.canCollide(actorA, actorB);
+        return Pair.canCollide(colliderA, colliderB);
     };
     /**
      * Detects potential collision pairs in a broadphase approach with the dynamic aabb tree strategy
@@ -48,20 +48,20 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var _this = this;
         var seconds = delta / 1000;
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
-        var potentialColliders = targets.filter(function (other) {
-            return !other.isKilled() && other.collisionType !== CollisionType.PreventCollision;
+        var potentialColliders = targets.map(function (t) { return t.collider; }).filter(function (other) {
+            return other.active && other.type !== CollisionType.PreventCollision;
         });
         // clear old list of collision pairs
         this._collisionPairCache = [];
         this._collisionHash = {};
         // check for normal collision pairs
-        var actor;
+        var collider;
         for (var j = 0, l = potentialColliders.length; j < l; j++) {
-            actor = potentialColliders[j];
+            collider = potentialColliders[j];
             // Query the collision tree for potential colliders
-            this._dynamicCollisionTree.query(actor.body, function (other) {
-                if (_this._shouldGenerateCollisionPair(actor, other.actor)) {
-                    var pair = new Pair(actor.body, other);
+            this._dynamicCollisionTree.query(collider.body, function (other) {
+                if (_this._shouldGenerateCollisionPair(collider, other.collider)) {
+                    var pair = new Pair(collider, other.collider);
                     _this._collisionHash[pair.id] = true;
                     _this._collisionPairCache.push(pair);
                 }
@@ -75,34 +75,34 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         // Check dynamic tree for fast moving objects
         // Fast moving objects are those moving at least there smallest bound per frame
         if (Physics.checkForFastBodies) {
-            var _loop_1 = function (actor_1) {
+            var _loop_1 = function (collider_1) {
                 // Skip non-active objects. Does not make sense on other collison types
-                if (actor_1.collisionType !== CollisionType.Active) {
+                if (collider_1.type !== CollisionType.Active) {
                     return "continue";
                 }
                 // Maximum travel distance next frame
-                var updateDistance = actor_1.vel.magnitude() * seconds + // velocity term
-                    actor_1.acc.magnitude() * 0.5 * seconds * seconds; // acc term
+                var updateDistance = collider_1.body.vel.magnitude() * seconds + // velocity term
+                    collider_1.body.acc.magnitude() * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
-                var minDimension = Math.min(actor_1.body.getBounds().getHeight(), actor_1.body.getBounds().getWidth());
+                var minDimension = Math.min(collider_1.bounds.height, collider_1.bounds.width);
                 if (Physics.disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
                     if (stats) {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
                     // objects resting on a surface may be slightly penatrating in the current position
-                    var updateVec = actor_1.pos.sub(actor_1.oldPos);
-                    var centerPoint = actor_1.body.collisionArea.getCenter();
-                    var furthestPoint = actor_1.body.collisionArea.getFurthestPoint(actor_1.vel);
+                    var updateVec = collider_1.body.pos.sub(collider_1.body.oldPos);
+                    var centerPoint = collider_1.shape.center;
+                    var furthestPoint = collider_1.shape.getFurthestPoint(collider_1.body.vel);
                     var origin_1 = furthestPoint.sub(updateVec);
-                    var ray_1 = new Ray(origin_1, actor_1.vel);
+                    var ray_1 = new Ray(origin_1, collider_1.body.vel);
                     // back the ray up by -2x surfaceEpsilon to account for fast moving objects starting on the surface
                     ray_1.pos = ray_1.pos.add(ray_1.dir.scale(-2 * Physics.surfaceEpsilon));
                     var minBody_1;
                     var minTranslate_1 = new Vector(Infinity, Infinity);
                     this_1._dynamicCollisionTree.rayCastQuery(ray_1, updateDistance + Physics.surfaceEpsilon * 2, function (other) {
-                        if (actor_1.body !== other && other.collisionArea) {
-                            var hitPoint = other.collisionArea.rayCast(ray_1, updateDistance + Physics.surfaceEpsilon * 10);
+                        if (collider_1.body !== other && other.collider.shape) {
+                            var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + Physics.surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);
                                 if (translate.magnitude() < minTranslate_1.magnitude()) {
@@ -114,7 +114,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         return false;
                     });
                     if (minBody_1 && Vector.isValid(minTranslate_1)) {
-                        var pair = new Pair(actor_1.body, minBody_1);
+                        var pair = new Pair(collider_1, minBody_1.collider);
                         if (!this_1._collisionHash[pair.id]) {
                             this_1._collisionHash[pair.id] = true;
                             this_1._collisionPairCache.push(pair);
@@ -122,11 +122,11 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         // move the fast moving object to the other body
                         // need to push into the surface by ex.Physics.surfaceEpsilon
                         var shift = centerPoint.sub(furthestPoint);
-                        actor_1.pos = origin_1
+                        collider_1.body.pos = origin_1
                             .add(shift)
                             .add(minTranslate_1)
                             .add(ray_1.dir.scale(2 * Physics.surfaceEpsilon));
-                        actor_1.body.collisionArea.recalc();
+                        collider_1.shape.recalc();
                         if (stats) {
                             stats.physics.fastBodyCollisions++;
                         }
@@ -135,8 +135,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             };
             var this_1 = this;
             for (var _i = 0, potentialColliders_1 = potentialColliders; _i < potentialColliders_1.length; _i++) {
-                var actor_1 = potentialColliders_1[_i];
-                _loop_1(actor_1);
+                var collider_1 = potentialColliders_1[_i];
+                _loop_1(collider_1);
             }
         }
         // return cache
@@ -164,11 +164,11 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             var pair = pairs_1[_i];
             pair.resolve(strategy);
             if (pair.collision) {
-                pair.bodyA.applyMtv();
-                pair.bodyB.applyMtv();
+                pair.colliderA.body.applyMtv();
+                pair.colliderB.body.applyMtv();
                 // todo still don't like this, this is a small integration step to resolve narrowphase collisions
-                pair.bodyA.actor.integrate(delta * Physics.collisionShift);
-                pair.bodyB.actor.integrate(delta * Physics.collisionShift);
+                pair.colliderA.body.integrate(delta * Physics.collisionShift);
+                pair.colliderB.body.integrate(delta * Physics.collisionShift);
             }
         }
         return pairs.filter(function (p) { return p.canCollide; });
@@ -181,8 +181,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
             currentFrameHash[p.id] = p;
             // find all new collisions
             if (!this._lastFramePairsHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
+                var actor1 = p.colliderA;
+                var actor2 = p.colliderB;
                 actor1.emit('collisionstart', new CollisionStartEvent(actor1, actor2, p));
                 actor2.emit('collisionstart', new CollisionStartEvent(actor2, actor1, p));
             }
@@ -191,8 +191,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         for (var _a = 0, _b = this._lastFramePairs; _a < _b.length; _a++) {
             var p = _b[_a];
             if (!currentFrameHash[p.id]) {
-                var actor1 = p.bodyA.actor;
-                var actor2 = p.bodyB.actor;
+                var actor1 = p.colliderA;
+                var actor2 = p.colliderB;
                 actor1.emit('collisionend', new CollisionEndEvent(actor1, actor2));
                 actor2.emit('collisionend', new CollisionEndEvent(actor2, actor1));
             }
@@ -208,7 +208,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var updated = 0;
         var len = targets.length;
         for (var i = 0; i < len; i++) {
-            if (this._dynamicCollisionTree.updateBody(targets[i].body)) {
+            if (this._dynamicCollisionTree.updateBody(targets[i])) {
                 updated++;
             }
         }

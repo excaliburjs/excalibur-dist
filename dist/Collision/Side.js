@@ -3,10 +3,10 @@
  */
 export var Side;
 (function (Side) {
-    Side[Side["None"] = 0] = "None";
-    Side[Side["Top"] = 1] = "Top";
-    Side[Side["Bottom"] = 2] = "Bottom";
-    Side[Side["Left"] = 3] = "Left";
-    Side[Side["Right"] = 4] = "Right";
+    Side["None"] = "None";
+    Side["Top"] = "Top";
+    Side["Bottom"] = "Bottom";
+    Side["Left"] = "Left";
+    Side["Right"] = "Right";
 })(Side || (Side = {}));
 //# sourceMappingURL=Side.js.map

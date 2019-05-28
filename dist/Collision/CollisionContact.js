@@ -1,16 +1,16 @@
-import { CollisionType } from '../Actor';
 import { Vector } from '../Algebra';
 import { Physics, CollisionResolutionStrategy } from '../Physics';
 import { PostCollisionEvent, PreCollisionEvent } from '../Events';
 import * as Util from '../Util/Util';
+import { CollisionType } from './CollisionType';
 /**
- * Collision contacts are used internally by Excalibur to resolve collision between actors. This
+ * Collision contacts are used internally by Excalibur to resolve collision between colliders. This
  * Pair prevents collisions from being evaluated more than one time
  */
 var CollisionContact = /** @class */ (function () {
-    function CollisionContact(bodyA, bodyB, mtv, point, normal) {
-        this.bodyA = bodyA;
-        this.bodyB = bodyB;
+    function CollisionContact(colliderA, colliderB, mtv, point, normal) {
+        this.colliderA = colliderA;
+        this.colliderB = colliderB;
         this.mtv = mtv;
         this.point = point;
         this.normal = normal;
@@ -26,66 +26,64 @@ var CollisionContact = /** @class */ (function () {
             throw new Error('Unknown collision resolution strategy');
         }
     };
-    CollisionContact.prototype._applyBoxImpulse = function (bodyA, bodyB, mtv) {
-        if (bodyA.collisionType === CollisionType.Active && bodyB.collisionType !== CollisionType.Passive) {
+    CollisionContact.prototype._applyBoxImpulse = function (colliderA, colliderB, mtv) {
+        if (colliderA.type === CollisionType.Active && colliderB.type !== CollisionType.Passive) {
             // Resolve overlaps
-            if (bodyA.collisionType === CollisionType.Active && bodyB.collisionType === CollisionType.Active) {
+            if (colliderA.type === CollisionType.Active && colliderB.type === CollisionType.Active) {
                 // split overlaps if both are Active
                 mtv = mtv.scale(0.5);
             }
             // Apply mtv
-            bodyA.pos.y += mtv.y;
-            bodyA.pos.x += mtv.x;
+            colliderA.body.pos.y += mtv.y;
+            colliderA.body.pos.x += mtv.x;
             var mtvDir = mtv.normalize();
             // only adjust if velocity is opposite
-            if (mtvDir.dot(bodyA.vel) < 0) {
+            if (mtvDir.dot(colliderA.body.vel) < 0) {
                 // Cancel out velocity in direction of mtv
-                var velAdj = mtvDir.scale(mtvDir.dot(bodyA.vel.negate()));
-                bodyA.vel = bodyA.vel.add(velAdj);
+                var velAdj = mtvDir.scale(mtvDir.dot(colliderA.body.vel.negate()));
+                colliderA.body.vel = colliderA.body.vel.add(velAdj);
             }
-            bodyA.emit('postcollision', new PostCollisionEvent(bodyA, bodyB, Util.getSideFromVector(mtv), mtv));
+            colliderA.emit('postcollision', new PostCollisionEvent(colliderA, colliderB, Util.getSideFromDirection(mtv), mtv));
         }
     };
     CollisionContact.prototype._resolveBoxCollision = function () {
-        var bodyA = this.bodyA.body.actor;
-        var bodyB = this.bodyB.body.actor;
-        var side = Util.getSideFromVector(this.mtv);
+        var side = Util.getSideFromDirection(this.mtv);
         var mtv = this.mtv.negate();
         // Publish collision events on both participants
-        bodyA.emit('precollision', new PreCollisionEvent(bodyA, bodyB, side, mtv));
-        bodyB.emit('precollision', new PreCollisionEvent(bodyB, bodyA, Util.getOppositeSide(side), mtv.negate()));
-        this._applyBoxImpulse(bodyA, bodyB, mtv);
-        this._applyBoxImpulse(bodyB, bodyA, mtv.negate());
+        this.colliderA.emit('precollision', new PreCollisionEvent(this.colliderA, this.colliderB, side, mtv));
+        this.colliderB.emit('precollision', new PreCollisionEvent(this.colliderB, this.colliderA, Util.getOppositeSide(side), mtv.negate()));
+        this._applyBoxImpulse(this.colliderA, this.colliderB, mtv);
+        this._applyBoxImpulse(this.colliderB, this.colliderA, mtv.negate());
     };
     CollisionContact.prototype._resolveRigidBodyCollision = function () {
         // perform collison on bounding areas
-        var bodyA = this.bodyA.body;
-        var bodyB = this.bodyB.body;
-        var mtv = this.mtv; // normal pointing away from bodyA
-        var normal = this.normal; // normal pointing away from bodyA
-        if (bodyA.actor === bodyB.actor) {
+        var bodyA = this.colliderA.body;
+        var bodyB = this.colliderB.body;
+        var mtv = this.mtv; // normal pointing away from colliderA
+        var normal = this.normal; // normal pointing away from colliderA
+        if (bodyA === bodyB) {
             // sanity check for existing pairs
             return;
         }
         // Publish collision events on both participants
-        var side = Util.getSideFromVector(this.mtv);
-        bodyA.actor.emit('precollision', new PreCollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-        bodyB.actor.emit('precollision', new PreCollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
+        var side = Util.getSideFromDirection(this.mtv);
+        this.colliderA.emit('precollision', new PreCollisionEvent(this.colliderA, this.colliderB, side, this.mtv));
+        this.colliderB.emit('precollision', new PreCollisionEvent(this.colliderB, this.colliderA, Util.getOppositeSide(side), this.mtv.negate()));
         // If any of the participants are passive then short circuit
-        if (bodyA.actor.collisionType === CollisionType.Passive || bodyB.actor.collisionType === CollisionType.Passive) {
+        if (this.colliderA.type === CollisionType.Passive || this.colliderB.type === CollisionType.Passive) {
             return;
         }
-        var invMassA = bodyA.actor.collisionType === CollisionType.Fixed ? 0 : 1 / bodyA.mass;
-        var invMassB = bodyB.actor.collisionType === CollisionType.Fixed ? 0 : 1 / bodyB.mass;
-        var invMoiA = bodyA.actor.collisionType === CollisionType.Fixed ? 0 : 1 / bodyA.moi;
-        var invMoiB = bodyB.actor.collisionType === CollisionType.Fixed ? 0 : 1 / bodyB.moi;
+        var invMassA = this.colliderA.type === CollisionType.Fixed ? 0 : 1 / this.colliderA.mass;
+        var invMassB = this.colliderB.type === CollisionType.Fixed ? 0 : 1 / this.colliderB.mass;
+        var invMoiA = this.colliderA.type === CollisionType.Fixed ? 0 : 1 / this.colliderA.inertia;
+        var invMoiB = this.colliderB.type === CollisionType.Fixed ? 0 : 1 / this.colliderB.inertia;
         // average restitution more relistic
-        var coefRestitution = Math.min(bodyA.restitution, bodyB.restitution);
-        var coefFriction = Math.min(bodyA.friction, bodyB.friction);
+        var coefRestitution = Math.min(this.colliderA.bounciness, this.colliderB.bounciness);
+        var coefFriction = Math.min(this.colliderA.friction, this.colliderB.friction);
         normal = normal.normalize();
         var tangent = normal.normal().normalize();
-        var ra = this.point.sub(this.bodyA.getCenter()); // point relative to bodyA position
-        var rb = this.point.sub(this.bodyB.getCenter()); /// point relative to bodyB
+        var ra = this.point.sub(this.colliderA.center); // point relative to colliderA position
+        var rb = this.point.sub(this.colliderB.center); /// point relative to colliderB
         // Relative velocity in linear terms
         // Angular to linear velocity formula -> omega = v/r
         var rv = bodyB.vel.add(rb.cross(-bodyB.rx)).sub(bodyA.vel.sub(ra.cross(bodyA.rx)));
@@ -102,14 +100,14 @@ var CollisionContact = /** @class */ (function () {
         // Collision impulse formula from Chris Hecker
         // https://en.wikipedia.org/wiki/Collision_response
         var impulse = -((1 + coefRestitution) * rvNormal) / (invMassA + invMassB + invMoiA * raTangent * raTangent + invMoiB * rbTangent * rbTangent);
-        if (bodyA.actor.collisionType === CollisionType.Fixed) {
+        if (this.colliderA.type === CollisionType.Fixed) {
             bodyB.vel = bodyB.vel.add(normal.scale(impulse * invMassB));
             if (Physics.allowRigidBodyRotation) {
                 bodyB.rx -= impulse * invMoiB * -rb.cross(normal);
             }
             bodyB.addMtv(mtv);
         }
-        else if (bodyB.actor.collisionType === CollisionType.Fixed) {
+        else if (this.colliderB.type === CollisionType.Fixed) {
             bodyA.vel = bodyA.vel.sub(normal.scale(impulse * invMassA));
             if (Physics.allowRigidBodyRotation) {
                 bodyA.rx += impulse * invMoiA * -ra.cross(normal);
@@ -142,14 +140,14 @@ var CollisionContact = /** @class */ (function () {
             else {
                 frictionImpulse = t.scale(-impulse * coefFriction);
             }
-            if (bodyA.actor.collisionType === CollisionType.Fixed) {
+            if (this.colliderA.type === CollisionType.Fixed) {
                 // apply frictional impulse
                 bodyB.vel = bodyB.vel.add(frictionImpulse.scale(invMassB));
                 if (Physics.allowRigidBodyRotation) {
                     bodyB.rx += frictionImpulse.dot(t) * invMoiB * rb.cross(t);
                 }
             }
-            else if (bodyB.actor.collisionType === CollisionType.Fixed) {
+            else if (this.colliderB.type === CollisionType.Fixed) {
                 // apply frictional impulse
                 bodyA.vel = bodyA.vel.sub(frictionImpulse.scale(invMassA));
                 if (Physics.allowRigidBodyRotation) {
@@ -167,8 +165,8 @@ var CollisionContact = /** @class */ (function () {
                 }
             }
         }
-        bodyA.actor.emit('postcollision', new PostCollisionEvent(this.bodyA.body.actor, this.bodyB.body.actor, side, this.mtv));
-        bodyB.actor.emit('postcollision', new PostCollisionEvent(this.bodyB.body.actor, this.bodyA.body.actor, Util.getOppositeSide(side), this.mtv.negate()));
+        this.colliderA.emit('postcollision', new PostCollisionEvent(this.colliderA, this.colliderB, side, this.mtv));
+        this.colliderB.emit('postcollision', new PostCollisionEvent(this.colliderB, this.colliderA, Util.getOppositeSide(side), this.mtv.negate()));
     };
     return CollisionContact;
 }());

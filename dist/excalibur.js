@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3151+e5912c1 - 2019-5-29
+ * excalibur - 0.22.0-alpha.3154+faf704b - 2019-5-29
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -12879,6 +12879,7 @@ var PointerType;
  */
 var NativePointerButton;
 (function (NativePointerButton) {
+    NativePointerButton[NativePointerButton["NoButton"] = -1] = "NoButton";
     NativePointerButton[NativePointerButton["Left"] = 0] = "Left";
     NativePointerButton[NativePointerButton["Middle"] = 1] = "Middle";
     NativePointerButton[NativePointerButton["Right"] = 2] = "Right";
@@ -12893,6 +12894,7 @@ var PointerButton;
     PointerButton["Middle"] = "Middle";
     PointerButton["Right"] = "Right";
     PointerButton["Unknown"] = "Unknown";
+    PointerButton["NoButton"] = "NoButton";
 })(PointerButton || (PointerButton = {}));
 var WheelDeltaMode;
 (function (WheelDeltaMode) {
@@ -13527,6 +13529,8 @@ var Pointers = /** @class */ (function (_super) {
     };
     Pointers.prototype._nativeButtonToPointerButton = function (s) {
         switch (s) {
+            case NativePointerButton.NoButton:
+                return PointerButton.NoButton;
             case NativePointerButton.Left:
                 return PointerButton.Left;
             case NativePointerButton.Middle:
@@ -21632,7 +21636,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3151+e5912c1";
+var EX_VERSION = "0.22.0-alpha.3154+faf704b";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

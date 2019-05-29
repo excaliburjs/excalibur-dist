@@ -32,6 +32,7 @@ export var PointerType;
  */
 export var NativePointerButton;
 (function (NativePointerButton) {
+    NativePointerButton[NativePointerButton["NoButton"] = -1] = "NoButton";
     NativePointerButton[NativePointerButton["Left"] = 0] = "Left";
     NativePointerButton[NativePointerButton["Middle"] = 1] = "Middle";
     NativePointerButton[NativePointerButton["Right"] = 2] = "Right";
@@ -46,6 +47,7 @@ export var PointerButton;
     PointerButton["Middle"] = "Middle";
     PointerButton["Right"] = "Right";
     PointerButton["Unknown"] = "Unknown";
+    PointerButton["NoButton"] = "NoButton";
 })(PointerButton || (PointerButton = {}));
 export var WheelDeltaMode;
 (function (WheelDeltaMode) {
@@ -680,6 +682,8 @@ var Pointers = /** @class */ (function (_super) {
     };
     Pointers.prototype._nativeButtonToPointerButton = function (s) {
         switch (s) {
+            case NativePointerButton.NoButton:
+                return PointerButton.NoButton;
             case NativePointerButton.Left:
                 return PointerButton.Left;
             case NativePointerButton.Middle:

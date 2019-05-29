@@ -21,6 +21,7 @@ export declare enum PointerType {
  * Native browser button enumeration
  */
 export declare enum NativePointerButton {
+    NoButton = -1,
     Left = 0,
     Middle = 1,
     Right = 2,
@@ -33,7 +34,8 @@ export declare enum PointerButton {
     Left = "Left",
     Middle = "Middle",
     Right = "Right",
-    Unknown = "Unknown"
+    Unknown = "Unknown",
+    NoButton = "NoButton"
 }
 export declare enum WheelDeltaMode {
     Pixel = "Pixel",

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3154+faf704b - 2019-5-29
+ * excalibur - 0.22.0-alpha.3190+27fdbcd - 2019-6-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -350,28 +350,26 @@ var MoveTo = /** @class */ (function () {
 }());
 
 var MoveBy = /** @class */ (function () {
-    function MoveBy(actor, destx, desty, time) {
+    function MoveBy(actor, offsetX, offsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._end = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](destx, desty);
-        if (time <= 0) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
-            throw new Error('Cannot move in time <= 0');
+        this._speed = speed;
+        this._offset = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](offsetX, offsetY);
+        if (speed <= 0) {
+            _Util_Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().error('Attempted to moveBy with speed less than or equal to zero : ' + speed);
+            throw new Error('Speed must be greater than 0 pixels per second');
         }
-        this._time = time;
     }
     MoveBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
             this._start = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this._actor.pos.x, this._actor.pos.y);
-            this._distance = this._start.distance(this._end);
+            this._end = this._start.add(this._offset);
+            this._distance = this._offset.magnitude();
             this._dir = this._end.sub(this._start).normalize();
-            this._speed = this._distance / (this._time / 1000);
         }
-        var m = this._dir.scale(this._speed);
-        this._actor.vel.x = m.x;
-        this._actor.vel.y = m.y;
+        this._actor.vel = this._dir.scale(this._speed);
         if (this.isComplete(this._actor)) {
             this._actor.pos.x = this._end.x;
             this._actor.pos.y = this._end.y;
@@ -380,7 +378,7 @@ var MoveBy = /** @class */ (function () {
         }
     };
     MoveBy.prototype.isComplete = function (actor) {
-        return this._stopped || new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](actor.pos.x, actor.pos.y).distance(this._start) >= this._distance;
+        return this._stopped || actor.pos.distance(this._start) >= this._distance;
     };
     MoveBy.prototype.stop = function () {
         this._actor.vel.y = 0;
@@ -590,18 +588,19 @@ var RotateTo = /** @class */ (function () {
 }());
 
 var RotateBy = /** @class */ (function () {
-    function RotateBy(actor, angleRadians, time, rotationType) {
+    function RotateBy(actor, angleRadiansOffset, speed, rotationType) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._end = angleRadians;
-        this._time = time;
+        this._speed = speed;
+        this._offset = angleRadiansOffset;
         this._rotationType = rotationType || _RotationType__WEBPACK_IMPORTED_MODULE_0__["RotationType"].ShortestPath;
     }
     RotateBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
             this._start = this._actor.rotation;
+            this._end = this._start + this._offset;
             var distance1 = Math.abs(this._end - this._start);
             var distance2 = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["TwoPI"] - distance1;
             if (distance1 > distance2) {
@@ -651,7 +650,6 @@ var RotateBy = /** @class */ (function () {
                     }
                     break;
             }
-            this._speed = Math.abs((this._distance / this._time) * 1000);
         }
         this._actor.rx = this._direction * this._speed;
         if (this.isComplete()) {
@@ -729,37 +727,35 @@ var ScaleTo = /** @class */ (function () {
 }());
 
 var ScaleBy = /** @class */ (function () {
-    function ScaleBy(actor, scaleX, scaleY, time) {
+    function ScaleBy(actor, scaleOffsetX, scaleOffsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._endX = scaleX;
-        this._endY = scaleY;
-        this._speedX = ((this._endX - this._actor.scale.x) / time) * 1000;
-        this._speedY = ((this._endY - this._actor.scale.y) / time) * 1000;
+        this._offset = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](scaleOffsetX, scaleOffsetY);
+        this._speedX = this._speedY = speed;
     }
     ScaleBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
-            this._startX = this._actor.scale.x;
-            this._startY = this._actor.scale.y;
-            this._distanceX = Math.abs(this._endX - this._startX);
-            this._distanceY = Math.abs(this._endY - this._startY);
+            this._startScale = this._actor.scale.clone();
+            this._endScale = this._startScale.add(this._offset);
+            this._distanceX = Math.abs(this._endScale.x - this._startScale.x);
+            this._distanceY = Math.abs(this._endScale.y - this._startScale.y);
+            this._directionX = this._endScale.x < this._startScale.x ? -1 : 1;
+            this._directionY = this._endScale.y < this._startScale.y ? -1 : 1;
         }
-        var directionX = this._endX < this._startX ? -1 : 1;
-        var directionY = this._endY < this._startY ? -1 : 1;
-        this._actor.sx = this._speedX * directionX;
-        this._actor.sy = this._speedY * directionY;
+        this._actor.sx = this._speedX * this._directionX;
+        this._actor.sy = this._speedY * this._directionY;
         if (this.isComplete()) {
-            this._actor.scale.x = this._endX;
-            this._actor.scale.y = this._endY;
+            this._actor.scale = this._endScale;
             this._actor.sx = 0;
             this._actor.sy = 0;
         }
     };
     ScaleBy.prototype.isComplete = function () {
         return (this._stopped ||
-            (Math.abs(this._actor.scale.x - this._startX) >= this._distanceX && Math.abs(this._actor.scale.y - this._startY) >= this._distanceY));
+            (Math.abs(this._actor.scale.x - this._startScale.x) >= this._distanceX &&
+                Math.abs(this._actor.scale.y - this._startScale.y) >= this._distanceY));
     };
     ScaleBy.prototype.stop = function () {
         this._actor.sx = 0;
@@ -1153,17 +1149,16 @@ var ActionContext = /** @class */ (function () {
         return this;
     };
     /**
-     * This method will move an actor to the specified x and y position by a
-     * certain time (in milliseconds). This method is part of the actor
-     * 'Action' fluent API allowing action chaining.
-     * @param x     The x location to move the actor to
-     * @param y     The y location to move the actor to
-     * @param time  The time it should take the actor to move to the new location in milliseconds
+     * This method will move an actor by the specified x offset and y offset from its current position, at a certain speed.
+     * This method is part of the actor 'Action' fluent API allowing action chaining.
+     * @param xOffset     The x offset to apply to this actor
+     * @param yOffset     The y location to move the actor to
+     * @param speed  The speed in pixels per second the actor should move
      */
-    ActionContext.prototype.moveBy = function (x, y, time) {
+    ActionContext.prototype.moveBy = function (xOffset, yOffset, speed) {
         var len = this._queues.length;
         for (var i = 0; i < len; i++) {
-            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["MoveBy"](this._actors[i], x, y, time));
+            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["MoveBy"](this._actors[i], xOffset, yOffset, speed));
         }
         return this;
     };
@@ -1183,17 +1178,17 @@ var ActionContext = /** @class */ (function () {
         return this;
     };
     /**
-     * This method will rotate an actor to the specified angle by a certain
-     * time (in milliseconds) and return back the actor. This method is part
+     * This method will rotate an actor by the specified angle offset, from it's current rotation given a certain speed
+     * in radians/sec and return back the actor. This method is part
      * of the actor 'Action' fluent API allowing action chaining.
-     * @param angleRadians  The angle to rotate to in radians
-     * @param time          The time it should take the actor to complete the rotation in milliseconds
-     * @param rotationType  The [[RotationType]] to use for this rotation
+     * @param angleRadiansOffset  The angle to rotate to in radians relative to the current rotation
+     * @param speed          The speed in radians/sec the actor should rotate at
+     * @param rotationType  The [[RotationType]] to use for this rotation, default is shortest path
      */
-    ActionContext.prototype.rotateBy = function (angleRadians, time, rotationType) {
+    ActionContext.prototype.rotateBy = function (angleRadiansOffset, speed, rotationType) {
         var len = this._queues.length;
         for (var i = 0; i < len; i++) {
-            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["RotateBy"](this._actors[i], angleRadians, time, rotationType));
+            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["RotateBy"](this._actors[i], angleRadiansOffset, speed, rotationType));
         }
         return this;
     };
@@ -1215,17 +1210,17 @@ var ActionContext = /** @class */ (function () {
         return this;
     };
     /**
-     * This method will scale an actor to the specified size by a certain time
-     * (in milliseconds) and return back the actor. This method is part of the
+     * This method will scale an actor by an amount relative to the current scale at a certin speed in scale units/sec
+     * and return back the actor. This method is part of the
      * actor 'Action' fluent API allowing action chaining.
-     * @param sizeX   The scaling factor to apply on X axis
-     * @param sizeY   The scaling factor to apply on Y axis
-     * @param time    The time it should take to complete the scaling in milliseconds
+     * @param sizeOffsetX   The scaling factor to apply on X axis
+     * @param sizeOffsetY   The scaling factor to apply on Y axis
+     * @param speed    The speed to scale at in scale units/sec
      */
-    ActionContext.prototype.scaleBy = function (sizeX, sizeY, time) {
+    ActionContext.prototype.scaleBy = function (sizeOffsetX, sizeOffsetY, speed) {
         var len = this._queues.length;
         for (var i = 0; i < len; i++) {
-            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["ScaleBy"](this._actors[i], sizeX, sizeY, time));
+            this._queues[i].add(new _Action__WEBPACK_IMPORTED_MODULE_0__["ScaleBy"](this._actors[i], sizeOffsetX, sizeOffsetY, speed));
         }
         return this;
     };
@@ -21636,7 +21631,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3154+faf704b";
+var EX_VERSION = "0.22.0-alpha.3190+27fdbcd";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

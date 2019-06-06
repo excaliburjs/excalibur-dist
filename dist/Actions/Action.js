@@ -109,28 +109,26 @@ var MoveTo = /** @class */ (function () {
 }());
 export { MoveTo };
 var MoveBy = /** @class */ (function () {
-    function MoveBy(actor, destx, desty, time) {
+    function MoveBy(actor, offsetX, offsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._end = new Vector(destx, desty);
-        if (time <= 0) {
-            Logger.getInstance().error('Attempted to moveBy time less than or equal to zero : ' + time);
-            throw new Error('Cannot move in time <= 0');
+        this._speed = speed;
+        this._offset = new Vector(offsetX, offsetY);
+        if (speed <= 0) {
+            Logger.getInstance().error('Attempted to moveBy with speed less than or equal to zero : ' + speed);
+            throw new Error('Speed must be greater than 0 pixels per second');
         }
-        this._time = time;
     }
     MoveBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
             this._start = new Vector(this._actor.pos.x, this._actor.pos.y);
-            this._distance = this._start.distance(this._end);
+            this._end = this._start.add(this._offset);
+            this._distance = this._offset.magnitude();
             this._dir = this._end.sub(this._start).normalize();
-            this._speed = this._distance / (this._time / 1000);
         }
-        var m = this._dir.scale(this._speed);
-        this._actor.vel.x = m.x;
-        this._actor.vel.y = m.y;
+        this._actor.vel = this._dir.scale(this._speed);
         if (this.isComplete(this._actor)) {
             this._actor.pos.x = this._end.x;
             this._actor.pos.y = this._end.y;
@@ -139,7 +137,7 @@ var MoveBy = /** @class */ (function () {
         }
     };
     MoveBy.prototype.isComplete = function (actor) {
-        return this._stopped || new Vector(actor.pos.x, actor.pos.y).distance(this._start) >= this._distance;
+        return this._stopped || actor.pos.distance(this._start) >= this._distance;
     };
     MoveBy.prototype.stop = function () {
         this._actor.vel.y = 0;
@@ -349,18 +347,19 @@ var RotateTo = /** @class */ (function () {
 }());
 export { RotateTo };
 var RotateBy = /** @class */ (function () {
-    function RotateBy(actor, angleRadians, time, rotationType) {
+    function RotateBy(actor, angleRadiansOffset, speed, rotationType) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._end = angleRadians;
-        this._time = time;
+        this._speed = speed;
+        this._offset = angleRadiansOffset;
         this._rotationType = rotationType || RotationType.ShortestPath;
     }
     RotateBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
             this._start = this._actor.rotation;
+            this._end = this._start + this._offset;
             var distance1 = Math.abs(this._end - this._start);
             var distance2 = Util.TwoPI - distance1;
             if (distance1 > distance2) {
@@ -410,7 +409,6 @@ var RotateBy = /** @class */ (function () {
                     }
                     break;
             }
-            this._speed = Math.abs((this._distance / this._time) * 1000);
         }
         this._actor.rx = this._direction * this._speed;
         if (this.isComplete()) {
@@ -488,37 +486,35 @@ var ScaleTo = /** @class */ (function () {
 }());
 export { ScaleTo };
 var ScaleBy = /** @class */ (function () {
-    function ScaleBy(actor, scaleX, scaleY, time) {
+    function ScaleBy(actor, scaleOffsetX, scaleOffsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
-        this._endX = scaleX;
-        this._endY = scaleY;
-        this._speedX = ((this._endX - this._actor.scale.x) / time) * 1000;
-        this._speedY = ((this._endY - this._actor.scale.y) / time) * 1000;
+        this._offset = new Vector(scaleOffsetX, scaleOffsetY);
+        this._speedX = this._speedY = speed;
     }
     ScaleBy.prototype.update = function (_delta) {
         if (!this._started) {
             this._started = true;
-            this._startX = this._actor.scale.x;
-            this._startY = this._actor.scale.y;
-            this._distanceX = Math.abs(this._endX - this._startX);
-            this._distanceY = Math.abs(this._endY - this._startY);
+            this._startScale = this._actor.scale.clone();
+            this._endScale = this._startScale.add(this._offset);
+            this._distanceX = Math.abs(this._endScale.x - this._startScale.x);
+            this._distanceY = Math.abs(this._endScale.y - this._startScale.y);
+            this._directionX = this._endScale.x < this._startScale.x ? -1 : 1;
+            this._directionY = this._endScale.y < this._startScale.y ? -1 : 1;
         }
-        var directionX = this._endX < this._startX ? -1 : 1;
-        var directionY = this._endY < this._startY ? -1 : 1;
-        this._actor.sx = this._speedX * directionX;
-        this._actor.sy = this._speedY * directionY;
+        this._actor.sx = this._speedX * this._directionX;
+        this._actor.sy = this._speedY * this._directionY;
         if (this.isComplete()) {
-            this._actor.scale.x = this._endX;
-            this._actor.scale.y = this._endY;
+            this._actor.scale = this._endScale;
             this._actor.sx = 0;
             this._actor.sy = 0;
         }
     };
     ScaleBy.prototype.isComplete = function () {
         return (this._stopped ||
-            (Math.abs(this._actor.scale.x - this._startX) >= this._distanceX && Math.abs(this._actor.scale.y - this._startY) >= this._distanceY));
+            (Math.abs(this._actor.scale.x - this._startScale.x) >= this._distanceX &&
+                Math.abs(this._actor.scale.y - this._startScale.y) >= this._distanceY));
     };
     ScaleBy.prototype.stop = function () {
         this._actor.sx = 0;

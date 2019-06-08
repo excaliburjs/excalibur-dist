@@ -42,4 +42,3 @@ export function Configurable(base) {
         return class_1;
     }(base));
 }
-//# sourceMappingURL=Configurable.js.map

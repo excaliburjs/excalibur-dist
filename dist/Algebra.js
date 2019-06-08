@@ -509,4 +509,3 @@ var GlobalCoordinates = /** @class */ (function () {
     return GlobalCoordinates;
 }());
 export { GlobalCoordinates };
-//# sourceMappingURL=Algebra.js.map

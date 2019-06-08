@@ -99,4 +99,3 @@ var CollisionGroup = /** @class */ (function () {
     return CollisionGroup;
 }());
 export { CollisionGroup };
-//# sourceMappingURL=CollisionGroup.js.map

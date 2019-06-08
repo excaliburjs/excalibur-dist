@@ -59,4 +59,3 @@ var UIActor = /** @class */ (function (_super) {
     return UIActor;
 }(Actor));
 export { UIActor };
-//# sourceMappingURL=UIActor.js.map

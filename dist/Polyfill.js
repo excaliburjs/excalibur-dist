@@ -126,4 +126,3 @@ export function polyfill() {
         };
     }
 }
-//# sourceMappingURL=Polyfill.js.map

@@ -171,4 +171,3 @@ var CollisionContact = /** @class */ (function () {
     return CollisionContact;
 }());
 export { CollisionContact };
-//# sourceMappingURL=CollisionContact.js.map

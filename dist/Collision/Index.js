@@ -13,4 +13,3 @@ export * from './Pair';
 export * from './ConvexPolygon';
 export * from './Side';
 export * from './Shape';
-//# sourceMappingURL=Index.js.map

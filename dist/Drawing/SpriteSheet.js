@@ -374,4 +374,3 @@ var SpriteFont = /** @class */ (function (_super) {
     return SpriteFont;
 }(Configurable(SpriteFontImpl)));
 export { SpriteFont };
-//# sourceMappingURL=SpriteSheet.js.map

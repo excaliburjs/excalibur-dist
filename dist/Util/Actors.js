@@ -7,4 +7,3 @@ export function isVanillaActor(actor) {
 export function isUIActor(actor) {
     return actor instanceof UIActor;
 }
-//# sourceMappingURL=Actors.js.map

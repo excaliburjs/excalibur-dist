@@ -199,4 +199,3 @@ var Fill = /** @class */ (function () {
     return Fill;
 }());
 export { Fill };
-//# sourceMappingURL=SpriteEffects.js.map

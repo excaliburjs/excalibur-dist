@@ -234,4 +234,3 @@ var Collider = /** @class */ (function () {
     return Collider;
 }());
 export { Collider };
-//# sourceMappingURL=Collider.js.map

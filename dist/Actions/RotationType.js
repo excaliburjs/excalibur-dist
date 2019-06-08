@@ -24,4 +24,3 @@ export var RotationType;
      */
     RotationType[RotationType["CounterClockwise"] = 3] = "CounterClockwise";
 })(RotationType || (RotationType = {}));
-//# sourceMappingURL=RotationType.js.map

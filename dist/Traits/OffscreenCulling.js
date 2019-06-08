@@ -30,4 +30,3 @@ var OffscreenCulling = /** @class */ (function () {
     return OffscreenCulling;
 }());
 export { OffscreenCulling };
-//# sourceMappingURL=OffscreenCulling.js.map

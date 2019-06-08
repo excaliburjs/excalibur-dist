@@ -9,4 +9,3 @@
 export * from './Gamepad';
 export * from './Pointer';
 export * from './Keyboard';
-//# sourceMappingURL=Index.js.map

@@ -116,4 +116,3 @@ export function circle(ctx, x, y, radius, stroke, fill) {
         ctx.stroke();
     }
 }
-//# sourceMappingURL=DrawUtil.js.map

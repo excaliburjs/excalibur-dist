@@ -388,4 +388,3 @@ var PolygonArea = /** @class */ (function (_super) {
     return PolygonArea;
 }(ConvexPolygon));
 export { PolygonArea };
-//# sourceMappingURL=ConvexPolygon.js.map

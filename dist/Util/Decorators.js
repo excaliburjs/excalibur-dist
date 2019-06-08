@@ -73,4 +73,3 @@ export function obsolete(options) {
         return method;
     };
 }
-//# sourceMappingURL=Decorators.js.map

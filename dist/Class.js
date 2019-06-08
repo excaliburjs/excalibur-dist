@@ -106,4 +106,3 @@ var Class = /** @class */ (function () {
     return Class;
 }());
 export { Class };
-//# sourceMappingURL=Class.js.map

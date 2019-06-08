@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.22.0-alpha.3195+4ca2e6d"` gets replaced by Webpack on build
+ * @description `"0.22.0-alpha.3198+9805f58"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.22.0-alpha.3195+4ca2e6d";
+export var EX_VERSION = "0.22.0-alpha.3198+9805f58";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entrypoint and exports everything
@@ -57,4 +57,3 @@ export * from './Util/SortedList';
 // ex.Deprecated
 import * as deprecated from './Deprecated';
 export { deprecated as Deprecated };
-//# sourceMappingURL=index.js.map

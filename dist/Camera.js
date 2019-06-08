@@ -584,4 +584,3 @@ var Camera = /** @class */ (function (_super) {
     return Camera;
 }(Class));
 export { Camera };
-//# sourceMappingURL=Camera.js.map

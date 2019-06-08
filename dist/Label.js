@@ -363,4 +363,3 @@ var Label = /** @class */ (function (_super) {
     return Label;
 }(Configurable(LabelImpl)));
 export { Label };
-//# sourceMappingURL=Label.js.map

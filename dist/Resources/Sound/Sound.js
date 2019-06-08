@@ -292,4 +292,3 @@ var Sound = /** @class */ (function (_super) {
     return Sound;
 }(Resource));
 export { Sound };
-//# sourceMappingURL=Sound.js.map

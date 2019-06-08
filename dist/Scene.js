@@ -635,4 +635,3 @@ var Scene = /** @class */ (function (_super) {
     return Scene;
 }(Class));
 export { Scene };
-//# sourceMappingURL=Scene.js.map

@@ -318,4 +318,3 @@ var Sprite = /** @class */ (function (_super) {
     return Sprite;
 }(Configurable(SpriteImpl)));
 export { Sprite };
-//# sourceMappingURL=Sprite.js.map

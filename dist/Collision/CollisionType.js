@@ -29,4 +29,3 @@ export var CollisionType;
      */
     CollisionType["Fixed"] = "Fixed";
 })(CollisionType || (CollisionType = {}));
-//# sourceMappingURL=CollisionType.js.map

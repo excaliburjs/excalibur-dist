@@ -16,4 +16,3 @@ var CapturePointer = /** @class */ (function () {
     return CapturePointer;
 }());
 export { CapturePointer };
-//# sourceMappingURL=CapturePointer.js.map

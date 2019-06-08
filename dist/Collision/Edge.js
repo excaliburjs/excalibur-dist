@@ -270,4 +270,3 @@ var EdgeArea = /** @class */ (function (_super) {
     return EdgeArea;
 }(Edge));
 export { EdgeArea };
-//# sourceMappingURL=Edge.js.map

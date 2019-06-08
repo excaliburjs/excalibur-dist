@@ -110,4 +110,3 @@ var Timer = /** @class */ (function () {
     return Timer;
 }());
 export { Timer };
-//# sourceMappingURL=Timer.js.map

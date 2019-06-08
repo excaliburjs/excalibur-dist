@@ -220,4 +220,3 @@ var ScreenAppender = /** @class */ (function () {
     return ScreenAppender;
 }());
 export { ScreenAppender };
-//# sourceMappingURL=Log.js.map

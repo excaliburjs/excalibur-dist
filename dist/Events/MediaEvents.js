@@ -95,4 +95,3 @@ var NativeSoundEvent = /** @class */ (function (_super) {
     return NativeSoundEvent;
 }(MediaEvent));
 export { NativeSoundEvent };
-//# sourceMappingURL=MediaEvents.js.map

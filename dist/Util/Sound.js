@@ -19,4 +19,3 @@ export function canPlayFile(file) {
         return false;
     }
 }
-//# sourceMappingURL=Sound.js.map

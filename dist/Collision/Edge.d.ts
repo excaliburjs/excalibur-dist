@@ -2,7 +2,7 @@ import { Body } from './Body';
 import { BoundingBox } from './BoundingBox';
 import { CollisionContact } from './CollisionContact';
 import { CollisionShape } from './CollisionShape';
-import { Vector, Ray, Projection } from '../Algebra';
+import { Vector, Ray, Projection, Line } from '../Algebra';
 import { Color } from '../Drawing/Color';
 import { Collider } from './Collider';
 export interface EdgeOptions {
@@ -62,6 +62,11 @@ export declare class Edge implements CollisionShape {
      */
     rayCast(ray: Ray, max?: number): Vector;
     /**
+     * Returns the closes line between this and another shape, from this -> shape
+     * @param shape
+     */
+    getClosestLineBetween(shape: CollisionShape): Line;
+    /**
      * @inheritdoc
      */
     collide(shape: CollisionShape): CollisionContact;
@@ -74,7 +79,15 @@ export declare class Edge implements CollisionShape {
      * Get the axis aligned bounding box for the edge shape in world space
      */
     readonly bounds: BoundingBox;
+    /**
+     * Get the axis aligned bounding box for the edge shape in local space
+     */
     readonly localBounds: BoundingBox;
+    /**
+     * Returns this edge represented as a line in world coordinates
+     */
+    asLine(): Line;
+    asLocalLine(): Line;
     /**
      * Get the axis associated with the edge
      */

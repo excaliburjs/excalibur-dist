@@ -4,6 +4,7 @@
 export interface ObsoleteOptions {
     message?: string;
     alternateMethod?: string;
+    showStackTrace?: boolean;
 }
 /**
  * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement

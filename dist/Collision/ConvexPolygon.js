@@ -18,6 +18,7 @@ import { Edge } from './Edge';
 import { CollisionJumpTable } from './CollisionJumpTable';
 import { Circle } from './Circle';
 import { Vector, Line, Ray, Projection } from '../Algebra';
+import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * Polygon collision shape for detecting collisions
  *
@@ -150,6 +151,20 @@ var ConvexPolygon = /** @class */ (function () {
             return false;
         }
         return true;
+    };
+    ConvexPolygon.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof Circle) {
+            return ClosestLineJumpTable.PolygonCircleClosestLine(this, shape);
+        }
+        else if (shape instanceof ConvexPolygon) {
+            return ClosestLineJumpTable.PolygonPolygonClosestLine(this, shape);
+        }
+        else if (shape instanceof Edge) {
+            return ClosestLineJumpTable.PolygonEdgeClosestLine(this, shape);
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
+        }
     };
     /**
      * Returns a collision contact if the 2 collision shapes collide, otherwise collide will

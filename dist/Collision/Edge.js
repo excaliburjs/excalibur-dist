@@ -15,9 +15,10 @@ import { BoundingBox } from './BoundingBox';
 import { CollisionJumpTable } from './CollisionJumpTable';
 import { Circle } from './Circle';
 import { ConvexPolygon } from './ConvexPolygon';
-import { Vector, Projection } from '../Algebra';
+import { Vector, Projection, Line } from '../Algebra';
 import { Physics } from '../Physics';
 import { Color } from '../Drawing/Color';
+import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * Edge is a single line collision shape to create collisions with a single line.
  *
@@ -135,6 +136,24 @@ var Edge = /** @class */ (function () {
         return null;
     };
     /**
+     * Returns the closes line between this and another shape, from this -> shape
+     * @param shape
+     */
+    Edge.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof Circle) {
+            return ClosestLineJumpTable.CircleEdgeClosestLine(shape, this);
+        }
+        else if (shape instanceof ConvexPolygon) {
+            return ClosestLineJumpTable.PolygonEdgeClosestLine(shape, this).flip();
+        }
+        else if (shape instanceof Edge) {
+            return ClosestLineJumpTable.EdgeEdgeClosestLine(this, shape);
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
+        }
+    };
+    /**
      * @inheritdoc
      */
     Edge.prototype.collide = function (shape) {
@@ -180,12 +199,24 @@ var Edge = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "localBounds", {
+        /**
+         * Get the axis aligned bounding box for the edge shape in local space
+         */
         get: function () {
             return this._boundsFromBeginEnd(this.begin, this.end);
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Returns this edge represented as a line in world coordinates
+     */
+    Edge.prototype.asLine = function () {
+        return new Line(this._getTransformedBegin(), this._getTransformedEnd());
+    };
+    Edge.prototype.asLocalLine = function () {
+        return new Line(this.begin, this.end);
+    };
     Object.defineProperty(Edge.prototype, "axes", {
         /**
          * Get the axis associated with the edge
@@ -249,10 +280,12 @@ var Edge = /** @class */ (function () {
     /* istanbul ignore next */
     Edge.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = Color.Red; }
+        var begin = this._getTransformedBegin();
+        var end = this._getTransformedEnd();
         ctx.strokeStyle = color.toString();
         ctx.beginPath();
-        ctx.moveTo(this.begin.x, this.begin.y);
-        ctx.lineTo(this.end.x, this.end.y);
+        ctx.moveTo(begin.x, begin.y);
+        ctx.lineTo(end.x, end.y);
         ctx.closePath();
         ctx.stroke();
     };

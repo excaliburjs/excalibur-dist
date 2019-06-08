@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3198+9805f58 - 2019-6-8
+ * excalibur - 0.22.0-alpha.3204+85b28b8 - 2019-6-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -2584,12 +2584,12 @@ var ActorImpl = /** @class */ (function (_super) {
         this._collisionHandlers[group] = [];
     };
     /**
-     * Returns true if the two actors are less than or equal to the distance specified from each other
+     * Returns true if the two actor.body.collider.shape's surfaces are less than or equal to the distance specified from each other
      * @param actor     Actor to test
      * @param distance  Distance in pixels to test
      */
     ActorImpl.prototype.within = function (actor, distance) {
-        return Math.sqrt(Math.pow(this.pos.x - actor.pos.x, 2) + Math.pow(this.pos.y - actor.pos.y, 2)) <= distance;
+        return this.body.collider.shape.getClosestLineBetween(actor.body.collider.shape).getLength() <= distance;
     };
     // #endregion
     ActorImpl.prototype._getCalculatedAnchor = function () {
@@ -3320,13 +3320,21 @@ var Line = /** @class */ (function () {
         return this.end.sub(this.begin).normal();
     };
     /**
-     * Returns the slope of the line in the form of a vector
+     * Returns the slope of the line in the form of a vector of length 1
      */
     Line.prototype.getSlope = function () {
         var begin = this.begin;
         var end = this.end;
         var distance = begin.distance(end);
         return end.sub(begin).scale(1 / distance);
+    };
+    /**
+     * Returns the edge of the line as vector, the length of the vector is the length of the edge
+     */
+    Line.prototype.getEdge = function () {
+        var begin = this.begin;
+        var end = this.end;
+        return end.sub(begin);
     };
     /**
      * Returns the length of the line segment in pixels
@@ -3336,6 +3344,22 @@ var Line = /** @class */ (function () {
         var end = this.end;
         var distance = begin.distance(end);
         return distance;
+    };
+    Object.defineProperty(Line.prototype, "midpoint", {
+        /**
+         * Returns the midpoint of the edge
+         */
+        get: function () {
+            return this.begin.add(this.end).scale(0.5);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Flips the direction of the line segment
+     */
+    Line.prototype.flip = function () {
+        return new Line(this.end, this.begin);
     };
     /**
      * Find the perpendicular distance from the line to a point
@@ -3350,6 +3374,20 @@ var Line = /** @class */ (function () {
         var dx = this.end.x - this.begin.x;
         var distance = Math.abs(dy * x0 - dx * y0 + this.end.x * this.begin.y - this.end.y * this.begin.x) / l;
         return distance;
+    };
+    /**
+     * Find the perpendicular line from the line to a point
+     * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+     * (a - p) - ((a - p) * n)n
+     * a is a point on the line
+     * p is the arbitrary point above the line
+     * n is a unit vector in direction of the line
+     * @param point
+     */
+    Line.prototype.findVectorToPoint = function (point) {
+        var aMinusP = this.begin.sub(point);
+        var n = this.getSlope();
+        return aMinusP.sub(n.scale(aMinusP.dot(n)));
     };
     /**
      * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
@@ -4995,6 +5033,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5008,6 +5047,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -5112,12 +5152,33 @@ var Circle = /** @class */ (function () {
             else {
                 var toi1 = -dir.dot(orig.sub(c)) + discriminant;
                 var toi2 = -dir.dot(orig.sub(c)) - discriminant;
-                var mintoi = Math.min(toi1, toi2);
+                var positiveToi = [];
+                if (toi1 >= 0) {
+                    positiveToi.push(toi1);
+                }
+                if (toi2 >= 0) {
+                    positiveToi.push(toi2);
+                }
+                var mintoi = Math.min.apply(Math, positiveToi);
                 if (mintoi <= max) {
                     return ray.getPoint(mintoi);
                 }
                 return null;
             }
+        }
+    };
+    Circle.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof Circle) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].CircleCircleClosestLine(this, shape);
+        }
+        else if (shape instanceof _ConvexPolygon__WEBPACK_IMPORTED_MODULE_2__["ConvexPolygon"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].PolygonCircleClosestLine(shape, this).flip();
+        }
+        else if (shape instanceof _Edge__WEBPACK_IMPORTED_MODULE_3__["Edge"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].CircleEdgeClosestLine(this, shape).flip();
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
         }
     };
     /**
@@ -5282,6 +5343,230 @@ var CircleArea = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./Collision/ClosestLineJumpTable.ts":
+/*!*******************************************!*\
+  !*** ./Collision/ClosestLineJumpTable.ts ***!
+  \*******************************************/
+/*! exports provided: ClosestLine, ClosestLineJumpTable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return ClosestLine; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return ClosestLineJumpTable; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+
+/**
+ * Finds the closes line between 2 line segments, were the magnitude of u, v are the lengths of each segment
+ * L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+ * L2 = Q(t) = q0 + t * v, where t is time and q0 is the start of the line
+ * @param p0 Point where L1 begins
+ * @param u Direction and length of L1
+ * @param q0 Point were L2 begins
+ * @param v Direction and lenght of L2
+ */
+function ClosestLine(p0, u, q0, v) {
+    // Distance between 2 lines http://geomalgorithms.com/a07-_distance.html
+    // w(s, t) = P(s) - Q(t)
+    // The w(s, t) that has the minimum distance we will say is w(sClosest, tClosest) = wClosest
+    //
+    // wClosest is the vector that is uniquely perpendicular to the 2 line directions u & v.
+    // wClosest = w0 + sClosest * u - tClosest * v, where w0 is p0 - q0
+    //
+    // The closest point between 2 lines then satisfies this pair of equations
+    // 1: u * wClosest = 0
+    // 2: v * wClosest = 0
+    //
+    // Substituting wClosest into the equations we get
+    //
+    // 1: (u * u) * sClosest - (u * v) tClosest = -u * w0
+    // 2: (v * u) * sClosest - (v * v) tClosest = -v * w0
+    // simplify w0
+    var w0 = p0.sub(q0);
+    // simplify (u * u);
+    var a = u.dot(u);
+    // simplify (u * v);
+    var b = u.dot(v);
+    // simplify (v * v)
+    var c = v.dot(v);
+    // simplify (u * w0)
+    var d = u.dot(w0);
+    // simplify (v * w0)
+    var e = v.dot(w0);
+    // denominator ac - b^2
+    var denom = a * c - b * b;
+    var sDenom = denom;
+    var tDenom = denom;
+    // if denom is 0 they are parallel, use any point from either as the start in this case p0
+    if (denom === 0 || denom <= 0.01) {
+        var tClosestParallel = d / b;
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Line"](p0, q0.add(v.scale(tClosestParallel)));
+    }
+    // Solve for sClosest for infinite line
+    var sClosest = b * e - c * d; // / denom;
+    // Solve for tClosest for infinite line
+    var tClosest = a * e - b * d; // / denom;
+    // Solve for segments candidate edges, if sClosest and tClosest are outside their segments
+    if (sClosest < 0) {
+        sClosest = 0;
+        tClosest = e;
+        tDenom = c;
+    }
+    else if (sClosest > sDenom) {
+        sClosest = sDenom;
+        tClosest = e + b;
+        tDenom = c;
+    }
+    if (tClosest < 0) {
+        tClosest = 0;
+        if (-d < 0) {
+            sClosest = 0;
+        }
+        else if (-d > a) {
+            sClosest = sDenom;
+        }
+        else {
+            sClosest = -d;
+            sDenom = a;
+        }
+    }
+    else if (tClosest > tDenom) {
+        tClosest = tDenom;
+        if (-d + b < 0) {
+            sClosest = 0;
+        }
+        else if (-d + b > a) {
+            sClosest = sDenom;
+        }
+        else {
+            sClosest = -d + b;
+            sDenom = a;
+        }
+    }
+    sClosest = Math.abs(sClosest) < 0.001 ? 0 : sClosest / sDenom;
+    tClosest = Math.abs(tClosest) < 0.001 ? 0 : tClosest / tDenom;
+    return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Line"](p0.add(u.scale(sClosest)), q0.add(v.scale(tClosest)));
+}
+var ClosestLineJumpTable = {
+    PolygonPolygonClosestLine: function (polygonA, polygonB) {
+        // Find the 2 closest faces on each polygon
+        var otherWorldPos = polygonB.worldPos;
+        var otherDirection = otherWorldPos.sub(polygonA.worldPos);
+        var thisDirection = otherDirection.negate();
+        var rayTowardsOther = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](polygonA.worldPos, otherDirection);
+        var rayTowardsThis = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](otherWorldPos, thisDirection);
+        var thisPoint = polygonA.rayCast(rayTowardsOther).add(rayTowardsOther.dir.scale(0.1));
+        var otherPoint = polygonB.rayCast(rayTowardsThis).add(rayTowardsThis.dir.scale(0.1));
+        var thisFace = polygonA.getClosestFace(thisPoint);
+        var otherFace = polygonB.getClosestFace(otherPoint);
+        // L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+        var p0 = thisFace.face.begin;
+        var u = thisFace.face.getEdge();
+        // L2 = Q(t) = q0 + t * v, where t is time and q0 is the start of the line
+        var q0 = otherFace.face.begin;
+        var v = otherFace.face.getEdge();
+        return ClosestLine(p0, u, q0, v);
+    },
+    PolygonEdgeClosestLine: function (polygon, edge) {
+        // Find the 2 closest faces on each polygon
+        var otherWorldPos = edge.worldPos;
+        var otherDirection = otherWorldPos.sub(polygon.worldPos);
+        var rayTowardsOther = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](polygon.worldPos, otherDirection);
+        var thisPoint = polygon.rayCast(rayTowardsOther).add(rayTowardsOther.dir.scale(0.1));
+        var thisFace = polygon.getClosestFace(thisPoint);
+        // L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+        var p0 = thisFace.face.begin;
+        var u = thisFace.face.getEdge();
+        // L2 = Q(t) = q0 + t * v, where t is time and q0 is the start of the line
+        var edgeLine = edge.asLine();
+        var edgeStart = edgeLine.begin;
+        var edgeVector = edgeLine.getEdge();
+        var q0 = edgeStart;
+        var v = edgeVector;
+        return ClosestLine(p0, u, q0, v);
+    },
+    PolygonCircleClosestLine: function (polygon, circle) {
+        // https://math.stackexchange.com/questions/1919177/how-to-find-point-on-line-closest-to-sphere
+        // Find the 2 closest faces on each polygon
+        var otherWorldPos = circle.worldPos;
+        var otherDirection = otherWorldPos.sub(polygon.worldPos);
+        var rayTowardsOther = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](polygon.worldPos, otherDirection.normalize());
+        var thisPoint = polygon.rayCast(rayTowardsOther).add(rayTowardsOther.dir.scale(0.1));
+        var thisFace = polygon.getClosestFace(thisPoint);
+        // L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+        var p0 = thisFace.face.begin;
+        var u = thisFace.face.getEdge();
+        // Time of minimum distance
+        var t = (u.x * (otherWorldPos.x - p0.x) + u.y * (otherWorldPos.y - p0.y)) / (u.x * u.x + u.y * u.y);
+        // If time of minimum is past the edge clamp
+        if (t > 1) {
+            t = 1;
+        }
+        else if (t < 0) {
+            t = 0;
+        }
+        // Minimum distance
+        var d = Math.sqrt(Math.pow(p0.x + u.x * t - otherWorldPos.x, 2) + Math.pow(p0.y + u.y * t - otherWorldPos.y, 2)) - circle.radius;
+        var circlex = ((p0.x + u.x * t - otherWorldPos.x) * circle.radius) / (circle.radius + d);
+        var circley = ((p0.y + u.y * t - otherWorldPos.y) * circle.radius) / (circle.radius + d);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Line"](u.scale(t).add(p0), new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](otherWorldPos.x + circlex, otherWorldPos.y + circley));
+    },
+    CircleCircleClosestLine: function (circleA, circleB) {
+        // Find the 2 closest faces on each polygon
+        var otherWorldPos = circleB.worldPos;
+        var otherDirection = otherWorldPos.sub(circleA.worldPos);
+        var thisWorldPos = circleA.worldPos;
+        var thisDirection = thisWorldPos.sub(circleB.worldPos);
+        var rayTowardsOther = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](circleA.worldPos, otherDirection);
+        var rayTowardsThis = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Ray"](circleB.worldPos, thisDirection);
+        var thisPoint = circleA.rayCast(rayTowardsOther);
+        var otherPoint = circleB.rayCast(rayTowardsThis);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Line"](thisPoint, otherPoint);
+    },
+    CircleEdgeClosestLine: function (circle, edge) {
+        // https://math.stackexchange.com/questions/1919177/how-to-find-point-on-line-closest-to-sphere
+        var circleWorlPos = circle.worldPos;
+        // L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+        var edgeLine = edge.asLine();
+        var edgeStart = edgeLine.begin;
+        var edgeVector = edgeLine.getEdge();
+        var p0 = edgeStart;
+        var u = edgeVector;
+        // Time of minimum distance
+        var t = (u.x * (circleWorlPos.x - p0.x) + u.y * (circleWorlPos.y - p0.y)) / (u.x * u.x + u.y * u.y);
+        // If time of minimum is past the edge clamp to edge
+        if (t > 1) {
+            t = 1;
+        }
+        else if (t < 0) {
+            t = 0;
+        }
+        // Minimum distance
+        var d = Math.sqrt(Math.pow(p0.x + u.x * t - circleWorlPos.x, 2) + Math.pow(p0.y + u.y * t - circleWorlPos.y, 2)) - circle.radius;
+        var circlex = ((p0.x + u.x * t - circleWorlPos.x) * circle.radius) / (circle.radius + d);
+        var circley = ((p0.y + u.y * t - circleWorlPos.y) * circle.radius) / (circle.radius + d);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Line"](u.scale(t).add(p0), new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](circleWorlPos.x + circlex, circleWorlPos.y + circley));
+    },
+    EdgeEdgeClosestLine: function (edgeA, edgeB) {
+        // L1 = P(s) = p0 + s * u, where s is time and p0 is the start of the line
+        var edgeLineA = edgeA.asLine();
+        var edgeStartA = edgeLineA.begin;
+        var edgeVectorA = edgeLineA.getEdge();
+        var p0 = edgeStartA;
+        var u = edgeVectorA;
+        // L2 = Q(t) = q0 + t * v, where t is time and q0 is the start of the line
+        var edgeLineB = edgeB.asLine();
+        var edgeStartB = edgeLineB.begin;
+        var edgeVectorB = edgeLineB.getEdge();
+        var q0 = edgeStartB;
+        var v = edgeVectorB;
+        return ClosestLine(p0, u, q0, v);
+    }
+};
+
+
+/***/ }),
+
 /***/ "./Collision/Collider.ts":
 /*!*******************************!*\
   !*** ./Collision/Collider.ts ***!
@@ -5436,6 +5721,15 @@ var Collider = /** @class */ (function () {
      */
     Collider.prototype.collide = function (other) {
         return this.shape.collide(other.shape);
+    };
+    /**
+     * Find the closest line between 2 colliders
+     *
+     * Line is in the direction of the other collider. Away from this collider, this -> other.
+     * @param other Other collider
+     */
+    Collider.prototype.getClosestLineBetween = function (other) {
+        return this.shape.getClosestLineBetween(other.shape);
     };
     Object.defineProperty(Collider.prototype, "offset", {
         /**
@@ -6158,6 +6452,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
 /* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6171,6 +6466,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -6310,6 +6606,20 @@ var ConvexPolygon = /** @class */ (function () {
             return false;
         }
         return true;
+    };
+    ConvexPolygon.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof _Circle__WEBPACK_IMPORTED_MODULE_5__["Circle"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].PolygonCircleClosestLine(this, shape);
+        }
+        else if (shape instanceof ConvexPolygon) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].PolygonPolygonClosestLine(this, shape);
+        }
+        else if (shape instanceof _Edge__WEBPACK_IMPORTED_MODULE_3__["Edge"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].PolygonEdgeClosestLine(this, shape);
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
+        }
     };
     /**
      * Returns a collision contact if the 2 collision shapes collide, otherwise collide will
@@ -7281,6 +7591,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -7294,6 +7605,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -7418,6 +7730,24 @@ var Edge = /** @class */ (function () {
         return null;
     };
     /**
+     * Returns the closes line between this and another shape, from this -> shape
+     * @param shape
+     */
+    Edge.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof _Circle__WEBPACK_IMPORTED_MODULE_2__["Circle"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].CircleEdgeClosestLine(shape, this);
+        }
+        else if (shape instanceof _ConvexPolygon__WEBPACK_IMPORTED_MODULE_3__["ConvexPolygon"]) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].PolygonEdgeClosestLine(shape, this).flip();
+        }
+        else if (shape instanceof Edge) {
+            return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__["ClosestLineJumpTable"].EdgeEdgeClosestLine(this, shape);
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
+        }
+    };
+    /**
      * @inheritdoc
      */
     Edge.prototype.collide = function (shape) {
@@ -7463,12 +7793,24 @@ var Edge = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "localBounds", {
+        /**
+         * Get the axis aligned bounding box for the edge shape in local space
+         */
         get: function () {
             return this._boundsFromBeginEnd(this.begin, this.end);
         },
         enumerable: true,
         configurable: true
     });
+    /**
+     * Returns this edge represented as a line in world coordinates
+     */
+    Edge.prototype.asLine = function () {
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_4__["Line"](this._getTransformedBegin(), this._getTransformedEnd());
+    };
+    Edge.prototype.asLocalLine = function () {
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_4__["Line"](this.begin, this.end);
+    };
     Object.defineProperty(Edge.prototype, "axes", {
         /**
          * Get the axis associated with the edge
@@ -7532,10 +7874,12 @@ var Edge = /** @class */ (function () {
     /* istanbul ignore next */
     Edge.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Red; }
+        var begin = this._getTransformedBegin();
+        var end = this._getTransformedEnd();
         ctx.strokeStyle = color.toString();
         ctx.beginPath();
-        ctx.moveTo(this.begin.x, this.begin.y);
-        ctx.lineTo(this.end.x, this.end.y);
+        ctx.moveTo(begin.x, begin.y);
+        ctx.lineTo(end.x, end.y);
         ctx.closePath();
         ctx.stroke();
     };
@@ -7561,7 +7905,7 @@ var EdgeArea = /** @class */ (function (_super) {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
+/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7588,38 +7932,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__["CollisionJumpTable"]; });
 
-/* harmony import */ var _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CollisionGroup */ "./Collision/CollisionGroup.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__["CollisionGroup"]; });
+/* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_6__["ClosestLine"]; });
 
-/* harmony import */ var _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CollisionGroupManager */ "./Collision/CollisionGroupManager.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_7__["CollisionGroupManager"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_6__["ClosestLineJumpTable"]; });
 
-/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_8__["TreeNode"]; });
+/* harmony import */ var _CollisionGroup__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CollisionGroup */ "./Collision/CollisionGroup.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _CollisionGroup__WEBPACK_IMPORTED_MODULE_7__["CollisionGroup"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_8__["DynamicTree"]; });
+/* harmony import */ var _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./CollisionGroupManager */ "./Collision/CollisionGroupManager.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_8__["CollisionGroupManager"]; });
 
-/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_9__["DynamicTreeCollisionBroadphase"]; });
+/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_9__["TreeNode"]; });
 
-/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_10__["Edge"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_9__["DynamicTree"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_10__["EdgeArea"]; });
+/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_10__["DynamicTreeCollisionBroadphase"]; });
 
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_11__["Pair"]; });
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["Edge"]; });
 
-/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__["ConvexPolygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["EdgeArea"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__["PolygonArea"]; });
+/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_12__["Pair"]; });
 
-/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_13__["Side"]; });
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__["ConvexPolygon"]; });
 
-/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_14__["Shape"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__["PolygonArea"]; });
+
+/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_14__["Side"]; });
+
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_15__["Shape"]; });
+
 
 
 
@@ -20023,7 +20373,11 @@ var __assign = (undefined && undefined.__assign) || function () {
  * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
  */
 function obsolete(options) {
-    options = _Util__WEBPACK_IMPORTED_MODULE_1__["extend"]({}, { message: 'This feature will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+    options = _Util__WEBPACK_IMPORTED_MODULE_1__["extend"]({}, {
+        message: 'This feature will be removed in future versions of Excalibur.',
+        alternateMethod: null,
+        showStackTrack: false
+    }, options);
     return function (target, property, descriptor) {
         if (descriptor &&
             !(typeof descriptor.value === 'function' || typeof descriptor.get === 'function' || typeof descriptor.set === 'function')) {
@@ -20039,7 +20393,7 @@ function obsolete(options) {
                 var args = Array.prototype.slice.call(arguments);
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }
@@ -20052,7 +20406,7 @@ function obsolete(options) {
             method.value = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }
@@ -20064,7 +20418,7 @@ function obsolete(options) {
             method.get = function () {
                 _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }
@@ -21588,7 +21942,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21807,6 +22161,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionJumpTable"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLine"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLineJumpTable"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroup"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroupManager"]; });
@@ -21926,7 +22284,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3198+9805f58";
+var EX_VERSION = "0.22.0-alpha.3204+85b28b8";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

@@ -16,7 +16,11 @@ import * as Util from './Util';
  * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
  */
 export function obsolete(options) {
-    options = Util.extend({}, { message: 'This feature will be removed in future versions of Excalibur.', alternateMethod: null }, options);
+    options = Util.extend({}, {
+        message: 'This feature will be removed in future versions of Excalibur.',
+        alternateMethod: null,
+        showStackTrack: false
+    }, options);
     return function (target, property, descriptor) {
         if (descriptor &&
             !(typeof descriptor.value === 'function' || typeof descriptor.get === 'function' || typeof descriptor.set === 'function')) {
@@ -32,7 +36,7 @@ export function obsolete(options) {
                 var args = Array.prototype.slice.call(arguments);
                 Logger.getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }
@@ -45,7 +49,7 @@ export function obsolete(options) {
             method.value = function () {
                 Logger.getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }
@@ -57,7 +61,7 @@ export function obsolete(options) {
             method.get = function () {
                 Logger.getInstance().warn(message);
                 // tslint:disable-next-line: no-console
-                if (console.trace) {
+                if (console.trace && options.showStackTrace) {
                     // tslint:disable-next-line: no-console
                     console.trace();
                 }

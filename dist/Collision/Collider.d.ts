@@ -3,7 +3,7 @@ import { GameEvent } from '../Events';
 import { Actor } from '../Actor';
 import { Body } from './Body';
 import { CollisionShape } from './CollisionShape';
-import { Vector } from '../Algebra';
+import { Vector, Line } from '../Algebra';
 import { BoundingBox } from './BoundingBox';
 import { CollisionType } from './CollisionType';
 import { CollisionGroup } from './CollisionGroup';
@@ -93,6 +93,13 @@ export declare class Collider implements Eventable, Clonable<Collider> {
      * @param other
      */
     collide(other: Collider): CollisionContact | null;
+    /**
+     * Find the closest line between 2 colliders
+     *
+     * Line is in the direction of the other collider. Away from this collider, this -> other.
+     * @param other Other collider
+     */
+    getClosestLineBetween(other: Collider): Line;
     /**
      * Gets the current pixel offset of the collider
      */

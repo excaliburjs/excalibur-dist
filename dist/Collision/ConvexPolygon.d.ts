@@ -74,6 +74,7 @@ export declare class ConvexPolygon implements CollisionShape {
      * Tests if a point is contained in this collision shape in world space
      */
     contains(point: Vector): boolean;
+    getClosestLineBetween(shape: CollisionShape): Line;
     /**
      * Returns a collision contact if the 2 collision shapes collide, otherwise collide will
      * return null.

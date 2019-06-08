@@ -361,13 +361,21 @@ var Line = /** @class */ (function () {
         return this.end.sub(this.begin).normal();
     };
     /**
-     * Returns the slope of the line in the form of a vector
+     * Returns the slope of the line in the form of a vector of length 1
      */
     Line.prototype.getSlope = function () {
         var begin = this.begin;
         var end = this.end;
         var distance = begin.distance(end);
         return end.sub(begin).scale(1 / distance);
+    };
+    /**
+     * Returns the edge of the line as vector, the length of the vector is the length of the edge
+     */
+    Line.prototype.getEdge = function () {
+        var begin = this.begin;
+        var end = this.end;
+        return end.sub(begin);
     };
     /**
      * Returns the length of the line segment in pixels
@@ -377,6 +385,22 @@ var Line = /** @class */ (function () {
         var end = this.end;
         var distance = begin.distance(end);
         return distance;
+    };
+    Object.defineProperty(Line.prototype, "midpoint", {
+        /**
+         * Returns the midpoint of the edge
+         */
+        get: function () {
+            return this.begin.add(this.end).scale(0.5);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Flips the direction of the line segment
+     */
+    Line.prototype.flip = function () {
+        return new Line(this.end, this.begin);
     };
     /**
      * Find the perpendicular distance from the line to a point
@@ -391,6 +415,20 @@ var Line = /** @class */ (function () {
         var dx = this.end.x - this.begin.x;
         var distance = Math.abs(dy * x0 - dx * y0 + this.end.x * this.begin.y - this.end.y * this.begin.x) / l;
         return distance;
+    };
+    /**
+     * Find the perpendicular line from the line to a point
+     * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+     * (a - p) - ((a - p) * n)n
+     * a is a point on the line
+     * p is the arbitrary point above the line
+     * n is a unit vector in direction of the line
+     * @param point
+     */
+    Line.prototype.findVectorToPoint = function (point) {
+        var aMinusP = this.begin.sub(point);
+        var n = this.getSlope();
+        return aMinusP.sub(n.scale(aMinusP.dot(n)));
     };
     /**
      * Finds a point on the line given only an X or a Y value. Given an X value, the function returns

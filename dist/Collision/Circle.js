@@ -18,6 +18,7 @@ import { Edge } from './Edge';
 import { Vector, Projection } from '../Algebra';
 import { Physics } from '../Physics';
 import { Color } from '../Drawing/Color';
+import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * This is a circle collision shape for the excalibur rigid body physics simulation
  *
@@ -115,12 +116,33 @@ var Circle = /** @class */ (function () {
             else {
                 var toi1 = -dir.dot(orig.sub(c)) + discriminant;
                 var toi2 = -dir.dot(orig.sub(c)) - discriminant;
-                var mintoi = Math.min(toi1, toi2);
+                var positiveToi = [];
+                if (toi1 >= 0) {
+                    positiveToi.push(toi1);
+                }
+                if (toi2 >= 0) {
+                    positiveToi.push(toi2);
+                }
+                var mintoi = Math.min.apply(Math, positiveToi);
                 if (mintoi <= max) {
                     return ray.getPoint(mintoi);
                 }
                 return null;
             }
+        }
+    };
+    Circle.prototype.getClosestLineBetween = function (shape) {
+        if (shape instanceof Circle) {
+            return ClosestLineJumpTable.CircleCircleClosestLine(this, shape);
+        }
+        else if (shape instanceof ConvexPolygon) {
+            return ClosestLineJumpTable.PolygonCircleClosestLine(shape, this).flip();
+        }
+        else if (shape instanceof Edge) {
+            return ClosestLineJumpTable.CircleEdgeClosestLine(this, shape).flip();
+        }
+        else {
+            throw new Error("Polygon could not collide with unknown CollisionShape " + typeof shape);
         }
     };
     /**

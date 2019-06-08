@@ -2,7 +2,7 @@ import { BoundingBox } from './BoundingBox';
 import { CollisionContact } from './CollisionContact';
 import { CollisionShape } from './CollisionShape';
 import { ConvexPolygon } from './ConvexPolygon';
-import { Vector, Ray, Projection } from '../Algebra';
+import { Vector, Ray, Projection, Line } from '../Algebra';
 import { Color } from '../Drawing/Color';
 import { Collider } from './Collider';
 import { Body } from './Body';
@@ -64,6 +64,7 @@ export declare class Circle implements CollisionShape {
      * @param ray
      */
     rayCast(ray: Ray, max?: number): Vector;
+    getClosestLineBetween(shape: CollisionShape): Line;
     /**
      * @inheritdoc
      */

@@ -133,6 +133,15 @@ var Collider = /** @class */ (function () {
     Collider.prototype.collide = function (other) {
         return this.shape.collide(other.shape);
     };
+    /**
+     * Find the closest line between 2 colliders
+     *
+     * Line is in the direction of the other collider. Away from this collider, this -> other.
+     * @param other Other collider
+     */
+    Collider.prototype.getClosestLineBetween = function (other) {
+        return this.shape.getClosestLineBetween(other.shape);
+    };
     Object.defineProperty(Collider.prototype, "offset", {
         /**
          * Gets the current pixel offset of the collider

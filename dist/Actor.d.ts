@@ -769,7 +769,7 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     removeCollidesWith(group: string): void;
     /**
-     * Returns true if the two actors are less than or equal to the distance specified from each other
+     * Returns true if the two actor.body.collider.shape's surfaces are less than or equal to the distance specified from each other
      * @param actor     Actor to test
      * @param distance  Distance in pixels to test
      */

@@ -201,19 +201,41 @@ export declare class Line {
      */
     normal(): Vector;
     /**
-     * Returns the slope of the line in the form of a vector
+     * Returns the slope of the line in the form of a vector of length 1
      */
     getSlope(): Vector;
+    /**
+     * Returns the edge of the line as vector, the length of the vector is the length of the edge
+     */
+    getEdge(): Vector;
     /**
      * Returns the length of the line segment in pixels
      */
     getLength(): number;
+    /**
+     * Returns the midpoint of the edge
+     */
+    readonly midpoint: Vector;
+    /**
+     * Flips the direction of the line segment
+     */
+    flip(): Line;
     /**
      * Find the perpendicular distance from the line to a point
      * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
      * @param point
      */
     distanceToPoint(point: Vector): number;
+    /**
+     * Find the perpendicular line from the line to a point
+     * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+     * (a - p) - ((a - p) * n)n
+     * a is a point on the line
+     * p is the arbitrary point above the line
+     * n is a unit vector in direction of the line
+     * @param point
+     */
+    findVectorToPoint(point: Vector): Vector;
     /**
      * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
      * a new point with the calculated Y value and vice-versa.

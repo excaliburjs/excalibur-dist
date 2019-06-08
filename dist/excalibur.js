@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3204+85b28b8 - 2019-6-8
+ * excalibur - 0.22.0-alpha.3211+08e964f - 2019-6-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -10514,6 +10514,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -10530,6 +10531,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_1__["polyfill"])();
+
 
 
 
@@ -10672,6 +10674,8 @@ var Engine = /** @class */ (function (_super) {
         _this._isLoading = false;
         _this._isInitialized = false;
         options = _Util_Util__WEBPACK_IMPORTED_MODULE_17__["extend"]({}, Engine._DefaultEngineOptions, options);
+        // Initialize browser events facade
+        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_19__["BrowserEvents"](window, document);
         // Check compatibility
         var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_9__["Detector"]();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
@@ -11140,7 +11144,7 @@ O|===|* >________________>\n\
         if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
             var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
             this._setHeightByDisplayMode(parent_1);
-            window.addEventListener('resize', function () {
+            this.browser.window.on('resize', function () {
                 _this._logger.debug('View port resized');
                 _this._setHeightByDisplayMode(parent_1);
                 _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
@@ -11176,7 +11180,7 @@ O|===|* >________________>\n\
             hidden = 'webkitHidden';
             visibilityChange = 'webkitvisibilitychange';
         }
-        document.addEventListener(visibilityChange, function () {
+        this.browser.document.on(visibilityChange, function () {
             if (document[hidden]) {
                 _this.eventDispatcher.emit('hidden', new _Events__WEBPACK_IMPORTED_MODULE_10__["HiddenEvent"](_this));
                 _this._logger.debug('Window hidden');
@@ -11457,6 +11461,7 @@ O|===|* >________________>\n\
         if (!this._hasStarted) {
             this._hasStarted = true;
             this._logger.debug('Starting game...');
+            this.browser.resume();
             Engine.createMainLoop(this, window.requestAnimationFrame, Date.now)();
             this._logger.debug('Game started');
         }
@@ -11515,6 +11520,7 @@ O|===|* >________________>\n\
     Engine.prototype.stop = function () {
         if (this._hasStarted) {
             this.emit('stop', new _Events__WEBPACK_IMPORTED_MODULE_10__["GameStopEvent"](this));
+            this.browser.pause();
             this._hasStarted = false;
             this._logger.debug('Game stopped');
         }
@@ -20220,6 +20226,99 @@ function isUIActor(actor) {
 
 /***/ }),
 
+/***/ "./Util/Browser.ts":
+/*!*************************!*\
+  !*** ./Util/Browser.ts ***!
+  \*************************/
+/*! exports provided: BrowserComponent, BrowserEvents */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return BrowserComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return BrowserEvents; });
+var BrowserComponent = /** @class */ (function () {
+    function BrowserComponent(nativeComponet) {
+        this.nativeComponet = nativeComponet;
+        this._paused = false;
+        this._nativeHandlers = {};
+    }
+    BrowserComponent.prototype.on = function (eventName, handler) {
+        if (this._nativeHandlers[eventName]) {
+            this.off(eventName, this._nativeHandlers[eventName]);
+        }
+        this._nativeHandlers[eventName] = this._decorate(handler);
+        this.nativeComponet.addEventListener(eventName, this._nativeHandlers[eventName]);
+    };
+    BrowserComponent.prototype.off = function (eventName, handler) {
+        if (!handler) {
+            handler = this._nativeHandlers[eventName];
+        }
+        this.nativeComponet.removeEventListener(eventName, handler);
+        this._nativeHandlers[eventName] = null;
+    };
+    BrowserComponent.prototype._decorate = function (handler) {
+        var _this = this;
+        return function (evt) {
+            if (!_this._paused) {
+                handler(evt);
+            }
+        };
+    };
+    BrowserComponent.prototype.pause = function () {
+        this._paused = true;
+    };
+    BrowserComponent.prototype.resume = function () {
+        this._paused = false;
+    };
+    BrowserComponent.prototype.clear = function () {
+        for (var event_1 in this._nativeHandlers) {
+            this.off(event_1);
+        }
+    };
+    return BrowserComponent;
+}());
+
+var BrowserEvents = /** @class */ (function () {
+    function BrowserEvents(_windowGlobal, _documentGlobal) {
+        this._windowGlobal = _windowGlobal;
+        this._documentGlobal = _documentGlobal;
+        this._windowComponent = new BrowserComponent(this._windowGlobal);
+        this._documentComponent = new BrowserComponent(this._documentGlobal);
+    }
+    Object.defineProperty(BrowserEvents.prototype, "window", {
+        get: function () {
+            return this._windowComponent;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BrowserEvents.prototype, "document", {
+        get: function () {
+            return this._documentComponent;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BrowserEvents.prototype.pause = function () {
+        this.window.pause();
+        this.document.pause();
+    };
+    BrowserEvents.prototype.resume = function () {
+        this.window.resume();
+        this.document.resume();
+    };
+    BrowserEvents.prototype.clear = function () {
+        this.window.clear();
+        this.document.clear();
+    };
+    return BrowserEvents;
+}());
+
+
+
+/***/ }),
+
 /***/ "./Util/CullingBox.ts":
 /*!****************************!*\
   !*** ./Util/CullingBox.ts ***!
@@ -21942,7 +22041,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22249,42 +22348,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_31__; });
 /* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_32__; });
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["obsolete"]; });
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserComponent"]; });
 
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_34__["Detector"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserEvents"]; });
 
-/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__["CullingBox"]; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["obsolete"]; });
 
-/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__["EasingFunctions"]; });
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_35__["Detector"]; });
 
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["LogLevel"]; });
+/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__["CullingBox"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["Logger"]; });
+/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__["EasingFunctions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ConsoleAppender"]; });
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["LogLevel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ScreenAppender"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["Logger"]; });
 
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["SortedList"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ConsoleAppender"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["BinaryTreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ScreenAppender"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["MockedElement"]; });
+/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["SortedList"]; });
 
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_39___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_39__);
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_39__; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["BinaryTreeNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["MockedElement"]; });
+
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
+/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_40__);
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_40__; });
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3204+85b28b8";
+var EX_VERSION = "0.22.0-alpha.3211+08e964f";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything
@@ -22328,6 +22432,7 @@ Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 
 
 // ex.Util namespaces
+
 
 
 

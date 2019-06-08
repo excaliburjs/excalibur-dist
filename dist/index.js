@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.22.0-alpha.3204+85b28b8"` gets replaced by Webpack on build
+ * @description `"0.22.0-alpha.3211+08e964f"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.22.0-alpha.3204+85b28b8";
+export var EX_VERSION = "0.22.0-alpha.3211+08e964f";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entrypoint and exports everything
@@ -48,6 +48,7 @@ export { traits as Traits };
 // ex.Util namespaces
 import * as util from './Util/Index';
 export { util as Util };
+export * from './Util/Browser';
 export * from './Util/Decorators';
 export * from './Util/Detector';
 export * from './Util/CullingBox';

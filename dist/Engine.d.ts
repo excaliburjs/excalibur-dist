@@ -17,6 +17,7 @@ import { Class } from './Class';
 import * as Input from './Input/Index';
 import * as Events from './Events';
 import { BoundingBox } from './Collision/BoundingBox';
+import { BrowserEvents } from './Util/Browser';
 /**
  * Enum representing the different display modes available to Excalibur
  */
@@ -143,6 +144,10 @@ export interface EngineOptions {
  * [[include:Engine.md]]
  */
 export declare class Engine extends Class implements CanInitialize, CanUpdate, CanDraw {
+    /**
+     *
+     */
+    browser: BrowserEvents;
     /**
      * Direct access to the engine's canvas element
      */

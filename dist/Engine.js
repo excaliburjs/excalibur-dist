@@ -31,6 +31,7 @@ import { Class } from './Class';
 import * as Input from './Input/Index';
 import * as Util from './Util/Util';
 import { BoundingBox } from './Collision/BoundingBox';
+import { BrowserEvents } from './Util/Browser';
 /**
  * Enum representing the different display modes available to Excalibur
  */
@@ -156,6 +157,8 @@ var Engine = /** @class */ (function (_super) {
         _this._isLoading = false;
         _this._isInitialized = false;
         options = Util.extend({}, Engine._DefaultEngineOptions, options);
+        // Initialize browser events facade
+        _this.browser = new BrowserEvents(window, document);
         // Check compatibility
         var detector = new Detector();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
@@ -624,7 +627,7 @@ O|===|* >________________>\n\
         if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
             var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
             this._setHeightByDisplayMode(parent_1);
-            window.addEventListener('resize', function () {
+            this.browser.window.on('resize', function () {
                 _this._logger.debug('View port resized');
                 _this._setHeightByDisplayMode(parent_1);
                 _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
@@ -660,7 +663,7 @@ O|===|* >________________>\n\
             hidden = 'webkitHidden';
             visibilityChange = 'webkitvisibilitychange';
         }
-        document.addEventListener(visibilityChange, function () {
+        this.browser.document.on(visibilityChange, function () {
             if (document[hidden]) {
                 _this.eventDispatcher.emit('hidden', new HiddenEvent(_this));
                 _this._logger.debug('Window hidden');
@@ -941,6 +944,7 @@ O|===|* >________________>\n\
         if (!this._hasStarted) {
             this._hasStarted = true;
             this._logger.debug('Starting game...');
+            this.browser.resume();
             Engine.createMainLoop(this, window.requestAnimationFrame, Date.now)();
             this._logger.debug('Game started');
         }
@@ -999,6 +1003,7 @@ O|===|* >________________>\n\
     Engine.prototype.stop = function () {
         if (this._hasStarted) {
             this.emit('stop', new GameStopEvent(this));
+            this.browser.pause();
             this._hasStarted = false;
             this._logger.debug('Game stopped');
         }

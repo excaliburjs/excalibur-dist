@@ -11,6 +11,7 @@ import { Class } from './Class';
  * Groups are used for logically grouping Actors so they can be acted upon
  * in bulk.
  *
+ * @obsolete Use [[CollisionGroupManager]] for collision based behavior
  * [[include:Groups.md]]
  */
 export declare class Group extends Class implements Actionable, Eventable {

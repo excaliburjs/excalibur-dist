@@ -8,9 +8,9 @@ import { Collider } from './Collider';
 import { Body } from './Body';
 export interface CircleOptions {
     /**
-     * Optional position to shift the circle relative to the collider, by default (0, 0).
+     * Optional pixel offset to shift the circle relative to the collider, by default (0, 0).
      */
-    pos?: Vector;
+    offset?: Vector;
     /**
      * Required radius of the circle
      */
@@ -31,7 +31,7 @@ export declare class Circle implements CollisionShape {
     /**
      * Position of the circle relative to the collider, by default (0, 0) meaning the shape is positioned on top of the collider.
      */
-    pos: Vector;
+    offset: Vector;
     readonly worldPos: Vector;
     /**
      * This is the radius of the circle

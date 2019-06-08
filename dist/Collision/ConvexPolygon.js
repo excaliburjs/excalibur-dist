@@ -29,7 +29,7 @@ var ConvexPolygon = /** @class */ (function () {
         this._transformedPoints = [];
         this._axes = [];
         this._sides = [];
-        this.pos = options.pos || Vector.Zero;
+        this.offset = options.offset || Vector.Zero;
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.collider = this.collider = options.collider || null;
@@ -47,7 +47,7 @@ var ConvexPolygon = /** @class */ (function () {
      */
     ConvexPolygon.prototype.clone = function () {
         return new ConvexPolygon({
-            pos: this.pos.clone(),
+            offset: this.offset.clone(),
             points: this.points.map(function (p) { return p.clone(); }),
             collider: null,
             body: null
@@ -56,9 +56,9 @@ var ConvexPolygon = /** @class */ (function () {
     Object.defineProperty(ConvexPolygon.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -70,9 +70,9 @@ var ConvexPolygon = /** @class */ (function () {
         get: function () {
             var body = this.collider ? this.collider.body : null;
             if (body) {
-                return body.pos.add(this.pos);
+                return body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -82,7 +82,7 @@ var ConvexPolygon = /** @class */ (function () {
      */
     ConvexPolygon.prototype._calculateTransformation = function () {
         var body = this.collider ? this.collider.body : null;
-        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var pos = body ? body.pos.add(this.offset) : this.offset;
         var angle = body ? body.rotation : 0;
         var scale = body ? body.scale : Vector.One;
         var len = this.points.length;
@@ -351,7 +351,7 @@ var ConvexPolygon = /** @class */ (function () {
         if (pos === void 0) { pos = Vector.Zero; }
         ctx.beginPath();
         ctx.fillStyle = color.toString();
-        var newPos = pos.add(this.pos);
+        var newPos = pos.add(this.offset);
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this.points[0].add(newPos);
         ctx.moveTo(firstPoint.x, firstPoint.y);

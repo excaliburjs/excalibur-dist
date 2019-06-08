@@ -1,8 +1,10 @@
 import { Color } from '../Drawing/Color';
 import * as DrawUtil from '../Util/DrawUtil';
+import { Vector } from '../Algebra';
 import { Physics } from '../Physics';
 import { BoundingBox } from './BoundingBox';
 import { CollisionType } from './CollisionType';
+import { CollisionGroup } from './CollisionGroup';
 import { EventDispatcher } from '../EventDispatcher';
 import { Pair } from './Pair';
 /**
@@ -17,13 +19,18 @@ export function isCollider(x) {
  */
 var Collider = /** @class */ (function () {
     function Collider(_a) {
-        var body = _a.body, type = _a.type, shape = _a.shape, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
+        var body = _a.body, type = _a.type, group = _a.group, shape = _a.shape, offset = _a.offset, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
         this._events = new EventDispatcher(this);
         /**
          * Gets or sets the current collision type of this collider. By
          * default it is ([[CollisionType.PreventCollision]]).
          */
         this.type = CollisionType.PreventCollision;
+        /**
+         * Gets or sets the current [[CollisionGroup|collision group]] for the collider, colliders with like collision groups do not collide.
+         * By default, the collider will collide with [[CollisionGroup|all groups]].
+         */
+        this.group = CollisionGroup.All;
         /**
          * The current mass of the actor, mass can be thought of as the resistance to acceleration.
          */
@@ -51,7 +58,9 @@ var Collider = /** @class */ (function () {
         }
         this.useShapeInertia = useShapeInertia;
         this._shape.collider = this;
-        this.type = type;
+        this.type = type || this.type;
+        this.group = group || this.group;
+        this.offset = offset || Vector.Zero;
     }
     /**
      * Returns a clone of the current collider, not associated with any body
@@ -60,7 +69,9 @@ var Collider = /** @class */ (function () {
         return new Collider({
             body: null,
             type: this.type,
-            shape: this._shape.clone()
+            shape: this._shape.clone(),
+            group: this.group,
+            offset: this.offset
         });
     };
     Object.defineProperty(Collider.prototype, "id", {
@@ -74,7 +85,7 @@ var Collider = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "shape", {
-        /**
+        /*
          * Get the shape of the collider as a [[CollisionShape]]
          */
         get: function () {
@@ -122,6 +133,22 @@ var Collider = /** @class */ (function () {
     Collider.prototype.collide = function (other) {
         return this.shape.collide(other.shape);
     };
+    Object.defineProperty(Collider.prototype, "offset", {
+        /**
+         * Gets the current pixel offset of the collider
+         */
+        get: function () {
+            return this.shape.offset.clone();
+        },
+        /**
+         * Sets the pixel offset of the collider
+         */
+        set: function (offset) {
+            this.shape.offset = offset.clone();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns a boolean indicating whether this body collided with
      * or was in stationary contact with

@@ -29,8 +29,8 @@ var Circle = /** @class */ (function () {
         /**
          * Position of the circle relative to the collider, by default (0, 0) meaning the shape is positioned on top of the collider.
          */
-        this.pos = Vector.Zero;
-        this.pos = options.pos || Vector.Zero;
+        this.offset = Vector.Zero;
+        this.offset = options.offset || Vector.Zero;
         this.radius = options.radius || 0;
         this.collider = options.collider || null;
         // @obsolete Remove next release in v0.24.0, code exists for backwards compat
@@ -43,9 +43,9 @@ var Circle = /** @class */ (function () {
     Object.defineProperty(Circle.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -55,7 +55,7 @@ var Circle = /** @class */ (function () {
      */
     Circle.prototype.clone = function () {
         return new Circle({
-            pos: this.pos.clone(),
+            offset: this.offset.clone(),
             radius: this.radius,
             collider: null,
             body: null
@@ -67,9 +67,9 @@ var Circle = /** @class */ (function () {
          */
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.pos.add(this.collider.body.pos);
+                return this.offset.add(this.collider.body.pos);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -78,7 +78,7 @@ var Circle = /** @class */ (function () {
      * Tests if a point is contained in this collision shape
      */
     Circle.prototype.contains = function (point) {
-        var pos = this.pos;
+        var pos = this.offset;
         if (this.collider && this.collider.body) {
             pos = this.collider.body.pos;
         }
@@ -155,7 +155,7 @@ var Circle = /** @class */ (function () {
             if (this.collider && this.collider.body) {
                 bodyPos = this.collider.body.pos;
             }
-            return new BoundingBox(this.pos.x + bodyPos.x - this.radius, this.pos.y + bodyPos.y - this.radius, this.pos.x + bodyPos.x + this.radius, this.pos.y + bodyPos.y + this.radius);
+            return new BoundingBox(this.offset.x + bodyPos.x - this.radius, this.offset.y + bodyPos.y - this.radius, this.offset.x + bodyPos.x + this.radius, this.offset.y + bodyPos.y + this.radius);
         },
         enumerable: true,
         configurable: true
@@ -165,7 +165,7 @@ var Circle = /** @class */ (function () {
          * Get the axis aligned bounding box for the circle shape in local coordinates
          */
         get: function () {
-            return new BoundingBox(this.pos.x - this.radius, this.pos.y - this.radius, this.pos.x + this.radius, this.pos.y + this.radius);
+            return new BoundingBox(this.offset.x - this.radius, this.offset.y - this.radius, this.offset.x + this.radius, this.offset.y + this.radius);
         },
         enumerable: true,
         configurable: true
@@ -199,8 +199,8 @@ var Circle = /** @class */ (function () {
         var axes = polygon.axes;
         var pc = polygon.center;
         // Special SAT with circles
-        var closestPointOnPoly = polygon.getFurthestPoint(this.pos.sub(pc));
-        axes.push(this.pos.sub(closestPointOnPoly).normalize());
+        var closestPointOnPoly = polygon.getFurthestPoint(this.offset.sub(pc));
+        axes.push(this.offset.sub(closestPointOnPoly).normalize());
         var minOverlap = Number.MAX_VALUE;
         var minAxis = null;
         var minIndex = -1;
@@ -243,7 +243,7 @@ var Circle = /** @class */ (function () {
     Circle.prototype.draw = function (ctx, color, pos) {
         if (color === void 0) { color = Color.Green; }
         if (pos === void 0) { pos = Vector.Zero; }
-        var newPos = pos.add(this.pos);
+        var newPos = pos.add(this.offset);
         ctx.beginPath();
         ctx.fillStyle = color.toString();
         ctx.arc(newPos.x, newPos.y, this.radius, 0, Math.PI * 2);
@@ -254,7 +254,7 @@ var Circle = /** @class */ (function () {
     Circle.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = Color.Green; }
         var body = this.collider.body;
-        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var pos = body ? body.pos.add(this.offset) : this.offset;
         var rotation = body ? body.rotation : 0;
         ctx.beginPath();
         ctx.strokeStyle = color.toString();

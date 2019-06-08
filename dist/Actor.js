@@ -92,6 +92,9 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
+        /**
+         * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
+         */
         _this.collisionGroups = [];
         _this._collisionHandlers = {};
         _this._isInitialized = false;
@@ -492,11 +495,10 @@ var ActorImpl = /** @class */ (function (_super) {
             return this.body.scale;
         },
         /**
-         * Sets the scale vector of the actor
+         * Sets the scale vector of the actor for
          */
         set: function (scale) {
             this.body.scale = scale;
-            this.width = this.width;
         },
         enumerable: true,
         configurable: true
@@ -801,6 +803,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * that group.
      *
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     ActorImpl.prototype.addCollisionGroup = function (name) {
         this.collisionGroups.push(name);
@@ -808,6 +811,7 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Removes an actor from a collision group.
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     ActorImpl.prototype.removeCollisionGroup = function (name) {
         var index = this.collisionGroups.indexOf(name);
@@ -1367,6 +1371,12 @@ var ActorImpl = /** @class */ (function (_super) {
         obsolete({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
     ], ActorImpl.prototype, "collisionType", null);
     __decorate([
+        obsolete({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
+    ], ActorImpl.prototype, "addCollisionGroup", null);
+    __decorate([
+        obsolete({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
+    ], ActorImpl.prototype, "removeCollisionGroup", null);
+    __decorate([
         obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.center' })
     ], ActorImpl.prototype, "getCenter", null);
     __decorate([
@@ -1414,6 +1424,15 @@ var ActorImpl = /** @class */ (function (_super) {
     __decorate([
         obsolete({ message: 'Actor.collides will be removed  in v0.24.0', alternateMethod: 'Actor.bounds.intersect or Actor.' })
     ], ActorImpl.prototype, "collides", null);
+    __decorate([
+        obsolete({ message: 'Actor.onCollidesWIth will be removed  in v0.24.0', alternateMethod: 'Actor.collider.canCollide' })
+    ], ActorImpl.prototype, "onCollidesWith", null);
+    __decorate([
+        obsolete({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
+    ], ActorImpl.prototype, "getCollisionHandlers", null);
+    __decorate([
+        obsolete({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
+    ], ActorImpl.prototype, "removeCollidesWith", null);
     return ActorImpl;
 }(Class));
 export { ActorImpl };

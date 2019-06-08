@@ -14,41 +14,41 @@ var Shape = /** @class */ (function () {
      * @param width Width of the box
      * @param height Height of the box
      * @param anchor Anchor of the box (default (.5, .5)) which positions the box relative to the center of the collider's position
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Box = function (width, height, anchor, center) {
+    Shape.Box = function (width, height, anchor, offset) {
         if (anchor === void 0) { anchor = Vector.Half; }
-        if (center === void 0) { center = Vector.Zero; }
+        if (offset === void 0) { offset = Vector.Zero; }
         return new ConvexPolygon({
             points: new BoundingBox(-width * anchor.x, -height * anchor.y, width - width * anchor.x, height - height * anchor.y).getPoints(),
-            pos: center
+            offset: offset
         });
     };
     /**
      * Creates a new [[arbitrary polygon|ConvexPolygon]] collision shape
      * @param points Points specified in counter clockwise
      * @param clockwiseWinding Optionally changed the winding of points, by default false meaning counter-clockwise winding.
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Polygon = function (points, clockwiseWinding, center) {
+    Shape.Polygon = function (points, clockwiseWinding, offset) {
         if (clockwiseWinding === void 0) { clockwiseWinding = false; }
-        if (center === void 0) { center = Vector.Zero; }
+        if (offset === void 0) { offset = Vector.Zero; }
         return new ConvexPolygon({
             points: points,
-            pos: center,
+            offset: offset,
             clockwiseWinding: clockwiseWinding
         });
     };
     /**
      * Creates a new [[circle|Circle]] collision shape
      * @param radius Radius of the circle shape
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Circle = function (radius, center) {
-        if (center === void 0) { center = Vector.Zero; }
+    Shape.Circle = function (radius, offset) {
+        if (offset === void 0) { offset = Vector.Zero; }
         return new Circle({
             radius: radius,
-            pos: center
+            offset: offset
         });
     };
     /**

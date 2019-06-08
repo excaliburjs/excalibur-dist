@@ -11,6 +11,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { UIActor } from './UIActor';
 import { Physics } from './Physics';
 import { InitializeEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent } from './Events';
@@ -26,6 +32,7 @@ import { Class } from './Class';
 import * as Util from './Util/Util';
 import * as ActorUtils from './Util/Actors';
 import { Trigger } from './Trigger';
+import { obsolete } from './Util/Decorators';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -55,10 +62,7 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        /**
-         * The [[Group]]s in the scene, if any
-         */
-        _this.groups = {};
+        _this._groups = {};
         /**
          * The [[UIActor]]s in a scene, if any; these are drawn last
          */
@@ -79,6 +83,19 @@ var Scene = /** @class */ (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(Scene.prototype, "groups", {
+        /**
+         * The [[Group]]s in the scene, if any
+         */
+        get: function () {
+            return this._groups;
+        },
+        set: function (groups) {
+            this._groups = groups;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -603,6 +620,18 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
+    __decorate([
+        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "groups", null);
+    __decorate([
+        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "createGroup", null);
+    __decorate([
+        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "getGroup", null);
+    __decorate([
+        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "removeGroup", null);
     return Scene;
 }(Class));
 export { Scene };

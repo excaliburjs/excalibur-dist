@@ -29,7 +29,7 @@ var Edge = /** @class */ (function () {
         this.begin = options.begin || Vector.Zero;
         this.end = options.end || Vector.Zero;
         this.collider = options.collider || null;
-        this.pos = this.center;
+        this.offset = this.center;
         // @obsolete Remove next release in v0.24.0, code exists for backwards compat
         if (options.body) {
             this.collider = options.body.collider;
@@ -51,9 +51,9 @@ var Edge = /** @class */ (function () {
     Object.defineProperty(Edge.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true

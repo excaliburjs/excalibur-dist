@@ -7,9 +7,9 @@ import { Vector, Line, Ray, Projection } from '../Algebra';
 import { Collider } from './Collider';
 export interface ConvexPolygonOptions {
     /**
-     * Point relative to a collider's position
+     * Pixel offset relative to a collider's position
      */
-    pos?: Vector;
+    offset?: Vector;
     /**
      * Points in the polygon in order around the perimeter in local coordinates
      */
@@ -34,7 +34,7 @@ export interface ConvexPolygonOptions {
  * [[include:BoxAndPolygonShape.md]]
  */
 export declare class ConvexPolygon implements CollisionShape {
-    pos: Vector;
+    offset: Vector;
     points: Vector[];
     /**
      * @obsolete Will be removed in v0.24.0 please use [[collider]] to set and retrieve body information

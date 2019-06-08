@@ -6,6 +6,7 @@ import { CollisionShape } from './CollisionShape';
 import { Vector } from '../Algebra';
 import { BoundingBox } from './BoundingBox';
 import { CollisionType } from './CollisionType';
+import { CollisionGroup } from './CollisionGroup';
 import { CollisionContact } from './CollisionContact';
 import { Clonable } from '../Interfaces/Clonable';
 /**
@@ -21,6 +22,14 @@ export interface ColliderOptions {
      * Optional body to associate with this collider
      */
     body?: Body;
+    /**
+     * Optional pixel offset from the position of the body
+     */
+    offset?: Vector;
+    /**
+     * Optional collision group on this collider
+     */
+    group?: CollisionGroup;
     /**
      * Optional [[collision type|CollisionType]], if not specified the default is [[CollisionType.PreventCollision]]
      */
@@ -42,7 +51,7 @@ export declare class Collider implements Eventable, Clonable<Collider> {
     private _shape;
     useShapeInertia: boolean;
     private _events;
-    constructor({ body, type, shape, useShapeInertia }: ColliderOptions);
+    constructor({ body, type, group, shape, offset, useShapeInertia }: ColliderOptions);
     /**
      * Returns a clone of the current collider, not associated with any body
      */
@@ -57,8 +66,10 @@ export declare class Collider implements Eventable, Clonable<Collider> {
      */
     type: CollisionType;
     /**
-     * Get the shape of the collider as a [[CollisionShape]]
+     * Gets or sets the current [[CollisionGroup|collision group]] for the collider, colliders with like collision groups do not collide.
+     * By default, the collider will collide with [[CollisionGroup|all groups]].
      */
+    group: CollisionGroup;
     /**
     * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
     */
@@ -82,6 +93,13 @@ export declare class Collider implements Eventable, Clonable<Collider> {
      * @param other
      */
     collide(other: Collider): CollisionContact | null;
+    /**
+     * Gets the current pixel offset of the collider
+     */
+    /**
+    * Sets the pixel offset of the collider
+    */
+    offset: Vector;
     /**
      * The current mass of the actor, mass can be thought of as the resistance to acceleration.
      */

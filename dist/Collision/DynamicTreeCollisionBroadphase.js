@@ -101,7 +101,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     var minBody_1;
                     var minTranslate_1 = new Vector(Infinity, Infinity);
                     this_1._dynamicCollisionTree.rayCastQuery(ray_1, updateDistance + Physics.surfaceEpsilon * 2, function (other) {
-                        if (collider_1.body !== other && other.collider.shape) {
+                        if (collider_1.body !== other && other.collider.shape && Pair.canCollide(collider_1, other.collider)) {
                             var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + Physics.surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);

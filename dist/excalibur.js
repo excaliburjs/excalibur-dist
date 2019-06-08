@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3190+27fdbcd - 2019-6-6
+ * excalibur - 0.22.0-alpha.3195+4ca2e6d - 2019-6-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -1574,6 +1574,9 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
+        /**
+         * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
+         */
         _this.collisionGroups = [];
         _this._collisionHandlers = {};
         _this._isInitialized = false;
@@ -1974,11 +1977,10 @@ var ActorImpl = /** @class */ (function (_super) {
             return this.body.scale;
         },
         /**
-         * Sets the scale vector of the actor
+         * Sets the scale vector of the actor for
          */
         set: function (scale) {
             this.body.scale = scale;
-            this.width = this.width;
         },
         enumerable: true,
         configurable: true
@@ -2283,6 +2285,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * that group.
      *
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     ActorImpl.prototype.addCollisionGroup = function (name) {
         this.collisionGroups.push(name);
@@ -2290,6 +2293,7 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Removes an actor from a collision group.
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     ActorImpl.prototype.removeCollisionGroup = function (name) {
         var index = this.collisionGroups.indexOf(name);
@@ -2849,6 +2853,12 @@ var ActorImpl = /** @class */ (function (_super) {
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
     ], ActorImpl.prototype, "collisionType", null);
     __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
+    ], ActorImpl.prototype, "addCollisionGroup", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
+    ], ActorImpl.prototype, "removeCollisionGroup", null);
+    __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.center' })
     ], ActorImpl.prototype, "getCenter", null);
     __decorate([
@@ -2896,6 +2906,15 @@ var ActorImpl = /** @class */ (function (_super) {
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collides will be removed  in v0.24.0', alternateMethod: 'Actor.bounds.intersect or Actor.' })
     ], ActorImpl.prototype, "collides", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.onCollidesWIth will be removed  in v0.24.0', alternateMethod: 'Actor.collider.canCollide' })
+    ], ActorImpl.prototype, "onCollidesWith", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
+    ], ActorImpl.prototype, "getCollisionHandlers", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
+    ], ActorImpl.prototype, "removeCollidesWith", null);
     return ActorImpl;
 }(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
 
@@ -4709,7 +4728,7 @@ var BoundingBox = /** @class */ (function () {
         return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
             body: actor ? actor.body : null,
             points: this.getPoints(),
-            pos: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero
+            offset: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero
         });
     };
     /**
@@ -5007,8 +5026,8 @@ var Circle = /** @class */ (function () {
         /**
          * Position of the circle relative to the collider, by default (0, 0) meaning the shape is positioned on top of the collider.
          */
-        this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
-        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
+        this.offset = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
+        this.offset = options.offset || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.radius = options.radius || 0;
         this.collider = options.collider || null;
         // @obsolete Remove next release in v0.24.0, code exists for backwards compat
@@ -5021,9 +5040,9 @@ var Circle = /** @class */ (function () {
     Object.defineProperty(Circle.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -5033,7 +5052,7 @@ var Circle = /** @class */ (function () {
      */
     Circle.prototype.clone = function () {
         return new Circle({
-            pos: this.pos.clone(),
+            offset: this.offset.clone(),
             radius: this.radius,
             collider: null,
             body: null
@@ -5045,9 +5064,9 @@ var Circle = /** @class */ (function () {
          */
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.pos.add(this.collider.body.pos);
+                return this.offset.add(this.collider.body.pos);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -5056,7 +5075,7 @@ var Circle = /** @class */ (function () {
      * Tests if a point is contained in this collision shape
      */
     Circle.prototype.contains = function (point) {
-        var pos = this.pos;
+        var pos = this.offset;
         if (this.collider && this.collider.body) {
             pos = this.collider.body.pos;
         }
@@ -5133,7 +5152,7 @@ var Circle = /** @class */ (function () {
             if (this.collider && this.collider.body) {
                 bodyPos = this.collider.body.pos;
             }
-            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.pos.x + bodyPos.x - this.radius, this.pos.y + bodyPos.y - this.radius, this.pos.x + bodyPos.x + this.radius, this.pos.y + bodyPos.y + this.radius);
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.offset.x + bodyPos.x - this.radius, this.offset.y + bodyPos.y - this.radius, this.offset.x + bodyPos.x + this.radius, this.offset.y + bodyPos.y + this.radius);
         },
         enumerable: true,
         configurable: true
@@ -5143,7 +5162,7 @@ var Circle = /** @class */ (function () {
          * Get the axis aligned bounding box for the circle shape in local coordinates
          */
         get: function () {
-            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.pos.x - this.radius, this.pos.y - this.radius, this.pos.x + this.radius, this.pos.y + this.radius);
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.offset.x - this.radius, this.offset.y - this.radius, this.offset.x + this.radius, this.offset.y + this.radius);
         },
         enumerable: true,
         configurable: true
@@ -5177,8 +5196,8 @@ var Circle = /** @class */ (function () {
         var axes = polygon.axes;
         var pc = polygon.center;
         // Special SAT with circles
-        var closestPointOnPoly = polygon.getFurthestPoint(this.pos.sub(pc));
-        axes.push(this.pos.sub(closestPointOnPoly).normalize());
+        var closestPointOnPoly = polygon.getFurthestPoint(this.offset.sub(pc));
+        axes.push(this.offset.sub(closestPointOnPoly).normalize());
         var minOverlap = Number.MAX_VALUE;
         var minAxis = null;
         var minIndex = -1;
@@ -5221,7 +5240,7 @@ var Circle = /** @class */ (function () {
     Circle.prototype.draw = function (ctx, color, pos) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
         if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
-        var newPos = pos.add(this.pos);
+        var newPos = pos.add(this.offset);
         ctx.beginPath();
         ctx.fillStyle = color.toString();
         ctx.arc(newPos.x, newPos.y, this.radius, 0, Math.PI * 2);
@@ -5232,7 +5251,7 @@ var Circle = /** @class */ (function () {
     Circle.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__["Color"].Green; }
         var body = this.collider.body;
-        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var pos = body ? body.pos.add(this.offset) : this.offset;
         var rotation = body ? body.rotation : 0;
         ctx.beginPath();
         ctx.strokeStyle = color.toString();
@@ -5276,11 +5295,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return Collider; });
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/DrawUtil */ "./Util/DrawUtil.ts");
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
-/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
-/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../EventDispatcher */ "./EventDispatcher.ts");
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
+/* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CollisionGroup */ "./Collision/CollisionGroup.ts");
+/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../EventDispatcher */ "./EventDispatcher.ts");
+/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+
+
 
 
 
@@ -5300,13 +5323,18 @@ function isCollider(x) {
  */
 var Collider = /** @class */ (function () {
     function Collider(_a) {
-        var body = _a.body, type = _a.type, shape = _a.shape, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
-        this._events = new _EventDispatcher__WEBPACK_IMPORTED_MODULE_5__["EventDispatcher"](this);
+        var body = _a.body, type = _a.type, group = _a.group, shape = _a.shape, offset = _a.offset, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
+        this._events = new _EventDispatcher__WEBPACK_IMPORTED_MODULE_7__["EventDispatcher"](this);
         /**
          * Gets or sets the current collision type of this collider. By
          * default it is ([[CollisionType.PreventCollision]]).
          */
-        this.type = _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision;
+        this.type = _CollisionType__WEBPACK_IMPORTED_MODULE_5__["CollisionType"].PreventCollision;
+        /**
+         * Gets or sets the current [[CollisionGroup|collision group]] for the collider, colliders with like collision groups do not collide.
+         * By default, the collider will collide with [[CollisionGroup|all groups]].
+         */
+        this.group = _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__["CollisionGroup"].All;
         /**
          * The current mass of the actor, mass can be thought of as the resistance to acceleration.
          */
@@ -5334,7 +5362,9 @@ var Collider = /** @class */ (function () {
         }
         this.useShapeInertia = useShapeInertia;
         this._shape.collider = this;
-        this.type = type;
+        this.type = type || this.type;
+        this.group = group || this.group;
+        this.offset = offset || _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero;
     }
     /**
      * Returns a clone of the current collider, not associated with any body
@@ -5343,7 +5373,9 @@ var Collider = /** @class */ (function () {
         return new Collider({
             body: null,
             type: this.type,
-            shape: this._shape.clone()
+            shape: this._shape.clone(),
+            group: this.group,
+            offset: this.offset
         });
     };
     Object.defineProperty(Collider.prototype, "id", {
@@ -5357,7 +5389,7 @@ var Collider = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "shape", {
-        /**
+        /*
          * Get the shape of the collider as a [[CollisionShape]]
          */
         get: function () {
@@ -5405,13 +5437,29 @@ var Collider = /** @class */ (function () {
     Collider.prototype.collide = function (other) {
         return this.shape.collide(other.shape);
     };
+    Object.defineProperty(Collider.prototype, "offset", {
+        /**
+         * Gets the current pixel offset of the collider
+         */
+        get: function () {
+            return this.shape.offset.clone();
+        },
+        /**
+         * Sets the pixel offset of the collider
+         */
+        set: function (offset) {
+            this.shape.offset = offset.clone();
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Returns a boolean indicating whether this body collided with
      * or was in stationary contact with
      * the body of the other [[Collider]]
      */
     Collider.prototype.touching = function (other) {
-        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_6__["Pair"](this, other);
+        var pair = new _Pair__WEBPACK_IMPORTED_MODULE_8__["Pair"](this, other);
         pair.collide();
         if (pair.collision) {
             return true;
@@ -5428,9 +5476,9 @@ var Collider = /** @class */ (function () {
                 return this.shape.bounds;
             }
             if (this.body) {
-                return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]().translate(this.body.pos);
+                return new _BoundingBox__WEBPACK_IMPORTED_MODULE_4__["BoundingBox"]().translate(this.body.pos);
             }
-            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]();
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_4__["BoundingBox"]();
         },
         enumerable: true,
         configurable: true
@@ -5444,7 +5492,7 @@ var Collider = /** @class */ (function () {
             if (this.shape) {
                 return this.shape.localBounds;
             }
-            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"]();
+            return new _BoundingBox__WEBPACK_IMPORTED_MODULE_4__["BoundingBox"]();
         },
         enumerable: true,
         configurable: true
@@ -5475,15 +5523,15 @@ var Collider = /** @class */ (function () {
     /* istanbul ignore next */
     Collider.prototype.debugDraw = function (ctx) {
         // Draw motion vectors
-        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showMotionVectors) {
-            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Yellow, this.body.pos, this.body.acc.add(_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].acc));
+        if (_Physics__WEBPACK_IMPORTED_MODULE_3__["Physics"].showMotionVectors) {
+            _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Yellow, this.body.pos, this.body.acc.add(_Physics__WEBPACK_IMPORTED_MODULE_3__["Physics"].acc));
             _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["vector"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red, this.body.pos, this.body.vel);
             _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_1__["point"](ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red, this.body.pos);
         }
-        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showBounds) {
+        if (_Physics__WEBPACK_IMPORTED_MODULE_3__["Physics"].showBounds) {
             this.bounds.debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Yellow);
         }
-        if (_Physics__WEBPACK_IMPORTED_MODULE_2__["Physics"].showArea) {
+        if (_Physics__WEBPACK_IMPORTED_MODULE_3__["Physics"].showArea) {
             this.shape.debugDraw(ctx, _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Green);
         }
     };
@@ -5680,6 +5728,195 @@ var CollisionContact = /** @class */ (function () {
         this.colliderB.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostCollisionEvent"](this.colliderB, this.colliderA, _Util_Util__WEBPACK_IMPORTED_MODULE_3__["getOppositeSide"](side), this.mtv.negate()));
     };
     return CollisionContact;
+}());
+
+
+
+/***/ }),
+
+/***/ "./Collision/CollisionGroup.ts":
+/*!*************************************!*\
+  !*** ./Collision/CollisionGroup.ts ***!
+  \*************************************/
+/*! exports provided: CollisionGroup */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return CollisionGroup; });
+/**
+ * CollisionGroups indicate like members that do not collide with each other. Use [[CollisionGroupManager]] to create [[CollisionGroup]]s
+ *
+ * For example:
+ *
+ * Players have collision group "player"
+ *
+ * ![Player Collision Group](/assets/images/docs/CollisionGroupsPlayer.png)
+ *
+ * Enemies have collision group "enemy"
+ *
+ * ![Enemy Collision Group](/assets/images/docs/CollisionGroupsEnemy.png)
+ *
+ * Blocks have collision group "ground"
+ *
+ * ![Ground collision group](/assets/images/docs/CollisionGroupsGround.png)
+ *
+ * Players don't collide with each other, but enemies and blocks. Likewise, enemies don't collide with each other but collide
+ * with players and blocks.
+ *
+ * This is done with bitmasking, see the following pseudo-code
+ *
+ * PlayerGroup = `0b001`
+ * PlayerGroupMask = `0b110`
+ *
+ * EnemyGroup = `0b010`
+ * EnemyGroupMask = `0b101`
+ *
+ * BlockGroup = `0b100`
+ * BlockGroupMask = `0b011`
+ *
+ * Should Players collide? No because the bitwise mask evaluates to 0
+ * `(player1.group & player2.mask) === 0`
+ * `(0b001 & 0b110) === 0`
+ *
+ * Should Players and Enemies collide? Yes because the bitwise mask is non-zero
+ * `(player1.group & enemy1.mask) === 1`
+ * `(0b001 & 0b101) === 1`
+ *
+ * Should Players and Blocks collide? Yes because the bitwise mask is non-zero
+ * `(player1.group & blocks1.mask) === 1`
+ * `(0b001 & 0b011) === 1`
+ */
+var CollisionGroup = /** @class */ (function () {
+    /**
+     * **STOP!!** It is preferred that [[CollisionGroupManager.create]] is used to create collision groups
+     *  unless you know how to construct the proper bitmasks. See https://github.com/excaliburjs/Excalibur/issues/1091 for more info.
+     * @param name Name of the collision group
+     * @param category 32 bit category for the group, should be a unique power of 2. For example `0b001` or `0b010`
+     * @param mask 32 bit mask of category, or `~category` generally. For a category of `0b001`, the mask would be `0b110`
+     */
+    function CollisionGroup(name, category, mask) {
+        this._name = name;
+        this._category = category;
+        this._mask = mask;
+    }
+    Object.defineProperty(CollisionGroup.prototype, "name", {
+        /**
+         * Get the name of the collision group
+         */
+        get: function () {
+            return this._name;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CollisionGroup.prototype, "category", {
+        /**
+         * Get the category of the collision group, a 32 bit number which should be a unique power of 2
+         */
+        get: function () {
+            return this._category;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CollisionGroup.prototype, "mask", {
+        /**
+         * Get the mask for this collision group
+         */
+        get: function () {
+            return this._mask;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Evaluates whether 2 collision groups can collide
+     * @param other  CollisionGroup
+     */
+    CollisionGroup.prototype.canCollide = function (other) {
+        return (this.category & other.mask) !== 0 && (other.category & this.mask) !== 0;
+    };
+    /**
+     * The `All` [[CollisionGroup]] is a special group that collides with all other groups including itself,
+     * it is the default collision group on colliders.
+     */
+    CollisionGroup.All = new CollisionGroup('Collide with all groups', -1, -1);
+    return CollisionGroup;
+}());
+
+
+
+/***/ }),
+
+/***/ "./Collision/CollisionGroupManager.ts":
+/*!********************************************!*\
+  !*** ./Collision/CollisionGroupManager.ts ***!
+  \********************************************/
+/*! exports provided: CollisionGroupManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return CollisionGroupManager; });
+/* harmony import */ var _CollisionGroup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CollisionGroup */ "./Collision/CollisionGroup.ts");
+
+/**
+ * Static class for managing collision groups in excalibur, there is a maximum of 32 collision groups possible in excalibur
+ */
+var CollisionGroupManager = /** @class */ (function () {
+    function CollisionGroupManager() {
+    }
+    /**
+     * Create a new named collision group up to a max of 32.
+     * @param name Name for the collision group
+     * @param mask Optionally provide your own 32-bit mask, if none is provide the manager will generate one
+     */
+    CollisionGroupManager.create = function (name, mask) {
+        if (this._currentGroup > this._MAX_GROUPS) {
+            throw new Error("Cannot have more than " + this._MAX_GROUPS + " collision groups");
+        }
+        if (this._groups.get(name)) {
+            throw new Error("Collision group " + name + " already exists");
+        }
+        var group = new _CollisionGroup__WEBPACK_IMPORTED_MODULE_0__["CollisionGroup"](name, this._currentBit, mask !== undefined ? mask : ~this._currentBit);
+        this._currentBit = (this._currentBit << 1) | 0;
+        this._currentGroup++;
+        this._groups.set(name, group);
+        return group;
+    };
+    Object.defineProperty(CollisionGroupManager, "groups", {
+        /**
+         * Get all collision groups currently tracked by excalibur
+         */
+        get: function () {
+            return Array.from(this._groups.values());
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Get a collision group by it's name
+     * @param name
+     */
+    CollisionGroupManager.groupByName = function (name) {
+        return this._groups.get(name);
+    };
+    /**
+     * Resets the managers internal group management state
+     */
+    CollisionGroupManager.reset = function () {
+        this._groups = new Map();
+        this._currentBit = this._STARTING_BIT;
+        this._currentGroup = 1;
+    };
+    // using bitmasking the maximum number of groups is 32, because that is the heighest 32bit integer that JS can present.
+    CollisionGroupManager._STARTING_BIT = 1 | 0;
+    CollisionGroupManager._MAX_GROUPS = 32;
+    CollisionGroupManager._currentGroup = 1;
+    CollisionGroupManager._currentBit = CollisionGroupManager._STARTING_BIT;
+    CollisionGroupManager._groups = new Map();
+    return CollisionGroupManager;
 }());
 
 
@@ -5952,7 +6189,7 @@ var ConvexPolygon = /** @class */ (function () {
         this._transformedPoints = [];
         this._axes = [];
         this._sides = [];
-        this.pos = options.pos || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero;
+        this.offset = options.offset || _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero;
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.collider = this.collider = options.collider || null;
@@ -5970,7 +6207,7 @@ var ConvexPolygon = /** @class */ (function () {
      */
     ConvexPolygon.prototype.clone = function () {
         return new ConvexPolygon({
-            pos: this.pos.clone(),
+            offset: this.offset.clone(),
             points: this.points.map(function (p) { return p.clone(); }),
             collider: null,
             body: null
@@ -5979,9 +6216,9 @@ var ConvexPolygon = /** @class */ (function () {
     Object.defineProperty(ConvexPolygon.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -5993,9 +6230,9 @@ var ConvexPolygon = /** @class */ (function () {
         get: function () {
             var body = this.collider ? this.collider.body : null;
             if (body) {
-                return body.pos.add(this.pos);
+                return body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -6005,7 +6242,7 @@ var ConvexPolygon = /** @class */ (function () {
      */
     ConvexPolygon.prototype._calculateTransformation = function () {
         var body = this.collider ? this.collider.body : null;
-        var pos = body ? body.pos.add(this.pos) : this.pos;
+        var pos = body ? body.pos.add(this.offset) : this.offset;
         var angle = body ? body.rotation : 0;
         var scale = body ? body.scale : _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].One;
         var len = this.points.length;
@@ -6274,7 +6511,7 @@ var ConvexPolygon = /** @class */ (function () {
         if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero; }
         ctx.beginPath();
         ctx.fillStyle = color.toString();
-        var newPos = pos.add(this.pos);
+        var newPos = pos.add(this.offset);
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this.points[0].add(newPos);
         ctx.moveTo(firstPoint.x, firstPoint.y);
@@ -6894,7 +7131,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     var minBody_1;
                     var minTranslate_1 = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Infinity, Infinity);
                     this_1._dynamicCollisionTree.rayCastQuery(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 2, function (other) {
-                        if (collider_1.body !== other && other.collider.shape) {
+                        if (collider_1.body !== other && other.collider.shape && _Pair__WEBPACK_IMPORTED_MODULE_2__["Pair"].canCollide(collider_1, other.collider)) {
                             var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);
@@ -7075,7 +7312,7 @@ var Edge = /** @class */ (function () {
         this.begin = options.begin || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.end = options.end || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.collider = options.collider || null;
-        this.pos = this.center;
+        this.offset = this.center;
         // @obsolete Remove next release in v0.24.0, code exists for backwards compat
         if (options.body) {
             this.collider = options.body.collider;
@@ -7097,9 +7334,9 @@ var Edge = /** @class */ (function () {
     Object.defineProperty(Edge.prototype, "worldPos", {
         get: function () {
             if (this.collider && this.collider.body) {
-                return this.collider.body.pos.add(this.pos);
+                return this.collider.body.pos.add(this.offset);
             }
-            return this.pos;
+            return this.offset;
         },
         enumerable: true,
         configurable: true
@@ -7324,7 +7561,7 @@ var EdgeArea = /** @class */ (function (_super) {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
+/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7351,32 +7588,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_5__["CollisionJumpTable"]; });
 
-/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_6__["TreeNode"]; });
+/* harmony import */ var _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CollisionGroup */ "./Collision/CollisionGroup.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _CollisionGroup__WEBPACK_IMPORTED_MODULE_6__["CollisionGroup"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_6__["DynamicTree"]; });
+/* harmony import */ var _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CollisionGroupManager */ "./Collision/CollisionGroupManager.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _CollisionGroupManager__WEBPACK_IMPORTED_MODULE_7__["CollisionGroupManager"]; });
 
-/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_7__["DynamicTreeCollisionBroadphase"]; });
+/* harmony import */ var _DynamicTree__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DynamicTree */ "./Collision/DynamicTree.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_8__["TreeNode"]; });
 
-/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_8__["Edge"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _DynamicTree__WEBPACK_IMPORTED_MODULE_8__["DynamicTree"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_8__["EdgeArea"]; });
+/* harmony import */ var _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_9__["DynamicTreeCollisionBroadphase"]; });
 
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_9__["Pair"]; });
+/* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_10__["Edge"]; });
 
-/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__["ConvexPolygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_10__["EdgeArea"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_10__["PolygonArea"]; });
+/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_11__["Pair"]; });
 
-/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_11__["Side"]; });
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__["ConvexPolygon"]; });
 
-/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_12__["Shape"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_12__["PolygonArea"]; });
+
+/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_13__["Side"]; });
+
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_14__["Shape"]; });
+
+
 
 
 
@@ -7425,6 +7670,10 @@ var Pair = /** @class */ (function () {
         this.id = Pair.calculatePairHash(colliderA, colliderB);
     }
     Pair.canCollide = function (colliderA, colliderB) {
+        // If both are in the same collision group short circuit
+        if (!colliderA.group.canCollide(colliderB.group)) {
+            return false;
+        }
         // if both are fixed short circuit
         if (colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].Fixed && colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].Fixed) {
             return false;
@@ -7525,41 +7774,41 @@ var Shape = /** @class */ (function () {
      * @param width Width of the box
      * @param height Height of the box
      * @param anchor Anchor of the box (default (.5, .5)) which positions the box relative to the center of the collider's position
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Box = function (width, height, anchor, center) {
+    Shape.Box = function (width, height, anchor, offset) {
         if (anchor === void 0) { anchor = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Half; }
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        if (offset === void 0) { offset = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
         return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
             points: new _BoundingBox__WEBPACK_IMPORTED_MODULE_3__["BoundingBox"](-width * anchor.x, -height * anchor.y, width - width * anchor.x, height - height * anchor.y).getPoints(),
-            pos: center
+            offset: offset
         });
     };
     /**
      * Creates a new [[arbitrary polygon|ConvexPolygon]] collision shape
      * @param points Points specified in counter clockwise
      * @param clockwiseWinding Optionally changed the winding of points, by default false meaning counter-clockwise winding.
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Polygon = function (points, clockwiseWinding, center) {
+    Shape.Polygon = function (points, clockwiseWinding, offset) {
         if (clockwiseWinding === void 0) { clockwiseWinding = false; }
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+        if (offset === void 0) { offset = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
         return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
             points: points,
-            pos: center,
+            offset: offset,
             clockwiseWinding: clockwiseWinding
         });
     };
     /**
      * Creates a new [[circle|Circle]] collision shape
      * @param radius Radius of the circle shape
-     * @param center Optional offset relative to the collider in local coordinates
+     * @param offset Optional offset relative to the collider in local coordinates
      */
-    Shape.Circle = function (radius, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
+    Shape.Circle = function (radius, offset) {
+        if (offset === void 0) { offset = _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero; }
         return new _Circle__WEBPACK_IMPORTED_MODULE_1__["Circle"]({
             radius: radius,
-            pos: center
+            offset: offset
         });
     };
     /**
@@ -11999,6 +12248,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -12012,6 +12262,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -12021,6 +12278,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * Groups are used for logically grouping Actors so they can be acted upon
  * in bulk.
  *
+ * @obsolete Use [[CollisionGroupManager]] for collision based behavior
  * [[include:Groups.md]]
  */
 var Group = /** @class */ (function (_super) {
@@ -12124,6 +12382,9 @@ var Group = /** @class */ (function (_super) {
             return prev.combine(curr);
         });
     };
+    Group = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0', alternateMethod: 'Use ex.CollisionGroupManager' })
+    ], Group);
     return Group;
 }(_Class__WEBPACK_IMPORTED_MODULE_4__["Class"]));
 
@@ -18011,6 +18272,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
 /* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18024,6 +18286,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -18068,10 +18337,7 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        /**
-         * The [[Group]]s in the scene, if any
-         */
-        _this.groups = {};
+        _this._groups = {};
         /**
          * The [[UIActor]]s in a scene, if any; these are drawn last
          */
@@ -18092,6 +18358,19 @@ var Scene = /** @class */ (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(Scene.prototype, "groups", {
+        /**
+         * The [[Group]]s in the scene, if any
+         */
+        get: function () {
+            return this._groups;
+        },
+        set: function (groups) {
+            this._groups = groups;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -18616,6 +18895,18 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "groups", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "createGroup", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "getGroup", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
+    ], Scene.prototype, "removeGroup", null);
     return Scene;
 }(_Class__WEBPACK_IMPORTED_MODULE_11__["Class"]));
 
@@ -21297,7 +21588,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21516,6 +21807,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionJumpTable"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroup"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroupManager"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["TreeNode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTree"]; });
@@ -21631,7 +21926,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3190+27fdbcd";
+var EX_VERSION = "0.22.0-alpha.3195+4ca2e6d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

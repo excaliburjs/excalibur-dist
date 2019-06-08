@@ -46,6 +46,7 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
     groups: {
         [key: string]: Group;
     };
+    private _groups;
     /**
      * Access to the Excalibur engine
      */

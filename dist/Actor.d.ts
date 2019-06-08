@@ -215,7 +215,7 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * Gets the scale vector of the actor
      */
     /**
-    * Sets the scale vector of the actor
+    * Sets the scale vector of the actor for
     */
     scale: Vector;
     /**
@@ -288,6 +288,9 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
     */
     collisionType: CollisionType;
+    /**
+     * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
+     */
     collisionGroups: string[];
     private _collisionHandlers;
     private _isInitialized;
@@ -639,11 +642,13 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * that group.
      *
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     addCollisionGroup(name: string): void;
     /**
      * Removes an actor from a collision group.
      * @param name The name of the collision group
+     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
      */
     removeCollisionGroup(name: string): void;
     /**

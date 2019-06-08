@@ -29,7 +29,7 @@ export interface EdgeOptions {
 export declare class Edge implements CollisionShape {
     body: Body;
     collider?: Collider;
-    pos: Vector;
+    offset: Vector;
     begin: Vector;
     end: Vector;
     constructor(options: EdgeOptions);

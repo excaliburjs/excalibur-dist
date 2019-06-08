@@ -11,15 +11,23 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { Vector } from './Algebra';
 import { ActionContext } from './Actions/ActionContext';
 import { Actor } from './Actor';
 import { Logger } from './Util/Log';
 import { Class } from './Class';
+import { obsolete } from './Util/Decorators';
 /**
  * Groups are used for logically grouping Actors so they can be acted upon
  * in bulk.
  *
+ * @obsolete Use [[CollisionGroupManager]] for collision based behavior
  * [[include:Groups.md]]
  */
 var Group = /** @class */ (function (_super) {
@@ -123,6 +131,9 @@ var Group = /** @class */ (function (_super) {
             return prev.combine(curr);
         });
     };
+    Group = __decorate([
+        obsolete({ message: 'ex.Group will be deprecated in v0.24.0', alternateMethod: 'Use ex.CollisionGroupManager' })
+    ], Group);
     return Group;
 }(Class));
 export { Group };

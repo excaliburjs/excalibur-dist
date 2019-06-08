@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.22.0-alpha.3220+1e79034 - 2019-6-8
+ * excalibur - 0.22.0-alpha.3227+85146de - 2019-6-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -239,6 +239,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -723,6 +731,9 @@ var ScaleTo = /** @class */ (function () {
     ScaleTo.prototype.reset = function () {
         this._started = false;
     };
+    ScaleTo = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleTo will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+    ], ScaleTo);
     return ScaleTo;
 }());
 
@@ -765,6 +776,9 @@ var ScaleBy = /** @class */ (function () {
     ScaleBy.prototype.reset = function () {
         this._started = false;
     };
+    ScaleBy = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleBy will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+    ], ScaleBy);
     return ScaleBy;
 }());
 
@@ -1635,6 +1649,8 @@ var ActorImpl = /** @class */ (function (_super) {
             'pointerdragenter',
             'pointerdragleave'
         ];
+        // initialize default options
+        _this._initDefaults();
         var shouldInitializeBody = true;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
@@ -1646,9 +1662,10 @@ var ActorImpl = /** @class */ (function (_super) {
                 shouldInitializeBody = false;
                 _this.body = config.body;
             }
+            if (config.anchor) {
+                _this.anchor = config.anchor;
+            }
         }
-        // initialize default options
-        _this._initDefaults();
         // Body and collider bounds are still determined by actor width/height
         _this._width = width || 0;
         _this._height = height || 0;
@@ -1972,12 +1989,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "scale", {
         /**
          * Gets the scale vector of the actor
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.scale;
         },
         /**
          * Sets the scale vector of the actor for
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.scale = scale;
@@ -1988,12 +2007,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
         /**
          * Gets the old scale of the actor last frame
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.oldScale;
         },
         /**
          * Sets the the old scale of the acotr last frame
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.oldScale = scale;
@@ -2004,12 +2025,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sx", {
         /**
          * Gets the x scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sx;
         },
         /**
          * Sets the x scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
@@ -2020,12 +2043,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sy", {
         /**
          * Gets the y scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sy;
         },
         /**
          * Sets the y scale velocity of the actor in scale/second
+         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
@@ -2758,7 +2783,7 @@ var ActorImpl = /** @class */ (function (_super) {
         this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDebugDrawEvent"](ctx, this));
         this.body.collider.debugDraw(ctx);
         // Draw actor bounding box
-        var bb = this.body.collider.bounds;
+        var bb = this.body.collider.localBounds.translate(this.getWorldPos());
         bb.debugDraw(ctx);
         // Draw actor Id
         ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
@@ -2849,6 +2874,12 @@ var ActorImpl = /** @class */ (function (_super) {
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.restitution will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.bounciness' })
     ], ActorImpl.prototype, "restitution", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+    ], ActorImpl.prototype, "sx", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+    ], ActorImpl.prototype, "sy", null);
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
     ], ActorImpl.prototype, "collisionType", null);
@@ -4328,18 +4359,22 @@ var Body = /** @class */ (function () {
         this.rotation = 0; // radians
         /**
          * The scale vector of the actor
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
         /**
          * The scale of the actor last frame
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
         /**
          * The x scalar velocity of the actor in scale/second
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.sx = 0; //scale/sec
         /**
          * The y scalar velocity of the actor in scale/second
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.sy = 0; //scale/sec
         /**
@@ -22388,7 +22423,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.22.0-alpha.3220+1e79034";
+var EX_VERSION = "0.22.0-alpha.3227+85146de";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

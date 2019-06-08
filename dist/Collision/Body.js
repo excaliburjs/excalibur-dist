@@ -64,18 +64,22 @@ var Body = /** @class */ (function () {
         this.rotation = 0; // radians
         /**
          * The scale vector of the actor
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.scale = Vector.One;
         /**
          * The scale of the actor last frame
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.oldScale = Vector.One;
         /**
          * The x scalar velocity of the actor in scale/second
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.sx = 0; //scale/sec
         /**
          * The y scalar velocity of the actor in scale/second
+         * @obsolete ex.Body.scale will be removed in v0.24.0
          */
         this.sy = 0; //scale/sec
         /**

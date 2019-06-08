@@ -213,30 +213,38 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     private _width;
     /**
      * Gets the scale vector of the actor
+     * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
      */
     /**
     * Sets the scale vector of the actor for
+    * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
     */
     scale: Vector;
     /**
      * Gets the old scale of the actor last frame
+     * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
      */
     /**
     * Sets the the old scale of the acotr last frame
+    * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
     */
     oldScale: Vector;
     /**
      * Gets the x scalar velocity of the actor in scale/second
+     * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
      */
     /**
     * Sets the x scalar velocity of the actor in scale/second
+    * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
     */
     sx: number;
     /**
      * Gets the y scalar velocity of the actor in scale/second
+     * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
      */
     /**
     * Sets the y scale velocity of the actor in scale/second
+    * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
     */
     sy: number;
     /**

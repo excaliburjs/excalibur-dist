@@ -75,18 +75,22 @@ export declare class Body implements Clonable<Body> {
     rotation: number;
     /**
      * The scale vector of the actor
+     * @obsolete ex.Body.scale will be removed in v0.24.0
      */
     scale: Vector;
     /**
      * The scale of the actor last frame
+     * @obsolete ex.Body.scale will be removed in v0.24.0
      */
     oldScale: Vector;
     /**
      * The x scalar velocity of the actor in scale/second
+     * @obsolete ex.Body.scale will be removed in v0.24.0
      */
     sx: number;
     /**
      * The y scalar velocity of the actor in scale/second
+     * @obsolete ex.Body.scale will be removed in v0.24.0
      */
     sy: number;
     /**

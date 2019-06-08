@@ -153,6 +153,8 @@ var ActorImpl = /** @class */ (function (_super) {
             'pointerdragenter',
             'pointerdragleave'
         ];
+        // initialize default options
+        _this._initDefaults();
         var shouldInitializeBody = true;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
@@ -164,9 +166,10 @@ var ActorImpl = /** @class */ (function (_super) {
                 shouldInitializeBody = false;
                 _this.body = config.body;
             }
+            if (config.anchor) {
+                _this.anchor = config.anchor;
+            }
         }
-        // initialize default options
-        _this._initDefaults();
         // Body and collider bounds are still determined by actor width/height
         _this._width = width || 0;
         _this._height = height || 0;
@@ -490,12 +493,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "scale", {
         /**
          * Gets the scale vector of the actor
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.scale;
         },
         /**
          * Sets the scale vector of the actor for
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.scale = scale;
@@ -506,12 +511,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
         /**
          * Gets the old scale of the actor last frame
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.oldScale;
         },
         /**
          * Sets the the old scale of the acotr last frame
+         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.oldScale = scale;
@@ -522,12 +529,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sx", {
         /**
          * Gets the x scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sx;
         },
         /**
          * Sets the x scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
@@ -538,12 +547,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sy", {
         /**
          * Gets the y scalar velocity of the actor in scale/second
+         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sy;
         },
         /**
          * Sets the y scale velocity of the actor in scale/second
+         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
@@ -1276,7 +1287,7 @@ var ActorImpl = /** @class */ (function (_super) {
         this.emit('predebugdraw', new PreDebugDrawEvent(ctx, this));
         this.body.collider.debugDraw(ctx);
         // Draw actor bounding box
-        var bb = this.body.collider.bounds;
+        var bb = this.body.collider.localBounds.translate(this.getWorldPos());
         bb.debugDraw(ctx);
         // Draw actor Id
         ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
@@ -1367,6 +1378,12 @@ var ActorImpl = /** @class */ (function (_super) {
     __decorate([
         obsolete({ message: 'ex.Actor.restitution will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.bounciness' })
     ], ActorImpl.prototype, "restitution", null);
+    __decorate([
+        obsolete({ message: 'ex.Actor.sx will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+    ], ActorImpl.prototype, "sx", null);
+    __decorate([
+        obsolete({ message: 'ex.Actor.sy will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+    ], ActorImpl.prototype, "sy", null);
     __decorate([
         obsolete({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
     ], ActorImpl.prototype, "collisionType", null);

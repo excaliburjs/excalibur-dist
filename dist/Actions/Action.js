@@ -1,7 +1,14 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { RotationType } from './RotationType';
 import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
 import * as Util from '../Util/Util';
+import { obsolete } from '../Util/Decorators';
 var EaseTo = /** @class */ (function () {
     function EaseTo(actor, x, y, duration, easingFcn) {
         this.actor = actor;
@@ -482,6 +489,9 @@ var ScaleTo = /** @class */ (function () {
     ScaleTo.prototype.reset = function () {
         this._started = false;
     };
+    ScaleTo = __decorate([
+        obsolete({ message: 'ex.Action.ScaleTo will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+    ], ScaleTo);
     return ScaleTo;
 }());
 export { ScaleTo };
@@ -524,6 +534,9 @@ var ScaleBy = /** @class */ (function () {
     ScaleBy.prototype.reset = function () {
         this._started = false;
     };
+    ScaleBy = __decorate([
+        obsolete({ message: 'ex.Action.ScaleBy will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+    ], ScaleBy);
     return ScaleBy;
 }());
 export { ScaleBy };

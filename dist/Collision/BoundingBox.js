@@ -14,20 +14,31 @@ import { Side } from './Side';
  */
 var BoundingBox = /** @class */ (function () {
     /**
-     * @param left    x coordinate of the left edge
+     * Constructor allows passing of either an object with all coordinate components,
+     * or the coordinate components passed separately.
+     * @param leftOrOptions    Either x coordinate of the left edge or an options object
+     * containing the four coordinate components.
      * @param top     y coordinate of the top edge
      * @param right   x coordinate of the right edge
      * @param bottom  y coordinate of the bottom edge
      */
-    function BoundingBox(left, top, right, bottom) {
-        if (left === void 0) { left = 0; }
+    function BoundingBox(leftOrOptions, top, right, bottom) {
+        if (leftOrOptions === void 0) { leftOrOptions = 0; }
         if (top === void 0) { top = 0; }
         if (right === void 0) { right = 0; }
         if (bottom === void 0) { bottom = 0; }
-        this.left = left;
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
+        if (typeof leftOrOptions === 'object') {
+            this.left = leftOrOptions.left;
+            this.top = leftOrOptions.top;
+            this.right = leftOrOptions.right;
+            this.bottom = leftOrOptions.bottom;
+        }
+        else if (typeof leftOrOptions === 'number') {
+            this.left = leftOrOptions;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
     }
     /**
      * Given bounding box A & B, returns the side relative to A when intersection is performed.

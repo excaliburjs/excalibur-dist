@@ -3,21 +3,30 @@ import { Actor } from '../Actor';
 import { Vector, Ray } from '../Algebra';
 import { Color } from '../Drawing/Color';
 import { Side } from './Side';
+export interface BoundingBoxOptions {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+}
 /**
  * Axis Aligned collision primitive for Excalibur.
  */
 export declare class BoundingBox {
-    left: number;
     top: number;
     right: number;
     bottom: number;
+    left: number;
     /**
-     * @param left    x coordinate of the left edge
+     * Constructor allows passing of either an object with all coordinate components,
+     * or the coordinate components passed separately.
+     * @param leftOrOptions    Either x coordinate of the left edge or an options object
+     * containing the four coordinate components.
      * @param top     y coordinate of the top edge
      * @param right   x coordinate of the right edge
      * @param bottom  y coordinate of the bottom edge
      */
-    constructor(left?: number, top?: number, right?: number, bottom?: number);
+    constructor(leftOrOptions?: number | BoundingBoxOptions, top?: number, right?: number, bottom?: number);
     /**
      * Given bounding box A & B, returns the side relative to A when intersection is performed.
      * @param intersection Intersection vector between 2 bounding boxes

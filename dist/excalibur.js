@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0 - 2019-6-8
+ * excalibur - 0.23.0-alpha.3233+acb2ca1 - 2019-6-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4648,20 +4648,31 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
  */
 var BoundingBox = /** @class */ (function () {
     /**
-     * @param left    x coordinate of the left edge
+     * Constructor allows passing of either an object with all coordinate components,
+     * or the coordinate components passed separately.
+     * @param leftOrOptions    Either x coordinate of the left edge or an options object
+     * containing the four coordinate components.
      * @param top     y coordinate of the top edge
      * @param right   x coordinate of the right edge
      * @param bottom  y coordinate of the bottom edge
      */
-    function BoundingBox(left, top, right, bottom) {
-        if (left === void 0) { left = 0; }
+    function BoundingBox(leftOrOptions, top, right, bottom) {
+        if (leftOrOptions === void 0) { leftOrOptions = 0; }
         if (top === void 0) { top = 0; }
         if (right === void 0) { right = 0; }
         if (bottom === void 0) { bottom = 0; }
-        this.left = left;
-        this.top = top;
-        this.right = right;
-        this.bottom = bottom;
+        if (typeof leftOrOptions === 'object') {
+            this.left = leftOrOptions.left;
+            this.top = leftOrOptions.top;
+            this.right = leftOrOptions.right;
+            this.bottom = leftOrOptions.bottom;
+        }
+        else if (typeof leftOrOptions === 'number') {
+            this.left = leftOrOptions;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
     }
     /**
      * Given bounding box A & B, returns the side relative to A when intersection is performed.
@@ -22423,7 +22434,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0";
+var EX_VERSION = "0.23.0-alpha.3233+acb2ca1";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

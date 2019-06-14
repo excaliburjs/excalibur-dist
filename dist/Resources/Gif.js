@@ -223,8 +223,8 @@ var lzwDecode = function (minCodeSize, data) {
 // The actual parsing; returns an object with properties.
 var ParseGif = /** @class */ (function () {
     function ParseGif(stream, color) {
-        if (color === void 0) { color = Color.Magenta; }
         var _this = this;
+        if (color === void 0) { color = Color.Magenta; }
         this._st = null;
         this._handler = {};
         this._transparentColor = null;

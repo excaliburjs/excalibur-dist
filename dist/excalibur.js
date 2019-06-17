@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.3248+c5d5b6a - 2019-6-15
+ * excalibur - 0.23.0-alpha.3252+3b83e15 - 2019-6-17
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -8872,12 +8872,8 @@ var AnimationImpl = /** @class */ (function () {
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            if (this.flipVertical) {
-                currSprite.flipVertical = this.flipVertical;
-            }
-            if (this.flipHorizontal) {
-                currSprite.flipHorizontal = this.flipHorizontal;
-            }
+            currSprite.flipVertical = this.flipVertical;
+            currSprite.flipHorizontal = this.flipHorizontal;
             currSprite.draw(ctx, x, y);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
@@ -22443,7 +22439,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.3248+c5d5b6a";
+var EX_VERSION = "0.23.0-alpha.3252+3b83e15";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

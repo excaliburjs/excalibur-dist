@@ -228,12 +228,8 @@ var AnimationImpl = /** @class */ (function () {
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            if (this.flipVertical) {
-                currSprite.flipVertical = this.flipVertical;
-            }
-            if (this.flipHorizontal) {
-                currSprite.flipHorizontal = this.flipHorizontal;
-            }
+            currSprite.flipVertical = this.flipVertical;
+            currSprite.flipHorizontal = this.flipHorizontal;
             currSprite.draw(ctx, x, y);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {

@@ -130,10 +130,7 @@ var LabelImpl = /** @class */ (function (_super) {
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
         var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object'
-            ? {
-                x: textOrConfig.x,
-                y: textOrConfig.y
-            }
+            ? { x: textOrConfig.x, y: textOrConfig.y }
             : { x: x, y: y }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false

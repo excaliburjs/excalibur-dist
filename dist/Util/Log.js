@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Logging level that Excalibur will tag
  */
@@ -196,7 +197,8 @@ var ScreenAppender = /** @class */ (function () {
         this._canvas.width = width || window.innerWidth;
         this._canvas.height = height || window.innerHeight;
         this._canvas.style.position = 'absolute';
-        this._ctx = this._canvas.getContext('2d');
+        // eslint-disable-next-line
+        this._ctx = this._canvas.getContext('2d'); // eslint-disable-line
         document.body.appendChild(this._canvas);
     }
     /**

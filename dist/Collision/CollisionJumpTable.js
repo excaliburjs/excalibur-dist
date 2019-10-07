@@ -92,17 +92,16 @@ export var CollisionJumpTable = {
         // (1) Polygon lands on the full face
         // (2) Polygon lands on the right point
         // (3) Polygon lands on the left point
-        var _a, _b;
         var e = edge.end.sub(edge.begin);
         var edgeNormal = e.normal();
         if (polygon.contains(edge.begin)) {
-            var mtv = (_a = polygon.getClosestFace(edge.begin), _a.distance), face = _a.face;
+            var _a = polygon.getClosestFace(edge.begin), mtv = _a.distance, face = _a.face;
             if (mtv) {
                 return new CollisionContact(polygon.collider, edge.collider, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
             }
         }
         if (polygon.contains(edge.end)) {
-            var mtv = (_b = polygon.getClosestFace(edge.end), _b.distance), face = _b.face;
+            var _b = polygon.getClosestFace(edge.end), mtv = _b.distance, face = _b.face;
             if (mtv) {
                 return new CollisionContact(polygon.collider, edge.collider, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
             }

@@ -2,7 +2,7 @@
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-export declare let EX_VERSION: string;
+export declare const EX_VERSION: string;
 export * from './Engine';
 export { Actor, ActorArgs as IActorArgs } from './Actor';
 export { CollisionType } from './Collision/CollisionType';

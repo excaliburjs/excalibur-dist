@@ -204,8 +204,8 @@ var SpriteFontImpl = /** @class */ (function (_super) {
      * @param spHeight        The height of each character in pixels
      */
     function SpriteFontImpl(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight, spacing) {
-        var _this = _super.call(this, imageOrConfig instanceof Texture
-            ? {
+        var _this = _super.call(this, imageOrConfig instanceof Texture ?
+            {
                 image: imageOrConfig,
                 spWidth: spWidth,
                 spHeight: spHeight,

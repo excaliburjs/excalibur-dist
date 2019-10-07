@@ -1300,7 +1300,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // Culling Box debug draw
         for (var j = 0; j < this.traits.length; j++) {
             if (this.traits[j] instanceof Traits.OffscreenCulling) {
-                this.traits[j].cullingBox.debugDraw(ctx);
+                this.traits[j].cullingBox.debugDraw(ctx); // eslint-disable-line
             }
         }
         // Unit Circle debug draw

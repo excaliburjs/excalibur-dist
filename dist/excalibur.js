@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4183+3271a04 - 2019-10-4
+ * excalibur - 0.23.0-alpha.4211+0c01406 - 2019-10-7
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -2805,7 +2805,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // Culling Box debug draw
         for (var j = 0; j < this.traits.length; j++) {
             if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["OffscreenCulling"]) {
-                this.traits[j].cullingBox.debugDraw(ctx);
+                this.traits[j].cullingBox.debugDraw(ctx); // eslint-disable-line
             }
         }
         // Unit Circle debug draw
@@ -6378,17 +6378,16 @@ var CollisionJumpTable = {
         // (1) Polygon lands on the full face
         // (2) Polygon lands on the right point
         // (3) Polygon lands on the left point
-        var _a, _b;
         var e = edge.end.sub(edge.begin);
         var edgeNormal = e.normal();
         if (polygon.contains(edge.begin)) {
-            var mtv = (_a = polygon.getClosestFace(edge.begin), _a.distance), face = _a.face;
+            var _a = polygon.getClosestFace(edge.begin), mtv = _a.distance, face = _a.face;
             if (mtv) {
                 return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon.collider, edge.collider, mtv.negate(), edge.begin.add(mtv.negate()), face.normal().negate());
             }
         }
         if (polygon.contains(edge.end)) {
-            var mtv = (_b = polygon.getClosestFace(edge.end), _b.distance), face = _b.face;
+            var _b = polygon.getClosestFace(edge.end), mtv = _b.distance, face = _b.face;
             if (mtv) {
                 return new _CollisionContact__WEBPACK_IMPORTED_MODULE_0__["CollisionContact"](polygon.collider, edge.collider, mtv.negate(), edge.end.add(mtv.negate()), face.normal().negate());
             }
@@ -8305,7 +8304,9 @@ function Configurable(base) {
             //set the value of every property that was passed in,
             //if the constructor previously set this value, it will be overridden here
             for (var k in props) {
+                // eslint-disable-next-line
                 if (typeof this[k] !== 'function') {
+                    // eslint-disable-next-line
                     this[k] = props[k];
                 }
             }
@@ -9658,7 +9659,7 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCanvas = document.createElement('canvas');
         this._spriteCanvas.width = width;
         this._spriteCanvas.height = height;
-        this._spriteCtx = this._spriteCanvas.getContext('2d');
+        this._spriteCtx = this._spriteCanvas.getContext('2d'); // eslint-disable-line
         this._texture.loaded
             .then(function () {
             _this.width = _this.width || _this._texture.image.naturalWidth;
@@ -10360,8 +10361,8 @@ var SpriteFontImpl = /** @class */ (function (_super) {
      * @param spHeight        The height of each character in pixels
      */
     function SpriteFontImpl(imageOrConfig, alphabet, caseInsensitive, columns, rows, spWidth, spHeight, spacing) {
-        var _this = _super.call(this, imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_4__["Texture"]
-            ? {
+        var _this = _super.call(this, imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_4__["Texture"] ?
+            {
                 image: imageOrConfig,
                 spWidth: spWidth,
                 spHeight: spHeight,
@@ -10750,12 +10751,16 @@ var Engine = /** @class */ (function (_super) {
             _this._compatible = true;
         }
         // Use native console API for color fun
+        // eslint-disable-next-line no-console
         if (console.log && !options.suppressConsoleBootMessage) {
+            // eslint-disable-next-line no-console
             console.log("%cPowered by Excalibur.js (v" + ___WEBPACK_IMPORTED_MODULE_0__["EX_VERSION"] + ")", 'background: #176BAA; color: white; border-radius: 5px; padding: 15px; font-size: 1.5em; line-height: 80px;');
+            // eslint-disable-next-line no-console
             console.log('\n\
       /| ________________\n\
 O|===|* >________________>\n\
       \\|');
+            // eslint-disable-next-line no-console
             console.log('Visit', 'http://excaliburjs.com', 'for more information');
         }
         // Suppress play button
@@ -11241,6 +11246,7 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
+        // eslint-disable-next-line
         this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
         this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
         if (!options.suppressHiDPIScaling) {
@@ -11354,10 +11360,12 @@ O|===|* >________________>\n\
      * Return the current smoothing status of the canvas
      */
     Engine.prototype.getAntialiasing = function () {
+        /*eslint-disable */
         return (this.ctx.imageSmoothingEnabled ||
             this.ctx.webkitImageSmoothingEnabled ||
             this.ctx.mozImageSmoothingEnabled ||
             this.ctx.msImageSmoothingEnabled);
+        /*eslint-enable */
     };
     Object.defineProperty(Engine.prototype, "isInitialized", {
         /**
@@ -14570,10 +14578,7 @@ var LabelImpl = /** @class */ (function (_super) {
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
         var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object'
-            ? {
-                x: textOrConfig.x,
-                y: textOrConfig.y
-            }
+            ? { x: textOrConfig.x, y: textOrConfig.y }
             : { x: x, y: y }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false
@@ -16743,7 +16748,9 @@ var ColorBlindCorrector = /** @class */ (function () {
         this.engine = engine;
         this.simulate = simulate;
         this.colorMode = colorMode;
-        this._vertexShader = 'attribute vec2 a_position;' +
+        /*eslint-disable */
+        this._vertexShader = '' +
+            'attribute vec2 a_position;' +
             'attribute vec2 a_texCoord;' +
             'uniform vec2 u_resolution;' +
             'varying vec2 v_texCoord;' +
@@ -16807,6 +16814,7 @@ var ColorBlindCorrector = /** @class */ (function () {
         this._internalCanvas = document.createElement('canvas');
         this._internalCanvas.width = engine.drawWidth;
         this._internalCanvas.height = engine.drawHeight;
+        // eslint-disable-next-line
         this._gl = this._internalCanvas.getContext('webgl', { preserveDrawingBuffer: true });
         this._program = this._gl.createProgram();
         var fragmentShader = this._getShader('Fragment', this._getFragmentShaderByMode(colorMode));
@@ -20701,6 +20709,7 @@ var Detector = /** @class */ (function () {
             msg += ' ' + REPORTED_FEATURES[feature] + '\n';
         }
         args.unshift(msg);
+        // eslint-disable-next-line no-console
         console.log.apply(console, args);
     };
     /**
@@ -21097,6 +21106,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return Logger; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return ConsoleAppender; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return ScreenAppender; });
+/* eslint-disable no-console */
 /**
  * Logging level that Excalibur will tag
  */
@@ -21295,7 +21305,8 @@ var ScreenAppender = /** @class */ (function () {
         this._canvas.width = width || window.innerWidth;
         this._canvas.height = height || window.innerHeight;
         this._canvas.style.position = 'absolute';
-        this._ctx = this._canvas.getContext('2d');
+        // eslint-disable-next-line
+        this._ctx = this._canvas.getContext('2d'); // eslint-disable-line
         document.body.appendChild(this._canvas);
     }
     /**
@@ -22439,7 +22450,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4183+3271a04";
+var EX_VERSION = "0.23.0-alpha.4211+0c01406";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

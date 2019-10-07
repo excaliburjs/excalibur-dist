@@ -182,12 +182,16 @@ var Engine = /** @class */ (function (_super) {
             _this._compatible = true;
         }
         // Use native console API for color fun
+        // eslint-disable-next-line no-console
         if (console.log && !options.suppressConsoleBootMessage) {
+            // eslint-disable-next-line no-console
             console.log("%cPowered by Excalibur.js (v" + EX_VERSION + ")", 'background: #176BAA; color: white; border-radius: 5px; padding: 15px; font-size: 1.5em; line-height: 80px;');
+            // eslint-disable-next-line no-console
             console.log('\n\
       /| ________________\n\
 O|===|* >________________>\n\
       \\|');
+            // eslint-disable-next-line no-console
             console.log('Visit', 'http://excaliburjs.com', 'for more information');
         }
         // Suppress play button
@@ -673,6 +677,7 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
+        // eslint-disable-next-line
         this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
         this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
         if (!options.suppressHiDPIScaling) {
@@ -786,10 +791,12 @@ O|===|* >________________>\n\
      * Return the current smoothing status of the canvas
      */
     Engine.prototype.getAntialiasing = function () {
+        /*eslint-disable */
         return (this.ctx.imageSmoothingEnabled ||
             this.ctx.webkitImageSmoothingEnabled ||
             this.ctx.mozImageSmoothingEnabled ||
             this.ctx.msImageSmoothingEnabled);
+        /*eslint-enable */
     };
     Object.defineProperty(Engine.prototype, "isInitialized", {
         /**

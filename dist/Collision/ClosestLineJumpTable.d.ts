@@ -12,7 +12,7 @@ import { Circle } from './Circle';
  * @param v Direction and lenght of L2
  */
 export declare function ClosestLine(p0: Vector, u: Vector, q0: Vector, v: Vector): Line;
-export declare let ClosestLineJumpTable: {
+export declare const ClosestLineJumpTable: {
     PolygonPolygonClosestLine(polygonA: ConvexPolygon, polygonB: ConvexPolygon): Line;
     PolygonEdgeClosestLine(polygon: ConvexPolygon, edge: Edge): Line;
     PolygonCircleClosestLine(polygon: ConvexPolygon, circle: Circle): Line;

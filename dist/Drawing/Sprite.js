@@ -71,7 +71,7 @@ var SpriteImpl = /** @class */ (function () {
         this._spriteCanvas = document.createElement('canvas');
         this._spriteCanvas.width = width;
         this._spriteCanvas.height = height;
-        this._spriteCtx = this._spriteCanvas.getContext('2d');
+        this._spriteCtx = this._spriteCanvas.getContext('2d'); // eslint-disable-line
         this._texture.loaded
             .then(function () {
             _this.width = _this.width || _this._texture.image.naturalWidth;

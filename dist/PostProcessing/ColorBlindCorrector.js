@@ -20,7 +20,9 @@ var ColorBlindCorrector = /** @class */ (function () {
         this.engine = engine;
         this.simulate = simulate;
         this.colorMode = colorMode;
-        this._vertexShader = 'attribute vec2 a_position;' +
+        /*eslint-disable */
+        this._vertexShader = '' +
+            'attribute vec2 a_position;' +
             'attribute vec2 a_texCoord;' +
             'uniform vec2 u_resolution;' +
             'varying vec2 v_texCoord;' +
@@ -84,6 +86,7 @@ var ColorBlindCorrector = /** @class */ (function () {
         this._internalCanvas = document.createElement('canvas');
         this._internalCanvas.width = engine.drawWidth;
         this._internalCanvas.height = engine.drawHeight;
+        // eslint-disable-next-line
         this._gl = this._internalCanvas.getContext('webgl', { preserveDrawingBuffer: true });
         this._program = this._gl.createProgram();
         var fragmentShader = this._getShader('Fragment', this._getFragmentShaderByMode(colorMode));

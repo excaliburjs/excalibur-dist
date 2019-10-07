@@ -100,6 +100,7 @@ var Detector = /** @class */ (function () {
             msg += ' ' + REPORTED_FEATURES[feature] + '\n';
         }
         args.unshift(msg);
+        // eslint-disable-next-line no-console
         console.log.apply(console, args);
     };
     /**

@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.23.0-alpha.4221+c204114"` gets replaced by Webpack on build
+ * @description `"0.23.0-alpha.4227+d1173c4"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.23.0-alpha.4221+c204114";
+export var EX_VERSION = "0.23.0-alpha.4227+d1173c4";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entrypoint and exports everything
@@ -28,7 +28,7 @@ export * from './Scene';
 export { TileMap, Cell, TileSprite } from './TileMap';
 export * from './Timer';
 export * from './Trigger';
-export * from './UIActor';
+export * from './ScreenElement';
 export * from './Actions/Index';
 export * from './Collision/Index';
 export * from './Drawing/Index';

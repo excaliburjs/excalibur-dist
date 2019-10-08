@@ -1,4 +1,4 @@
-import { UIActor } from './UIActor';
+import { ScreenElement } from './ScreenElement';
 import { InitializeEvent, ActivateEvent, DeactivateEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from './Events';
 import { Timer } from './Timer';
 import { Engine } from './Engine';
@@ -52,9 +52,9 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     private _engine;
     /**
-     * The [[UIActor]]s in a scene, if any; these are drawn last
+     * The [[ScreenElement]]s in a scene, if any; these are drawn last
      */
-    uiActors: Actor[];
+    screenElements: Actor[];
     private _isInitialized;
     private _sortedDrawingTree;
     private _broadphase;
@@ -235,10 +235,10 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     add(actor: Actor): void;
     /**
-     * Adds a [[UIActor]] to the scene.
-     * @param uiActor  The UIActor to add to the current scene
+     * Adds a [[ScreenElement]] to the scene.
+     * @param screenElement  The ScreenElement to add to the current scene
      */
-    add(uiActor: UIActor): void;
+    add(screenElement: ScreenElement): void;
     /**
      * Removes a [[Timer]] from the current scene, it will no longer be updated.
      * @param timer  The timer to remove to the current scene.
@@ -255,20 +255,20 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     remove(actor: Actor): void;
     /**
-     * Removes a [[UIActor]] to the scene, it will no longer be drawn or updated
-     * @param uiActor  The UIActor to remove from the current scene
+     * Removes a [[ScreenElement]] to the scene, it will no longer be drawn or updated
+     * @param screenElement  The ScreenElement to remove from the current scene
      */
-    remove(uiActor: UIActor): void;
+    remove(screenElement: ScreenElement): void;
     /**
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
-     * @todo Should this be `UIActor` only?
+     * @todo Should this be `ScreenElement` only?
      */
-    addUIActor(actor: Actor): void;
+    addScreenElement(actor: Actor): void;
     /**
      * Removes an actor as a piece of UI
      */
-    removeUIActor(actor: Actor): void;
+    removeScreenElement(actor: Actor): void;
     /**
      * Adds an actor to the scene, once this is done the actor will be drawn and updated.
      */

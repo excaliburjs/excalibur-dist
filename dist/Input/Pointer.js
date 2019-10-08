@@ -538,8 +538,8 @@ var Pointers = /** @class */ (function (_super) {
     Pointers.prototype._validateWheelEventPath = function (pointers, actor) {
         for (var i = 0; i < pointers.length; i++) {
             var wheelEvent = pointers[i];
-            var isNotUIActor = !Actors.isUIActor(actor);
-            if (actor.contains(wheelEvent.x, wheelEvent.y, isNotUIActor)) {
+            var isNotScreenElement = !Actors.isScreenElement(actor);
+            if (actor.contains(wheelEvent.x, wheelEvent.y, isNotScreenElement)) {
                 wheelEvent.layPath(actor);
             }
         }
@@ -831,7 +831,7 @@ var Pointer = /** @class */ (function (_super) {
      */
     Pointer.prototype.isActorUnderPointer = function (actor) {
         if (this.lastWorldPos) {
-            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !Actors.isUIActor(actor));
+            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !Actors.isScreenElement(actor));
         }
         return false;
     };

@@ -20,15 +20,15 @@ import { Shape } from './Collision/Shape';
  * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
  * not participate in collisions. Drawn on top of all other actors.
  */
-var UIActor = /** @class */ (function (_super) {
-    __extends(UIActor, _super);
+var ScreenElement = /** @class */ (function (_super) {
+    __extends(ScreenElement, _super);
     /**
      * @param x       The starting x coordinate of the actor
      * @param y       The starting y coordinate of the actor
      * @param width   The starting width of the actor
      * @param height  The starting height of the actor
      */
-    function UIActor(xOrConfig, y, width, height) {
+    function ScreenElement(xOrConfig, y, width, height) {
         var _this = this;
         if (typeof xOrConfig !== 'object') {
             _this = _super.call(this, xOrConfig, y, width, height) || this;
@@ -44,11 +44,11 @@ var UIActor = /** @class */ (function (_super) {
         _this.enableCapturePointer = true;
         return _this;
     }
-    UIActor.prototype._initialize = function (engine) {
+    ScreenElement.prototype._initialize = function (engine) {
         this._engine = engine;
         _super.prototype._initialize.call(this, engine);
     };
-    UIActor.prototype.contains = function (x, y, useWorld) {
+    ScreenElement.prototype.contains = function (x, y, useWorld) {
         if (useWorld === void 0) { useWorld = true; }
         if (useWorld) {
             return _super.prototype.contains.call(this, x, y);
@@ -56,6 +56,6 @@ var UIActor = /** @class */ (function (_super) {
         var coords = this._engine.worldToScreenCoordinates(new Vector(x, y));
         return _super.prototype.contains.call(this, coords.x, coords.y);
     };
-    return UIActor;
+    return ScreenElement;
 }(Actor));
-export { UIActor };
+export { ScreenElement };

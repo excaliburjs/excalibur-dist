@@ -16,7 +16,7 @@ import { polyfill } from './Polyfill';
 polyfill();
 import { Promise } from './Promises';
 import { Vector } from './Algebra';
-import { UIActor } from './UIActor';
+import { ScreenElement } from './ScreenElement';
 import { Actor } from './Actor';
 import { Timer } from './Timer';
 import { TileMap } from './TileMap';
@@ -477,8 +477,8 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.add = function (entity) {
-        if (entity instanceof UIActor) {
-            this.currentScene.addUIActor(entity);
+        if (entity instanceof ScreenElement) {
+            this.currentScene.addScreenElement(entity);
             return;
         }
         if (entity instanceof Actor) {
@@ -495,8 +495,8 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.remove = function (entity) {
-        if (entity instanceof UIActor) {
-            this.currentScene.removeUIActor(entity);
+        if (entity instanceof ScreenElement) {
+            this.currentScene.removeScreenElement(entity);
             return;
         }
         if (entity instanceof Actor) {

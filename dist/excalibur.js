@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4221+c204114 - 2019-10-8
+ * excalibur - 0.23.0-alpha.4227+d1173c4 - 2019-10-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -10554,7 +10554,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Polyfill */ "./Polyfill.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
 /* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
@@ -11049,8 +11049,8 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.add = function (entity) {
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_4__["UIActor"]) {
-            this.currentScene.addUIActor(entity);
+        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_4__["ScreenElement"]) {
+            this.currentScene.addScreenElement(entity);
             return;
         }
         if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_5__["Actor"]) {
@@ -11067,8 +11067,8 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.remove = function (entity) {
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_4__["UIActor"]) {
-            this.currentScene.removeUIActor(entity);
+        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_4__["ScreenElement"]) {
+            this.currentScene.removeScreenElement(entity);
             return;
         }
         if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_5__["Actor"]) {
@@ -14059,8 +14059,8 @@ var Pointers = /** @class */ (function (_super) {
     Pointers.prototype._validateWheelEventPath = function (pointers, actor) {
         for (var i = 0; i < pointers.length; i++) {
             var wheelEvent = pointers[i];
-            var isNotUIActor = !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isUIActor"](actor);
-            if (actor.contains(wheelEvent.x, wheelEvent.y, isNotUIActor)) {
+            var isNotScreenElement = !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isScreenElement"](actor);
+            if (actor.contains(wheelEvent.x, wheelEvent.y, isNotScreenElement)) {
                 wheelEvent.layPath(actor);
             }
         }
@@ -14352,7 +14352,7 @@ var Pointer = /** @class */ (function (_super) {
      */
     Pointer.prototype.isActorUnderPointer = function (actor) {
         if (this.lastWorldPos) {
-            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isUIActor"](actor));
+            return actor.contains(this.lastWorldPos.x, this.lastWorldPos.y, !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isScreenElement"](actor));
         }
         return false;
     };
@@ -16456,7 +16456,7 @@ var Physics = /** @class */ (function () {
     };
     /**
      * Global acceleration that is applied to all vanilla actors that have a [[CollisionType.Active|active]] collision type.
-     * Global acceleration won't effect [[Label|labels]], [[UIActor|ui actors]], or [[Trigger|triggers]] in Excalibur.
+     * Global acceleration won't effect [[Label|labels]], [[ScreenElement|ui actors]], or [[Trigger|triggers]] in Excalibur.
      *
      * This is a great way to globally simulate effects like gravity.
      */
@@ -18675,7 +18675,7 @@ var Texture = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return Scene; });
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
@@ -18757,9 +18757,9 @@ var Scene = /** @class */ (function (_super) {
         _this.tileMaps = [];
         _this._groups = {};
         /**
-         * The [[UIActor]]s in a scene, if any; these are drawn last
+         * The [[ScreenElement]]s in a scene, if any; these are drawn last
          */
-        _this.uiActors = [];
+        _this.screenElements = [];
         _this._isInitialized = false;
         _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](_Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"].prototype.getZIndex);
         _this._broadphase = new _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__["DynamicTreeCollisionBroadphase"]();
@@ -18975,8 +18975,8 @@ var Scene = /** @class */ (function (_super) {
             timer.update(delta);
         }
         // Cycle through actors updating UI actors
-        for (i = 0, len = this.uiActors.length; i < len; i++) {
-            this.uiActors[i].update(engine, delta);
+        for (i = 0, len = this.screenElements.length; i < len; i++) {
+            this.screenElements[i].update(engine, delta);
         }
         // Cycle through actors updating tile maps
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -19063,15 +19063,15 @@ var Scene = /** @class */ (function (_super) {
             this.debugDraw(ctx);
         }
         ctx.restore();
-        for (i = 0, len = this.uiActors.length; i < len; i++) {
+        for (i = 0, len = this.screenElements.length; i < len; i++) {
             // only draw ui actors that are visible and on screen
-            if (this.uiActors[i].visible) {
-                this.uiActors[i].draw(ctx, delta);
+            if (this.screenElements[i].visible) {
+                this.screenElements[i].draw(ctx, delta);
             }
         }
         if (this._engine && this._engine.isDebug) {
-            for (i = 0, len = this.uiActors.length; i < len; i++) {
-                this.uiActors[i].debugDraw(ctx);
+            for (i = 0, len = this.screenElements.length; i < len; i++) {
+                this.screenElements[i].debugDraw(ctx);
             }
         }
         this._postdraw(ctx, delta);
@@ -19107,9 +19107,9 @@ var Scene = /** @class */ (function (_super) {
         if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
             entity.unkill();
         }
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_0__["UIActor"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.uiActors, entity)) {
-                this.addUIActor(entity);
+        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.screenElements, entity)) {
+                this.addScreenElement(entity);
             }
             return;
         }
@@ -19132,8 +19132,8 @@ var Scene = /** @class */ (function (_super) {
         }
     };
     Scene.prototype.remove = function (entity) {
-        if (entity instanceof _UIActor__WEBPACK_IMPORTED_MODULE_0__["UIActor"]) {
-            this.removeUIActor(entity);
+        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) {
+            this.removeScreenElement(entity);
             return;
         }
         if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
@@ -19149,19 +19149,19 @@ var Scene = /** @class */ (function (_super) {
     /**
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
-     * @todo Should this be `UIActor` only?
+     * @todo Should this be `ScreenElement` only?
      */
-    Scene.prototype.addUIActor = function (actor) {
-        this.uiActors.push(actor);
+    Scene.prototype.addScreenElement = function (actor) {
+        this.screenElements.push(actor);
         actor.scene = this;
     };
     /**
      * Removes an actor as a piece of UI
      */
-    Scene.prototype.removeUIActor = function (actor) {
-        var index = this.uiActors.indexOf(actor);
+    Scene.prototype.removeScreenElement = function (actor) {
+        var index = this.screenElements.indexOf(actor);
         if (index > -1) {
-            this.uiActors.splice(index, 1);
+            this.screenElements.splice(index, 1);
         }
     };
     /**
@@ -19295,7 +19295,7 @@ var Scene = /** @class */ (function (_super) {
         return false;
     };
     Scene.prototype._collectActorStats = function (engine) {
-        for (var _i = 0, _a = this.uiActors; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.screenElements; _i < _a.length; _i++) {
             var _ui = _a[_i];
             engine.stats.currFrame.actors.ui++;
         }
@@ -19304,7 +19304,7 @@ var Scene = /** @class */ (function (_super) {
             engine.stats.currFrame.actors.alive++;
             for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
                 var child = _e[_d];
-                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_13__["isUIActor"](child)) {
+                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_13__["isScreenElement"](child)) {
                     engine.stats.currFrame.actors.ui++;
                 }
                 else {
@@ -19327,6 +19327,86 @@ var Scene = /** @class */ (function (_super) {
     ], Scene.prototype, "removeGroup", null);
     return Scene;
 }(_Class__WEBPACK_IMPORTED_MODULE_11__["Class"]));
+
+
+
+/***/ }),
+
+/***/ "./ScreenElement.ts":
+/*!**************************!*\
+  !*** ./ScreenElement.ts ***!
+  \**************************/
+/*! exports provided: ScreenElement */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return ScreenElement; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+/**
+ * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
+ * not participate in collisions. Drawn on top of all other actors.
+ */
+var ScreenElement = /** @class */ (function (_super) {
+    __extends(ScreenElement, _super);
+    /**
+     * @param x       The starting x coordinate of the actor
+     * @param y       The starting y coordinate of the actor
+     * @param width   The starting width of the actor
+     * @param height  The starting height of the actor
+     */
+    function ScreenElement(xOrConfig, y, width, height) {
+        var _this = this;
+        if (typeof xOrConfig !== 'object') {
+            _this = _super.call(this, xOrConfig, y, width, height) || this;
+        }
+        else {
+            _this = _super.call(this, xOrConfig) || this;
+        }
+        _this.traits = [];
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_2__["CapturePointer"]());
+        _this.anchor.setTo(0, 0);
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
+        _this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Box(_this.width, _this.height, _this.anchor);
+        _this.enableCapturePointer = true;
+        return _this;
+    }
+    ScreenElement.prototype._initialize = function (engine) {
+        this._engine = engine;
+        _super.prototype._initialize.call(this, engine);
+    };
+    ScreenElement.prototype.contains = function (x, y, useWorld) {
+        if (useWorld === void 0) { useWorld = true; }
+        if (useWorld) {
+            return _super.prototype.contains.call(this, x, y);
+        }
+        var coords = this._engine.worldToScreenCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](x, y));
+        return _super.prototype.contains.call(this, coords.x, coords.y);
+    };
+    return ScreenElement;
+}(_Actor__WEBPACK_IMPORTED_MODULE_1__["Actor"]));
 
 
 
@@ -20181,108 +20261,28 @@ var Trigger = /** @class */ (function (_super) {
 
 /***/ }),
 
-/***/ "./UIActor.ts":
-/*!********************!*\
-  !*** ./UIActor.ts ***!
-  \********************/
-/*! exports provided: UIActor */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return UIActor; });
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
-/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-
-
-
-
-/**
- * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
- * not participate in collisions. Drawn on top of all other actors.
- */
-var UIActor = /** @class */ (function (_super) {
-    __extends(UIActor, _super);
-    /**
-     * @param x       The starting x coordinate of the actor
-     * @param y       The starting y coordinate of the actor
-     * @param width   The starting width of the actor
-     * @param height  The starting height of the actor
-     */
-    function UIActor(xOrConfig, y, width, height) {
-        var _this = this;
-        if (typeof xOrConfig !== 'object') {
-            _this = _super.call(this, xOrConfig, y, width, height) || this;
-        }
-        else {
-            _this = _super.call(this, xOrConfig) || this;
-        }
-        _this.traits = [];
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_2__["CapturePointer"]());
-        _this.anchor.setTo(0, 0);
-        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
-        _this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Box(_this.width, _this.height, _this.anchor);
-        _this.enableCapturePointer = true;
-        return _this;
-    }
-    UIActor.prototype._initialize = function (engine) {
-        this._engine = engine;
-        _super.prototype._initialize.call(this, engine);
-    };
-    UIActor.prototype.contains = function (x, y, useWorld) {
-        if (useWorld === void 0) { useWorld = true; }
-        if (useWorld) {
-            return _super.prototype.contains.call(this, x, y);
-        }
-        var coords = this._engine.worldToScreenCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](x, y));
-        return _super.prototype.contains.call(this, coords.x, coords.y);
-    };
-    return UIActor;
-}(_Actor__WEBPACK_IMPORTED_MODULE_1__["Actor"]));
-
-
-
-/***/ }),
-
 /***/ "./Util/Actors.ts":
 /*!************************!*\
   !*** ./Util/Actors.ts ***!
   \************************/
-/*! exports provided: isVanillaActor, isUIActor */
+/*! exports provided: isVanillaActor, isScreenElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isVanillaActor", function() { return isVanillaActor; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isUIActor", function() { return isUIActor; });
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../UIActor */ "./UIActor.ts");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isScreenElement", function() { return isScreenElement; });
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ScreenElement */ "./ScreenElement.ts");
 /* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Label */ "./Label.ts");
 /* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Trigger */ "./Trigger.ts");
 
 
 
 function isVanillaActor(actor) {
-    return !(actor instanceof _UIActor__WEBPACK_IMPORTED_MODULE_0__["UIActor"]) && !(actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_2__["Trigger"]) && !(actor instanceof _Label__WEBPACK_IMPORTED_MODULE_1__["Label"]);
+    return !(actor instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) && !(actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_2__["Trigger"]) && !(actor instanceof _Label__WEBPACK_IMPORTED_MODULE_1__["Label"]);
 }
-function isUIActor(actor) {
-    return actor instanceof _UIActor__WEBPACK_IMPORTED_MODULE_0__["UIActor"];
+function isScreenElement(actor) {
+    return actor instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"];
 }
 
 
@@ -22106,7 +22106,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22296,8 +22296,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_21__["Trigger"]; });
 
-/* harmony import */ var _UIActor__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./UIActor */ "./UIActor.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _UIActor__WEBPACK_IMPORTED_MODULE_22__["UIActor"]; });
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["ScreenElement"]; });
 
 /* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Actions"]; });
@@ -22453,7 +22453,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4221+c204114";
+var EX_VERSION = "0.23.0-alpha.4227+d1173c4";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

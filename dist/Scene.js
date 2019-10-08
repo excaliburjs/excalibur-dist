@@ -17,7 +17,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { UIActor } from './UIActor';
+import { ScreenElement } from './ScreenElement';
 import { Physics } from './Physics';
 import { InitializeEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent } from './Events';
 import { Logger } from './Util/Log';
@@ -64,9 +64,9 @@ var Scene = /** @class */ (function (_super) {
         _this.tileMaps = [];
         _this._groups = {};
         /**
-         * The [[UIActor]]s in a scene, if any; these are drawn last
+         * The [[ScreenElement]]s in a scene, if any; these are drawn last
          */
-        _this.uiActors = [];
+        _this.screenElements = [];
         _this._isInitialized = false;
         _this._sortedDrawingTree = new SortedList(Actor.prototype.getZIndex);
         _this._broadphase = new DynamicTreeCollisionBroadphase();
@@ -282,8 +282,8 @@ var Scene = /** @class */ (function (_super) {
             timer.update(delta);
         }
         // Cycle through actors updating UI actors
-        for (i = 0, len = this.uiActors.length; i < len; i++) {
-            this.uiActors[i].update(engine, delta);
+        for (i = 0, len = this.screenElements.length; i < len; i++) {
+            this.screenElements[i].update(engine, delta);
         }
         // Cycle through actors updating tile maps
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -370,15 +370,15 @@ var Scene = /** @class */ (function (_super) {
             this.debugDraw(ctx);
         }
         ctx.restore();
-        for (i = 0, len = this.uiActors.length; i < len; i++) {
+        for (i = 0, len = this.screenElements.length; i < len; i++) {
             // only draw ui actors that are visible and on screen
-            if (this.uiActors[i].visible) {
-                this.uiActors[i].draw(ctx, delta);
+            if (this.screenElements[i].visible) {
+                this.screenElements[i].draw(ctx, delta);
             }
         }
         if (this._engine && this._engine.isDebug) {
-            for (i = 0, len = this.uiActors.length; i < len; i++) {
-                this.uiActors[i].debugDraw(ctx);
+            for (i = 0, len = this.screenElements.length; i < len; i++) {
+                this.screenElements[i].debugDraw(ctx);
             }
         }
         this._postdraw(ctx, delta);
@@ -414,9 +414,9 @@ var Scene = /** @class */ (function (_super) {
         if (entity instanceof Actor) {
             entity.unkill();
         }
-        if (entity instanceof UIActor) {
-            if (!Util.contains(this.uiActors, entity)) {
-                this.addUIActor(entity);
+        if (entity instanceof ScreenElement) {
+            if (!Util.contains(this.screenElements, entity)) {
+                this.addScreenElement(entity);
             }
             return;
         }
@@ -439,8 +439,8 @@ var Scene = /** @class */ (function (_super) {
         }
     };
     Scene.prototype.remove = function (entity) {
-        if (entity instanceof UIActor) {
-            this.removeUIActor(entity);
+        if (entity instanceof ScreenElement) {
+            this.removeScreenElement(entity);
             return;
         }
         if (entity instanceof Actor) {
@@ -456,19 +456,19 @@ var Scene = /** @class */ (function (_super) {
     /**
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
-     * @todo Should this be `UIActor` only?
+     * @todo Should this be `ScreenElement` only?
      */
-    Scene.prototype.addUIActor = function (actor) {
-        this.uiActors.push(actor);
+    Scene.prototype.addScreenElement = function (actor) {
+        this.screenElements.push(actor);
         actor.scene = this;
     };
     /**
      * Removes an actor as a piece of UI
      */
-    Scene.prototype.removeUIActor = function (actor) {
-        var index = this.uiActors.indexOf(actor);
+    Scene.prototype.removeScreenElement = function (actor) {
+        var index = this.screenElements.indexOf(actor);
         if (index > -1) {
-            this.uiActors.splice(index, 1);
+            this.screenElements.splice(index, 1);
         }
     };
     /**
@@ -602,7 +602,7 @@ var Scene = /** @class */ (function (_super) {
         return false;
     };
     Scene.prototype._collectActorStats = function (engine) {
-        for (var _i = 0, _a = this.uiActors; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this.screenElements; _i < _a.length; _i++) {
             var _ui = _a[_i];
             engine.stats.currFrame.actors.ui++;
         }
@@ -611,7 +611,7 @@ var Scene = /** @class */ (function (_super) {
             engine.stats.currFrame.actors.alive++;
             for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
                 var child = _e[_d];
-                if (ActorUtils.isUIActor(child)) {
+                if (ActorUtils.isScreenElement(child)) {
                     engine.stats.currFrame.actors.ui++;
                 }
                 else {

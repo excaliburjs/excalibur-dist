@@ -1,9 +1,9 @@
-import { UIActor } from '../UIActor';
+import { ScreenElement } from '../ScreenElement';
 import { Label } from '../Label';
 import { Trigger } from '../Trigger';
 export function isVanillaActor(actor) {
-    return !(actor instanceof UIActor) && !(actor instanceof Trigger) && !(actor instanceof Label);
+    return !(actor instanceof ScreenElement) && !(actor instanceof Trigger) && !(actor instanceof Label);
 }
-export function isUIActor(actor) {
-    return actor instanceof UIActor;
+export function isScreenElement(actor) {
+    return actor instanceof ScreenElement;
 }

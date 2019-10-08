@@ -2,7 +2,7 @@ import { CanUpdate, CanDraw, CanInitialize } from './Interfaces/LifecycleEvents'
 import { Loadable } from './Interfaces/Loadable';
 import { Promise } from './Promises';
 import { Vector } from './Algebra';
-import { UIActor } from './UIActor';
+import { ScreenElement } from './ScreenElement';
 import { Actor } from './Actor';
 import { Timer } from './Timer';
 import { TileMap } from './TileMap';
@@ -436,12 +436,12 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     add(actor: Actor): void;
     /**
-     * Adds a [[UIActor]] to the [[currentScene]] of the game,
-     * UIActors do not participate in collisions, instead the
+     * Adds a [[ScreenElement]] to the [[currentScene]] of the game,
+     * ScreenElements do not participate in collisions, instead the
      * remain in the same place on the screen.
-     * @param uiActor  The UIActor to add to the [[currentScene]]
+     * @param screenElement  The ScreenElement to add to the [[currentScene]]
      */
-    add(uiActor: UIActor): void;
+    add(screenElement: ScreenElement): void;
     /**
      * Removes a scene instance from the engine
      * @param scene  The scene to remove
@@ -470,10 +470,10 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     remove(actor: Actor): void;
     /**
-     * Removes a [[UIActor]] to the scene, it will no longer be drawn or updated
-     * @param uiActor  The UIActor to remove from the [[currentScene]]
+     * Removes a [[ScreenElement]] to the scene, it will no longer be drawn or updated
+     * @param screenElement  The ScreenElement to remove from the [[currentScene]]
      */
-    remove(uiActor: UIActor): void;
+    remove(screenElement: ScreenElement): void;
     /**
      * Adds an actor to the [[currentScene]] of the game. This is synonymous
      * to calling `engine.currentScene.add(actor)`.

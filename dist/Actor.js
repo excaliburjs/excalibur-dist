@@ -1143,6 +1143,9 @@ var ActorImpl = /** @class */ (function (_super) {
         if (this.color) {
             this.color.a = this.opacity;
         }
+        if (this.opacity === 0) {
+            this.visible = false;
+        }
         // calculate changing opacity
         if (this.previousOpacity !== this.opacity) {
             this.previousOpacity = this.opacity;

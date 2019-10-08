@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4211+0c01406 - 2019-10-7
+ * excalibur - 0.23.0-alpha.4221+c204114 - 2019-10-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -2647,6 +2647,9 @@ var ActorImpl = /** @class */ (function (_super) {
         // Update color only opacity
         if (this.color) {
             this.color.a = this.opacity;
+        }
+        if (this.opacity === 0) {
+            this.visible = false;
         }
         // calculate changing opacity
         if (this.previousOpacity !== this.opacity) {
@@ -22450,7 +22453,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4211+0c01406";
+var EX_VERSION = "0.23.0-alpha.4221+c204114";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

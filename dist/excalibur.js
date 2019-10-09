@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4249+74a2347 - 2019-10-9
+ * excalibur - 0.23.0-alpha.4263+7569c69 - 2019-10-9
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4222,65 +4222,6 @@ var Class = /** @class */ (function () {
      */
     Class.prototype.once = function (eventName, handler) {
         this.eventDispatcher.once(eventName, handler);
-    };
-    /**
-     * You may wish to extend native Excalibur functionality in vanilla Javascript.
-     * Any method on a class inheriting [[Class]] may be extended to support
-     * additional functionality. In the example below we create a new type called `MyActor`.
-     *
-     *
-     * ```js
-     * var MyActor = Actor.extend({
-     *
-     *    constructor: function() {
-     *       this.newprop = 'something';
-     *       Actor.apply(this, arguments);
-     *    },
-     *
-     *    update: function(engine, delta) {
-     *       // Implement custom update
-     *       // Call super constructor update
-     *       Actor.prototype.update.call(this, engine, delta);
-     *
-     *       console.log("Something cool!");
-     *    }
-     * });
-     *
-     * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
-     * ```
-     *
-     * In TypeScript, you only need to use the `extends` syntax, you do not need
-     * to use this method of extension.
-     *
-     * @param methods A JSON object contain any methods/properties you want to extend
-     */
-    Class.extend = function (methods) {
-        var parent = this;
-        var child;
-        if (methods && methods.hasOwnProperty('constructor')) {
-            child = methods.constructor;
-        }
-        else {
-            child = function () {
-                return parent.apply(this, arguments);
-            };
-        }
-        // Using constructor allows JS to lazily instantiate super classes
-        var Super = function () {
-            this.constructor = child;
-        };
-        Super.prototype = parent.prototype;
-        child.prototype = new Super();
-        if (methods) {
-            for (var prop in methods) {
-                if (methods.hasOwnProperty(prop)) {
-                    child.prototype[prop] = methods[prop];
-                }
-            }
-        }
-        // Make subclasses extendable
-        child.extend = Class.extend;
-        return child;
     };
     return Class;
 }());
@@ -22453,7 +22394,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4249+74a2347";
+var EX_VERSION = "0.23.0-alpha.4263+7569c69";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

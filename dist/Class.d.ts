@@ -40,36 +40,4 @@ export declare class Class implements Eventable {
      * @param handler   The handler of the event that will be auto unsubscribed
      */
     once(eventName: string, handler: (event: GameEvent<any>) => void): void;
-    /**
-     * You may wish to extend native Excalibur functionality in vanilla Javascript.
-     * Any method on a class inheriting [[Class]] may be extended to support
-     * additional functionality. In the example below we create a new type called `MyActor`.
-     *
-     *
-     * ```js
-     * var MyActor = Actor.extend({
-     *
-     *    constructor: function() {
-     *       this.newprop = 'something';
-     *       Actor.apply(this, arguments);
-     *    },
-     *
-     *    update: function(engine, delta) {
-     *       // Implement custom update
-     *       // Call super constructor update
-     *       Actor.prototype.update.call(this, engine, delta);
-     *
-     *       console.log("Something cool!");
-     *    }
-     * });
-     *
-     * var myActor = new MyActor(100, 100, 100, 100, Color.Azure);
-     * ```
-     *
-     * In TypeScript, you only need to use the `extends` syntax, you do not need
-     * to use this method of extension.
-     *
-     * @param methods A JSON object contain any methods/properties you want to extend
-     */
-    static extend(methods: any): any;
 }

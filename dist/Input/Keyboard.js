@@ -103,7 +103,9 @@ var Keyboard = /** @class */ (function (_super) {
      */
     Keyboard.prototype.init = function (global) {
         var _this = this;
-        global = global || window;
+        // See https://github.com/excaliburjs/Excalibur/issues/1294
+        // window.top is for the iframe case
+        global = global || window.top || window;
         global.addEventListener('blur', function () {
             _this._keys.length = 0; // empties array efficiently
         });

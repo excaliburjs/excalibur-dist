@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4369+14ad22c - 2019-10-19
+ * excalibur - 0.23.0-alpha.4399+741640f - 2019-10-19
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -16781,7 +16781,9 @@ var Keyboard = /** @class */ (function (_super) {
      */
     Keyboard.prototype.init = function (global) {
         var _this = this;
-        global = global || window;
+        // See https://github.com/excaliburjs/Excalibur/issues/1294
+        // window.top is for the iframe case
+        global = global || window.top || window;
         global.addEventListener('blur', function () {
             _this._keys.length = 0; // empties array efficiently
         });
@@ -25749,7 +25751,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4369+14ad22c";
+var EX_VERSION = "0.23.0-alpha.4399+741640f";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4399+741640f - 2019-10-19
+ * excalibur - 0.23.0-alpha.4418+878e5f8 - 2019-10-20
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -14158,6 +14158,10 @@ O|===|* >________________>\n\
             _this._logger.debug('Using Canvas element specified: ' + options.canvasElementId);
             _this.canvas = document.getElementById(options.canvasElementId);
         }
+        else if (options.canvasElement) {
+            _this._logger.debug('Using Canvas element specified:', options.canvasElement);
+            _this.canvas = options.canvasElement;
+        }
         else {
             _this._logger.debug('Using generated canvas element');
             _this.canvas = document.createElement('canvas');
@@ -14632,7 +14636,7 @@ O|===|* >________________>\n\
         if (!options.suppressHiDPIScaling) {
             this._initializeHiDpi();
         }
-        if (!this.canvasElementId) {
+        if (!this.canvasElementId && !options.canvasElement) {
             document.body.appendChild(this.canvas);
         }
     };
@@ -15013,6 +15017,7 @@ O|===|* >________________>\n\
         height: 0,
         enableCanvasTransparency: true,
         canvasElementId: '',
+        canvasElement: undefined,
         pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_16__["PointerScope"].Document,
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,
@@ -25751,7 +25756,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4399+741640f";
+var EX_VERSION = "0.23.0-alpha.4418+878e5f8";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

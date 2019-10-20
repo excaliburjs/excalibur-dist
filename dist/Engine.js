@@ -209,6 +209,10 @@ O|===|* >________________>\n\
             _this._logger.debug('Using Canvas element specified: ' + options.canvasElementId);
             _this.canvas = document.getElementById(options.canvasElementId);
         }
+        else if (options.canvasElement) {
+            _this._logger.debug('Using Canvas element specified:', options.canvasElement);
+            _this.canvas = options.canvasElement;
+        }
         else {
             _this._logger.debug('Using generated canvas element');
             _this.canvas = document.createElement('canvas');
@@ -683,7 +687,7 @@ O|===|* >________________>\n\
         if (!options.suppressHiDPIScaling) {
             this._initializeHiDpi();
         }
-        if (!this.canvasElementId) {
+        if (!this.canvasElementId && !options.canvasElement) {
             document.body.appendChild(this.canvas);
         }
     };
@@ -1064,6 +1068,7 @@ O|===|* >________________>\n\
         height: 0,
         enableCanvasTransparency: true,
         canvasElementId: '',
+        canvasElement: undefined,
         pointerScope: Input.PointerScope.Document,
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,

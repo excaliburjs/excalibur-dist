@@ -88,6 +88,10 @@ export interface EngineOptions {
      */
     canvasElementId?: string;
     /**
+     * Optionally specify the target canvas DOM element directly
+     */
+    canvasElement?: HTMLCanvasElement;
+    /**
      * The [[DisplayMode]] of the game. Depending on this value, [[width]] and [[height]] may be ignored.
      */
     displayMode?: DisplayMode;

@@ -138,10 +138,26 @@ var Vector = /** @class */ (function () {
     };
     /**
      * The magnitude (size) of the Vector
+     * @obsolete magnitude will be removed in favour of '.size' in version 0.25.0
      */
     Vector.prototype.magnitude = function () {
         return this.distance();
     };
+    Object.defineProperty(Vector.prototype, "size", {
+        /**
+         * The size(magnitude) of the Vector
+         */
+        get: function () {
+            return this.distance();
+        },
+        set: function (newLength) {
+            var v = this.normalize().scale(newLength);
+            this.x = v.x;
+            this.y = v.y;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Normalizes a vector to have a magnitude of 1.
      */

@@ -70,8 +70,13 @@ export declare class Vector implements Clonable<Vector> {
     distance(v?: Vector): number;
     /**
      * The magnitude (size) of the Vector
+     * @obsolete magnitude will be removed in favour of '.size' in version 0.25.0
      */
     magnitude(): number;
+    /**
+     * The size(magnitude) of the Vector
+     */
+    size: number;
     /**
      * Normalizes a vector to have a magnitude of 1.
      */

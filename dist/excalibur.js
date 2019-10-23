@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4418+878e5f8 - 2019-10-20
+ * excalibur - 0.23.0-alpha.4457+fd8b569 - 2019-10-23
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -6576,10 +6576,26 @@ var Vector = /** @class */ (function () {
     };
     /**
      * The magnitude (size) of the Vector
+     * @obsolete magnitude will be removed in favour of '.size' in version 0.25.0
      */
     Vector.prototype.magnitude = function () {
         return this.distance();
     };
+    Object.defineProperty(Vector.prototype, "size", {
+        /**
+         * The size(magnitude) of the Vector
+         */
+        get: function () {
+            return this.distance();
+        },
+        set: function (newLength) {
+            var v = this.normalize().scale(newLength);
+            this.x = v.x;
+            this.y = v.y;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Normalizes a vector to have a magnitude of 1.
      */
@@ -25756,7 +25772,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4418+878e5f8";
+var EX_VERSION = "0.23.0-alpha.4457+fd8b569";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

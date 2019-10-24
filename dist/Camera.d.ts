@@ -127,17 +127,42 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     protected _follow: Actor;
     private _cameraStrategies;
     strategy: StrategyContainer;
+    /**
+     * Get or set current zoom of the camera, defaults to 1
+     */
     z: number;
-    dx: number;
-    dy: number;
+    /**
+     * Get or set rate of change in zoom, defaults to 0
+     */
     dz: number;
-    ax: number;
-    ay: number;
+    /**
+     * Get or set zoom acceleration
+     */
     az: number;
+    /**
+     * Current rotation of the camera
+     */
     rotation: number;
+    /**
+     * Current angular velc
+     */
     rx: number;
-    private _x;
-    private _y;
+    /**
+     * Get or set the camera's angular velocity
+     */
+    angularVelocity: number;
+    /**
+     * Get or set the camera's position
+     */
+    pos: Vector;
+    /**
+     * Get or set the camera's velocity
+     */
+    vel: Vector;
+    /**
+     * GEt or set the camera's acceleration
+     */
+    acc: Vector;
     private _cameraMoving;
     private _currentLerpTime;
     private _lerpDuration;
@@ -174,19 +199,21 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     */
     y: number;
     /**
-     * Get the camera's position as a vector
+     * Get or set the camera's x velocity
      */
+    dx: number;
     /**
-    * Set the cameras position
-    */
-    pos: Vector;
-    /**
-     * Get the camera's velocity as a vector
+     * Get or set the camera's y velocity
      */
+    dy: number;
     /**
-    * Set the camera's velocity
-    */
-    vel: Vector;
+     * Get or set the camera's x acceleration
+     */
+    ax: number;
+    /**
+     * Get or set the camera's y acceleration
+     */
+    ay: number;
     /**
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
      */

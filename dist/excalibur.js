@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4457+fd8b569 - 2019-10-23
+ * excalibur - 0.23.0-alpha.4494+0948f94 - 2019-10-24
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -7160,7 +7160,7 @@ var ElasticToActorStrategy = /** @class */ (function () {
         this.action = function (target, cam, _eng, _delta) {
             var position = target.center;
             var focus = cam.getFocus();
-            var cameraVel = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](cam.dx, cam.dy);
+            var cameraVel = cam.vel.clone();
             // Calculate the strech vector, using the spring equation
             // F = kX
             // https://en.wikipedia.org/wiki/Hooke's_law
@@ -7219,18 +7219,38 @@ var Camera = /** @class */ (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._cameraStrategies = [];
         _this.strategy = new StrategyContainer(_this);
-        // camera physical quantities
+        /**
+         * Get or set current zoom of the camera, defaults to 1
+         */
         _this.z = 1;
-        _this.dx = 0;
-        _this.dy = 0;
+        /**
+         * Get or set rate of change in zoom, defaults to 0
+         */
         _this.dz = 0;
-        _this.ax = 0;
-        _this.ay = 0;
+        /**
+         * Get or set zoom acceleration
+         */
         _this.az = 0;
+        /**
+         * Current rotation of the camera
+         */
         _this.rotation = 0;
+        /**
+         * Current angular velc
+         */
         _this.rx = 0;
-        _this._x = 0;
-        _this._y = 0;
+        /**
+         * Get or set the camera's position
+         */
+        _this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero;
+        /**
+         * Get or set the camera's velocity
+         */
+        _this.vel = _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero;
+        /**
+         * GEt or set the camera's acceleration
+         */
+        _this.acc = _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].Zero;
         _this._cameraMoving = false;
         _this._currentLerpTime = 0;
         _this._lerpDuration = 1000; // 1 second
@@ -7254,19 +7274,32 @@ var Camera = /** @class */ (function (_super) {
         _this._isInitialized = false;
         return _this;
     }
+    Object.defineProperty(Camera.prototype, "angularVelocity", {
+        /**
+         * Get or set the camera's angular velocity
+         */
+        get: function () {
+            return this.rx;
+        },
+        set: function (value) {
+            this.rx = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Camera.prototype, "x", {
         /**
          * Get the camera's x position
          */
         get: function () {
-            return this._x;
+            return this.pos.x;
         },
         /**
          * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
          */
         set: function (value) {
             if (!this._follow && !this._cameraMoving) {
-                this._x = value;
+                this.pos.x = value;
             }
         },
         enumerable: true,
@@ -7277,49 +7310,67 @@ var Camera = /** @class */ (function (_super) {
          * Get the camera's y position
          */
         get: function () {
-            return this._y;
+            return this.pos.y;
         },
         /**
          * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
          */
         set: function (value) {
             if (!this._follow && !this._cameraMoving) {
-                this._y = value;
+                this.pos.y = value;
             }
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Camera.prototype, "pos", {
+    Object.defineProperty(Camera.prototype, "dx", {
         /**
-         * Get the camera's position as a vector
+         * Get or set the camera's x velocity
          */
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](this.x, this.y);
+            return this.vel.x;
         },
-        /**
-         * Set the cameras position
-         */
         set: function (value) {
-            this.x = value.x;
-            this.y = value.y;
+            this.vel.x = value;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Camera.prototype, "vel", {
+    Object.defineProperty(Camera.prototype, "dy", {
         /**
-         * Get the camera's velocity as a vector
+         * Get or set the camera's y velocity
          */
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](this.dx, this.dy);
+            return this.vel.y;
         },
-        /**
-         * Set the camera's velocity
-         */
         set: function (value) {
-            this.dx = value.x;
-            this.dy = value.y;
+            this.vel.y = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "ax", {
+        /**
+         * Get or set the camera's x acceleration
+         */
+        get: function () {
+            return this.acc.x;
+        },
+        set: function (value) {
+            this.acc.x = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Camera.prototype, "ay", {
+        /**
+         * Get or set the camera's y acceleration
+         */
+        get: function () {
+            return this.acc.y;
+        },
+        set: function (value) {
+            this.acc.y = value;
         },
         enumerable: true,
         configurable: true
@@ -7328,7 +7379,7 @@ var Camera = /** @class */ (function (_super) {
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
      */
     Camera.prototype.getFocus = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](this.x, this.y);
+        return this.pos;
     };
     /**
      * This moves the camera focal point to the specified position using specified easing function. Cannot move when following an Actor.
@@ -7511,13 +7562,11 @@ var Camera = /** @class */ (function (_super) {
         this._initialize(_engine);
         this._preupdate(_engine, delta);
         // Update placements based on linear algebra
-        this._x += (this.dx * delta) / 1000;
-        this._y += (this.dy * delta) / 1000;
+        this.pos = this.pos.add(this.vel.scale(delta / 1000));
         this.z += (this.dz * delta) / 1000;
-        this.dx += (this.ax * delta) / 1000;
-        this.dy += (this.ay * delta) / 1000;
+        this.vel = this.vel.add(this.acc.scale(delta / 1000));
         this.dz += (this.az * delta) / 1000;
-        this.rotation += (this.rx * delta) / 1000;
+        this.rotation += (this.angularVelocity * delta) / 1000;
         if (this._isZooming) {
             if (this._currentZoomTime < this._zoomDuration) {
                 var zoomEasing = this._zoomEasing;
@@ -7536,13 +7585,11 @@ var Camera = /** @class */ (function (_super) {
             if (this._currentLerpTime < this._lerpDuration) {
                 var moveEasing = _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__["EasingFunctions"].CreateVectorEasingFunction(this._easing);
                 var lerpPoint = moveEasing(this._currentLerpTime, this._lerpStart, this._lerpEnd, this._lerpDuration);
-                this._x = lerpPoint.x;
-                this._y = lerpPoint.y;
+                this.pos = lerpPoint;
                 this._currentLerpTime += delta;
             }
             else {
-                this._x = this._lerpEnd.x;
-                this._y = this._lerpEnd.y;
+                this.pos = this._lerpEnd;
                 var end = this._lerpEnd.clone();
                 this._lerpStart = null;
                 this._lerpEnd = null;
@@ -25772,7 +25819,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4457+fd8b569";
+var EX_VERSION = "0.23.0-alpha.4494+0948f94";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

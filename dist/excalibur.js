@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4775+37c459d - 2019-10-30
+ * excalibur - 0.23.0-alpha.4788+ae331b4 - 2019-10-30
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -23936,11 +23936,13 @@ var CullingBox = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Util/Decorators.ts ***!
   \****************************/
-/*! exports provided: obsolete */
+/*! exports provided: maxMessages, resetObsoleteCounter, obsolete */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return maxMessages; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return resetObsoleteCounter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return obsolete; });
 /* harmony import */ var _Log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Log */ "./Util/Log.ts");
 /* harmony import */ var _Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util */ "./Util/Util.ts");
@@ -23957,6 +23959,24 @@ var __assign = (undefined && undefined.__assign) || function () {
 };
 
 
+var maxMessages = 5;
+var obsoleteMessage = {};
+var resetObsoleteCounter = function () {
+    for (var message in obsoleteMessage) {
+        obsoleteMessage[message] = 0;
+    }
+};
+var logMessage = function (message, options) {
+    if (obsoleteMessage[message] < maxMessages) {
+        _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+        // tslint:disable-next-line: no-console
+        if (console.trace && options.showStackTrace) {
+            // tslint:disable-next-line: no-console
+            console.trace();
+        }
+    }
+    obsoleteMessage[message]++;
+};
 /**
  * Obsolete decorator for marking Excalibur methods obsolete, you can optionally specify a custom message and/or alternate replacement
  * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
@@ -23975,17 +23995,15 @@ function obsolete(options) {
         var methodSignature = "" + (target.name || '') + (target.name && property ? '.' : '') + (property ? property : '');
         var message = methodSignature + " is marked obsolete: " + options.message +
             (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
+        if (!obsoleteMessage[message]) {
+            obsoleteMessage[message] = 0;
+        }
         // If descriptor is null it is a class
         var method = descriptor ? __assign({}, descriptor) : target;
         if (!descriptor) {
             var constructor = function () {
                 var args = Array.prototype.slice.call(arguments);
-                _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
-                // tslint:disable-next-line: no-console
-                if (console.trace && options.showStackTrace) {
-                    // tslint:disable-next-line: no-console
-                    console.trace();
-                }
+                logMessage(message, options);
                 return new (method.bind.apply(method, [void 0].concat(args)))();
             };
             constructor.prototype = method.prototype;
@@ -23993,30 +24011,20 @@ function obsolete(options) {
         }
         if (descriptor && descriptor.value) {
             method.value = function () {
-                _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
-                // tslint:disable-next-line: no-console
-                if (console.trace && options.showStackTrace) {
-                    // tslint:disable-next-line: no-console
-                    console.trace();
-                }
+                logMessage(message, options);
                 return descriptor.value.apply(this, arguments);
             };
             return method;
         }
         if (descriptor && descriptor.get) {
             method.get = function () {
-                _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
-                // tslint:disable-next-line: no-console
-                if (console.trace && options.showStackTrace) {
-                    // tslint:disable-next-line: no-console
-                    console.trace();
-                }
+                logMessage(message, options);
                 return descriptor.get.apply(this, arguments);
             };
         }
         if (descriptor && descriptor.set) {
             method.set = function () {
-                _Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn(message);
+                logMessage(message, options);
                 return descriptor.set.apply(this, arguments);
             };
         }
@@ -25534,7 +25542,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25847,6 +25855,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserEvents"]; });
 
 /* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["maxMessages"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["resetObsoleteCounter"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["obsolete"]; });
 
 /* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
@@ -25881,7 +25893,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4775+37c459d";
+var EX_VERSION = "0.23.0-alpha.4788+ae331b4";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

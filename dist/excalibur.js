@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4788+ae331b4 - 2019-10-30
+ * excalibur - 0.23.0-alpha.4819+cdbf175 - 2019-11-1
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -23957,6 +23957,13 @@ var __assign = (undefined && undefined.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __spreadArrays = (undefined && undefined.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 
 
 var maxMessages = 5;
@@ -24004,7 +24011,7 @@ function obsolete(options) {
             var constructor = function () {
                 var args = Array.prototype.slice.call(arguments);
                 logMessage(message, options);
-                return new (method.bind.apply(method, [void 0].concat(args)))();
+                return new (method.bind.apply(method, __spreadArrays([void 0], args)))();
             };
             constructor.prototype = method.prototype;
             return constructor;
@@ -25893,7 +25900,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4788+ae331b4";
+var EX_VERSION = "0.23.0-alpha.4819+cdbf175";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

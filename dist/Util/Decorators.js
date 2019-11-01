@@ -9,6 +9,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 import { Logger } from './Log';
 import * as Util from './Util';
 export var maxMessages = 5;
@@ -56,7 +63,7 @@ export function obsolete(options) {
             var constructor = function () {
                 var args = Array.prototype.slice.call(arguments);
                 logMessage(message, options);
-                return new (method.bind.apply(method, [void 0].concat(args)))();
+                return new (method.bind.apply(method, __spreadArrays([void 0], args)))();
             };
             constructor.prototype = method.prototype;
             return constructor;

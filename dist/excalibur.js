@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4819+cdbf175 - 2019-11-1
+ * excalibur - 0.23.0-alpha.4851+fc991ca - 2019-11-5
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -21549,7 +21549,7 @@ var WebAudioInstance = /** @class */ (function (_super) {
         set: function (value) {
             value = _Util_Util__WEBPACK_IMPORTED_MODULE_1__["clamp"](value, 0, 1.0);
             this._volume = value;
-            if (this._volumeNode.gain.setTargetAtTime) {
+            if (this._isPlaying && this._volumeNode.gain.setTargetAtTime) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
                 // After each .1 seconds timestep, the target value will ~63.2% closer to the target value.
                 // This exponential ramp provides a more pleasant trasition in gain
@@ -25900,7 +25900,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4819+cdbf175";
+var EX_VERSION = "0.23.0-alpha.4851+fc991ca";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

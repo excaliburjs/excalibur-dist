@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4851+fc991ca - 2019-11-5
+ * excalibur - 0.23.0-alpha.4853+b24ed90 - 2019-11-5
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -23269,18 +23269,9 @@ __webpack_require__.r(__webpack_exports__);
  * after a certain interval, optionally repeating.
  */
 var Timer = /** @class */ (function () {
-    /**
-     * @param fcn        The callback to be fired after the interval is complete.
-     * @param interval   Interval length
-     * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
-     * @param numberOfRepeats Specifies a maximum number of times that this timer will execute.
-     */
     function Timer(fcn, interval, repeats, numberOfRepeats) {
         this.id = 0;
         this.interval = 10;
-        this.fcn = function () {
-            return;
-        };
         this.repeats = false;
         this.maxNumberOfRepeats = -1;
         this._elapsedTime = 0;
@@ -23289,6 +23280,13 @@ var Timer = /** @class */ (function () {
         this._numberOfTicks = 0;
         this.complete = false;
         this.scene = null;
+        if (typeof fcn !== 'function') {
+            var options = fcn;
+            fcn = options.fcn;
+            interval = options.interval;
+            repeats = options.repeats;
+            numberOfRepeats = options.numberOfRepeats;
+        }
         if (!!numberOfRepeats && numberOfRepeats >= 0) {
             this.maxNumberOfRepeats = numberOfRepeats;
             if (!repeats) {
@@ -23297,14 +23295,33 @@ var Timer = /** @class */ (function () {
         }
         this.id = Timer.id++;
         this.interval = interval || this.interval;
-        this.fcn = fcn || this.fcn;
         this.repeats = repeats || this.repeats;
+        this._callbacks = [];
+        if (fcn) {
+            this.on(fcn);
+        }
     }
+    /**
+     * Adds a new callback to be fired after the interval is complete
+     * @param fcn The callback to be added to the callback list, to be fired after the interval is complete.
+     */
+    Timer.prototype.on = function (fcn) {
+        this._callbacks.push(fcn);
+    };
+    /**
+     * Removes a callback from the callback list to be fired after the interval is complete.
+     * @param fcn The callback to be removed from the callback list, to be fired after the interval is complete.
+     */
+    Timer.prototype.off = function (fcn) {
+        var index = this._callbacks.indexOf(fcn);
+        this._callbacks.splice(index, 1);
+    };
     /**
      * Updates the timer after a certain number of milliseconds have elapsed. This is used internally by the engine.
      * @param delta  Number of elapsed milliseconds since the last update.
      */
     Timer.prototype.update = function (delta) {
+        var _this = this;
         if (!this._paused) {
             this._totalTimeAlive += delta;
             this._elapsedTime += delta;
@@ -23312,7 +23329,9 @@ var Timer = /** @class */ (function () {
                 this.complete = true;
             }
             if (!this.complete && this._elapsedTime >= this.interval) {
-                this.fcn.call(this);
+                this._callbacks.forEach(function (c) {
+                    c.call(_this);
+                });
                 this._numberOfTicks++;
                 if (this.repeats) {
                     this._elapsedTime = 0;
@@ -25900,7 +25919,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4851+fc991ca";
+var EX_VERSION = "0.23.0-alpha.4853+b24ed90";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

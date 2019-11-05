@@ -1,4 +1,10 @@
 import { Scene } from './Scene';
+export interface TimerOptions {
+    repeats?: boolean;
+    numberOfRepeats?: number;
+    fcn?: () => void;
+    interval: number;
+}
 /**
  * The Excalibur timer hooks into the internal timer and fires callbacks,
  * after a certain interval, optionally repeating.
@@ -7,22 +13,32 @@ export declare class Timer {
     static id: number;
     id: number;
     interval: number;
-    fcn: () => void;
     repeats: boolean;
     maxNumberOfRepeats: number;
     private _elapsedTime;
     private _totalTimeAlive;
     private _paused;
     private _numberOfTicks;
+    private _callbacks;
     complete: boolean;
     scene: Scene;
     /**
-     * @param fcn        The callback to be fired after the interval is complete.
-     * @param interval   Interval length
+     * @param options    Options - repeats, numberOfRepeats, fcn, interval
      * @param repeats    Indicates whether this call back should be fired only once, or repeat after every interval as completed.
      * @param numberOfRepeats Specifies a maximum number of times that this timer will execute.
+     * @param fcn        The callback to be fired after the interval is complete.
      */
-    constructor(fcn: () => void, interval: number, repeats?: boolean, numberOfRepeats?: number);
+    constructor(options: TimerOptions);
+    /**
+     * Adds a new callback to be fired after the interval is complete
+     * @param fcn The callback to be added to the callback list, to be fired after the interval is complete.
+     */
+    on(fcn: () => void): void;
+    /**
+     * Removes a callback from the callback list to be fired after the interval is complete.
+     * @param fcn The callback to be removed from the callback list, to be fired after the interval is complete.
+     */
+    off(fcn: () => void): void;
     /**
      * Updates the timer after a certain number of milliseconds have elapsed. This is used internally by the engine.
      * @param delta  Number of elapsed milliseconds since the last update.

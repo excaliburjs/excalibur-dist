@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4853+b24ed90 - 2019-11-5
+ * excalibur - 0.23.0-alpha.4895+6b597b7 - 2019-11-9
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5110,6 +5110,27 @@ var ActorImpl = /** @class */ (function (_super) {
          */
         _this.currentDrawing = null;
         /**
+         * Draggable helper
+         */
+        _this._draggable = false;
+        _this._dragging = false;
+        _this._pointerDragStartHandler = function () {
+            _this._dragging = true;
+        };
+        _this._pointerDragEndHandler = function () {
+            _this._dragging = false;
+        };
+        _this._pointerDragMoveHandler = function (pe) {
+            if (_this._dragging) {
+                _this.pos = pe.pointer.lastWorldPos;
+            }
+        };
+        _this._pointerDragLeaveHandler = function (pe) {
+            if (_this._dragging) {
+                _this.pos = pe.pointer.lastWorldPos;
+            }
+        };
+        /**
          * Modify the current actor update pipeline.
          */
         _this.traits = [];
@@ -5581,6 +5602,30 @@ var ActorImpl = /** @class */ (function (_super) {
          */
         set: function (type) {
             this.body.collider.type = type;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "draggable", {
+        get: function () {
+            return this._draggable;
+        },
+        set: function (isDraggable) {
+            if (isDraggable) {
+                if (isDraggable && !this._draggable) {
+                    this.on('pointerdragstart', this._pointerDragStartHandler);
+                    this.on('pointerdragend', this._pointerDragEndHandler);
+                    this.on('pointerdragmove', this._pointerDragMoveHandler);
+                    this.on('pointerdragleave', this._pointerDragLeaveHandler);
+                }
+                else if (!isDraggable && this._draggable) {
+                    this.off('pointerdragstart', this._pointerDragStartHandler);
+                    this.off('pointerdragend', this._pointerDragEndHandler);
+                    this.off('pointerdragmove', this._pointerDragMoveHandler);
+                    this.off('pointerdragleave', this._pointerDragLeaveHandler);
+                }
+                this._draggable = isDraggable;
+            }
         },
         enumerable: true,
         configurable: true
@@ -25919,7 +25964,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4853+b24ed90";
+var EX_VERSION = "0.23.0-alpha.4895+6b597b7";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

@@ -313,6 +313,16 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     currentDrawing: Drawable;
     /**
+     * Draggable helper
+     */
+    private _draggable;
+    private _dragging;
+    private _pointerDragStartHandler;
+    private _pointerDragEndHandler;
+    private _pointerDragMoveHandler;
+    private _pointerDragLeaveHandler;
+    draggable: boolean;
+    /**
      * Modify the current actor update pipeline.
      */
     traits: Trait[];

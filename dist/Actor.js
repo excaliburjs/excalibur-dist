@@ -107,6 +107,27 @@ var ActorImpl = /** @class */ (function (_super) {
          */
         _this.currentDrawing = null;
         /**
+         * Draggable helper
+         */
+        _this._draggable = false;
+        _this._dragging = false;
+        _this._pointerDragStartHandler = function () {
+            _this._dragging = true;
+        };
+        _this._pointerDragEndHandler = function () {
+            _this._dragging = false;
+        };
+        _this._pointerDragMoveHandler = function (pe) {
+            if (_this._dragging) {
+                _this.pos = pe.pointer.lastWorldPos;
+            }
+        };
+        _this._pointerDragLeaveHandler = function (pe) {
+            if (_this._dragging) {
+                _this.pos = pe.pointer.lastWorldPos;
+            }
+        };
+        /**
          * Modify the current actor update pipeline.
          */
         _this.traits = [];
@@ -578,6 +599,30 @@ var ActorImpl = /** @class */ (function (_super) {
          */
         set: function (type) {
             this.body.collider.type = type;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ActorImpl.prototype, "draggable", {
+        get: function () {
+            return this._draggable;
+        },
+        set: function (isDraggable) {
+            if (isDraggable) {
+                if (isDraggable && !this._draggable) {
+                    this.on('pointerdragstart', this._pointerDragStartHandler);
+                    this.on('pointerdragend', this._pointerDragEndHandler);
+                    this.on('pointerdragmove', this._pointerDragMoveHandler);
+                    this.on('pointerdragleave', this._pointerDragLeaveHandler);
+                }
+                else if (!isDraggable && this._draggable) {
+                    this.off('pointerdragstart', this._pointerDragStartHandler);
+                    this.off('pointerdragend', this._pointerDragEndHandler);
+                    this.off('pointerdragmove', this._pointerDragMoveHandler);
+                    this.off('pointerdragleave', this._pointerDragLeaveHandler);
+                }
+                this._draggable = isDraggable;
+            }
         },
         enumerable: true,
         configurable: true

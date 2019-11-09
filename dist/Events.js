@@ -79,70 +79,12 @@ var GameEvent = /** @class */ (function () {
          * determines, if event bubbles to the target's ancestors
          */
         this.bubbles = true;
-        /**
-         * Holds the whole path from the Root to the event target
-         */
-        this._path = [];
-        this._name = '';
     }
-    Object.defineProperty(GameEvent.prototype, "eventPath", {
-        /**
-         * Returns Event path from root to active actor.
-         */
-        get: function () {
-            return this._path;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameEvent.prototype, "name", {
-        /**
-         * Returns name of the event
-         */
-        get: function () {
-            return this._name;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
      * Prevents event from bubbling
      */
     GameEvent.prototype.stopPropagation = function () {
         this.bubbles = false;
-    };
-    /**
-     * Action, that calls when event happens
-     */
-    GameEvent.prototype.action = function () {
-        var actor = this.eventPath.pop();
-        if (actor) {
-            this._onActionStart(actor);
-            actor.eventDispatcher.emit(this._name, this);
-            this._onActionEnd(actor);
-        }
-    };
-    /**
-     * Propagate event further through event path
-     */
-    GameEvent.prototype.propagate = function () {
-        if (!this.eventPath.length) {
-            return;
-        }
-        this.action();
-        if (this.bubbles) {
-            this.propagate();
-        }
-    };
-    GameEvent.prototype.layPath = function (actor) {
-        var actorPath = actor.getAncestors();
-        this._path = actorPath.length > this._path.length ? actorPath : this._path;
-    };
-    GameEvent.prototype._onActionStart = function (_actor) {
-        // to be rewritten
-    };
-    GameEvent.prototype._onActionEnd = function (_actor) {
-        // to be rewritten
     };
     return GameEvent;
 }());

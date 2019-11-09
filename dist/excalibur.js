@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4895+6b597b7 - 2019-11-9
+ * excalibur - 0.23.0-alpha.4926+195efca - 2019-11-9
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -14764,6 +14764,7 @@ O|===|* >________________>\n\
         else if (this.displayMode === DisplayMode.Position) {
             this._intializeDisplayModePosition(options);
         }
+        this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
         this.input = {
             keyboard: new _Input_Index__WEBPACK_IMPORTED_MODULE_16__["Keyboard"](),
@@ -14773,7 +14774,6 @@ O|===|* >________________>\n\
         this.input.keyboard.init();
         this.input.pointers.init(options && options.pointerScope === _Input_Index__WEBPACK_IMPORTED_MODULE_16__["PointerScope"].Document ? document : this.canvas);
         this.input.gamepads.init();
-        this.pageScrollPreventionMode = options.scrollPreventionMode;
         // Issue #385 make use of the visibility api
         // https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
         var hidden, visibilityChange;
@@ -15486,70 +15486,12 @@ var GameEvent = /** @class */ (function () {
          * determines, if event bubbles to the target's ancestors
          */
         this.bubbles = true;
-        /**
-         * Holds the whole path from the Root to the event target
-         */
-        this._path = [];
-        this._name = '';
     }
-    Object.defineProperty(GameEvent.prototype, "eventPath", {
-        /**
-         * Returns Event path from root to active actor.
-         */
-        get: function () {
-            return this._path;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GameEvent.prototype, "name", {
-        /**
-         * Returns name of the event
-         */
-        get: function () {
-            return this._name;
-        },
-        enumerable: true,
-        configurable: true
-    });
     /**
      * Prevents event from bubbling
      */
     GameEvent.prototype.stopPropagation = function () {
         this.bubbles = false;
-    };
-    /**
-     * Action, that calls when event happens
-     */
-    GameEvent.prototype.action = function () {
-        var actor = this.eventPath.pop();
-        if (actor) {
-            this._onActionStart(actor);
-            actor.eventDispatcher.emit(this._name, this);
-            this._onActionEnd(actor);
-        }
-    };
-    /**
-     * Propagate event further through event path
-     */
-    GameEvent.prototype.propagate = function () {
-        if (!this.eventPath.length) {
-            return;
-        }
-        this.action();
-        if (this.bubbles) {
-            this.propagate();
-        }
-    };
-    GameEvent.prototype.layPath = function (actor) {
-        var actorPath = actor.getAncestors();
-        this._path = actorPath.length > this._path.length ? actorPath : this._path;
-    };
-    GameEvent.prototype._onActionStart = function (_actor) {
-        // to be rewritten
-    };
-    GameEvent.prototype._onActionEnd = function (_actor) {
-        // to be rewritten
     };
     return GameEvent;
 }());
@@ -17073,6 +17015,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Class */ "./Class.ts");
 /* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Util/Actors */ "./Util/Actors.ts");
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Traits/Index */ "./Traits/Index.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -17086,6 +17029,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 
 
 
@@ -17212,16 +17167,29 @@ var PointerEvent = /** @class */ (function (_super) {
         configurable: true
     });
     /**
-     * Sets event path to actor, depending on actor provided.
-     * If actor is lower in hierarchy tree, previous path'll be kept.
-     * @param actor Actor, to lay path form.
+     * Action, that calls when event happens
      */
-    PointerEvent.prototype.layPath = function (actor) {
-        if (!this.pointer.isActorUnderPointer(actor)) {
-            return;
+    PointerEvent.prototype.doAction = function (actor) {
+        if (actor) {
+            this._onActionStart(actor);
+            actor.emit(this._name, this);
+            this._onActionEnd(actor);
         }
-        var actorPath = actor.getAncestors();
-        this._path = actorPath.length > this._path.length ? actorPath : this._path;
+    };
+    PointerEvent.prototype._onActionStart = function (_actor) {
+        // to be rewritten
+    };
+    PointerEvent.prototype._onActionEnd = function (_actor) {
+        // to be rewritten
+    };
+    /**
+     * Propagate event further through event path
+     */
+    PointerEvent.prototype.propagate = function (actor) {
+        this.doAction(actor);
+        if (this.bubbles && actor.parent) {
+            this.propagate(actor.parent);
+        }
     };
     return PointerEvent;
 }(_Events__WEBPACK_IMPORTED_MODULE_1__["GameEvent"]));
@@ -17285,48 +17253,25 @@ var PointerMoveEvent = /** @class */ (function (_super) {
         _this._name = 'pointermove';
         return _this;
     }
-    PointerMoveEvent.prototype.propagate = function () {
-        var _this = this;
-        if (!this.eventPath.length) {
-            if (this.pointer.hasActorsUnderPointer) {
-                var actors = this.pointer.getActorsUnderPointer();
-                actors.forEach(function (actor) {
-                    if (!_this.pointer.isActorUnderPointer(actor)) {
-                        _this._onActorLeave(actor);
-                    }
-                });
+    PointerMoveEvent.prototype.propagate = function (actor) {
+        // If the actor was under the pointer last frame, but not this one it left
+        if (this.pointer.wasActorUnderPointerLastFrame(actor) && !this.pointer.hasActorUnderPointerInList(actor)) {
+            this._onActorLeave(actor);
+            return;
+        }
+        if (this.pointer.hasActorUnderPointerInList(actor)) {
+            this.doAction(actor);
+            if (this.bubbles && actor.parent) {
+                this.propagate(actor.parent);
             }
-            return;
         }
-        this.action();
-        if (this.bubbles) {
-            this.propagate();
-        }
-    };
-    /**
-     * Sets event path to actor, depending on actor provided.
-     * If actor is in a dragging state, current dragging target would be used.
-     * @param actor Actor, to lay path form.
-     */
-    PointerMoveEvent.prototype.layPath = function (actor) {
-        /**
-         *  double-check is preformed, because user could move pointer too fast and
-         *  in that case, pointer can appear out of boundings of the dragging element
-         */
-        if (this.pointer.isDragging) {
-            actor = this.pointer.dragTarget || actor;
-        }
-        else if (!this.pointer.isActorUnderPointer(actor)) {
-            return;
-        }
-        var actorPath = actor.getAncestors();
-        this._path = actorPath.length > this._path.length ? actorPath : this._path;
     };
     PointerMoveEvent.prototype._onActionStart = function (actor) {
         if (!actor.capturePointer.captureMoveEvents) {
             return;
         }
-        if (this.pointer.isActorUnderPointer(actor) && !this.pointer.hasActorUnderPointerInList(actor)) {
+        // In the case this is new
+        if (this.pointer.isActorUnderPointer(actor) && !this.pointer.wasActorUnderPointerLastFrame(actor)) {
             this._onActorEnter(actor);
         }
         if (this.pointer.isDragging && actor.capturePointer.captureDragEvents) {
@@ -17335,8 +17280,7 @@ var PointerMoveEvent = /** @class */ (function (_super) {
     };
     PointerMoveEvent.prototype._onActorEnter = function (actor) {
         var pe = createPointerEventByName('enter', this.coordinates, this.pointer, this.index, this.pointerType, this.button, this.ev);
-        pe.layPath(actor);
-        pe.propagate();
+        pe.propagate(actor);
         this.pointer.addActorUnderPointer(actor);
         if (this.pointer.isDragging) {
             this.pointer.dragTarget = actor;
@@ -17344,8 +17288,7 @@ var PointerMoveEvent = /** @class */ (function (_super) {
     };
     PointerMoveEvent.prototype._onActorLeave = function (actor) {
         var pe = createPointerEventByName('leave', this.coordinates, this.pointer, this.index, this.pointerType, this.button, this.ev);
-        pe.layPath(actor);
-        pe.propagate();
+        pe.propagate(actor);
         this.pointer.removeActorUnderPointer(actor);
     };
     return PointerMoveEvent;
@@ -17379,10 +17322,6 @@ var PointerLeaveEvent = /** @class */ (function (_super) {
         _this._name = 'pointerleave';
         return _this;
     }
-    PointerLeaveEvent.prototype.layPath = function (actor) {
-        var actorPath = actor.getAncestors();
-        this._path = actorPath.length > this._path.length ? actorPath : this._path;
-    };
     PointerLeaveEvent.prototype._onActionStart = function (actor) {
         if (!actor.capturePointer.captureMoveEvents) {
             return;
@@ -17533,18 +17472,77 @@ var Pointers = /** @class */ (function (_super) {
             target.addEventListener('mousemove', this._handleMouseEvent('move', this._pointerMove));
         }
         // MDN MouseWheelEvent
+        var wheelOptions = {
+            passive: !(this._engine.pageScrollPreventionMode === _Engine__WEBPACK_IMPORTED_MODULE_0__["ScrollPreventionMode"].All ||
+                this._engine.pageScrollPreventionMode === _Engine__WEBPACK_IMPORTED_MODULE_0__["ScrollPreventionMode"].Canvas)
+        };
         if ('onwheel' in document.createElement('div')) {
             // Modern Browsers
-            target.addEventListener('wheel', this._handleWheelEvent('wheel', this._wheel));
+            target.addEventListener('wheel', this._handleWheelEvent('wheel', this._wheel), wheelOptions);
         }
         else if (document.onmousewheel !== undefined) {
             // Webkit and IE
-            target.addEventListener('mousewheel', this._handleWheelEvent('wheel', this._wheel));
+            target.addEventListener('mousewheel', this._handleWheelEvent('wheel', this._wheel), wheelOptions);
         }
         else {
             // Remaining browser and older Firefox
-            target.addEventListener('MozMousePixelScroll', this._handleWheelEvent('wheel', this._wheel));
+            target.addEventListener('MozMousePixelScroll', this._handleWheelEvent('wheel', this._wheel), wheelOptions);
         }
+    };
+    /**
+     * Synthesize a pointer event that looks like a real browser event to excalibur
+     * @param eventName
+     * @param pos
+     */
+    Pointers.prototype.triggerEvent = function (eventName, pos, button, pointerType, pointerId) {
+        if (button === void 0) { button = NativePointerButton.Left; }
+        if (pointerType === void 0) { pointerType = 'mouse'; }
+        if (pointerId === void 0) { pointerId = 0; }
+        var x = 0;
+        var y = 0;
+        var coords;
+        if (pos instanceof _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"]) {
+            x = pos.pagePos.x;
+            y = pos.pagePos.y;
+            coords = pos;
+        }
+        else {
+            x = pos.x;
+            y = pos.y;
+            coords = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"](pos.clone(), pos.clone(), pos.clone());
+        }
+        var eventish = {
+            pageX: x,
+            pageY: y,
+            pointerId: pointerId,
+            pointerType: pointerType,
+            button: button,
+            preventDefault: function () {
+                /* do nothing */
+            }
+        };
+        switch (eventName) {
+            case 'move':
+                this._handlePointerEvent(eventName, this._pointerMove, coords)(eventish);
+                break;
+            case 'down':
+                this._handlePointerEvent(eventName, this._pointerDown, coords)(eventish);
+                break;
+            case 'up':
+                this._handlePointerEvent(eventName, this._pointerUp, coords)(eventish);
+                break;
+            case 'cancel':
+                this._handlePointerEvent(eventName, this._pointerCancel, coords)(eventish);
+                break;
+        }
+        for (var _i = 0, _a = this._engine.currentScene.actors; _i < _a.length; _i++) {
+            var actor = _a[_i];
+            var capturePointer = actor.traits.filter(function (t) { return t instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_6__["CapturePointer"]; })[0];
+            if (capturePointer) {
+                capturePointer.update(actor, this._engine, 1);
+            }
+        }
+        this.update();
     };
     Pointers.prototype.update = function () {
         this._pointerUp.length = 0;
@@ -17576,69 +17574,54 @@ var Pointers = /** @class */ (function (_super) {
     Pointers.prototype.count = function () {
         return this._pointers.length;
     };
-    /**
-     * Propogates events through ancestors chain if necessary
-     */
-    Pointers.prototype.propagate = function () {
-        this._propagatePointerEvent(this._pointerDown);
-        this._propagatePointerEvent(this._pointerUp);
-        this._propagatePointerEvent(this._pointerMove);
-        this._propagatePointerEvent(this._pointerCancel);
-        this._propagateWheelEvent('pointerwheel', this._wheel);
-    };
-    /**
-     * Revises pointer events paths accordingly to actor provided
-     * @param actor  Actor to be revised
-     */
-    Pointers.prototype.revisePointerEventsPaths = function (actor) {
-        this._revisePointerEventPath(actor, this._pointerDown);
-        this._revisePointerEventPath(actor, this._pointerUp);
-        this._revisePointerEventPath(actor, this._pointerMove);
-        this._revisePointerEventPath(actor, this._pointerCancel);
-        this._validateWheelEventPath(this._wheel, actor);
-    };
-    Pointers.prototype._propagatePointerEvent = function (pointers) {
-        var len = pointers.length;
-        for (var i = 0; i < len; i++) {
-            pointers[i].propagate();
+    Pointers.prototype.updateActorsUnderPointer = function (actor) {
+        for (var _i = 0, _a = this._pointers; _i < _a.length; _i++) {
+            var pointer = _a[_i];
+            pointer.captureOldActorUnderPointer();
+            if (pointer.isActorUnderPointer(actor)) {
+                pointer.addActorUnderPointer(actor);
+            }
+            else {
+                pointer.removeActorUnderPointer(actor);
+            }
         }
-    };
-    Pointers.prototype._revisePointerEventPath = function (actor, pointers) {
-        var len = pointers.length;
-        for (var i = 0; i < len; i++) {
-            var pointerEvent = pointers[i];
-            pointerEvent.layPath(actor);
+        for (var _b = 0, _c = this._pointerDown; _b < _c.length; _b++) {
+            var evt = _c[_b];
+            if (evt.pointer.hasActorUnderPointerInList(actor)) {
+                evt.propagate(actor);
+            }
         }
-    };
-    Pointers.prototype._validateWheelEventPath = function (pointers, actor) {
-        for (var i = 0; i < pointers.length; i++) {
-            var wheelEvent = pointers[i];
-            var isNotScreenElement = !_Util_Actors__WEBPACK_IMPORTED_MODULE_4__["isScreenElement"](actor);
-            if (actor.contains(wheelEvent.x, wheelEvent.y, isNotScreenElement)) {
-                wheelEvent.layPath(actor);
+        for (var _d = 0, _e = this._pointerUp; _d < _e.length; _d++) {
+            var evt = _e[_d];
+            if (evt.pointer.hasActorUnderPointerInList(actor)) {
+                evt.propagate(actor);
+            }
+        }
+        for (var _f = 0, _g = this._pointerMove; _f < _g.length; _f++) {
+            var evt = _g[_f];
+            evt.propagate(actor);
+        }
+        for (var _h = 0, _j = this._pointerCancel; _h < _j.length; _h++) {
+            var evt = _j[_h];
+            if (evt.pointer.hasActorUnderPointerInList(actor)) {
+                evt.propagate(actor);
+            }
+        }
+        for (var _k = 0, _l = this._wheel; _k < _l.length; _k++) {
+            var evt = _l[_k];
+            if (this._pointers[evt.index].hasActorUnderPointerInList(actor)) {
+                this._propagateWheelEvent(actor, evt);
             }
         }
     };
-    Pointers.prototype._propagateWheelEvent = function (eventName, pointers) {
-        var len = pointers.length;
-        var wheelEvent;
-        for (var i = 0; i < len; i++) {
-            wheelEvent = pointers[i];
-            switch (eventName) {
-                case 'pointerwheel':
-                    this._propagateWheelPointerEvent(wheelEvent);
-                    break;
-            }
-        }
+    Pointers.prototype._propagateWheelEvent = function (actor, event) {
+        this._propagateWheelPointerEvent(actor, event);
     };
-    Pointers.prototype._propagateWheelPointerEvent = function (wheelEvent) {
-        if (!wheelEvent.eventPath.length) {
-            return;
-        }
-        var actor = wheelEvent.eventPath.pop();
-        actor.eventDispatcher.emit('pointerwheel', wheelEvent);
-        if (wheelEvent.bubbles) {
-            this._propagateWheelPointerEvent(wheelEvent);
+    Pointers.prototype._propagateWheelPointerEvent = function (actor, wheelEvent) {
+        actor.emit('pointerwheel', wheelEvent);
+        // Recurse and propogate
+        if (wheelEvent.bubbles && actor.parent) {
+            this._propagateWheelPointerEvent(actor.parent, wheelEvent);
         }
     };
     Pointers.prototype._handleMouseEvent = function (eventName, eventArr) {
@@ -17680,7 +17663,7 @@ var Pointers = /** @class */ (function (_super) {
             }
         };
     };
-    Pointers.prototype._handlePointerEvent = function (eventName, eventArr) {
+    Pointers.prototype._handlePointerEvent = function (eventName, eventArr, coords) {
         var _this = this;
         return function (e) {
             e.preventDefault();
@@ -17690,7 +17673,7 @@ var Pointers = /** @class */ (function (_super) {
                 return;
             }
             var pointer = _this.at(index);
-            var coordinates = _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"].fromPagePosition(e.pageX, e.pageY, _this._engine);
+            var coordinates = coords || _Algebra__WEBPACK_IMPORTED_MODULE_2__["GlobalCoordinates"].fromPagePosition(e.pageX, e.pageY, _this._engine);
             var pe = createPointerEventByName(eventName, coordinates, pointer, index, _this._stringToPointerType(e.pointerType), _this._nativeButtonToPointerButton(e.button), e);
             eventArr.push(pe);
             pointer.eventDispatcher.emit(eventName, pe);
@@ -17796,6 +17779,7 @@ var Pointer = /** @class */ (function (_super) {
         _this._isDown = false;
         _this._wasDown = false;
         _this._actorsUnderPointer = { length: 0 };
+        _this._actorsUnderPointerLastFrame = { length: 0 };
         /**
          * The last position on the document this pointer was at. Can be `null` if pointer was never active.
          */
@@ -17864,6 +17848,7 @@ var Pointer = /** @class */ (function (_super) {
         else if (!this._wasDown && this._isDown) {
             this._wasDown = true;
         }
+        this._actorsUnderPointerLastFrame = __assign({}, this._actorsUnderPointer);
     };
     /**
      * Adds an Actor to actorsUnderPointer object.
@@ -17910,12 +17895,18 @@ var Pointer = /** @class */ (function (_super) {
         }
         return false;
     };
+    Pointer.prototype.wasActorUnderPointerLastFrame = function (actor) {
+        return this._actorsUnderPointerLastFrame.hasOwnProperty(actor.id.toString());
+    };
     /**
      * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
      * @param actor An Actor for check;
      */
     Pointer.prototype.hasActorUnderPointerInList = function (actor) {
         return this._actorsUnderPointer.hasOwnProperty(actor.id.toString());
+    };
+    Pointer.prototype.captureOldActorUnderPointer = function () {
+        this._actorsUnderPointerLastFrame = __assign({}, this._actorsUnderPointer);
     };
     Pointer.prototype._onPointerMove = function (ev) {
         this.lastPagePos = new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ev.pagePos.x, ev.pagePos.y);
@@ -22465,8 +22456,6 @@ var Scene = /** @class */ (function (_super) {
             this.triggers[i].update(engine, delta);
         }
         this._collectActorStats(engine);
-        // propagates all events through their paths assigned
-        engine.input.pointers.propagate();
         // Run the broadphase and narrowphase
         if (this._broadphase && _Physics__WEBPACK_IMPORTED_MODULE_1__["Physics"].enabled) {
             var beforeBroadphase = Date.now();
@@ -23467,7 +23456,7 @@ var CapturePointer = /** @class */ (function () {
         if (actor.isKilled()) {
             return;
         }
-        engine.input.pointers.revisePointerEventsPaths(actor);
+        engine.input.pointers.updateActorsUnderPointer(actor);
     };
     return CapturePointer;
 }());
@@ -25964,7 +25953,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4895+6b597b7";
+var EX_VERSION = "0.23.0-alpha.4926+195efca";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entrypoint and exports everything

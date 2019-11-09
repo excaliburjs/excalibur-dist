@@ -75,6 +75,7 @@ export declare class PointerEvent extends GameEvent<Actor> {
     pointerType: PointerType;
     button: PointerButton;
     ev: any;
+    protected _name: string;
     /** The world coordinates of the event. */
     readonly worldPos: Vector;
     /** The page coordinates of the event. */
@@ -93,11 +94,15 @@ export declare class PointerEvent extends GameEvent<Actor> {
     constructor(coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any);
     readonly pos: Vector;
     /**
-     * Sets event path to actor, depending on actor provided.
-     * If actor is lower in hierarchy tree, previous path'll be kept.
-     * @param actor Actor, to lay path form.
+     * Action, that calls when event happens
      */
-    layPath(actor: Actor): void;
+    doAction(actor: Actor): void;
+    protected _onActionStart(_actor?: Actor): void;
+    protected _onActionEnd(_actor?: Actor): void;
+    /**
+     * Propagate event further through event path
+     */
+    propagate(actor: Actor): void;
 }
 export declare class PointerEventFactory<T extends PointerEvent> {
     protected _pointerEventType: new (coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any) => T;
@@ -119,13 +124,7 @@ export declare class PointerDownEvent extends PointerEvent {
 }
 export declare class PointerMoveEvent extends PointerEvent {
     protected _name: string;
-    propagate(): void;
-    /**
-     * Sets event path to actor, depending on actor provided.
-     * If actor is in a dragging state, current dragging target would be used.
-     * @param actor Actor, to lay path form.
-     */
-    layPath(actor: Actor): void;
+    propagate(actor: Actor): void;
     protected _onActionStart(actor: Actor): void;
     private _onActorEnter;
     private _onActorLeave;
@@ -137,7 +136,6 @@ export declare class PointerEnterEvent extends PointerEvent {
 }
 export declare class PointerLeaveEvent extends PointerEvent {
     protected _name: string;
-    layPath(actor: Actor): void;
     protected _onActionStart(actor: Actor): void;
     protected _onActionEnd(actor: Actor): void;
 }
@@ -211,6 +209,12 @@ export declare class Pointers extends Class {
      * Initializes pointer event listeners
      */
     init(target?: GlobalEventHandlers): void;
+    /**
+     * Synthesize a pointer event that looks like a real browser event to excalibur
+     * @param eventName
+     * @param pos
+     */
+    triggerEvent(eventName: 'up' | 'down' | 'move' | 'cancel' | 'wheel', pos: Vector | GlobalCoordinates, button?: NativePointerButton, pointerType?: 'mouse' | 'touch' | 'pen', pointerId?: number): void;
     update(): void;
     /**
      * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
@@ -221,18 +225,7 @@ export declare class Pointers extends Class {
      * Get number of pointers being watched
      */
     count(): number;
-    /**
-     * Propogates events through ancestors chain if necessary
-     */
-    propagate(): void;
-    /**
-     * Revises pointer events paths accordingly to actor provided
-     * @param actor  Actor to be revised
-     */
-    revisePointerEventsPaths(actor: Actor): void;
-    private _propagatePointerEvent;
-    private _revisePointerEventPath;
-    private _validateWheelEventPath;
+    updateActorsUnderPointer(actor: Actor): void;
     private _propagateWheelEvent;
     private _propagateWheelPointerEvent;
     private _handleMouseEvent;
@@ -254,6 +247,7 @@ export declare class Pointer extends Class {
     private _isDown;
     private _wasDown;
     private _actorsUnderPointer;
+    private _actorsUnderPointerLastFrame;
     /**
      * Whether the Pointer is currently dragging.
      */
@@ -308,11 +302,13 @@ export declare class Pointer extends Class {
      * @param actor An Actor for check;
      */
     isActorUnderPointer(actor: Actor): boolean;
+    wasActorUnderPointerLastFrame(actor: Actor): boolean;
     /**
      * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
      * @param actor An Actor for check;
      */
     hasActorUnderPointerInList(actor: Actor): boolean;
+    captureOldActorUnderPointer(): void;
     private _onPointerMove;
     private _onPointerDown;
     private _onPointerUp;

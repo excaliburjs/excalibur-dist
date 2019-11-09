@@ -138,33 +138,9 @@ export declare class GameEvent<T, U = T> {
      */
     bubbles: boolean;
     /**
-     * Holds the whole path from the Root to the event target
-     */
-    protected _path: Actor[];
-    protected _name: string;
-    /**
-     * Returns Event path from root to active actor.
-     */
-    readonly eventPath: Actor[];
-    /**
-     * Returns name of the event
-     */
-    readonly name: string;
-    /**
      * Prevents event from bubbling
      */
     stopPropagation(): void;
-    /**
-     * Action, that calls when event happens
-     */
-    action(): void;
-    /**
-     * Propagate event further through event path
-     */
-    propagate(): void;
-    layPath(actor: Actor): void;
-    protected _onActionStart(_actor?: Actor): void;
-    protected _onActionEnd(_actor?: Actor): void;
 }
 /**
  * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.

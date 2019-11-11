@@ -32,7 +32,7 @@ var Color = /** @class */ (function () {
         return new Color(r, g, b, a);
     };
     /**
-     * Creates a new inscance of Color from a hex string
+     * Creates a new instance of Color from a hex string
      *
      * @param hex  CSS color string of the form #ffffff, the alpha component is optional
      */
@@ -54,7 +54,7 @@ var Color = /** @class */ (function () {
         }
     };
     /**
-     * Creats a new instance of Color from hsla values
+     * Creates a new instance of Color from hsla values
      *
      * @param h  Hue is represented [0-1]
      * @param s  Saturation is represented [0-1]
@@ -293,7 +293,7 @@ var Color = /** @class */ (function () {
     });
     Object.defineProperty(Color, "Vermillion", {
         /**
-         * Vermillion (#FF5B31)
+         * Vermilion (#FF5B31)
          */
         get: function () {
             return Color.fromHex('#FF5B31');

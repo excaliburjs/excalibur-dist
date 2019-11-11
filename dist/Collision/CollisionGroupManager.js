@@ -48,7 +48,7 @@ var CollisionGroupManager = /** @class */ (function () {
         this._currentBit = this._STARTING_BIT;
         this._currentGroup = 1;
     };
-    // using bitmasking the maximum number of groups is 32, because that is the heighest 32bit integer that JS can present.
+    // using bitmasking the maximum number of groups is 32, because that is the highest 32bit integer that JS can present.
     CollisionGroupManager._STARTING_BIT = 1 | 0;
     CollisionGroupManager._MAX_GROUPS = 32;
     CollisionGroupManager._currentGroup = 1;

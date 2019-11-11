@@ -48,8 +48,8 @@ var CullingBox = /** @class */ (function () {
             new Vector(this._xMin, this._yMin),
             new Vector(this._xMax, this._yMin),
             new Vector(this._xMin, this._yMax),
-            new Vector(this._xMax, this._yMax)
-        ]; // bottomright
+            new Vector(this._xMax, this._yMax) // bottom right
+        ];
         // sprite can be wider than canvas screen (and still visible within canvas)
         // top or bottom of sprite must be within canvas
         if (boundingPoints[0].x < 0 &&

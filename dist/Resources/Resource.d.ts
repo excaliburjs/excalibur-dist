@@ -44,7 +44,7 @@ export declare class Resource<T> extends Class implements Loadable {
      */
     setData(data: any): void;
     /**
-     * This method is meant to be overriden to handle any additional
+     * This method is meant to be overridden to handle any additional
      * processing. Such as decoding downloaded audio bits.
      */
     processData(data: T): any;

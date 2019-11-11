@@ -97,7 +97,7 @@ export declare class Vector implements Clonable<Vector> {
      */
     add(v: Vector): Vector;
     /**
-     * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
+     * Subtracts a vector from another, if you subtract vector `B.sub(A)` the resulting vector points from A -> B
      * @param v The vector to subtract
      */
     sub(v: Vector): Vector;
@@ -156,7 +156,7 @@ export declare class Vector implements Clonable<Vector> {
      */
     clone(): Vector;
     /**
-     * Returns a string repesentation of the vector.
+     * Returns a string representation of the vector.
      */
     toString(): string;
 }

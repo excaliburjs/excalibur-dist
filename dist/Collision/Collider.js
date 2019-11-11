@@ -191,7 +191,7 @@ var Collider = /** @class */ (function () {
     Object.defineProperty(Collider.prototype, "localBounds", {
         /**
          * Returns the collider's [[BoundingBox]] relative to the body's position.
-         * If there is no shape, a point boudning box is returned
+         * If there is no shape, a point bounding box is returned
          */
         get: function () {
             if (this.shape) {

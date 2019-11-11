@@ -321,7 +321,7 @@ var PerlinGenerator = /** @class */ (function () {
         return total / maxValue;
     };
     /**
-     * Generates a list starting at 0 and ending at 1 of contious perlin noise, by default the step is 1/length;
+     * Generates a list starting at 0 and ending at 1 of continuous perlin noise, by default the step is 1/length;
      *
      */
     PerlinGenerator.prototype.sequence = function (length, step) {

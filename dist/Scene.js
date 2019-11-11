@@ -113,14 +113,14 @@ var Scene = /** @class */ (function (_super) {
         // will be overridden
     };
     /**
-     * This is called when the scene is made active and started. It is meant to be overriden,
+     * This is called when the scene is made active and started. It is meant to be overridden,
      * this is where you should setup any DOM UI or event handlers needed for the scene.
      */
     Scene.prototype.onActivate = function (_oldScene, _newScene) {
         // will be overridden
     };
     /**
-     * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
+     * This is called when the scene is made transitioned away from and stopped. It is meant to be overridden,
      * this is where you should cleanup any DOM UI or event handlers needed for the scene.
      */
     Scene.prototype.onDeactivate = function (_oldScene, _newScene) {
@@ -178,7 +178,7 @@ var Scene = /** @class */ (function (_super) {
         configurable: true
     });
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Initializes the scene before the first update, meant to be called by engine not by users of
      * Excalibur
@@ -199,7 +199,7 @@ var Scene = /** @class */ (function (_super) {
         }
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
      * @internal
@@ -209,17 +209,17 @@ var Scene = /** @class */ (function (_super) {
         this.onActivate(oldScene, newScene);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
      * @internal
      */
     Scene.prototype._deactivate = function (oldScene, newScene) {
-        this._logger.debug('Scene.onDectivate', this);
+        this._logger.debug('Scene.onDeactivate', this);
         this.onDeactivate(oldScene, newScene);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -229,7 +229,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPreUpdate(_engine, delta);
     };
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
@@ -239,7 +239,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPostUpdate(_engine, delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _predraw handler for [[onPreDraw]] lifecycle event
      *
@@ -250,7 +250,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPreDraw(_ctx, _delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _postdraw handler for [[onPostDraw]] lifecycle event
      *

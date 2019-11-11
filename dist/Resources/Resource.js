@@ -123,7 +123,7 @@ var Resource = /** @class */ (function (_super) {
         this.data = this.processData(data);
     };
     /**
-     * This method is meant to be overriden to handle any additional
+     * This method is meant to be overridden to handle any additional
      * processing. Such as decoding downloaded audio bits.
      */
     Resource.prototype.processData = function (data) {

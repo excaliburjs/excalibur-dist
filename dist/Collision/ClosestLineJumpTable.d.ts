@@ -9,7 +9,7 @@ import { Circle } from './Circle';
  * @param p0 Point where L1 begins
  * @param u Direction and length of L1
  * @param q0 Point were L2 begins
- * @param v Direction and lenght of L2
+ * @param v Direction and length of L2
  */
 export declare function ClosestLine(p0: Vector, u: Vector, q0: Vector, v: Vector): Line;
 export declare const ClosestLineJumpTable: {

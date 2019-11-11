@@ -30,9 +30,9 @@ var Random = /** @class */ (function () {
         this._upperMask = 0x80000000; // 34 high bits
         // Word size, 64 bits
         this._w = 32;
-        // Degree of recurrance
+        // Degree of recurrence
         this._n = 624;
-        // Middle word, an offset used in the recurrance defining the series x, 1<=m<n
+        // Middle word, an offset used in the recurrence defining the series x, 1<=m<n
         this._m = 397;
         // coefficients of teh rational normal form twist matrix
         this._a = 0x9908b0df;

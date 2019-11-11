@@ -153,7 +153,7 @@ var Physics = /** @class */ (function () {
      */
     Physics.boundsPadding = 5;
     /**
-     * Surface epsilon is used to help deal with surface penatration
+     * Surface epsilon is used to help deal with surface penetration
      */
     Physics.surfaceEpsilon = 0.1;
     /**
@@ -163,7 +163,7 @@ var Physics = /** @class */ (function () {
     Physics.checkForFastBodies = true;
     /**
      * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
-     * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+     * body is moving at least half of its minimum dimension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
      * Excalibur will always perform the fast body raycast regardless of speed.
      */
     Physics.disableMinimumSpeedForFastBody = false;

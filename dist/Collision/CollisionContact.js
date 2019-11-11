@@ -56,7 +56,7 @@ var CollisionContact = /** @class */ (function () {
         this._applyBoxImpulse(this.colliderB, this.colliderA, mtv.negate());
     };
     CollisionContact.prototype._resolveRigidBodyCollision = function () {
-        // perform collison on bounding areas
+        // perform collision on bounding areas
         var bodyA = this.colliderA.body;
         var bodyB = this.colliderB.body;
         var mtv = this.mtv; // normal pointing away from colliderA
@@ -77,7 +77,7 @@ var CollisionContact = /** @class */ (function () {
         var invMassB = this.colliderB.type === CollisionType.Fixed ? 0 : 1 / this.colliderB.mass;
         var invMoiA = this.colliderA.type === CollisionType.Fixed ? 0 : 1 / this.colliderA.inertia;
         var invMoiB = this.colliderB.type === CollisionType.Fixed ? 0 : 1 / this.colliderB.inertia;
-        // average restitution more relistic
+        // average restitution more realistic
         var coefRestitution = Math.min(this.colliderA.bounciness, this.colliderB.bounciness);
         var coefFriction = Math.min(this.colliderA.friction, this.colliderB.friction);
         normal = normal.normalize();

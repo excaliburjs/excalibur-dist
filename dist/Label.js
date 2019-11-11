@@ -26,7 +26,7 @@ export var FontUnit;
      */
     FontUnit[FontUnit["Em"] = 0] = "Em";
     /**
-     * Rem is similar to the Em, it is a scalable unit. 1 rem is eqaul to the font size of the root element
+     * Rem is similar to the Em, it is a scalable unit. 1 rem is equal to the font size of the root element
      */
     FontUnit[FontUnit["Rem"] = 1] = "Rem";
     /**
@@ -129,9 +129,7 @@ var LabelImpl = /** @class */ (function (_super) {
      * over a css font.
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object'
-            ? { x: textOrConfig.x, y: textOrConfig.y }
-            : { x: x, y: y }) || this;
+        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? { x: textOrConfig.x, y: textOrConfig.y } : { x: x, y: y }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false
          */

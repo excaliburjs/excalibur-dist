@@ -13,7 +13,7 @@ export declare enum FontUnit {
      */
     Em = 0,
     /**
-     * Rem is similar to the Em, it is a scalable unit. 1 rem is eqaul to the font size of the root element
+     * Rem is similar to the Em, it is a scalable unit. 1 rem is equal to the font size of the root element
      */
     Rem = 1,
     /**

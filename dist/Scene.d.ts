@@ -100,12 +100,12 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     onInitialize(_engine: Engine): void;
     /**
-     * This is called when the scene is made active and started. It is meant to be overriden,
+     * This is called when the scene is made active and started. It is meant to be overridden,
      * this is where you should setup any DOM UI or event handlers needed for the scene.
      */
     onActivate(_oldScene: Scene, _newScene: Scene): void;
     /**
-     * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
+     * This is called when the scene is made transitioned away from and stopped. It is meant to be overridden,
      * this is where you should cleanup any DOM UI or event handlers needed for the scene.
      */
     onDeactivate(_oldScene: Scene, _newScene: Scene): void;
@@ -142,7 +142,7 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     readonly isInitialized: boolean;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Initializes the scene before the first update, meant to be called by engine not by users of
      * Excalibur
@@ -150,35 +150,35 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     _initialize(engine: Engine): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
      * @internal
      */
     _activate(oldScene: Scene, newScene: Scene): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
      * @internal
      */
     _deactivate(oldScene: Scene, newScene: Scene): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
      */
     _preupdate(_engine: Engine, delta: number): void;
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
      */
     _postupdate(_engine: Engine, delta: number): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _predraw handler for [[onPreDraw]] lifecycle event
      *
@@ -186,7 +186,7 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      */
     _predraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _postdraw handler for [[onPostDraw]] lifecycle event
      *

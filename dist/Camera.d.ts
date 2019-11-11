@@ -45,7 +45,7 @@ export declare class StrategyContainer {
     /**
      * Creates and adds the [[ElasticToActorStrategy]] on the current camera
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -68,7 +68,7 @@ export declare enum Axis {
     Y = 1
 }
 /**
- * Lock a camera to the exact x/y postition of an actor.
+ * Lock a camera to the exact x/y position of an actor.
  */
 export declare class LockCameraToActorStrategy implements CameraStrategy<Actor> {
     target: Actor;
@@ -93,7 +93,7 @@ export declare class ElasticToActorStrategy implements CameraStrategy<Actor> {
     cameraFriction: number;
     /**
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -144,7 +144,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      */
     rotation: number;
     /**
-     * Current angular velc
+     * Current angular velocity
      */
     rx: number;
     /**
@@ -247,7 +247,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      */
     getZoom(): number;
     /**
-     * Gets the boundingbox of the viewport of this camera in world coordinates
+     * Gets the bounding box of the viewport of this camera in world coordinates
      */
     readonly viewport: BoundingBox;
     /**
@@ -265,7 +265,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      */
     clearAllStrategies(): void;
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -278,7 +278,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      */
     onPreUpdate(_engine: Engine, _delta: number): void;
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal

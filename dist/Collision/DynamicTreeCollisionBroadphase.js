@@ -48,7 +48,9 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var _this = this;
         var seconds = delta / 1000;
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
-        var potentialColliders = targets.map(function (t) { return t.collider; }).filter(function (other) {
+        var potentialColliders = targets
+            .map(function (t) { return t.collider; })
+            .filter(function (other) {
             return other.active && other.type !== CollisionType.PreventCollision;
         });
         // clear old list of collision pairs
@@ -76,7 +78,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         // Fast moving objects are those moving at least there smallest bound per frame
         if (Physics.checkForFastBodies) {
             var _loop_1 = function (collider_1) {
-                // Skip non-active objects. Does not make sense on other collison types
+                // Skip non-active objects. Does not make sense on other collision types
                 if (collider_1.type !== CollisionType.Active) {
                     return "continue";
                 }
@@ -90,7 +92,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
-                    // objects resting on a surface may be slightly penatrating in the current position
+                    // objects resting on a surface may be slightly penetrating in the current position
                     var updateVec = collider_1.body.pos.sub(collider_1.body.oldPos);
                     var centerPoint = collider_1.shape.center;
                     var furthestPoint = collider_1.shape.getFurthestPoint(collider_1.body.vel);

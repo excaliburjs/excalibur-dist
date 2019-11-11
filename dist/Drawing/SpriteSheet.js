@@ -109,7 +109,7 @@ var SpriteSheetImpl = /** @class */ (function () {
         return new Animation(engine, images, speed);
     };
     /**
-     * Create an animation from the this SpriteSheet by specifing the range of
+     * Create an animation from the this SpriteSheet by specifying the range of
      * images with the beginning (inclusive) and ending (exclusive) index
      * For example `getAnimationBetween(engine, 0, 5, 200)` returns an animation with 5 frames.
      * @param engine      Reference to the current game Engine
@@ -137,7 +137,7 @@ var SpriteSheetImpl = /** @class */ (function () {
         return new Animation(engine, sprites, speed);
     };
     /**
-     * Retreive a specific sprite from the SpriteSheet by its index. Sprites are organized
+     * Retrieve a specific sprite from the SpriteSheet by its index. Sprites are organized
      * in row major order in the SpriteSheet.
      * @param index  The index of the sprite
      */

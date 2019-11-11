@@ -192,7 +192,7 @@ var Vector = /** @class */ (function () {
         return new Vector(this.x + v.x, this.y + v.y);
     };
     /**
-     * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
+     * Subtracts a vector from another, if you subtract vector `B.sub(A)` the resulting vector points from A -> B
      * @param v The vector to subtract
      */
     Vector.prototype.sub = function (v) {
@@ -284,7 +284,7 @@ var Vector = /** @class */ (function () {
         return new Vector(this.x, this.y);
     };
     /**
-     * Returns a string repesentation of the vector.
+     * Returns a string representation of the vector.
      */
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";

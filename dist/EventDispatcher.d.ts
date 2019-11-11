@@ -51,7 +51,7 @@ export declare class EventDispatcher<T = any> implements Eventable {
      */
     once(eventName: string, handler: (event: GameEvent<T>) => void): void;
     /**
-     * Wires this event dispatcher to also recieve events from another
+     * Wires this event dispatcher to also receive events from another
      */
     wire(eventDispatcher: EventDispatcher): void;
     /**

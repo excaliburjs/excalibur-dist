@@ -114,7 +114,7 @@ var EventDispatcher = /** @class */ (function () {
         this.on(eventName, metaHandler);
     };
     /**
-     * Wires this event dispatcher to also recieve events from another
+     * Wires this event dispatcher to also receive events from another
      */
     EventDispatcher.prototype.wire = function (eventDispatcher) {
         eventDispatcher._wiredEventDispatchers.push(this);

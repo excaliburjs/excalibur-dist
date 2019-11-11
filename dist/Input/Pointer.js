@@ -601,7 +601,7 @@ var Pointers = /** @class */ (function (_super) {
     };
     Pointers.prototype._propagateWheelPointerEvent = function (actor, wheelEvent) {
         actor.emit('pointerwheel', wheelEvent);
-        // Recurse and propogate
+        // Recurse and propagate
         if (wheelEvent.bubbles && actor.parent) {
             this._propagateWheelPointerEvent(actor.parent, wheelEvent);
         }
@@ -881,7 +881,7 @@ var Pointer = /** @class */ (function (_super) {
         return this._actorsUnderPointerLastFrame.hasOwnProperty(actor.id.toString());
     };
     /**
-     * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
+     * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
     Pointer.prototype.hasActorUnderPointerInList = function (actor) {

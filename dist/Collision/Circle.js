@@ -90,7 +90,7 @@ var Circle = /** @class */ (function () {
         return false;
     };
     /**
-     * Casts a ray at the Circl shape and returns the nearest point of collision
+     * Casts a ray at the Circle shape and returns the nearest point of collision
      * @param ray
      */
     Circle.prototype.rayCast = function (ray, max) {

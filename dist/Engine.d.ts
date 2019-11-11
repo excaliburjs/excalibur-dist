@@ -517,7 +517,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     private _setHeightByDisplayMode;
     /**
-     * Initializes the internal canvas, rendering context, displaymode, and native event listeners
+     * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     private _initialize;
     onInitialize(_engine: Engine): void;

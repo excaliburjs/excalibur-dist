@@ -304,7 +304,7 @@ export declare class Pointer extends Class {
     isActorUnderPointer(actor: Actor): boolean;
     wasActorUnderPointerLastFrame(actor: Actor): boolean;
     /**
-     * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
+     * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
     hasActorUnderPointerInList(actor: Actor): boolean;

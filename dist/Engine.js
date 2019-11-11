@@ -625,7 +625,7 @@ O|===|* >________________>\n\
         }
     };
     /**
-     * Initializes the internal canvas, rendering context, displaymode, and native event listeners
+     * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     Engine.prototype._initialize = function (options) {
         var _this = this;
@@ -825,7 +825,7 @@ O|===|* >________________>\n\
      */
     Engine.prototype._update = function (delta) {
         if (this._isLoading) {
-            // suspend updates untill loading is finished
+            // suspend updates until loading is finished
             this._loader.update(this, delta);
             // Update input listeners
             this.input.keyboard.update();

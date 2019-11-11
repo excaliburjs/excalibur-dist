@@ -138,7 +138,7 @@ var ConvexPolygon = /** @class */ (function () {
      * Tests if a point is contained in this collision shape in world space
      */
     ConvexPolygon.prototype.contains = function (point) {
-        // Always cast to the right, as long as we cast in a consitent fixed direction we
+        // Always cast to the right, as long as we cast in a consistent fixed direction we
         // will be fine
         var testRay = new Ray(point, new Vector(1, 0));
         var intersectCount = this.getSides().reduce(function (accum, side) {
@@ -370,7 +370,9 @@ var ConvexPolygon = /** @class */ (function () {
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this.points[0].add(newPos);
         ctx.moveTo(firstPoint.x, firstPoint.y);
-        this.points.map(function (p) { return p.add(newPos); }).forEach(function (point) {
+        this.points
+            .map(function (p) { return p.add(newPos); })
+            .forEach(function (point) {
             ctx.lineTo(point.x, point.y);
         });
         ctx.lineTo(firstPoint.x, firstPoint.y);

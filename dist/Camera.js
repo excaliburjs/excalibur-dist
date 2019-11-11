@@ -44,7 +44,7 @@ var StrategyContainer = /** @class */ (function () {
     /**
      * Creates and adds the [[ElasticToActorStrategy]] on the current camera
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -74,7 +74,7 @@ export var Axis;
     Axis[Axis["Y"] = 1] = "Y";
 })(Axis || (Axis = {}));
 /**
- * Lock a camera to the exact x/y postition of an actor.
+ * Lock a camera to the exact x/y position of an actor.
  */
 var LockCameraToActorStrategy = /** @class */ (function () {
     function LockCameraToActorStrategy(target) {
@@ -115,7 +115,7 @@ export { LockCameraToActorAxisStrategy };
 var ElasticToActorStrategy = /** @class */ (function () {
     /**
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -131,7 +131,7 @@ var ElasticToActorStrategy = /** @class */ (function () {
             var position = target.center;
             var focus = cam.getFocus();
             var cameraVel = cam.vel.clone();
-            // Calculate the strech vector, using the spring equation
+            // Calculate the stretch vector, using the spring equation
             // F = kX
             // https://en.wikipedia.org/wiki/Hooke's_law
             // Apply to the current camera velocity
@@ -206,7 +206,7 @@ var Camera = /** @class */ (function (_super) {
          */
         _this.rotation = 0;
         /**
-         * Current angular velc
+         * Current angular velocity
          */
         _this.rx = 0;
         /**
@@ -427,7 +427,7 @@ var Camera = /** @class */ (function (_super) {
     };
     Object.defineProperty(Camera.prototype, "viewport", {
         /**
-         * Gets the boundingbox of the viewport of this camera in world coordinates
+         * Gets the bounding box of the viewport of this camera in world coordinates
          */
         get: function () {
             if (this._engine) {
@@ -461,7 +461,7 @@ var Camera = /** @class */ (function (_super) {
         this._cameraStrategies.length = 0;
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -479,7 +479,7 @@ var Camera = /** @class */ (function (_super) {
         // Overridable
     };
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal

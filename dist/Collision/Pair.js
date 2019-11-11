@@ -45,13 +45,13 @@ var Pair = /** @class */ (function () {
         configurable: true
     });
     /**
-     * Runs the collison intersection logic on the members of this pair
+     * Runs the collision intersection logic on the members of this pair
      */
     Pair.prototype.collide = function () {
         this.collision = this.colliderA.collide(this.colliderB);
     };
     /**
-     * Resovles the collision body position and velocity if a collision occured
+     * Resolves the collision body position and velocity if a collision occurred
      */
     Pair.prototype.resolve = function (strategy) {
         if (this.collision) {

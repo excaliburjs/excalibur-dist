@@ -60,7 +60,7 @@ export declare class Circle implements CollisionShape {
      */
     contains(point: Vector): boolean;
     /**
-     * Casts a ray at the Circl shape and returns the nearest point of collision
+     * Casts a ray at the Circle shape and returns the nearest point of collision
      * @param ray
      */
     rayCast(ray: Ray, max?: number): Vector;

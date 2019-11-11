@@ -4,7 +4,7 @@ import { Collider } from './Collider';
 import { Clonable } from '../Interfaces/Clonable';
 export interface BodyOptions {
     /**
-     * Optionally the actory associated with this body
+     * Optionally the actor associated with this body
      */
     actor?: Actor;
     /**
@@ -49,7 +49,7 @@ export declare class Body implements Clonable<Body> {
      */
     oldVel: Vector;
     /**
-     * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+     * The current acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
      * be useful to simulate a gravitational effect.
      */
     acc: Vector;

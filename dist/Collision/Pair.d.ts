@@ -16,11 +16,11 @@ export declare class Pair {
      */
     readonly canCollide: boolean;
     /**
-     * Runs the collison intersection logic on the members of this pair
+     * Runs the collision intersection logic on the members of this pair
      */
     collide(): void;
     /**
-     * Resovles the collision body position and velocity if a collision occured
+     * Resolves the collision body position and velocity if a collision occurred
      */
     resolve(strategy: CollisionResolutionStrategy): void;
     /**

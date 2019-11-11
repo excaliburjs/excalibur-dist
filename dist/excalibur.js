@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4926+195efca - 2019-11-9
+ * excalibur - 0.23.0-alpha.4967+b628396 - 2019-11-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4731,7 +4731,7 @@ var ActionContext = /** @class */ (function () {
         return this;
     };
     /**
-     * This method will scale an actor by an amount relative to the current scale at a certin speed in scale units/sec
+     * This method will scale an actor by an amount relative to the current scale at a certain speed in scale units/sec
      * and return back the actor. This method is part of the
      * actor 'Action' fluent API allowing action chaining.
      * @param sizeOffsetX   The scaling factor to apply on X axis
@@ -5541,7 +5541,7 @@ var ActorImpl = /** @class */ (function (_super) {
             return this.body.oldScale;
         },
         /**
-         * Sets the the old scale of the acotr last frame
+         * Sets the the old scale of the actor last frame
          * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
          */
         set: function (scale) {
@@ -5668,7 +5668,7 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
      *
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * @internal
      */
@@ -5713,7 +5713,7 @@ var ActorImpl = /** @class */ (function (_super) {
     };
     // #endregion
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _prekill handler for [[onPreKill]] lifecycle event
      * @internal
@@ -5731,7 +5731,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // Override me
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _prekill handler for [[onPostKill]] lifecycle event
      * @internal
@@ -6046,7 +6046,7 @@ var ActorImpl = /** @class */ (function (_super) {
         return rotated ? bb.rotate(this.rotation) : bb;
     };
     /**
-     * Returns the actors unrotated geometry in world coordinates
+     * Returns the actor's unrotated geometry in world coordinates
      */
     ActorImpl.prototype.getGeometry = function () {
         return this.getBounds(false).getPoints();
@@ -6130,7 +6130,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
      * `null` when there is no collision;
      * @param actor The other actor to test
-     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.interesect]] to get boudings intersection,
+     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.intersect]] to get bounds intersection,
      * or [[Actor.body.collider.collide]] to collide with another collider
      */
     ActorImpl.prototype.collides = function (actor) {
@@ -6232,7 +6232,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // Override me
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -6242,7 +6242,7 @@ var ActorImpl = /** @class */ (function (_super) {
         this.onPreUpdate(engine, delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
@@ -6310,7 +6310,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // Override me
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _predraw handler for [[onPreDraw]] lifecycle event
      * @internal
@@ -6320,7 +6320,7 @@ var ActorImpl = /** @class */ (function (_super) {
         this.onPreDraw(ctx, delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _postdraw handler for [[onPostDraw]] lifecycle event
      * @internal
@@ -6737,7 +6737,7 @@ var Vector = /** @class */ (function () {
         return new Vector(this.x + v.x, this.y + v.y);
     };
     /**
-     * Subtracts a vector from another, if you subract vector `B.sub(A)` the resulting vector points from A -> B
+     * Subtracts a vector from another, if you subtract vector `B.sub(A)` the resulting vector points from A -> B
      * @param v The vector to subtract
      */
     Vector.prototype.sub = function (v) {
@@ -6829,7 +6829,7 @@ var Vector = /** @class */ (function () {
         return new Vector(this.x, this.y);
     };
     /**
-     * Returns a string repesentation of the vector.
+     * Returns a string representation of the vector.
      */
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";
@@ -7181,7 +7181,7 @@ var StrategyContainer = /** @class */ (function () {
     /**
      * Creates and adds the [[ElasticToActorStrategy]] on the current camera
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -7211,7 +7211,7 @@ var Axis;
     Axis[Axis["Y"] = 1] = "Y";
 })(Axis || (Axis = {}));
 /**
- * Lock a camera to the exact x/y postition of an actor.
+ * Lock a camera to the exact x/y position of an actor.
  */
 var LockCameraToActorStrategy = /** @class */ (function () {
     function LockCameraToActorStrategy(target) {
@@ -7252,7 +7252,7 @@ var LockCameraToActorAxisStrategy = /** @class */ (function () {
 var ElasticToActorStrategy = /** @class */ (function () {
     /**
      * If cameraElasticity < cameraFriction < 1.0, the behavior will be a dampened spring that will slowly end at the target without bouncing
-     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillationg spring that will over
+     * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
      * @param target Target actor to elastically follow
@@ -7268,7 +7268,7 @@ var ElasticToActorStrategy = /** @class */ (function () {
             var position = target.center;
             var focus = cam.getFocus();
             var cameraVel = cam.vel.clone();
-            // Calculate the strech vector, using the spring equation
+            // Calculate the stretch vector, using the spring equation
             // F = kX
             // https://en.wikipedia.org/wiki/Hooke's_law
             // Apply to the current camera velocity
@@ -7343,7 +7343,7 @@ var Camera = /** @class */ (function (_super) {
          */
         _this.rotation = 0;
         /**
-         * Current angular velc
+         * Current angular velocity
          */
         _this.rx = 0;
         /**
@@ -7564,7 +7564,7 @@ var Camera = /** @class */ (function (_super) {
     };
     Object.defineProperty(Camera.prototype, "viewport", {
         /**
-         * Gets the boundingbox of the viewport of this camera in world coordinates
+         * Gets the bounding box of the viewport of this camera in world coordinates
          */
         get: function () {
             if (this._engine) {
@@ -7598,7 +7598,7 @@ var Camera = /** @class */ (function (_super) {
         this._cameraStrategies.length = 0;
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -7616,7 +7616,7 @@ var Camera = /** @class */ (function (_super) {
         // Overridable
     };
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
@@ -7892,7 +7892,7 @@ var Body = /** @class */ (function () {
          */
         this.oldVel = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
         /**
-         * The curret acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
+         * The current acceleration vector (ax, ay) of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may
          * be useful to simulate a gravitational effect.
          */
         this.acc = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
@@ -8731,7 +8731,7 @@ var Circle = /** @class */ (function () {
         return false;
     };
     /**
-     * Casts a ray at the Circl shape and returns the nearest point of collision
+     * Casts a ray at the Circle shape and returns the nearest point of collision
      * @param ray
      */
     Circle.prototype.rayCast = function (ray, max) {
@@ -8968,7 +8968,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param p0 Point where L1 begins
  * @param u Direction and length of L1
  * @param q0 Point were L2 begins
- * @param v Direction and lenght of L2
+ * @param v Direction and length of L2
  */
 function ClosestLine(p0, u, q0, v) {
     // Distance between 2 lines http://geomalgorithms.com/a07-_distance.html
@@ -9385,7 +9385,7 @@ var Collider = /** @class */ (function () {
     Object.defineProperty(Collider.prototype, "localBounds", {
         /**
          * Returns the collider's [[BoundingBox]] relative to the body's position.
-         * If there is no shape, a point boudning box is returned
+         * If there is no shape, a point bounding box is returned
          */
         get: function () {
             if (this.shape) {
@@ -9514,7 +9514,7 @@ var CollisionContact = /** @class */ (function () {
         this._applyBoxImpulse(this.colliderB, this.colliderA, mtv.negate());
     };
     CollisionContact.prototype._resolveRigidBodyCollision = function () {
-        // perform collison on bounding areas
+        // perform collision on bounding areas
         var bodyA = this.colliderA.body;
         var bodyB = this.colliderB.body;
         var mtv = this.mtv; // normal pointing away from colliderA
@@ -9535,7 +9535,7 @@ var CollisionContact = /** @class */ (function () {
         var invMassB = this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderB.mass;
         var invMoiA = this.colliderA.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderA.inertia;
         var invMoiB = this.colliderB.type === _CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].Fixed ? 0 : 1 / this.colliderB.inertia;
-        // average restitution more relistic
+        // average restitution more realistic
         var coefRestitution = Math.min(this.colliderA.bounciness, this.colliderB.bounciness);
         var coefFriction = Math.min(this.colliderA.friction, this.colliderB.friction);
         normal = normal.normalize();
@@ -9809,7 +9809,7 @@ var CollisionGroupManager = /** @class */ (function () {
         this._currentBit = this._STARTING_BIT;
         this._currentGroup = 1;
     };
-    // using bitmasking the maximum number of groups is 32, because that is the heighest 32bit integer that JS can present.
+    // using bitmasking the maximum number of groups is 32, because that is the highest 32bit integer that JS can present.
     CollisionGroupManager._STARTING_BIT = 1 | 0;
     CollisionGroupManager._MAX_GROUPS = 32;
     CollisionGroupManager._currentGroup = 1;
@@ -10028,7 +10028,7 @@ var CollisionType;
      * Actors with the `Fixed` setting raise collision events and participate in
      * collisions with other actors. Actors with the `Fixed` setting will not be
      * pushed or moved by other actors sharing the `Fixed`. Think of Fixed
-     * actors as "immovable/onstoppable" objects. If two `Fixed` actors meet they will
+     * actors as "immovable/unstoppable" objects. If two `Fixed` actors meet they will
      * not be pushed or moved by each other, they will not interact except to throw
      * collision events.
      */
@@ -10197,7 +10197,7 @@ var ConvexPolygon = /** @class */ (function () {
      * Tests if a point is contained in this collision shape in world space
      */
     ConvexPolygon.prototype.contains = function (point) {
-        // Always cast to the right, as long as we cast in a consitent fixed direction we
+        // Always cast to the right, as long as we cast in a consistent fixed direction we
         // will be fine
         var testRay = new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Ray"](point, new _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"](1, 0));
         var intersectCount = this.getSides().reduce(function (accum, side) {
@@ -10429,7 +10429,9 @@ var ConvexPolygon = /** @class */ (function () {
         // Iterate through the supplied points and construct a 'polygon'
         var firstPoint = this.points[0].add(newPos);
         ctx.moveTo(firstPoint.x, firstPoint.y);
-        this.points.map(function (p) { return p.add(newPos); }).forEach(function (point) {
+        this.points
+            .map(function (p) { return p.add(newPos); })
+            .forEach(function (point) {
             ctx.lineTo(point.x, point.y);
         });
         ctx.lineTo(firstPoint.x, firstPoint.y);
@@ -10503,7 +10505,7 @@ var TreeNode = /** @class */ (function () {
 }());
 
 /**
- * The DynamicTrees provides a spatial partiioning data structure for quickly querying for overlapping bounding boxes for
+ * The DynamicTrees provides a spatial partitioning data structure for quickly querying for overlapping bounding boxes for
  * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
  *
  * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
@@ -10861,7 +10863,7 @@ var DynamicTree = /** @class */ (function () {
      * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
      * long ray to test the tree specified by `max`.
      *
-     * In the query callback, it will be passed a potential body that intersects with the racast. Returning true from this
+     * In the query callback, it will be passed a potential body that intersects with the raycast. Returning true from this
      * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
      * the tree until all possible bodies that would intersect with the ray have been returned.
      */
@@ -10992,7 +10994,9 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         var _this = this;
         var seconds = delta / 1000;
         // Retrieve the list of potential colliders, exclude killed, prevented, and self
-        var potentialColliders = targets.map(function (t) { return t.collider; }).filter(function (other) {
+        var potentialColliders = targets
+            .map(function (t) { return t.collider; })
+            .filter(function (other) {
             return other.active && other.type !== _CollisionType__WEBPACK_IMPORTED_MODULE_6__["CollisionType"].PreventCollision;
         });
         // clear old list of collision pairs
@@ -11020,7 +11024,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
         // Fast moving objects are those moving at least there smallest bound per frame
         if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].checkForFastBodies) {
             var _loop_1 = function (collider_1) {
-                // Skip non-active objects. Does not make sense on other collison types
+                // Skip non-active objects. Does not make sense on other collision types
                 if (collider_1.type !== _CollisionType__WEBPACK_IMPORTED_MODULE_6__["CollisionType"].Active) {
                     return "continue";
                 }
@@ -11034,7 +11038,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                         stats.physics.fastBodies++;
                     }
                     // start with the oldPos because the integration for actors has already happened
-                    // objects resting on a surface may be slightly penatrating in the current position
+                    // objects resting on a surface may be slightly penetrating in the current position
                     var updateVec = collider_1.body.pos.sub(collider_1.body.oldPos);
                     var centerPoint = collider_1.shape.center;
                     var furthestPoint = collider_1.shape.getFurthestPoint(collider_1.body.vel);
@@ -11655,13 +11659,13 @@ var Pair = /** @class */ (function () {
         configurable: true
     });
     /**
-     * Runs the collison intersection logic on the members of this pair
+     * Runs the collision intersection logic on the members of this pair
      */
     Pair.prototype.collide = function () {
         this.collision = this.colliderA.collide(this.colliderB);
     };
     /**
-     * Resovles the collision body position and velocity if a collision occured
+     * Resolves the collision body position and velocity if a collision occurred
      */
     Pair.prototype.resolve = function (strategy) {
         if (this.collision) {
@@ -12511,7 +12515,7 @@ var Color = /** @class */ (function () {
         return new Color(r, g, b, a);
     };
     /**
-     * Creates a new inscance of Color from a hex string
+     * Creates a new instance of Color from a hex string
      *
      * @param hex  CSS color string of the form #ffffff, the alpha component is optional
      */
@@ -12533,7 +12537,7 @@ var Color = /** @class */ (function () {
         }
     };
     /**
-     * Creats a new instance of Color from hsla values
+     * Creates a new instance of Color from hsla values
      *
      * @param h  Hue is represented [0-1]
      * @param s  Saturation is represented [0-1]
@@ -12772,7 +12776,7 @@ var Color = /** @class */ (function () {
     });
     Object.defineProperty(Color, "Vermillion", {
         /**
-         * Vermillion (#FF5B31)
+         * Vermilion (#FF5B31)
          */
         get: function () {
             return Color.fromHex('#FF5B31');
@@ -13816,7 +13820,7 @@ var SpriteSheetImpl = /** @class */ (function () {
         return new _Animation__WEBPACK_IMPORTED_MODULE_1__["Animation"](engine, images, speed);
     };
     /**
-     * Create an animation from the this SpriteSheet by specifing the range of
+     * Create an animation from the this SpriteSheet by specifying the range of
      * images with the beginning (inclusive) and ending (exclusive) index
      * For example `getAnimationBetween(engine, 0, 5, 200)` returns an animation with 5 frames.
      * @param engine      Reference to the current game Engine
@@ -13844,7 +13848,7 @@ var SpriteSheetImpl = /** @class */ (function () {
         return new _Animation__WEBPACK_IMPORTED_MODULE_1__["Animation"](engine, sprites, speed);
     };
     /**
-     * Retreive a specific sprite from the SpriteSheet by its index. Sprites are organized
+     * Retrieve a specific sprite from the SpriteSheet by its index. Sprites are organized
      * in row major order in the SpriteSheet.
      * @param index  The index of the sprite
      */
@@ -14744,7 +14748,7 @@ O|===|* >________________>\n\
         }
     };
     /**
-     * Initializes the internal canvas, rendering context, displaymode, and native event listeners
+     * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     Engine.prototype._initialize = function (options) {
         var _this = this;
@@ -14944,7 +14948,7 @@ O|===|* >________________>\n\
      */
     Engine.prototype._update = function (delta) {
         if (this._isLoading) {
-            // suspend updates untill loading is finished
+            // suspend updates until loading is finished
             this._loader.update(this, delta);
             // Update input listeners
             this.input.keyboard.update();
@@ -15341,7 +15345,7 @@ var EventDispatcher = /** @class */ (function () {
         this.on(eventName, metaHandler);
     };
     /**
-     * Wires this event dispatcher to also recieve events from another
+     * Wires this event dispatcher to also receive events from another
      */
     EventDispatcher.prototype.wire = function (eventDispatcher) {
         eventDispatcher._wiredEventDispatchers.push(this);
@@ -17619,7 +17623,7 @@ var Pointers = /** @class */ (function (_super) {
     };
     Pointers.prototype._propagateWheelPointerEvent = function (actor, wheelEvent) {
         actor.emit('pointerwheel', wheelEvent);
-        // Recurse and propogate
+        // Recurse and propagate
         if (wheelEvent.bubbles && actor.parent) {
             this._propagateWheelPointerEvent(actor.parent, wheelEvent);
         }
@@ -17899,7 +17903,7 @@ var Pointer = /** @class */ (function (_super) {
         return this._actorsUnderPointerLastFrame.hasOwnProperty(actor.id.toString());
     };
     /**
-     * Checks if Pointer has a specific Actor in ActrorsUnderPointer list.
+     * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
     Pointer.prototype.hasActorUnderPointerInList = function (actor) {
@@ -18022,7 +18026,7 @@ var FontUnit;
      */
     FontUnit[FontUnit["Em"] = 0] = "Em";
     /**
-     * Rem is similar to the Em, it is a scalable unit. 1 rem is eqaul to the font size of the root element
+     * Rem is similar to the Em, it is a scalable unit. 1 rem is equal to the font size of the root element
      */
     FontUnit[FontUnit["Rem"] = 1] = "Rem";
     /**
@@ -18125,9 +18129,7 @@ var LabelImpl = /** @class */ (function (_super) {
      * over a css font.
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object'
-            ? { x: textOrConfig.x, y: textOrConfig.y }
-            : { x: x, y: y }) || this;
+        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? { x: textOrConfig.x, y: textOrConfig.y } : { x: x, y: y }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false
          */
@@ -19119,7 +19121,7 @@ var PerlinGenerator = /** @class */ (function () {
         return total / maxValue;
     };
     /**
-     * Generates a list starting at 0 and ending at 1 of contious perlin noise, by default the step is 1/length;
+     * Generates a list starting at 0 and ending at 1 of continuous perlin noise, by default the step is 1/length;
      *
      */
     PerlinGenerator.prototype.sequence = function (length, step) {
@@ -19302,9 +19304,9 @@ var Random = /** @class */ (function () {
         this._upperMask = 0x80000000; // 34 high bits
         // Word size, 64 bits
         this._w = 32;
-        // Degree of recurrance
+        // Degree of recurrence
         this._n = 624;
-        // Middle word, an offset used in the recurrance defining the series x, 1<=m<n
+        // Middle word, an offset used in the recurrence defining the series x, 1<=m<n
         this._m = 397;
         // coefficients of teh rational normal form twist matrix
         this._a = 0x9908b0df;
@@ -20099,7 +20101,7 @@ var Physics = /** @class */ (function () {
      */
     Physics.boundsPadding = 5;
     /**
-     * Surface epsilon is used to help deal with surface penatration
+     * Surface epsilon is used to help deal with surface penetration
      */
     Physics.surfaceEpsilon = 0.1;
     /**
@@ -20109,7 +20111,7 @@ var Physics = /** @class */ (function () {
     Physics.checkForFastBodies = true;
     /**
      * Disable minimum fast moving body raycast, by default if ex.Physics.checkForFastBodies = true Excalibur will only check if the
-     * body is moving at least half of its minimum diminension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
+     * body is moving at least half of its minimum dimension in an update. If ex.Physics.disableMinimumSpeedForFastBody is set to true,
      * Excalibur will always perform the fast body raycast regardless of speed.
      */
     Physics.disableMinimumSpeedForFastBody = false;
@@ -20382,7 +20384,7 @@ var ColorBlindCorrector = /** @class */ (function () {
         this._setRectangle(0, 0, image.width, image.height);
         // Draw the rectangle.
         this._gl.drawArrays(this._gl.TRIANGLES, 0, 6);
-        // Grab tranformed image from internal canvas
+        // Grab transformed image from internal canvas
         var pixelData = new Uint8Array(image.width * image.height * 4);
         this._gl.readPixels(0, 0, image.width, image.height, this._gl.RGBA, this._gl.UNSIGNED_BYTE, pixelData);
         image.data.set(pixelData);
@@ -20515,7 +20517,7 @@ var Promise = /** @class */ (function () {
     Promise.prototype.then = function (successCallback, rejectCallback) {
         if (successCallback) {
             this._successCallbacks.push(successCallback);
-            // If the promise is already resovled call immediately
+            // If the promise is already resolved call immediately
             if (this.state() === PromiseState.Resolved) {
                 try {
                     successCallback.call(this, this._value);
@@ -21313,7 +21315,7 @@ var Resource = /** @class */ (function (_super) {
         this.data = this.processData(data);
     };
     /**
-     * This method is meant to be overriden to handle any additional
+     * This method is meant to be overridden to handle any additional
      * processing. Such as decoding downloaded audio bits.
      */
     Resource.prototype.processData = function (data) {
@@ -21588,7 +21590,7 @@ var WebAudioInstance = /** @class */ (function (_super) {
             if (this._isPlaying && this._volumeNode.gain.setTargetAtTime) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
                 // After each .1 seconds timestep, the target value will ~63.2% closer to the target value.
-                // This exponential ramp provides a more pleasant trasition in gain
+                // This exponential ramp provides a more pleasant transition in gain
                 this._volumeNode.gain.setTargetAtTime(value, this._audioContext.currentTime, 0.1);
             }
             else {
@@ -22270,14 +22272,14 @@ var Scene = /** @class */ (function (_super) {
         // will be overridden
     };
     /**
-     * This is called when the scene is made active and started. It is meant to be overriden,
+     * This is called when the scene is made active and started. It is meant to be overridden,
      * this is where you should setup any DOM UI or event handlers needed for the scene.
      */
     Scene.prototype.onActivate = function (_oldScene, _newScene) {
         // will be overridden
     };
     /**
-     * This is called when the scene is made transitioned away from and stopped. It is meant to be overriden,
+     * This is called when the scene is made transitioned away from and stopped. It is meant to be overridden,
      * this is where you should cleanup any DOM UI or event handlers needed for the scene.
      */
     Scene.prototype.onDeactivate = function (_oldScene, _newScene) {
@@ -22335,7 +22337,7 @@ var Scene = /** @class */ (function (_super) {
         configurable: true
     });
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Initializes the scene before the first update, meant to be called by engine not by users of
      * Excalibur
@@ -22356,7 +22358,7 @@ var Scene = /** @class */ (function (_super) {
         }
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
      * @internal
@@ -22366,17 +22368,17 @@ var Scene = /** @class */ (function (_super) {
         this.onActivate(oldScene, newScene);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
      * @internal
      */
     Scene.prototype._deactivate = function (oldScene, newScene) {
-        this._logger.debug('Scene.onDectivate', this);
+        this._logger.debug('Scene.onDeactivate', this);
         this.onDeactivate(oldScene, newScene);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
@@ -22386,7 +22388,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPreUpdate(_engine, delta);
     };
     /**
-     *  It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
@@ -22396,7 +22398,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPostUpdate(_engine, delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _predraw handler for [[onPreDraw]] lifecycle event
      *
@@ -22407,7 +22409,7 @@ var Scene = /** @class */ (function (_super) {
         this.onPreDraw(_ctx, _delta);
     };
     /**
-     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _postdraw handler for [[onPostDraw]] lifecycle event
      *
@@ -23924,8 +23926,8 @@ var CullingBox = /** @class */ (function () {
             new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](this._xMin, this._yMin),
             new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](this._xMax, this._yMin),
             new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](this._xMin, this._yMax),
-            new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](this._xMax, this._yMax)
-        ]; // bottomright
+            new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](this._xMax, this._yMax) // bottom right
+        ];
         // sprite can be wider than canvas screen (and still visible within canvas)
         // top or bottom of sprite must be within canvas
         if (boundingPoints[0].x < 0 &&
@@ -25953,10 +25955,10 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4926+195efca";
+var EX_VERSION = "0.23.0-alpha.4967+b628396";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
-// This file is used as the bundle entrypoint and exports everything
+// This file is used as the bundle entry point and exports everything
 // that will be exposed as the `ex` global variable.
 
 

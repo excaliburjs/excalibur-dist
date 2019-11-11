@@ -53,13 +53,13 @@ export declare class Color {
      */
     static fromRGB(r: number, g: number, b: number, a?: number): Color;
     /**
-     * Creates a new inscance of Color from a hex string
+     * Creates a new instance of Color from a hex string
      *
      * @param hex  CSS color string of the form #ffffff, the alpha component is optional
      */
     static fromHex(hex: string): Color;
     /**
-     * Creats a new instance of Color from hsla values
+     * Creates a new instance of Color from hsla values
      *
      * @param h  Hue is represented [0-1]
      * @param s  Saturation is represented [0-1]
@@ -178,7 +178,7 @@ export declare class Color {
      */
     static readonly Red: Color;
     /**
-     * Vermillion (#FF5B31)
+     * Vermilion (#FF5B31)
      */
     static readonly Vermillion: Color;
     /**

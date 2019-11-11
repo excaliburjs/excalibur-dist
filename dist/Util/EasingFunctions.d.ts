@@ -46,6 +46,7 @@ export interface EasingFunction {
  * ```
  */
 export declare class EasingFunctions {
+    static CreateReversibleEasingFunction(easing: EasingFunction): (time: number, start: number, end: number, duration: number) => number;
     static CreateReversableEasingFunction(easing: EasingFunction): (time: number, start: number, end: number, duration: number) => number;
     static CreateVectorEasingFunction(easing: EasingFunction): (time: number, start: Vector, end: Vector, duration: number) => Vector;
     static Linear: EasingFunction;

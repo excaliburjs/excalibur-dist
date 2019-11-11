@@ -96,6 +96,11 @@ export declare class Color {
      *
      * @param color  The other color
      */
+    multiply(color: Color): Color;
+    /**
+     * Multiplies a color by another, results in a darker color
+     * @param color
+     */
     mulitiply(color: Color): Color;
     /**
      * Screens a color by another, results in a lighter color
@@ -177,6 +182,10 @@ export declare class Color {
      * Red (#FF0000)
      */
     static readonly Red: Color;
+    /**
+     * Vermilion (#FF5B31)
+     */
+    static readonly Vermilion: Color;
     /**
      * Vermilion (#FF5B31)
      */

@@ -1,4 +1,11 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { Vector } from './Algebra';
+import { obsolete } from './Util/Decorators';
 /**
  * Possible collision resolution strategies
  *
@@ -53,6 +60,16 @@ var Physics = /** @class */ (function () {
     Physics.useRigidBodyPhysics = function () {
         Physics.collisionResolutionStrategy = CollisionResolutionStrategy.RigidBody;
     };
+    Object.defineProperty(Physics, "dynamicTreeVelocityMultiplyer", {
+        get: function () {
+            return Physics.dynamicTreeVelocityMultiplier;
+        },
+        set: function (value) {
+            Physics.dynamicTreeVelocityMultiplier = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Global acceleration that is applied to all vanilla actors that have a [[CollisionType.Active|active]] collision type.
      * Global acceleration won't effect [[Label|labels]], [[ScreenElement|ui actors]], or [[Trigger|triggers]] in Excalibur.
@@ -145,9 +162,9 @@ var Physics = /** @class */ (function () {
      */
     Physics.collisionShift = 0.001;
     /**
-     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplier);
      */
-    Physics.dynamicTreeVelocityMultiplyer = 2;
+    Physics.dynamicTreeVelocityMultiplier = 2;
     /**
      * Pad RigidBody BoundingBox by a constant amount
      */
@@ -167,6 +184,12 @@ var Physics = /** @class */ (function () {
      * Excalibur will always perform the fast body raycast regardless of speed.
      */
     Physics.disableMinimumSpeedForFastBody = false;
+    __decorate([
+        obsolete({
+            message: 'Alias for incorrect spelling used in older versions',
+            alternateMethod: 'dynamicTreeVelocityMultiplier'
+        })
+    ], Physics, "dynamicTreeVelocityMultiplyer", null);
     return Physics;
 }());
 export { Physics };

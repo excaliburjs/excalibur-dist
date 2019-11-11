@@ -208,8 +208,8 @@ var DynamicTree = /** @class */ (function () {
         b.top -= Physics.boundsPadding;
         b.right += Physics.boundsPadding;
         b.bottom += Physics.boundsPadding;
-        var multdx = body.vel.x * Physics.dynamicTreeVelocityMultiplyer;
-        var multdy = body.vel.y * Physics.dynamicTreeVelocityMultiplyer;
+        var multdx = body.vel.x * Physics.dynamicTreeVelocityMultiplier;
+        var multdy = body.vel.y * Physics.dynamicTreeVelocityMultiplier;
         if (multdx < 0) {
             b.left += multdx;
         }

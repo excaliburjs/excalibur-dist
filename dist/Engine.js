@@ -643,7 +643,7 @@ O|===|* >________________>\n\
             });
         }
         else if (this.displayMode === DisplayMode.Position) {
-            this._intializeDisplayModePosition(options);
+            this._initializeDisplayModePosition(options);
         }
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
@@ -694,7 +694,7 @@ O|===|* >________________>\n\
     Engine.prototype.onInitialize = function (_engine) {
         // Override me
     };
-    Engine.prototype._intializeDisplayModePosition = function (options) {
+    Engine.prototype._initializeDisplayModePosition = function (options) {
         if (!options.position) {
             throw new Error('DisplayMode of Position was selected but no position option was given');
         }

@@ -1,6 +1,6 @@
 var BrowserComponent = /** @class */ (function () {
-    function BrowserComponent(nativeComponet) {
-        this.nativeComponet = nativeComponet;
+    function BrowserComponent(nativeComponent) {
+        this.nativeComponent = nativeComponent;
         this._paused = false;
         this._nativeHandlers = {};
     }
@@ -9,13 +9,13 @@ var BrowserComponent = /** @class */ (function () {
             this.off(eventName, this._nativeHandlers[eventName]);
         }
         this._nativeHandlers[eventName] = this._decorate(handler);
-        this.nativeComponet.addEventListener(eventName, this._nativeHandlers[eventName]);
+        this.nativeComponent.addEventListener(eventName, this._nativeHandlers[eventName]);
     };
     BrowserComponent.prototype.off = function (eventName, handler) {
         if (!handler) {
             handler = this._nativeHandlers[eventName];
         }
-        this.nativeComponet.removeEventListener(eventName, handler);
+        this.nativeComponent.removeEventListener(eventName, handler);
         this._nativeHandlers[eventName] = null;
     };
     BrowserComponent.prototype._decorate = function (handler) {

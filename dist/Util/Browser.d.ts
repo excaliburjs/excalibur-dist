@@ -3,7 +3,7 @@ export interface NativeEventable {
     removeEventListener(name: string, handler: (...any: any[]) => any): any;
 }
 export declare class BrowserComponent<T extends NativeEventable> {
-    nativeComponet: T;
+    nativeComponent: T;
     private _paused;
     private _nativeHandlers;
     on(eventName: string, handler: (evt: any) => void): void;
@@ -12,7 +12,7 @@ export declare class BrowserComponent<T extends NativeEventable> {
     pause(): void;
     resume(): void;
     clear(): void;
-    constructor(nativeComponet: T);
+    constructor(nativeComponent: T);
 }
 export declare class BrowserEvents {
     private _windowGlobal;

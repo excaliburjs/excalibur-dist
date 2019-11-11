@@ -1,3 +1,10 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { obsolete } from '../Util/Decorators';
 /**
  * Provides standard colors (e.g. [[Color.Black]])
  * but you can also create custom colors using RGB, HSL, or Hex. Also provides
@@ -115,12 +122,19 @@ var Color = /** @class */ (function () {
      *
      * @param color  The other color
      */
-    Color.prototype.mulitiply = function (color) {
+    Color.prototype.multiply = function (color) {
         var newR = (((color.r / 255) * this.r) / 255) * 255;
         var newG = (((color.g / 255) * this.g) / 255) * 255;
         var newB = (((color.b / 255) * this.b) / 255) * 255;
         var newA = color.a * this.a;
         return new Color(newR, newG, newB, newA);
+    };
+    /**
+     * Multiplies a color by another, results in a darker color
+     * @param color
+     */
+    Color.prototype.mulitiply = function (color) {
+        return this.multiply(color);
     };
     /**
      * Screens a color by another, results in a lighter color
@@ -130,7 +144,7 @@ var Color = /** @class */ (function () {
     Color.prototype.screen = function (color) {
         var color1 = color.invert();
         var color2 = color.invert();
-        return color1.mulitiply(color2).invert();
+        return color1.multiply(color2).invert();
     };
     /**
      * Inverts the current color
@@ -291,12 +305,22 @@ var Color = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Color, "Vermillion", {
+    Object.defineProperty(Color, "Vermilion", {
         /**
          * Vermilion (#FF5B31)
          */
         get: function () {
             return Color.fromHex('#FF5B31');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Vermillion", {
+        /**
+         * Vermilion (#FF5B31)
+         */
+        get: function () {
+            return Color.Vermilion;
         },
         enumerable: true,
         configurable: true
@@ -401,6 +425,15 @@ var Color = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    __decorate([
+        obsolete({ message: 'Alias for incorrect spelling used in older versions, use multiply instead' })
+    ], Color.prototype, "mulitiply", null);
+    __decorate([
+        obsolete({
+            message: 'Alias for incorrect spelling used in older versions',
+            alternateMethod: 'Vermilion'
+        })
+    ], Color, "Vermillion", null);
     return Color;
 }());
 export { Color };

@@ -521,7 +521,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     private _initialize;
     onInitialize(_engine: Engine): void;
-    private _intializeDisplayModePosition;
+    private _initializeDisplayModePosition;
     private _initializeHiDpi;
     /**
      * If supported by the browser, this will set the antialiasing flag on the

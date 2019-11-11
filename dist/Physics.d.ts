@@ -135,8 +135,9 @@ export declare class Physics {
      */
     static collisionShift: number;
     /**
-     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplier);
      */
+    static dynamicTreeVelocityMultiplier: number;
     static dynamicTreeVelocityMultiplyer: number;
     /**
      * Pad RigidBody BoundingBox by a constant amount

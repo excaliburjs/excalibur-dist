@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4967+b628396 - 2019-11-11
+ * excalibur - 0.23.0-alpha.4969+386b2a0 - 2019-11-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -10692,8 +10692,8 @@ var DynamicTree = /** @class */ (function () {
         b.top -= _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].boundsPadding;
         b.right += _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].boundsPadding;
         b.bottom += _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].boundsPadding;
-        var multdx = body.vel.x * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].dynamicTreeVelocityMultiplyer;
-        var multdy = body.vel.y * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].dynamicTreeVelocityMultiplyer;
+        var multdx = body.vel.x * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].dynamicTreeVelocityMultiplier;
+        var multdy = body.vel.y * _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].dynamicTreeVelocityMultiplier;
         if (multdx < 0) {
             b.left += multdx;
         }
@@ -12481,6 +12481,14 @@ var Animation = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return Color; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 /**
  * Provides standard colors (e.g. [[Color.Black]])
  * but you can also create custom colors using RGB, HSL, or Hex. Also provides
@@ -12598,12 +12606,19 @@ var Color = /** @class */ (function () {
      *
      * @param color  The other color
      */
-    Color.prototype.mulitiply = function (color) {
+    Color.prototype.multiply = function (color) {
         var newR = (((color.r / 255) * this.r) / 255) * 255;
         var newG = (((color.g / 255) * this.g) / 255) * 255;
         var newB = (((color.b / 255) * this.b) / 255) * 255;
         var newA = color.a * this.a;
         return new Color(newR, newG, newB, newA);
+    };
+    /**
+     * Multiplies a color by another, results in a darker color
+     * @param color
+     */
+    Color.prototype.mulitiply = function (color) {
+        return this.multiply(color);
     };
     /**
      * Screens a color by another, results in a lighter color
@@ -12613,7 +12628,7 @@ var Color = /** @class */ (function () {
     Color.prototype.screen = function (color) {
         var color1 = color.invert();
         var color2 = color.invert();
-        return color1.mulitiply(color2).invert();
+        return color1.multiply(color2).invert();
     };
     /**
      * Inverts the current color
@@ -12774,12 +12789,22 @@ var Color = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Color, "Vermillion", {
+    Object.defineProperty(Color, "Vermilion", {
         /**
          * Vermilion (#FF5B31)
          */
         get: function () {
             return Color.fromHex('#FF5B31');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Color, "Vermillion", {
+        /**
+         * Vermilion (#FF5B31)
+         */
+        get: function () {
+            return Color.Vermilion;
         },
         enumerable: true,
         configurable: true
@@ -12884,6 +12909,15 @@ var Color = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({ message: 'Alias for incorrect spelling used in older versions, use multiply instead' })
+    ], Color.prototype, "mulitiply", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({
+            message: 'Alias for incorrect spelling used in older versions',
+            alternateMethod: 'Vermilion'
+        })
+    ], Color, "Vermillion", null);
     return Color;
 }());
 
@@ -14766,7 +14800,7 @@ O|===|* >________________>\n\
             });
         }
         else if (this.displayMode === DisplayMode.Position) {
-            this._intializeDisplayModePosition(options);
+            this._initializeDisplayModePosition(options);
         }
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
@@ -14817,7 +14851,7 @@ O|===|* >________________>\n\
     Engine.prototype.onInitialize = function (_engine) {
         // Override me
     };
-    Engine.prototype._intializeDisplayModePosition = function (options) {
+    Engine.prototype._initializeDisplayModePosition = function (options) {
         if (!options.position) {
             throw new Error('DisplayMode of Position was selected but no position option was given');
         }
@@ -19946,6 +19980,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return Integrator; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return Physics; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 /**
  * Possible collision resolution strategies
@@ -20001,6 +20043,16 @@ var Physics = /** @class */ (function () {
     Physics.useRigidBodyPhysics = function () {
         Physics.collisionResolutionStrategy = CollisionResolutionStrategy.RigidBody;
     };
+    Object.defineProperty(Physics, "dynamicTreeVelocityMultiplyer", {
+        get: function () {
+            return Physics.dynamicTreeVelocityMultiplier;
+        },
+        set: function (value) {
+            Physics.dynamicTreeVelocityMultiplier = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Global acceleration that is applied to all vanilla actors that have a [[CollisionType.Active|active]] collision type.
      * Global acceleration won't effect [[Label|labels]], [[ScreenElement|ui actors]], or [[Trigger|triggers]] in Excalibur.
@@ -20093,9 +20145,9 @@ var Physics = /** @class */ (function () {
      */
     Physics.collisionShift = 0.001;
     /**
-     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplyer);
+     * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplier);
      */
-    Physics.dynamicTreeVelocityMultiplyer = 2;
+    Physics.dynamicTreeVelocityMultiplier = 2;
     /**
      * Pad RigidBody BoundingBox by a constant amount
      */
@@ -20115,6 +20167,12 @@ var Physics = /** @class */ (function () {
      * Excalibur will always perform the fast body raycast regardless of speed.
      */
     Physics.disableMinimumSpeedForFastBody = false;
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_1__["obsolete"])({
+            message: 'Alias for incorrect spelling used in older versions',
+            alternateMethod: 'dynamicTreeVelocityMultiplier'
+        })
+    ], Physics, "dynamicTreeVelocityMultiplyer", null);
     return Physics;
 }());
 
@@ -23783,8 +23841,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return BrowserComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return BrowserEvents; });
 var BrowserComponent = /** @class */ (function () {
-    function BrowserComponent(nativeComponet) {
-        this.nativeComponet = nativeComponet;
+    function BrowserComponent(nativeComponent) {
+        this.nativeComponent = nativeComponent;
         this._paused = false;
         this._nativeHandlers = {};
     }
@@ -23793,13 +23851,13 @@ var BrowserComponent = /** @class */ (function () {
             this.off(eventName, this._nativeHandlers[eventName]);
         }
         this._nativeHandlers[eventName] = this._decorate(handler);
-        this.nativeComponet.addEventListener(eventName, this._nativeHandlers[eventName]);
+        this.nativeComponent.addEventListener(eventName, this._nativeHandlers[eventName]);
     };
     BrowserComponent.prototype.off = function (eventName, handler) {
         if (!handler) {
             handler = this._nativeHandlers[eventName];
         }
-        this.nativeComponet.removeEventListener(eventName, handler);
+        this.nativeComponent.removeEventListener(eventName, handler);
         this._nativeHandlers[eventName] = null;
     };
     BrowserComponent.prototype._decorate = function (handler) {
@@ -24430,6 +24488,14 @@ function circle(ctx, x, y, radius, stroke, fill) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return EasingFunctions; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 /**
  * Standard easing functions for motion in Excalibur, defined on a domain of [0, duration] and a range from [+startValue,+endValue]
@@ -24474,7 +24540,7 @@ __webpack_require__.r(__webpack_exports__);
 var EasingFunctions = /** @class */ (function () {
     function EasingFunctions() {
     }
-    EasingFunctions.CreateReversableEasingFunction = function (easing) {
+    EasingFunctions.CreateReversibleEasingFunction = function (easing) {
         return function (time, start, end, duration) {
             if (end < start) {
                 return start - (easing(time, end, start, duration) - end);
@@ -24484,26 +24550,29 @@ var EasingFunctions = /** @class */ (function () {
             }
         };
     };
+    EasingFunctions.CreateReversableEasingFunction = function (easing) {
+        return EasingFunctions.CreateReversibleEasingFunction(easing);
+    };
     EasingFunctions.CreateVectorEasingFunction = function (easing) {
         return function (time, start, end, duration) {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](easing(time, start.x, end.x, duration), easing(time, start.y, end.y, duration));
         };
     };
-    EasingFunctions.Linear = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.Linear = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         return (endValue * currentTime) / duration + startValue;
     });
-    EasingFunctions.EaseInQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseInQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration;
         return endValue * currentTime * currentTime + startValue;
     });
-    EasingFunctions.EaseOutQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseOutQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration;
         return -endValue * currentTime * (currentTime - 2) + startValue;
     });
-    EasingFunctions.EaseInOutQuad = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseInOutQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration / 2;
         if (currentTime < 1) {
@@ -24512,18 +24581,18 @@ var EasingFunctions = /** @class */ (function () {
         currentTime--;
         return (-endValue / 2) * (currentTime * (currentTime - 2) - 1) + startValue;
     });
-    EasingFunctions.EaseInCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseInCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration;
         return endValue * currentTime * currentTime * currentTime + startValue;
     });
-    EasingFunctions.EaseOutCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseOutCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration;
         currentTime--;
         return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
     });
-    EasingFunctions.EaseInOutCubic = EasingFunctions.CreateReversableEasingFunction(function (currentTime, startValue, endValue, duration) {
+    EasingFunctions.EaseInOutCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
         endValue = endValue - startValue;
         currentTime /= duration / 2;
         if (currentTime < 1) {
@@ -24532,6 +24601,12 @@ var EasingFunctions = /** @class */ (function () {
         currentTime -= 2;
         return (endValue / 2) * (currentTime * currentTime * currentTime + 2) + startValue;
     });
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_1__["obsolete"])({
+            message: 'Alias for incorrect spelling used in older versions',
+            alternateMethod: 'CreateReversibleEasingFunction'
+        })
+    ], EasingFunctions, "CreateReversableEasingFunction", null);
     return EasingFunctions;
 }());
 
@@ -25955,7 +26030,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4967+b628396";
+var EX_VERSION = "0.23.0-alpha.4969+386b2a0";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

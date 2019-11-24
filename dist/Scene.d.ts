@@ -2,7 +2,6 @@ import { ScreenElement } from './ScreenElement';
 import { InitializeEvent, ActivateEvent, DeactivateEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, GameEvent } from './Events';
 import { Timer } from './Timer';
 import { Engine } from './Engine';
-import { Group } from './Group';
 import { TileMap } from './TileMap';
 import { Camera } from './Camera';
 import { Actor } from './Actor';
@@ -40,13 +39,6 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * The [[TileMap]]s in the scene, if any
      */
     tileMaps: TileMap[];
-    /**
-     * The [[Group]]s in the scene, if any
-     */
-    groups: {
-        [key: string]: Group;
-    };
-    private _groups;
     /**
      * Access to the Excalibur engine
      */
@@ -305,22 +297,6 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * Tests whether a [[Timer]] is active in the scene
      */
     isTimerActive(timer: Timer): boolean;
-    /**
-     * Creates and adds a [[Group]] to the scene with a name
-     */
-    createGroup(name: string): Group;
-    /**
-     * Returns a [[Group]] by name
-     */
-    getGroup(name: string): Group;
-    /**
-     * Removes a [[Group]] by name
-     */
-    removeGroup(name: string): void;
-    /**
-     * Removes a [[Group]] by reference
-     */
-    removeGroup(group: Group): void;
     /**
      * Removes the given actor from the sorted drawing tree
      */

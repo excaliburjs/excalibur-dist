@@ -11,12 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { ScreenElement } from './ScreenElement';
 import { Physics } from './Physics';
 import { InitializeEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent } from './Events';
@@ -24,7 +18,6 @@ import { Logger } from './Util/Log';
 import { Timer } from './Timer';
 import { DynamicTreeCollisionBroadphase } from './Collision/DynamicTreeCollisionBroadphase';
 import { SortedList } from './Util/SortedList';
-import { Group } from './Group';
 import { TileMap } from './TileMap';
 import { Camera } from './Camera';
 import { Actor } from './Actor';
@@ -32,7 +25,6 @@ import { Class } from './Class';
 import * as Util from './Util/Util';
 import * as ActorUtils from './Util/Actors';
 import { Trigger } from './Trigger';
-import { obsolete } from './Util/Decorators';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -62,7 +54,6 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        _this._groups = {};
         /**
          * The [[ScreenElement]]s in a scene, if any; these are drawn last
          */
@@ -83,19 +74,6 @@ var Scene = /** @class */ (function (_super) {
         }
         return _this;
     }
-    Object.defineProperty(Scene.prototype, "groups", {
-        /**
-         * The [[Group]]s in the scene, if any
-         */
-        get: function () {
-            return this._groups;
-        },
-        set: function (groups) {
-            this._groups = groups;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -553,29 +531,6 @@ var Scene = /** @class */ (function (_super) {
         return this._timers.indexOf(timer) > -1 && !timer.complete;
     };
     /**
-     * Creates and adds a [[Group]] to the scene with a name
-     */
-    Scene.prototype.createGroup = function (name) {
-        return new Group(name, this);
-    };
-    /**
-     * Returns a [[Group]] by name
-     */
-    Scene.prototype.getGroup = function (name) {
-        return this.groups[name];
-    };
-    Scene.prototype.removeGroup = function (group) {
-        if (typeof group === 'string') {
-            delete this.groups[group];
-        }
-        else if (group instanceof Group) {
-            delete this.groups[group.name];
-        }
-        else {
-            this._logger.error('Invalid arguments to removeGroup', group);
-        }
-    };
-    /**
      * Removes the given actor from the sorted drawing tree
      */
     Scene.prototype.cleanupDrawTree = function (actor) {
@@ -618,18 +573,6 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
-    __decorate([
-        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "groups", null);
-    __decorate([
-        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "createGroup", null);
-    __decorate([
-        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "getGroup", null);
-    __decorate([
-        obsolete({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "removeGroup", null);
     return Scene;
 }(Class));
 export { Scene };

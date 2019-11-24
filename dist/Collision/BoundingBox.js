@@ -1,13 +1,6 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { ConvexPolygon } from './ConvexPolygon';
 import { Vector } from '../Algebra';
 import { Color } from '../Drawing/Color';
-import { obsolete } from '../Util/Decorators';
 import { Side } from './Side';
 /**
  * Axis Aligned collision primitive for Excalibur.
@@ -90,12 +83,6 @@ var BoundingBox = /** @class */ (function () {
         if (pos === void 0) { pos = Vector.Zero; }
         return new BoundingBox(-width * anchor.x + pos.x, -height * anchor.y + pos.y, width - width * anchor.x + pos.x, height - height * anchor.y + pos.y);
     };
-    /**
-     * Returns the calculated width of the bounding box
-     */
-    BoundingBox.prototype.getWidth = function () {
-        return this.width;
-    };
     Object.defineProperty(BoundingBox.prototype, "width", {
         /**
          * Returns the calculated width of the bounding box
@@ -106,12 +93,6 @@ var BoundingBox = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Returns the calculated height of the bounding box
-     */
-    BoundingBox.prototype.getHeight = function () {
-        return this.height;
-    };
     Object.defineProperty(BoundingBox.prototype, "height", {
         /**
          * Returns the calculated height of the bounding box
@@ -122,12 +103,6 @@ var BoundingBox = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Returns the center of the bounding box
-     */
-    BoundingBox.prototype.getCenter = function () {
-        return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
-    };
     Object.defineProperty(BoundingBox.prototype, "center", {
         /**
          * Returns the center of the bounding box
@@ -175,8 +150,12 @@ var BoundingBox = /** @class */ (function () {
      * Creates a Polygon collision area from the points of the bounding box
      */
     BoundingBox.prototype.toPolygon = function (actor) {
+        var maybeCollider = null;
+        if (actor && actor.body && actor.body.collider) {
+            maybeCollider = actor.body.collider;
+        }
         return new ConvexPolygon({
-            body: actor ? actor.body : null,
+            collider: maybeCollider,
             points: this.getPoints(),
             offset: Vector.Zero
         });
@@ -390,36 +369,12 @@ var BoundingBox = /** @class */ (function () {
         var intersect = this.intersect(bb);
         return BoundingBox.getSideFromIntersection(intersect);
     };
-    /**
-     * Test wether this bounding box collides with another returning,
-     * the intersection vector that can be used to resolve the collision. If there
-     * is no collision null is returned.
-     *
-     * @returns A Vector in the direction of the current BoundingBox
-     * @param boundingBox  Other collidable to test
-     * @obsolete BoundingBox.collides will be removed in v0.24.0, use BoundingBox.intersect
-     */
-    BoundingBox.prototype.collides = function (boundingBox) {
-        return this.intersect(boundingBox);
-    };
     /* istanbul ignore next */
     BoundingBox.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = Color.Yellow; }
         ctx.strokeStyle = color.toString();
         ctx.strokeRect(this.left, this.top, this.width, this.height);
     };
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.width' })
-    ], BoundingBox.prototype, "getWidth", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.height' })
-    ], BoundingBox.prototype, "getHeight", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
-    ], BoundingBox.prototype, "getCenter", null);
-    __decorate([
-        obsolete({ message: 'BoundingBox.collides will be removed in v0.24.0', alternateMethod: 'BoundingBox.intersect' })
-    ], BoundingBox.prototype, "collides", null);
     return BoundingBox;
 }());
 export { BoundingBox };

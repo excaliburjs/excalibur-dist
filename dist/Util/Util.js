@@ -174,12 +174,6 @@ export function getOppositeSide(side) {
     return Side.None;
 }
 /**
- * @obsolete use Util.getSideFromDirection
- */
-export function getSideFromVector(direction) {
-    return getSideFromDirection(direction);
-}
-/**
  * Returns the side in the direction of the vector supplied
  * @param direction Vector to check
  */

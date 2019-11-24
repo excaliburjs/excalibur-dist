@@ -132,6 +132,7 @@ var Color = /** @class */ (function () {
     /**
      * Multiplies a color by another, results in a darker color
      * @param color
+     * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
      */
     Color.prototype.mulitiply = function (color) {
         return this.multiply(color);
@@ -318,6 +319,7 @@ var Color = /** @class */ (function () {
     Object.defineProperty(Color, "Vermillion", {
         /**
          * Vermilion (#FF5B31)
+         * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
          */
         get: function () {
             return Color.Vermilion;
@@ -426,7 +428,7 @@ var Color = /** @class */ (function () {
         configurable: true
     });
     __decorate([
-        obsolete({ message: 'Alias for incorrect spelling used in older versions, use multiply instead' })
+        obsolete({ message: 'Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0' })
     ], Color.prototype, "mulitiply", null);
     __decorate([
         obsolete({

@@ -11,12 +11,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { BoundingBox } from './Collision/BoundingBox';
 import { Color } from './Drawing/Color';
 import { Class } from './Class';
@@ -24,7 +18,6 @@ import { Vector } from './Algebra';
 import { Logger } from './Util/Log';
 import * as Events from './Events';
 import { Configurable } from './Configurable';
-import { obsolete } from './Util/Decorators';
 /**
  * @hidden
  */
@@ -312,12 +305,6 @@ var CellImpl = /** @class */ (function () {
         this.sprites = sprites;
         this._bounds = new BoundingBox(this.x, this.y, this.x + this.width, this.y + this.height);
     }
-    /**
-     * Returns the bounding box for this cell
-     */
-    CellImpl.prototype.getBounds = function () {
-        return this._bounds;
-    };
     Object.defineProperty(CellImpl.prototype, "bounds", {
         get: function () {
             return this._bounds;
@@ -325,12 +312,6 @@ var CellImpl = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the center coordinate of this cell
-     */
-    CellImpl.prototype.getCenter = function () {
-        return new Vector(this.x + this.width / 2, this.y + this.height / 2);
-    };
     Object.defineProperty(CellImpl.prototype, "center", {
         get: function () {
             return new Vector(this.x + this.width / 2, this.y + this.height / 2);
@@ -359,12 +340,6 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.clearSprites = function () {
         this.sprites.length = 0;
     };
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.bounds' })
-    ], CellImpl.prototype, "getBounds", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
-    ], CellImpl.prototype, "getCenter", null);
     return CellImpl;
 }());
 export { CellImpl };

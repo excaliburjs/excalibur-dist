@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { BoundingBox } from './BoundingBox';
 import { CollisionJumpTable } from './CollisionJumpTable';
 import { ConvexPolygon } from './ConvexPolygon';
@@ -34,12 +21,6 @@ var Circle = /** @class */ (function () {
         this.offset = options.offset || Vector.Zero;
         this.radius = options.radius || 0;
         this.collider = options.collider || null;
-        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
-        if (options.body) {
-            this.collider = options.body.collider;
-            this.body = this.collider.body;
-        }
-        // ==================================
     }
     Object.defineProperty(Circle.prototype, "worldPos", {
         get: function () {
@@ -58,8 +39,7 @@ var Circle = /** @class */ (function () {
         return new Circle({
             offset: this.offset.clone(),
             radius: this.radius,
-            collider: null,
-            body: null
+            collider: null
         });
     };
     Object.defineProperty(Circle.prototype, "center", {
@@ -292,14 +272,3 @@ var Circle = /** @class */ (function () {
     return Circle;
 }());
 export { Circle };
-/**
- * @obsolete Use [[Circle]], CircleArea will be removed in v0.24.0
- */
-var CircleArea = /** @class */ (function (_super) {
-    __extends(CircleArea, _super);
-    function CircleArea() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return CircleArea;
-}(Circle));
-export { CircleArea };

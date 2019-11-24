@@ -112,7 +112,7 @@ var EasingFunctions = /** @class */ (function () {
     });
     __decorate([
         obsolete({
-            message: 'Alias for incorrect spelling used in older versions',
+            message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
             alternateMethod: 'CreateReversibleEasingFunction'
         })
     ], EasingFunctions, "CreateReversableEasingFunction", null);

@@ -1,5 +1,4 @@
 import { Class } from './Class';
-import { BoundingBox } from './Collision/BoundingBox';
 import { Texture } from './Resources/Texture';
 import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent, EnterViewPortEvent, ExitViewPortEvent } from './Events';
 import { PointerEvent, WheelEvent, PointerDragEvent } from './Input/Pointer';
@@ -14,9 +13,7 @@ import { Logger } from './Util/Log';
 import { ActionContext } from './Actions/ActionContext';
 import { ActionQueue } from './Actions/Action';
 import { Vector } from './Algebra';
-import { CollisionShape } from './Collision/CollisionShape';
 import { Body } from './Collision/Body';
-import { Side } from './Collision/Side';
 import { Eventable } from './Interfaces/Evented';
 import { Actionable } from './Actions/Actionable';
 import * as Traits from './Traits/Index';
@@ -28,6 +25,8 @@ export declare function isActor(x: any): x is Actor;
  * [[include:Constructors.md]]
  */
 export interface ActorArgs extends Partial<ActorImpl> {
+    x?: number;
+    y?: number;
     width?: number;
     height?: number;
     pos?: Vector;
@@ -39,6 +38,7 @@ export interface ActorArgs extends Partial<ActorImpl> {
     color?: Color;
     visible?: boolean;
     body?: Body;
+    collisionType?: CollisionType;
 }
 export interface ActorDefaults {
     anchor: Vector;
@@ -65,35 +65,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     body: Body;
     private _body;
-    /**
-     * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-     * [Edge|edges].
-     * @obsolete Use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-     */
-    /**
-    * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-    * [Edge|edges].
-    * @obsolete use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-    */
-    collisionArea: CollisionShape;
-    /**
-     * Gets the x position of the actor relative to it's parent (if any)
-     * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-     */
-    /**
-    * Sets the x position of the actor relative to it's parent (if any)
-    * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-    */
-    x: number;
-    /**
-     * Gets the y position of the actor relative to it's parent (if any)
-     * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-     */
-    /**
-    * Sets the y position of the actor relative to it's parent (if any)
-    * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-    */
-    y: number;
     /**
      * Gets the position vector of the actor in pixels
      */
@@ -152,52 +123,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     */
     rx: number;
     /**
-     * Gets the current torque applied to the actor. Torque can be thought of as rotational force
-     * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-     */
-    /**
-    * Sets the current torque applied to the actor. Torque can be thought of as rotational force
-    * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-    */
-    torque: number;
-    /**
-     * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
-     * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-     */
-    /**
-    * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
-    * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-    */
-    mass: number;
-    /**
-     * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
-     * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-     */
-    /**
-    * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
-    * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-    */
-    moi: number;
-    /**
-     * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
-     * @obsolete ex.Actor.friction will be removed in v0.24.0, use ex.Actor.body.collider.friction
-     */
-    /**
-    * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
-    */
-    friction: number;
-    /**
-     * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-     * as bounciness.
-     * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-     */
-    /**
-    * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-    * as bounciness.
-    * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-    */
-    restitution: number;
-    /**
      * The anchor to apply all actor related transformations like rotation,
      * translation, and scaling. By default the anchor is in the center of
      * the actor. By default it is set to the center of the actor (.5, .5)
@@ -213,38 +138,38 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     private _width;
     /**
      * Gets the scale vector of the actor
-     * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+     * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
      */
     /**
     * Sets the scale vector of the actor for
-    * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+    * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
     */
     scale: Vector;
     /**
      * Gets the old scale of the actor last frame
-     * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+     * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
      */
     /**
     * Sets the the old scale of the actor last frame
-    * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+    * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
     */
     oldScale: Vector;
     /**
      * Gets the x scalar velocity of the actor in scale/second
-     * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+     * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
      */
     /**
     * Sets the x scalar velocity of the actor in scale/second
-    * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+    * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
     */
     sx: number;
     /**
      * Gets the y scalar velocity of the actor in scale/second
-     * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+     * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
      */
     /**
     * Sets the y scale velocity of the actor in scale/second
-    * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+    * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
     */
     sy: number;
     /**
@@ -285,22 +210,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * The children of this actor
      */
     children: Actor[];
-    /**
-     * Gets or sets the current collision type of this actor. By
-     * default it is ([[CollisionType.PreventCollision]]).
-     * @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-     */
-    /**
-    * Gets or sets the current collision type of this actor. By
-    * default it is ([[CollisionType.PreventCollision]]).
-    *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-    */
-    collisionType: CollisionType;
-    /**
-     * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
-     */
-    collisionGroups: string[];
-    private _collisionHandlers;
     private _isInitialized;
     frames: {
         [key: string]: Drawable;
@@ -653,64 +562,11 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     setZIndex(newIndex: number): void;
     /**
-     * Adds an actor to a collision group. Actors with no named collision groups are
-     * considered to be in every collision group.
-     *
-     * Once in a collision group(s) actors will only collide with other actors in
-     * that group.
-     *
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    addCollisionGroup(name: string): void;
-    /**
-     * Removes an actor from a collision group.
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    removeCollisionGroup(name: string): void;
-    /**
-     * Get the center point of an actor
-     */
-    getCenter(): Vector;
-    /**
      * Get the center point of an actor
      */
     readonly center: Vector;
     width: number;
-    /**
-     * Gets the calculated width of an actor, factoring in scale
-     */
-    getWidth(): number;
-    /**
-     * Sets the width of an actor, factoring in the current scale
-     */
-    setWidth(width: number): void;
     height: number;
-    /**
-     * Gets the calculated height of an actor, factoring in scale
-     */
-    getHeight(): number;
-    /**
-     * Sets the height of an actor, factoring in the current scale
-     */
-    setHeight(height: number): void;
-    /**
-     * Gets the left edge of the actor
-     */
-    getLeft(): number;
-    /**
-     * Gets the right edge of the actor
-     */
-    getRight(): number;
-    /**
-     * Gets the top edge of the actor
-     */
-    getTop(): number;
-    /**
-     * Gets the bottom edge of the actor
-     */
-    getBottom(): number;
     /**
      * Gets this actor's rotation taking into account any parent relationships
      *
@@ -728,22 +584,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     getGlobalScale(): Vector;
     /**
-     * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
-     */
-    getBounds(rotated?: boolean): BoundingBox;
-    /**
-     * Returns the actor's [[BoundingBox]] relative to the actor's position.
-     */
-    getRelativeBounds(rotated?: boolean): BoundingBox;
-    /**
-     * Returns the actor's unrotated geometry in world coordinates
-     */
-    getGeometry(): Vector[];
-    /**
-     * Return the actor's unrotated geometry relative to the actor's position
-     */
-    getRelativeGeometry(): Vector[];
-    /**
      * Tests whether the x/y specified are contained in the actor
      * @param x  X coordinate to test (in world coordinates)
      * @param y  Y coordinate to test (in world coordinates)
@@ -751,48 +591,11 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     contains(x: number, y: number, recurse?: boolean): boolean;
     /**
-     * Returns the side of the collision based on the intersection
-     * @param intersect The displacement vector returned by a collision
-     * @obsolete Actor.getSideFromIntersect will be removed in v0.24.0, use [[BoundingBox.sideFromIntersection]]
-     */
-    getSideFromIntersect(intersect: Vector): Side;
-    /**
-     * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
-     * @param actor The other actor to test
-     * @obsolete Actor.collidesWithSide will be removed in v0.24.0, use [[Actor.bounds.intersectWithSide]]
-     */
-    collidesWithSide(actor: Actor): Side;
-    /**
-     * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
-     * `null` when there is no collision;
-     * @param actor The other actor to test
-     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.intersect]] to get bounds intersection,
-     * or [[Actor.body.collider.collide]] to collide with another collider
-     */
-    collides(actor: Actor): Vector;
-    /**
-     * Register a handler to fire when this actor collides with another in a specified group
-     * @param group The group name to listen for
-     * @param func The callback to fire on collision with another actor from the group. The callback is passed the other actor.
-     */
-    onCollidesWith(group: string, func: (actor: Actor) => void): void;
-    getCollisionHandlers(): {
-        [key: string]: {
-            (actor: Actor): void;
-        }[];
-    };
-    /**
-     * Removes all collision handlers for this group on this actor
-     * @param group Group to remove all handlers for on this actor.
-     */
-    removeCollidesWith(group: string): void;
-    /**
      * Returns true if the two actor.body.collider.shape's surfaces are less than or equal to the distance specified from each other
      * @param actor     Actor to test
      * @param distance  Distance in pixels to test
      */
     within(actor: Actor, distance: number): boolean;
-    private _getCalculatedAnchor;
     protected _reapplyEffects(drawing: Drawable): void;
     /**
      * Called by the Engine, updates the state of the actor

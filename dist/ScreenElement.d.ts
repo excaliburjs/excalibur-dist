@@ -12,3 +12,9 @@ export declare class ScreenElement extends Actor {
     _initialize(engine: Engine): void;
     contains(x: number, y: number, useWorld?: boolean): boolean;
 }
+/**
+ * Legacy UIActor constructor
+ * @obsolete UIActor constructor will be removed in v0.25.0 use [[ScreenElement]] instead
+ */
+export declare class UIActor extends ScreenElement {
+}

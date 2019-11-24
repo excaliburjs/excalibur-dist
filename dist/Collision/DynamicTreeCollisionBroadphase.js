@@ -83,8 +83,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     return "continue";
                 }
                 // Maximum travel distance next frame
-                var updateDistance = collider_1.body.vel.magnitude() * seconds + // velocity term
-                    collider_1.body.acc.magnitude() * 0.5 * seconds * seconds; // acc term
+                var updateDistance = collider_1.body.vel.size * seconds + // velocity term
+                    collider_1.body.acc.size * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
                 var minDimension = Math.min(collider_1.bounds.height, collider_1.bounds.width);
                 if (Physics.disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
@@ -107,7 +107,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                             var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + Physics.surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);
-                                if (translate.magnitude() < minTranslate_1.magnitude()) {
+                                if (translate.size < minTranslate_1.size) {
                                     minTranslate_1 = translate;
                                     minBody_1 = other;
                                 }

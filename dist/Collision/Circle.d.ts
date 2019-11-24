@@ -5,7 +5,6 @@ import { ConvexPolygon } from './ConvexPolygon';
 import { Vector, Ray, Projection, Line } from '../Algebra';
 import { Color } from '../Drawing/Color';
 import { Collider } from './Collider';
-import { Body } from './Body';
 export interface CircleOptions {
     /**
      * Optional pixel offset to shift the circle relative to the collider, by default (0, 0).
@@ -19,7 +18,6 @@ export interface CircleOptions {
      * Optional collider to associate with this shape
      */
     collider?: Collider;
-    body?: Body;
 }
 /**
  * This is a circle collision shape for the excalibur rigid body physics simulation
@@ -37,11 +35,6 @@ export declare class Circle implements CollisionShape {
      * This is the radius of the circle
      */
     radius: number;
-    /**
-     * Reference to the actor associated with this collision shape
-     * @obsolete Will be removed in v0.24.0 please use [[collider]] to retrieve body information
-     */
-    body: Body;
     /**
      * The collider associated for this shape, if any.
      */
@@ -101,14 +94,4 @@ export declare class Circle implements CollisionShape {
     project(axis: Vector): Projection;
     draw(ctx: CanvasRenderingContext2D, color?: Color, pos?: Vector): void;
     debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
-}
-/**
- * @obsolete Use [[CircleOptions]], CircleAreaOptions will be removed in v0.24.0
- */
-export interface CircleAreaOptions extends CircleOptions {
-}
-/**
- * @obsolete Use [[Circle]], CircleArea will be removed in v0.24.0
- */
-export declare class CircleArea extends Circle {
 }

@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.23.0-alpha.4969+386b2a0"` gets replaced by Webpack on build
+ * @description `"0.23.0-alpha.5044+9b84a25"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.23.0-alpha.4969+386b2a0";
+export var EX_VERSION = "0.23.0-alpha.5044+9b84a25";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entry point and exports everything
@@ -18,7 +18,6 @@ export * from './Debug';
 export * from './EventDispatcher';
 export * from './Events/MediaEvents';
 export * from './Events';
-export * from './Group';
 export { Label, FontStyle, FontUnit, TextAlign, BaseAlign } from './Label';
 export * from './Loader';
 export { Particle, ParticleEmitter, EmitterType } from './Particles';
@@ -56,5 +55,6 @@ export * from './Util/EasingFunctions';
 export * from './Util/Log';
 export * from './Util/SortedList';
 // ex.Deprecated
-import * as deprecated from './Deprecated';
-export { deprecated as Deprecated };
+// import * as deprecated from './Deprecated';
+// export { deprecated as Deprecated };
+// export * from './Deprecated';

@@ -2,7 +2,6 @@ import { Color } from '../Drawing/Color';
 import { BoundingBox } from './BoundingBox';
 import { CollisionContact } from './CollisionContact';
 import { CollisionShape } from './CollisionShape';
-import { Body } from './Body';
 import { Vector, Line, Ray, Projection } from '../Algebra';
 import { Collider } from './Collider';
 export interface ConvexPolygonOptions {
@@ -22,10 +21,6 @@ export interface ConvexPolygonOptions {
      * Collider to associate optionally with this shape
      */
     collider?: Collider;
-    /**
-     * @obsolete Will be removed in v0.24.0 please use [[collider]] to set and retrieve body information
-     */
-    body?: Body;
 }
 /**
  * Polygon collision shape for detecting collisions
@@ -36,10 +31,6 @@ export interface ConvexPolygonOptions {
 export declare class ConvexPolygon implements CollisionShape {
     offset: Vector;
     points: Vector[];
-    /**
-     * @obsolete Will be removed in v0.24.0 please use [[collider]] to set and retrieve body information
-     */
-    body: Body;
     /**
      * Collider associated with this shape
      */
@@ -125,11 +116,4 @@ export declare class ConvexPolygon implements CollisionShape {
     project(axis: Vector): Projection;
     draw(ctx: CanvasRenderingContext2D, color?: Color, pos?: Vector): void;
     debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
-}
-/**
- * @obsolete Use [[ConvexPolygonOptions]], PolygonAreaOptions will be removed in v0.24.0
- */
-export interface PolygonAreaOptions extends ConvexPolygonOptions {
-}
-export declare class PolygonArea extends ConvexPolygon {
 }

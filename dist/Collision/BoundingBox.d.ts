@@ -37,23 +37,11 @@ export declare class BoundingBox {
     /**
      * Returns the calculated width of the bounding box
      */
-    getWidth(): number;
-    /**
-     * Returns the calculated width of the bounding box
-     */
     readonly width: number;
     /**
      * Returns the calculated height of the bounding box
      */
-    getHeight(): number;
-    /**
-     * Returns the calculated height of the bounding box
-     */
     readonly height: number;
-    /**
-     * Returns the center of the bounding box
-     */
-    getCenter(): Vector;
     /**
      * Returns the center of the bounding box
      */
@@ -109,15 +97,5 @@ export declare class BoundingBox {
      * @param bb The other actor to test
      */
     intersectWithSide(bb: BoundingBox): Side;
-    /**
-     * Test wether this bounding box collides with another returning,
-     * the intersection vector that can be used to resolve the collision. If there
-     * is no collision null is returned.
-     *
-     * @returns A Vector in the direction of the current BoundingBox
-     * @param boundingBox  Other collidable to test
-     * @obsolete BoundingBox.collides will be removed in v0.24.0, use BoundingBox.intersect
-     */
-    collides(boundingBox: BoundingBox): Vector;
     debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
 }

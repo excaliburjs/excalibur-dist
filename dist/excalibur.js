@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.4969+386b2a0 - 2019-11-11
+ * excalibur - 0.23.0-alpha.5044+9b84a25 - 2019-11-24
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3881,7 +3881,7 @@ var MoveBy = /** @class */ (function () {
             this._started = true;
             this._start = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this._actor.pos.x, this._actor.pos.y);
             this._end = this._start.add(this._offset);
-            this._distance = this._offset.magnitude();
+            this._distance = this._offset.size;
             this._dir = this._end.sub(this._start).normalize();
         }
         this._actor.vel = this._dir.scale(this._speed);
@@ -4239,7 +4239,7 @@ var ScaleTo = /** @class */ (function () {
         this._started = false;
     };
     ScaleTo = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleTo will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleTo will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
     ], ScaleTo);
     return ScaleTo;
 }());
@@ -4284,7 +4284,7 @@ var ScaleBy = /** @class */ (function () {
         this._started = false;
     };
     ScaleBy = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleBy will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_4__["obsolete"])({ message: 'ex.Action.ScaleBy will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
     ], ScaleBy);
     return ScaleBy;
 }());
@@ -4982,25 +4982,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActorImpl", function() { return ActorImpl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return Actor; });
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
-/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
-/* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Collision/Side */ "./Collision/Side.ts");
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony import */ var _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Drawing/SpriteEffects */ "./Drawing/SpriteEffects.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
-/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
+/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony import */ var _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Drawing/SpriteEffects */ "./Drawing/SpriteEffects.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5020,8 +5018,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
 
 
 
@@ -5082,7 +5078,7 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Convenience reference to the global logger
          */
-        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance();
+        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance();
         /**
          * The scene that the actor is in
          */
@@ -5095,11 +5091,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
-        /**
-         * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
-         */
-        _this.collisionGroups = [];
-        _this._collisionHandlers = {};
         _this._isInitialized = false;
         _this.frames = {};
         _this._effectsDirty = false;
@@ -5148,7 +5139,7 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         _this._zIndex = 0;
         _this._isKilled = false;
-        _this._opacityFx = new _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_14__["Opacity"](_this.opacity);
+        _this._opacityFx = new _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_12__["Opacity"](_this.opacity);
         // #region Events
         _this._capturePointerEvents = [
             'pointerup',
@@ -5182,8 +5173,14 @@ var ActorImpl = /** @class */ (function (_super) {
         var shouldInitializeBody = true;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
-            xOrConfig = config.pos ? config.pos.x : config.x;
-            y = config.pos ? config.pos.y : config.y;
+            if (config.pos) {
+                xOrConfig = config.pos ? config.pos.x : 0;
+                y = config.pos ? config.pos.y : 0;
+            }
+            else {
+                xOrConfig = config.x || 0;
+                y = config.y || 0;
+            }
             width = config.width;
             height = config.height;
             if (config.body) {
@@ -5199,12 +5196,17 @@ var ActorImpl = /** @class */ (function (_super) {
         _this._height = height || 0;
         // Initialize default collider to be a box
         if (shouldInitializeBody) {
-            _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_10__["Body"]({
-                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_18__["Collider"]({
-                    type: _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__["CollisionType"].Passive,
-                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(_this._width, _this._height, _this.anchor)
+            _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_9__["Body"]({
+                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__["Collider"]({
+                    type: _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].Passive,
+                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(_this._width, _this._height, _this.anchor)
                 })
             });
+        }
+        if (xOrConfig && typeof xOrConfig === 'object' && xOrConfig.collisionType) {
+            if (_this.body && _this.body.collider) {
+                _this.body.collider.type = xOrConfig.collisionType;
+            }
         }
         // Position uses body to store values must be initialized after body
         _this.pos.x = xOrConfig || 0;
@@ -5215,12 +5217,12 @@ var ActorImpl = /** @class */ (function (_super) {
             _this.opacity = color.a;
         }
         // Build default pipeline
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["TileMapCollisionDetection"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["OffscreenCulling"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["CapturePointer"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["TileMapCollisionDetection"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["OffscreenCulling"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["CapturePointer"]());
         // Build the action queue
-        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_8__["ActionQueue"](_this);
-        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__["ActionContext"](_this);
+        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_7__["ActionQueue"](_this);
+        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_6__["ActionContext"](_this);
         return _this;
     }
     Object.defineProperty(ActorImpl.prototype, "body", {
@@ -5234,62 +5236,6 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (body) {
             this._body = body;
             this._body.actor = this;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "collisionArea", {
-        /**
-         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-         * [Edge|edges].
-         * @obsolete Use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-         */
-        get: function () {
-            return this.body.collider.shape;
-        },
-        /**
-         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-         * [Edge|edges].
-         * @obsolete use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-         */
-        set: function (area) {
-            this.body.collider.shape = area;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "x", {
-        /**
-         * Gets the x position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-         */
-        get: function () {
-            return this.body.pos.x;
-        },
-        /**
-         * Sets the x position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-         */
-        set: function (theX) {
-            this.body.pos.x = theX;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "y", {
-        /**
-         * Gets the y position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-         */
-        get: function () {
-            return this.body.pos.y;
-        },
-        /**
-         * Sets the y position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-         */
-        set: function (theY) {
-            this.body.pos.y = theY;
         },
         enumerable: true,
         configurable: true
@@ -5423,108 +5369,17 @@ var ActorImpl = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(ActorImpl.prototype, "torque", {
-        /**
-         * Gets the current torque applied to the actor. Torque can be thought of as rotational force
-         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-         */
-        get: function () {
-            return this.body.torque;
-        },
-        /**
-         * Sets the current torque applied to the actor. Torque can be thought of as rotational force
-         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-         */
-        set: function (theTorque) {
-            this.body.torque = theTorque;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "mass", {
-        /**
-         * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
-         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-         */
-        get: function () {
-            return this.body.collider.mass;
-        },
-        /**
-         * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
-         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-         */
-        set: function (theMass) {
-            this.body.collider.mass = theMass;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "moi", {
-        /**
-         * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
-         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-         */
-        get: function () {
-            return this.body.collider.inertia;
-        },
-        /**
-         * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
-         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-         */
-        set: function (theMoi) {
-            this.body.collider.inertia = theMoi;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "friction", {
-        /**
-         * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
-         * @obsolete ex.Actor.friction will be removed in v0.24.0, use ex.Actor.body.collider.friction
-         */
-        get: function () {
-            return this.body.collider.friction;
-        },
-        /**
-         * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
-         */
-        set: function (theFriction) {
-            this.body.collider.friction = theFriction;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "restitution", {
-        /**
-         * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-         * as bounciness.
-         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-         */
-        get: function () {
-            return this.body.collider.bounciness;
-        },
-        /**
-         * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-         * as bounciness.
-         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-         */
-        set: function (theRestitution) {
-            this.body.collider.bounciness = theRestitution;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(ActorImpl.prototype, "scale", {
         /**
          * Gets the scale vector of the actor
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.scale;
         },
         /**
          * Sets the scale vector of the actor for
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.scale = scale;
@@ -5535,14 +5390,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
         /**
          * Gets the old scale of the actor last frame
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.oldScale;
         },
         /**
          * Sets the the old scale of the actor last frame
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.oldScale = scale;
@@ -5553,14 +5408,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sx", {
         /**
          * Gets the x scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sx;
         },
         /**
          * Sets the x scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
@@ -5571,37 +5426,17 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sy", {
         /**
          * Gets the y scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sy;
         },
         /**
          * Sets the y scale velocity of the actor in scale/second
-         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "collisionType", {
-        /**
-         * Gets or sets the current collision type of this actor. By
-         * default it is ([[CollisionType.PreventCollision]]).
-         * @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-         */
-        get: function () {
-            return this.body.collider.type;
-        },
-        /**
-         * Gets or sets the current collision type of this actor. By
-         * default it is ([[CollisionType.PreventCollision]]).
-         *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-         */
-        set: function (type) {
-            this.body.collider.type = type;
         },
         enumerable: true,
         configurable: true
@@ -5675,7 +5510,7 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype._initialize = function (engine) {
         if (!this.isInitialized) {
             this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_3__["InitializeEvent"](engine, this));
+            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_2__["InitializeEvent"](engine, this));
             this._isInitialized = true;
         }
         for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
@@ -5719,7 +5554,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._prekill = function (_scene) {
-        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreKillEvent"](this));
+        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreKillEvent"](this));
         this.onPreKill(_scene);
     };
     /**
@@ -5737,7 +5572,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postkill = function (_scene) {
-        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostKillEvent"](this));
+        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostKillEvent"](this));
         this.onPostKill(_scene);
     };
     /**
@@ -5755,7 +5590,7 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.kill = function () {
         if (this.scene) {
             this._prekill(this.scene);
-            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_3__["KillEvent"](this));
+            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_2__["KillEvent"](this));
             this._isKilled = true;
             this.scene.remove(this);
             this._postkill(this.scene);
@@ -5783,8 +5618,8 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to add
      */
     ActorImpl.prototype.add = function (actor) {
-        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_16__["CollisionType"].PreventCollision;
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_15__["addItemToArray"](actor, this.children)) {
+        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].PreventCollision;
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["addItemToArray"](actor, this.children)) {
             actor.parent = this;
         }
     };
@@ -5793,7 +5628,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to remove
      */
     ActorImpl.prototype.remove = function (actor) {
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_15__["removeItemFromArray"](actor, this.children)) {
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["removeItemFromArray"](actor, this.children)) {
             actor.parent = null;
         }
     };
@@ -5805,7 +5640,7 @@ var ActorImpl = /** @class */ (function (_super) {
                 this.currentDrawing = this.frames[key];
             }
             else {
-                _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
+                _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
             }
         }
     };
@@ -5818,10 +5653,10 @@ var ActorImpl = /** @class */ (function (_super) {
             this._effectsDirty = true;
         }
         else {
-            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_5__["Sprite"]) {
+            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_4__["Sprite"]) {
                 this.addDrawing('default', arguments[0]);
             }
-            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"]) {
+            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_1__["Texture"]) {
                 this.addDrawing('default', arguments[0].asSprite());
             }
         }
@@ -5854,42 +5689,12 @@ var ActorImpl = /** @class */ (function (_super) {
         this._zIndex = newIndex;
         this.scene.updateDrawTree(this);
     };
-    /**
-     * Adds an actor to a collision group. Actors with no named collision groups are
-     * considered to be in every collision group.
-     *
-     * Once in a collision group(s) actors will only collide with other actors in
-     * that group.
-     *
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    ActorImpl.prototype.addCollisionGroup = function (name) {
-        this.collisionGroups.push(name);
-    };
-    /**
-     * Removes an actor from a collision group.
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    ActorImpl.prototype.removeCollisionGroup = function (name) {
-        var index = this.collisionGroups.indexOf(name);
-        if (index !== -1) {
-            this.collisionGroups.splice(index, 1);
-        }
-    };
-    /**
-     * Get the center point of an actor
-     */
-    ActorImpl.prototype.getCenter = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
-    };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**
          * Get the center point of an actor
          */
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
         },
         enumerable: true,
         configurable: true
@@ -5900,72 +5705,24 @@ var ActorImpl = /** @class */ (function (_super) {
         },
         set: function (width) {
             this._width = width / this.scale.x;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the calculated width of an actor, factoring in scale
-     */
-    ActorImpl.prototype.getWidth = function () {
-        return this.width;
-    };
-    /**
-     * Sets the width of an actor, factoring in the current scale
-     */
-    ActorImpl.prototype.setWidth = function (width) {
-        this.width = width;
-    };
     Object.defineProperty(ActorImpl.prototype, "height", {
         get: function () {
             return this._height * this.getGlobalScale().y;
         },
         set: function (height) {
             this._height = height / this.scale.y;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_19__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the calculated height of an actor, factoring in scale
-     */
-    ActorImpl.prototype.getHeight = function () {
-        return this.height;
-    };
-    /**
-     * Sets the height of an actor, factoring in the current scale
-     */
-    ActorImpl.prototype.setHeight = function (height) {
-        this.height = height;
-    };
-    /**
-     * Gets the left edge of the actor
-     */
-    ActorImpl.prototype.getLeft = function () {
-        return this.getBounds().left;
-    };
-    /**
-     * Gets the right edge of the actor
-     */
-    ActorImpl.prototype.getRight = function () {
-        return this.getBounds().right;
-    };
-    /**
-     * Gets the top edge of the actor
-     */
-    ActorImpl.prototype.getTop = function () {
-        return this.getBounds().top;
-    };
-    /**
-     * Gets the bottom edge of the actor
-     */
-    ActorImpl.prototype.getBottom = function () {
-        return this.getBounds().bottom;
-    };
     /**
      * Gets this actor's rotation taking into account any parent relationships
      *
@@ -6011,52 +5768,19 @@ var ActorImpl = /** @class */ (function (_super) {
         // rotate around root anchor
         var ra = root.getWorldPos(); // 10, 10
         var r = this.getWorldRotation();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y).rotate(r, ra);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](x, y).rotate(r, ra);
     };
     /**
      * Gets the global scale of the Actor
      */
     ActorImpl.prototype.getGlobalScale = function () {
         if (!this.parent) {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x, this.scale.y);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.scale.x, this.scale.y);
         }
         var parentScale = this.parent.getGlobalScale();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
     };
     // #region Collision
-    /**
-     * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
-     */
-    ActorImpl.prototype.getBounds = function (rotated) {
-        if (rotated === void 0) { rotated = true; }
-        // todo cache bounding box
-        var anchor = this._getCalculatedAnchor();
-        var pos = this.getWorldPos();
-        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__["BoundingBox"](pos.x - anchor.x, pos.y - anchor.y, pos.x + this.width - anchor.x, pos.y + this.height - anchor.y);
-        return rotated ? bb.rotate(this.rotation, pos) : bb;
-    };
-    /**
-     * Returns the actor's [[BoundingBox]] relative to the actor's position.
-     */
-    ActorImpl.prototype.getRelativeBounds = function (rotated) {
-        if (rotated === void 0) { rotated = true; }
-        // todo cache bounding box
-        var anchor = this._getCalculatedAnchor();
-        var bb = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_1__["BoundingBox"](-anchor.x, -anchor.y, this.width - anchor.x, this.height - anchor.y);
-        return rotated ? bb.rotate(this.rotation) : bb;
-    };
-    /**
-     * Returns the actor's unrotated geometry in world coordinates
-     */
-    ActorImpl.prototype.getGeometry = function () {
-        return this.getBounds(false).getPoints();
-    };
-    /**
-     * Return the actor's unrotated geometry relative to the actor's position
-     */
-    ActorImpl.prototype.getRelativeGeometry = function () {
-        return this.getRelativeBounds(false).getPoints();
-    };
     /**
      * Tests whether the x/y specified are contained in the actor
      * @param x  X coordinate to test (in world coordinates)
@@ -6068,7 +5792,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // These shenanigans are to handle child actor containment,
         // the only time getWorldPos and pos are different is a child actor
         var childShift = this.getWorldPos().sub(this.pos);
-        var containment = this.body.collider.bounds.translate(childShift).contains(new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y));
+        var containment = this.body.collider.bounds.translate(childShift).contains(new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](x, y));
         if (recurse) {
             return (containment ||
                 this.children.some(function (child) {
@@ -6076,89 +5800,6 @@ var ActorImpl = /** @class */ (function (_super) {
                 }));
         }
         return containment;
-    };
-    /**
-     * Returns the side of the collision based on the intersection
-     * @param intersect The displacement vector returned by a collision
-     * @obsolete Actor.getSideFromIntersect will be removed in v0.24.0, use [[BoundingBox.sideFromIntersection]]
-     */
-    ActorImpl.prototype.getSideFromIntersect = function (intersect) {
-        if (intersect) {
-            if (Math.abs(intersect.x) > Math.abs(intersect.y)) {
-                if (intersect.x < 0) {
-                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Right;
-                }
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Left;
-            }
-            else {
-                if (intersect.y < 0) {
-                    return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Bottom;
-                }
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Top;
-            }
-        }
-        return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].None;
-    };
-    /**
-     * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
-     * @param actor The other actor to test
-     * @obsolete Actor.collidesWithSide will be removed in v0.24.0, use [[Actor.bounds.intersectWithSide]]
-     */
-    ActorImpl.prototype.collidesWithSide = function (actor) {
-        var separationVector = this.collides(actor);
-        if (!separationVector) {
-            return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].None;
-        }
-        if (Math.abs(separationVector.x) > Math.abs(separationVector.y)) {
-            if (this.pos.x < actor.pos.x) {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Right;
-            }
-            else {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Left;
-            }
-        }
-        else {
-            if (this.pos.y < actor.pos.y) {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Bottom;
-            }
-            else {
-                return _Collision_Side__WEBPACK_IMPORTED_MODULE_11__["Side"].Top;
-            }
-        }
-    };
-    /**
-     * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
-     * `null` when there is no collision;
-     * @param actor The other actor to test
-     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.intersect]] to get bounds intersection,
-     * or [[Actor.body.collider.collide]] to collide with another collider
-     */
-    ActorImpl.prototype.collides = function (actor) {
-        var bounds = this.body.collider.bounds;
-        var otherBounds = actor.body.collider.bounds;
-        var intersect = bounds.intersect(otherBounds);
-        return intersect;
-    };
-    /**
-     * Register a handler to fire when this actor collides with another in a specified group
-     * @param group The group name to listen for
-     * @param func The callback to fire on collision with another actor from the group. The callback is passed the other actor.
-     */
-    ActorImpl.prototype.onCollidesWith = function (group, func) {
-        if (!this._collisionHandlers[group]) {
-            this._collisionHandlers[group] = [];
-        }
-        this._collisionHandlers[group].push(func);
-    };
-    ActorImpl.prototype.getCollisionHandlers = function () {
-        return this._collisionHandlers;
-    };
-    /**
-     * Removes all collision handlers for this group on this actor
-     * @param group Group to remove all handlers for on this actor.
-     */
-    ActorImpl.prototype.removeCollidesWith = function (group) {
-        this._collisionHandlers[group] = [];
     };
     /**
      * Returns true if the two actor.body.collider.shape's surfaces are less than or equal to the distance specified from each other
@@ -6169,9 +5810,6 @@ var ActorImpl = /** @class */ (function (_super) {
         return this.body.collider.shape.getClosestLineBetween(actor.body.collider.shape).getLength() <= distance;
     };
     // #endregion
-    ActorImpl.prototype._getCalculatedAnchor = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y);
-    };
     ActorImpl.prototype._reapplyEffects = function (drawing) {
         drawing.removeEffect(this._opacityFx);
         drawing.addEffect(this._opacityFx);
@@ -6238,7 +5876,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._preupdate = function (engine, delta) {
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreUpdateEvent"](engine, delta, this));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreUpdateEvent"](engine, delta, this));
         this.onPreUpdate(engine, delta);
     };
     /**
@@ -6248,7 +5886,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postupdate = function (engine, delta) {
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreUpdateEvent"](engine, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreUpdateEvent"](engine, delta, this));
         this.onPostUpdate(engine, delta);
     };
     // endregion
@@ -6280,7 +5918,7 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {
-                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
+                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
             }
         }
         ctx.restore();
@@ -6316,7 +5954,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._predraw = function (ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDrawEvent"](ctx, delta, this));
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDrawEvent"](ctx, delta, this));
         this.onPreDraw(ctx, delta);
     };
     /**
@@ -6326,7 +5964,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postdraw = function (ctx, delta) {
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDrawEvent"](ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDrawEvent"](ctx, delta, this));
         this.onPostDraw(ctx, delta);
     };
     /**
@@ -6335,7 +5973,7 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     /* istanbul ignore next */
     ActorImpl.prototype.debugDraw = function (ctx) {
-        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreDebugDrawEvent"](ctx, this));
+        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDebugDrawEvent"](ctx, this));
         this.body.collider.debugDraw(ctx);
         // Draw actor bounding box
         var bb = this.body.collider.localBounds.translate(this.getWorldPos());
@@ -6343,19 +5981,19 @@ var ActorImpl = /** @class */ (function (_super) {
         // Draw actor Id
         ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
         // Draw actor anchor Vector
-        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
+        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
         ctx.beginPath();
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, 3, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
         // Culling Box debug draw
         for (var j = 0; j < this.traits.length; j++) {
-            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_13__["OffscreenCulling"]) {
+            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["OffscreenCulling"]) {
                 this.traits[j].cullingBox.debugDraw(ctx); // eslint-disable-line
             }
         }
         // Unit Circle debug draw
-        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
+        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
         ctx.beginPath();
         var radius = Math.min(this.width, this.height);
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, radius, 0, Math.PI * 2);
@@ -6369,7 +6007,7 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         var oldFont = ctx.font;
         for (var tick in ticks) {
-            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_4__["Color"].Yellow.toString();
+            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
             ctx.font = '14px';
             ctx.textAlign = 'center';
             ctx.fillText(tick, this.getWorldPos().x + Math.cos(ticks[tick]) * (radius + 10), this.getWorldPos().y + Math.sin(ticks[tick]) * (radius + 10));
@@ -6379,7 +6017,7 @@ var ActorImpl = /** @class */ (function (_super) {
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].debugDraw(ctx);
         }
-        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostDebugDrawEvent"](ctx, this));
+        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostDebugDrawEvent"](ctx, this));
     };
     /**
      * Returns the full array of ancestors
@@ -6399,108 +6037,18 @@ var ActorImpl = /** @class */ (function (_super) {
      * Indicates the next id to be set
      */
     ActorImpl.defaults = {
-        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"].Half
+        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"].Half
     };
     /**
      * Indicates the next id to be set
      */
     ActorImpl.maxId = 0;
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collisionArea will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.shape' })
-    ], ActorImpl.prototype, "collisionArea", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.x will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.x, or ex.Actor.body.pos.x' })
-    ], ActorImpl.prototype, "x", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.y will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.y, or ex.Actor.body.pos.y' })
-    ], ActorImpl.prototype, "y", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.torque will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.torque' })
-    ], ActorImpl.prototype, "torque", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.mass will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.mass' })
-    ], ActorImpl.prototype, "mass", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.moi will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.inertia' })
-    ], ActorImpl.prototype, "moi", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.friction will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.friction' })
-    ], ActorImpl.prototype, "friction", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.restitution will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.bounciness' })
-    ], ActorImpl.prototype, "restitution", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sy", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
-    ], ActorImpl.prototype, "collisionType", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
-    ], ActorImpl.prototype, "addCollisionGroup", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
-    ], ActorImpl.prototype, "removeCollisionGroup", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.center' })
-    ], ActorImpl.prototype, "getCenter", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
-    ], ActorImpl.prototype, "getWidth", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
-    ], ActorImpl.prototype, "setWidth", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
-    ], ActorImpl.prototype, "getHeight", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
-    ], ActorImpl.prototype, "setHeight", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.left' })
-    ], ActorImpl.prototype, "getLeft", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.right' })
-    ], ActorImpl.prototype, "getRight", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.top' })
-    ], ActorImpl.prototype, "getTop", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.bottom' })
-    ], ActorImpl.prototype, "getBottom", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds' })
-    ], ActorImpl.prototype, "getBounds", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds' })
-    ], ActorImpl.prototype, "getRelativeBounds", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.getPoints()' })
-    ], ActorImpl.prototype, "getGeometry", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds.getPoints()' })
-    ], ActorImpl.prototype, "getRelativeGeometry", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getSideFromIntersect will be removed in v0.24.0', alternateMethod: 'BoundingBox.sideFromIntersection' })
-    ], ActorImpl.prototype, "getSideFromIntersect", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collidesWithSide will be removed in v0.24.0', alternateMethod: 'Actor.bounds.intersectWithSide' })
-    ], ActorImpl.prototype, "collidesWithSide", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.collides will be removed  in v0.24.0', alternateMethod: 'Actor.bounds.intersect or Actor.' })
-    ], ActorImpl.prototype, "collides", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.onCollidesWIth will be removed  in v0.24.0', alternateMethod: 'Actor.collider.canCollide' })
-    ], ActorImpl.prototype, "onCollidesWith", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
-    ], ActorImpl.prototype, "getCollisionHandlers", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_17__["obsolete"])({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
-    ], ActorImpl.prototype, "removeCollidesWith", null);
     return ActorImpl;
 }(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
 
@@ -6522,7 +6070,7 @@ var Actor = /** @class */ (function (_super) {
         return _super.call(this, xOrConfig, y, width, height, color) || this;
     }
     return Actor;
-}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_12__["Configurable"])(ActorImpl)));
+}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_10__["Configurable"])(ActorImpl)));
 
 
 
@@ -6543,6 +6091,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Projection", function() { return Projection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalCoordinates", function() { return GlobalCoordinates; });
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 /**
  * A 2D vector on a plane.
@@ -6834,6 +6390,9 @@ var Vector = /** @class */ (function () {
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_1__["obsolete"])({ message: 'will be removed in favour of `.size` in version 0.25.0' })
+    ], Vector.prototype, "magnitude", null);
     return Vector;
 }());
 
@@ -7300,7 +6859,7 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
             var position = target.center;
             var focus = cam.getFocus();
             var direction = position.sub(focus);
-            var distance = direction.magnitude();
+            var distance = direction.size;
             if (distance >= _this.radius) {
                 var offset = distance - _this.radius;
                 return focus.add(direction.normalize().scale(offset));
@@ -7849,16 +7408,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _CollisionType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionType */ "./Collision/CollisionType.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Events */ "./Events.ts");
-/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
 
 
 
@@ -7918,22 +7469,22 @@ var Body = /** @class */ (function () {
         this.rotation = 0; // radians
         /**
          * The scale vector of the actor
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
         /**
          * The scale of the actor last frame
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.oldScale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
         /**
          * The x scalar velocity of the actor in scale/second
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.sx = 0; //scale/sec
         /**
          * The y scalar velocity of the actor in scale/second
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.sy = 0; //scale/sec
         /**
@@ -8063,20 +7614,21 @@ var Body = /** @class */ (function () {
     /**
      * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
+     * If no width/height are specified the body will attempt to use the associated actor's width/height.
+     *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useBoxCollider = function (width, height, anchor, center) {
         if (anchor === void 0) { anchor = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Half; }
         if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Box(width, height, anchor, center);
+        if (width === null || width === undefined) {
+            width = this.actor ? this.actor.width : 0;
+        }
+        if (height === null || height === undefined) {
+            height = this.actor ? this.actor.height : 0;
+        }
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Box(width, height, anchor, center);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.useBoxCollision will be removed in v0.24.0 use [[Body.useBoxCollider]]
-     */
-    Body.prototype.useBoxCollision = function (center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.useBoxCollider(this.actor.width, this.actor.height, this.actor.anchor, center);
     };
     /**
      * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
@@ -8089,15 +7641,8 @@ var Body = /** @class */ (function () {
      */
     Body.prototype.usePolygonCollider = function (points, center) {
         if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Polygon(points, false, center);
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Polygon(points, false, center);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.usePolygonCollision will be removed in v0.24.0 use [[Body.usePolygonCollider]]
-     */
-    Body.prototype.usePolygonCollision = function (points, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.usePolygonCollider(points, center);
     };
     /**
      * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
@@ -8106,15 +7651,8 @@ var Body = /** @class */ (function () {
      */
     Body.prototype.useCircleCollider = function (radius, center) {
         if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Circle(radius, center);
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Circle(radius, center);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.useCircleCollision will be removed in v0.24.0, use [[Body.useCircleCollider]]
-     */
-    Body.prototype.useCircleCollision = function (radius, center) {
-        if (center === void 0) { center = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero; }
-        this.useCircleCollider(radius, center);
     };
     /**
      * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
@@ -8123,14 +7661,8 @@ var Body = /** @class */ (function () {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useEdgeCollider = function (begin, end) {
-        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_5__["Shape"].Edge(begin, end);
+        this.collider.shape = _Shape__WEBPACK_IMPORTED_MODULE_4__["Shape"].Edge(begin, end);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.useEdgeCollision will be removed in v0.24.0, use [[Body.useEdgeCollider]]
-     */
-    Body.prototype.useEdgeCollision = function (begin, end) {
-        this.useEdgeCollider(begin, end);
     };
     // TODO remove this, eventually events will stay local to the thing they are around
     Body.prototype._wireColliderEventsToActor = function () {
@@ -8138,37 +7670,25 @@ var Body = /** @class */ (function () {
         this.collider.clear();
         this.collider.on('precollision', function (evt) {
             if (_this.actor) {
-                _this.actor.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+                _this.actor.emit('precollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
             }
         });
         this.collider.on('postcollision', function (evt) {
             if (_this.actor) {
-                _this.actor.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+                _this.actor.emit('postcollision', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostCollisionEvent"](evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
             }
         });
         this.collider.on('collisionstart', function (evt) {
             if (_this.actor) {
-                _this.actor.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionStartEvent"](evt.target.body.actor, evt.other.body.actor, evt.pair));
+                _this.actor.emit('collisionstart', new _Events__WEBPACK_IMPORTED_MODULE_3__["CollisionStartEvent"](evt.target.body.actor, evt.other.body.actor, evt.pair));
             }
         });
         this.collider.on('collisionend', function (evt) {
             if (_this.actor) {
-                _this.actor.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_4__["CollisionEndEvent"](evt.target.body.actor, evt.other.body.actor));
+                _this.actor.emit('collisionend', new _Events__WEBPACK_IMPORTED_MODULE_3__["CollisionEndEvent"](evt.target.body.actor, evt.other.body.actor));
             }
         });
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useBoxCollider' })
-    ], Body.prototype, "useBoxCollision", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.usePolygonCollider' })
-    ], Body.prototype, "usePolygonCollision", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useCircleCollider' })
-    ], Body.prototype, "useCircleCollision", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useEdgeCollider' })
-    ], Body.prototype, "useEdgeCollision", null);
     return Body;
 }());
 
@@ -8189,15 +7709,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
+/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
 
 
 
@@ -8239,23 +7751,23 @@ var BoundingBox = /** @class */ (function () {
      */
     BoundingBox.getSideFromIntersection = function (intersection) {
         if (!intersection) {
-            return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].None;
+            return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].None;
         }
         if (intersection) {
             if (Math.abs(intersection.x) > Math.abs(intersection.y)) {
                 if (intersection.x < 0) {
-                    return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Right;
+                    return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].Right;
                 }
-                return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Left;
+                return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].Left;
             }
             else {
                 if (intersection.y < 0) {
-                    return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Bottom;
+                    return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].Bottom;
                 }
-                return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].Top;
+                return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].Top;
             }
         }
-        return _Side__WEBPACK_IMPORTED_MODULE_4__["Side"].None;
+        return _Side__WEBPACK_IMPORTED_MODULE_3__["Side"].None;
     };
     BoundingBox.fromPoints = function (points) {
         var minX = Infinity;
@@ -8283,12 +7795,6 @@ var BoundingBox = /** @class */ (function () {
         if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero; }
         return new BoundingBox(-width * anchor.x + pos.x, -height * anchor.y + pos.y, width - width * anchor.x + pos.x, height - height * anchor.y + pos.y);
     };
-    /**
-     * Returns the calculated width of the bounding box
-     */
-    BoundingBox.prototype.getWidth = function () {
-        return this.width;
-    };
     Object.defineProperty(BoundingBox.prototype, "width", {
         /**
          * Returns the calculated width of the bounding box
@@ -8299,12 +7805,6 @@ var BoundingBox = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Returns the calculated height of the bounding box
-     */
-    BoundingBox.prototype.getHeight = function () {
-        return this.height;
-    };
     Object.defineProperty(BoundingBox.prototype, "height", {
         /**
          * Returns the calculated height of the bounding box
@@ -8315,12 +7815,6 @@ var BoundingBox = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Returns the center of the bounding box
-     */
-    BoundingBox.prototype.getCenter = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"]((this.left + this.right) / 2, (this.top + this.bottom) / 2);
-    };
     Object.defineProperty(BoundingBox.prototype, "center", {
         /**
          * Returns the center of the bounding box
@@ -8368,8 +7862,12 @@ var BoundingBox = /** @class */ (function () {
      * Creates a Polygon collision area from the points of the bounding box
      */
     BoundingBox.prototype.toPolygon = function (actor) {
+        var maybeCollider = null;
+        if (actor && actor.body && actor.body.collider) {
+            maybeCollider = actor.body.collider;
+        }
         return new _ConvexPolygon__WEBPACK_IMPORTED_MODULE_0__["ConvexPolygon"]({
-            body: actor ? actor.body : null,
+            collider: maybeCollider,
             points: this.getPoints(),
             offset: _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero
         });
@@ -8583,36 +8081,12 @@ var BoundingBox = /** @class */ (function () {
         var intersect = this.intersect(bb);
         return BoundingBox.getSideFromIntersection(intersect);
     };
-    /**
-     * Test wether this bounding box collides with another returning,
-     * the intersection vector that can be used to resolve the collision. If there
-     * is no collision null is returned.
-     *
-     * @returns A Vector in the direction of the current BoundingBox
-     * @param boundingBox  Other collidable to test
-     * @obsolete BoundingBox.collides will be removed in v0.24.0, use BoundingBox.intersect
-     */
-    BoundingBox.prototype.collides = function (boundingBox) {
-        return this.intersect(boundingBox);
-    };
     /* istanbul ignore next */
     BoundingBox.prototype.debugDraw = function (ctx, color) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Yellow; }
         ctx.strokeStyle = color.toString();
         ctx.strokeRect(this.left, this.top, this.width, this.height);
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.width' })
-    ], BoundingBox.prototype, "getWidth", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.height' })
-    ], BoundingBox.prototype, "getHeight", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
-    ], BoundingBox.prototype, "getCenter", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_3__["obsolete"])({ message: 'BoundingBox.collides will be removed in v0.24.0', alternateMethod: 'BoundingBox.intersect' })
-    ], BoundingBox.prototype, "collides", null);
     return BoundingBox;
 }());
 
@@ -8624,13 +8098,12 @@ var BoundingBox = /** @class */ (function () {
 /*!*****************************!*\
   !*** ./Collision/Circle.ts ***!
   \*****************************/
-/*! exports provided: Circle, CircleArea */
+/*! exports provided: Circle */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return Circle; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return CircleArea; });
 /* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
 /* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
@@ -8639,19 +8112,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 
 
 
@@ -8675,12 +8135,6 @@ var Circle = /** @class */ (function () {
         this.offset = options.offset || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.radius = options.radius || 0;
         this.collider = options.collider || null;
-        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
-        if (options.body) {
-            this.collider = options.body.collider;
-            this.body = this.collider.body;
-        }
-        // ==================================
     }
     Object.defineProperty(Circle.prototype, "worldPos", {
         get: function () {
@@ -8699,8 +8153,7 @@ var Circle = /** @class */ (function () {
         return new Circle({
             offset: this.offset.clone(),
             radius: this.radius,
-            collider: null,
-            body: null
+            collider: null
         });
     };
     Object.defineProperty(Circle.prototype, "center", {
@@ -8932,17 +8385,6 @@ var Circle = /** @class */ (function () {
     };
     return Circle;
 }());
-
-/**
- * @obsolete Use [[Circle]], CircleArea will be removed in v0.24.0
- */
-var CircleArea = /** @class */ (function (_super) {
-    __extends(CircleArea, _super);
-    function CircleArea() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return CircleArea;
-}(Circle));
 
 
 
@@ -10042,13 +9484,12 @@ var CollisionType;
 /*!************************************!*\
   !*** ./Collision/ConvexPolygon.ts ***!
   \************************************/
-/*! exports provided: ConvexPolygon, PolygonArea */
+/*! exports provided: ConvexPolygon */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return ConvexPolygon; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return PolygonArea; });
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
@@ -10057,19 +9498,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 
 
 
@@ -10093,12 +9521,6 @@ var ConvexPolygon = /** @class */ (function () {
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.collider = this.collider = options.collider || null;
-        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
-        if (options.body) {
-            this.collider = options.body.collider;
-            this.body = this.collider.body;
-        }
-        // ==================================
         // calculate initial transformation
         this._calculateTransformation();
     }
@@ -10109,8 +9531,7 @@ var ConvexPolygon = /** @class */ (function () {
         return new ConvexPolygon({
             offset: this.offset.clone(),
             points: this.points.map(function (p) { return p.clone(); }),
-            collider: null,
-            body: null
+            collider: null
         });
     };
     Object.defineProperty(ConvexPolygon.prototype, "worldPos", {
@@ -10455,14 +9876,6 @@ var ConvexPolygon = /** @class */ (function () {
     };
     return ConvexPolygon;
 }());
-
-var PolygonArea = /** @class */ (function (_super) {
-    __extends(PolygonArea, _super);
-    function PolygonArea() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return PolygonArea;
-}(ConvexPolygon));
 
 
 
@@ -11029,8 +10442,8 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                     return "continue";
                 }
                 // Maximum travel distance next frame
-                var updateDistance = collider_1.body.vel.magnitude() * seconds + // velocity term
-                    collider_1.body.acc.magnitude() * 0.5 * seconds * seconds; // acc term
+                var updateDistance = collider_1.body.vel.size * seconds + // velocity term
+                    collider_1.body.acc.size * 0.5 * seconds * seconds; // acc term
                 // Find the minimum dimension
                 var minDimension = Math.min(collider_1.bounds.height, collider_1.bounds.width);
                 if (_Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].disableMinimumSpeedForFastBody || updateDistance > minDimension / 2) {
@@ -11053,7 +10466,7 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
                             var hitPoint = other.collider.shape.rayCast(ray_1, updateDistance + _Physics__WEBPACK_IMPORTED_MODULE_0__["Physics"].surfaceEpsilon * 10);
                             if (hitPoint) {
                                 var translate = hitPoint.sub(origin_1);
-                                if (translate.magnitude() < minTranslate_1.magnitude()) {
+                                if (translate.size < minTranslate_1.size) {
                                     minTranslate_1 = translate;
                                     minBody_1 = other;
                                 }
@@ -11185,13 +10598,12 @@ var DynamicTreeCollisionBroadphase = /** @class */ (function () {
 /*!***************************!*\
   !*** ./Collision/Edge.ts ***!
   \***************************/
-/*! exports provided: Edge, EdgeArea */
+/*! exports provided: Edge */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return Edge; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return EdgeArea; });
 /* harmony import */ var _BoundingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundingBox */ "./Collision/BoundingBox.ts");
 /* harmony import */ var _CollisionJumpTable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CollisionJumpTable */ "./Collision/CollisionJumpTable.ts");
 /* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
@@ -11200,19 +10612,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Physics */ "./Physics.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _ClosestLineJumpTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ClosestLineJumpTable */ "./Collision/ClosestLineJumpTable.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 
 
 
@@ -11233,12 +10632,6 @@ var Edge = /** @class */ (function () {
         this.end = options.end || _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"].Zero;
         this.collider = options.collider || null;
         this.offset = this.center;
-        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
-        if (options.body) {
-            this.collider = options.body.collider;
-            this.body = this.collider.body;
-        }
-        // ==================================
     }
     /**
      * Returns a clone of this Edge, not associated with any collider
@@ -11247,8 +10640,7 @@ var Edge = /** @class */ (function () {
         return new Edge({
             begin: this.begin.clone(),
             end: this.end.clone(),
-            collider: null,
-            body: null
+            collider: null
         });
     };
     Object.defineProperty(Edge.prototype, "worldPos", {
@@ -11494,17 +10886,6 @@ var Edge = /** @class */ (function () {
     return Edge;
 }());
 
-/**
- * @obsolete Use [[Edge]], EdgeArea will be removed in v0.24.0
- */
-var EdgeArea = /** @class */ (function (_super) {
-    __extends(EdgeArea, _super);
-    function EdgeArea() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return EdgeArea;
-}(Edge));
-
 
 
 /***/ }),
@@ -11513,7 +10894,7 @@ var EdgeArea = /** @class */ (function (_super) {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape */
+/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11531,8 +10912,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Circle */ "./Collision/Circle.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Circle__WEBPACK_IMPORTED_MODULE_3__["Circle"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _Circle__WEBPACK_IMPORTED_MODULE_3__["CircleArea"]; });
 
 /* harmony import */ var _CollisionContact__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CollisionContact */ "./Collision/CollisionContact.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _CollisionContact__WEBPACK_IMPORTED_MODULE_4__["CollisionContact"]; });
@@ -11562,15 +10941,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["Edge"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["EdgeArea"]; });
-
 /* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_12__["Pair"]; });
 
 /* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__["ConvexPolygon"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__["PolygonArea"]; });
 
 /* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_14__["Side"]; });
@@ -12170,17 +11545,6 @@ var PhysicsStats = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./Deprecated.ts":
-/*!***********************!*\
-  !*** ./Deprecated.ts ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
-
-/***/ }),
-
 /***/ "./Drawing/Animation.ts":
 /*!******************************!*\
   !*** ./Drawing/Animation.ts ***!
@@ -12616,6 +11980,7 @@ var Color = /** @class */ (function () {
     /**
      * Multiplies a color by another, results in a darker color
      * @param color
+     * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
      */
     Color.prototype.mulitiply = function (color) {
         return this.multiply(color);
@@ -12802,6 +12167,7 @@ var Color = /** @class */ (function () {
     Object.defineProperty(Color, "Vermillion", {
         /**
          * Vermilion (#FF5B31)
+         * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
          */
         get: function () {
             return Color.Vermilion;
@@ -12910,7 +12276,7 @@ var Color = /** @class */ (function () {
         configurable: true
     });
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({ message: 'Alias for incorrect spelling used in older versions, use multiply instead' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({ message: 'Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0' })
     ], Color.prototype, "mulitiply", null);
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({
@@ -16183,165 +15549,6 @@ var NativeSoundEvent = /** @class */ (function (_super) {
 
 /***/ }),
 
-/***/ "./Group.ts":
-/*!******************!*\
-  !*** ./Group.ts ***!
-  \******************/
-/*! exports provided: Group */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return Group; });
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
-
-
-
-
-/**
- * Groups are used for logically grouping Actors so they can be acted upon
- * in bulk.
- *
- * @obsolete Use [[CollisionGroupManager]] for collision based behavior
- * [[include:Groups.md]]
- */
-var Group = /** @class */ (function (_super) {
-    __extends(Group, _super);
-    function Group(name, scene) {
-        var _this = _super.call(this) || this;
-        _this.name = name;
-        _this.scene = scene;
-        _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_3__["Logger"].getInstance();
-        _this._members = [];
-        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_1__["ActionContext"]();
-        if (scene == null) {
-            _this._logger.error('Invalid constructor arguments passed to Group: ', name, ', scene must not be null!');
-        }
-        else {
-            var existingGroup = scene.groups[name];
-            if (existingGroup) {
-                _this._logger.warn('Group with name', name, 'already exists. This new group will replace it.');
-            }
-            scene.groups[name] = _this;
-        }
-        return _this;
-    }
-    Group.prototype.add = function (actorOrActors) {
-        if (actorOrActors instanceof _Actor__WEBPACK_IMPORTED_MODULE_2__["Actor"]) {
-            actorOrActors = [].concat(actorOrActors);
-        }
-        var groupIdx;
-        var len = actorOrActors.length;
-        for (var i = 0; i < len; i++) {
-            groupIdx = this.getMembers().indexOf(actorOrActors[i]);
-            if (groupIdx === -1) {
-                this._members.push(actorOrActors[i]);
-                this.scene.add(actorOrActors[i]);
-                this.actions.addActorToContext(actorOrActors[i]);
-                this.eventDispatcher.wire(actorOrActors[i].eventDispatcher);
-            }
-        }
-    };
-    Group.prototype.remove = function (actor) {
-        var index = this._members.indexOf(actor);
-        if (index > -1) {
-            this._members.splice(index, 1);
-            this.actions.removeActorFromContext(actor);
-            this.eventDispatcher.unwire(actor.eventDispatcher);
-        }
-    };
-    Group.prototype.move = function (args) {
-        var members = this.getMembers();
-        var len = members.length;
-        if (arguments.length === 1 && args instanceof _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"]) {
-            for (var i = 0; i < len; i++) {
-                members[i].pos.x += args.x;
-                members[i].pos.y += args.y;
-            }
-        }
-        else if (typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
-            var x = arguments[0];
-            var y = arguments[1];
-            for (var i = 0; i < len; i++) {
-                members[i].pos.x += x;
-                members[i].pos.y += y;
-            }
-        }
-        else {
-            this._logger.error('Invalid arguments passed to group move', this.name, 'args:', arguments);
-        }
-    };
-    Group.prototype.rotate = function (angle) {
-        if (typeof angle !== 'number') {
-            this._logger.error('Invalid arguments passed to group rotate', this.name, 'args:', arguments);
-            return;
-        }
-        for (var _i = 0, _a = this.getMembers(); _i < _a.length; _i++) {
-            var member = _a[_i];
-            member.rotation += angle;
-        }
-    };
-    Group.prototype.on = function (eventName, handler) {
-        this.eventDispatcher.on(eventName, handler);
-    };
-    Group.prototype.off = function (eventName, handler) {
-        this.eventDispatcher.off(eventName, handler);
-    };
-    Group.prototype.emit = function (topic, event) {
-        this.eventDispatcher.emit(topic, event);
-    };
-    Group.prototype.contains = function (actor) {
-        return this.getMembers().indexOf(actor) > -1;
-    };
-    Group.prototype.getMembers = function () {
-        return this._members;
-    };
-    Group.prototype.getRandomMember = function () {
-        return this._members[Math.floor(Math.random() * this._members.length)];
-    };
-    Group.prototype.getBounds = function () {
-        return this.getMembers()
-            .map(function (a) { return a.getBounds(); })
-            .reduce(function (prev, curr) {
-            return prev.combine(curr);
-        });
-    };
-    Group = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0', alternateMethod: 'Use ex.CollisionGroupManager' })
-    ], Group);
-    return Group;
-}(_Class__WEBPACK_IMPORTED_MODULE_4__["Class"]));
-
-
-
-/***/ }),
-
 /***/ "./Input/Gamepad.ts":
 /*!**************************!*\
   !*** ./Input/Gamepad.ts ***!
@@ -18031,7 +17238,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -18045,6 +17253,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -18163,7 +17372,7 @@ var LabelImpl = /** @class */ (function (_super) {
      * over a css font.
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? { x: textOrConfig.x, y: textOrConfig.y } : { x: x, y: y }) || this;
+        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? textOrConfig : { pos: new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](x, y) }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false
          */
@@ -18208,7 +17417,7 @@ var LabelImpl = /** @class */ (function (_super) {
         _this.text = text || '';
         _this.color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Black;
         _this.spriteFont = spriteFont;
-        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"].PreventCollision;
+        _this.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"].PreventCollision;
         _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
         _this._textShadowOn = false;
         _this._shadowOffsetX = 0;
@@ -19748,7 +18957,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
      * @param height  The height of the emitter
      */
     function ParticleEmitterImpl(xOrConfig, y, width, height) {
-        var _this = _super.call(this, typeof xOrConfig === 'number' ? { x: xOrConfig, y: y, width: width, height: height } : xOrConfig) || this;
+        var _this = _super.call(this, typeof xOrConfig === 'number' ? { pos: new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](xOrConfig, y), width: width, height: height } : xOrConfig) || this;
         _this.numParticles = 0;
         /**
          * Gets or sets the isEmitting flag
@@ -19807,12 +19016,12 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
          */
         _this.focusAccel = 1;
         /*
-          * Gets or sets the optional starting size for the particles
-          */
+         * Gets or sets the optional starting size for the particles
+         */
         _this.startSize = null;
         /*
-          * Gets or sets the optional ending size for the particles
-          */
+         * Gets or sets the optional ending size for the particles
+         */
         _this.endSize = null;
         /**
          * Gets or sets the minimum size of all particles
@@ -20169,7 +19378,7 @@ var Physics = /** @class */ (function () {
     Physics.disableMinimumSpeedForFastBody = false;
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_1__["obsolete"])({
-            message: 'Alias for incorrect spelling used in older versions',
+            message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
             alternateMethod: 'dynamicTreeVelocityMultiplier'
         })
     ], Physics, "dynamicTreeVelocityMultiplyer", null);
@@ -22206,15 +21415,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
 /* harmony import */ var _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Collision/DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
 /* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony import */ var _Group__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Group */ "./Group.ts");
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
-/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
+/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22228,14 +21435,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
-
 
 
 
@@ -22279,20 +21478,19 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        _this._groups = {};
         /**
          * The [[ScreenElement]]s in a scene, if any; these are drawn last
          */
         _this.screenElements = [];
         _this._isInitialized = false;
-        _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](_Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"].prototype.getZIndex);
+        _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](_Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"].prototype.getZIndex);
         _this._broadphase = new _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__["DynamicTreeCollisionBroadphase"]();
         _this._killQueue = [];
         _this._triggerKillQueue = [];
         _this._timers = [];
         _this._cancelQueue = [];
         _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_3__["Logger"].getInstance();
-        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_9__["Camera"]();
+        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_8__["Camera"]();
         _this._engine = _engine;
         if (_engine) {
             _this.camera.x = _engine.halfDrawWidth;
@@ -22300,19 +21498,6 @@ var Scene = /** @class */ (function (_super) {
         }
         return _this;
     }
-    Object.defineProperty(Scene.prototype, "groups", {
-        /**
-         * The [[Group]]s in the scene, if any
-         */
-        get: function () {
-            return this._groups;
-        },
-        set: function (groups) {
-            this._groups = groups;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -22626,29 +21811,29 @@ var Scene = /** @class */ (function (_super) {
         return this.actors.indexOf(actor) > -1;
     };
     Scene.prototype.add = function (entity) {
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
             entity.unkill();
         }
         if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.screenElements, entity)) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.screenElements, entity)) {
                 this.addScreenElement(entity);
             }
             return;
         }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.actors, entity)) {
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.actors, entity)) {
                 this._addChild(entity);
             }
             return;
         }
         if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_4__["Timer"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this._timers, entity)) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this._timers, entity)) {
                 this.addTimer(entity);
             }
             return;
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_8__["TileMap"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.tileMaps, entity)) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.tileMaps, entity)) {
                 this.addTileMap(entity);
             }
         }
@@ -22658,13 +21843,13 @@ var Scene = /** @class */ (function (_super) {
             this.removeScreenElement(entity);
             return;
         }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_10__["Actor"]) {
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
             this._removeChild(entity);
         }
         if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_4__["Timer"]) {
             this.removeTimer(entity);
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_8__["TileMap"]) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
             this.removeTileMap(entity);
         }
     };
@@ -22692,7 +21877,7 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype._addChild = function (actor) {
         this._broadphase.track(actor.body);
         actor.scene = this;
-        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_14__["Trigger"]) {
+        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_13__["Trigger"]) {
             this.triggers.push(actor);
         }
         else {
@@ -22719,11 +21904,11 @@ var Scene = /** @class */ (function (_super) {
      * Removes an actor from the scene, it will no longer be drawn or updated.
      */
     Scene.prototype._removeChild = function (actor) {
-        if (!_Util_Util__WEBPACK_IMPORTED_MODULE_12__["contains"](this.actors, actor)) {
+        if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.actors, actor)) {
             return;
         }
         this._broadphase.untrack(actor.body);
-        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_14__["Trigger"]) {
+        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_13__["Trigger"]) {
             this._triggerKillQueue.push(actor);
         }
         else {
@@ -22770,29 +21955,6 @@ var Scene = /** @class */ (function (_super) {
         return this._timers.indexOf(timer) > -1 && !timer.complete;
     };
     /**
-     * Creates and adds a [[Group]] to the scene with a name
-     */
-    Scene.prototype.createGroup = function (name) {
-        return new _Group__WEBPACK_IMPORTED_MODULE_7__["Group"](name, this);
-    };
-    /**
-     * Returns a [[Group]] by name
-     */
-    Scene.prototype.getGroup = function (name) {
-        return this.groups[name];
-    };
-    Scene.prototype.removeGroup = function (group) {
-        if (typeof group === 'string') {
-            delete this.groups[group];
-        }
-        else if (group instanceof _Group__WEBPACK_IMPORTED_MODULE_7__["Group"]) {
-            delete this.groups[group.name];
-        }
-        else {
-            this._logger.error('Invalid arguments to removeGroup', group);
-        }
-    };
-    /**
      * Removes the given actor from the sorted drawing tree
      */
     Scene.prototype.cleanupDrawTree = function (actor) {
@@ -22826,7 +21988,7 @@ var Scene = /** @class */ (function (_super) {
             engine.stats.currFrame.actors.alive++;
             for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
                 var child = _e[_d];
-                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_13__["isScreenElement"](child)) {
+                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_12__["isScreenElement"](child)) {
                     engine.stats.currFrame.actors.ui++;
                 }
                 else {
@@ -22835,20 +21997,8 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "groups", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "createGroup", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "getGroup", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Group will be deprecated in v0.24.0' })
-    ], Scene.prototype, "removeGroup", null);
     return Scene;
-}(_Class__WEBPACK_IMPORTED_MODULE_11__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_10__["Class"]));
 
 
 
@@ -22858,17 +22008,19 @@ var Scene = /** @class */ (function (_super) {
 /*!**************************!*\
   !*** ./ScreenElement.ts ***!
   \**************************/
-/*! exports provided: ScreenElement */
+/*! exports provided: ScreenElement, UIActor */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return ScreenElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return UIActor; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
 /* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 /* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22882,6 +22034,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -22930,6 +22089,21 @@ var ScreenElement = /** @class */ (function (_super) {
     return ScreenElement;
 }(_Actor__WEBPACK_IMPORTED_MODULE_1__["Actor"]));
 
+/**
+ * Legacy UIActor constructor
+ * @obsolete UIActor constructor will be removed in v0.25.0 use [[ScreenElement]] instead
+ */
+var UIActor = /** @class */ (function (_super) {
+    __extends(UIActor, _super);
+    function UIActor() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    UIActor = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'Will be removed in v0.25.0', alternateMethod: 'ScreenElement' })
+    ], UIActor);
+    return UIActor;
+}(ScreenElement));
+
 
 
 /***/ }),
@@ -22955,7 +22129,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22969,13 +22142,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -23270,12 +22436,6 @@ var CellImpl = /** @class */ (function () {
         this.sprites = sprites;
         this._bounds = new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.x, this.y, this.x + this.width, this.y + this.height);
     }
-    /**
-     * Returns the bounding box for this cell
-     */
-    CellImpl.prototype.getBounds = function () {
-        return this._bounds;
-    };
     Object.defineProperty(CellImpl.prototype, "bounds", {
         get: function () {
             return this._bounds;
@@ -23283,12 +22443,6 @@ var CellImpl = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the center coordinate of this cell
-     */
-    CellImpl.prototype.getCenter = function () {
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
-    };
     Object.defineProperty(CellImpl.prototype, "center", {
         get: function () {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
@@ -23317,12 +22471,6 @@ var CellImpl = /** @class */ (function () {
     CellImpl.prototype.clearSprites = function () {
         this.sprites.length = 0;
     };
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.bounds' })
-    ], CellImpl.prototype, "getBounds", null);
-    __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_7__["obsolete"])({ message: 'Will be removed in v0.24.0', alternateMethod: 'BoundingBox.center' })
-    ], CellImpl.prototype, "getCenter", null);
     return CellImpl;
 }());
 
@@ -24603,7 +23751,7 @@ var EasingFunctions = /** @class */ (function () {
     });
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_1__["obsolete"])({
-            message: 'Alias for incorrect spelling used in older versions',
+            message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
             alternateMethod: 'CreateReversibleEasingFunction'
         })
     ], EasingFunctions, "CreateReversableEasingFunction", null);
@@ -24618,7 +23766,7 @@ var EasingFunctions = /** @class */ (function () {
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, getSideFromDirection, Collection, fail */
+/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24651,8 +23799,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["contains"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getOppositeSide", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getOppositeSide"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getSideFromVector"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getSideFromDirection", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["getSideFromDirection"]; });
 
@@ -25214,7 +24360,7 @@ function canPlayFile(file) {
 /*!**********************!*\
   !*** ./Util/Util.ts ***!
   \**********************/
-/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromVector, getSideFromDirection, Collection, fail */
+/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25233,7 +24379,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeItemFromArray", function() { return removeItemFromArray; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "contains", function() { return contains; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOppositeSide", function() { return getOppositeSide; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromVector", function() { return getSideFromVector; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromDirection", function() { return getSideFromDirection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return Collection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return fail; });
@@ -25414,12 +24559,6 @@ function getOppositeSide(side) {
         return _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Left;
     }
     return _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].None;
-}
-/**
- * @obsolete use Util.getSideFromDirection
- */
-function getSideFromVector(direction) {
-    return getSideFromDirection(direction);
 }
 /**
  * Returns the side in the direction of the vector supplied
@@ -25679,7 +24818,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, Deprecated, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Group, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CircleArea, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, EdgeArea, Pair, ConvexPolygon, PolygonArea, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25815,227 +24954,216 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ExitTriggerEvent"]; });
 
-/* harmony import */ var _Group__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Group */ "./Group.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Group", function() { return _Group__WEBPACK_IMPORTED_MODULE_12__["Group"]; });
+/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Label */ "./Label.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["Label"]; });
 
-/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Label */ "./Label.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["Label"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontStyle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontStyle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontUnit"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontUnit"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["TextAlign"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["TextAlign"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["BaseAlign"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["BaseAlign"]; });
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_13__["Loader"]; });
 
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_14__["Loader"]; });
+/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["Particle"]; });
 
-/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["Particle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["ParticleEmitter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["ParticleEmitter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["EmitterType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["EmitterType"]; });
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["CollisionResolutionStrategy"]; });
 
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["CollisionResolutionStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["BroadphaseStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["BroadphaseStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Integrator"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Integrator"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Physics"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Physics"]; });
+/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["PromiseState"]; });
 
-/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["PromiseState"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["Promise"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["Promise"]; });
+/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_17__["Scene"]; });
 
-/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_18__["Scene"]; });
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileMap"]; });
 
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileMap"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["Cell"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["Cell"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileSprite"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileSprite"]; });
+/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_19__["Timer"]; });
 
-/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_20__["Timer"]; });
+/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_20__["Trigger"]; });
 
-/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_21__["Trigger"]; });
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["ScreenElement"]; });
 
-/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["ScreenElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["UIActor"]; });
 
-/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Actions"]; });
+/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Actions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Internal"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Internal"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["ActionContext"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["ActionContext"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["RotationType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["RotationType"]; });
 
-/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Body"]; });
+/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Body"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["isCollider"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["isCollider"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Collider"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Collider"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["BoundingBox"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["BoundingBox"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Circle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Circle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CircleArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CircleArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionContact"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionContact"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionJumpTable"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionJumpTable"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ClosestLine"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLine"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ClosestLineJumpTable"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLineJumpTable"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionGroup"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroup"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionGroupManager"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroupManager"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["TreeNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["TreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTree"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTree"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTreeCollisionBroadphase"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTreeCollisionBroadphase"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Edge"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Edge"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Pair"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EdgeArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["EdgeArea"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ConvexPolygon"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Pair"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Side"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ConvexPolygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Shape"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PolygonArea", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["PolygonArea"]; });
+/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Animation"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Side"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Sprite"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Shape"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteSheet"]; });
 
-/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Animation"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteFont"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Sprite"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Effects"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteSheet"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Color"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteFont"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Polygon"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Effects"]; });
+/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__["ExResponse"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Color"]; });
+/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinGenerator"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Polygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinDrawer2D"]; });
 
-/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["ExResponse"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["Random"]; });
 
-/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinGenerator"]; });
+/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindness"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinDrawer2D"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindCorrector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["Random"]; });
+/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Resource"]; });
 
-/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindness"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Texture"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindCorrector"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Gif"]; });
 
-/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Resource"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Stream"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Texture"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["ParseGif"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Gif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Sound"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Stream"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioContextFactory"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["ParseGif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstanceFactory"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Sound"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioContextFactory"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioTagInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstanceFactory"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstance"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioTagInstance"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["WebAudioInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["WebAudioInstance"]; });
 
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__; });
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_30__; });
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_31__; });
-/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_32__; });
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserComponent"]; });
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_29__; });
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_30__; });
+/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_31__; });
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_32__["BrowserComponent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserEvents"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_32__["BrowserEvents"]; });
 
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["maxMessages"]; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["maxMessages"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["resetObsoleteCounter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["resetObsoleteCounter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["obsolete"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["obsolete"]; });
 
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_35__["Detector"]; });
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_34__["Detector"]; });
 
-/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__["CullingBox"]; });
+/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__["CullingBox"]; });
 
-/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__["EasingFunctions"]; });
+/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__["EasingFunctions"]; });
 
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["LogLevel"]; });
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["LogLevel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["Logger"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["Logger"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ConsoleAppender"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ConsoleAppender"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ScreenAppender"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ScreenAppender"]; });
 
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["SortedList"]; });
+/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["SortedList"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["BinaryTreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["BinaryTreeNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["MockedElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["MockedElement"]; });
 
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./Deprecated */ "./Deprecated.ts");
-/* harmony import */ var _Deprecated__WEBPACK_IMPORTED_MODULE_40___default = /*#__PURE__*/__webpack_require__.n(_Deprecated__WEBPACK_IMPORTED_MODULE_40__);
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Deprecated", function() { return _Deprecated__WEBPACK_IMPORTED_MODULE_40__; });
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.4969+386b2a0";
+var EX_VERSION = "0.23.0-alpha.5044+9b84a25";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything
 // that will be exposed as the `ex` global variable.
-
 
 
 
@@ -26084,8 +25212,9 @@ Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 
 
 // ex.Deprecated
-
-
+// import * as deprecated from './Deprecated';
+// export { deprecated as Deprecated };
+// export * from './Deprecated';
 
 
 /***/ })

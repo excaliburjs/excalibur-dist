@@ -186,7 +186,7 @@ var Physics = /** @class */ (function () {
     Physics.disableMinimumSpeedForFastBody = false;
     __decorate([
         obsolete({
-            message: 'Alias for incorrect spelling used in older versions',
+            message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
             alternateMethod: 'dynamicTreeVelocityMultiplier'
         })
     ], Physics, "dynamicTreeVelocityMultiplyer", null);

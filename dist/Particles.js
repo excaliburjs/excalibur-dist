@@ -172,7 +172,7 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
      * @param height  The height of the emitter
      */
     function ParticleEmitterImpl(xOrConfig, y, width, height) {
-        var _this = _super.call(this, typeof xOrConfig === 'number' ? { x: xOrConfig, y: y, width: width, height: height } : xOrConfig) || this;
+        var _this = _super.call(this, typeof xOrConfig === 'number' ? { pos: new Vector(xOrConfig, y), width: width, height: height } : xOrConfig) || this;
         _this.numParticles = 0;
         /**
          * Gets or sets the isEmitting flag
@@ -231,12 +231,12 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
          */
         _this.focusAccel = 1;
         /*
-          * Gets or sets the optional starting size for the particles
-          */
+         * Gets or sets the optional starting size for the particles
+         */
         _this.startSize = null;
         /*
-          * Gets or sets the optional ending size for the particles
-          */
+         * Gets or sets the optional ending size for the particles
+         */
         _this.endSize = null;
         /**
          * Gets or sets the minimum size of all particles

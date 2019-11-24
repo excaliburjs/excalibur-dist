@@ -100,6 +100,7 @@ export declare class Color {
     /**
      * Multiplies a color by another, results in a darker color
      * @param color
+     * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
      */
     mulitiply(color: Color): Color;
     /**
@@ -188,6 +189,7 @@ export declare class Color {
     static readonly Vermilion: Color;
     /**
      * Vermilion (#FF5B31)
+     * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
      */
     static readonly Vermillion: Color;
     /**

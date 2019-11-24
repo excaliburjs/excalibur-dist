@@ -132,7 +132,7 @@ var MoveBy = /** @class */ (function () {
             this._started = true;
             this._start = new Vector(this._actor.pos.x, this._actor.pos.y);
             this._end = this._start.add(this._offset);
-            this._distance = this._offset.magnitude();
+            this._distance = this._offset.size;
             this._dir = this._end.sub(this._start).normalize();
         }
         this._actor.vel = this._dir.scale(this._speed);
@@ -490,7 +490,7 @@ var ScaleTo = /** @class */ (function () {
         this._started = false;
     };
     ScaleTo = __decorate([
-        obsolete({ message: 'ex.Action.ScaleTo will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+        obsolete({ message: 'ex.Action.ScaleTo will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
     ], ScaleTo);
     return ScaleTo;
 }());
@@ -535,7 +535,7 @@ var ScaleBy = /** @class */ (function () {
         this._started = false;
     };
     ScaleBy = __decorate([
-        obsolete({ message: 'ex.Action.ScaleBy will be removed in v0.24.0', alternateMethod: 'Set width and hight directly' })
+        obsolete({ message: 'ex.Action.ScaleBy will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
     ], ScaleBy);
     return ScaleBy;
 }());

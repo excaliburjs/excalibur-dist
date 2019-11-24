@@ -18,7 +18,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Class } from './Class';
-import { BoundingBox } from './Collision/BoundingBox';
 import { Texture } from './Resources/Texture';
 import { InitializeEvent, KillEvent, PreUpdateEvent, PreDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostKillEvent, PreKillEvent } from './Events';
 import { Color } from './Drawing/Color';
@@ -28,7 +27,6 @@ import { ActionContext } from './Actions/ActionContext';
 import { ActionQueue } from './Actions/Action';
 import { Vector } from './Algebra';
 import { Body } from './Collision/Body';
-import { Side } from './Collision/Side';
 import { Configurable } from './Configurable';
 import * as Traits from './Traits/Index';
 import * as Effects from './Drawing/SpriteEffects';
@@ -92,11 +90,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
-        /**
-         * @obsolete Legacy collision groups will be removed in v0.24.0, use [[Actor.body.collider.collisionGroup]]
-         */
-        _this.collisionGroups = [];
-        _this._collisionHandlers = {};
         _this._isInitialized = false;
         _this.frames = {};
         _this._effectsDirty = false;
@@ -179,8 +172,14 @@ var ActorImpl = /** @class */ (function (_super) {
         var shouldInitializeBody = true;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
-            xOrConfig = config.pos ? config.pos.x : config.x;
-            y = config.pos ? config.pos.y : config.y;
+            if (config.pos) {
+                xOrConfig = config.pos ? config.pos.x : 0;
+                y = config.pos ? config.pos.y : 0;
+            }
+            else {
+                xOrConfig = config.x || 0;
+                y = config.y || 0;
+            }
             width = config.width;
             height = config.height;
             if (config.body) {
@@ -202,6 +201,11 @@ var ActorImpl = /** @class */ (function (_super) {
                     shape: Shape.Box(_this._width, _this._height, _this.anchor)
                 })
             });
+        }
+        if (xOrConfig && typeof xOrConfig === 'object' && xOrConfig.collisionType) {
+            if (_this.body && _this.body.collider) {
+                _this.body.collider.type = xOrConfig.collisionType;
+            }
         }
         // Position uses body to store values must be initialized after body
         _this.pos.x = xOrConfig || 0;
@@ -231,62 +235,6 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (body) {
             this._body = body;
             this._body.actor = this;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "collisionArea", {
-        /**
-         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-         * [Edge|edges].
-         * @obsolete Use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-         */
-        get: function () {
-            return this.body.collider.shape;
-        },
-        /**
-         * Gets the collision geometry shape to use for collision possible options are [Circle|circles], [ConvexPolygon|polygons], and
-         * [Edge|edges].
-         * @obsolete use Actor.body.collider.shape, collisionArea will be removed in v0.24.0
-         */
-        set: function (area) {
-            this.body.collider.shape = area;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "x", {
-        /**
-         * Gets the x position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-         */
-        get: function () {
-            return this.body.pos.x;
-        },
-        /**
-         * Sets the x position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.x will be removed in v0.24.0, use ex.Actor.pos.x
-         */
-        set: function (theX) {
-            this.body.pos.x = theX;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "y", {
-        /**
-         * Gets the y position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-         */
-        get: function () {
-            return this.body.pos.y;
-        },
-        /**
-         * Sets the y position of the actor relative to it's parent (if any)
-         * @obsolete ex.Actor.y will be removed in v0.24.0, use ex.Actor.pos.y
-         */
-        set: function (theY) {
-            this.body.pos.y = theY;
         },
         enumerable: true,
         configurable: true
@@ -420,108 +368,17 @@ var ActorImpl = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(ActorImpl.prototype, "torque", {
-        /**
-         * Gets the current torque applied to the actor. Torque can be thought of as rotational force
-         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-         */
-        get: function () {
-            return this.body.torque;
-        },
-        /**
-         * Sets the current torque applied to the actor. Torque can be thought of as rotational force
-         * @obsolete ex.Actor.torque will be removed in v0.24.0, use ex.Actor.body.torque
-         */
-        set: function (theTorque) {
-            this.body.torque = theTorque;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "mass", {
-        /**
-         * Get the current mass of the actor, mass can be thought of as the resistance to acceleration.
-         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-         */
-        get: function () {
-            return this.body.collider.mass;
-        },
-        /**
-         * Sets the mass of the actor, mass can be thought of as the resistance to acceleration.
-         * @obsolete ex.Actor.mass will be removed in v0.24.0, use ex.Actor.body.collider.mass
-         */
-        set: function (theMass) {
-            this.body.collider.mass = theMass;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "moi", {
-        /**
-         * Gets the current moment of inertia, moi can be thought of as the resistance to rotation.
-         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-         */
-        get: function () {
-            return this.body.collider.inertia;
-        },
-        /**
-         * Sets the current moment of inertia, moi can be thought of as the resistance to rotation.
-         * @obsolete ex.Actor.moi will be removed in v0.24.0, use ex.Actor.body.collider.inertia
-         */
-        set: function (theMoi) {
-            this.body.collider.inertia = theMoi;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "friction", {
-        /**
-         * Gets the coefficient of friction on this actor, this can be thought of as how sticky or slippery an object is.
-         * @obsolete ex.Actor.friction will be removed in v0.24.0, use ex.Actor.body.collider.friction
-         */
-        get: function () {
-            return this.body.collider.friction;
-        },
-        /**
-         * Sets the coefficient of friction of this actor, this can ve thought of as how stick or slippery an object is.
-         */
-        set: function (theFriction) {
-            this.body.collider.friction = theFriction;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "restitution", {
-        /**
-         * Gets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-         * as bounciness.
-         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-         */
-        get: function () {
-            return this.body.collider.bounciness;
-        },
-        /**
-         * Sets the coefficient of restitution of this actor, represents the amount of energy preserved after collision. Think of this
-         * as bounciness.
-         * @obsolete ex.Actor.restitution will be removed in v0.24.0, use ex.Actor.body.collider.restitution
-         */
-        set: function (theRestitution) {
-            this.body.collider.bounciness = theRestitution;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(ActorImpl.prototype, "scale", {
         /**
          * Gets the scale vector of the actor
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.scale;
         },
         /**
          * Sets the scale vector of the actor for
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.scale = scale;
@@ -532,14 +389,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
         /**
          * Gets the old scale of the actor last frame
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.oldScale;
         },
         /**
          * Sets the the old scale of the actor last frame
-         * @obsolete ex.Actor.scale will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scale) {
             this.body.oldScale = scale;
@@ -550,14 +407,14 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sx", {
         /**
          * Gets the x scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sx;
         },
         /**
          * Sets the x scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sx will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
@@ -568,37 +425,17 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "sy", {
         /**
          * Gets the y scalar velocity of the actor in scale/second
-         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
          */
         get: function () {
             return this.body.sy;
         },
         /**
          * Sets the y scale velocity of the actor in scale/second
-         * @obsolete ex.Actor.sy will be removed in v0.24.0, set width and height directly in constructor
+         * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
          */
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ActorImpl.prototype, "collisionType", {
-        /**
-         * Gets or sets the current collision type of this actor. By
-         * default it is ([[CollisionType.PreventCollision]]).
-         * @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-         */
-        get: function () {
-            return this.body.collider.type;
-        },
-        /**
-         * Gets or sets the current collision type of this actor. By
-         * default it is ([[CollisionType.PreventCollision]]).
-         *  @obsolete ex.Actor.collisionType will be removed in v0.24.0, use ex.Actor.body.collider.type
-         */
-        set: function (type) {
-            this.body.collider.type = type;
         },
         enumerable: true,
         configurable: true
@@ -851,36 +688,6 @@ var ActorImpl = /** @class */ (function (_super) {
         this._zIndex = newIndex;
         this.scene.updateDrawTree(this);
     };
-    /**
-     * Adds an actor to a collision group. Actors with no named collision groups are
-     * considered to be in every collision group.
-     *
-     * Once in a collision group(s) actors will only collide with other actors in
-     * that group.
-     *
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    ActorImpl.prototype.addCollisionGroup = function (name) {
-        this.collisionGroups.push(name);
-    };
-    /**
-     * Removes an actor from a collision group.
-     * @param name The name of the collision group
-     * @obsolete Use [[Actor.body.collider.collisionGroup]], legacy collisionGroups will be removed in v0.24.0
-     */
-    ActorImpl.prototype.removeCollisionGroup = function (name) {
-        var index = this.collisionGroups.indexOf(name);
-        if (index !== -1) {
-            this.collisionGroups.splice(index, 1);
-        }
-    };
-    /**
-     * Get the center point of an actor
-     */
-    ActorImpl.prototype.getCenter = function () {
-        return new Vector(this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
-    };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**
          * Get the center point of an actor
@@ -903,18 +710,6 @@ var ActorImpl = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the calculated width of an actor, factoring in scale
-     */
-    ActorImpl.prototype.getWidth = function () {
-        return this.width;
-    };
-    /**
-     * Sets the width of an actor, factoring in the current scale
-     */
-    ActorImpl.prototype.setWidth = function (width) {
-        this.width = width;
-    };
     Object.defineProperty(ActorImpl.prototype, "height", {
         get: function () {
             return this._height * this.getGlobalScale().y;
@@ -927,42 +722,6 @@ var ActorImpl = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
-    /**
-     * Gets the calculated height of an actor, factoring in scale
-     */
-    ActorImpl.prototype.getHeight = function () {
-        return this.height;
-    };
-    /**
-     * Sets the height of an actor, factoring in the current scale
-     */
-    ActorImpl.prototype.setHeight = function (height) {
-        this.height = height;
-    };
-    /**
-     * Gets the left edge of the actor
-     */
-    ActorImpl.prototype.getLeft = function () {
-        return this.getBounds().left;
-    };
-    /**
-     * Gets the right edge of the actor
-     */
-    ActorImpl.prototype.getRight = function () {
-        return this.getBounds().right;
-    };
-    /**
-     * Gets the top edge of the actor
-     */
-    ActorImpl.prototype.getTop = function () {
-        return this.getBounds().top;
-    };
-    /**
-     * Gets the bottom edge of the actor
-     */
-    ActorImpl.prototype.getBottom = function () {
-        return this.getBounds().bottom;
-    };
     /**
      * Gets this actor's rotation taking into account any parent relationships
      *
@@ -1022,39 +781,6 @@ var ActorImpl = /** @class */ (function (_super) {
     };
     // #region Collision
     /**
-     * Returns the actor's [[BoundingBox]] calculated for this instant in world space.
-     */
-    ActorImpl.prototype.getBounds = function (rotated) {
-        if (rotated === void 0) { rotated = true; }
-        // todo cache bounding box
-        var anchor = this._getCalculatedAnchor();
-        var pos = this.getWorldPos();
-        var bb = new BoundingBox(pos.x - anchor.x, pos.y - anchor.y, pos.x + this.width - anchor.x, pos.y + this.height - anchor.y);
-        return rotated ? bb.rotate(this.rotation, pos) : bb;
-    };
-    /**
-     * Returns the actor's [[BoundingBox]] relative to the actor's position.
-     */
-    ActorImpl.prototype.getRelativeBounds = function (rotated) {
-        if (rotated === void 0) { rotated = true; }
-        // todo cache bounding box
-        var anchor = this._getCalculatedAnchor();
-        var bb = new BoundingBox(-anchor.x, -anchor.y, this.width - anchor.x, this.height - anchor.y);
-        return rotated ? bb.rotate(this.rotation) : bb;
-    };
-    /**
-     * Returns the actor's unrotated geometry in world coordinates
-     */
-    ActorImpl.prototype.getGeometry = function () {
-        return this.getBounds(false).getPoints();
-    };
-    /**
-     * Return the actor's unrotated geometry relative to the actor's position
-     */
-    ActorImpl.prototype.getRelativeGeometry = function () {
-        return this.getRelativeBounds(false).getPoints();
-    };
-    /**
      * Tests whether the x/y specified are contained in the actor
      * @param x  X coordinate to test (in world coordinates)
      * @param y  Y coordinate to test (in world coordinates)
@@ -1075,89 +801,6 @@ var ActorImpl = /** @class */ (function (_super) {
         return containment;
     };
     /**
-     * Returns the side of the collision based on the intersection
-     * @param intersect The displacement vector returned by a collision
-     * @obsolete Actor.getSideFromIntersect will be removed in v0.24.0, use [[BoundingBox.sideFromIntersection]]
-     */
-    ActorImpl.prototype.getSideFromIntersect = function (intersect) {
-        if (intersect) {
-            if (Math.abs(intersect.x) > Math.abs(intersect.y)) {
-                if (intersect.x < 0) {
-                    return Side.Right;
-                }
-                return Side.Left;
-            }
-            else {
-                if (intersect.y < 0) {
-                    return Side.Bottom;
-                }
-                return Side.Top;
-            }
-        }
-        return Side.None;
-    };
-    /**
-     * Test whether the actor has collided with another actor, returns the side of the current actor that collided.
-     * @param actor The other actor to test
-     * @obsolete Actor.collidesWithSide will be removed in v0.24.0, use [[Actor.bounds.intersectWithSide]]
-     */
-    ActorImpl.prototype.collidesWithSide = function (actor) {
-        var separationVector = this.collides(actor);
-        if (!separationVector) {
-            return Side.None;
-        }
-        if (Math.abs(separationVector.x) > Math.abs(separationVector.y)) {
-            if (this.pos.x < actor.pos.x) {
-                return Side.Right;
-            }
-            else {
-                return Side.Left;
-            }
-        }
-        else {
-            if (this.pos.y < actor.pos.y) {
-                return Side.Bottom;
-            }
-            else {
-                return Side.Top;
-            }
-        }
-    };
-    /**
-     * Test whether the actor has collided with another actor, returns the intersection vector on collision. Returns
-     * `null` when there is no collision;
-     * @param actor The other actor to test
-     * @obsolete Actor.collides will be removed in v0.24.0, use [[Actor.bounds.intersect]] to get bounds intersection,
-     * or [[Actor.body.collider.collide]] to collide with another collider
-     */
-    ActorImpl.prototype.collides = function (actor) {
-        var bounds = this.body.collider.bounds;
-        var otherBounds = actor.body.collider.bounds;
-        var intersect = bounds.intersect(otherBounds);
-        return intersect;
-    };
-    /**
-     * Register a handler to fire when this actor collides with another in a specified group
-     * @param group The group name to listen for
-     * @param func The callback to fire on collision with another actor from the group. The callback is passed the other actor.
-     */
-    ActorImpl.prototype.onCollidesWith = function (group, func) {
-        if (!this._collisionHandlers[group]) {
-            this._collisionHandlers[group] = [];
-        }
-        this._collisionHandlers[group].push(func);
-    };
-    ActorImpl.prototype.getCollisionHandlers = function () {
-        return this._collisionHandlers;
-    };
-    /**
-     * Removes all collision handlers for this group on this actor
-     * @param group Group to remove all handlers for on this actor.
-     */
-    ActorImpl.prototype.removeCollidesWith = function (group) {
-        this._collisionHandlers[group] = [];
-    };
-    /**
      * Returns true if the two actor.body.collider.shape's surfaces are less than or equal to the distance specified from each other
      * @param actor     Actor to test
      * @param distance  Distance in pixels to test
@@ -1166,9 +809,6 @@ var ActorImpl = /** @class */ (function (_super) {
         return this.body.collider.shape.getClosestLineBetween(actor.body.collider.shape).getLength() <= distance;
     };
     // #endregion
-    ActorImpl.prototype._getCalculatedAnchor = function () {
-        return new Vector(this.width * this.anchor.x, this.height * this.anchor.y);
-    };
     ActorImpl.prototype._reapplyEffects = function (drawing) {
         drawing.removeEffect(this._opacityFx);
         drawing.addEffect(this._opacityFx);
@@ -1403,101 +1043,11 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     ActorImpl.maxId = 0;
     __decorate([
-        obsolete({ message: 'Actor.collisionArea will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.shape' })
-    ], ActorImpl.prototype, "collisionArea", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.x will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.x, or ex.Actor.body.pos.x' })
-    ], ActorImpl.prototype, "x", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.y will be removed in v0.24.0', alternateMethod: 'ex.Actor.pos.y, or ex.Actor.body.pos.y' })
-    ], ActorImpl.prototype, "y", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.torque will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.torque' })
-    ], ActorImpl.prototype, "torque", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.mass will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.mass' })
-    ], ActorImpl.prototype, "mass", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.moi will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.inertia' })
-    ], ActorImpl.prototype, "moi", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.friction will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.friction' })
-    ], ActorImpl.prototype, "friction", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.restitution will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.bounciness' })
-    ], ActorImpl.prototype, "restitution", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.sx will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+        obsolete({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);
     __decorate([
-        obsolete({ message: 'ex.Actor.sy will be removed in v0.24.0', alternateMethod: 'Set width and height directly in constructor' })
+        obsolete({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sy", null);
-    __decorate([
-        obsolete({ message: 'ex.Actor.collisionType will be removed in v0.24.0', alternateMethod: 'ex.Actor.body.collider.type' })
-    ], ActorImpl.prototype, "collisionType", null);
-    __decorate([
-        obsolete({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
-    ], ActorImpl.prototype, "addCollisionGroup", null);
-    __decorate([
-        obsolete({ message: 'Legacy collision groups will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.collisionGroup' })
-    ], ActorImpl.prototype, "removeCollisionGroup", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.center' })
-    ], ActorImpl.prototype, "getCenter", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
-    ], ActorImpl.prototype, "getWidth", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.width' })
-    ], ActorImpl.prototype, "setWidth", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
-    ], ActorImpl.prototype, "getHeight", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.height' })
-    ], ActorImpl.prototype, "setHeight", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.left' })
-    ], ActorImpl.prototype, "getLeft", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.right' })
-    ], ActorImpl.prototype, "getRight", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.top' })
-    ], ActorImpl.prototype, "getTop", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.bottom' })
-    ], ActorImpl.prototype, "getBottom", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds' })
-    ], ActorImpl.prototype, "getBounds", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds' })
-    ], ActorImpl.prototype, "getRelativeBounds", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.bounds.getPoints()' })
-    ], ActorImpl.prototype, "getGeometry", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Actor.body.collider.localBounds.getPoints()' })
-    ], ActorImpl.prototype, "getRelativeGeometry", null);
-    __decorate([
-        obsolete({ message: 'Actor.getSideFromIntersect will be removed in v0.24.0', alternateMethod: 'BoundingBox.sideFromIntersection' })
-    ], ActorImpl.prototype, "getSideFromIntersect", null);
-    __decorate([
-        obsolete({ message: 'Actor.collidesWithSide will be removed in v0.24.0', alternateMethod: 'Actor.bounds.intersectWithSide' })
-    ], ActorImpl.prototype, "collidesWithSide", null);
-    __decorate([
-        obsolete({ message: 'Actor.collides will be removed  in v0.24.0', alternateMethod: 'Actor.bounds.intersect or Actor.' })
-    ], ActorImpl.prototype, "collides", null);
-    __decorate([
-        obsolete({ message: 'Actor.onCollidesWIth will be removed  in v0.24.0', alternateMethod: 'Actor.collider.canCollide' })
-    ], ActorImpl.prototype, "onCollidesWith", null);
-    __decorate([
-        obsolete({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
-    ], ActorImpl.prototype, "getCollisionHandlers", null);
-    __decorate([
-        obsolete({ message: 'Actor.getCollisionHandlers will be removed  in v0.24.0' })
-    ], ActorImpl.prototype, "removeCollidesWith", null);
     return ActorImpl;
 }(Class));
 export { ActorImpl };

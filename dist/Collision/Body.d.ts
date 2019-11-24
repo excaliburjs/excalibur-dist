@@ -75,22 +75,22 @@ export declare class Body implements Clonable<Body> {
     rotation: number;
     /**
      * The scale vector of the actor
-     * @obsolete ex.Body.scale will be removed in v0.24.0
+     * @obsolete ex.Body.scale will be removed in v0.25.0
      */
     scale: Vector;
     /**
      * The scale of the actor last frame
-     * @obsolete ex.Body.scale will be removed in v0.24.0
+     * @obsolete ex.Body.scale will be removed in v0.25.0
      */
     oldScale: Vector;
     /**
      * The x scalar velocity of the actor in scale/second
-     * @obsolete ex.Body.scale will be removed in v0.24.0
+     * @obsolete ex.Body.scale will be removed in v0.25.0
      */
     sx: number;
     /**
      * The y scalar velocity of the actor in scale/second
-     * @obsolete ex.Body.scale will be removed in v0.24.0
+     * @obsolete ex.Body.scale will be removed in v0.25.0
      */
     sy: number;
     /**
@@ -123,13 +123,11 @@ export declare class Body implements Clonable<Body> {
     /**
      * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
+     * If no width/height are specified the body will attempt to use the associated actor's width/height.
+     *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    useBoxCollider(width: number, height: number, anchor?: Vector, center?: Vector): Collider;
-    /**
-     * @obsolete Body.useBoxCollision will be removed in v0.24.0 use [[Body.useBoxCollider]]
-     */
-    useBoxCollision(center?: Vector): void;
+    useBoxCollider(width?: number, height?: number, anchor?: Vector, center?: Vector): Collider;
     /**
      * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
      *  to the anchor of the associated actor
@@ -141,19 +139,11 @@ export declare class Body implements Clonable<Body> {
      */
     usePolygonCollider(points: Vector[], center?: Vector): Collider;
     /**
-     * @obsolete Body.usePolygonCollision will be removed in v0.24.0 use [[Body.usePolygonCollider]]
-     */
-    usePolygonCollision(points: Vector[], center?: Vector): void;
-    /**
      * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     useCircleCollider(radius: number, center?: Vector): Collider;
-    /**
-     * @obsolete Body.useCircleCollision will be removed in v0.24.0, use [[Body.useCircleCollider]]
-     */
-    useCircleCollision(radius?: number, center?: Vector): void;
     /**
      * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
      * of this physics body.
@@ -161,9 +151,5 @@ export declare class Body implements Clonable<Body> {
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     useEdgeCollider(begin: Vector, end: Vector): Collider;
-    /**
-     * @obsolete Body.useEdgeCollision will be removed in v0.24.0, use [[Body.useEdgeCollider]]
-     */
-    useEdgeCollision(begin: Vector, end: Vector): void;
     private _wireColliderEventsToActor;
 }

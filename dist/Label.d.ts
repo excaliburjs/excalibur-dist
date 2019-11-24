@@ -103,6 +103,8 @@ export declare enum FontStyle {
  * [[include:Constructors.md]]
  */
 export interface LabelArgs extends Partial<LabelImpl> {
+    x?: number;
+    y?: number;
     text?: string;
     bold?: boolean;
     pos?: Vector;

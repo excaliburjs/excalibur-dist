@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 import { Color } from './Drawing/Color';
 import { Actor } from './Actor';
 import { Configurable } from './Configurable';
+import { Vector } from './Algebra';
 import { CollisionType } from './Collision/CollisionType';
 /**
  * Enum representing the different font size units
@@ -129,7 +130,7 @@ var LabelImpl = /** @class */ (function (_super) {
      * over a css font.
      */
     function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? { x: textOrConfig.x, y: textOrConfig.y } : { x: x, y: y }) || this;
+        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? textOrConfig : { pos: new Vector(x, y) }) || this;
         /**
          * Sets or gets the bold property of the label's text, by default it's false
          */

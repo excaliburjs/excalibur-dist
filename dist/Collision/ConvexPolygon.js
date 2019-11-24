@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { Color } from '../Drawing/Color';
 import { Physics } from '../Physics';
 import { BoundingBox } from './BoundingBox';
@@ -34,12 +21,6 @@ var ConvexPolygon = /** @class */ (function () {
         var winding = !!options.clockwiseWinding;
         this.points = (winding ? options.points.reverse() : options.points) || [];
         this.collider = this.collider = options.collider || null;
-        // @obsolete Remove next release in v0.24.0, code exists for backwards compat
-        if (options.body) {
-            this.collider = options.body.collider;
-            this.body = this.collider.body;
-        }
-        // ==================================
         // calculate initial transformation
         this._calculateTransformation();
     }
@@ -50,8 +31,7 @@ var ConvexPolygon = /** @class */ (function () {
         return new ConvexPolygon({
             offset: this.offset.clone(),
             points: this.points.map(function (p) { return p.clone(); }),
-            collider: null,
-            body: null
+            collider: null
         });
     };
     Object.defineProperty(ConvexPolygon.prototype, "worldPos", {
@@ -397,11 +377,3 @@ var ConvexPolygon = /** @class */ (function () {
     return ConvexPolygon;
 }());
 export { ConvexPolygon };
-var PolygonArea = /** @class */ (function (_super) {
-    __extends(PolygonArea, _super);
-    function PolygonArea() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return PolygonArea;
-}(ConvexPolygon));
-export { PolygonArea };

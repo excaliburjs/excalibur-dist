@@ -1,4 +1,11 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import * as Util from './Util/Util';
+import { obsolete } from './Util/Decorators';
 /**
  * A 2D vector on a plane.
  */
@@ -289,6 +296,9 @@ var Vector = /** @class */ (function () {
     Vector.prototype.toString = function () {
         return "(" + this.x + ", " + this.y + ")";
     };
+    __decorate([
+        obsolete({ message: 'will be removed in favour of `.size` in version 0.25.0' })
+    ], Vector.prototype, "magnitude", null);
     return Vector;
 }());
 export { Vector };

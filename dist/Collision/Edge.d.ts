@@ -18,7 +18,6 @@ export interface EdgeOptions {
      * Optionally the collider associated with this edge
      */
     collider?: Collider;
-    body?: Body;
 }
 /**
  * Edge is a single line collision shape to create collisions with a single line.
@@ -107,14 +106,4 @@ export declare class Edge implements CollisionShape {
     project(axis: Vector): Projection;
     draw(ctx: CanvasRenderingContext2D, color?: Color, pos?: Vector): void;
     debugDraw(ctx: CanvasRenderingContext2D, color?: Color): void;
-}
-/**
- * @obsolete Use [[EdgeOptions]], EdgeAreaOptions will be removed in v0.24.0
- */
-export interface EdgeAreaOptions extends EdgeOptions {
-}
-/**
- * @obsolete Use [[Edge]], EdgeArea will be removed in v0.24.0
- */
-export declare class EdgeArea extends Edge {
 }

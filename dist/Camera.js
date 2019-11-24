@@ -163,7 +163,7 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
             var position = target.center;
             var focus = cam.getFocus();
             var direction = position.sub(focus);
-            var distance = direction.magnitude();
+            var distance = direction.size;
             if (distance >= _this.radius) {
                 var offset = distance - _this.radius;
                 return focus.add(direction.normalize().scale(offset));

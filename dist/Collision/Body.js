@@ -1,13 +1,6 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { Vector } from '../Algebra';
 import { CollisionType } from './CollisionType';
 import { Physics } from '../Physics';
-import { obsolete } from '../Util/Decorators';
 import { PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent } from '../Events';
 import { Shape } from './Shape';
 /**
@@ -64,22 +57,22 @@ var Body = /** @class */ (function () {
         this.rotation = 0; // radians
         /**
          * The scale vector of the actor
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.scale = Vector.One;
         /**
          * The scale of the actor last frame
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.oldScale = Vector.One;
         /**
          * The x scalar velocity of the actor in scale/second
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.sx = 0; //scale/sec
         /**
          * The y scalar velocity of the actor in scale/second
-         * @obsolete ex.Body.scale will be removed in v0.24.0
+         * @obsolete ex.Body.scale will be removed in v0.25.0
          */
         this.sy = 0; //scale/sec
         /**
@@ -209,20 +202,21 @@ var Body = /** @class */ (function () {
     /**
      * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
+     * If no width/height are specified the body will attempt to use the associated actor's width/height.
+     *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
     Body.prototype.useBoxCollider = function (width, height, anchor, center) {
         if (anchor === void 0) { anchor = Vector.Half; }
         if (center === void 0) { center = Vector.Zero; }
+        if (width === null || width === undefined) {
+            width = this.actor ? this.actor.width : 0;
+        }
+        if (height === null || height === undefined) {
+            height = this.actor ? this.actor.height : 0;
+        }
         this.collider.shape = Shape.Box(width, height, anchor, center);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.useBoxCollision will be removed in v0.24.0 use [[Body.useBoxCollider]]
-     */
-    Body.prototype.useBoxCollision = function (center) {
-        if (center === void 0) { center = Vector.Zero; }
-        this.useBoxCollider(this.actor.width, this.actor.height, this.actor.anchor, center);
     };
     /**
      * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
@@ -239,13 +233,6 @@ var Body = /** @class */ (function () {
         return this.collider;
     };
     /**
-     * @obsolete Body.usePolygonCollision will be removed in v0.24.0 use [[Body.usePolygonCollider]]
-     */
-    Body.prototype.usePolygonCollision = function (points, center) {
-        if (center === void 0) { center = Vector.Zero; }
-        this.usePolygonCollider(points, center);
-    };
-    /**
      * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
@@ -256,13 +243,6 @@ var Body = /** @class */ (function () {
         return this.collider;
     };
     /**
-     * @obsolete Body.useCircleCollision will be removed in v0.24.0, use [[Body.useCircleCollider]]
-     */
-    Body.prototype.useCircleCollision = function (radius, center) {
-        if (center === void 0) { center = Vector.Zero; }
-        this.useCircleCollider(radius, center);
-    };
-    /**
      * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
      * of this physics body.
      *
@@ -271,12 +251,6 @@ var Body = /** @class */ (function () {
     Body.prototype.useEdgeCollider = function (begin, end) {
         this.collider.shape = Shape.Edge(begin, end);
         return this.collider;
-    };
-    /**
-     * @obsolete Body.useEdgeCollision will be removed in v0.24.0, use [[Body.useEdgeCollider]]
-     */
-    Body.prototype.useEdgeCollision = function (begin, end) {
-        this.useEdgeCollider(begin, end);
     };
     // TODO remove this, eventually events will stay local to the thing they are around
     Body.prototype._wireColliderEventsToActor = function () {
@@ -303,18 +277,6 @@ var Body = /** @class */ (function () {
             }
         });
     };
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useBoxCollider' })
-    ], Body.prototype, "useBoxCollision", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.usePolygonCollider' })
-    ], Body.prototype, "usePolygonCollision", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useCircleCollider' })
-    ], Body.prototype, "useCircleCollision", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in v0.24.0', alternateMethod: 'Body.useEdgeCollider' })
-    ], Body.prototype, "useEdgeCollision", null);
     return Body;
 }());
 export { Body };

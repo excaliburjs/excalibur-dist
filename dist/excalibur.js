@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5044+9b84a25 - 2019-11-24
+ * excalibur - 0.23.0-alpha.5087+d51da27 - 2019-11-24
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5171,6 +5171,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // initialize default options
         _this._initDefaults();
         var shouldInitializeBody = true;
+        var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             if (config.pos) {
@@ -5190,6 +5191,9 @@ var ActorImpl = /** @class */ (function (_super) {
             if (config.anchor) {
                 _this.anchor = config.anchor;
             }
+            if (config.collisionType) {
+                collisionType = config.collisionType;
+            }
         }
         // Body and collider bounds are still determined by actor width/height
         _this._width = width || 0;
@@ -5203,10 +5207,8 @@ var ActorImpl = /** @class */ (function (_super) {
                 })
             });
         }
-        if (xOrConfig && typeof xOrConfig === 'object' && xOrConfig.collisionType) {
-            if (_this.body && _this.body.collider) {
-                _this.body.collider.type = xOrConfig.collisionType;
-            }
+        if (_this.body && _this.body.collider) {
+            _this.body.collider.type = collisionType;
         }
         // Position uses body to store values must be initialized after body
         _this.pos.x = xOrConfig || 0;
@@ -25159,7 +25161,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5044+9b84a25";
+var EX_VERSION = "0.23.0-alpha.5087+d51da27";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

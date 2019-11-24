@@ -170,6 +170,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // initialize default options
         _this._initDefaults();
         var shouldInitializeBody = true;
+        var collisionType = CollisionType.Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             if (config.pos) {
@@ -189,6 +190,9 @@ var ActorImpl = /** @class */ (function (_super) {
             if (config.anchor) {
                 _this.anchor = config.anchor;
             }
+            if (config.collisionType) {
+                collisionType = config.collisionType;
+            }
         }
         // Body and collider bounds are still determined by actor width/height
         _this._width = width || 0;
@@ -202,10 +206,8 @@ var ActorImpl = /** @class */ (function (_super) {
                 })
             });
         }
-        if (xOrConfig && typeof xOrConfig === 'object' && xOrConfig.collisionType) {
-            if (_this.body && _this.body.collider) {
-                _this.body.collider.type = xOrConfig.collisionType;
-            }
+        if (_this.body && _this.body.collider) {
+            _this.body.collider.type = collisionType;
         }
         // Position uses body to store values must be initialized after body
         _this.pos.x = xOrConfig || 0;

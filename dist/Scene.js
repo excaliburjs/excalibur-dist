@@ -277,6 +277,7 @@ var Scene = /** @class */ (function (_super) {
             this.triggers[i].update(engine, delta);
         }
         this._collectActorStats(engine);
+        engine.input.pointers.dispatchPointerEvents();
         // Run the broadphase and narrowphase
         if (this._broadphase && Physics.enabled) {
             var beforeBroadphase = Date.now();

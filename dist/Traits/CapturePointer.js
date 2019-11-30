@@ -11,7 +11,7 @@ var CapturePointer = /** @class */ (function () {
         if (actor.isKilled()) {
             return;
         }
-        engine.input.pointers.updateActorsUnderPointer(actor);
+        engine.input.pointers.checkAndUpdateActorUnderPointer(actor);
     };
     return CapturePointer;
 }());

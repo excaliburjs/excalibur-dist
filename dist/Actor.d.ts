@@ -1,7 +1,7 @@
 import { Class } from './Class';
 import { Texture } from './Resources/Texture';
 import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent, EnterViewPortEvent, ExitViewPortEvent } from './Events';
-import { PointerEvent, WheelEvent, PointerDragEvent } from './Input/Pointer';
+import { PointerEvent, WheelEvent, PointerDragEvent } from './Input/PointerEvents';
 import { Engine } from './Engine';
 import { Color } from './Drawing/Color';
 import { Sprite } from './Drawing/Sprite';
@@ -18,7 +18,7 @@ import { Eventable } from './Interfaces/Evented';
 import { Actionable } from './Actions/Actionable';
 import * as Traits from './Traits/Index';
 import * as Events from './Events';
-import { PointerEvents } from './Interfaces/PointerEvents';
+import { PointerEvents } from './Interfaces/PointerEventHandlers';
 import { CollisionType } from './Collision/CollisionType';
 export declare function isActor(x: any): x is Actor;
 /**

@@ -134,7 +134,8 @@ export declare class GameEvent<T, U = T> {
      */
     other: U | null;
     /**
-     * determines, if event bubbles to the target's ancestors
+     * If set to false, prevents event from propagating to other actors. If true it will be propagated
+     * to all actors that apply.
      */
     bubbles: boolean;
     /**

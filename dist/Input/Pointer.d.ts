@@ -1,9 +1,6 @@
-import { Engine } from './../Engine';
-import { GameEvent } from '../Events';
 import { Actor } from '../Actor';
-import { Vector, GlobalCoordinates } from '../Algebra';
+import { Vector } from '../Algebra';
 import { Class } from '../Class';
-import * as Events from '../Events';
 export interface ActorsUnderPointer {
     [ActorId: number]: Actor;
     length: number;
@@ -16,31 +13,6 @@ export declare enum PointerType {
     Mouse = "Mouse",
     Pen = "Pen",
     Unknown = "Unknown"
-}
-/**
- * Native browser button enumeration
- */
-export declare enum NativePointerButton {
-    NoButton = -1,
-    Left = 0,
-    Middle = 1,
-    Right = 2,
-    Unknown = 3
-}
-/**
- * The mouse button being pressed.
- */
-export declare enum PointerButton {
-    Left = "Left",
-    Middle = "Middle",
-    Right = "Right",
-    Unknown = "Unknown",
-    NoButton = "NoButton"
-}
-export declare enum WheelDeltaMode {
-    Pixel = "Pixel",
-    Line = "Line",
-    Page = "Page"
 }
 /**
  * Determines the scope of handling mouse/touch events. See [[Pointers]] for more information.
@@ -57,197 +29,17 @@ export declare enum PointerScope {
     Document = "Document"
 }
 /**
- * Type that indicates Excalibur's valid synthetic pointer events
- */
-export declare type PointerEventName = 'pointerdragstart' | 'pointerdragend' | 'pointerdragmove' | 'pointerdragenter' | 'pointerdragleave' | 'pointermove' | 'pointerenter' | 'pointerleave' | 'pointerup' | 'pointerdown';
-/**
- * Pointer events
- *
- * Represents a mouse, touch, or stylus event. See [[Pointers]] for more information on
- * handling pointer input.
- *
- * For mouse-based events, you can inspect [[PointerEvent.button]] to see what button was pressed.
- */
-export declare class PointerEvent extends GameEvent<Actor> {
-    protected coordinates: GlobalCoordinates;
-    pointer: Pointer;
-    index: number;
-    pointerType: PointerType;
-    button: PointerButton;
-    ev: any;
-    protected _name: string;
-    /** The world coordinates of the event. */
-    readonly worldPos: Vector;
-    /** The page coordinates of the event. */
-    readonly pagePos: Vector;
-    /** The screen coordinates of the event. */
-    readonly screenPos: Vector;
-    /**
-     * @param coordinates         The [[GlobalCoordinates]] of the event
-     * @param pointer             The [[Pointer]] of the event
-     * @param index               The index of the pointer (zero-based)
-     * @param pointerType         The type of pointer
-     * @param button              The button pressed (if [[PointerType.Mouse]])
-     * @param ev                  The raw DOM event being handled
-     * @param pos                 (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
-     */
-    constructor(coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any);
-    readonly pos: Vector;
-    /**
-     * Action, that calls when event happens
-     */
-    doAction(actor: Actor): void;
-    protected _onActionStart(_actor?: Actor): void;
-    protected _onActionEnd(_actor?: Actor): void;
-    /**
-     * Propagate event further through event path
-     */
-    propagate(actor: Actor): void;
-}
-export declare class PointerEventFactory<T extends PointerEvent> {
-    protected _pointerEventType: new (coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any) => T;
-    constructor(_pointerEventType: new (coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any) => T);
-    /**
-     * Create specific PointerEvent
-     */
-    create(coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any): T;
-}
-export declare class PointerDragEvent extends PointerEvent {
-}
-export declare class PointerUpEvent extends PointerEvent {
-    protected _name: string;
-    protected _onActionEnd(actor: Actor): void;
-}
-export declare class PointerDownEvent extends PointerEvent {
-    protected _name: string;
-    protected _onActionEnd(actor: Actor): void;
-}
-export declare class PointerMoveEvent extends PointerEvent {
-    protected _name: string;
-    propagate(actor: Actor): void;
-    protected _onActionStart(actor: Actor): void;
-    private _onActorEnter;
-    private _onActorLeave;
-}
-export declare class PointerEnterEvent extends PointerEvent {
-    protected _name: string;
-    protected _onActionStart(actor: Actor): void;
-    protected _onActionEnd(actor: Actor): void;
-}
-export declare class PointerLeaveEvent extends PointerEvent {
-    protected _name: string;
-    protected _onActionStart(actor: Actor): void;
-    protected _onActionEnd(actor: Actor): void;
-}
-export declare class PointerCancelEvent extends PointerEvent {
-    protected _name: string;
-}
-/**
- * Wheel Events
- *
- * Represents a mouse wheel event. See [[Pointers]] for more information on
- * handling point input.
- */
-export declare class WheelEvent extends GameEvent<Actor> {
-    x: number;
-    y: number;
-    pageX: number;
-    pageY: number;
-    screenX: number;
-    screenY: number;
-    index: number;
-    deltaX: number;
-    deltaY: number;
-    deltaZ: number;
-    deltaMode: WheelDeltaMode;
-    ev: any;
-    /**
-     * @param x            The `x` coordinate of the event (in world coordinates)
-     * @param y            The `y` coordinate of the event (in world coordinates)
-     * @param pageX        The `x` coordinate of the event (in document coordinates)
-     * @param pageY        The `y` coordinate of the event (in document coordinates)
-     * @param screenX      The `x` coordinate of the event (in screen coordinates)
-     * @param screenY      The `y` coordinate of the event (in screen coordinates)
-     * @param index        The index of the pointer (zero-based)
-     * @param deltaX       The type of pointer
-     * @param deltaY       The type of pointer
-     * @param deltaZ       The type of pointer
-     * @param deltaMode    The type of movement [[WheelDeltaMode]]
-     * @param ev           The raw DOM event being handled
-     */
-    constructor(x: number, y: number, pageX: number, pageY: number, screenX: number, screenY: number, index: number, deltaX: number, deltaY: number, deltaZ: number, deltaMode: WheelDeltaMode, ev: any);
-}
-/**
- * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
- * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
- *
- * [[include:Pointers.md]]
- */
-export declare class Pointers extends Class {
-    private _engine;
-    private _pointerDown;
-    private _pointerUp;
-    private _pointerMove;
-    private _pointerCancel;
-    private _wheel;
-    private _pointers;
-    private _activePointers;
-    constructor(engine: Engine);
-    on(eventName: Events.up, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.down, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.move, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.enter, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.leave, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.cancel, handler: (event: PointerEvent) => void): void;
-    on(eventName: Events.wheel, handler: (event: WheelEvent) => void): void;
-    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
-    /**
-     * Primary pointer (mouse, 1 finger, stylus, etc.)
-     */
-    primary: Pointer;
-    /**
-     * Initializes pointer event listeners
-     */
-    init(target?: GlobalEventHandlers): void;
-    /**
-     * Synthesize a pointer event that looks like a real browser event to excalibur
-     * @param eventName
-     * @param pos
-     */
-    triggerEvent(eventName: 'up' | 'down' | 'move' | 'cancel' | 'wheel', pos: Vector | GlobalCoordinates, button?: NativePointerButton, pointerType?: 'mouse' | 'touch' | 'pen', pointerId?: number): void;
-    update(): void;
-    /**
-     * Safely gets a Pointer at a specific index and initializes one if it doesn't yet exist
-     * @param index  The pointer index to retrieve
-     */
-    at(index: number): Pointer;
-    /**
-     * Get number of pointers being watched
-     */
-    count(): number;
-    updateActorsUnderPointer(actor: Actor): void;
-    private _propagateWheelEvent;
-    private _propagateWheelPointerEvent;
-    private _handleMouseEvent;
-    private _handleTouchEvent;
-    private _handlePointerEvent;
-    private _handleWheelEvent;
-    /**
-     * Gets the index of the pointer specified for the given pointer ID or finds the next empty pointer slot available.
-     * This is required because IE10/11 uses incrementing pointer IDs so we need to store a mapping of ID => idx
-     */
-    private _getPointerIndex;
-    private _nativeButtonToPointerButton;
-    private _stringToPointerType;
-}
-/**
  * Captures and dispatches PointerEvents
  */
 export declare class Pointer extends Class {
+    private static _MAX_ID;
+    readonly id: number;
     private _isDown;
     private _wasDown;
     private _actorsUnderPointer;
-    private _actorsUnderPointerLastFrame;
+    private _actors;
+    private _actorsLastFrame;
+    private _actorsNoLongerUnderPointer;
     /**
      * Whether the Pointer is currently dragging.
      */
@@ -281,6 +73,9 @@ export declare class Pointer extends Class {
      */
     dragTarget: Actor;
     constructor();
+    /**
+     * Update the state of current pointer, meant to be called a the end of frame
+     */
     update(): void;
     /**
      * Adds an Actor to actorsUnderPointer object.
@@ -293,22 +88,32 @@ export declare class Pointer extends Class {
      */
     removeActorUnderPointer(actor: Actor): void;
     /**
-     * Returns an Actor from actorsUnderPointer object.
-     * @param actor An Actor to be ;
+     * Returns all actors under this pointer this frame
      */
     getActorsUnderPointer(): Actor[];
+    /**
+     * Returns all actors that are no longer under the pointer this frame
+     */
+    getActorsUnderPointerLastFrame(): Actor[];
+    /**
+     * Returns all actors relevant for events to pointer this frame
+     */
+    getActorsForEvents(): Actor[];
     /**
      * Checks if Pointer has a specific Actor under.
      * @param actor An Actor for check;
      */
-    isActorUnderPointer(actor: Actor): boolean;
-    wasActorUnderPointerLastFrame(actor: Actor): boolean;
+    checkActorUnderPointer(actor: Actor): boolean;
+    /**
+     * Checks if an actor was under the pointer last frame
+     * @param actor
+     */
+    wasActorUnderPointer(actor: Actor): boolean;
     /**
      * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
-    hasActorUnderPointerInList(actor: Actor): boolean;
-    captureOldActorUnderPointer(): void;
+    isActorUnderPointer(actor: Actor): boolean;
     private _onPointerMove;
     private _onPointerDown;
     private _onPointerUp;

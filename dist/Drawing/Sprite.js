@@ -181,7 +181,7 @@ var SpriteImpl = /** @class */ (function () {
         this.addEffect(new Effects.Desaturate(factor));
     };
     /**
-     * Adds a new [[ISpriteEffect]] to this drawing.
+     * Adds a new [[SpriteEffect]] to this drawing.
      * @param effect  Effect to add to the this drawing
      */
     SpriteImpl.prototype.addEffect = function (effect) {

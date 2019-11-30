@@ -930,7 +930,7 @@ O|===|* >________________>\n\
     /**
      * Starts the internal game loop for Excalibur after loading
      * any provided assets.
-     * @param loader  Optional [[ILoader]] to use to load resources. The default loader is [[Loader]], override to provide your own
+     * @param loader  Optional [[Loader]] to use to load resources. The default loader is [[Loader]], override to provide your own
      * custom loader.
      */
     Engine.prototype.start = function (loader) {
@@ -1039,7 +1039,7 @@ O|===|* >________________>\n\
      * Another option available to you to load resources into the game.
      * Immediately after calling this the game will pause and the loading screen
      * will appear.
-     * @param loader  Some [[ILoadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
+     * @param loader  Some [[Loadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
      */
     Engine.prototype.load = function (loader) {
         var _this = this;

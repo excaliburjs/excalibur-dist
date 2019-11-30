@@ -25,7 +25,7 @@ var Shape = /** @class */ (function () {
         });
     };
     /**
-     * Creates a new [[arbitrary polygon|ConvexPolygon]] collision shape
+     * Creates a new [[ConvexPolygon|arbitrary polygon]] collision shape
      * @param points Points specified in counter clockwise
      * @param clockwiseWinding Optionally changed the winding of points, by default false meaning counter-clockwise winding.
      * @param offset Optional offset relative to the collider in local coordinates
@@ -52,7 +52,7 @@ var Shape = /** @class */ (function () {
         });
     };
     /**
-     * Creates a new [[edge|Edge]] collision shape
+     * Creates a new [[Edge|edge]] collision shape
      * @param begin Beginning of the edge in local coordinates to the collider
      * @param end Ending of the edge in local coordinates to the collider
      */

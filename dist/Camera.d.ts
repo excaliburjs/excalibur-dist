@@ -252,12 +252,12 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     readonly viewport: BoundingBox;
     /**
      * Adds a new camera strategy to this camera
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     addStrategy<T>(cameraStrategy: CameraStrategy<T>): void;
     /**
      * Removes a camera strategy by reference
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     removeStrategy<T>(cameraStrategy: CameraStrategy<T>): void;
     /**

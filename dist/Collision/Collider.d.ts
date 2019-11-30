@@ -15,7 +15,8 @@ import { Clonable } from '../Interfaces/Clonable';
 export declare function isCollider(x: Actor | Collider): x is Collider;
 export interface ColliderOptions {
     /**
-     * Optional [[shape|Shape]] to use with this collider, the shape defines the collidable region along with the [[bounding box|BoundingBox]]
+     * Optional [[CollisionShape|Shape]] to use with this collider, the shape defines the collidable
+     * region along with the [[BoundingBox|bounding box]]
      */
     shape?: CollisionShape;
     /**
@@ -31,7 +32,7 @@ export interface ColliderOptions {
      */
     group?: CollisionGroup;
     /**
-     * Optional [[collision type|CollisionType]], if not specified the default is [[CollisionType.PreventCollision]]
+     * Optional [[CollisionType|collision type]], if not specified the default is [[CollisionType.PreventCollision]]
      */
     type?: CollisionType;
     /**

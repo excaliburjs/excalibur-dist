@@ -5,7 +5,7 @@ import { AudioInstance } from './AudioInstance';
 import { Promise } from '../../Promises';
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
- * components, from soundtracks to sound effects. [[Sound]] is an [[ILoadable]]
+ * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  *
  * [[include:Sounds.md]]

@@ -80,12 +80,12 @@ export declare class SpriteImpl implements Drawable {
      */
     desaturate(factor?: number): void;
     /**
-     * Adds a new [[ISpriteEffect]] to this drawing.
+     * Adds a new [[SpriteEffect]] to this drawing.
      * @param effect  Effect to add to the this drawing
      */
     addEffect(effect: Effects.SpriteEffect): void;
     /**
-     * Removes a [[ISpriteEffect]] from this sprite.
+     * Removes a [[SpriteEffect]] from this sprite.
      * @param effect  Effect to remove from this sprite
      */
     removeEffect(effect: Effects.SpriteEffect): void;

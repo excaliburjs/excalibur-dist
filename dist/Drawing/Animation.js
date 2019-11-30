@@ -145,7 +145,7 @@ var AnimationImpl = /** @class */ (function () {
         this.addEffect(new Effects.Desaturate(factor));
     };
     /**
-     * Add a [[ISpriteEffect]] manually
+     * Add a [[SpriteEffect]] manually
      */
     AnimationImpl.prototype.addEffect = function (effect) {
         for (var i in this.sprites) {

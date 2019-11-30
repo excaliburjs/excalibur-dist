@@ -95,11 +95,11 @@ export declare class AnimationImpl implements Drawable {
      */
     desaturate(factor?: number): void;
     /**
-     * Add a [[ISpriteEffect]] manually
+     * Add a [[SpriteEffect]] manually
      */
     addEffect(effect: Effects.SpriteEffect): void;
     /**
-     * Removes an [[ISpriteEffect]] from this animation.
+     * Removes an [[SpriteEffect]] from this animation.
      * @param effect Effect to remove from this animation
      */
     removeEffect(effect: Effects.SpriteEffect): void;

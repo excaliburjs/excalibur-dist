@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5195+dd54e82 - 2019-11-30
+ * excalibur - 0.23.0-alpha.5238+f726244 - 2019-11-30
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4601,7 +4601,7 @@ __webpack_require__.r(__webpack_exports__);
  * The fluent Action API allows you to perform "actions" on
  * [[Actor|Actors]] such as following, moving, rotating, and
  * more. You can implement your own actions by implementing
- * the [[IAction]] interface.
+ * the [[Action]] interface.
  *
  * [[include:Actions.md]]
  */
@@ -5470,7 +5470,7 @@ var ActorImpl = /** @class */ (function (_super) {
     Object.defineProperty(ActorImpl.prototype, "color", {
         /**
          * Sets the color of the actor. A rectangle of this color will be
-         * drawn if no [[IDrawable]] is specified as the actors drawing.
+         * drawn if no [[Drawable]] is specified as the actors drawing.
          *
          * The default is `null` which prevents a rectangle from being drawn.
          */
@@ -7140,14 +7140,14 @@ var Camera = /** @class */ (function (_super) {
     });
     /**
      * Adds a new camera strategy to this camera
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     Camera.prototype.addStrategy = function (cameraStrategy) {
         this._cameraStrategies.push(cameraStrategy);
     };
     /**
      * Removes a camera strategy by reference
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     Camera.prototype.removeStrategy = function (cameraStrategy) {
         Object(_Util_Util__WEBPACK_IMPORTED_MODULE_3__["removeItemFromArray"])(cameraStrategy, this._cameraStrategies);
@@ -11120,7 +11120,7 @@ var Shape = /** @class */ (function () {
         });
     };
     /**
-     * Creates a new [[arbitrary polygon|ConvexPolygon]] collision shape
+     * Creates a new [[ConvexPolygon|arbitrary polygon]] collision shape
      * @param points Points specified in counter clockwise
      * @param clockwiseWinding Optionally changed the winding of points, by default false meaning counter-clockwise winding.
      * @param offset Optional offset relative to the collider in local coordinates
@@ -11147,7 +11147,7 @@ var Shape = /** @class */ (function () {
         });
     };
     /**
-     * Creates a new [[edge|Edge]] collision shape
+     * Creates a new [[Edge|edge]] collision shape
      * @param begin Beginning of the edge in local coordinates to the collider
      * @param end Ending of the edge in local coordinates to the collider
      */
@@ -11274,12 +11274,12 @@ var Debug = /** @class */ (function () {
         this.stats = {
             /**
              * Current frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
-             * Best accessed on [[postframe]] event. See [[IFrameStats]]
+             * Best accessed on [[postframe]] event. See [[FrameStats]]
              */
             currFrame: new FrameStats(),
             /**
              * Previous frame statistics. Engine reuses this instance, use [[FrameStats.clone]] to copy frame stats.
-             * Best accessed on [[preframe]] event. Best inspected on engine event `preframe`. See [[IFrameStats]]
+             * Best accessed on [[preframe]] event. Best inspected on engine event `preframe`. See [[FrameStats]]
              */
             prevFrame: new FrameStats()
         };
@@ -11710,7 +11710,7 @@ var AnimationImpl = /** @class */ (function () {
         this.addEffect(new _SpriteEffects__WEBPACK_IMPORTED_MODULE_0__["Desaturate"](factor));
     };
     /**
-     * Add a [[ISpriteEffect]] manually
+     * Add a [[SpriteEffect]] manually
      */
     AnimationImpl.prototype.addEffect = function (effect) {
         for (var i in this.sprites) {
@@ -12725,7 +12725,7 @@ var SpriteImpl = /** @class */ (function () {
         this.addEffect(new _SpriteEffects__WEBPACK_IMPORTED_MODULE_0__["Desaturate"](factor));
     };
     /**
-     * Adds a new [[ISpriteEffect]] to this drawing.
+     * Adds a new [[SpriteEffect]] to this drawing.
      * @param effect  Effect to add to the this drawing
      */
     SpriteImpl.prototype.addEffect = function (effect) {
@@ -14455,7 +14455,7 @@ O|===|* >________________>\n\
     /**
      * Starts the internal game loop for Excalibur after loading
      * any provided assets.
-     * @param loader  Optional [[ILoader]] to use to load resources. The default loader is [[Loader]], override to provide your own
+     * @param loader  Optional [[Loader]] to use to load resources. The default loader is [[Loader]], override to provide your own
      * custom loader.
      */
     Engine.prototype.start = function (loader) {
@@ -14564,7 +14564,7 @@ O|===|* >________________>\n\
      * Another option available to you to load resources into the game.
      * Immediately after calling this the game will pause and the loading screen
      * will appear.
-     * @param loader  Some [[ILoadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
+     * @param loader  Some [[Loadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
      */
     Engine.prototype.load = function (loader) {
         var _this = this;
@@ -17828,7 +17828,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * one time. The loader must be passed to the engine in order to
  * trigger the loading progress bar.
  *
- * The [[Loader]] itself implements [[ILoadable]] so you can load loaders.
+ * The [[Loader]] itself implements [[Loadable]] so you can load loaders.
  *
  * ## Example: Pre-loading resources for a game
  *
@@ -20065,7 +20065,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
- * [[Texture]] is an [[ILoadable]] which means it can be passed to a [[Loader]]
+ * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  *
  * [[include:Textures.md]]
@@ -21159,7 +21159,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
- * components, from soundtracks to sound effects. [[Sound]] is an [[ILoadable]]
+ * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  *
  * [[include:Sounds.md]]
@@ -21184,10 +21184,10 @@ var Sound = /** @class */ (function (_super) {
         _this._audioContext = _AudioContext__WEBPACK_IMPORTED_MODULE_3__["AudioContextFactory"].create();
         _this._detectResponseType();
         /* Chrome : MP3, WAV, Ogg
-             * Firefox : WAV, Ogg,
-             * IE : MP3, WAV coming soon
-             * Safari MP3, WAV, Ogg
-             */
+         * Firefox : WAV, Ogg,
+         * IE : MP3, WAV coming soon
+         * Safari MP3, WAV, Ogg
+         */
         for (var _a = 0, paths_1 = paths; _a < paths_1.length; _a++) {
             var path = paths_1[_a];
             if (Object(_Util_Sound__WEBPACK_IMPORTED_MODULE_6__["canPlayFile"])(path)) {
@@ -21466,7 +21466,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
- * [[Texture]] is an [[ILoadable]] which means it can be passed to a [[Loader]]
+ * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  *
  * [[include:Textures.md]]
@@ -23989,7 +23989,7 @@ var LogLevel;
 /**
  * Static singleton that represents the logging facility for Excalibur.
  * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
- * Derive from [[IAppender]] to create your own logging appenders.
+ * Derive from [[Appender]] to create your own logging appenders.
  *
  * [[include:Logger.md]]
  */
@@ -24019,7 +24019,7 @@ var Logger = /** @class */ (function () {
         return Logger._instance;
     };
     /**
-     * Adds a new [[IAppender]] to the list of appenders to write to
+     * Adds a new [[Appender]] to the list of appenders to write to
      */
     Logger.prototype.addAppender = function (appender) {
         this._appenders.push(appender);
@@ -25305,7 +25305,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5195+dd54e82";
+var EX_VERSION = "0.23.0-alpha.5238+f726244";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

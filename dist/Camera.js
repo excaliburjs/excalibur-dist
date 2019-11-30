@@ -442,14 +442,14 @@ var Camera = /** @class */ (function (_super) {
     });
     /**
      * Adds a new camera strategy to this camera
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     Camera.prototype.addStrategy = function (cameraStrategy) {
         this._cameraStrategies.push(cameraStrategy);
     };
     /**
      * Removes a camera strategy by reference
-     * @param cameraStrategy Instance of an [[ICameraStrategy]]
+     * @param cameraStrategy Instance of an [[CameraStrategy]]
      */
     Camera.prototype.removeStrategy = function (cameraStrategy) {
         removeItemFromArray(cameraStrategy, this._cameraStrategies);

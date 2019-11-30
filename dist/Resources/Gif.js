@@ -18,7 +18,7 @@ import { Color } from '../Drawing/Color';
 import { SpriteSheet } from '../Drawing/SpriteSheet';
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
- * [[Texture]] is an [[ILoadable]] which means it can be passed to a [[Loader]]
+ * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  *
  * [[include:Textures.md]]

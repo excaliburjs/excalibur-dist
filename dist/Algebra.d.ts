@@ -281,3 +281,11 @@ export declare class GlobalCoordinates {
     static fromPagePosition(pos: Vector, engine: Engine): GlobalCoordinates;
     constructor(worldPos: Vector, pagePos: Vector, screenPos: Vector);
 }
+/**
+ * Shorthand for creating new Vectors - returns a new Vector instance with the
+ * provided X and Y components.
+ *
+ * @param x  X component of the Vector
+ * @param y  Y component of the Vector
+ */
+export declare function vec(x: number, y: number): Vector;

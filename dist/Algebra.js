@@ -573,3 +573,13 @@ var GlobalCoordinates = /** @class */ (function () {
     return GlobalCoordinates;
 }());
 export { GlobalCoordinates };
+/**
+ * Shorthand for creating new Vectors - returns a new Vector instance with the
+ * provided X and Y components.
+ *
+ * @param x  X component of the Vector
+ * @param y  Y component of the Vector
+ */
+export function vec(x, y) {
+    return new Vector(x, y);
+}

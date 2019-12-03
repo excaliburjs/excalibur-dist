@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5417+ef068f3 - 2019-12-3
+ * excalibur - 0.23.0-alpha.5418+3739643 - 2019-12-3
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -11681,9 +11681,9 @@ var AnimationImpl = /** @class */ (function () {
          */
         this.currentFrame = 0;
         this._oldTime = Date.now();
-        this.anchor = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](0.0, 0.0);
+        this.anchor = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].Zero;
         this.rotation = 0.0;
-        this.scale = new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](1, 1);
+        this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"].One;
         /**
          * Indicates whether the animation should loop after it is completed
          */
@@ -11864,19 +11864,25 @@ var AnimationImpl = /** @class */ (function () {
     AnimationImpl.prototype.skip = function (frames) {
         this.currentFrame = (this.currentFrame + frames) % this.sprites.length;
     };
-    AnimationImpl.prototype.draw = function (ctx, x, y) {
+    AnimationImpl.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y, flipHorizontal: this.flipHorizontal, flipVertical: this.flipVertical });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    AnimationImpl.prototype._drawWithOptions = function (options) {
         this.tick();
         this._updateValues();
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            currSprite.flipVertical = this.flipVertical;
-            currSprite.flipHorizontal = this.flipHorizontal;
-            currSprite.draw(ctx, x, y);
+            currSprite.draw(options);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
             currSprite = this.sprites[_Util_Util__WEBPACK_IMPORTED_MODULE_3__["clamp"](this.freezeFrame, 0, this.sprites.length - 1)];
-            currSprite.draw(ctx, x, y);
+            currSprite.draw(options);
         }
         // add the calculated width
         if (currSprite) {
@@ -12499,6 +12505,19 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return Polygon; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
 
 /**
  * Creates a closed polygon drawing given a list of [[Vector]]s.
@@ -12519,9 +12538,11 @@ var Polygon = /** @class */ (function () {
          */
         this.filled = false;
         this._points = [];
-        this.anchor = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
+        this.anchor = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero;
+        this.offset = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero;
         this.rotation = 0;
-        this.scale = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](1, 1);
+        this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
+        this.opacity = 1;
         this._points = points;
         var minX = this._points.reduce(function (prev, curr) {
             return Math.min(prev, curr.x);
@@ -12561,11 +12582,22 @@ var Polygon = /** @class */ (function () {
     Polygon.prototype.reset = function () {
         //pass
     };
-    Polygon.prototype.draw = function (ctx, x, y) {
+    Polygon.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    Polygon.prototype._drawWithOptions = function (options) {
+        var _a = __assign(__assign({}, options), { rotation: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.rotation, this.rotation), drawWidth: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.drawWidth, this.drawWidth), drawHeight: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.drawHeight, this.drawHeight), flipHorizontal: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.flipHorizontal, this.flipHorizontal), flipVertical: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.flipVertical, this.flipVertical), anchor: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.anchor, this.anchor), offset: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.offset, this.offset), opacity: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.opacity, this.opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
+        var xpoint = drawWidth * anchor.x + offset.x + x;
+        var ypoint = drawHeight * anchor.y + offset.y + y;
         ctx.save();
-        ctx.translate(x + this.anchor.x, y + this.anchor.y);
+        ctx.translate(xpoint, ypoint);
         ctx.scale(this.scale.x, this.scale.y);
-        ctx.rotate(this.rotation);
+        ctx.rotate(rotation);
         ctx.beginPath();
         ctx.lineWidth = this.lineWidth;
         // Iterate through the supplied points and construct a 'polygon'
@@ -12583,15 +12615,18 @@ var Polygon = /** @class */ (function () {
             ctx.fill();
         }
         ctx.strokeStyle = this.lineColor.toString();
-        if (this.flipHorizontal) {
-            ctx.translate(this.drawWidth, 0);
+        if (flipHorizontal) {
+            ctx.translate(drawWidth, 0);
             ctx.scale(-1, 1);
         }
-        if (this.flipVertical) {
-            ctx.translate(0, this.drawHeight);
+        if (flipVertical) {
+            ctx.translate(0, drawHeight);
             ctx.scale(1, -1);
         }
+        var oldAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(opacity, 1);
         ctx.stroke();
+        ctx.globalAlpha = oldAlpha;
         ctx.restore();
     };
     return Polygon;
@@ -12632,6 +12667,17 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
 
 
@@ -12656,7 +12702,8 @@ var SpriteImpl = /** @class */ (function () {
         this.y = 0;
         this.rotation = 0.0;
         this.anchor = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](0.0, 0.0);
-        this.scale = new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](1, 1);
+        this.offset = _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero;
+        this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].One;
         this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_4__["Logger"].getInstance();
         /**
          * Draws the sprite flipped vertically
@@ -12674,6 +12721,7 @@ var SpriteImpl = /** @class */ (function () {
         this._pixelData = null;
         this._pixelsLoaded = false;
         this._dirtyEffect = false;
+        this._opacity = 1;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_2__["Texture"])) {
             x = imageOrConfig.x | 0;
@@ -12746,7 +12794,8 @@ var SpriteImpl = /** @class */ (function () {
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
      */
     SpriteImpl.prototype.opacity = function (value) {
-        this.addEffect(new _SpriteEffects__WEBPACK_IMPORTED_MODULE_0__["Opacity"](value));
+        this._opacity = value;
+        // this.addEffect(new Effects.Opacity(value));
     };
     /**
      * Applies the [[Grayscale]] effect to a sprite, removing color information.
@@ -12879,32 +12928,41 @@ var SpriteImpl = /** @class */ (function () {
         ctx.strokeRect(-xpoint, -ypoint, this.drawWidth, this.drawHeight);
         ctx.restore();
     };
-    /**
-     * Draws the sprite appropriately to the 2D rendering context, at an x and y coordinate.
-     * @param ctx  The 2D rendering context
-     * @param x    The x coordinate of where to draw
-     * @param y    The y coordinate of where to draw
-     */
-    SpriteImpl.prototype.draw = function (ctx, x, y) {
+    SpriteImpl.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    SpriteImpl.prototype._drawWithOptions = function (options) {
+        var _a = __assign(__assign({}, options), { rotation: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.rotation, this.rotation), drawWidth: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.drawWidth, this.drawWidth), drawHeight: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.drawHeight, this.drawHeight), flipHorizontal: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.flipHorizontal, this.flipHorizontal), flipVertical: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.flipVertical, this.flipVertical), anchor: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.anchor, this.anchor), offset: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.offset, this.offset), opacity: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.opacity, this._opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
         if (this._dirtyEffect) {
             this._applyEffects();
         }
         // calculating current dimensions
         ctx.save();
-        var xpoint = this.drawWidth * this.anchor.x;
-        var ypoint = this.drawHeight * this.anchor.y;
+        var xpoint = drawWidth * anchor.x + offset.x;
+        var ypoint = drawHeight * anchor.y + offset.y;
         ctx.translate(x, y);
-        ctx.rotate(this.rotation);
+        ctx.rotate(rotation);
         // todo cache flipped sprites
-        if (this.flipHorizontal) {
-            ctx.translate(this.drawWidth, 0);
+        if (flipHorizontal) {
+            ctx.translate(drawWidth, 0);
             ctx.scale(-1, 1);
         }
-        if (this.flipVertical) {
-            ctx.translate(0, this.drawHeight);
+        if (flipVertical) {
+            ctx.translate(0, drawHeight);
             ctx.scale(1, -1);
         }
-        ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, this.drawWidth, this.drawHeight);
+        if (this._dirtyEffect) {
+            this._applyEffects();
+        }
+        var oldAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(opacity, 1);
+        ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, drawWidth, drawHeight);
+        ctx.globalAlpha = oldAlpha;
         ctx.restore();
     };
     /**
@@ -23998,7 +24056,7 @@ var EasingFunctions = /** @class */ (function () {
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
+/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24009,6 +24067,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "extend", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["extend"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "base64Encode", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["base64Encode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "nullish", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["nullish"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "clamp", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["clamp"]; });
 
@@ -24592,7 +24652,7 @@ function canPlayFile(file) {
 /*!**********************!*\
   !*** ./Util/Util.ts ***!
   \**********************/
-/*! exports provided: TwoPI, extend, base64Encode, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
+/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24600,6 +24660,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TwoPI", function() { return TwoPI; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extend", function() { return extend; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "base64Encode", function() { return base64Encode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nullish", function() { return nullish; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clamp", function() { return clamp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "randomInRange", function() { return randomInRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "randomIntInRange", function() { return randomIntInRange; });
@@ -24701,6 +24762,14 @@ function base64Encode(inputStr) {
         outputStr += b64.charAt(enc1) + b64.charAt(enc2) + b64.charAt(enc3) + b64.charAt(enc4);
     }
     return outputStr;
+}
+/**
+ * Sugar that will use `nullishVal` if it's not null or undefined. Simulates the `??` operator
+ * @param nullishVal
+ * @param defaultVal
+ */
+function nullish(nullishVal, defaultVal) {
+    return nullishVal !== null && nullishVal !== undefined ? nullishVal : defaultVal;
 }
 /**
  * Clamps a value between a min and max inclusive
@@ -25393,7 +25462,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5417+ef068f3";
+var EX_VERSION = "0.23.0-alpha.5418+3739643";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

@@ -11,12 +11,23 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
 import { Texture } from '../Resources/Texture';
 import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
-import { clamp } from '../Util/Util';
+import { clamp, nullish } from '../Util/Util';
 import { Configurable } from '../Configurable';
 /**
  * @hidden
@@ -35,7 +46,8 @@ var SpriteImpl = /** @class */ (function () {
         this.y = 0;
         this.rotation = 0.0;
         this.anchor = new Vector(0.0, 0.0);
-        this.scale = new Vector(1, 1);
+        this.offset = Vector.Zero;
+        this.scale = Vector.One;
         this.logger = Logger.getInstance();
         /**
          * Draws the sprite flipped vertically
@@ -53,6 +65,7 @@ var SpriteImpl = /** @class */ (function () {
         this._pixelData = null;
         this._pixelsLoaded = false;
         this._dirtyEffect = false;
+        this._opacity = 1;
         var image = imageOrConfig;
         if (imageOrConfig && !(imageOrConfig instanceof Texture)) {
             x = imageOrConfig.x | 0;
@@ -125,7 +138,8 @@ var SpriteImpl = /** @class */ (function () {
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
      */
     SpriteImpl.prototype.opacity = function (value) {
-        this.addEffect(new Effects.Opacity(value));
+        this._opacity = value;
+        // this.addEffect(new Effects.Opacity(value));
     };
     /**
      * Applies the [[Grayscale]] effect to a sprite, removing color information.
@@ -258,32 +272,41 @@ var SpriteImpl = /** @class */ (function () {
         ctx.strokeRect(-xpoint, -ypoint, this.drawWidth, this.drawHeight);
         ctx.restore();
     };
-    /**
-     * Draws the sprite appropriately to the 2D rendering context, at an x and y coordinate.
-     * @param ctx  The 2D rendering context
-     * @param x    The x coordinate of where to draw
-     * @param y    The y coordinate of where to draw
-     */
-    SpriteImpl.prototype.draw = function (ctx, x, y) {
+    SpriteImpl.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    SpriteImpl.prototype._drawWithOptions = function (options) {
+        var _a = __assign(__assign({}, options), { rotation: nullish(options.rotation, this.rotation), drawWidth: nullish(options.drawWidth, this.drawWidth), drawHeight: nullish(options.drawHeight, this.drawHeight), flipHorizontal: nullish(options.flipHorizontal, this.flipHorizontal), flipVertical: nullish(options.flipVertical, this.flipVertical), anchor: nullish(options.anchor, this.anchor), offset: nullish(options.offset, this.offset), opacity: nullish(options.opacity, this._opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
         if (this._dirtyEffect) {
             this._applyEffects();
         }
         // calculating current dimensions
         ctx.save();
-        var xpoint = this.drawWidth * this.anchor.x;
-        var ypoint = this.drawHeight * this.anchor.y;
+        var xpoint = drawWidth * anchor.x + offset.x;
+        var ypoint = drawHeight * anchor.y + offset.y;
         ctx.translate(x, y);
-        ctx.rotate(this.rotation);
+        ctx.rotate(rotation);
         // todo cache flipped sprites
-        if (this.flipHorizontal) {
-            ctx.translate(this.drawWidth, 0);
+        if (flipHorizontal) {
+            ctx.translate(drawWidth, 0);
             ctx.scale(-1, 1);
         }
-        if (this.flipVertical) {
-            ctx.translate(0, this.drawHeight);
+        if (flipVertical) {
+            ctx.translate(0, drawHeight);
             ctx.scale(1, -1);
         }
-        ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, this.drawWidth, this.drawHeight);
+        if (this._dirtyEffect) {
+            this._applyEffects();
+        }
+        var oldAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = nullish(opacity, 1);
+        ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, drawWidth, drawHeight);
+        ctx.globalAlpha = oldAlpha;
         ctx.restore();
     };
     /**

@@ -1,6 +1,6 @@
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
-import { Drawable } from '../Interfaces/Drawable';
+import { Drawable, DrawOptions } from '../Interfaces/Drawable';
 import { Texture } from '../Resources/Texture';
 import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
@@ -15,6 +15,7 @@ export declare class SpriteImpl implements Drawable {
     readonly drawHeight: number;
     rotation: number;
     anchor: Vector;
+    offset: Vector;
     scale: Vector;
     logger: Logger;
     /**
@@ -42,6 +43,7 @@ export declare class SpriteImpl implements Drawable {
      */
     constructor(imageOrConfig: Texture | SpriteArgs, x: number, y: number, width: number, height: number);
     private _loadPixels;
+    private _opacity;
     /**
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value
      */
@@ -111,6 +113,12 @@ export declare class SpriteImpl implements Drawable {
      * @param y    The y coordinate of where to draw
      */
     draw(ctx: CanvasRenderingContext2D, x: number, y: number): void;
+    /**
+     * Draws the sprite with custom options to override internals without mutating them.
+     * @param options
+     */
+    draw(options: DrawOptions): void;
+    private _drawWithOptions;
     /**
      * Produces a copy of the current sprite
      */

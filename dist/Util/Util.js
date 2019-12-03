@@ -84,6 +84,14 @@ export function base64Encode(inputStr) {
     return outputStr;
 }
 /**
+ * Sugar that will use `nullishVal` if it's not null or undefined. Simulates the `??` operator
+ * @param nullishVal
+ * @param defaultVal
+ */
+export function nullish(nullishVal, defaultVal) {
+    return nullishVal !== null && nullishVal !== undefined ? nullishVal : defaultVal;
+}
+/**
  * Clamps a value between a min and max inclusive
  */
 export function clamp(val, min, max) {

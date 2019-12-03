@@ -39,9 +39,9 @@ var AnimationImpl = /** @class */ (function () {
          */
         this.currentFrame = 0;
         this._oldTime = Date.now();
-        this.anchor = new Vector(0.0, 0.0);
+        this.anchor = Vector.Zero;
         this.rotation = 0.0;
-        this.scale = new Vector(1, 1);
+        this.scale = Vector.One;
         /**
          * Indicates whether the animation should loop after it is completed
          */
@@ -222,19 +222,25 @@ var AnimationImpl = /** @class */ (function () {
     AnimationImpl.prototype.skip = function (frames) {
         this.currentFrame = (this.currentFrame + frames) % this.sprites.length;
     };
-    AnimationImpl.prototype.draw = function (ctx, x, y) {
+    AnimationImpl.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y, flipHorizontal: this.flipHorizontal, flipVertical: this.flipVertical });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    AnimationImpl.prototype._drawWithOptions = function (options) {
         this.tick();
         this._updateValues();
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            currSprite.flipVertical = this.flipVertical;
-            currSprite.flipHorizontal = this.flipHorizontal;
-            currSprite.draw(ctx, x, y);
+            currSprite.draw(options);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
             currSprite = this.sprites[Util.clamp(this.freezeFrame, 0, this.sprites.length - 1)];
-            currSprite.draw(ctx, x, y);
+            currSprite.draw(options);
         }
         // add the calculated width
         if (currSprite) {

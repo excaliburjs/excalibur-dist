@@ -41,6 +41,12 @@ export declare function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3)
 export declare function extend(target: any, ...objects: any[]): any;
 export declare function base64Encode(inputStr: string): string;
 /**
+ * Sugar that will use `nullishVal` if it's not null or undefined. Simulates the `??` operator
+ * @param nullishVal
+ * @param defaultVal
+ */
+export declare function nullish<T>(nullishVal: T | undefined | null, defaultVal: T): T;
+/**
  * Clamps a value between a min and max inclusive
  */
 export declare function clamp(val: number, min: number, max: number): number;

@@ -1,6 +1,6 @@
 import { Color } from './Color';
 import * as Effects from './SpriteEffects';
-import { Drawable } from '../Interfaces/Drawable';
+import { Drawable, DrawOptions } from '../Interfaces/Drawable';
 import { Vector } from '../Algebra';
 /**
  * Creates a closed polygon drawing given a list of [[Vector]]s.
@@ -32,8 +32,10 @@ export declare class Polygon implements Drawable {
     filled: boolean;
     private _points;
     anchor: Vector;
+    offset: Vector;
     rotation: number;
     scale: Vector;
+    opacity: number;
     /**
      * @param points  The vectors to use to build the polygon in order
      */
@@ -55,5 +57,17 @@ export declare class Polygon implements Drawable {
      */
     clearEffects(): void;
     reset(): void;
+    /**
+     * Draws the sprite appropriately to the 2D rendering context, at an x and y coordinate.
+     * @param ctx  The 2D rendering context
+     * @param x    The x coordinate of where to draw
+     * @param y    The y coordinate of where to draw
+     */
     draw(ctx: CanvasRenderingContext2D, x: number, y: number): void;
+    /**
+     * Draws the sprite with custom options to override internals without mutating them.
+     * @param options
+     */
+    draw(options: DrawOptions): void;
+    private _drawWithOptions;
 }

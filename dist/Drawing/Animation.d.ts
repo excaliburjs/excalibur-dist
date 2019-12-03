@@ -2,7 +2,7 @@ import { Sprite } from './Sprite';
 import { AnimationArgs } from '../Drawing/Animation';
 import * as Effects from './SpriteEffects';
 import { Color } from './Color';
-import { Drawable } from '../Interfaces/Drawable';
+import { Drawable, DrawOptions } from '../Interfaces/Drawable';
 import { Vector } from '../Algebra';
 import { Engine } from '../Engine';
 /**
@@ -135,7 +135,19 @@ export declare class AnimationImpl implements Drawable {
      * @param frames  Frames to skip ahead
      */
     skip(frames: number): void;
+    /**
+     * Draws the animation appropriately to the 2D rendering context, at an x and y coordinate.
+     * @param ctx  The 2D rendering context
+     * @param x    The x coordinate of where to draw
+     * @param y    The y coordinate of where to draw
+     */
     draw(ctx: CanvasRenderingContext2D, x: number, y: number): void;
+    /**
+     * Draws the animation with custom options to override internals without mutating them.
+     * @param options
+     */
+    draw(options: DrawOptions): void;
+    private _drawWithOptions;
     /**
      * Plays an animation at an arbitrary location in the game.
      * @param x  The x position in the game to play

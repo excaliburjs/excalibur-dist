@@ -1,4 +1,16 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import { Vector } from '../Algebra';
+import { nullish } from '../Util/Util';
 /**
  * Creates a closed polygon drawing given a list of [[Vector]]s.
  *
@@ -18,9 +30,11 @@ var Polygon = /** @class */ (function () {
          */
         this.filled = false;
         this._points = [];
-        this.anchor = new Vector(0, 0);
+        this.anchor = Vector.Zero;
+        this.offset = Vector.Zero;
         this.rotation = 0;
-        this.scale = new Vector(1, 1);
+        this.scale = Vector.One;
+        this.opacity = 1;
         this._points = points;
         var minX = this._points.reduce(function (prev, curr) {
             return Math.min(prev, curr.x);
@@ -60,11 +74,22 @@ var Polygon = /** @class */ (function () {
     Polygon.prototype.reset = function () {
         //pass
     };
-    Polygon.prototype.draw = function (ctx, x, y) {
+    Polygon.prototype.draw = function (ctxOrOptions, x, y) {
+        if (ctxOrOptions instanceof CanvasRenderingContext2D) {
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
+        }
+        else {
+            this._drawWithOptions(ctxOrOptions);
+        }
+    };
+    Polygon.prototype._drawWithOptions = function (options) {
+        var _a = __assign(__assign({}, options), { rotation: nullish(options.rotation, this.rotation), drawWidth: nullish(options.drawWidth, this.drawWidth), drawHeight: nullish(options.drawHeight, this.drawHeight), flipHorizontal: nullish(options.flipHorizontal, this.flipHorizontal), flipVertical: nullish(options.flipVertical, this.flipVertical), anchor: nullish(options.anchor, this.anchor), offset: nullish(options.offset, this.offset), opacity: nullish(options.opacity, this.opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
+        var xpoint = drawWidth * anchor.x + offset.x + x;
+        var ypoint = drawHeight * anchor.y + offset.y + y;
         ctx.save();
-        ctx.translate(x + this.anchor.x, y + this.anchor.y);
+        ctx.translate(xpoint, ypoint);
         ctx.scale(this.scale.x, this.scale.y);
-        ctx.rotate(this.rotation);
+        ctx.rotate(rotation);
         ctx.beginPath();
         ctx.lineWidth = this.lineWidth;
         // Iterate through the supplied points and construct a 'polygon'
@@ -82,15 +107,18 @@ var Polygon = /** @class */ (function () {
             ctx.fill();
         }
         ctx.strokeStyle = this.lineColor.toString();
-        if (this.flipHorizontal) {
-            ctx.translate(this.drawWidth, 0);
+        if (flipHorizontal) {
+            ctx.translate(drawWidth, 0);
             ctx.scale(-1, 1);
         }
-        if (this.flipVertical) {
-            ctx.translate(0, this.drawHeight);
+        if (flipVertical) {
+            ctx.translate(0, drawHeight);
             ctx.scale(1, -1);
         }
+        var oldAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = nullish(opacity, 1);
         ctx.stroke();
+        ctx.globalAlpha = oldAlpha;
         ctx.restore();
     };
     return Polygon;

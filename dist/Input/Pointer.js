@@ -122,6 +122,15 @@ var Pointer = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Pointer.prototype.on = function (event, handler) {
+        _super.prototype.on.call(this, event, handler);
+    };
+    Pointer.prototype.once = function (event, handler) {
+        _super.prototype.once.call(this, event, handler);
+    };
+    Pointer.prototype.off = function (event, handler) {
+        _super.prototype.off.call(this, event, handler);
+    };
     /**
      * Update the state of current pointer, meant to be called a the end of frame
      */
@@ -220,7 +229,7 @@ var Pointer = /** @class */ (function (_super) {
         this.lastWorldPos = new Vector(ev.worldPos.x, ev.worldPos.y);
         this._isDown = true;
     };
-    Pointer.prototype._onPointerUp = function () {
+    Pointer.prototype._onPointerUp = function (_ev) {
         this._isDown = false;
         this.dragTarget = null;
     };

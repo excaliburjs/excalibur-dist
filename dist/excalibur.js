@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5416+c1f2a5d - 2019-12-3
+ * excalibur - 0.23.0-alpha.5417+ef068f3 - 2019-12-3
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -16454,6 +16454,15 @@ var Pointer = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Pointer.prototype.on = function (event, handler) {
+        _super.prototype.on.call(this, event, handler);
+    };
+    Pointer.prototype.once = function (event, handler) {
+        _super.prototype.once.call(this, event, handler);
+    };
+    Pointer.prototype.off = function (event, handler) {
+        _super.prototype.off.call(this, event, handler);
+    };
     /**
      * Update the state of current pointer, meant to be called a the end of frame
      */
@@ -16552,7 +16561,7 @@ var Pointer = /** @class */ (function (_super) {
         this.lastWorldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](ev.worldPos.x, ev.worldPos.y);
         this._isDown = true;
     };
-    Pointer.prototype._onPointerUp = function () {
+    Pointer.prototype._onPointerUp = function (_ev) {
         this._isDown = false;
         this.dragTarget = null;
     };
@@ -25384,7 +25393,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5416+c1f2a5d";
+var EX_VERSION = "0.23.0-alpha.5417+ef068f3";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

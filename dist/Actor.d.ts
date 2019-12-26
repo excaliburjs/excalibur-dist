@@ -63,65 +63,74 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
      * acceleration, mass, inertia, etc.
      */
-    body: Body;
+    get body(): Body;
+    set body(body: Body);
     private _body;
     /**
      * Gets the position vector of the actor in pixels
      */
+    get pos(): Vector;
     /**
-    * Sets the position vector of the actor in pixels
-    */
-    pos: Vector;
+     * Sets the position vector of the actor in pixels
+     */
+    set pos(thePos: Vector);
     /**
      * Gets the position vector of the actor from the last frame
      */
+    get oldPos(): Vector;
     /**
-    * Sets the position vector of the actor in the last frame
-    */
-    oldPos: Vector;
+     * Sets the position vector of the actor in the last frame
+     */
+    set oldPos(thePos: Vector);
     /**
      * Gets the velocity vector of the actor in pixels/sec
      */
+    get vel(): Vector;
     /**
-    * Sets the velocity vector of the actor in pixels/sec
-    */
-    vel: Vector;
+     * Sets the velocity vector of the actor in pixels/sec
+     */
+    set vel(theVel: Vector);
     /**
      * Gets the velocity vector of the actor from the last frame
      */
+    get oldVel(): Vector;
     /**
-    * Sets the velocity vector of the actor from the last frame
-    */
-    oldVel: Vector;
+     * Sets the velocity vector of the actor from the last frame
+     */
+    set oldVel(theVel: Vector);
     /**
      * Gets the acceleration vector of the actor in pixels/second/second. An acceleration pointing down such as (0, 100) may be
      * useful to simulate a gravitational effect.
      */
+    get acc(): Vector;
     /**
-    * Sets the acceleration vector of teh actor in pixels/second/second
-    */
-    acc: Vector;
+     * Sets the acceleration vector of teh actor in pixels/second/second
+     */
+    set acc(theAcc: Vector);
     /**
      * Sets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
      */
+    set oldAcc(theAcc: Vector);
     /**
-    * Gets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
-    */
-    oldAcc: Vector;
+     * Gets the acceleration of the actor from the last frame. This does not include the global acc [[Physics.acc]].
+     */
+    get oldAcc(): Vector;
     /**
      * Gets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
      */
+    get rotation(): number;
     /**
-    * Sets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
-    */
-    rotation: number;
+     * Sets the rotation of the actor in radians. 1 radian = 180/PI Degrees.
+     */
+    set rotation(theAngle: number);
     /**
      * Gets the rotational velocity of the actor in radians/second
      */
+    get rx(): number;
     /**
-    * Sets the rotational velocity of the actor in radians/sec
-    */
-    rx: number;
+     * Sets the rotational velocity of the actor in radians/sec
+     */
+    set rx(angularVelocity: number);
     /**
      * The anchor to apply all actor related transformations like rotation,
      * translation, and scaling. By default the anchor is in the center of
@@ -140,38 +149,42 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * Gets the scale vector of the actor
      * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
      */
+    get scale(): Vector;
     /**
-    * Sets the scale vector of the actor for
-    * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
-    */
-    scale: Vector;
+     * Sets the scale vector of the actor for
+     * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
+     */
+    set scale(scale: Vector);
     /**
      * Gets the old scale of the actor last frame
      * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
      */
+    get oldScale(): Vector;
     /**
-    * Sets the the old scale of the actor last frame
-    * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
-    */
-    oldScale: Vector;
+     * Sets the the old scale of the actor last frame
+     * @obsolete ex.Actor.scale will be removed in v0.25.0, set width and height directly in constructor
+     */
+    set oldScale(scale: Vector);
     /**
      * Gets the x scalar velocity of the actor in scale/second
      * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
      */
+    get sx(): number;
     /**
-    * Sets the x scalar velocity of the actor in scale/second
-    * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
-    */
-    sx: number;
+     * Sets the x scalar velocity of the actor in scale/second
+     * @obsolete ex.Actor.sx will be removed in v0.25.0, set width and height directly in constructor
+     */
+    set sx(scalePerSecondX: number);
     /**
      * Gets the y scalar velocity of the actor in scale/second
      * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
      */
+    get sy(): number;
     /**
-    * Sets the y scale velocity of the actor in scale/second
-    * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
-    */
-    sy: number;
+     * Sets the y scale velocity of the actor in scale/second
+     * @obsolete ex.Actor.sy will be removed in v0.25.0, set width and height directly in constructor
+     */
+    set sy(scalePerSecondY: number);
     /**
      * Indicates whether the actor is physically in the viewport
      */
@@ -230,7 +243,8 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     private _pointerDragEndHandler;
     private _pointerDragMoveHandler;
     private _pointerDragLeaveHandler;
-    draggable: boolean;
+    get draggable(): boolean;
+    set draggable(isDraggable: boolean);
     /**
      * Modify the current actor update pipeline.
      */
@@ -241,7 +255,8 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      *
      * The default is `null` which prevents a rectangle from being drawn.
      */
-    color: Color;
+    get color(): Color;
+    set color(v: Color);
     private _color;
     /**
      * Whether or not to enable the [[CapturePointer]] trait that propagates
@@ -274,7 +289,7 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     /**
      * Gets whether the actor is Initialized
      */
-    readonly isInitialized: boolean;
+    get isInitialized(): boolean;
     /**
      * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
      *
@@ -548,7 +563,8 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * @param drawing This can be an [[Animation]], [[Sprite]], or [[Polygon]].
      */
     addDrawing(key: any, drawing: Drawable): void;
-    z: number;
+    get z(): number;
+    set z(newZ: number);
     /**
      * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
@@ -564,9 +580,11 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     /**
      * Get the center point of an actor
      */
-    readonly center: Vector;
-    width: number;
-    height: number;
+    get center(): Vector;
+    get width(): number;
+    set width(width: number);
+    get height(): number;
+    set height(height: number);
     /**
      * Gets this actor's rotation taking into account any parent relationships
      *

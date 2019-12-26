@@ -82,14 +82,14 @@ export declare class Loader extends Class implements CanLoad {
     logoHeight: number;
     backgroundColor: string;
     protected _imageElement: HTMLImageElement;
-    protected readonly _image: HTMLImageElement;
+    protected get _image(): HTMLImageElement;
     suppressPlayButton: boolean;
     protected _playButtonRootElement: HTMLElement;
     protected _playButtonElement: HTMLButtonElement;
     protected _styleBlock: HTMLStyleElement;
     /** Loads the css from Loader.css */
     protected _playButtonStyles: string;
-    protected readonly _playButton: HTMLButtonElement;
+    protected get _playButton(): HTMLButtonElement;
     /**
      * Get/set play button text
      */

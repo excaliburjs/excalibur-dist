@@ -152,38 +152,41 @@ export declare class FrameStats implements FrameStatistics {
     /**
      * Gets the frame's id
      */
+    get id(): number;
     /**
-    * Sets the frame's id
-    */
-    id: number;
+     * Sets the frame's id
+     */
+    set id(value: number);
     /**
      * Gets the frame's delta (time since last frame)
      */
+    get delta(): number;
     /**
-    * Sets the frame's delta (time since last frame). Internal use only.
-    * @internal
-    */
-    delta: number;
+     * Sets the frame's delta (time since last frame). Internal use only.
+     * @internal
+     */
+    set delta(value: number);
     /**
      * Gets the frame's frames-per-second (FPS)
      */
+    get fps(): number;
     /**
-    * Sets the frame's frames-per-second (FPS). Internal use only.
-    * @internal
-    */
-    fps: number;
+     * Sets the frame's frames-per-second (FPS). Internal use only.
+     * @internal
+     */
+    set fps(value: number);
     /**
      * Gets the frame's actor statistics
      */
-    readonly actors: FrameActorStats;
+    get actors(): FrameActorStats;
     /**
      * Gets the frame's duration statistics
      */
-    readonly duration: FrameDurationStats;
+    get duration(): FrameDurationStats;
     /**
      * Gets the frame's physics statistics
      */
-    readonly physics: PhysicsStats;
+    get physics(): PhysicsStats;
 }
 export declare class PhysicsStats implements PhysicsStatistics {
     private _pairs;
@@ -203,11 +206,18 @@ export declare class PhysicsStats implements PhysicsStatistics {
      * Provides a clone of this instance.
      */
     clone(): PhysicsStatistics;
-    pairs: number;
-    collisions: number;
-    collidersHash: CollidersHash;
-    fastBodies: number;
-    fastBodyCollisions: number;
-    broadphase: number;
-    narrowphase: number;
+    get pairs(): number;
+    set pairs(value: number);
+    get collisions(): number;
+    set collisions(value: number);
+    get collidersHash(): CollidersHash;
+    set collidersHash(colliders: CollidersHash);
+    get fastBodies(): number;
+    set fastBodies(value: number);
+    get fastBodyCollisions(): number;
+    set fastBodyCollisions(value: number);
+    get broadphase(): number;
+    set broadphase(value: number);
+    get narrowphase(): number;
+    set narrowphase(value: number);
 }

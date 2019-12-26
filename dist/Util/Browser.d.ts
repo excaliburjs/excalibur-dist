@@ -20,8 +20,8 @@ export declare class BrowserEvents {
     private _windowComponent;
     private _documentComponent;
     constructor(_windowGlobal: Window, _documentGlobal: Document);
-    readonly window: BrowserComponent<Window>;
-    readonly document: BrowserComponent<Document>;
+    get window(): BrowserComponent<Window>;
+    get document(): BrowserComponent<Document>;
     pause(): void;
     resume(): void;
     clear(): void;

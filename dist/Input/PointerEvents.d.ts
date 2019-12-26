@@ -47,13 +47,13 @@ export declare class PointerEvent extends GameEvent<Actor> {
     button: PointerButton;
     ev: any;
     protected _name: string;
-    readonly name: string;
+    get name(): string;
     /** The world coordinates of the event. */
-    readonly worldPos: Vector;
+    get worldPos(): Vector;
     /** The page coordinates of the event. */
-    readonly pagePos: Vector;
+    get pagePos(): Vector;
     /** The screen coordinates of the event. */
-    readonly screenPos: Vector;
+    get screenPos(): Vector;
     /**
      * @param coordinates         The [[GlobalCoordinates]] of the event
      * @param pointer             The [[Pointer]] of the event
@@ -64,7 +64,7 @@ export declare class PointerEvent extends GameEvent<Actor> {
      * @param pos                 (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
      */
     constructor(coordinates: GlobalCoordinates, pointer: Pointer, index: number, pointerType: PointerType, button: PointerButton, ev: any);
-    readonly pos: Vector;
+    get pos(): Vector;
     propagate(actor: Actor): void;
     /**
      * Action, that calls when event happens

@@ -37,15 +37,15 @@ export declare class BoundingBox {
     /**
      * Returns the calculated width of the bounding box
      */
-    readonly width: number;
+    get width(): number;
     /**
      * Returns the calculated height of the bounding box
      */
-    readonly height: number;
+    get height(): number;
     /**
      * Returns the center of the bounding box
      */
-    readonly center: Vector;
+    get center(): Vector;
     translate(pos: Vector): BoundingBox;
     /**
      * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
@@ -82,7 +82,7 @@ export declare class BoundingBox {
      * @param other  The bounding box to combine
      */
     combine(other: BoundingBox): BoundingBox;
-    readonly dimensions: Vector;
+    get dimensions(): Vector;
     /**
      * Test wether this bounding box intersects with another returning
      * the intersection vector that can be used to resolve the collision. If there

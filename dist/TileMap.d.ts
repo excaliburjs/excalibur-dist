@@ -127,8 +127,8 @@ export declare class CellImpl {
      * @param sprites The list of tile sprites to use to draw in this cell (in order)
      */
     constructor(xOrConfig: number | CellArgs, y: number, width: number, height: number, index: number, solid?: boolean, sprites?: TileSprite[]);
-    readonly bounds: BoundingBox;
-    readonly center: Vector;
+    get bounds(): BoundingBox;
+    get center(): Vector;
     /**
      * Add another [[TileSprite]] to this cell
      */

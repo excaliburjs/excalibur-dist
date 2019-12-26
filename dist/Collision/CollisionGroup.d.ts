@@ -61,15 +61,15 @@ export declare class CollisionGroup {
     /**
      * Get the name of the collision group
      */
-    readonly name: string;
+    get name(): string;
     /**
      * Get the category of the collision group, a 32 bit number which should be a unique power of 2
      */
-    readonly category: number;
+    get category(): number;
     /**
      * Get the mask for this collision group
      */
-    readonly mask: number;
+    get mask(): number;
     /**
      * Evaluates whether 2 collision groups can collide
      * @param other  CollisionGroup

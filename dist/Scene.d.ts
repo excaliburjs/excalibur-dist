@@ -132,7 +132,7 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
     /**
      * Gets whether or not the [[Scene]] has been initialized
      */
-    readonly isInitialized: boolean;
+    get isInitialized(): boolean;
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *

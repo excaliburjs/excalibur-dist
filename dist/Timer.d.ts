@@ -50,7 +50,7 @@ export declare class Timer {
      * @param newNumberOfRepeats If specified, sets a new non-negative upper limit to the number of time this timer executes
      */
     reset(newInterval?: number, newNumberOfRepeats?: number): void;
-    readonly timesRepeated: number;
+    get timesRepeated(): number;
     getTimeRunning(): number;
     /**
      * Pauses the timer so that no more time will be incremented towards the next call

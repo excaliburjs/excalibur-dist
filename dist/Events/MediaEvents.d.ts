@@ -8,17 +8,19 @@ export declare class MediaEvent extends GameEvent<Sound> {
     /**
      * Media event cannot bubble
      */
+    set bubbles(_value: boolean);
     /**
-    * Media event cannot bubble
-    */
-    bubbles: boolean;
+     * Media event cannot bubble
+     */
+    get bubbles(): boolean;
     /**
      * Media event cannot bubble, so they have no path
      */
+    protected get _path(): Actor[];
     /**
-    * Media event cannot bubble, so they have no path
-    */
-    protected _path: Actor[];
+     * Media event cannot bubble, so they have no path
+     */
+    protected set _path(_val: Actor[]);
     constructor(target: Sound, _name?: string);
     /**
      * Prevents event from bubbling

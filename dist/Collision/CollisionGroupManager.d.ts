@@ -17,7 +17,7 @@ export declare class CollisionGroupManager {
     /**
      * Get all collision groups currently tracked by excalibur
      */
-    static readonly groups: CollisionGroup[];
+    static get groups(): CollisionGroup[];
     /**
      * Get a collision group by it's name
      * @param name

@@ -208,7 +208,7 @@ export declare class LabelImpl extends Actor {
     update(engine: Engine, delta: number): void;
     draw(ctx: CanvasRenderingContext2D, delta: number): void;
     private _fontDraw;
-    protected readonly _fontString: string;
+    protected get _fontString(): string;
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }
 declare const Label_base: typeof LabelImpl;

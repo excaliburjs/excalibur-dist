@@ -338,7 +338,8 @@ export declare class PreCollisionEvent<T extends Collider | Actor = Actor> exten
      * @param intersection  Intersection vector
      */
     constructor(actor: T, other: T, side: Side, intersection: Vector);
-    actor: T;
+    get actor(): T;
+    set actor(actor: T);
 }
 /**
  * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
@@ -354,7 +355,8 @@ export declare class PostCollisionEvent<T extends Collider | Actor = Actor> exte
      * @param intersection  Intersection vector
      */
     constructor(actor: T, other: T, side: Side, intersection: Vector);
-    actor: T;
+    get actor(): T;
+    set actor(actor: T);
 }
 /**
  * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
@@ -369,7 +371,8 @@ export declare class CollisionStartEvent<T extends Collider | Actor = Actor> ext
      * @param pair
      */
     constructor(actor: T, other: T, pair: Pair);
-    actor: T;
+    get actor(): T;
+    set actor(actor: T);
 }
 /**
  * Event thrown when the [[Actor|actor]] is no longer colliding with another
@@ -380,7 +383,8 @@ export declare class CollisionEndEvent<T extends Collider | Actor = Actor> exten
      *
      */
     constructor(actor: T, other: T);
-    actor: T;
+    get actor(): T;
+    set actor(actor: T);
 }
 /**
  * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call

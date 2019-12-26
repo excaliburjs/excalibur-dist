@@ -11,8 +11,10 @@ export declare class AudioInstanceFactory {
  */
 export declare class AudioInstance implements Audio {
     protected _src: string | AudioBuffer;
-    loop: boolean;
-    volume: number;
+    set loop(value: boolean);
+    get loop(): boolean;
+    set volume(value: number);
+    get volume(): number;
     protected _volume: number;
     protected _loop: boolean;
     protected _playingPromise: Promise<boolean>;
@@ -33,7 +35,8 @@ export declare class AudioInstance implements Audio {
  * Internal class representing a HTML5 audio instance
  */
 export declare class AudioTagInstance extends AudioInstance {
-    volume: number;
+    set volume(value: number);
+    get volume(): number;
     protected _src: string;
     protected _instance: HTMLAudioElement;
     constructor(src: string);
@@ -48,8 +51,9 @@ export declare class AudioTagInstance extends AudioInstance {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
  */
 export declare class WebAudioInstance extends AudioInstance {
-    volume: number;
-    private readonly _playbackRate;
+    set volume(value: number);
+    get volume(): number;
+    private get _playbackRate();
     protected _src: AudioBuffer;
     protected _instance: AudioBufferSourceNode;
     private _audioContext;

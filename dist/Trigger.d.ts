@@ -41,7 +41,8 @@ export declare class Trigger extends Actor {
      * @param opts Trigger options
      */
     constructor(opts: Partial<TriggerOptions>);
-    target: Actor;
+    set target(target: Actor);
+    get target(): Actor;
     _initialize(engine: Engine): void;
     private _dispatchAction;
     debugDraw(ctx: CanvasRenderingContext2D): void;

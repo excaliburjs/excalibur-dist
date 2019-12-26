@@ -138,7 +138,8 @@ export declare class Physics {
      * Factor to add to the RigidBody BoundingBox, bounding box (dimensions += vel * dynamicTreeVelocityMultiplier);
      */
     static dynamicTreeVelocityMultiplier: number;
-    static dynamicTreeVelocityMultiplyer: number;
+    static get dynamicTreeVelocityMultiplyer(): number;
+    static set dynamicTreeVelocityMultiplyer(value: number);
     /**
      * Pad RigidBody BoundingBox by a constant amount
      */

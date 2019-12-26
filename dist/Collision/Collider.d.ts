@@ -60,7 +60,7 @@ export declare class Collider implements Eventable, Clonable<Collider> {
     /**
      * Get the unique id of the collider
      */
-    readonly id: number;
+    get id(): number;
     /**
      * Gets or sets the current collision type of this collider. By
      * default it is ([[CollisionType.PreventCollision]]).
@@ -71,10 +71,11 @@ export declare class Collider implements Eventable, Clonable<Collider> {
      * By default, the collider will collide with [[CollisionGroup|all groups]].
      */
     group: CollisionGroup;
+    get shape(): CollisionShape;
     /**
-    * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
-    */
-    shape: CollisionShape;
+     * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
+     */
+    set shape(shape: CollisionShape);
     /**
      * Return a reference to the body associated with this collider
      */
@@ -82,11 +83,11 @@ export declare class Collider implements Eventable, Clonable<Collider> {
     /**
      * The center of the collider in world space
      */
-    readonly center: Vector;
+    get center(): Vector;
     /**
      * Is this collider active, if false it wont collide
      */
-    readonly active: boolean;
+    get active(): boolean;
     /**
      * Collide 2 colliders and product a collision contact if there is a collision, null if none
      *
@@ -104,10 +105,11 @@ export declare class Collider implements Eventable, Clonable<Collider> {
     /**
      * Gets the current pixel offset of the collider
      */
+    get offset(): Vector;
     /**
-    * Sets the pixel offset of the collider
-    */
-    offset: Vector;
+     * Sets the pixel offset of the collider
+     */
+    set offset(offset: Vector);
     /**
      * The current mass of the actor, mass can be thought of as the resistance to acceleration.
      */
@@ -135,12 +137,12 @@ export declare class Collider implements Eventable, Clonable<Collider> {
      * Returns the collider's [[BoundingBox]] calculated for this instant in world space.
      * If there is no shape, a point bounding box is returned
      */
-    readonly bounds: BoundingBox;
+    get bounds(): BoundingBox;
     /**
      * Returns the collider's [[BoundingBox]] relative to the body's position.
      * If there is no shape, a point bounding box is returned
      */
-    readonly localBounds: BoundingBox;
+    get localBounds(): BoundingBox;
     /**
      * Updates the collision shapes geometry and internal caches if needed
      */

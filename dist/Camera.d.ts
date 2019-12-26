@@ -150,7 +150,8 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     /**
      * Get or set the camera's angular velocity
      */
-    angularVelocity: number;
+    get angularVelocity(): number;
+    set angularVelocity(value: number);
     /**
      * Get or set the camera's position
      */
@@ -187,33 +188,39 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     /**
      * Get the camera's x position
      */
+    get x(): number;
     /**
-    * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
-    */
-    x: number;
+     * Set the camera's x position (cannot be set when following an [[Actor]] or when moving)
+     */
+    set x(value: number);
     /**
      * Get the camera's y position
      */
+    get y(): number;
     /**
-    * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
-    */
-    y: number;
+     * Set the camera's y position (cannot be set when following an [[Actor]] or when moving)
+     */
+    set y(value: number);
     /**
      * Get or set the camera's x velocity
      */
-    dx: number;
+    get dx(): number;
+    set dx(value: number);
     /**
      * Get or set the camera's y velocity
      */
-    dy: number;
+    get dy(): number;
+    set dy(value: number);
     /**
      * Get or set the camera's x acceleration
      */
-    ax: number;
+    get ax(): number;
+    set ax(value: number);
     /**
      * Get or set the camera's y acceleration
      */
-    ay: number;
+    get ay(): number;
+    set ay(value: number);
     /**
      * Returns the focal point of the camera, a new point giving the x and y position of the camera
      */
@@ -249,7 +256,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     /**
      * Gets the bounding box of the viewport of this camera in world coordinates
      */
-    readonly viewport: BoundingBox;
+    get viewport(): BoundingBox;
     /**
      * Adds a new camera strategy to this camera
      * @param cameraStrategy Instance of an [[CameraStrategy]]
@@ -292,7 +299,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     onPostUpdate(_engine: Engine, _delta: number): void;
     private _engine;
     private _isInitialized;
-    readonly isInitialized: boolean;
+    get isInitialized(): boolean;
     _initialize(_engine: Engine): void;
     /**
      * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`

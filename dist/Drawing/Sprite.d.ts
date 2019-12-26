@@ -11,8 +11,8 @@ export declare class SpriteImpl implements Drawable {
     private _texture;
     x: number;
     y: number;
-    readonly drawWidth: number;
-    readonly drawHeight: number;
+    get drawWidth(): number;
+    get drawHeight(): number;
     rotation: number;
     anchor: Vector;
     offset: Vector;

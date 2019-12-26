@@ -44,19 +44,19 @@ export declare class Pointer extends Class {
     /**
      * Whether the Pointer is currently dragging.
      */
-    readonly isDragging: boolean;
+    get isDragging(): boolean;
     /**
      * Whether the Pointer just started dragging.
      */
-    readonly isDragStart: boolean;
+    get isDragStart(): boolean;
     /**
      * Whether the Pointer just ended dragging.
      */
-    readonly isDragEnd: boolean;
+    get isDragEnd(): boolean;
     /**
      * Returns true if pointer has any actors under
      */
-    readonly hasActorsUnderPointer: boolean;
+    get hasActorsUnderPointer(): boolean;
     /**
      * The last position on the document this pointer was at. Can be `null` if pointer was never active.
      */

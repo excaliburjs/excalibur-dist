@@ -168,40 +168,40 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * The width of the game canvas in pixels (physical width component of the
      * resolution of the canvas element)
      */
-    readonly canvasWidth: number;
+    get canvasWidth(): number;
     /**
      * Returns half width of the game canvas in pixels (half physical width component)
      */
-    readonly halfCanvasWidth: number;
+    get halfCanvasWidth(): number;
     /**
      * The height of the game canvas in pixels, (physical height component of
      * the resolution of the canvas element)
      */
-    readonly canvasHeight: number;
+    get canvasHeight(): number;
     /**
      * Returns half height of the game canvas in pixels (half physical height component)
      */
-    readonly halfCanvasHeight: number;
+    get halfCanvasHeight(): number;
     /**
      * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
      */
-    readonly drawWidth: number;
+    get drawWidth(): number;
     /**
      * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
      */
-    readonly halfDrawWidth: number;
+    get halfDrawWidth(): number;
     /**
      * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
      */
-    readonly drawHeight: number;
+    get drawHeight(): number;
     /**
      * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
      */
-    readonly halfDrawHeight: number;
+    get halfDrawHeight(): number;
     /**
      * Returns whether excalibur detects the current screen to be HiDPI
      */
-    readonly isHiDpi: boolean;
+    get isHiDpi(): boolean;
     /**
      * Access engine input like pointer, keyboard, or gamepad
      */
@@ -214,7 +214,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Access [[stats]] that holds frame statistics.
      */
-    readonly stats: DebugStats;
+    get stats(): DebugStats;
     /**
      * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
      */
@@ -247,7 +247,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Returns the calculated pixel ration for use in rendering
      */
-    readonly pixelRatio: number;
+    get pixelRatio(): number;
     /**
      * Indicates the current position of the engine. Valid only when DisplayMode is DisplayMode.Position
      */
@@ -358,11 +358,12 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
      */
+    get timescale(): number;
     /**
-    * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
-    * when using time-based movement.
-    */
-    timescale: number;
+     * Sets the current engine timescale factor. Useful for creating slow-motion effects or fast-forward effects
+     * when using time-based movement.
+     */
+    set timescale(value: number);
     /**
      * Plays a sprite animation on the screen at the specified `x` and `y`
      * (in game coordinates, not screen pixels). These animations play
@@ -537,7 +538,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Gets whether the actor is Initialized
      */
-    readonly isInitialized: boolean;
+    get isInitialized(): boolean;
     private _overrideInitialize;
     /**
      * Updates the entire state of the game

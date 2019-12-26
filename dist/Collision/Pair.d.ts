@@ -14,7 +14,7 @@ export declare class Pair {
     /**
      * Returns whether or not it is possible for the pairs to collide
      */
-    readonly canCollide: boolean;
+    get canCollide(): boolean;
     /**
      * Runs the collision intersection logic on the members of this pair
      */

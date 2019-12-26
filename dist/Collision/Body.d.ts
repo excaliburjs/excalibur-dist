@@ -22,14 +22,15 @@ export declare class Body implements Clonable<Body> {
      * Constructs a new physics body associated with an actor
      */
     constructor({ actor, collider }: BodyOptions);
-    readonly id: number;
+    get id(): number;
     /**
      * Returns a clone of this body, not associated with any actor
      */
     clone(): Body;
-    readonly active: boolean;
-    readonly center: Vector;
-    collider: Collider;
+    get active(): boolean;
+    get center(): Vector;
+    set collider(collider: Collider);
+    get collider(): Collider;
     /**
      * The (x, y) position of the actor this will be in the middle of the actor if the
      * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
@@ -111,7 +112,7 @@ export declare class Body implements Clonable<Body> {
      * Flags the shape dirty and must be recalculated in world space
      */
     markCollisionShapeDirty(): void;
-    readonly isColliderShapeDirty: boolean;
+    get isColliderShapeDirty(): boolean;
     /**
      * Sets the old versions of pos, vel, acc, and scale.
      */

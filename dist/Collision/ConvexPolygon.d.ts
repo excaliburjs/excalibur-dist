@@ -43,11 +43,11 @@ export declare class ConvexPolygon implements CollisionShape {
      * Returns a clone of this ConvexPolygon, not associated with any collider
      */
     clone(): ConvexPolygon;
-    readonly worldPos: Vector;
+    get worldPos(): Vector;
     /**
      * Get the center of the collision shape in world coordinates
      */
-    readonly center: Vector;
+    get center(): Vector;
     /**
      * Calculates the underlying transformation from the body relative space to world space
      */
@@ -87,16 +87,16 @@ export declare class ConvexPolygon implements CollisionShape {
     /**
      * Get the axis aligned bounding box for the polygon shape in world coordinates
      */
-    readonly bounds: BoundingBox;
+    get bounds(): BoundingBox;
     /**
      * Get the axis aligned bounding box for the polygon shape in local coordinates
      */
-    readonly localBounds: BoundingBox;
+    get localBounds(): BoundingBox;
     /**
      * Get the moment of inertia for an arbitrary polygon
      * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
      */
-    readonly inertia: number;
+    get inertia(): number;
     /**
      * Casts a ray into the polygon and returns a vector representing the point of contact (in world space) or null if no collision.
      */
@@ -104,7 +104,7 @@ export declare class ConvexPolygon implements CollisionShape {
     /**
      * Get the axis associated with the convex polygon
      */
-    readonly axes: Vector[];
+    get axes(): Vector[];
     /**
      * Perform Separating Axis test against another polygon, returns null if no overlap in polys
      * Reference http://www.dyn4j.org/2010/01/sat/

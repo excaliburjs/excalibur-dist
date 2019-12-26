@@ -57,7 +57,7 @@ export declare class Gif extends Resource<Texture[]> {
     asSprite(id?: number): Sprite;
     asSpriteSheet(): SpriteSheet;
     asAnimation(engine: Engine, speed: number): Animation;
-    readonly readCheckBytes: number[];
+    get readCheckBytes(): number[];
 }
 export interface Frame {
     sentinel: number;

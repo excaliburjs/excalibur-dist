@@ -154,82 +154,82 @@ export declare class Color {
     /**
      * Black (#000000)
      */
-    static readonly Black: Color;
+    static get Black(): Color;
     /**
      * White (#FFFFFF)
      */
-    static readonly White: Color;
+    static get White(): Color;
     /**
      * Gray (#808080)
      */
-    static readonly Gray: Color;
+    static get Gray(): Color;
     /**
      * Light gray (#D3D3D3)
      */
-    static readonly LightGray: Color;
+    static get LightGray(): Color;
     /**
      * Dark gray (#A9A9A9)
      */
-    static readonly DarkGray: Color;
+    static get DarkGray(): Color;
     /**
      * Yellow (#FFFF00)
      */
-    static readonly Yellow: Color;
+    static get Yellow(): Color;
     /**
      * Orange (#FFA500)
      */
-    static readonly Orange: Color;
+    static get Orange(): Color;
     /**
      * Red (#FF0000)
      */
-    static readonly Red: Color;
+    static get Red(): Color;
     /**
      * Vermilion (#FF5B31)
      */
-    static readonly Vermilion: Color;
+    static get Vermilion(): Color;
     /**
      * Vermilion (#FF5B31)
      * @obsolete Alias for incorrect spelling used in older versions, use multiply instead, will be removed in v0.25.0
      */
-    static readonly Vermillion: Color;
+    static get Vermillion(): Color;
     /**
      * Rose (#FF007F)
      */
-    static readonly Rose: Color;
+    static get Rose(): Color;
     /**
      * Magenta (#FF00FF)
      */
-    static readonly Magenta: Color;
+    static get Magenta(): Color;
     /**
      * Violet (#7F00FF)
      */
-    static readonly Violet: Color;
+    static get Violet(): Color;
     /**
      * Blue (#0000FF)
      */
-    static readonly Blue: Color;
+    static get Blue(): Color;
     /**
      * Azure (#007FFF)
      */
-    static readonly Azure: Color;
+    static get Azure(): Color;
     /**
      * Cyan (#00FFFF)
      */
-    static readonly Cyan: Color;
+    static get Cyan(): Color;
     /**
      * Viridian (#59978F)
      */
-    static readonly Viridian: Color;
+    static get Viridian(): Color;
     /**
      * Green (#00FF00)
      */
-    static readonly Green: Color;
+    static get Green(): Color;
     /**
      * Chartreuse (#7FFF00)
      */
-    static readonly Chartreuse: Color;
+    static get Chartreuse(): Color;
     /**
      * Transparent (#FFFFFF00)
      */
-    static readonly Transparent: Color;
+    static get Transparent(): Color;
 }

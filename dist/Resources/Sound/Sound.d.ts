@@ -15,12 +15,14 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
      * Indicates whether the clip should loop when complete
      * @param value  Set the looping flag
      */
-    loop: boolean;
-    volume: number;
+    set loop(value: boolean);
+    get loop(): boolean;
+    set volume(value: number);
+    get volume(): number;
     /**
      * Return array of Current AudioInstances playing or being paused
      */
-    readonly instances: AudioInstance[];
+    get instances(): AudioInstance[];
     path: string;
     private _loop;
     private _volume;

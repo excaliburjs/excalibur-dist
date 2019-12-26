@@ -30,7 +30,7 @@ export declare class Circle implements CollisionShape {
      * Position of the circle relative to the collider, by default (0, 0) meaning the shape is positioned on top of the collider.
      */
     offset: Vector;
-    readonly worldPos: Vector;
+    get worldPos(): Vector;
     /**
      * This is the radius of the circle
      */
@@ -47,7 +47,7 @@ export declare class Circle implements CollisionShape {
     /**
      * Get the center of the collision shape in world coordinates
      */
-    readonly center: Vector;
+    get center(): Vector;
     /**
      * Tests if a point is contained in this collision shape
      */
@@ -69,20 +69,20 @@ export declare class Circle implements CollisionShape {
     /**
      * Get the axis aligned bounding box for the circle shape in world coordinates
      */
-    readonly bounds: BoundingBox;
+    get bounds(): BoundingBox;
     /**
      * Get the axis aligned bounding box for the circle shape in local coordinates
      */
-    readonly localBounds: BoundingBox;
+    get localBounds(): BoundingBox;
     /**
      * Get axis not implemented on circles, since there are infinite axis in a circle
      */
-    readonly axes: Vector[];
+    get axes(): Vector[];
     /**
      * Returns the moment of inertia of a circle given it's mass
      * https://en.wikipedia.org/wiki/List_of_moments_of_inertia
      */
-    readonly inertia: number;
+    get inertia(): number;
     /**
      * Tests the separating axis theorem for circles against polygons
      */

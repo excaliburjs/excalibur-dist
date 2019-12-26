@@ -9,31 +9,31 @@ export declare class Vector implements Clonable<Vector> {
     /**
      * A (0, 0) vector
      */
-    static readonly Zero: Vector;
+    static get Zero(): Vector;
     /**
      * A (1, 1) vector
      */
-    static readonly One: Vector;
+    static get One(): Vector;
     /**
      * A (0.5, 0.5) vector
      */
-    static readonly Half: Vector;
+    static get Half(): Vector;
     /**
      * A unit vector pointing up (0, -1)
      */
-    static readonly Up: Vector;
+    static get Up(): Vector;
     /**
      * A unit vector pointing down (0, 1)
      */
-    static readonly Down: Vector;
+    static get Down(): Vector;
     /**
      * A unit vector pointing left (-1, 0)
      */
-    static readonly Left: Vector;
+    static get Left(): Vector;
     /**
      * A unit vector pointing right (1, 0)
      */
-    static readonly Right: Vector;
+    static get Right(): Vector;
     /**
      * Returns a vector of unit length in the direction of the specified angle in Radians.
      * @param angle The angle to generate the vector
@@ -76,7 +76,8 @@ export declare class Vector implements Clonable<Vector> {
     /**
      * The size(magnitude) of the Vector
      */
-    size: number;
+    get size(): number;
+    set size(newLength: number);
     /**
      * Normalizes a vector to have a magnitude of 1.
      */
@@ -196,11 +197,11 @@ export declare class Line {
     /**
      * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
      */
-    readonly slope: number;
+    get slope(): number;
     /**
      * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
      */
-    readonly intercept: number;
+    get intercept(): number;
     /**
      * Gets the normal of the line
      */
@@ -220,7 +221,7 @@ export declare class Line {
     /**
      * Returns the midpoint of the edge
      */
-    readonly midpoint: Vector;
+    get midpoint(): Vector;
     /**
      * Flips the direction of the line segment
      */

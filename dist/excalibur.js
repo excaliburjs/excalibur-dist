@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5524+5d0938c - 2019-12-27
+ * excalibur - 0.23.0-alpha.5527+d41e518 - 2019-12-27
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2019 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4998,7 +4998,7 @@ var ActionContext = /** @class */ (function () {
 /*!**************************!*\
   !*** ./Actions/Index.ts ***!
   \**************************/
-/*! exports provided: Actions, Internal, ActionContext, RotationType */
+/*! exports provided: ActionContext, RotationType, Actions, Internal */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12486,7 +12486,7 @@ var HSLColor = /** @class */ (function () {
 /*!**************************!*\
   !*** ./Drawing/Index.ts ***!
   \**************************/
-/*! exports provided: Animation, Sprite, SpriteSheet, SpriteFont, Effects, Color, Polygon */
+/*! exports provided: Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20721,7 +20721,7 @@ var ParseGif = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Resources/Index.ts ***!
   \****************************/
-/*! exports provided: Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24083,7 +24083,7 @@ var EasingFunctions = /** @class */ (function () {
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: DrawUtil, TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
+/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail, DrawUtil */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25146,7 +25146,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Actor, CollisionType, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Particle, ParticleEmitter, EmitterType, TileMap, Cell, TileSprite, Events, Input, Traits, Util, DisplayMode, ScrollPreventionMode, Engine, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Loader, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, Timer, Trigger, ScreenElement, UIActor, Actions, Internal, Animation, Sprite, SpriteSheet, SpriteFont, Effects, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement, ActionContext, RotationType, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Color, Polygon, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Texture, Gif, Stream, ParseGif, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance */
+/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25341,13 +25341,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["UIActor"]; });
 
 /* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Actions"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Internal"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["ActionContext"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["RotationType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Actions"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Internal"]; });
 
 /* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Body"]; });
@@ -25391,6 +25391,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Animation"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Color"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Polygon"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Sprite"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteSheet"]; });
@@ -25398,10 +25402,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteFont"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Effects"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Color"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Polygon"]; });
 
 /* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__["ExResponse"]; });
@@ -25421,14 +25421,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Resource"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Texture"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Gif"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Stream"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["ParseGif"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Sound"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioContextFactory"]; });
@@ -25440,6 +25432,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioTagInstance"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["WebAudioInstance"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Texture"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Gif"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Stream"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["ParseGif"]; });
 
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__; });
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
@@ -25489,7 +25489,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5524+5d0938c";
+var EX_VERSION = "0.23.0-alpha.5527+d41e518";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

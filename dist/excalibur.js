@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5642+4ca940b - 2020-1-17
+ * excalibur - 0.23.0-alpha.5647+e1ab12f - 2020-1-17
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -533,7 +533,8 @@ var min = Math.min;
 var nativeLastIndexOf = [].lastIndexOf;
 var NEGATIVE_ZERO = !!nativeLastIndexOf && 1 / [1].lastIndexOf(1, -0) < 0;
 var STRICT_METHOD = arrayMethodIsStrict('lastIndexOf');
-var USES_TO_LENGTH = arrayMethodUsesToLength('lastIndexOf', { ACCESSORS: true, 1: 2147483647 });
+// For preventing possible almost infinite loop in non-standard implementations, test the forward version of the method
+var USES_TO_LENGTH = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
 var FORCED = NEGATIVE_ZERO || !STRICT_METHOD || !USES_TO_LENGTH;
 
 // `Array.prototype.lastIndexOf` method implementation
@@ -617,28 +618,25 @@ var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/co
 var has = __webpack_require__(/*! ../internals/has */ "../../node_modules/core-js/internals/has.js");
 
 var defineProperty = Object.defineProperty;
+var cache = {};
 
 var thrower = function (it) { throw it; };
 
 module.exports = function (METHOD_NAME, options) {
+  if (has(cache, METHOD_NAME)) return cache[METHOD_NAME];
   if (!options) options = {};
   var method = [][METHOD_NAME];
   var ACCESSORS = has(options, 'ACCESSORS') ? options.ACCESSORS : false;
   var argument0 = has(options, 0) ? options[0] : thrower;
   var argument1 = has(options, 1) ? options[1] : undefined;
 
-  return !!method && !fails(function () {
+  return cache[METHOD_NAME] = !!method && !fails(function () {
     if (ACCESSORS && !DESCRIPTORS) return true;
     var O = { length: -1 };
 
-    var addTrap = function (key) {
-      if (ACCESSORS) defineProperty(O, key, { enumerable: true, get: thrower });
-      else O[key] = 1;
-    };
+    if (ACCESSORS) defineProperty(O, 1, { enumerable: true, get: thrower });
+    else O[1] = 1;
 
-    addTrap(1);
-    addTrap(2147483646);
-    addTrap(4294967294);
     method.call(O, argument0, argument1);
   });
 };
@@ -2406,7 +2404,7 @@ var store = __webpack_require__(/*! ../internals/shared-store */ "../../node_mod
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.3',
+  version: '3.6.4',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -3292,7 +3290,8 @@ var arrayMethodIsStrict = __webpack_require__(/*! ../internals/array-method-is-s
 var arrayMethodUsesToLength = __webpack_require__(/*! ../internals/array-method-uses-to-length */ "../../node_modules/core-js/internals/array-method-uses-to-length.js");
 
 var STRICT_METHOD = arrayMethodIsStrict('reduceRight');
-var USES_TO_LENGTH = arrayMethodUsesToLength('reduceRight', { 1: 0 });
+// For preventing possible almost infinite loop in non-standard implementations, test the forward version of the method
+var USES_TO_LENGTH = arrayMethodUsesToLength('reduce', { 1: 0 });
 
 // `Array.prototype.reduceRight` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.reduceright
@@ -25585,7 +25584,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5642+4ca940b";
+var EX_VERSION = "0.23.0-alpha.5647+e1ab12f";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

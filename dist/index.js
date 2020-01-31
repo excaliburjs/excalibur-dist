@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.23.0-alpha.5704+7bb392b"` gets replaced by Webpack on build
+ * @description `"0.23.0-alpha.5718+918e5fa"` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.23.0-alpha.5704+7bb392b";
+export var EX_VERSION = "0.23.0-alpha.5718+918e5fa";
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entry point and exports everything

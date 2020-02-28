@@ -2,7 +2,7 @@ sudo: false
 install: true
 language: node_js
 node_js:
-- '4'
+- '12'
 
 before_script:
     # Set up NPM auth token

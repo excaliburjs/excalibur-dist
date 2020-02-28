@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.5843+bab0ab2 - 2020-2-28
+ * excalibur - 0.23.0-alpha.5846+2251fe3 - 2020-2-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -13777,9 +13777,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13793,10 +13792,20 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_1__["polyfill"])();
-
 
 
 
@@ -13938,9 +13947,9 @@ var Engine = /** @class */ (function (_super) {
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
-        options = _Util_Util__WEBPACK_IMPORTED_MODULE_17__["extend"]({}, Engine._DefaultEngineOptions, options);
+        options = __assign(__assign({}, Engine._DefaultEngineOptions), options);
         // Initialize browser events facade
-        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_19__["BrowserEvents"](window, document);
+        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_18__["BrowserEvents"](window, document);
         // Check compatibility
         var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_9__["Detector"]();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
@@ -14166,7 +14175,7 @@ O|===|* >________________>\n\
         var top = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero).y;
         var right = left + this.drawWidth;
         var bottom = top + this.drawHeight;
-        return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_18__["BoundingBox"](left, top, right, bottom);
+        return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__["BoundingBox"](left, top, right, bottom);
     };
     Object.defineProperty(Engine.prototype, "timescale", {
         /**
@@ -25584,7 +25593,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.5843+bab0ab2";
+var EX_VERSION = "0.23.0-alpha.5846+2251fe3";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

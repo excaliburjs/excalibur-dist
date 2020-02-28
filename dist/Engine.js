@@ -11,6 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import { EX_VERSION } from './';
 import { polyfill } from './Polyfill';
 polyfill();
@@ -29,7 +40,6 @@ import { Scene } from './Scene';
 import { Debug } from './Debug';
 import { Class } from './Class';
 import * as Input from './Input/Index';
-import * as Util from './Util/Util';
 import { BoundingBox } from './Collision/BoundingBox';
 import { BrowserEvents } from './Util/Browser';
 /**
@@ -156,7 +166,7 @@ var Engine = /** @class */ (function (_super) {
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
-        options = Util.extend({}, Engine._DefaultEngineOptions, options);
+        options = __assign(__assign({}, Engine._DefaultEngineOptions), options);
         // Initialize browser events facade
         _this.browser = new BrowserEvents(window, document);
         // Check compatibility

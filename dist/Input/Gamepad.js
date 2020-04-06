@@ -379,3 +379,4 @@ export var Axes;
      */
     Axes[Axes["RightStickY"] = 3] = "RightStickY";
 })(Axes || (Axes = {}));
+//# sourceMappingURL=Gamepad.js.map

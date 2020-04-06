@@ -7,3 +7,4 @@ export function isVanillaActor(actor) {
 export function isScreenElement(actor) {
     return actor instanceof ScreenElement;
 }
+//# sourceMappingURL=Actors.js.map

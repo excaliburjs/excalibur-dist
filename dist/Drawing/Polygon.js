@@ -124,3 +124,4 @@ var Polygon = /** @class */ (function () {
     return Polygon;
 }());
 export { Polygon };
+//# sourceMappingURL=Polygon.js.map

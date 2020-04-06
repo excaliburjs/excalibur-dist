@@ -41,3 +41,4 @@ export function polyfill() {
         window.devicePixelRatio = window.devicePixelRatio || 1;
     }
 }
+//# sourceMappingURL=Polyfill.js.map

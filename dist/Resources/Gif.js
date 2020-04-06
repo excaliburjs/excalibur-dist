@@ -495,3 +495,4 @@ var ParseGif = /** @class */ (function () {
     return ParseGif;
 }());
 export { ParseGif };
+//# sourceMappingURL=Gif.js.map

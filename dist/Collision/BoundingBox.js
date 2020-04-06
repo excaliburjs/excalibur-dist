@@ -378,3 +378,4 @@ var BoundingBox = /** @class */ (function () {
     return BoundingBox;
 }());
 export { BoundingBox };
+//# sourceMappingURL=BoundingBox.js.map

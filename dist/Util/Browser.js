@@ -76,3 +76,4 @@ var BrowserEvents = /** @class */ (function () {
     return BrowserEvents;
 }());
 export { BrowserEvents };
+//# sourceMappingURL=Browser.js.map

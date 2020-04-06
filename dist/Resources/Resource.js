@@ -137,3 +137,4 @@ var Resource = /** @class */ (function (_super) {
     return Resource;
 }(Class));
 export { Resource };
+//# sourceMappingURL=Resource.js.map

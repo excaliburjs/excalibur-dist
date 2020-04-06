@@ -361,3 +361,4 @@ var Cell = /** @class */ (function (_super) {
     return Cell;
 }(Configurable(CellImpl)));
 export { Cell };
+//# sourceMappingURL=TileMap.js.map

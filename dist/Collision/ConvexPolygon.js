@@ -377,3 +377,4 @@ var ConvexPolygon = /** @class */ (function () {
     return ConvexPolygon;
 }());
 export { ConvexPolygon };
+//# sourceMappingURL=ConvexPolygon.js.map

@@ -349,3 +349,4 @@ export function createPointerEventByName(eventName, coordinates, pointer, index,
     }
     return factory.create(coordinates, pointer, index, pointerType, button, ev);
 }
+//# sourceMappingURL=PointerEvents.js.map

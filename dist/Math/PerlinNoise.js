@@ -458,3 +458,4 @@ var PerlinDrawer2D = /** @class */ (function () {
     return PerlinDrawer2D;
 }());
 export { PerlinDrawer2D };
+//# sourceMappingURL=PerlinNoise.js.map

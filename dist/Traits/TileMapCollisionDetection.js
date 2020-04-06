@@ -31,3 +31,4 @@ var TileMapCollisionDetection = /** @class */ (function () {
     return TileMapCollisionDetection;
 }());
 export { TileMapCollisionDetection };
+//# sourceMappingURL=TileMapCollisionDetection.js.map

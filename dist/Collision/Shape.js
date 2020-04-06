@@ -65,3 +65,4 @@ var Shape = /** @class */ (function () {
     return Shape;
 }());
 export { Shape };
+//# sourceMappingURL=Shape.js.map

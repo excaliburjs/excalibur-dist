@@ -386,3 +386,4 @@ var ParticleEmitter = /** @class */ (function (_super) {
     return ParticleEmitter;
 }(Configurable(ParticleEmitterImpl)));
 export { ParticleEmitter };
+//# sourceMappingURL=Particles.js.map

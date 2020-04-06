@@ -289,3 +289,4 @@ var WebAudioInstance = /** @class */ (function (_super) {
     return WebAudioInstance;
 }(AudioInstance));
 export { WebAudioInstance };
+//# sourceMappingURL=AudioInstance.js.map

@@ -168,3 +168,4 @@ var Detector = /** @class */ (function () {
     return Detector;
 }());
 export { Detector };
+//# sourceMappingURL=Detector.js.map

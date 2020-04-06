@@ -344,3 +344,4 @@ export { Collection };
 export function fail(message) {
     throw new Error(message);
 }
+//# sourceMappingURL=Util.js.map

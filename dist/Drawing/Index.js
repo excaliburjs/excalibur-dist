@@ -5,3 +5,4 @@ export { Sprite } from './Sprite';
 export { SpriteSheet, SpriteFont } from './SpriteSheet';
 import * as effects from './SpriteEffects';
 export { effects as Effects };
+//# sourceMappingURL=Index.js.map

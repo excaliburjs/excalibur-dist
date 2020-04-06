@@ -1,8 +1,8 @@
 /**
  * The current Excalibur version string
- * @description `"0.23.0-alpha.5956+ab7f47a"` gets replaced by Webpack on build
+ * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-export var EX_VERSION = "0.23.0-alpha.5956+ab7f47a";
+export var EX_VERSION = process.env.__EX_VERSION;
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entry point and exports everything
@@ -58,3 +58,4 @@ export * from './Util/SortedList';
 // import * as deprecated from './Deprecated';
 // export { deprecated as Deprecated };
 // export * from './Deprecated';
+//# sourceMappingURL=index.js.map

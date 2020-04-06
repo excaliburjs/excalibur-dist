@@ -206,3 +206,4 @@ export var ClosestLineJumpTable = {
         return ClosestLine(p0, u, q0, v);
     }
 };
+//# sourceMappingURL=ClosestLineJumpTable.js.map

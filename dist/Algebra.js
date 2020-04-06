@@ -583,3 +583,4 @@ export { GlobalCoordinates };
 export function vec(x, y) {
     return new Vector(x, y);
 }
+//# sourceMappingURL=Algebra.js.map

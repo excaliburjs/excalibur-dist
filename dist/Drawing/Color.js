@@ -518,3 +518,4 @@ var HSLColor = /** @class */ (function () {
     };
     return HSLColor;
 }());
+//# sourceMappingURL=Color.js.map

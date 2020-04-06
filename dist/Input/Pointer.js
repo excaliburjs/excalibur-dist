@@ -237,3 +237,4 @@ var Pointer = /** @class */ (function (_super) {
     return Pointer;
 }(Class));
 export { Pointer };
+//# sourceMappingURL=Pointer.js.map

@@ -196,3 +196,4 @@ var ColorBlindCorrector = /** @class */ (function () {
     return ColorBlindCorrector;
 }());
 export { ColorBlindCorrector };
+//# sourceMappingURL=ColorBlindCorrector.js.map

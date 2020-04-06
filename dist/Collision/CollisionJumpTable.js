@@ -153,3 +153,4 @@ export var CollisionJumpTable = {
         return new CollisionContact(polyA.collider, polyB.collider, minAxis, contact, minAxis.normalize());
     }
 };
+//# sourceMappingURL=CollisionJumpTable.js.map

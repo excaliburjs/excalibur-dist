@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.6110+06a438d - 2020-4-12
+ * excalibur - 0.23.0-alpha.6144+ea301f7 - 2020-4-13
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -15709,13 +15709,14 @@ var ExitTriggerEvent = /** @class */ (function (_super) {
 /*!*******************************!*\
   !*** ./Events/MediaEvents.ts ***!
   \*******************************/
-/*! exports provided: MediaEvent, NativeSoundEvent */
+/*! exports provided: MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return MediaEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return NativeSoundEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NativeSoundProcessedEvent", function() { return NativeSoundProcessedEvent; });
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Events */ "./Events.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -15812,6 +15813,17 @@ var NativeSoundEvent = /** @class */ (function (_super) {
         return _this;
     }
     return NativeSoundEvent;
+}(MediaEvent));
+
+var NativeSoundProcessedEvent = /** @class */ (function (_super) {
+    __extends(NativeSoundProcessedEvent, _super);
+    function NativeSoundProcessedEvent(target, processedData) {
+        var _this = _super.call(this, target, 'NativeSoundProcessedEvent') || this;
+        _this.processedData = processedData;
+        _this.data = _this.processedData;
+        return _this;
+    }
+    return NativeSoundProcessedEvent;
 }(MediaEvent));
 
 
@@ -21113,6 +21125,7 @@ var AudioInstance = /** @class */ (function () {
     function AudioInstance(_src) {
         this._src = _src;
         this._volume = 1;
+        this._duration = undefined;
         this._loop = false;
         this._isPlaying = false;
         this._isPaused = false;
@@ -21137,6 +21150,19 @@ var AudioInstance = /** @class */ (function () {
         },
         set: function (value) {
             this._volume = _Util_Util__WEBPACK_IMPORTED_MODULE_1__["clamp"](value, 0, 1.0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AudioInstance.prototype, "duration", {
+        /**
+         * Duration of the sound, in seconds.
+         */
+        get: function () {
+            return this._duration;
+        },
+        set: function (value) {
+            this._duration = value;
         },
         enumerable: true,
         configurable: true
@@ -21453,6 +21479,8 @@ var Sound = /** @class */ (function (_super) {
         var _this = _super.call(this, '', '') || this;
         _this._loop = false;
         _this._volume = 1;
+        _this._duration = undefined;
+        _this._isStopped = false;
         _this._isPaused = false;
         _this._tracks = [];
         _this._wasPlayingOnHidden = false;
@@ -21513,6 +21541,13 @@ var Sound = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Sound.prototype, "duration", {
+        get: function () {
+            return this._duration;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Sound.prototype, "instances", {
         /**
          * Return array of Current AudioInstances playing or being paused
@@ -21539,6 +21574,13 @@ var Sound = /** @class */ (function (_super) {
                     _this._wasPlayingOnHidden = false;
                 }
             });
+            this._engine.on('start', function () {
+                _this._isStopped = false;
+            });
+            this._engine.on('stop', function () {
+                _this.stop();
+                _this._isStopped = true;
+            });
         }
     };
     /**
@@ -21561,6 +21603,10 @@ var Sound = /** @class */ (function (_super) {
         if (!this.isLoaded()) {
             this.logger.warn('Cannot start playing. Resource', this.path, 'is not loaded yet');
             return _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"].resolve(true);
+        }
+        if (this._isStopped) {
+            this.logger.warn('Cannot start playing. Engine is in a stopped state.');
+            return _Promises__WEBPACK_IMPORTED_MODULE_5__["Promise"].resolve(false);
         }
         this.volume = volume || this.volume;
         if (this._isPaused) {
@@ -21586,12 +21632,9 @@ var Sound = /** @class */ (function (_super) {
         this.logger.debug('Paused all instances of sound', this.path);
     };
     /**
-     * Stop the sound and rewind
+     * Stop the sound if it is currently playing and rewind the track. If the sound is not playing, rewinds the track.
      */
     Sound.prototype.stop = function () {
-        if (!this.isPlaying()) {
-            return;
-        }
         for (var _i = 0, _a = this._tracks; _i < _a.length; _i++) {
             var track = _a[_i];
             track.stop();
@@ -21674,6 +21717,8 @@ var Sound = /** @class */ (function (_super) {
     };
     Sound.prototype._setProcessedData = function (processedData) {
         this._processedData.resolve(processedData);
+        this._duration = typeof processedData === 'object' ? processedData.duration : undefined;
+        this.emit('processed', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundProcessedEvent"](this, processedData));
     };
     Sound.prototype._createNewTrack = function () {
         var _this = this;
@@ -21693,6 +21738,7 @@ var Sound = /** @class */ (function (_super) {
         var newTrack = _AudioInstance__WEBPACK_IMPORTED_MODULE_2__["AudioInstanceFactory"].create(data);
         newTrack.loop = this.loop;
         newTrack.volume = this.volume;
+        newTrack.duration = this.duration;
         this._tracks.push(newTrack);
         return newTrack;
     };
@@ -25251,7 +25297,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25319,6 +25365,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["MediaEvent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["NativeSoundEvent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundProcessedEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["NativeSoundProcessedEvent"]; });
 
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EventTypes"]; });
@@ -25594,7 +25642,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.6110+06a438d";
+var EX_VERSION = "0.23.0-alpha.6144+ea301f7";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

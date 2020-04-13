@@ -15,7 +15,7 @@ import { ExResponse } from '../../Interfaces/AudioImplementation';
 import { Resource } from '../Resource';
 import { AudioInstanceFactory } from './AudioInstance';
 import { AudioContextFactory } from './AudioContext';
-import { NativeSoundEvent } from '../../Events/MediaEvents';
+import { NativeSoundEvent, NativeSoundProcessedEvent } from '../../Events/MediaEvents';
 import { Promise } from '../../Promises';
 import { canPlayFile } from '../../Util/Sound';
 /**
@@ -38,6 +38,8 @@ var Sound = /** @class */ (function (_super) {
         var _this = _super.call(this, '', '') || this;
         _this._loop = false;
         _this._volume = 1;
+        _this._duration = undefined;
+        _this._isStopped = false;
         _this._isPaused = false;
         _this._tracks = [];
         _this._wasPlayingOnHidden = false;
@@ -98,6 +100,13 @@ var Sound = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Sound.prototype, "duration", {
+        get: function () {
+            return this._duration;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Sound.prototype, "instances", {
         /**
          * Return array of Current AudioInstances playing or being paused
@@ -124,6 +133,13 @@ var Sound = /** @class */ (function (_super) {
                     _this._wasPlayingOnHidden = false;
                 }
             });
+            this._engine.on('start', function () {
+                _this._isStopped = false;
+            });
+            this._engine.on('stop', function () {
+                _this.stop();
+                _this._isStopped = true;
+            });
         }
     };
     /**
@@ -146,6 +162,10 @@ var Sound = /** @class */ (function (_super) {
         if (!this.isLoaded()) {
             this.logger.warn('Cannot start playing. Resource', this.path, 'is not loaded yet');
             return Promise.resolve(true);
+        }
+        if (this._isStopped) {
+            this.logger.warn('Cannot start playing. Engine is in a stopped state.');
+            return Promise.resolve(false);
         }
         this.volume = volume || this.volume;
         if (this._isPaused) {
@@ -171,12 +191,9 @@ var Sound = /** @class */ (function (_super) {
         this.logger.debug('Paused all instances of sound', this.path);
     };
     /**
-     * Stop the sound and rewind
+     * Stop the sound if it is currently playing and rewind the track. If the sound is not playing, rewinds the track.
      */
     Sound.prototype.stop = function () {
-        if (!this.isPlaying()) {
-            return;
-        }
         for (var _i = 0, _a = this._tracks; _i < _a.length; _i++) {
             var track = _a[_i];
             track.stop();
@@ -259,6 +276,8 @@ var Sound = /** @class */ (function (_super) {
     };
     Sound.prototype._setProcessedData = function (processedData) {
         this._processedData.resolve(processedData);
+        this._duration = typeof processedData === 'object' ? processedData.duration : undefined;
+        this.emit('processed', new NativeSoundProcessedEvent(this, processedData));
     };
     Sound.prototype._createNewTrack = function () {
         var _this = this;
@@ -278,6 +297,7 @@ var Sound = /** @class */ (function (_super) {
         var newTrack = AudioInstanceFactory.create(data);
         newTrack.loop = this.loop;
         newTrack.volume = this.volume;
+        newTrack.duration = this.duration;
         this._tracks.push(newTrack);
         return newTrack;
     };

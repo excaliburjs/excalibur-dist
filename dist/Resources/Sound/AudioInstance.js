@@ -41,6 +41,7 @@ var AudioInstance = /** @class */ (function () {
     function AudioInstance(_src) {
         this._src = _src;
         this._volume = 1;
+        this._duration = undefined;
         this._loop = false;
         this._isPlaying = false;
         this._isPaused = false;
@@ -65,6 +66,19 @@ var AudioInstance = /** @class */ (function () {
         },
         set: function (value) {
             this._volume = Util.clamp(value, 0, 1.0);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(AudioInstance.prototype, "duration", {
+        /**
+         * Duration of the sound, in seconds.
+         */
+        get: function () {
+            return this._duration;
+        },
+        set: function (value) {
+            this._duration = value;
         },
         enumerable: true,
         configurable: true

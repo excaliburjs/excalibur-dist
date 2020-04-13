@@ -19,6 +19,7 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
     get loop(): boolean;
     set volume(value: number);
     get volume(): number;
+    get duration(): number | undefined;
     /**
      * Return array of Current AudioInstances playing or being paused
      */
@@ -26,6 +27,8 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
     path: string;
     private _loop;
     private _volume;
+    private _duration;
+    private _isStopped;
     private _isPaused;
     private _tracks;
     private _engine;
@@ -55,7 +58,7 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
      */
     pause(): void;
     /**
-     * Stop the sound and rewind
+     * Stop the sound if it is currently playing and rewind the track. If the sound is not playing, rewinds the track.
      */
     stop(): void;
     setData(data: any): void;

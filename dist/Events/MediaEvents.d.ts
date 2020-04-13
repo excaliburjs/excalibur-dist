@@ -40,3 +40,8 @@ export declare class NativeSoundEvent extends MediaEvent {
     track?: AudioInstance;
     constructor(target: Sound, track?: AudioInstance);
 }
+export declare class NativeSoundProcessedEvent extends MediaEvent {
+    private processedData;
+    data: string | AudioBuffer;
+    constructor(target: Sound, processedData: string | AudioBuffer);
+}

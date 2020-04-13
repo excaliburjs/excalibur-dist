@@ -15,7 +15,13 @@ export declare class AudioInstance implements Audio {
     get loop(): boolean;
     set volume(value: number);
     get volume(): number;
+    set duration(value: number | undefined);
+    /**
+     * Duration of the sound, in seconds.
+     */
+    get duration(): number | undefined;
     protected _volume: number;
+    protected _duration: number | undefined;
     protected _loop: boolean;
     protected _playingPromise: Promise<boolean>;
     protected _isPlaying: boolean;

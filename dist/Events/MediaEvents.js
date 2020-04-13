@@ -95,4 +95,15 @@ var NativeSoundEvent = /** @class */ (function (_super) {
     return NativeSoundEvent;
 }(MediaEvent));
 export { NativeSoundEvent };
+var NativeSoundProcessedEvent = /** @class */ (function (_super) {
+    __extends(NativeSoundProcessedEvent, _super);
+    function NativeSoundProcessedEvent(target, processedData) {
+        var _this = _super.call(this, target, 'NativeSoundProcessedEvent') || this;
+        _this.processedData = processedData;
+        _this.data = _this.processedData;
+        return _this;
+    }
+    return NativeSoundProcessedEvent;
+}(MediaEvent));
+export { NativeSoundProcessedEvent };
 //# sourceMappingURL=MediaEvents.js.map

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.23.0-alpha.6144+ea301f7 - 2020-4-13
+ * excalibur - 0.23.0-alpha.6182+8bdbabd - 2020-4-15
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -22688,6 +22688,9 @@ var TileMapImpl = /** @class */ (function (_super) {
         var height = actor.pos.y + actor.height;
         var actorBounds = actor.body.collider.bounds;
         var overlaps = [];
+        if (actor.width <= 0 || actor.height <= 0) {
+            return null;
+        }
         // trace points for overlap
         for (var x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
             for (var y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {
@@ -25642,7 +25645,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.23.0-alpha.6144+ea301f7";
+var EX_VERSION = "0.23.0-alpha.6182+8bdbabd";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

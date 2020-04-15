@@ -89,6 +89,9 @@ var TileMapImpl = /** @class */ (function (_super) {
         var height = actor.pos.y + actor.height;
         var actorBounds = actor.body.collider.bounds;
         var overlaps = [];
+        if (actor.width <= 0 || actor.height <= 0) {
+            return null;
+        }
         // trace points for overlap
         for (var x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
             for (var y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {

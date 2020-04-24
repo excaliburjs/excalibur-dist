@@ -201,13 +201,10 @@ var ActorImpl = /** @class */ (function (_super) {
         if (shouldInitializeBody) {
             _this.body = new Body({
                 collider: new Collider({
-                    type: CollisionType.Passive,
+                    type: collisionType,
                     shape: Shape.Box(_this._width, _this._height, _this.anchor)
                 })
             });
-        }
-        if (_this.body && _this.body.collider) {
-            _this.body.collider.type = collisionType;
         }
         // Position uses body to store values must be initialized after body
         _this.pos.x = xOrConfig || 0;

@@ -16,4 +16,4 @@ before_script:
 
 script:
     # Publish new prerelease tag if version doesn't exist AND it has alpha in the name
-    - if [ "$NPM_EXISTS" = "" ] && [[ $PACKAGE_VERSION == *"-alpha"* ]]; then npm publish --tag next; fi
+    - if [ "$NPM_EXISTS" = "" ] && [[ $PACKAGE_VERSION == *"-alpha"* ]]; then npm publish --tag next; else npm publish; fi

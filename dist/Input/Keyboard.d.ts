@@ -1,5 +1,4 @@
-import { Class } from './../Class';
-import { GameEvent } from '../Events';
+import { Class } from '../Class';
 import * as Events from '../Events';
 /**
  * Enum representing input key codes
@@ -55,7 +54,7 @@ export declare enum Keys {
 /**
  * Event thrown on a game object for a key event
  */
-export declare class KeyEvent extends GameEvent<any> {
+export declare class KeyEvent extends Events.GameEvent<any> {
     key: Keys;
     /**
      * @param key  The key responsible for throwing the event
@@ -75,7 +74,7 @@ export declare class Keyboard extends Class {
     on(eventName: Events.press, handler: (event: KeyEvent) => void): void;
     on(eventName: Events.release, handler: (event: KeyEvent) => void): void;
     on(eventName: Events.hold, handler: (event: KeyEvent) => void): void;
-    on(eventName: string, handler: (event: GameEvent<any>) => void): void;
+    on(eventName: string, handler: (event: Events.GameEvent<any>) => void): void;
     /**
      * Initialize Keyboard event listeners
      */

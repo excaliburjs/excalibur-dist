@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6457+73f942e - 2020-4-27
+ * excalibur - 0.25.0-alpha.6469+b5134e7 - 2020-4-28
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -16320,8 +16320,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Keys", function() { return Keys; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KeyEvent", function() { return KeyEvent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Keyboard", function() { return Keyboard; });
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../Class */ "./Class.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Class */ "./Class.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Events */ "./Events.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -16335,6 +16336,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 /**
@@ -16403,7 +16405,7 @@ var KeyEvent = /** @class */ (function (_super) {
         return _this;
     }
     return KeyEvent;
-}(_Events__WEBPACK_IMPORTED_MODULE_1__["GameEvent"]));
+}(_Events__WEBPACK_IMPORTED_MODULE_2__["GameEvent"]));
 
 /**
  * Provides keyboard support for Excalibur.
@@ -16427,9 +16429,29 @@ var Keyboard = /** @class */ (function (_super) {
      */
     Keyboard.prototype.init = function (global) {
         var _this = this;
-        // See https://github.com/excaliburjs/Excalibur/issues/1294
-        // window.top is for the iframe case
-        global = global || window.top || window;
+        if (!global) {
+            try {
+                // Try and listen to events on top window frame if within an iframe.
+                //
+                // See https://github.com/excaliburjs/Excalibur/issues/1294
+                //
+                // Attempt to add an event listener, which triggers a DOMException on
+                // cross-origin iframes
+                var noop = function () {
+                    return;
+                };
+                window.top.addEventListener('blur', noop);
+                window.top.removeEventListener('blur', noop);
+                // this will be the same as window if not embedded within an iframe
+                global = window.top;
+            }
+            catch (_a) {
+                // fallback to current frame
+                global = window;
+                _Util_Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance().warn('Failed to bind to keyboard events to top frame. ' +
+                    'If you are trying to embed Excalibur in a cross-origin iframe, keyboard events will not fire.');
+            }
+        }
         global.addEventListener('blur', function () {
             _this._keys.length = 0; // empties array efficiently
         });
@@ -16506,7 +16528,7 @@ var Keyboard = /** @class */ (function (_super) {
         }
     };
     return Keyboard;
-}(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_1__["Class"]));
 
 
 
@@ -25642,7 +25664,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6457+73f942e";
+var EX_VERSION = "0.25.0-alpha.6469+b5134e7";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

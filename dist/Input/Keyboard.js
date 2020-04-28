@@ -11,8 +11,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { Class } from './../Class';
-import { GameEvent } from '../Events';
+import { Logger } from '../Util/Log';
+import { Class } from '../Class';
+import * as Events from '../Events';
 /**
  * Enum representing input key codes
  */
@@ -79,7 +80,7 @@ var KeyEvent = /** @class */ (function (_super) {
         return _this;
     }
     return KeyEvent;
-}(GameEvent));
+}(Events.GameEvent));
 export { KeyEvent };
 /**
  * Provides keyboard support for Excalibur.
@@ -103,9 +104,29 @@ var Keyboard = /** @class */ (function (_super) {
      */
     Keyboard.prototype.init = function (global) {
         var _this = this;
-        // See https://github.com/excaliburjs/Excalibur/issues/1294
-        // window.top is for the iframe case
-        global = global || window.top || window;
+        if (!global) {
+            try {
+                // Try and listen to events on top window frame if within an iframe.
+                //
+                // See https://github.com/excaliburjs/Excalibur/issues/1294
+                //
+                // Attempt to add an event listener, which triggers a DOMException on
+                // cross-origin iframes
+                var noop = function () {
+                    return;
+                };
+                window.top.addEventListener('blur', noop);
+                window.top.removeEventListener('blur', noop);
+                // this will be the same as window if not embedded within an iframe
+                global = window.top;
+            }
+            catch (_a) {
+                // fallback to current frame
+                global = window;
+                Logger.getInstance().warn('Failed to bind to keyboard events to top frame. ' +
+                    'If you are trying to embed Excalibur in a cross-origin iframe, keyboard events will not fire.');
+            }
+        }
         global.addEventListener('blur', function () {
             _this._keys.length = 0; // empties array efficiently
         });

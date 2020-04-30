@@ -1,5 +1,6 @@
-import { DebugFlags } from './DebugFlags';
+import { DebugFlags, ColorBlindFlags } from './DebugFlags';
 import { Pair } from './Collision/Pair';
+import { Engine } from './Engine';
 /**
  * Debug stats containing current and previous frame statistics
  */
@@ -123,10 +124,17 @@ export interface PhysicsStatistics {
  * updated during a frame.
  */
 export declare class Debug implements DebugFlags {
+    private _engine;
+    constructor(engine: Engine);
     /**
      * Performance statistics
      */
     stats: DebugStats;
+    /**
+     * Correct or simulate color blindness using [[ColorBlindness]] post processor.
+     * @warning Will reduce FPS.
+     */
+    colorBlindMode: ColorBlindFlags;
 }
 /**
  * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid

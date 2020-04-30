@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.24.2 - 2020-4-28
+ * excalibur - 0.25.0-alpha.6478+2825f48 - 2020-4-30
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -11457,13 +11457,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return Debug; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FrameStats", function() { return FrameStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PhysicsStats", function() { return PhysicsStats; });
+/* harmony import */ var _DebugFlags__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DebugFlags */ "./DebugFlags.ts");
+
 /**
  * Debug statistics and flags for Excalibur. If polling these values, it would be
  * best to do so on the `postupdate` event for [[Engine]], after all values have been
  * updated during a frame.
  */
 var Debug = /** @class */ (function () {
-    function Debug() {
+    function Debug(engine) {
         /**
          * Performance statistics
          */
@@ -11479,6 +11481,8 @@ var Debug = /** @class */ (function () {
              */
             prevFrame: new FrameStats()
         };
+        this._engine = engine;
+        this.colorBlindMode = new _DebugFlags__WEBPACK_IMPORTED_MODULE_0__["ColorBlindFlags"](this._engine);
     }
     return Debug;
 }());
@@ -11737,6 +11741,35 @@ var PhysicsStats = /** @class */ (function () {
         configurable: true
     });
     return PhysicsStats;
+}());
+
+
+
+/***/ }),
+
+/***/ "./DebugFlags.ts":
+/*!***********************!*\
+  !*** ./DebugFlags.ts ***!
+  \***********************/
+/*! exports provided: ColorBlindFlags */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ColorBlindFlags", function() { return ColorBlindFlags; });
+/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
+
+var ColorBlindFlags = /** @class */ (function () {
+    function ColorBlindFlags(engine) {
+        this._engine = engine;
+    }
+    ColorBlindFlags.prototype.correct = function (colorBlindness) {
+        this._engine.postProcessors.push(new _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_0__["ColorBlindCorrector"](this._engine, false, colorBlindness));
+    };
+    ColorBlindFlags.prototype.simulate = function (colorBlindness) {
+        this._engine.postProcessors.push(new _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_0__["ColorBlindCorrector"](this._engine, true, colorBlindness));
+    };
+    return ColorBlindFlags;
 }());
 
 
@@ -13899,10 +13932,6 @@ var Engine = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._hasStarted = false;
         /**
-         * Access Excalibur debugging functionality.
-         */
-        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_14__["Debug"]();
-        /**
          * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
          */
         _this.postProcessors = [];
@@ -14022,6 +14051,7 @@ O|===|* >________________>\n\
         }
         _this.enableCanvasTransparency = options.enableCanvasTransparency;
         _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_8__["Loader"]();
+        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_14__["Debug"](_this);
         _this._initialize(options);
         _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_13__["Scene"](_this);
         _this.addScene('root', _this.rootScene);
@@ -25664,7 +25694,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.24.2";
+var EX_VERSION = "0.25.0-alpha.6478+2825f48";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

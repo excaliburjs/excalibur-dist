@@ -1,10 +1,11 @@
+import { ColorBlindFlags } from './DebugFlags';
 /**
  * Debug statistics and flags for Excalibur. If polling these values, it would be
  * best to do so on the `postupdate` event for [[Engine]], after all values have been
  * updated during a frame.
  */
 var Debug = /** @class */ (function () {
-    function Debug() {
+    function Debug(engine) {
         /**
          * Performance statistics
          */
@@ -20,6 +21,8 @@ var Debug = /** @class */ (function () {
              */
             prevFrame: new FrameStats()
         };
+        this._engine = engine;
+        this.colorBlindMode = new ColorBlindFlags(this._engine);
     }
     return Debug;
 }());

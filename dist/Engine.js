@@ -121,10 +121,6 @@ var Engine = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this._hasStarted = false;
         /**
-         * Access Excalibur debugging functionality.
-         */
-        _this.debug = new Debug();
-        /**
          * Gets or sets the list of post processors to apply at the end of drawing a frame (such as [[ColorBlindCorrector]])
          */
         _this.postProcessors = [];
@@ -244,6 +240,7 @@ O|===|* >________________>\n\
         }
         _this.enableCanvasTransparency = options.enableCanvasTransparency;
         _this._loader = new Loader();
+        _this.debug = new Debug(_this);
         _this._initialize(options);
         _this.rootScene = _this.currentScene = new Scene(_this);
         _this.addScene('root', _this.rootScene);

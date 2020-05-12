@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6555+44a926b - 2020-5-12
+ * excalibur - 0.25.0-alpha.6557+57e03f4 - 2020-5-12
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -6873,7 +6873,7 @@ function vec(x, y) {
 /*!*******************!*\
   !*** ./Camera.ts ***!
   \*******************/
-/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera */
+/*! exports provided: StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6884,6 +6884,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return LockCameraToActorAxisStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return ElasticToActorStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return RadiusAroundActorStrategy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LimitCameraBoundsStrategy", function() { return LimitCameraBoundsStrategy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return Camera; });
 /* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
@@ -6892,6 +6893,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6905,6 +6907,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -6955,6 +6958,13 @@ var StrategyContainer = /** @class */ (function () {
      */
     StrategyContainer.prototype.radiusAroundActor = function (actor, radius) {
         this.camera.addStrategy(new RadiusAroundActorStrategy(actor, radius));
+    };
+    /**
+     * Creates and adds the [[LimitCameraBoundsStrategy]] on the current camera
+     * @param box The bounding box to limit the camera to.
+     */
+    StrategyContainer.prototype.limitCameraBounds = function (box) {
+        this.camera.addStrategy(new LimitCameraBoundsStrategy(box));
     };
     return StrategyContainer;
 }());
@@ -7066,6 +7076,51 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
         };
     }
     return RadiusAroundActorStrategy;
+}());
+
+/**
+ * Prevent a camera from going beyond the given camera dimensions.
+ */
+var LimitCameraBoundsStrategy = /** @class */ (function () {
+    function LimitCameraBoundsStrategy(target) {
+        var _this = this;
+        this.target = target;
+        /**
+         * Useful for limiting the camera to a [[TileMap]]'s dimensions, or a specific area inside the map.
+         *
+         * Note that this strategy does not perform any movement by itself.
+         * It only sets the camera position to within the given bounds when the camera has gone beyond them.
+         * Thus, it is a good idea to combine it with other camera strategies and set this strategy as the last one.
+         *
+         * Make sure that the camera bounds are at least as large as the viewport size.
+         *
+         * @param target The bounding box to limit the camera to
+         */
+        this.boundSizeChecked = false; // Check and warn only once
+        this.action = function (target, cam, _eng, _delta) {
+            var focus = cam.getFocus();
+            if (!_this.boundSizeChecked) {
+                if (target.bottom - target.top < _eng.drawHeight || target.right - target.left < _eng.drawWidth) {
+                    _Util_Log__WEBPACK_IMPORTED_MODULE_7__["Logger"].getInstance().warn('Camera bounds should not be smaller than the engine viewport');
+                }
+                _this.boundSizeChecked = true;
+            }
+            if (focus.x < target.left + _eng.halfDrawWidth) {
+                focus.x = target.left + _eng.halfDrawWidth;
+            }
+            else if (focus.x > target.right - _eng.halfDrawWidth) {
+                focus.x = target.right - _eng.halfDrawWidth;
+            }
+            if (focus.y < target.top + _eng.halfDrawHeight) {
+                focus.y = target.top + _eng.halfDrawHeight;
+            }
+            else if (focus.y > target.bottom - _eng.halfDrawHeight) {
+                focus.y = target.bottom - _eng.halfDrawHeight;
+            }
+            return focus;
+        };
+    }
+    return LimitCameraBoundsStrategy;
 }());
 
 /**
@@ -25349,7 +25404,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25394,6 +25449,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["ElasticToActorStrategy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["RadiusAroundActorStrategy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LimitCameraBoundsStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LimitCameraBoundsStrategy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["Camera"]; });
 
@@ -25694,7 +25751,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6555+44a926b";
+var EX_VERSION = "0.25.0-alpha.6557+57e03f4";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

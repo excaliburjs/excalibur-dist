@@ -59,6 +59,11 @@ export declare class StrategyContainer {
      * @param radius Number of pixels away before the camera will follow
      */
     radiusAroundActor(actor: Actor, radius: number): void;
+    /**
+     * Creates and adds the [[LimitCameraBoundsStrategy]] on the current camera
+     * @param box The bounding box to limit the camera to.
+     */
+    limitCameraBounds(box: BoundingBox): void;
 }
 /**
  * Camera axis enum
@@ -113,6 +118,26 @@ export declare class RadiusAroundActorStrategy implements CameraStrategy<Actor> 
      */
     constructor(target: Actor, radius: number);
     action: (target: Actor, cam: Camera, _eng: Engine, _delta: number) => Vector;
+}
+/**
+ * Prevent a camera from going beyond the given camera dimensions.
+ */
+export declare class LimitCameraBoundsStrategy implements CameraStrategy<BoundingBox> {
+    target: BoundingBox;
+    /**
+     * Useful for limiting the camera to a [[TileMap]]'s dimensions, or a specific area inside the map.
+     *
+     * Note that this strategy does not perform any movement by itself.
+     * It only sets the camera position to within the given bounds when the camera has gone beyond them.
+     * Thus, it is a good idea to combine it with other camera strategies and set this strategy as the last one.
+     *
+     * Make sure that the camera bounds are at least as large as the viewport size.
+     *
+     * @param target The bounding box to limit the camera to
+     */
+    boundSizeChecked: boolean;
+    constructor(target: BoundingBox);
+    action: (target: BoundingBox, cam: Camera, _eng: Engine, _delta: number) => Vector;
 }
 /**
  * Cameras

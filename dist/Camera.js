@@ -18,6 +18,7 @@ import { removeItemFromArray } from './Util/Util';
 import { PreUpdateEvent, PostUpdateEvent, InitializeEvent } from './Events';
 import { Class } from './Class';
 import { BoundingBox } from './Collision/BoundingBox';
+import { Logger } from './Util/Log';
 /**
  * Container to house convenience strategy methods
  * @internal
@@ -61,6 +62,13 @@ var StrategyContainer = /** @class */ (function () {
      */
     StrategyContainer.prototype.radiusAroundActor = function (actor, radius) {
         this.camera.addStrategy(new RadiusAroundActorStrategy(actor, radius));
+    };
+    /**
+     * Creates and adds the [[LimitCameraBoundsStrategy]] on the current camera
+     * @param box The bounding box to limit the camera to.
+     */
+    StrategyContainer.prototype.limitCameraBounds = function (box) {
+        this.camera.addStrategy(new LimitCameraBoundsStrategy(box));
     };
     return StrategyContainer;
 }());
@@ -174,6 +182,51 @@ var RadiusAroundActorStrategy = /** @class */ (function () {
     return RadiusAroundActorStrategy;
 }());
 export { RadiusAroundActorStrategy };
+/**
+ * Prevent a camera from going beyond the given camera dimensions.
+ */
+var LimitCameraBoundsStrategy = /** @class */ (function () {
+    function LimitCameraBoundsStrategy(target) {
+        var _this = this;
+        this.target = target;
+        /**
+         * Useful for limiting the camera to a [[TileMap]]'s dimensions, or a specific area inside the map.
+         *
+         * Note that this strategy does not perform any movement by itself.
+         * It only sets the camera position to within the given bounds when the camera has gone beyond them.
+         * Thus, it is a good idea to combine it with other camera strategies and set this strategy as the last one.
+         *
+         * Make sure that the camera bounds are at least as large as the viewport size.
+         *
+         * @param target The bounding box to limit the camera to
+         */
+        this.boundSizeChecked = false; // Check and warn only once
+        this.action = function (target, cam, _eng, _delta) {
+            var focus = cam.getFocus();
+            if (!_this.boundSizeChecked) {
+                if (target.bottom - target.top < _eng.drawHeight || target.right - target.left < _eng.drawWidth) {
+                    Logger.getInstance().warn('Camera bounds should not be smaller than the engine viewport');
+                }
+                _this.boundSizeChecked = true;
+            }
+            if (focus.x < target.left + _eng.halfDrawWidth) {
+                focus.x = target.left + _eng.halfDrawWidth;
+            }
+            else if (focus.x > target.right - _eng.halfDrawWidth) {
+                focus.x = target.right - _eng.halfDrawWidth;
+            }
+            if (focus.y < target.top + _eng.halfDrawHeight) {
+                focus.y = target.top + _eng.halfDrawHeight;
+            }
+            else if (focus.y > target.bottom - _eng.halfDrawHeight) {
+                focus.y = target.bottom - _eng.halfDrawHeight;
+            }
+            return focus;
+        };
+    }
+    return LimitCameraBoundsStrategy;
+}());
+export { LimitCameraBoundsStrategy };
 /**
  * Cameras
  *

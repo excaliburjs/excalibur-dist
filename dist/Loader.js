@@ -153,7 +153,7 @@ var Loader = /** @class */ (function (_super) {
             }
             return this._imageElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Loader.prototype, "_playButton", {
@@ -174,7 +174,7 @@ var Loader = /** @class */ (function (_super) {
             }
             return this._playButtonElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Loader.prototype.wireEngine = function (engine) {

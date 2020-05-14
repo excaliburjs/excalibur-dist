@@ -235,7 +235,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this._body = body;
             this._body.actor = this;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "pos", {
@@ -251,7 +251,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (thePos) {
             this.body.pos.setTo(thePos.x, thePos.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldPos", {
@@ -267,7 +267,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (thePos) {
             this.body.oldPos.setTo(thePos.x, thePos.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "vel", {
@@ -283,7 +283,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theVel) {
             this.body.vel.setTo(theVel.x, theVel.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldVel", {
@@ -299,7 +299,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theVel) {
             this.body.oldVel.setTo(theVel.x, theVel.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "acc", {
@@ -316,7 +316,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAcc) {
             this.body.acc.setTo(theAcc.x, theAcc.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldAcc", {
@@ -332,7 +332,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAcc) {
             this.body.oldAcc.setTo(theAcc.x, theAcc.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "rotation", {
@@ -348,7 +348,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAngle) {
             this.body.rotation = theAngle;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "rx", {
@@ -364,7 +364,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (angularVelocity) {
             this.body.rx = angularVelocity;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "scale", {
@@ -382,7 +382,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scale) {
             this.body.scale = scale;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
@@ -400,7 +400,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scale) {
             this.body.oldScale = scale;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "sx", {
@@ -418,7 +418,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "sy", {
@@ -436,7 +436,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "draggable", {
@@ -460,7 +460,7 @@ var ActorImpl = /** @class */ (function (_super) {
                 this._draggable = isDraggable;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "color", {
@@ -476,7 +476,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (v) {
             this._color = v.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -495,7 +495,7 @@ var ActorImpl = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -666,7 +666,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (newZ) {
             this.setZIndex(newZ);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -694,7 +694,7 @@ var ActorImpl = /** @class */ (function (_super) {
         get: function () {
             return new Vector(this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "width", {
@@ -706,7 +706,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this.body.collider.shape = Shape.Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "height", {
@@ -718,7 +718,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this.body.collider.shape = Shape.Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

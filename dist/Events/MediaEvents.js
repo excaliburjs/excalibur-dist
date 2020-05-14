@@ -34,7 +34,7 @@ var MediaEvent = /** @class */ (function (_super) {
         set: function (_value) {
             // stubbed
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(MediaEvent.prototype, "_path", {
@@ -50,7 +50,7 @@ var MediaEvent = /** @class */ (function (_super) {
         set: function (_val) {
             // stubbed
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

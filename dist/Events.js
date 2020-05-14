@@ -427,7 +427,7 @@ var PreCollisionEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PreCollisionEvent;
@@ -459,7 +459,7 @@ var PostCollisionEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PostCollisionEvent;
@@ -490,7 +490,7 @@ var CollisionStartEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return CollisionStartEvent;
@@ -517,7 +517,7 @@ var CollisionEndEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return CollisionEndEvent;

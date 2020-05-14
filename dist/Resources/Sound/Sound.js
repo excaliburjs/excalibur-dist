@@ -81,7 +81,7 @@ var Sound = /** @class */ (function (_super) {
             }
             this.logger.debug('Set loop for all instances of sound', this.path, 'to', this._loop);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "volume", {
@@ -97,14 +97,14 @@ var Sound = /** @class */ (function (_super) {
             this.emit('volumechange', new NativeSoundEvent(this));
             this.logger.debug('Set loop for all instances of sound', this.path, 'to', this._volume);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "duration", {
         get: function () {
             return this._duration;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "instances", {
@@ -114,7 +114,7 @@ var Sound = /** @class */ (function (_super) {
         get: function () {
             return this._tracks;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Sound.prototype.wireEngine = function (engine) {

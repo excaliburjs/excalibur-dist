@@ -96,7 +96,7 @@ var Body = /** @class */ (function () {
         get: function () {
             return this.actor ? this.actor.id : -1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -112,14 +112,14 @@ var Body = /** @class */ (function () {
         get: function () {
             return this.actor ? !this.actor.isKilled() : false;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Body.prototype, "center", {
         get: function () {
             return this.pos;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Body.prototype, "collider", {
@@ -134,7 +134,7 @@ var Body = /** @class */ (function () {
                 this._wireColliderEventsToActor();
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -160,7 +160,7 @@ var Body = /** @class */ (function () {
         get: function () {
             return this._geometryDirty;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

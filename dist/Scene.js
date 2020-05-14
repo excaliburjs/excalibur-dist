@@ -152,7 +152,7 @@ var Scene = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

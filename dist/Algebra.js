@@ -25,7 +25,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "One", {
@@ -35,7 +35,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(1, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Half", {
@@ -45,7 +45,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0.5, 0.5);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Up", {
@@ -55,7 +55,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, -1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Down", {
@@ -65,7 +65,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Left", {
@@ -75,7 +75,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(-1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Right", {
@@ -85,7 +85,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -162,7 +162,7 @@ var Vector = /** @class */ (function () {
             this.x = v.x;
             this.y = v.y;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -367,7 +367,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return (this.end.y - this.begin.y) / (this.end.x - this.begin.x);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Line.prototype, "intercept", {
@@ -377,7 +377,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return this.begin.y - this.slope * this.begin.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -419,7 +419,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return this.begin.add(this.end).scale(0.5);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

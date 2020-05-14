@@ -41,7 +41,7 @@ var Pair = /** @class */ (function () {
             var actorB = this.colliderB;
             return Pair.canCollide(actorA, actorB);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

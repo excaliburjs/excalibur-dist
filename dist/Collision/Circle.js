@@ -29,7 +29,7 @@ var Circle = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -52,7 +52,7 @@ var Circle = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -159,7 +159,7 @@ var Circle = /** @class */ (function () {
             }
             return new BoundingBox(this.offset.x + bodyPos.x - this.radius, this.offset.y + bodyPos.y - this.radius, this.offset.x + bodyPos.x + this.radius, this.offset.y + bodyPos.y + this.radius);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "localBounds", {
@@ -169,7 +169,7 @@ var Circle = /** @class */ (function () {
         get: function () {
             return new BoundingBox(this.offset.x - this.radius, this.offset.y - this.radius, this.offset.x + this.radius, this.offset.y + this.radius);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "axes", {
@@ -179,7 +179,7 @@ var Circle = /** @class */ (function () {
         get: function () {
             return null;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "inertia", {
@@ -191,7 +191,7 @@ var Circle = /** @class */ (function () {
             var mass = this.collider ? this.collider.mass : Physics.defaultMass;
             return (mass * this.radius * this.radius) / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

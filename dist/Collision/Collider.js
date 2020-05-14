@@ -81,7 +81,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.body ? this.body.id : -1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "shape", {
@@ -101,7 +101,7 @@ var Collider = /** @class */ (function () {
                 this.inertia = isNaN(this._shape.inertia) ? this.inertia : this._shape.inertia;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "center", {
@@ -111,7 +111,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.bounds.center;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "active", {
@@ -121,7 +121,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.body.active;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -155,7 +155,7 @@ var Collider = /** @class */ (function () {
         set: function (offset) {
             this.shape.offset = offset.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -185,7 +185,7 @@ var Collider = /** @class */ (function () {
             }
             return new BoundingBox();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "localBounds", {
@@ -199,7 +199,7 @@ var Collider = /** @class */ (function () {
             }
             return new BoundingBox();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

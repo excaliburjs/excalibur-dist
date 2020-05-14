@@ -36,7 +36,7 @@ var Edge = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "center", {
@@ -47,7 +47,7 @@ var Edge = /** @class */ (function () {
             var pos = this.begin.average(this.end).add(this._getBodyPos());
             return pos;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Edge.prototype._getBodyPos = function () {
@@ -175,7 +175,7 @@ var Edge = /** @class */ (function () {
             var transformedEnd = this._getTransformedEnd();
             return this._boundsFromBeginEnd(transformedBegin, transformedEnd);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "localBounds", {
@@ -185,7 +185,7 @@ var Edge = /** @class */ (function () {
         get: function () {
             return this._boundsFromBeginEnd(this.begin, this.end);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -211,7 +211,7 @@ var Edge = /** @class */ (function () {
             axes.push(edgeNormal.normal().negate());
             return axes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "inertia", {
@@ -224,7 +224,7 @@ var Edge = /** @class */ (function () {
             var length = this.end.sub(this.begin).distance() / 2;
             return mass * length * length;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

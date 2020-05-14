@@ -336,7 +336,7 @@ var LabelImpl = /** @class */ (function (_super) {
         get: function () {
             return this._lookupFontStyle(this.fontStyle) + " " + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     LabelImpl.prototype.debugDraw = function (ctx) {

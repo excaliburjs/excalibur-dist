@@ -51,14 +51,14 @@ var BrowserEvents = /** @class */ (function () {
         get: function () {
             return this._windowComponent;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BrowserEvents.prototype, "document", {
         get: function () {
             return this._documentComponent;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     BrowserEvents.prototype.pause = function () {

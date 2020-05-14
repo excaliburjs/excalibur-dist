@@ -307,7 +307,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.rx = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "x", {
@@ -325,7 +325,7 @@ var Camera = /** @class */ (function (_super) {
                 this.pos.x = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "y", {
@@ -343,7 +343,7 @@ var Camera = /** @class */ (function (_super) {
                 this.pos.y = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "dx", {
@@ -356,7 +356,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.vel.x = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "dy", {
@@ -369,7 +369,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.vel.y = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "ax", {
@@ -382,7 +382,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.acc.x = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "ay", {
@@ -395,7 +395,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.acc.y = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -490,7 +490,7 @@ var Camera = /** @class */ (function (_super) {
             }
             return new BoundingBox(0, 0, 0, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -553,7 +553,7 @@ var Camera = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Camera.prototype._initialize = function (_engine) {

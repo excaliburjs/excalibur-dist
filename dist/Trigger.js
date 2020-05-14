@@ -96,7 +96,7 @@ var Trigger = /** @class */ (function (_super) {
             this._target = target;
             this.filter = function (actor) { return actor === target; };
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Trigger.prototype._initialize = function (engine) {

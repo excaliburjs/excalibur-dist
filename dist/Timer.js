@@ -99,7 +99,7 @@ var Timer = /** @class */ (function () {
         get: function () {
             return this._numberOfTicks;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Timer.prototype.getTimeRunning = function () {

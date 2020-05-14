@@ -101,7 +101,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._id = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "delta", {
@@ -118,7 +118,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._delta = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "fps", {
@@ -135,7 +135,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._fps = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "actors", {
@@ -145,7 +145,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._actorStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "duration", {
@@ -155,7 +155,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._durationStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "physics", {
@@ -165,7 +165,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._physicsStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return FrameStats;
@@ -217,7 +217,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._pairs = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "collisions", {
@@ -227,7 +227,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._collisions = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "collidersHash", {
@@ -237,7 +237,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (colliders) {
             this._collidersHash = colliders;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
@@ -247,7 +247,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._fastBodies = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
@@ -257,7 +257,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._fastBodyCollisions = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "broadphase", {
@@ -267,7 +267,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._broadphase = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
@@ -277,7 +277,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._narrowphase = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PhysicsStats;

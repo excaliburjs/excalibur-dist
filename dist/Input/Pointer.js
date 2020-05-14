@@ -89,7 +89,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "isDragStart", {
@@ -99,7 +99,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return !this._wasDown && this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "isDragEnd", {
@@ -109,7 +109,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return this._wasDown && !this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "hasActorsUnderPointer", {
@@ -119,7 +119,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return !!this._actorsUnderPointer.length;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Pointer.prototype.on = function (event, handler) {

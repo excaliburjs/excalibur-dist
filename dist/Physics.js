@@ -67,7 +67,7 @@ var Physics = /** @class */ (function () {
         set: function (value) {
             Physics.dynamicTreeVelocityMultiplier = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

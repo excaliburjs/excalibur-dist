@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6557+57e03f4 - 2020-5-12
+ * excalibur - 0.25.0-alpha.6565+0c63a5c - 2020-5-14
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5089,11 +5089,22 @@ var ActionContext = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./Actions/Actionable.ts":
+/*!*******************************!*\
+  !*** ./Actions/Actionable.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./Actions/Index.ts":
 /*!**************************!*\
   !*** ./Actions/Index.ts ***!
   \**************************/
-/*! exports provided: ActionContext, RotationType, Actions, Internal */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5102,17 +5113,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ActionContext__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ActionContext */ "./Actions/ActionContext.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _ActionContext__WEBPACK_IMPORTED_MODULE_0__["ActionContext"]; });
 
-/* harmony import */ var _RotationType__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RotationType */ "./Actions/RotationType.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _RotationType__WEBPACK_IMPORTED_MODULE_1__["RotationType"]; });
+/* harmony import */ var _Actionable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actionable */ "./Actions/Actionable.ts");
+/* harmony import */ var _Actionable__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_Actionable__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actionable__WEBPACK_IMPORTED_MODULE_1__) if(["Actions","Internal","ActionContext","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actionable__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _RotationType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RotationType */ "./Actions/RotationType.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _RotationType__WEBPACK_IMPORTED_MODULE_2__["RotationType"]; });
 
-/* harmony import */ var _Action__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Action */ "./Actions/Action.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Action__WEBPACK_IMPORTED_MODULE_2__; });
+/* harmony import */ var _Action__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Action */ "./Actions/Action.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Action__WEBPACK_IMPORTED_MODULE_3__; });
+
 
 
 
 
 // legacy Internal.Actions namespace support
-var Internal = { Actions: _Action__WEBPACK_IMPORTED_MODULE_2__ };
+var Internal = { Actions: _Action__WEBPACK_IMPORTED_MODULE_3__ };
 
 
 /***/ }),
@@ -5424,7 +5439,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this._body = body;
             this._body.actor = this;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "pos", {
@@ -5440,7 +5455,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (thePos) {
             this.body.pos.setTo(thePos.x, thePos.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldPos", {
@@ -5456,7 +5471,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (thePos) {
             this.body.oldPos.setTo(thePos.x, thePos.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "vel", {
@@ -5472,7 +5487,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theVel) {
             this.body.vel.setTo(theVel.x, theVel.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldVel", {
@@ -5488,7 +5503,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theVel) {
             this.body.oldVel.setTo(theVel.x, theVel.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "acc", {
@@ -5505,7 +5520,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAcc) {
             this.body.acc.setTo(theAcc.x, theAcc.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldAcc", {
@@ -5521,7 +5536,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAcc) {
             this.body.oldAcc.setTo(theAcc.x, theAcc.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "rotation", {
@@ -5537,7 +5552,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (theAngle) {
             this.body.rotation = theAngle;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "rx", {
@@ -5553,7 +5568,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (angularVelocity) {
             this.body.rx = angularVelocity;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "scale", {
@@ -5571,7 +5586,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scale) {
             this.body.scale = scale;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "oldScale", {
@@ -5589,7 +5604,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scale) {
             this.body.oldScale = scale;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "sx", {
@@ -5607,7 +5622,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scalePerSecondX) {
             this.body.sx = scalePerSecondX;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "sy", {
@@ -5625,7 +5640,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (scalePerSecondY) {
             this.body.sy = scalePerSecondY;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "draggable", {
@@ -5649,7 +5664,7 @@ var ActorImpl = /** @class */ (function (_super) {
                 this._draggable = isDraggable;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "color", {
@@ -5665,7 +5680,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (v) {
             this._color = v.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -5684,7 +5699,7 @@ var ActorImpl = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -5855,7 +5870,7 @@ var ActorImpl = /** @class */ (function (_super) {
         set: function (newZ) {
             this.setZIndex(newZ);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -5883,7 +5898,7 @@ var ActorImpl = /** @class */ (function (_super) {
         get: function () {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "width", {
@@ -5895,7 +5910,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ActorImpl.prototype, "height", {
@@ -5907,7 +5922,7 @@ var ActorImpl = /** @class */ (function (_super) {
             this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -6307,7 +6322,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "One", {
@@ -6317,7 +6332,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(1, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Half", {
@@ -6327,7 +6342,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0.5, 0.5);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Up", {
@@ -6337,7 +6352,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, -1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Down", {
@@ -6347,7 +6362,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(0, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Left", {
@@ -6357,7 +6372,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(-1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "Right", {
@@ -6367,7 +6382,7 @@ var Vector = /** @class */ (function () {
         get: function () {
             return new Vector(1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -6444,7 +6459,7 @@ var Vector = /** @class */ (function () {
             this.x = v.x;
             this.y = v.y;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -6649,7 +6664,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return (this.end.y - this.begin.y) / (this.end.x - this.begin.x);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Line.prototype, "intercept", {
@@ -6659,7 +6674,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return this.begin.y - this.slope * this.begin.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -6701,7 +6716,7 @@ var Line = /** @class */ (function () {
         get: function () {
             return this.begin.add(this.end).scale(0.5);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -7203,7 +7218,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.rx = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "x", {
@@ -7221,7 +7236,7 @@ var Camera = /** @class */ (function (_super) {
                 this.pos.x = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "y", {
@@ -7239,7 +7254,7 @@ var Camera = /** @class */ (function (_super) {
                 this.pos.y = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "dx", {
@@ -7252,7 +7267,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.vel.x = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "dy", {
@@ -7265,7 +7280,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.vel.y = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "ax", {
@@ -7278,7 +7293,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.acc.x = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Camera.prototype, "ay", {
@@ -7291,7 +7306,7 @@ var Camera = /** @class */ (function (_super) {
         set: function (value) {
             this.acc.y = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -7386,7 +7401,7 @@ var Camera = /** @class */ (function (_super) {
             }
             return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_6__["BoundingBox"](0, 0, 0, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -7449,7 +7464,7 @@ var Camera = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Camera.prototype._initialize = function (_engine) {
@@ -7761,7 +7776,7 @@ var Body = /** @class */ (function () {
         get: function () {
             return this.actor ? this.actor.id : -1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -7777,14 +7792,14 @@ var Body = /** @class */ (function () {
         get: function () {
             return this.actor ? !this.actor.isKilled() : false;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Body.prototype, "center", {
         get: function () {
             return this.pos;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Body.prototype, "collider", {
@@ -7799,7 +7814,7 @@ var Body = /** @class */ (function () {
                 this._wireColliderEventsToActor();
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -7825,7 +7840,7 @@ var Body = /** @class */ (function () {
         get: function () {
             return this._geometryDirty;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -8055,7 +8070,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return this.right - this.left;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoundingBox.prototype, "height", {
@@ -8065,7 +8080,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return this.bottom - this.top;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoundingBox.prototype, "center", {
@@ -8075,7 +8090,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"]((this.left + this.right) / 2, (this.top + this.bottom) / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     BoundingBox.prototype.translate = function (pos) {
@@ -8189,7 +8204,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_1__["Vector"](this.width, this.height);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -8396,7 +8411,7 @@ var Circle = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -8419,7 +8434,7 @@ var Circle = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -8526,7 +8541,7 @@ var Circle = /** @class */ (function () {
             }
             return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.offset.x + bodyPos.x - this.radius, this.offset.y + bodyPos.y - this.radius, this.offset.x + bodyPos.x + this.radius, this.offset.y + bodyPos.y + this.radius);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "localBounds", {
@@ -8536,7 +8551,7 @@ var Circle = /** @class */ (function () {
         get: function () {
             return new _BoundingBox__WEBPACK_IMPORTED_MODULE_0__["BoundingBox"](this.offset.x - this.radius, this.offset.y - this.radius, this.offset.x + this.radius, this.offset.y + this.radius);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "axes", {
@@ -8546,7 +8561,7 @@ var Circle = /** @class */ (function () {
         get: function () {
             return null;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Circle.prototype, "inertia", {
@@ -8558,7 +8573,7 @@ var Circle = /** @class */ (function () {
             var mass = this.collider ? this.collider.mass : _Physics__WEBPACK_IMPORTED_MODULE_5__["Physics"].defaultMass;
             return (mass * this.radius * this.radius) / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -8970,7 +8985,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.body ? this.body.id : -1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "shape", {
@@ -8990,7 +9005,7 @@ var Collider = /** @class */ (function () {
                 this.inertia = isNaN(this._shape.inertia) ? this.inertia : this._shape.inertia;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "center", {
@@ -9000,7 +9015,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.bounds.center;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "active", {
@@ -9010,7 +9025,7 @@ var Collider = /** @class */ (function () {
         get: function () {
             return this.body.active;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9044,7 +9059,7 @@ var Collider = /** @class */ (function () {
         set: function (offset) {
             this.shape.offset = offset.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9074,7 +9089,7 @@ var Collider = /** @class */ (function () {
             }
             return new _BoundingBox__WEBPACK_IMPORTED_MODULE_4__["BoundingBox"]();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Collider.prototype, "localBounds", {
@@ -9088,7 +9103,7 @@ var Collider = /** @class */ (function () {
             }
             return new _BoundingBox__WEBPACK_IMPORTED_MODULE_4__["BoundingBox"]();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9401,7 +9416,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._name;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CollisionGroup.prototype, "category", {
@@ -9411,7 +9426,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._category;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CollisionGroup.prototype, "mask", {
@@ -9421,7 +9436,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._mask;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9486,7 +9501,7 @@ var CollisionGroupManager = /** @class */ (function () {
         get: function () {
             return Array.from(this._groups.values());
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9688,6 +9703,28 @@ var CollisionJumpTable = {
 
 /***/ }),
 
+/***/ "./Collision/CollisionResolver.ts":
+/*!****************************************!*\
+  !*** ./Collision/CollisionResolver.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Collision/CollisionShape.ts":
+/*!*************************************!*\
+  !*** ./Collision/CollisionShape.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./Collision/CollisionType.ts":
 /*!************************************!*\
   !*** ./Collision/CollisionType.ts ***!
@@ -9794,7 +9831,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "center", {
@@ -9808,7 +9845,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -9967,7 +10004,7 @@ var ConvexPolygon = /** @class */ (function () {
             var points = this.getTransformedPoints();
             return _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"].fromPoints(points);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "localBounds", {
@@ -9977,7 +10014,7 @@ var ConvexPolygon = /** @class */ (function () {
         get: function () {
             return _BoundingBox__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"].fromPoints(this.points);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "inertia", {
@@ -9999,7 +10036,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return (mass / 6) * (numerator / denominator);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -10044,7 +10081,7 @@ var ConvexPolygon = /** @class */ (function () {
             this._axes = axes;
             return this._axes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -10903,7 +10940,7 @@ var Edge = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "center", {
@@ -10914,7 +10951,7 @@ var Edge = /** @class */ (function () {
             var pos = this.begin.average(this.end).add(this._getBodyPos());
             return pos;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Edge.prototype._getBodyPos = function () {
@@ -11042,7 +11079,7 @@ var Edge = /** @class */ (function () {
             var transformedEnd = this._getTransformedEnd();
             return this._boundsFromBeginEnd(transformedBegin, transformedEnd);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "localBounds", {
@@ -11052,7 +11089,7 @@ var Edge = /** @class */ (function () {
         get: function () {
             return this._boundsFromBeginEnd(this.begin, this.end);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -11078,7 +11115,7 @@ var Edge = /** @class */ (function () {
             axes.push(edgeNormal.normal().negate());
             return axes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Edge.prototype, "inertia", {
@@ -11091,7 +11128,7 @@ var Edge = /** @class */ (function () {
             var length = this.end.sub(this.begin).distance() / 2;
             return mass * length * length;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -11147,7 +11184,7 @@ var Edge = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11194,17 +11231,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Edge__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Edge */ "./Collision/Edge.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["Edge"]; });
 
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_12__["Pair"]; });
+/* harmony import */ var _CollisionShape__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./CollisionShape */ "./Collision/CollisionShape.ts");
+/* harmony import */ var _CollisionShape__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_CollisionShape__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _CollisionShape__WEBPACK_IMPORTED_MODULE_12__) if(["Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _CollisionShape__WEBPACK_IMPORTED_MODULE_12__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CollisionResolver */ "./Collision/CollisionResolver.ts");
+/* harmony import */ var _CollisionResolver__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_CollisionResolver__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__) if(["Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Physics */ "./Collision/Physics.ts");
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_Physics__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Physics__WEBPACK_IMPORTED_MODULE_14__) if(["Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Physics__WEBPACK_IMPORTED_MODULE_14__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_15__["Pair"]; });
 
-/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_13__["ConvexPolygon"]; });
+/* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _ConvexPolygon__WEBPACK_IMPORTED_MODULE_16__["ConvexPolygon"]; });
 
-/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_14__["Side"]; });
+/* harmony import */ var _Side__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Side */ "./Collision/Side.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Side__WEBPACK_IMPORTED_MODULE_17__["Side"]; });
 
-/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_15__["Shape"]; });
+/* harmony import */ var _Shape__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Shape */ "./Collision/Shape.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Shape__WEBPACK_IMPORTED_MODULE_18__["Shape"]; });
+
+
+
 
 
 
@@ -11283,7 +11332,7 @@ var Pair = /** @class */ (function () {
             var actorB = this.colliderB;
             return Pair.canCollide(actorA, actorB);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -11324,6 +11373,17 @@ var Pair = /** @class */ (function () {
     };
     return Pair;
 }());
+
+
+
+/***/ }),
+
+/***/ "./Collision/Physics.ts":
+/*!******************************!*\
+  !*** ./Collision/Physics.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 
 
@@ -11616,7 +11676,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._id = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "delta", {
@@ -11633,7 +11693,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._delta = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "fps", {
@@ -11650,7 +11710,7 @@ var FrameStats = /** @class */ (function () {
         set: function (value) {
             this._fps = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "actors", {
@@ -11660,7 +11720,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._actorStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "duration", {
@@ -11670,7 +11730,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._durationStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FrameStats.prototype, "physics", {
@@ -11680,7 +11740,7 @@ var FrameStats = /** @class */ (function () {
         get: function () {
             return this._physicsStats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return FrameStats;
@@ -11732,7 +11792,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._pairs = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "collisions", {
@@ -11742,7 +11802,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._collisions = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "collidersHash", {
@@ -11752,7 +11812,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (colliders) {
             this._collidersHash = colliders;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
@@ -11762,7 +11822,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._fastBodies = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
@@ -11772,7 +11832,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._fastBodyCollisions = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "broadphase", {
@@ -11782,7 +11842,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._broadphase = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
@@ -11792,7 +11852,7 @@ var PhysicsStats = /** @class */ (function () {
         set: function (value) {
             this._narrowphase = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PhysicsStats;
@@ -12373,7 +12433,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#000000');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "White", {
@@ -12383,7 +12443,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFFFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Gray", {
@@ -12393,7 +12453,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#808080');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "LightGray", {
@@ -12403,7 +12463,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#D3D3D3');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "DarkGray", {
@@ -12413,7 +12473,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#A9A9A9');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Yellow", {
@@ -12423,7 +12483,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Orange", {
@@ -12433,7 +12493,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFA500');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Red", {
@@ -12443,7 +12503,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF0000');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Vermilion", {
@@ -12453,7 +12513,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF5B31');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Vermillion", {
@@ -12464,7 +12524,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.Vermilion;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Rose", {
@@ -12474,7 +12534,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF007F');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Magenta", {
@@ -12484,7 +12544,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF00FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Violet", {
@@ -12494,7 +12554,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#7F00FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Blue", {
@@ -12504,7 +12564,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#0000FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Azure", {
@@ -12514,7 +12574,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#007FFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Cyan", {
@@ -12524,7 +12584,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#00FFFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Viridian", {
@@ -12534,7 +12594,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#59978F');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Green", {
@@ -12544,7 +12604,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#00FF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Chartreuse", {
@@ -12554,7 +12614,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#7FFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Transparent", {
@@ -12564,7 +12624,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFFFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     __decorate([
@@ -12967,14 +13027,14 @@ var SpriteImpl = /** @class */ (function () {
         get: function () {
             return this.width * this.scale.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SpriteImpl.prototype, "drawHeight", {
         get: function () {
             return this.height * this.scale.y;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SpriteImpl.prototype._loadPixels = function () {
@@ -14121,7 +14181,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfCanvasWidth", {
@@ -14131,7 +14191,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.width / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "canvasHeight", {
@@ -14142,7 +14202,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfCanvasHeight", {
@@ -14152,7 +14212,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.height / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "drawWidth", {
@@ -14165,7 +14225,7 @@ O|===|* >________________>\n\
             }
             return this.canvasWidth / this.pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfDrawWidth", {
@@ -14175,7 +14235,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.drawWidth / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "drawHeight", {
@@ -14188,7 +14248,7 @@ O|===|* >________________>\n\
             }
             return this.canvasHeight / this.pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfDrawHeight", {
@@ -14198,7 +14258,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.drawHeight / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "isHiDpi", {
@@ -14208,7 +14268,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.pixelRatio !== 1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "stats", {
@@ -14218,7 +14278,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.debug.stats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "pixelRatio", {
@@ -14236,7 +14296,7 @@ O|===|* >________________>\n\
             var pixelRatio = devicePixelRatio;
             return pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Engine.prototype.on = function (eventName, handler) {
@@ -14277,7 +14337,7 @@ O|===|* >________________>\n\
             }
             this._timescale = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -14682,7 +14742,7 @@ O|===|* >________________>\n\
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Engine.prototype._overrideInitialize = function (engine) {
@@ -15588,7 +15648,7 @@ var PreCollisionEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PreCollisionEvent;
@@ -15620,7 +15680,7 @@ var PostCollisionEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return PostCollisionEvent;
@@ -15651,7 +15711,7 @@ var CollisionStartEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return CollisionStartEvent;
@@ -15678,7 +15738,7 @@ var CollisionEndEvent = /** @class */ (function (_super) {
         set: function (actor) {
             this.target = actor;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return CollisionEndEvent;
@@ -15836,7 +15896,7 @@ var MediaEvent = /** @class */ (function (_super) {
         set: function (_value) {
             // stubbed
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(MediaEvent.prototype, "_path", {
@@ -15852,7 +15912,7 @@ var MediaEvent = /** @class */ (function (_super) {
         set: function (_val) {
             // stubbed
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -15907,6 +15967,17 @@ var NativeSoundProcessedEvent = /** @class */ (function (_super) {
     }
     return NativeSoundProcessedEvent;
 }(MediaEvent));
+
+
+
+/***/ }),
+
+/***/ "./Input/EngineInput.ts":
+/*!******************************!*\
+  !*** ./Input/EngineInput.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 
 
@@ -16316,7 +16387,7 @@ var Axes;
 /*!************************!*\
   !*** ./Input/Index.ts ***!
   \************************/
-/*! exports provided: Gamepads, Gamepad, Buttons, Axes, PointerType, PointerScope, Pointer, Pointers, NativePointerButton, PointerButton, WheelDeltaMode, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, createPointerEventByName, Keys, KeyEvent, Keyboard */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16376,6 +16447,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Keyboard", function() { return _Keyboard__WEBPACK_IMPORTED_MODULE_4__["Keyboard"]; });
 
+/* harmony import */ var _EngineInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./EngineInput */ "./Input/EngineInput.ts");
+/* harmony import */ var _EngineInput__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_EngineInput__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _EngineInput__WEBPACK_IMPORTED_MODULE_5__) if(["Gamepads","Gamepad","Buttons","Axes","PointerType","PointerScope","Pointer","Pointers","NativePointerButton","PointerButton","WheelDeltaMode","PointerEvent","PointerEventFactory","PointerDragEvent","PointerUpEvent","PointerDownEvent","PointerMoveEvent","PointerEnterEvent","PointerLeaveEvent","PointerCancelEvent","WheelEvent","createPointerEventByName","Keys","KeyEvent","Keyboard","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _EngineInput__WEBPACK_IMPORTED_MODULE_5__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /**
  * Provides support for mice, keyboards, and controllers.
  *
@@ -16384,6 +16458,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * @typedoc
  */
+
 
 
 
@@ -16726,7 +16801,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "isDragStart", {
@@ -16736,7 +16811,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return !this._wasDown && this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "isDragEnd", {
@@ -16746,7 +16821,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return this._wasDown && !this._isDown;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Pointer.prototype, "hasActorsUnderPointer", {
@@ -16756,7 +16831,7 @@ var Pointer = /** @class */ (function (_super) {
         get: function () {
             return !!this._actorsUnderPointer.length;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Pointer.prototype.on = function (event, handler) {
@@ -16977,7 +17052,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this._name;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "worldPos", {
@@ -16985,7 +17060,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.worldPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "pagePos", {
@@ -16993,7 +17068,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.pagePos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "screenPos", {
@@ -17001,14 +17076,14 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.screenPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "pos", {
         get: function () {
             return this.coordinates.worldPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     PointerEvent.prototype.propagate = function (actor) {
@@ -17711,6 +17786,17 @@ var Pointers = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./Interfaces/Audio.ts":
+/*!*****************************!*\
+  !*** ./Interfaces/Audio.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./Interfaces/AudioImplementation.ts":
 /*!*******************************************!*\
   !*** ./Interfaces/AudioImplementation.ts ***!
@@ -17739,18 +17825,127 @@ var ExResponse = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./Interfaces/Drawable.ts":
+/*!********************************!*\
+  !*** ./Interfaces/Drawable.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/Evented.ts":
+/*!*******************************!*\
+  !*** ./Interfaces/Evented.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./Interfaces/Index.ts":
 /*!*****************************!*\
   !*** ./Interfaces/Index.ts ***!
   \*****************************/
-/*! exports provided: ExResponse */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _AudioImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AudioImplementation */ "./Interfaces/AudioImplementation.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"]; });
+/* harmony import */ var _Trait__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Trait */ "./Interfaces/Trait.ts");
+/* harmony import */ var _Trait__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Trait__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Trait__WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Trait__WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Audio */ "./Interfaces/Audio.ts");
+/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_Audio__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Audio__WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Audio__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _AudioImplementation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioImplementation */ "./Interfaces/AudioImplementation.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _AudioImplementation__WEBPACK_IMPORTED_MODULE_2__["ExResponse"]; });
 
+/* harmony import */ var _Drawable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawable */ "./Interfaces/Drawable.ts");
+/* harmony import */ var _Drawable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_Drawable__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Drawable__WEBPACK_IMPORTED_MODULE_3__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Drawable__WEBPACK_IMPORTED_MODULE_3__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Evented */ "./Interfaces/Evented.ts");
+/* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_Evented__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Evented__WEBPACK_IMPORTED_MODULE_4__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Evented__WEBPACK_IMPORTED_MODULE_4__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loadable */ "./Interfaces/Loadable.ts");
+/* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_Loadable__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Loadable__WEBPACK_IMPORTED_MODULE_5__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Loadable__WEBPACK_IMPORTED_MODULE_5__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Interfaces/Loader.ts");
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_Loader__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Loader__WEBPACK_IMPORTED_MODULE_6__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Loader__WEBPACK_IMPORTED_MODULE_6__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
+/* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
+/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__) if(["ExResponse","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/LifecycleEvents.ts":
+/*!***************************************!*\
+  !*** ./Interfaces/LifecycleEvents.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/Loadable.ts":
+/*!********************************!*\
+  !*** ./Interfaces/Loadable.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/Loader.ts":
+/*!******************************!*\
+  !*** ./Interfaces/Loader.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/PointerEventHandlers.ts":
+/*!********************************************!*\
+  !*** ./Interfaces/PointerEventHandlers.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./Interfaces/Trait.ts":
+/*!*****************************!*\
+  !*** ./Interfaces/Trait.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 
 
@@ -18114,7 +18309,7 @@ var LabelImpl = /** @class */ (function (_super) {
         get: function () {
             return this._lookupFontStyle(this.fontStyle) + " " + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     LabelImpl.prototype.debugDraw = function (ctx) {
@@ -18347,7 +18542,7 @@ var Loader = /** @class */ (function (_super) {
             }
             return this._imageElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Loader.prototype, "_playButton", {
@@ -18368,7 +18563,7 @@ var Loader = /** @class */ (function (_super) {
             }
             return this._playButtonElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Loader.prototype.wireEngine = function (engine) {
@@ -19796,7 +19991,7 @@ var Physics = /** @class */ (function () {
         set: function (value) {
             Physics.dynamicTreeVelocityMultiplier = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -20205,7 +20400,7 @@ var ColorBlindCorrector = /** @class */ (function () {
 /*!*********************************!*\
   !*** ./PostProcessing/Index.ts ***!
   \*********************************/
-/*! exports provided: ColorBlindness, ColorBlindCorrector */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20215,6 +20410,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _ColorBlindCorrector__WEBPACK_IMPORTED_MODULE_0__["ColorBlindCorrector"]; });
 
+/* harmony import */ var _PostProcessor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostProcessor */ "./PostProcessing/PostProcessor.ts");
+/* harmony import */ var _PostProcessor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_PostProcessor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessor__WEBPACK_IMPORTED_MODULE_1__) if(["ColorBlindness","ColorBlindCorrector","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessor__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+
+
+/***/ }),
+
+/***/ "./PostProcessing/PostProcessor.ts":
+/*!*****************************************!*\
+  !*** ./PostProcessing/PostProcessor.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 
 
@@ -20541,7 +20751,7 @@ var Gif = /** @class */ (function (_super) {
         get: function () {
             return this._gif.checkBytes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return Gif;
@@ -21245,7 +21455,7 @@ var AudioInstance = /** @class */ (function () {
                 this._wireUpOnEnded();
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(AudioInstance.prototype, "volume", {
@@ -21255,7 +21465,7 @@ var AudioInstance = /** @class */ (function () {
         set: function (value) {
             this._volume = _Util_Util__WEBPACK_IMPORTED_MODULE_1__["clamp"](value, 0, 1.0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(AudioInstance.prototype, "duration", {
@@ -21268,7 +21478,7 @@ var AudioInstance = /** @class */ (function () {
         set: function (value) {
             this._duration = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AudioInstance.prototype.isPlaying = function () {
@@ -21343,7 +21553,7 @@ var AudioTagInstance = /** @class */ (function (_super) {
             this._volume = value;
             this._instance.volume = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AudioTagInstance.prototype.pause = function () {
@@ -21415,14 +21625,14 @@ var WebAudioInstance = /** @class */ (function (_super) {
                 this._volumeNode.gain.value = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(WebAudioInstance.prototype, "_playbackRate", {
         get: function () {
             return this._instance ? 1 / (this._instance.playbackRate.value || 1.0) : null;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     WebAudioInstance.prototype.pause = function () {
@@ -21626,7 +21836,7 @@ var Sound = /** @class */ (function (_super) {
             }
             this.logger.debug('Set loop for all instances of sound', this.path, 'to', this._loop);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "volume", {
@@ -21642,14 +21852,14 @@ var Sound = /** @class */ (function (_super) {
             this.emit('volumechange', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this));
             this.logger.debug('Set loop for all instances of sound', this.path, 'to', this._volume);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "duration", {
         get: function () {
             return this._duration;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Sound.prototype, "instances", {
@@ -21659,7 +21869,7 @@ var Sound = /** @class */ (function (_super) {
         get: function () {
             return this._tracks;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Sound.prototype.wireEngine = function (engine) {
@@ -22147,7 +22357,7 @@ var Scene = /** @class */ (function (_super) {
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -23015,14 +23225,14 @@ var CellImpl = /** @class */ (function () {
         get: function () {
             return this._bounds;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CellImpl.prototype, "center", {
         get: function () {
             return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -23182,7 +23392,7 @@ var Timer = /** @class */ (function () {
         get: function () {
             return this._numberOfTicks;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Timer.prototype.getTimeRunning = function () {
@@ -23488,7 +23698,7 @@ var Trigger = /** @class */ (function (_super) {
             this._target = target;
             this.filter = function (actor) { return actor === target; };
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Trigger.prototype._initialize = function (engine) {
@@ -23616,14 +23826,14 @@ var BrowserEvents = /** @class */ (function () {
         get: function () {
             return this._windowComponent;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BrowserEvents.prototype, "document", {
         get: function () {
             return this._documentComponent;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     BrowserEvents.prototype.pause = function () {
@@ -25404,7 +25614,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, DisplayMode, ScrollPreventionMode, Engine, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25603,53 +25813,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["UIActor"]; });
 
 /* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["ActionContext"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["RotationType"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Actions"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__["Internal"]; });
-
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actions_Index__WEBPACK_IMPORTED_MODULE_22__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Body"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["isCollider"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Collider"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["BoundingBox"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Circle"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionContact"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionJumpTable"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ClosestLine"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ClosestLineJumpTable"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionGroup"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["CollisionGroupManager"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["TreeNode"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTree"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["DynamicTreeCollisionBroadphase"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Edge"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Pair"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["ConvexPolygon"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Side"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__["Shape"]; });
-
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Collision_Index__WEBPACK_IMPORTED_MODULE_23__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Animation"]; });
 
@@ -25666,8 +25832,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Effects"]; });
 
 /* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__["ExResponse"]; });
-
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinGenerator"]; });
 
@@ -25676,10 +25841,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["Random"]; });
 
 /* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindness"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__["ColorBlindCorrector"]; });
-
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","PerlinGenerator","PerlinDrawer2D","Random","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 /* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Resource"]; });
 
@@ -25751,7 +25913,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6557+57e03f4";
+var EX_VERSION = "0.25.0-alpha.6565+0c63a5c";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

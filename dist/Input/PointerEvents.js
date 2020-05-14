@@ -73,7 +73,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this._name;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "worldPos", {
@@ -81,7 +81,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.worldPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "pagePos", {
@@ -89,7 +89,7 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.pagePos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "screenPos", {
@@ -97,14 +97,14 @@ var PointerEvent = /** @class */ (function (_super) {
         get: function () {
             return this.coordinates.screenPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(PointerEvent.prototype, "pos", {
         get: function () {
             return this.coordinates.worldPos.clone();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     PointerEvent.prototype.propagate = function (actor) {

@@ -41,7 +41,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "center", {
@@ -55,7 +55,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return this.offset;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -214,7 +214,7 @@ var ConvexPolygon = /** @class */ (function () {
             var points = this.getTransformedPoints();
             return BoundingBox.fromPoints(points);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "localBounds", {
@@ -224,7 +224,7 @@ var ConvexPolygon = /** @class */ (function () {
         get: function () {
             return BoundingBox.fromPoints(this.points);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ConvexPolygon.prototype, "inertia", {
@@ -246,7 +246,7 @@ var ConvexPolygon = /** @class */ (function () {
             }
             return (mass / 6) * (numerator / denominator);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -291,7 +291,7 @@ var ConvexPolygon = /** @class */ (function () {
             this._axes = axes;
             return this._axes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

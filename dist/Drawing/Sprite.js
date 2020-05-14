@@ -104,14 +104,14 @@ var SpriteImpl = /** @class */ (function () {
         get: function () {
             return this.width * this.scale.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SpriteImpl.prototype, "drawHeight", {
         get: function () {
             return this.height * this.scale.y;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SpriteImpl.prototype._loadPixels = function () {

@@ -90,7 +90,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return this.right - this.left;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoundingBox.prototype, "height", {
@@ -100,7 +100,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return this.bottom - this.top;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(BoundingBox.prototype, "center", {
@@ -110,7 +110,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     BoundingBox.prototype.translate = function (pos) {
@@ -224,7 +224,7 @@ var BoundingBox = /** @class */ (function () {
         get: function () {
             return new Vector(this.width, this.height);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

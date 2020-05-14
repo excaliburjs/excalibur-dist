@@ -233,7 +233,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#000000');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "White", {
@@ -243,7 +243,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFFFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Gray", {
@@ -253,7 +253,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#808080');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "LightGray", {
@@ -263,7 +263,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#D3D3D3');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "DarkGray", {
@@ -273,7 +273,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#A9A9A9');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Yellow", {
@@ -283,7 +283,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Orange", {
@@ -293,7 +293,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFA500');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Red", {
@@ -303,7 +303,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF0000');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Vermilion", {
@@ -313,7 +313,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF5B31');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Vermillion", {
@@ -324,7 +324,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.Vermilion;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Rose", {
@@ -334,7 +334,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF007F');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Magenta", {
@@ -344,7 +344,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FF00FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Violet", {
@@ -354,7 +354,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#7F00FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Blue", {
@@ -364,7 +364,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#0000FF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Azure", {
@@ -374,7 +374,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#007FFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Cyan", {
@@ -384,7 +384,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#00FFFF');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Viridian", {
@@ -394,7 +394,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#59978F');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Green", {
@@ -404,7 +404,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#00FF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Chartreuse", {
@@ -414,7 +414,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#7FFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Color, "Transparent", {
@@ -424,7 +424,7 @@ var Color = /** @class */ (function () {
         get: function () {
             return Color.fromHex('#FFFFFF00');
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     __decorate([

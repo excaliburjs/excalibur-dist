@@ -57,7 +57,7 @@ var AudioInstance = /** @class */ (function () {
                 this._wireUpOnEnded();
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(AudioInstance.prototype, "volume", {
@@ -67,7 +67,7 @@ var AudioInstance = /** @class */ (function () {
         set: function (value) {
             this._volume = Util.clamp(value, 0, 1.0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(AudioInstance.prototype, "duration", {
@@ -80,7 +80,7 @@ var AudioInstance = /** @class */ (function () {
         set: function (value) {
             this._duration = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AudioInstance.prototype.isPlaying = function () {
@@ -155,7 +155,7 @@ var AudioTagInstance = /** @class */ (function (_super) {
             this._volume = value;
             this._instance.volume = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AudioTagInstance.prototype.pause = function () {
@@ -227,14 +227,14 @@ var WebAudioInstance = /** @class */ (function (_super) {
                 this._volumeNode.gain.value = value;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(WebAudioInstance.prototype, "_playbackRate", {
         get: function () {
             return this._instance ? 1 / (this._instance.playbackRate.value || 1.0) : null;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     WebAudioInstance.prototype.pause = function () {

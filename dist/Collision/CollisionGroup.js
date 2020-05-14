@@ -61,7 +61,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._name;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CollisionGroup.prototype, "category", {
@@ -71,7 +71,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._category;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CollisionGroup.prototype, "mask", {
@@ -81,7 +81,7 @@ var CollisionGroup = /** @class */ (function () {
         get: function () {
             return this._mask;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

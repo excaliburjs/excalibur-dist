@@ -255,7 +255,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfCanvasWidth", {
@@ -265,7 +265,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.width / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "canvasHeight", {
@@ -276,7 +276,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfCanvasHeight", {
@@ -286,7 +286,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.canvas.height / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "drawWidth", {
@@ -299,7 +299,7 @@ O|===|* >________________>\n\
             }
             return this.canvasWidth / this.pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfDrawWidth", {
@@ -309,7 +309,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.drawWidth / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "drawHeight", {
@@ -322,7 +322,7 @@ O|===|* >________________>\n\
             }
             return this.canvasHeight / this.pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "halfDrawHeight", {
@@ -332,7 +332,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.drawHeight / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "isHiDpi", {
@@ -342,7 +342,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.pixelRatio !== 1;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "stats", {
@@ -352,7 +352,7 @@ O|===|* >________________>\n\
         get: function () {
             return this.debug.stats;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Engine.prototype, "pixelRatio", {
@@ -370,7 +370,7 @@ O|===|* >________________>\n\
             var pixelRatio = devicePixelRatio;
             return pixelRatio;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Engine.prototype.on = function (eventName, handler) {
@@ -411,7 +411,7 @@ O|===|* >________________>\n\
             }
             this._timescale = value;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**
@@ -816,7 +816,7 @@ O|===|* >________________>\n\
         get: function () {
             return this._isInitialized;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Engine.prototype._overrideInitialize = function (engine) {

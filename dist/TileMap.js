@@ -312,14 +312,14 @@ var CellImpl = /** @class */ (function () {
         get: function () {
             return this._bounds;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(CellImpl.prototype, "center", {
         get: function () {
             return new Vector(this.x + this.width / 2, this.y + this.height / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

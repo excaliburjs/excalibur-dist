@@ -102,7 +102,7 @@ var Gif = /** @class */ (function (_super) {
         get: function () {
             return this._gif.checkBytes;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return Gif;

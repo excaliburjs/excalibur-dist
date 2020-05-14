@@ -30,7 +30,7 @@ var CollisionGroupManager = /** @class */ (function () {
         get: function () {
             return Array.from(this._groups.values());
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     /**

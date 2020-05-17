@@ -24,7 +24,7 @@ import { Sprite } from '../Drawing/Sprite';
 var Texture = /** @class */ (function (_super) {
     __extends(Texture, _super);
     /**
-     * @param path       Path to the image resource
+     * @param path       Path to the image resource or a base64 string representing an image "data:image/png;base64,iVB..."
      * @param bustCache  Optionally load texture with cache busting
      */
     function Texture(path, bustCache) {
@@ -57,6 +57,8 @@ var Texture = /** @class */ (function (_super) {
         if (this.path.indexOf('data:image/') > -1) {
             this.image = new Image();
             this.image.addEventListener('load', function () {
+                _this.oncomplete();
+                _this._isLoaded = true;
                 _this.width = _this._sprite.width = _this.image.naturalWidth;
                 _this.height = _this._sprite.height = _this.image.naturalHeight;
                 _this._sprite = new Sprite(_this, 0, 0, _this.width, _this.height);

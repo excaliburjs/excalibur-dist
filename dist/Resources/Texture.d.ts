@@ -30,7 +30,7 @@ export declare class Texture extends Resource<HTMLImageElement> {
      */
     image: HTMLImageElement;
     /**
-     * @param path       Path to the image resource
+     * @param path       Path to the image resource or a base64 string representing an image "data:image/png;base64,iVB..."
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path: string, bustCache?: boolean);

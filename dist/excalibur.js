@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6596+f3fde4f - 2020-5-17
+ * excalibur - 0.25.0-alpha.6597+6b44d34 - 2020-5-17
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -22110,7 +22110,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var Texture = /** @class */ (function (_super) {
     __extends(Texture, _super);
     /**
-     * @param path       Path to the image resource
+     * @param path       Path to the image resource or a base64 string representing an image "data:image/png;base64,iVB..."
      * @param bustCache  Optionally load texture with cache busting
      */
     function Texture(path, bustCache) {
@@ -22143,6 +22143,8 @@ var Texture = /** @class */ (function (_super) {
         if (this.path.indexOf('data:image/') > -1) {
             this.image = new Image();
             this.image.addEventListener('load', function () {
+                _this.oncomplete();
+                _this._isLoaded = true;
                 _this.width = _this._sprite.width = _this.image.naturalWidth;
                 _this.height = _this._sprite.height = _this.image.naturalHeight;
                 _this._sprite = new _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_2__["Sprite"](_this, 0, 0, _this.width, _this.height);
@@ -25913,7 +25915,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6596+f3fde4f";
+var EX_VERSION = "0.25.0-alpha.6597+6b44d34";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

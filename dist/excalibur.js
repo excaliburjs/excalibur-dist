@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6613+c5d710a - 2020-5-23
+ * excalibur - 0.25.0-alpha.6614+02e1a61 - 2020-5-23
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -22445,10 +22445,12 @@ var Scene = /** @class */ (function (_super) {
                 this.camera.x = engine.halfDrawWidth;
                 this.camera.y = engine.halfDrawHeight;
             }
+            // This order is important! we want to be sure any custom init that add actors
+            // fire before the actor init
+            this.onInitialize.call(this, engine);
             this._initializeChildren();
             this._logger.debug('Scene.onInitialize', this, engine);
             this.eventDispatcher.emit('initialize', new _Events__WEBPACK_IMPORTED_MODULE_2__["InitializeEvent"](engine, this));
-            this.onInitialize.call(this, engine);
             this._isInitialized = true;
         }
     };
@@ -25984,7 +25986,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6613+c5d710a";
+var EX_VERSION = "0.25.0-alpha.6614+02e1a61";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

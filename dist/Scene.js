@@ -169,10 +169,12 @@ var Scene = /** @class */ (function (_super) {
                 this.camera.x = engine.halfDrawWidth;
                 this.camera.y = engine.halfDrawHeight;
             }
+            // This order is important! we want to be sure any custom init that add actors
+            // fire before the actor init
+            this.onInitialize.call(this, engine);
             this._initializeChildren();
             this._logger.debug('Scene.onInitialize', this, engine);
             this.eventDispatcher.emit('initialize', new InitializeEvent(engine, this));
-            this.onInitialize.call(this, engine);
             this._isInitialized = true;
         }
     };

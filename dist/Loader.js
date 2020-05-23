@@ -103,6 +103,13 @@ var Loader = /** @class */ (function (_super) {
         _this.logo = logoImg;
         _this.logoWidth = 468;
         _this.logoHeight = 118;
+        /**
+         * Gets or sets the color of the loading bar, default is [[Color.White]]
+         */
+        _this.loadingBarColor = Color.White;
+        /**
+         * Gets or sets the background color of the loader as a hex string
+         */
         _this.backgroundColor = '#176BAA';
         _this.suppressPlayButton = false;
         /** Loads the css from Loader.css */
@@ -156,10 +163,25 @@ var Loader = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Loader.prototype, "playButtonRootElement", {
+        get: function () {
+            return this._playButtonRootElement;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Loader.prototype, "playButtonElement", {
+        get: function () {
+            return this._playButtonElement;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Loader.prototype, "_playButton", {
         get: function () {
             if (!this._playButtonRootElement) {
                 this._playButtonRootElement = document.createElement('div');
+                this._playButtonRootElement.id = 'excalibur-play-root';
                 this._playButtonRootElement.style.position = 'absolute';
                 document.body.appendChild(this._playButtonRootElement);
             }
@@ -230,53 +252,59 @@ var Loader = /** @class */ (function (_super) {
         this._playButton.style.display = 'none';
     };
     /**
+     * Clean up generated elements for the loader
+     */
+    Loader.prototype.dispose = function () {
+        if (this._playButtonRootElement.parentElement) {
+            this._playButtonRootElement.removeChild(this._playButtonElement);
+            document.body.removeChild(this._playButtonRootElement);
+            document.head.removeChild(this._styleBlock);
+            this._playButtonRootElement = null;
+            this._playButtonElement = null;
+            this._styleBlock = null;
+        }
+    };
+    /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
      */
     Loader.prototype.load = function () {
         var _this = this;
         var complete = new Promise();
-        var me = this;
         if (this._resourceList.length === 0) {
-            me.showPlayButton().then(function () {
+            this.showPlayButton().then(function () {
                 // Unlock audio context in chrome after user gesture
                 // https://github.com/excaliburjs/Excalibur/issues/262
                 // https://github.com/excaliburjs/Excalibur/issues/1031
                 WebAudio.unlock().then(function () {
-                    me.hidePlayButton();
-                    me.oncomplete.call(me);
+                    _this.hidePlayButton();
+                    _this.oncomplete.call(_this);
                     complete.resolve();
+                    _this.dispose();
                 });
             });
             return complete;
         }
-        var progressArray = new Array(this._resourceList.length);
-        var progressChunks = this._resourceList.length;
-        this._resourceList.forEach(function (r, i) {
+        this._resourceList.forEach(function (resource) {
             if (_this._engine) {
-                r.wireEngine(_this._engine);
+                resource.wireEngine(_this._engine);
             }
-            r.onprogress = function (e) {
-                var total = e.total;
-                var loaded = e.loaded;
-                progressArray[i] = { loaded: (loaded / total) * (100 / progressChunks), total: 100 };
-                var progressResult = progressArray.reduce(function (accum, next) {
-                    return { loaded: accum.loaded + next.loaded, total: 100 };
-                }, { loaded: 0, total: 100 });
-                me.onprogress.call(me, progressResult);
+            resource.onprogress = function (e) {
+                _this.updateResourceProgress(e.loaded, e.total);
             };
-            r.oncomplete = r.onerror = function () {
-                me._numLoaded++;
-                if (me._numLoaded === me._resourceCount) {
+            resource.oncomplete = resource.onerror = function () {
+                _this.markResourceComplete();
+                if (_this.isLoaded()) {
                     setTimeout(function () {
-                        me.showPlayButton().then(function () {
+                        _this.showPlayButton().then(function () {
                             // Unlock audio context in chrome after user gesture
                             // https://github.com/excaliburjs/Excalibur/issues/262
                             // https://github.com/excaliburjs/Excalibur/issues/1031
                             WebAudio.unlock().then(function () {
-                                me.hidePlayButton();
-                                me.oncomplete.call(me);
+                                _this.hidePlayButton();
+                                _this.oncomplete.call(_this);
                                 complete.resolve();
+                                _this.dispose();
                             });
                         });
                     }, 200); // short delay in showing the button for aesthetics
@@ -294,6 +322,26 @@ var Loader = /** @class */ (function (_super) {
         loadNext(this._resourceList, 0);
         return complete;
     };
+    Loader.prototype.updateResourceProgress = function (loadedBytes, totalBytes) {
+        var chunkSize = 100 / this._resourceCount;
+        var resourceProgress = loadedBytes / totalBytes;
+        // This only works if we load 1 resource at a time
+        var totalProgress = resourceProgress * chunkSize + this.progress * 100;
+        this.onprogress({ loaded: totalProgress, total: 100 });
+    };
+    Loader.prototype.markResourceComplete = function () {
+        this._numLoaded++;
+    };
+    Object.defineProperty(Loader.prototype, "progress", {
+        /**
+         * Returns the progess of the loader as a number between [0, 1] inclusive.
+         */
+        get: function () {
+            return this._resourceCount > 0 ? this._numLoaded / this._resourceCount : 1;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * Loader draw function. Draws the default Excalibur loading screen.
      * Override `logo`, `logoWidth`, `logoHeight` and `backgroundColor` properties
@@ -307,30 +355,51 @@ var Loader = /** @class */ (function (_super) {
             var top_1 = ctx.canvas.offsetTop;
             var buttonWidth = this._playButton.clientWidth;
             var buttonHeight = this._playButton.clientHeight;
-            this._playButtonRootElement.style.left = left + canvasWidth / 2 - buttonWidth / 2 + "px";
-            this._playButtonRootElement.style.top = top_1 + canvasHeight / 2 - buttonHeight / 2 + 100 + "px";
+            if (this.playButtonPosition) {
+                this._playButtonRootElement.style.left = this.playButtonPosition.x + "px";
+                this._playButtonRootElement.style.top = this.playButtonPosition.y + "px";
+            }
+            else {
+                this._playButtonRootElement.style.left = left + canvasWidth / 2 - buttonWidth / 2 + "px";
+                this._playButtonRootElement.style.top = top_1 + canvasHeight / 2 - buttonHeight / 2 + 100 + "px";
+            }
         }
         ctx.fillStyle = this.backgroundColor;
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        var y = canvasHeight / 2;
+        var logoY = canvasHeight / 2;
         var width = Math.min(this.logoWidth, canvasWidth * 0.75);
-        var x = canvasWidth / 2 - width / 2;
+        var logoX = canvasWidth / 2 - width / 2;
+        if (this.logoPosition) {
+            logoX = this.logoPosition.x;
+            logoY = this.logoPosition.y;
+        }
         var imageHeight = Math.floor(width * (this.logoHeight / this.logoWidth)); // OG height/width factor
         var oldAntialias = this._engine.getAntialiasing();
         this._engine.setAntialiasing(true);
-        ctx.drawImage(this._image, 0, 0, this.logoWidth, this.logoHeight, x, y - imageHeight - 20, width, imageHeight);
+        if (!this.logoPosition) {
+            ctx.drawImage(this._image, 0, 0, this.logoWidth, this.logoHeight, logoX, logoY - imageHeight - 20, width, imageHeight);
+        }
+        else {
+            ctx.drawImage(this._image, 0, 0, this.logoWidth, this.logoHeight, logoX, logoY, width, imageHeight);
+        }
         // loading box
         if (!this.suppressPlayButton && this._playButtonShown) {
             this._engine.setAntialiasing(oldAntialias);
             return;
         }
+        var loadingX = logoX;
+        var loadingY = logoY;
+        if (this.loadingBarPosition) {
+            loadingX = this.loadingBarPosition.x;
+            loadingY = this.loadingBarPosition.y;
+        }
         ctx.lineWidth = 2;
-        DrawUtil.roundRect(ctx, x, y, width, 20, 10);
-        var progress = width * (this._numLoaded / this._resourceCount);
+        DrawUtil.roundRect(ctx, loadingX, loadingY, width, 20, 10, this.loadingBarColor);
+        var progress = width * this.progress;
         var margin = 5;
         var progressWidth = progress - margin * 2;
         var height = 20 - margin * 2;
-        DrawUtil.roundRect(ctx, x + margin, y + margin, progressWidth > 0 ? progressWidth : 0, height, 5, null, Color.White);
+        DrawUtil.roundRect(ctx, loadingX + margin, loadingY + margin, progressWidth > 10 ? progressWidth : 10, height, 5, null, this.loadingBarColor);
         this._engine.setAntialiasing(oldAntialias);
     };
     /**

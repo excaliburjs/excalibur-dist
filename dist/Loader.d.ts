@@ -1,8 +1,10 @@
+import { Color } from './Drawing/Color';
 import { Promise } from './Promises';
 import { Engine } from './Engine';
 import { Loadable } from './Interfaces/Loadable';
 import { CanLoad } from './Interfaces/Loader';
 import { Class } from './Class';
+import { Vector } from './Algebra';
 /**
  * Pre-loading assets
  *
@@ -80,10 +82,34 @@ export declare class Loader extends Class implements CanLoad {
     logo: string;
     logoWidth: number;
     logoHeight: number;
+    /**
+     * Positions the top left corner of the logo image
+     * If not set, the loader automatically positions the logo
+     */
+    logoPosition: Vector | null;
+    /**
+     * Positions the top left corner of the play button.
+     * If not set, the loader automatically positions the play button
+     */
+    playButtonPosition: Vector | null;
+    /**
+     * Positions the top left corner of the loading bar
+     * If not set, the loader automatically positions the loading bar
+     */
+    loadingBarPosition: Vector | null;
+    /**
+     * Gets or sets the color of the loading bar, default is [[Color.White]]
+     */
+    loadingBarColor: Color;
+    /**
+     * Gets or sets the background color of the loader as a hex string
+     */
     backgroundColor: string;
     protected _imageElement: HTMLImageElement;
     protected get _image(): HTMLImageElement;
     suppressPlayButton: boolean;
+    get playButtonRootElement(): HTMLElement | null;
+    get playButtonElement(): HTMLButtonElement | null;
     protected _playButtonRootElement: HTMLElement;
     protected _playButtonElement: HTMLButtonElement;
     protected _styleBlock: HTMLStyleElement;
@@ -123,10 +149,20 @@ export declare class Loader extends Class implements CanLoad {
     showPlayButton(): Promise<any>;
     hidePlayButton(): void;
     /**
+     * Clean up generated elements for the loader
+     */
+    dispose(): void;
+    /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
      */
     load(): Promise<any>;
+    updateResourceProgress(loadedBytes: number, totalBytes: number): void;
+    markResourceComplete(): void;
+    /**
+     * Returns the progess of the loader as a number between [0, 1] inclusive.
+     */
+    get progress(): number;
     /**
      * Loader draw function. Draws the default Excalibur loading screen.
      * Override `logo`, `logoWidth`, `logoHeight` and `backgroundColor` properties

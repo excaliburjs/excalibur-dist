@@ -113,7 +113,7 @@ export declare class Pointer extends Class {
      */
     getActorsForEvents(): Actor[];
     /**
-     * Checks if Pointer has a specific Actor under.
+     * Checks if Pointer location has a specific Actor bounds contained underneath.
      * @param actor An Actor for check;
      */
     checkActorUnderPointer(actor: Actor): boolean;
@@ -126,7 +126,7 @@ export declare class Pointer extends Class {
      * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
-    isActorUnderPointer(actor: Actor): boolean;
+    isActorAliveUnderPointer(actor: Actor): boolean;
     private _onPointerMove;
     private _onPointerDown;
     private _onPointerUp;

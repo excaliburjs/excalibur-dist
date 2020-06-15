@@ -210,7 +210,7 @@ var PointerMoveEvent = /** @class */ (function (_super) {
         //   this._onActorLeave(actor);
         //   return;
         // }
-        if (this.pointer.isActorUnderPointer(actor)) {
+        if (this.pointer.isActorAliveUnderPointer(actor)) {
             this.doAction(actor);
             if (this.bubbles && actor.parent) {
                 this.propagate(actor.parent);

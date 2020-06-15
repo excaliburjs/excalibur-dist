@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6725+eb23d0a - 2020-6-15
+ * excalibur - 0.25.0-alpha.6726+3ecb1e3 - 2020-6-15
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -16861,7 +16861,7 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor to be added;
      */
     Pointer.prototype.addActorUnderPointer = function (actor) {
-        if (!this.isActorUnderPointer(actor)) {
+        if (!this.isActorAliveUnderPointer(actor)) {
             this._actorsUnderPointer[actor.id] = actor;
             this._actorsUnderPointer.length += 1;
             this._actors.push(actor);
@@ -16879,7 +16879,7 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor to be removed;
      */
     Pointer.prototype.removeActorUnderPointer = function (actor) {
-        if (this.isActorUnderPointer(actor)) {
+        if (this.isActorAliveUnderPointer(actor)) {
             delete this._actorsUnderPointer[actor.id];
             this._actorsUnderPointer.length -= 1;
             Object(_Util_Util__WEBPACK_IMPORTED_MODULE_3__["removeItemFromArray"])(actor, this._actors);
@@ -16907,7 +16907,7 @@ var Pointer = /** @class */ (function (_super) {
         });
     };
     /**
-     * Checks if Pointer has a specific Actor under.
+     * Checks if Pointer location has a specific Actor bounds contained underneath.
      * @param actor An Actor for check;
      */
     Pointer.prototype.checkActorUnderPointer = function (actor) {
@@ -16927,8 +16927,8 @@ var Pointer = /** @class */ (function (_super) {
      * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
-    Pointer.prototype.isActorUnderPointer = function (actor) {
-        return this._actorsUnderPointer.hasOwnProperty(actor.id.toString());
+    Pointer.prototype.isActorAliveUnderPointer = function (actor) {
+        return !!(!actor.isKilled() && actor.scene && this._actorsUnderPointer.hasOwnProperty(actor.id.toString()));
     };
     Pointer.prototype._onPointerMove = function (ev) {
         this.lastPagePos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](ev.pagePos.x, ev.pagePos.y);
@@ -17189,7 +17189,7 @@ var PointerMoveEvent = /** @class */ (function (_super) {
         //   this._onActorLeave(actor);
         //   return;
         // }
-        if (this.pointer.isActorUnderPointer(actor)) {
+        if (this.pointer.isActorAliveUnderPointer(actor)) {
             this.doAction(actor);
             if (this.bubbles && actor.parent) {
                 this.propagate(actor.parent);
@@ -17576,7 +17576,7 @@ var Pointers = /** @class */ (function (_super) {
                 // If the actor was under the pointer last frame, but not this this frame, pointer left
                 if (!lastMoveEventPerPointerPerActor[evt.pointer.id + '+' + actor.id] &&
                     evt.pointer.wasActorUnderPointer(actor) &&
-                    !evt.pointer.isActorUnderPointer(actor)) {
+                    !evt.pointer.isActorAliveUnderPointer(actor)) {
                     lastMoveEventPerPointerPerActor[evt.pointer.id + '+' + actor.id] = evt;
                     var pe = Object(_PointerEvents__WEBPACK_IMPORTED_MODULE_3__["createPointerEventByName"])('leave', new _Algebra__WEBPACK_IMPORTED_MODULE_5__["GlobalCoordinates"](evt.worldPos, evt.pagePos, evt.screenPos), evt.pointer, evt.index, evt.pointerType, evt.button, evt.ev);
                     pe.propagate(actor);
@@ -17596,7 +17596,7 @@ var Pointers = /** @class */ (function (_super) {
                 // If the actor was not under the pointer last frame, but it is this frame, pointer entered
                 if (!lastMoveEventPerPointer[evt.pointer.id] &&
                     !evt.pointer.wasActorUnderPointer(actor) &&
-                    evt.pointer.isActorUnderPointer(actor)) {
+                    evt.pointer.isActorAliveUnderPointer(actor)) {
                     lastMoveEventPerPointer[evt.pointer.id] = evt;
                     var pe = Object(_PointerEvents__WEBPACK_IMPORTED_MODULE_3__["createPointerEventByName"])('enter', new _Algebra__WEBPACK_IMPORTED_MODULE_5__["GlobalCoordinates"](evt.worldPos, evt.pagePos, evt.screenPos), evt.pointer, evt.index, evt.pointerType, evt.button, evt.ev);
                     pe.propagate(actor);
@@ -25986,7 +25986,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6725+eb23d0a";
+var EX_VERSION = "0.25.0-alpha.6726+3ecb1e3";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

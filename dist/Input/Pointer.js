@@ -149,7 +149,7 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor to be added;
      */
     Pointer.prototype.addActorUnderPointer = function (actor) {
-        if (!this.isActorUnderPointer(actor)) {
+        if (!this.isActorAliveUnderPointer(actor)) {
             this._actorsUnderPointer[actor.id] = actor;
             this._actorsUnderPointer.length += 1;
             this._actors.push(actor);
@@ -167,7 +167,7 @@ var Pointer = /** @class */ (function (_super) {
      * @param actor An Actor to be removed;
      */
     Pointer.prototype.removeActorUnderPointer = function (actor) {
-        if (this.isActorUnderPointer(actor)) {
+        if (this.isActorAliveUnderPointer(actor)) {
             delete this._actorsUnderPointer[actor.id];
             this._actorsUnderPointer.length -= 1;
             removeItemFromArray(actor, this._actors);
@@ -195,7 +195,7 @@ var Pointer = /** @class */ (function (_super) {
         });
     };
     /**
-     * Checks if Pointer has a specific Actor under.
+     * Checks if Pointer location has a specific Actor bounds contained underneath.
      * @param actor An Actor for check;
      */
     Pointer.prototype.checkActorUnderPointer = function (actor) {
@@ -215,8 +215,8 @@ var Pointer = /** @class */ (function (_super) {
      * Checks if Pointer has a specific Actor in ActorsUnderPointer list.
      * @param actor An Actor for check;
      */
-    Pointer.prototype.isActorUnderPointer = function (actor) {
-        return this._actorsUnderPointer.hasOwnProperty(actor.id.toString());
+    Pointer.prototype.isActorAliveUnderPointer = function (actor) {
+        return !!(!actor.isKilled() && actor.scene && this._actorsUnderPointer.hasOwnProperty(actor.id.toString()));
     };
     Pointer.prototype._onPointerMove = function (ev) {
         this.lastPagePos = new Vector(ev.pagePos.x, ev.pagePos.y);

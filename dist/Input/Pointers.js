@@ -225,7 +225,7 @@ var Pointers = /** @class */ (function (_super) {
                 // If the actor was under the pointer last frame, but not this this frame, pointer left
                 if (!lastMoveEventPerPointerPerActor[evt.pointer.id + '+' + actor.id] &&
                     evt.pointer.wasActorUnderPointer(actor) &&
-                    !evt.pointer.isActorUnderPointer(actor)) {
+                    !evt.pointer.isActorAliveUnderPointer(actor)) {
                     lastMoveEventPerPointerPerActor[evt.pointer.id + '+' + actor.id] = evt;
                     var pe = createPointerEventByName('leave', new GlobalCoordinates(evt.worldPos, evt.pagePos, evt.screenPos), evt.pointer, evt.index, evt.pointerType, evt.button, evt.ev);
                     pe.propagate(actor);
@@ -245,7 +245,7 @@ var Pointers = /** @class */ (function (_super) {
                 // If the actor was not under the pointer last frame, but it is this frame, pointer entered
                 if (!lastMoveEventPerPointer[evt.pointer.id] &&
                     !evt.pointer.wasActorUnderPointer(actor) &&
-                    evt.pointer.isActorUnderPointer(actor)) {
+                    evt.pointer.isActorAliveUnderPointer(actor)) {
                     lastMoveEventPerPointer[evt.pointer.id] = evt;
                     var pe = createPointerEventByName('enter', new GlobalCoordinates(evt.worldPos, evt.pagePos, evt.screenPos), evt.pointer, evt.index, evt.pointerType, evt.button, evt.ev);
                     pe.propagate(actor);

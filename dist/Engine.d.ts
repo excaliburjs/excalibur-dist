@@ -2,6 +2,7 @@ import { CanUpdate, CanDraw, CanInitialize } from './Interfaces/LifecycleEvents'
 import { Loadable } from './Interfaces/Loadable';
 import { Promise } from './Promises';
 import { Vector } from './Algebra';
+import { Screen, DisplayMode, AbsolutePosition, ScreenDimension } from './Screen';
 import { ScreenElement } from './ScreenElement';
 import { Actor } from './Actor';
 import { Timer } from './Timer';
@@ -16,29 +17,7 @@ import { Debug, DebugStats } from './Debug';
 import { Class } from './Class';
 import * as Input from './Input/Index';
 import * as Events from './Events';
-import { BoundingBox } from './Collision/BoundingBox';
 import { BrowserEvents } from './Util/Browser';
-/**
- * Enum representing the different display modes available to Excalibur
- */
-export declare enum DisplayMode {
-    /**
-     * Show the game as full screen
-     */
-    FullScreen = 0,
-    /**
-     * Scale the game to the parent DOM container
-     */
-    Container = 1,
-    /**
-     * Show the game as a fixed size
-     */
-    Fixed = 2,
-    /**
-     * Allow the game to be positioned with the [[EngineOptions.position]] option
-     */
-    Position = 3
-}
 /**
  * Enum representing the different mousewheel event bubble prevention
  */
@@ -57,28 +36,31 @@ export declare enum ScrollPreventionMode {
     All = 2
 }
 /**
- * Interface describing the absolute CSS position of the game window. For use when [[DisplayMode.Position]]
- * is specified and when the user wants to define exact pixel spacing of the window.
- * When a number is given, the value is interpreted as pixels
- */
-export interface AbsolutePosition {
-    top?: number | string;
-    left?: number | string;
-    right?: number | string;
-    bottom?: number | string;
-}
-/**
  * Defines the available options to configure the Excalibur engine at constructor time.
  */
 export interface EngineOptions {
     /**
-     * Optionally configure the native canvas width of the game
+     * Optionally configure the width of the viewport in css pixels
      */
     width?: number;
     /**
-     * Optionally configure the native canvas height of the game
+     * Optionally configure the height of the viewport in css pixels
      */
     height?: number;
+    /**
+     * Optionally configure the width & height of the viewport in css pixels.
+     * Use `viewport` instead of [[EngineOptions.width]] and [[EngineOptions.height]], or vice versa.
+     */
+    viewport?: ScreenDimension;
+    /**
+     * Optionally specify the size the logical pixel resolution, if not specified it will be width x height.
+     * See [[Resolution]] for common presets.
+     */
+    resolution?: ScreenDimension;
+    /**
+     * Optionally specify antialiasing (smoothing), by default true (smooth pixels)
+     */
+    antialiasing?: boolean;
     /**
      * Optionally configure the native canvas transparent backdrop
      */
@@ -152,6 +134,10 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      *
      */
     browser: BrowserEvents;
+    /**
+     * Screen abstraction
+     */
+    screen: Screen;
     /**
      * Direct access to the engine's canvas element
      */
@@ -237,12 +223,11 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Indicates whether the engine is set to fullscreen or not
      */
-    isFullscreen: boolean;
+    get isFullscreen(): boolean;
     /**
      * Indicates the current [[DisplayMode]] of the engine.
      */
-    displayMode: DisplayMode;
-    private _suppressHiDPIScaling;
+    get displayMode(): DisplayMode;
     private _suppressPlayButton;
     /**
      * Returns the calculated pixel ration for use in rendering
@@ -278,7 +263,6 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     pageScrollPreventionMode: ScrollPreventionMode;
     private _logger;
-    private _isSmoothingEnabled;
     private _requestId;
     private _compatible;
     private _timescale;
@@ -354,7 +338,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * Returns a BoundingBox of the top left corner of the screen
      * and the bottom right corner of the screen.
      */
-    getWorldBounds(): BoundingBox;
+    getWorldBounds(): import(".").BoundingBox;
     /**
      * Gets the current engine timescale factor (default is 1.0 which is 1:1 time)
      */
@@ -514,16 +498,10 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     worldToScreenCoordinates(point: Vector): Vector;
     /**
-     * Sets the internal canvas height based on the selected display mode.
-     */
-    private _setHeightByDisplayMode;
-    /**
      * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     private _initialize;
     onInitialize(_engine: Engine): void;
-    private _initializeDisplayModePosition;
-    private _initializeHiDpi;
     /**
      * If supported by the browser, this will set the antialiasing flag on the
      * canvas. Set this to `false` if you want a 'jagged' pixel art look to your

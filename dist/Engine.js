@@ -26,7 +26,7 @@ import { EX_VERSION } from './';
 import { polyfill } from './Polyfill';
 polyfill();
 import { Promise } from './Promises';
-import { Vector } from './Algebra';
+import { Screen, DisplayMode } from './Screen';
 import { ScreenElement } from './ScreenElement';
 import { Actor } from './Actor';
 import { Timer } from './Timer';
@@ -40,30 +40,7 @@ import { Scene } from './Scene';
 import { Debug } from './Debug';
 import { Class } from './Class';
 import * as Input from './Input/Index';
-import { BoundingBox } from './Collision/BoundingBox';
 import { BrowserEvents } from './Util/Browser';
-/**
- * Enum representing the different display modes available to Excalibur
- */
-export var DisplayMode;
-(function (DisplayMode) {
-    /**
-     * Show the game as full screen
-     */
-    DisplayMode[DisplayMode["FullScreen"] = 0] = "FullScreen";
-    /**
-     * Scale the game to the parent DOM container
-     */
-    DisplayMode[DisplayMode["Container"] = 1] = "Container";
-    /**
-     * Show the game as a fixed size
-     */
-    DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
-    /**
-     * Allow the game to be positioned with the [[EngineOptions.position]] option
-     */
-    DisplayMode[DisplayMode["Position"] = 3] = "Position";
-})(DisplayMode || (DisplayMode = {}));
 /**
  * Enum representing the different mousewheel event bubble prevention
  */
@@ -118,6 +95,7 @@ var Engine = /** @class */ (function (_super) {
      * ```
      */
     function Engine(options) {
+        var _a, _b, _c;
         var _this = _super.call(this) || this;
         _this._hasStarted = false;
         /**
@@ -129,15 +107,6 @@ var Engine = /** @class */ (function (_super) {
          */
         _this.scenes = {};
         _this._animations = [];
-        /**
-         * Indicates whether the engine is set to fullscreen or not
-         */
-        _this.isFullscreen = false;
-        /**
-         * Indicates the current [[DisplayMode]] of the engine.
-         */
-        _this.displayMode = DisplayMode.FullScreen;
-        _this._suppressHiDPIScaling = false;
         _this._suppressPlayButton = false;
         /**
          * Indicates whether audio should be paused when the game is no longer visible.
@@ -158,7 +127,6 @@ var Engine = /** @class */ (function (_super) {
         _this.onFatalException = function (e) {
             Logger.getInstance().fatal(e);
         };
-        _this._isSmoothingEnabled = true;
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
@@ -223,18 +191,31 @@ O|===|* >________________>\n\
             _this._logger.debug('Using generated canvas element');
             _this.canvas = document.createElement('canvas');
         }
-        if (options.width && options.height) {
+        var displayMode = (_a = options.displayMode) !== null && _a !== void 0 ? _a : DisplayMode.Fixed;
+        if ((options.width && options.height) || options.viewport) {
             if (options.displayMode === undefined) {
-                _this.displayMode = DisplayMode.Fixed;
+                displayMode = DisplayMode.Fixed;
             }
             _this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
-            _this.canvas.width = options.width;
-            _this.canvas.height = options.height;
         }
         else if (!options.displayMode) {
             _this._logger.debug('Engine viewport is fullscreen');
-            _this.displayMode = DisplayMode.FullScreen;
+            displayMode = DisplayMode.FullScreen;
         }
+        // eslint-disable-next-line
+        _this.ctx = _this.canvas.getContext('2d', { alpha: _this.enableCanvasTransparency });
+        _this.screen = new Screen({
+            canvas: _this.canvas,
+            context: _this.ctx,
+            antialiasing: (_b = options.antialiasing) !== null && _b !== void 0 ? _b : true,
+            browser: _this.browser,
+            viewport: (_c = options.viewport) !== null && _c !== void 0 ? _c : { width: options.width, height: options.height },
+            resolution: options.resolution,
+            displayMode: displayMode,
+            position: options.position,
+            pixelRatio: options.suppressHiDPIScaling ? 1 : null
+        });
+        _this.screen.applyResolutionAndViewport();
         if (options.backgroundColor) {
             _this.backgroundColor = options.backgroundColor.clone();
         }
@@ -253,7 +234,7 @@ O|===|* >________________>\n\
          * resolution of the canvas element)
          */
         get: function () {
-            return this.canvas.width;
+            return this.screen.canvasWidth;
         },
         enumerable: false,
         configurable: true
@@ -263,7 +244,7 @@ O|===|* >________________>\n\
          * Returns half width of the game canvas in pixels (half physical width component)
          */
         get: function () {
-            return this.canvas.width / 2;
+            return this.screen.halfCanvasWidth;
         },
         enumerable: false,
         configurable: true
@@ -274,7 +255,7 @@ O|===|* >________________>\n\
          * the resolution of the canvas element)
          */
         get: function () {
-            return this.canvas.height;
+            return this.screen.canvasHeight;
         },
         enumerable: false,
         configurable: true
@@ -284,7 +265,7 @@ O|===|* >________________>\n\
          * Returns half height of the game canvas in pixels (half physical height component)
          */
         get: function () {
-            return this.canvas.height / 2;
+            return this.screen.halfCanvasHeight;
         },
         enumerable: false,
         configurable: true
@@ -294,10 +275,7 @@ O|===|* >________________>\n\
          * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            if (this.currentScene && this.currentScene.camera) {
-                return this.canvasWidth / this.currentScene.camera.getZoom() / this.pixelRatio;
-            }
-            return this.canvasWidth / this.pixelRatio;
+            return this.screen.drawWidth;
         },
         enumerable: false,
         configurable: true
@@ -307,7 +285,7 @@ O|===|* >________________>\n\
          * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            return this.drawWidth / 2;
+            return this.screen.halfDrawWidth;
         },
         enumerable: false,
         configurable: true
@@ -317,10 +295,7 @@ O|===|* >________________>\n\
          * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            if (this.currentScene && this.currentScene.camera) {
-                return this.canvasHeight / this.currentScene.camera.getZoom() / this.pixelRatio;
-            }
-            return this.canvasHeight / this.pixelRatio;
+            return this.screen.drawHeight;
         },
         enumerable: false,
         configurable: true
@@ -330,7 +305,7 @@ O|===|* >________________>\n\
          * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            return this.drawHeight / 2;
+            return this.screen.halfDrawHeight;
         },
         enumerable: false,
         configurable: true
@@ -340,7 +315,7 @@ O|===|* >________________>\n\
          * Returns whether excalibur detects the current screen to be HiDPI
          */
         get: function () {
-            return this.pixelRatio !== 1;
+            return this.screen.isHiDpi;
         },
         enumerable: false,
         configurable: true
@@ -355,20 +330,32 @@ O|===|* >________________>\n\
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Engine.prototype, "isFullscreen", {
+        /**
+         * Indicates whether the engine is set to fullscreen or not
+         */
+        get: function () {
+            return this.screen.isFullScreen;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Engine.prototype, "displayMode", {
+        /**
+         * Indicates the current [[DisplayMode]] of the engine.
+         */
+        get: function () {
+            return this.screen.displayMode;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Engine.prototype, "pixelRatio", {
         /**
          * Returns the calculated pixel ration for use in rendering
          */
         get: function () {
-            if (this._suppressHiDPIScaling) {
-                return 1;
-            }
-            if (window.devicePixelRatio < 1) {
-                return 1;
-            }
-            var devicePixelRatio = window.devicePixelRatio || 1;
-            var pixelRatio = devicePixelRatio;
-            return pixelRatio;
+            return this.screen.pixelRatio;
         },
         enumerable: false,
         configurable: true
@@ -387,11 +374,7 @@ O|===|* >________________>\n\
      * and the bottom right corner of the screen.
      */
     Engine.prototype.getWorldBounds = function () {
-        var left = this.screenToWorldCoordinates(Vector.Zero).x;
-        var top = this.screenToWorldCoordinates(Vector.Zero).y;
-        var right = left + this.drawWidth;
-        var bottom = top + this.drawHeight;
-        return new BoundingBox(left, top, right, bottom);
+        return this.screen.getWorldBounds();
     };
     Object.defineProperty(Engine.prototype, "timescale", {
         /**
@@ -565,6 +548,7 @@ O|===|* >________________>\n\
             }
             // set current scene to new one
             this.currentScene = newScene;
+            this.screen.setCurrentCamera(newScene.camera);
             // initialize the current scene if has not been already
             this.currentScene._initialize(this);
             this.currentScene._activate.call(this.currentScene, [oldScene, newScene]);
@@ -579,79 +563,20 @@ O|===|* >________________>\n\
      * @param point  Screen coordinate to convert
      */
     Engine.prototype.screenToWorldCoordinates = function (point) {
-        var newX = point.x;
-        var newY = point.y;
-        // transform back to world space
-        newX = (newX / this.canvas.clientWidth) * this.drawWidth;
-        newY = (newY / this.canvas.clientHeight) * this.drawHeight;
-        // transform based on zoom
-        newX = newX - this.halfDrawWidth;
-        newY = newY - this.halfDrawHeight;
-        // shift by focus
-        if (this.currentScene && this.currentScene.camera) {
-            var focus_1 = this.currentScene.camera.getFocus();
-            newX += focus_1.x;
-            newY += focus_1.y;
-        }
-        return new Vector(Math.floor(newX), Math.floor(newY));
+        return this.screen.screenToWorldCoordinates(point);
     };
     /**
      * Transforms a world coordinate, to a screen coordinate
      * @param point  World coordinate to convert
      */
     Engine.prototype.worldToScreenCoordinates = function (point) {
-        var screenX = point.x;
-        var screenY = point.y;
-        // shift by focus
-        if (this.currentScene && this.currentScene.camera) {
-            var focus_2 = this.currentScene.camera.getFocus();
-            screenX -= focus_2.x;
-            screenY -= focus_2.y;
-        }
-        // transform back on zoom
-        screenX = screenX + this.halfDrawWidth;
-        screenY = screenY + this.halfDrawHeight;
-        // transform back to screen space
-        screenX = (screenX * this.canvas.clientWidth) / this.drawWidth;
-        screenY = (screenY * this.canvas.clientHeight) / this.drawHeight;
-        return new Vector(Math.floor(screenX), Math.floor(screenY));
-    };
-    /**
-     * Sets the internal canvas height based on the selected display mode.
-     */
-    Engine.prototype._setHeightByDisplayMode = function (parent) {
-        if (this.displayMode === DisplayMode.Container) {
-            this.canvas.width = parent.clientWidth;
-            this.canvas.height = parent.clientHeight;
-        }
-        if (this.displayMode === DisplayMode.FullScreen) {
-            document.body.style.margin = '0px';
-            document.body.style.overflow = 'hidden';
-            this.canvas.width = parent.innerWidth;
-            this.canvas.height = parent.innerHeight;
-        }
+        return this.screen.worldToScreenCoordinates(point);
     };
     /**
      * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     Engine.prototype._initialize = function (options) {
         var _this = this;
-        if (options.displayMode) {
-            this.displayMode = options.displayMode;
-        }
-        if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
-            var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
-            this._setHeightByDisplayMode(parent_1);
-            this.browser.window.on('resize', function () {
-                _this._logger.debug('View port resized');
-                _this._setHeightByDisplayMode(parent_1);
-                _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
-                _this.setAntialiasing(_this._isSmoothingEnabled);
-            });
-        }
-        else if (this.displayMode === DisplayMode.Position) {
-            this._initializeDisplayModePosition(options);
-        }
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
         this.input = {
@@ -688,98 +613,12 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
-        // eslint-disable-next-line
-        this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
-        this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
-        if (!options.suppressHiDPIScaling) {
-            this._initializeHiDpi();
-        }
         if (!this.canvasElementId && !options.canvasElement) {
             document.body.appendChild(this.canvas);
         }
     };
     Engine.prototype.onInitialize = function (_engine) {
         // Override me
-    };
-    Engine.prototype._initializeDisplayModePosition = function (options) {
-        if (!options.position) {
-            throw new Error('DisplayMode of Position was selected but no position option was given');
-        }
-        else {
-            this.canvas.style.display = 'block';
-            this.canvas.style.position = 'absolute';
-            if (typeof options.position === 'string') {
-                var specifiedPosition = options.position.split(' ');
-                switch (specifiedPosition[0]) {
-                    case 'top':
-                        this.canvas.style.top = '0px';
-                        break;
-                    case 'bottom':
-                        this.canvas.style.bottom = '0px';
-                        break;
-                    case 'middle':
-                        this.canvas.style.top = '50%';
-                        var offsetY = -this.halfDrawHeight;
-                        this.canvas.style.marginTop = offsetY.toString();
-                        break;
-                    default:
-                        throw new Error('Invalid Position Given');
-                }
-                if (specifiedPosition[1]) {
-                    switch (specifiedPosition[1]) {
-                        case 'left':
-                            this.canvas.style.left = '0px';
-                            break;
-                        case 'right':
-                            this.canvas.style.right = '0px';
-                            break;
-                        case 'center':
-                            this.canvas.style.left = '50%';
-                            var offsetX = -this.halfDrawWidth;
-                            this.canvas.style.marginLeft = offsetX.toString();
-                            break;
-                        default:
-                            throw new Error('Invalid Position Given');
-                    }
-                }
-            }
-            else {
-                if (options.position.top) {
-                    typeof options.position.top === 'number'
-                        ? (this.canvas.style.top = options.position.top.toString() + 'px')
-                        : (this.canvas.style.top = options.position.top);
-                }
-                if (options.position.right) {
-                    typeof options.position.right === 'number'
-                        ? (this.canvas.style.right = options.position.right.toString() + 'px')
-                        : (this.canvas.style.right = options.position.right);
-                }
-                if (options.position.bottom) {
-                    typeof options.position.bottom === 'number'
-                        ? (this.canvas.style.bottom = options.position.bottom.toString() + 'px')
-                        : (this.canvas.style.bottom = options.position.bottom);
-                }
-                if (options.position.left) {
-                    typeof options.position.left === 'number'
-                        ? (this.canvas.style.left = options.position.left.toString() + 'px')
-                        : (this.canvas.style.left = options.position.left);
-                }
-            }
-        }
-    };
-    Engine.prototype._initializeHiDpi = function () {
-        // Scale the canvas if needed
-        if (this.isHiDpi) {
-            var oldWidth = this.canvas.width;
-            var oldHeight = this.canvas.height;
-            this.canvas.width = oldWidth * this.pixelRatio;
-            this.canvas.height = oldHeight * this.pixelRatio;
-            this.canvas.style.width = oldWidth + 'px';
-            this.canvas.style.height = oldHeight + 'px';
-            this._logger.warn("Hi DPI screen detected, resetting canvas resolution from \n                           " + oldWidth + "x" + oldHeight + " to " + this.canvas.width + "x" + this.canvas.height + " \n                           css size will remain " + oldWidth + "x" + oldHeight);
-            this.ctx.scale(this.pixelRatio, this.pixelRatio);
-            this._logger.warn("Canvas drawing context was scaled by " + this.pixelRatio);
-        }
     };
     /**
      * If supported by the browser, this will set the antialiasing flag on the
@@ -788,26 +627,13 @@ O|===|* >________________>\n\
      * @param isSmooth  Set smoothing to true or false
      */
     Engine.prototype.setAntialiasing = function (isSmooth) {
-        this._isSmoothingEnabled = isSmooth;
-        var ctx = this.ctx;
-        ctx.imageSmoothingEnabled = isSmooth;
-        for (var _i = 0, _a = ['webkitImageSmoothingEnabled', 'mozImageSmoothingEnabled', 'msImageSmoothingEnabled']; _i < _a.length; _i++) {
-            var smoothing = _a[_i];
-            if (smoothing in ctx) {
-                ctx[smoothing] = isSmooth;
-            }
-        }
+        this.screen.antialiasing = isSmooth;
     };
     /**
      * Return the current smoothing status of the canvas
      */
     Engine.prototype.getAntialiasing = function () {
-        /*eslint-disable */
-        return (this.ctx.imageSmoothingEnabled ||
-            this.ctx.webkitImageSmoothingEnabled ||
-            this.ctx.mozImageSmoothingEnabled ||
-            this.ctx.msImageSmoothingEnabled);
-        /*eslint-enable */
+        return this.screen.antialiasing;
     };
     Object.defineProperty(Engine.prototype, "isInitialized", {
         /**
@@ -846,6 +672,7 @@ O|===|* >________________>\n\
         // process engine level events
         this.currentScene.update(this, delta);
         // update animations
+        // TODO remove
         this._animations = this._animations.filter(function (a) {
             return !a.animation.isDone();
         });
@@ -946,6 +773,10 @@ O|===|* >________________>\n\
             var promise = new Promise();
             return promise.reject('Excalibur is incompatible with your browser');
         }
+        // Changing resolution invalidates context state, so we need to capture it before applying
+        this.screen.pushResolutionAndViewport();
+        this.screen.resolution = this.screen.viewport;
+        this.screen.applyResolutionAndViewport();
         var loadingComplete;
         if (loader) {
             this._loader = loader;
@@ -957,6 +788,8 @@ O|===|* >________________>\n\
             loadingComplete = Promise.resolve();
         }
         loadingComplete.then(function () {
+            _this.screen.popResolutionAndViewport();
+            _this.screen.applyResolutionAndViewport();
             _this.emit('start', new GameStartEvent(_this));
         });
         if (!this._hasStarted) {

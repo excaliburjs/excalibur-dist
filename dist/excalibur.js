@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6809+9b3456f - 2020-7-2
+ * excalibur - 0.25.0-alpha.6924+37f1a57 - 2020-8-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -13897,18 +13897,17 @@ var SpriteFont = /** @class */ (function (_super) {
 /*!*******************!*\
   !*** ./Engine.ts ***!
   \*******************/
-/*! exports provided: DisplayMode, ScrollPreventionMode, Engine */
+/*! exports provided: ScrollPreventionMode, Engine */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DisplayMode", function() { return DisplayMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScrollPreventionMode", function() { return ScrollPreventionMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Engine", function() { return Engine; });
 /* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ */ "./index.ts");
 /* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Polyfill */ "./Polyfill.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Screen__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Screen */ "./Screen.ts");
 /* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
@@ -13922,8 +13921,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
 /* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Class */ "./Class.ts");
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13967,29 +13965,6 @@ Object(_Polyfill__WEBPACK_IMPORTED_MODULE_1__["polyfill"])();
 
 
 
-
-/**
- * Enum representing the different display modes available to Excalibur
- */
-var DisplayMode;
-(function (DisplayMode) {
-    /**
-     * Show the game as full screen
-     */
-    DisplayMode[DisplayMode["FullScreen"] = 0] = "FullScreen";
-    /**
-     * Scale the game to the parent DOM container
-     */
-    DisplayMode[DisplayMode["Container"] = 1] = "Container";
-    /**
-     * Show the game as a fixed size
-     */
-    DisplayMode[DisplayMode["Fixed"] = 2] = "Fixed";
-    /**
-     * Allow the game to be positioned with the [[EngineOptions.position]] option
-     */
-    DisplayMode[DisplayMode["Position"] = 3] = "Position";
-})(DisplayMode || (DisplayMode = {}));
 /**
  * Enum representing the different mousewheel event bubble prevention
  */
@@ -14044,6 +14019,7 @@ var Engine = /** @class */ (function (_super) {
      * ```
      */
     function Engine(options) {
+        var _a, _b, _c;
         var _this = _super.call(this) || this;
         _this._hasStarted = false;
         /**
@@ -14055,15 +14031,6 @@ var Engine = /** @class */ (function (_super) {
          */
         _this.scenes = {};
         _this._animations = [];
-        /**
-         * Indicates whether the engine is set to fullscreen or not
-         */
-        _this.isFullscreen = false;
-        /**
-         * Indicates the current [[DisplayMode]] of the engine.
-         */
-        _this.displayMode = DisplayMode.FullScreen;
-        _this._suppressHiDPIScaling = false;
         _this._suppressPlayButton = false;
         /**
          * Indicates whether audio should be paused when the game is no longer visible.
@@ -14084,13 +14051,12 @@ var Engine = /** @class */ (function (_super) {
         _this.onFatalException = function (e) {
             _Util_Log__WEBPACK_IMPORTED_MODULE_11__["Logger"].getInstance().fatal(e);
         };
-        _this._isSmoothingEnabled = true;
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
         options = __assign(__assign({}, Engine._DefaultEngineOptions), options);
         // Initialize browser events facade
-        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_18__["BrowserEvents"](window, document);
+        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_17__["BrowserEvents"](window, document);
         // Check compatibility
         var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_9__["Detector"]();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
@@ -14149,18 +14115,31 @@ O|===|* >________________>\n\
             _this._logger.debug('Using generated canvas element');
             _this.canvas = document.createElement('canvas');
         }
-        if (options.width && options.height) {
+        var displayMode = (_a = options.displayMode) !== null && _a !== void 0 ? _a : _Screen__WEBPACK_IMPORTED_MODULE_3__["DisplayMode"].Fixed;
+        if ((options.width && options.height) || options.viewport) {
             if (options.displayMode === undefined) {
-                _this.displayMode = DisplayMode.Fixed;
+                displayMode = _Screen__WEBPACK_IMPORTED_MODULE_3__["DisplayMode"].Fixed;
             }
             _this._logger.debug('Engine viewport is size ' + options.width + ' x ' + options.height);
-            _this.canvas.width = options.width;
-            _this.canvas.height = options.height;
         }
         else if (!options.displayMode) {
             _this._logger.debug('Engine viewport is fullscreen');
-            _this.displayMode = DisplayMode.FullScreen;
+            displayMode = _Screen__WEBPACK_IMPORTED_MODULE_3__["DisplayMode"].FullScreen;
         }
+        // eslint-disable-next-line
+        _this.ctx = _this.canvas.getContext('2d', { alpha: _this.enableCanvasTransparency });
+        _this.screen = new _Screen__WEBPACK_IMPORTED_MODULE_3__["Screen"]({
+            canvas: _this.canvas,
+            context: _this.ctx,
+            antialiasing: (_b = options.antialiasing) !== null && _b !== void 0 ? _b : true,
+            browser: _this.browser,
+            viewport: (_c = options.viewport) !== null && _c !== void 0 ? _c : { width: options.width, height: options.height },
+            resolution: options.resolution,
+            displayMode: displayMode,
+            position: options.position,
+            pixelRatio: options.suppressHiDPIScaling ? 1 : null
+        });
+        _this.screen.applyResolutionAndViewport();
         if (options.backgroundColor) {
             _this.backgroundColor = options.backgroundColor.clone();
         }
@@ -14179,7 +14158,7 @@ O|===|* >________________>\n\
          * resolution of the canvas element)
          */
         get: function () {
-            return this.canvas.width;
+            return this.screen.canvasWidth;
         },
         enumerable: false,
         configurable: true
@@ -14189,7 +14168,7 @@ O|===|* >________________>\n\
          * Returns half width of the game canvas in pixels (half physical width component)
          */
         get: function () {
-            return this.canvas.width / 2;
+            return this.screen.halfCanvasWidth;
         },
         enumerable: false,
         configurable: true
@@ -14200,7 +14179,7 @@ O|===|* >________________>\n\
          * the resolution of the canvas element)
          */
         get: function () {
-            return this.canvas.height;
+            return this.screen.canvasHeight;
         },
         enumerable: false,
         configurable: true
@@ -14210,7 +14189,7 @@ O|===|* >________________>\n\
          * Returns half height of the game canvas in pixels (half physical height component)
          */
         get: function () {
-            return this.canvas.height / 2;
+            return this.screen.halfCanvasHeight;
         },
         enumerable: false,
         configurable: true
@@ -14220,10 +14199,7 @@ O|===|* >________________>\n\
          * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            if (this.currentScene && this.currentScene.camera) {
-                return this.canvasWidth / this.currentScene.camera.getZoom() / this.pixelRatio;
-            }
-            return this.canvasWidth / this.pixelRatio;
+            return this.screen.drawWidth;
         },
         enumerable: false,
         configurable: true
@@ -14233,7 +14209,7 @@ O|===|* >________________>\n\
          * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            return this.drawWidth / 2;
+            return this.screen.halfDrawWidth;
         },
         enumerable: false,
         configurable: true
@@ -14243,10 +14219,7 @@ O|===|* >________________>\n\
          * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            if (this.currentScene && this.currentScene.camera) {
-                return this.canvasHeight / this.currentScene.camera.getZoom() / this.pixelRatio;
-            }
-            return this.canvasHeight / this.pixelRatio;
+            return this.screen.drawHeight;
         },
         enumerable: false,
         configurable: true
@@ -14256,7 +14229,7 @@ O|===|* >________________>\n\
          * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
          */
         get: function () {
-            return this.drawHeight / 2;
+            return this.screen.halfDrawHeight;
         },
         enumerable: false,
         configurable: true
@@ -14266,7 +14239,7 @@ O|===|* >________________>\n\
          * Returns whether excalibur detects the current screen to be HiDPI
          */
         get: function () {
-            return this.pixelRatio !== 1;
+            return this.screen.isHiDpi;
         },
         enumerable: false,
         configurable: true
@@ -14281,20 +14254,32 @@ O|===|* >________________>\n\
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Engine.prototype, "isFullscreen", {
+        /**
+         * Indicates whether the engine is set to fullscreen or not
+         */
+        get: function () {
+            return this.screen.isFullScreen;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Engine.prototype, "displayMode", {
+        /**
+         * Indicates the current [[DisplayMode]] of the engine.
+         */
+        get: function () {
+            return this.screen.displayMode;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Engine.prototype, "pixelRatio", {
         /**
          * Returns the calculated pixel ration for use in rendering
          */
         get: function () {
-            if (this._suppressHiDPIScaling) {
-                return 1;
-            }
-            if (window.devicePixelRatio < 1) {
-                return 1;
-            }
-            var devicePixelRatio = window.devicePixelRatio || 1;
-            var pixelRatio = devicePixelRatio;
-            return pixelRatio;
+            return this.screen.pixelRatio;
         },
         enumerable: false,
         configurable: true
@@ -14313,11 +14298,7 @@ O|===|* >________________>\n\
      * and the bottom right corner of the screen.
      */
     Engine.prototype.getWorldBounds = function () {
-        var left = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero).x;
-        var top = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"].Zero).y;
-        var right = left + this.drawWidth;
-        var bottom = top + this.drawHeight;
-        return new _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_17__["BoundingBox"](left, top, right, bottom);
+        return this.screen.getWorldBounds();
     };
     Object.defineProperty(Engine.prototype, "timescale", {
         /**
@@ -14491,6 +14472,7 @@ O|===|* >________________>\n\
             }
             // set current scene to new one
             this.currentScene = newScene;
+            this.screen.setCurrentCamera(newScene.camera);
             // initialize the current scene if has not been already
             this.currentScene._initialize(this);
             this.currentScene._activate.call(this.currentScene, [oldScene, newScene]);
@@ -14505,79 +14487,20 @@ O|===|* >________________>\n\
      * @param point  Screen coordinate to convert
      */
     Engine.prototype.screenToWorldCoordinates = function (point) {
-        var newX = point.x;
-        var newY = point.y;
-        // transform back to world space
-        newX = (newX / this.canvas.clientWidth) * this.drawWidth;
-        newY = (newY / this.canvas.clientHeight) * this.drawHeight;
-        // transform based on zoom
-        newX = newX - this.halfDrawWidth;
-        newY = newY - this.halfDrawHeight;
-        // shift by focus
-        if (this.currentScene && this.currentScene.camera) {
-            var focus_1 = this.currentScene.camera.getFocus();
-            newX += focus_1.x;
-            newY += focus_1.y;
-        }
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Math.floor(newX), Math.floor(newY));
+        return this.screen.screenToWorldCoordinates(point);
     };
     /**
      * Transforms a world coordinate, to a screen coordinate
      * @param point  World coordinate to convert
      */
     Engine.prototype.worldToScreenCoordinates = function (point) {
-        var screenX = point.x;
-        var screenY = point.y;
-        // shift by focus
-        if (this.currentScene && this.currentScene.camera) {
-            var focus_2 = this.currentScene.camera.getFocus();
-            screenX -= focus_2.x;
-            screenY -= focus_2.y;
-        }
-        // transform back on zoom
-        screenX = screenX + this.halfDrawWidth;
-        screenY = screenY + this.halfDrawHeight;
-        // transform back to screen space
-        screenX = (screenX * this.canvas.clientWidth) / this.drawWidth;
-        screenY = (screenY * this.canvas.clientHeight) / this.drawHeight;
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](Math.floor(screenX), Math.floor(screenY));
-    };
-    /**
-     * Sets the internal canvas height based on the selected display mode.
-     */
-    Engine.prototype._setHeightByDisplayMode = function (parent) {
-        if (this.displayMode === DisplayMode.Container) {
-            this.canvas.width = parent.clientWidth;
-            this.canvas.height = parent.clientHeight;
-        }
-        if (this.displayMode === DisplayMode.FullScreen) {
-            document.body.style.margin = '0px';
-            document.body.style.overflow = 'hidden';
-            this.canvas.width = parent.innerWidth;
-            this.canvas.height = parent.innerHeight;
-        }
+        return this.screen.worldToScreenCoordinates(point);
     };
     /**
      * Initializes the internal canvas, rendering context, display mode, and native event listeners
      */
     Engine.prototype._initialize = function (options) {
         var _this = this;
-        if (options.displayMode) {
-            this.displayMode = options.displayMode;
-        }
-        if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
-            var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
-            this._setHeightByDisplayMode(parent_1);
-            this.browser.window.on('resize', function () {
-                _this._logger.debug('View port resized');
-                _this._setHeightByDisplayMode(parent_1);
-                _this._logger.info('parent.clientHeight ' + parent_1.clientHeight);
-                _this.setAntialiasing(_this._isSmoothingEnabled);
-            });
-        }
-        else if (this.displayMode === DisplayMode.Position) {
-            this._initializeDisplayModePosition(options);
-        }
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
         this.input = {
@@ -14614,98 +14537,12 @@ O|===|* >________________>\n\
                 _this._logger.debug('Window visible');
             }
         });
-        // eslint-disable-next-line
-        this.ctx = this.canvas.getContext('2d', { alpha: this.enableCanvasTransparency });
-        this._suppressHiDPIScaling = !!options.suppressHiDPIScaling;
-        if (!options.suppressHiDPIScaling) {
-            this._initializeHiDpi();
-        }
         if (!this.canvasElementId && !options.canvasElement) {
             document.body.appendChild(this.canvas);
         }
     };
     Engine.prototype.onInitialize = function (_engine) {
         // Override me
-    };
-    Engine.prototype._initializeDisplayModePosition = function (options) {
-        if (!options.position) {
-            throw new Error('DisplayMode of Position was selected but no position option was given');
-        }
-        else {
-            this.canvas.style.display = 'block';
-            this.canvas.style.position = 'absolute';
-            if (typeof options.position === 'string') {
-                var specifiedPosition = options.position.split(' ');
-                switch (specifiedPosition[0]) {
-                    case 'top':
-                        this.canvas.style.top = '0px';
-                        break;
-                    case 'bottom':
-                        this.canvas.style.bottom = '0px';
-                        break;
-                    case 'middle':
-                        this.canvas.style.top = '50%';
-                        var offsetY = -this.halfDrawHeight;
-                        this.canvas.style.marginTop = offsetY.toString();
-                        break;
-                    default:
-                        throw new Error('Invalid Position Given');
-                }
-                if (specifiedPosition[1]) {
-                    switch (specifiedPosition[1]) {
-                        case 'left':
-                            this.canvas.style.left = '0px';
-                            break;
-                        case 'right':
-                            this.canvas.style.right = '0px';
-                            break;
-                        case 'center':
-                            this.canvas.style.left = '50%';
-                            var offsetX = -this.halfDrawWidth;
-                            this.canvas.style.marginLeft = offsetX.toString();
-                            break;
-                        default:
-                            throw new Error('Invalid Position Given');
-                    }
-                }
-            }
-            else {
-                if (options.position.top) {
-                    typeof options.position.top === 'number'
-                        ? (this.canvas.style.top = options.position.top.toString() + 'px')
-                        : (this.canvas.style.top = options.position.top);
-                }
-                if (options.position.right) {
-                    typeof options.position.right === 'number'
-                        ? (this.canvas.style.right = options.position.right.toString() + 'px')
-                        : (this.canvas.style.right = options.position.right);
-                }
-                if (options.position.bottom) {
-                    typeof options.position.bottom === 'number'
-                        ? (this.canvas.style.bottom = options.position.bottom.toString() + 'px')
-                        : (this.canvas.style.bottom = options.position.bottom);
-                }
-                if (options.position.left) {
-                    typeof options.position.left === 'number'
-                        ? (this.canvas.style.left = options.position.left.toString() + 'px')
-                        : (this.canvas.style.left = options.position.left);
-                }
-            }
-        }
-    };
-    Engine.prototype._initializeHiDpi = function () {
-        // Scale the canvas if needed
-        if (this.isHiDpi) {
-            var oldWidth = this.canvas.width;
-            var oldHeight = this.canvas.height;
-            this.canvas.width = oldWidth * this.pixelRatio;
-            this.canvas.height = oldHeight * this.pixelRatio;
-            this.canvas.style.width = oldWidth + 'px';
-            this.canvas.style.height = oldHeight + 'px';
-            this._logger.warn("Hi DPI screen detected, resetting canvas resolution from \n                           " + oldWidth + "x" + oldHeight + " to " + this.canvas.width + "x" + this.canvas.height + " \n                           css size will remain " + oldWidth + "x" + oldHeight);
-            this.ctx.scale(this.pixelRatio, this.pixelRatio);
-            this._logger.warn("Canvas drawing context was scaled by " + this.pixelRatio);
-        }
     };
     /**
      * If supported by the browser, this will set the antialiasing flag on the
@@ -14714,26 +14551,13 @@ O|===|* >________________>\n\
      * @param isSmooth  Set smoothing to true or false
      */
     Engine.prototype.setAntialiasing = function (isSmooth) {
-        this._isSmoothingEnabled = isSmooth;
-        var ctx = this.ctx;
-        ctx.imageSmoothingEnabled = isSmooth;
-        for (var _i = 0, _a = ['webkitImageSmoothingEnabled', 'mozImageSmoothingEnabled', 'msImageSmoothingEnabled']; _i < _a.length; _i++) {
-            var smoothing = _a[_i];
-            if (smoothing in ctx) {
-                ctx[smoothing] = isSmooth;
-            }
-        }
+        this.screen.antialiasing = isSmooth;
     };
     /**
      * Return the current smoothing status of the canvas
      */
     Engine.prototype.getAntialiasing = function () {
-        /*eslint-disable */
-        return (this.ctx.imageSmoothingEnabled ||
-            this.ctx.webkitImageSmoothingEnabled ||
-            this.ctx.mozImageSmoothingEnabled ||
-            this.ctx.msImageSmoothingEnabled);
-        /*eslint-enable */
+        return this.screen.antialiasing;
     };
     Object.defineProperty(Engine.prototype, "isInitialized", {
         /**
@@ -14772,6 +14596,7 @@ O|===|* >________________>\n\
         // process engine level events
         this.currentScene.update(this, delta);
         // update animations
+        // TODO remove
         this._animations = this._animations.filter(function (a) {
             return !a.animation.isDone();
         });
@@ -14872,6 +14697,10 @@ O|===|* >________________>\n\
             var promise = new _Promises__WEBPACK_IMPORTED_MODULE_2__["Promise"]();
             return promise.reject('Excalibur is incompatible with your browser');
         }
+        // Changing resolution invalidates context state, so we need to capture it before applying
+        this.screen.pushResolutionAndViewport();
+        this.screen.resolution = this.screen.viewport;
+        this.screen.applyResolutionAndViewport();
         var loadingComplete;
         if (loader) {
             this._loader = loader;
@@ -14883,6 +14712,8 @@ O|===|* >________________>\n\
             loadingComplete = _Promises__WEBPACK_IMPORTED_MODULE_2__["Promise"].resolve();
         }
         loadingComplete.then(function () {
+            _this.screen.popResolutionAndViewport();
+            _this.screen.applyResolutionAndViewport();
             _this.emit('start', new _Events__WEBPACK_IMPORTED_MODULE_10__["GameStartEvent"](_this));
         });
         if (!this._hasStarted) {
@@ -22859,6 +22690,547 @@ var Scene = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./Screen.ts":
+/*!*******************!*\
+  !*** ./Screen.ts ***!
+  \*******************/
+/*! exports provided: DisplayMode, Resolution, Screen */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DisplayMode", function() { return DisplayMode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Resolution", function() { return Resolution; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Screen", function() { return Screen; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+
+
+/**
+ * Enum representing the different display modes available to Excalibur.
+ */
+var DisplayMode;
+(function (DisplayMode) {
+    /**
+     * Use the entire screen's css width/height for the game resolution dynamically. This is not the same as [[Screen.goFullScreen]]
+     */
+    DisplayMode["FullScreen"] = "FullScreen";
+    /**
+     * Use the parent DOM container's css width/height for the game resolution dynamically
+     */
+    DisplayMode["Container"] = "Container";
+    /**
+     * Default, use a specified resolution for the game
+     */
+    DisplayMode["Fixed"] = "Fixed";
+    /**
+     * Allow the game to be positioned with the [[EngineOptions.position]] option
+     */
+    DisplayMode["Position"] = "Position";
+})(DisplayMode || (DisplayMode = {}));
+/**
+ * Convenience class for quick resolutions
+ * Mostly sourced from https://emulation.gametechwiki.com/index.php/Resolution
+ */
+var Resolution = /** @class */ (function () {
+    function Resolution() {
+    }
+    Object.defineProperty(Resolution, "SVGA", {
+        get: function () {
+            return { width: 800, height: 600 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "Standard", {
+        get: function () {
+            return { width: 1920, height: 1080 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "Atari2600", {
+        get: function () {
+            return { width: 160, height: 192 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "GameBoy", {
+        get: function () {
+            return { width: 160, height: 144 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "GameBoyAdvance", {
+        get: function () {
+            return { width: 240, height: 160 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "NintendoDS", {
+        get: function () {
+            return { width: 256, height: 192 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "NES", {
+        get: function () {
+            return { width: 256, height: 224 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Resolution, "SNES", {
+        get: function () {
+            return { width: 256, height: 244 };
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return Resolution;
+}());
+
+/**
+ * The Screen handles all aspects of interacting with the screen for Excalibur.
+ *
+ * [[include:Screen.md]]
+ */
+var Screen = /** @class */ (function () {
+    function Screen(options) {
+        var _this = this;
+        var _a, _b, _c;
+        this._antialiasing = true;
+        this._resolutionStack = [];
+        this._viewportStack = [];
+        this._pixelRatio = null;
+        this._isFullScreen = false;
+        this._isDisposed = false;
+        this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_1__["Logger"].getInstance();
+        this._pixelRatioChangeHandler = function () {
+            _this._logger.debug('Pixel Ratio Change', window.devicePixelRatio);
+            _this.applyResolutionAndViewport();
+        };
+        this._windowResizeHandler = function () {
+            var parent = (_this.displayMode === DisplayMode.Container ? (_this.canvas.parentElement || document.body) : window);
+            _this._logger.debug('View port resized');
+            _this._setHeightByDisplayMode(parent);
+            _this._logger.info('parent.clientHeight ' + parent.clientHeight);
+            _this.applyResolutionAndViewport();
+        };
+        this.viewport = options.viewport;
+        this.resolution = (_a = options.resolution) !== null && _a !== void 0 ? _a : __assign({}, this.viewport);
+        this._displayMode = (_b = options.displayMode) !== null && _b !== void 0 ? _b : DisplayMode.Fixed;
+        this._canvas = options.canvas;
+        this._ctx = options.context;
+        this._antialiasing = (_c = options.antialiasing) !== null && _c !== void 0 ? _c : this._antialiasing;
+        this._browser = options.browser;
+        this._position = options.position;
+        this._pixelRatio = options.pixelRatio;
+        this._applyDisplayMode();
+        this._mediaQueryList = this._browser.window.nativeComponent.matchMedia("(resolution: " + window.devicePixelRatio + "dppx)");
+        this._mediaQueryList.addEventListener('change', this._pixelRatioChangeHandler);
+    }
+    Screen.prototype.dispose = function () {
+        if (!this._isDisposed) {
+            // Clean up handlers
+            this._isDisposed = true;
+            this._browser.window.off('resize', this._windowResizeHandler);
+            this._mediaQueryList.removeEventListener('change', this._pixelRatioChangeHandler);
+        }
+    };
+    Object.defineProperty(Screen.prototype, "pixelRatio", {
+        get: function () {
+            if (this._pixelRatio) {
+                return this._pixelRatio;
+            }
+            if (window.devicePixelRatio < 1) {
+                return 1;
+            }
+            var devicePixelRatio = window.devicePixelRatio || 1;
+            return devicePixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "isHiDpi", {
+        get: function () {
+            return this.pixelRatio !== 1;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "displayMode", {
+        get: function () {
+            return this._displayMode;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "canvas", {
+        get: function () {
+            return this._canvas;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "resolution", {
+        get: function () {
+            return this._resolution;
+        },
+        set: function (resolution) {
+            this._resolution = resolution;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "viewport", {
+        get: function () {
+            if (this._viewport) {
+                return this._viewport;
+            }
+            return this._resolution;
+        },
+        set: function (viewport) {
+            this._viewport = viewport;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "scaledWidth", {
+        get: function () {
+            return this._resolution.width * this.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "scaledHeight", {
+        get: function () {
+            return this._resolution.height * this.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Screen.prototype.setCurrentCamera = function (camera) {
+        this._camera = camera;
+    };
+    Screen.prototype.pushResolutionAndViewport = function () {
+        this._resolutionStack.push(this.resolution);
+        this._viewportStack.push(this.viewport);
+        this.resolution = __assign({}, this.resolution);
+        this.viewport = __assign({}, this.viewport);
+    };
+    Screen.prototype.popResolutionAndViewport = function () {
+        this.resolution = this._resolutionStack.pop();
+        this.viewport = this._viewportStack.pop();
+    };
+    Screen.prototype.applyResolutionAndViewport = function () {
+        this._canvas.width = this.scaledWidth;
+        this._canvas.height = this.scaledHeight;
+        this._canvas.style.imageRendering = this._antialiasing ? 'auto' : 'pixelated';
+        this._canvas.style.width = this.viewport.width + 'px';
+        this._canvas.style.height = this.viewport.height + 'px';
+        // After messing with the canvas width/height the graphics context is invalidated and needs to have some properties reset
+        this._ctx.resetTransform();
+        this._ctx.scale(this.pixelRatio, this.pixelRatio);
+        this._ctx.imageSmoothingEnabled = this._antialiasing;
+    };
+    Object.defineProperty(Screen.prototype, "antialiasing", {
+        get: function () {
+            return this._antialiasing;
+        },
+        set: function (isSmooth) {
+            this._antialiasing = isSmooth;
+            this._ctx.imageSmoothingEnabled = this._antialiasing;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "isFullScreen", {
+        /**
+         * Returns true if excalibur is fullscreened using the browser fullscreen api
+         */
+        get: function () {
+            return this._isFullScreen;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Requests to go fullscreen using the browser fullscreen api
+     */
+    Screen.prototype.goFullScreen = function () {
+        var _this = this;
+        return this._canvas.requestFullscreen().then(function () {
+            _this._isFullScreen = true;
+        });
+    };
+    /**
+     * Requests to exit fullscreen using the browser fullscreen api
+     */
+    Screen.prototype.exitFullScreen = function () {
+        var _this = this;
+        return document.exitFullscreen().then(function () {
+            _this._isFullScreen = false;
+        });
+    };
+    /**
+     * Transforms the current x, y from screen coordinates to world coordinates
+     * @param point  Screen coordinate to convert
+     */
+    Screen.prototype.screenToWorldCoordinates = function (point) {
+        var _a, _b, _c, _d;
+        var newX = point.x;
+        var newY = point.y;
+        // transform back to world space
+        newX = (newX / this.viewport.width) * this.drawWidth;
+        newY = (newY / this.viewport.height) * this.drawHeight;
+        // transform based on zoom
+        newX = newX - this.halfDrawWidth;
+        newY = newY - this.halfDrawHeight;
+        // shift by focus
+        newX += (_b = (_a = this._camera) === null || _a === void 0 ? void 0 : _a.x) !== null && _b !== void 0 ? _b : 0;
+        newY += (_d = (_c = this._camera) === null || _c === void 0 ? void 0 : _c.y) !== null && _d !== void 0 ? _d : 0;
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](Math.floor(newX), Math.floor(newY));
+    };
+    /**
+     * Transforms a world coordinate, to a screen coordinate
+     * @param point  World coordinate to convert
+     */
+    Screen.prototype.worldToScreenCoordinates = function (point) {
+        var _a, _b, _c, _d;
+        var screenX = point.x;
+        var screenY = point.y;
+        // shift by focus
+        screenX -= (_b = (_a = this._camera) === null || _a === void 0 ? void 0 : _a.x) !== null && _b !== void 0 ? _b : 0;
+        screenY -= (_d = (_c = this._camera) === null || _c === void 0 ? void 0 : _c.y) !== null && _d !== void 0 ? _d : 0;
+        // transform back on zoom
+        screenX = screenX + this.halfDrawWidth;
+        screenY = screenY + this.halfDrawHeight;
+        // transform back to screen space
+        screenX = (screenX * this.viewport.width) / this.drawWidth;
+        screenY = (screenY * this.viewport.height) / this.drawHeight;
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](Math.floor(screenX), Math.floor(screenY));
+    };
+    /**
+     * Returns a BoundingBox of the top left corner of the screen
+     * and the bottom right corner of the screen.
+     */
+    Screen.prototype.getWorldBounds = function () {
+        var left = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero).x;
+        var top = this.screenToWorldCoordinates(_Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero).y;
+        var right = left + this.drawWidth;
+        var bottom = top + this.drawHeight;
+        return new _Collision_Index__WEBPACK_IMPORTED_MODULE_2__["BoundingBox"](left, top, right, bottom);
+    };
+    Object.defineProperty(Screen.prototype, "canvasWidth", {
+        /**
+         * The width of the game canvas in pixels (physical width component of the
+         * resolution of the canvas element)
+         */
+        get: function () {
+            return this.canvas.width;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "halfCanvasWidth", {
+        /**
+         * Returns half width of the game canvas in pixels (half physical width component)
+         */
+        get: function () {
+            return this.canvas.width / 2;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "canvasHeight", {
+        /**
+         * The height of the game canvas in pixels, (physical height component of
+         * the resolution of the canvas element)
+         */
+        get: function () {
+            return this.canvas.height;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "halfCanvasHeight", {
+        /**
+         * Returns half height of the game canvas in pixels (half physical height component)
+         */
+        get: function () {
+            return this.canvas.height / 2;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "drawWidth", {
+        /**
+         * Returns the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        get: function () {
+            if (this._camera) {
+                return this.scaledWidth / this._camera.z / this.pixelRatio;
+            }
+            return this.scaledWidth / this.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "halfDrawWidth", {
+        /**
+         * Returns half the width of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        get: function () {
+            return this.drawWidth / 2;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "drawHeight", {
+        /**
+         * Returns the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        get: function () {
+            if (this._camera) {
+                return this.scaledHeight / this._camera.z / this.pixelRatio;
+            }
+            return this.scaledHeight / this.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Screen.prototype, "halfDrawHeight", {
+        /**
+         * Returns half the height of the engine's visible drawing surface in pixels including zoom and device pixel ratio.
+         */
+        get: function () {
+            return this.drawHeight / 2;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Screen.prototype._applyDisplayMode = function () {
+        if (this.displayMode === DisplayMode.FullScreen || this.displayMode === DisplayMode.Container) {
+            var parent_1 = (this.displayMode === DisplayMode.Container ? (this.canvas.parentElement || document.body) : window);
+            this._setHeightByDisplayMode(parent_1);
+            this._browser.window.on('resize', this._windowResizeHandler);
+        }
+        else if (this.displayMode === DisplayMode.Position) {
+            this._initializeDisplayModePosition(this._position);
+        }
+    };
+    /**
+     * Sets the internal canvas height based on the selected display mode.
+     */
+    Screen.prototype._setHeightByDisplayMode = function (parent) {
+        if (this.displayMode === DisplayMode.Container) {
+            this.resolution = {
+                width: parent.clientWidth,
+                height: parent.clientHeight
+            };
+            this.viewport = this.resolution;
+        }
+        if (this.displayMode === DisplayMode.FullScreen) {
+            document.body.style.margin = '0px';
+            document.body.style.overflow = 'hidden';
+            this.resolution = {
+                width: parent.innerWidth,
+                height: parent.innerHeight
+            };
+            this.viewport = this.resolution;
+        }
+    };
+    Screen.prototype._initializeDisplayModePosition = function (position) {
+        if (!position) {
+            throw new Error('DisplayMode of Position was selected but no position option was given');
+        }
+        else {
+            this.canvas.style.display = 'block';
+            this.canvas.style.position = 'absolute';
+            if (typeof position === 'string') {
+                var specifiedPosition = position.split(' ');
+                switch (specifiedPosition[0]) {
+                    case 'top':
+                        this.canvas.style.top = '0px';
+                        break;
+                    case 'bottom':
+                        this.canvas.style.bottom = '0px';
+                        break;
+                    case 'middle':
+                        this.canvas.style.top = '50%';
+                        var offsetY = -this.halfDrawHeight;
+                        this.canvas.style.marginTop = offsetY.toString();
+                        break;
+                    default:
+                        throw new Error('Invalid Position Given');
+                }
+                if (specifiedPosition[1]) {
+                    switch (specifiedPosition[1]) {
+                        case 'left':
+                            this.canvas.style.left = '0px';
+                            break;
+                        case 'right':
+                            this.canvas.style.right = '0px';
+                            break;
+                        case 'center':
+                            this.canvas.style.left = '50%';
+                            var offsetX = -this.halfDrawWidth;
+                            this.canvas.style.marginLeft = offsetX.toString();
+                            break;
+                        default:
+                            throw new Error('Invalid Position Given');
+                    }
+                }
+            }
+            else {
+                if (position.top) {
+                    typeof position.top === 'number'
+                        ? (this.canvas.style.top = position.top.toString() + 'px')
+                        : (this.canvas.style.top = position.top);
+                }
+                if (position.right) {
+                    typeof position.right === 'number'
+                        ? (this.canvas.style.right = position.right.toString() + 'px')
+                        : (this.canvas.style.right = position.right);
+                }
+                if (position.bottom) {
+                    typeof position.bottom === 'number'
+                        ? (this.canvas.style.bottom = position.bottom.toString() + 'px')
+                        : (this.canvas.style.bottom = position.bottom);
+                }
+                if (position.left) {
+                    typeof position.left === 'number'
+                        ? (this.canvas.style.left = position.left.toString() + 'px')
+                        : (this.canvas.style.left = position.left);
+                }
+            }
+        }
+    };
+    return Screen;
+}());
+
+
+
+/***/ }),
+
 /***/ "./ScreenElement.ts":
 /*!**************************!*\
   !*** ./ScreenElement.ts ***!
@@ -25695,302 +26067,308 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EX_VERSION", function() { return EX_VERSION; });
 /* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Polyfill */ "./Polyfill.ts");
 /* harmony import */ var _Engine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Engine */ "./Engine.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DisplayMode", function() { return _Engine__WEBPACK_IMPORTED_MODULE_1__["DisplayMode"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScrollPreventionMode", function() { return _Engine__WEBPACK_IMPORTED_MODULE_1__["ScrollPreventionMode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Engine", function() { return _Engine__WEBPACK_IMPORTED_MODULE_1__["Engine"]; });
 
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return _Actor__WEBPACK_IMPORTED_MODULE_2__["Actor"]; });
+/* harmony import */ var _Screen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Screen */ "./Screen.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DisplayMode", function() { return _Screen__WEBPACK_IMPORTED_MODULE_2__["DisplayMode"]; });
 
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__["CollisionType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resolution", function() { return _Screen__WEBPACK_IMPORTED_MODULE_2__["Resolution"]; });
 
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Vector"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Screen", function() { return _Screen__WEBPACK_IMPORTED_MODULE_2__["Screen"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ray", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Ray"]; });
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return _Actor__WEBPACK_IMPORTED_MODULE_3__["Actor"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Line"]; });
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionType", function() { return _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_4__["CollisionType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Projection", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["Projection"]; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Vector", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["Vector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GlobalCoordinates", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["GlobalCoordinates"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ray", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["Ray"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vec", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_4__["vec"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["Line"]; });
 
-/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StrategyContainer", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["StrategyContainer"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Projection", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["Projection"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Axis", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["Axis"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GlobalCoordinates", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["GlobalCoordinates"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LockCameraToActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vec", function() { return _Algebra__WEBPACK_IMPORTED_MODULE_5__["vec"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LockCameraToActorAxisStrategy"]; });
+/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StrategyContainer", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["StrategyContainer"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["ElasticToActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Axis", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["Axis"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["RadiusAroundActorStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["LockCameraToActorStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LimitCameraBoundsStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["LimitCameraBoundsStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LockCameraToActorAxisStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["LockCameraToActorAxisStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_5__["Camera"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ElasticToActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["ElasticToActorStrategy"]; });
 
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _Class__WEBPACK_IMPORTED_MODULE_6__["Class"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RadiusAroundActorStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["RadiusAroundActorStrategy"]; });
 
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Configurable", function() { return _Configurable__WEBPACK_IMPORTED_MODULE_7__["Configurable"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LimitCameraBoundsStrategy", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["LimitCameraBoundsStrategy"]; });
 
-/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["Debug"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Camera", function() { return _Camera__WEBPACK_IMPORTED_MODULE_6__["Camera"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FrameStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["FrameStats"]; });
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _Class__WEBPACK_IMPORTED_MODULE_7__["Class"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PhysicsStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_8__["PhysicsStats"]; });
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Configurable", function() { return _Configurable__WEBPACK_IMPORTED_MODULE_8__["Configurable"]; });
 
-/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./EventDispatcher */ "./EventDispatcher.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventDispatcher", function() { return _EventDispatcher__WEBPACK_IMPORTED_MODULE_9__["EventDispatcher"]; });
+/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return _Debug__WEBPACK_IMPORTED_MODULE_9__["Debug"]; });
 
-/* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Events/MediaEvents */ "./Events/MediaEvents.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["MediaEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FrameStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_9__["FrameStats"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["NativeSoundEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PhysicsStats", function() { return _Debug__WEBPACK_IMPORTED_MODULE_9__["PhysicsStats"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundProcessedEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_10__["NativeSoundProcessedEvent"]; });
+/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./EventDispatcher */ "./EventDispatcher.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventDispatcher", function() { return _EventDispatcher__WEBPACK_IMPORTED_MODULE_10__["EventDispatcher"]; });
 
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EventTypes"]; });
+/* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Events/MediaEvents */ "./Events/MediaEvents.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MediaEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_11__["MediaEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_11__["NativeSoundEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["KillEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NativeSoundProcessedEvent", function() { return _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_11__["NativeSoundProcessedEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreKillEvent"]; });
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EventTypes", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["EventTypes"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostKillEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameStartEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "KillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["KillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStopEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GameStopEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreKillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostKillEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostKillEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GameStartEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreDebugDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameStopEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GameStopEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostDebugDrawEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreUpdateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostUpdateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreDebugDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreFrameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostDebugDrawEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostDebugDrawEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostFrameEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreUpdateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadConnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadConnectEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostUpdateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostUpdateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadDisconnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadDisconnectEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreFrameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadButtonEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadButtonEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostFrameEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostFrameEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadAxisEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["GamepadAxisEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadConnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GamepadConnectEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["SubscribeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadDisconnectEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GamepadDisconnectEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UnsubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["UnsubscribeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadButtonEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GamepadButtonEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VisibleEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["VisibleEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GamepadAxisEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["GamepadAxisEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HiddenEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["HiddenEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["SubscribeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PreCollisionEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UnsubscribeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["UnsubscribeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["PostCollisionEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VisibleEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["VisibleEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["CollisionStartEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HiddenEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["HiddenEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionEndEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["CollisionEndEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PreCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PreCollisionEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "InitializeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["InitializeEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PostCollisionEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["PostCollisionEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ActivateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionStartEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["CollisionStartEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DeactivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["DeactivateEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionEndEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["CollisionEndEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ExitViewPortEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "InitializeEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["InitializeEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EnterViewPortEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["ActivateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["EnterTriggerEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DeactivateEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["DeactivateEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__["ExitTriggerEvent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["ExitViewPortEvent"]; });
 
-/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Label */ "./Label.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["Label"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterViewPortEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["EnterViewPortEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontStyle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EnterTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["EnterTriggerEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["FontUnit"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExitTriggerEvent", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__["ExitTriggerEvent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["TextAlign"]; });
+/* harmony import */ var _Label__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Label */ "./Label.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Label", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["Label"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_12__["BaseAlign"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontStyle", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontStyle"]; });
 
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_13__["Loader"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FontUnit", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["FontUnit"]; });
 
-/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["Particle"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["TextAlign"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["ParticleEmitter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseAlign", function() { return _Label__WEBPACK_IMPORTED_MODULE_13__["BaseAlign"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_14__["EmitterType"]; });
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return _Loader__WEBPACK_IMPORTED_MODULE_14__["Loader"]; });
 
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["CollisionResolutionStrategy"]; });
+/* harmony import */ var _Particles__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Particles */ "./Particles.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Particle", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["Particle"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["BroadphaseStrategy"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParticleEmitter", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["ParticleEmitter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Integrator"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EmitterType", function() { return _Particles__WEBPACK_IMPORTED_MODULE_15__["EmitterType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_15__["Physics"]; });
+/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Physics */ "./Physics.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionResolutionStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["CollisionResolutionStrategy"]; });
 
-/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["PromiseState"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BroadphaseStrategy", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["BroadphaseStrategy"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_16__["Promise"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Integrator", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Integrator"]; });
 
-/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_17__["Scene"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Physics", function() { return _Physics__WEBPACK_IMPORTED_MODULE_16__["Physics"]; });
 
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileMap"]; });
+/* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseState", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["PromiseState"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["Cell"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Promise", function() { return _Promises__WEBPACK_IMPORTED_MODULE_17__["Promise"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_18__["TileSprite"]; });
+/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scene", function() { return _Scene__WEBPACK_IMPORTED_MODULE_18__["Scene"]; });
 
-/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_19__["Timer"]; });
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileMap", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileMap"]; });
 
-/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_20__["Trigger"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["Cell"]; });
 
-/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["ScreenElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TileSprite", function() { return _TileMap__WEBPACK_IMPORTED_MODULE_19__["TileSprite"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_21__["UIActor"]; });
+/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Timer", function() { return _Timer__WEBPACK_IMPORTED_MODULE_20__["Timer"]; });
 
-/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actions_Index__WEBPACK_IMPORTED_MODULE_22__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_22__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Collision_Index__WEBPACK_IMPORTED_MODULE_23__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_23__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Animation"]; });
+/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Trigger", function() { return _Trigger__WEBPACK_IMPORTED_MODULE_21__["Trigger"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Color"]; });
+/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["ScreenElement"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Polygon"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["UIActor"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Sprite"]; });
+/* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actions_Index__WEBPACK_IMPORTED_MODULE_23__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Collision_Index__WEBPACK_IMPORTED_MODULE_24__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Animation"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteSheet"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Color", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Color"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["SpriteFont"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Polygon"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_24__["Effects"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sprite", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Sprite"]; });
 
-/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_25__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinGenerator"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteSheet", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteSheet"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["PerlinDrawer2D"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["SpriteFont"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_26__["Random"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Effects"]; });
 
-/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","DisplayMode","ScrollPreventionMode","Engine","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","PerlinGenerator","PerlinDrawer2D","Random","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_27__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Resource"]; });
+/* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinGenerator"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Sound"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinDrawer2D", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinDrawer2D"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioContextFactory"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["Random"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstanceFactory"]; });
+/* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__) if(["EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","PerlinGenerator","PerlinDrawer2D","Random","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Resource"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Sound", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Sound"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["AudioTagInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioContextFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioContextFactory"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["WebAudioInstance"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstanceFactory", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstanceFactory"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Texture"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Gif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AudioTagInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["AudioTagInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["Stream"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "WebAudioInstance", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["WebAudioInstance"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_28__["ParseGif"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Texture", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Texture"]; });
 
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_11__; });
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_29__; });
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_30__; });
-/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_31__; });
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_32__["BrowserComponent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Gif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Gif"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_32__["BrowserEvents"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Stream", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Stream"]; });
 
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["maxMessages"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["ParseGif"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["resetObsoleteCounter"]; });
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__; });
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_30__; });
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_31__; });
+/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_32__; });
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserComponent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_33__["obsolete"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserEvents"]; });
 
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_34__["Detector"]; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["maxMessages"]; });
 
-/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_35__["CullingBox"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["resetObsoleteCounter"]; });
 
-/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_36__["EasingFunctions"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["obsolete"]; });
 
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["LogLevel"]; });
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_35__["Detector"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["Logger"]; });
+/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__["CullingBox"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ConsoleAppender"]; });
+/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__["EasingFunctions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_37__["ScreenAppender"]; });
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["LogLevel"]; });
 
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["SortedList"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["Logger"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["BinaryTreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ConsoleAppender"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_38__["MockedElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ScreenAppender"]; });
+
+/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["SortedList"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["BinaryTreeNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["MockedElement"]; });
 
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6809+9b3456f";
+var EX_VERSION = "0.25.0-alpha.6924+37f1a57";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything
 // that will be exposed as the `ex` global variable.
+
 
 
 

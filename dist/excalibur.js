@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6924+37f1a57 - 2020-8-8
+ * excalibur - 0.25.0-alpha.6928+d60209c - 2020-8-8
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5196,12 +5196,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
 /* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony import */ var _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Drawing/SpriteEffects */ "./Drawing/SpriteEffects.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
-/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5221,7 +5220,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -5296,7 +5294,6 @@ var ActorImpl = /** @class */ (function (_super) {
         _this.children = [];
         _this._isInitialized = false;
         _this.frames = {};
-        _this._effectsDirty = false;
         /**
          * Access to the current drawing for the actor, this can be
          * an [[Animation]], [[Sprite]], or [[Polygon]].
@@ -5342,7 +5339,6 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         _this._zIndex = 0;
         _this._isKilled = false;
-        _this._opacityFx = new _Drawing_SpriteEffects__WEBPACK_IMPORTED_MODULE_12__["Opacity"](_this.opacity);
         // #region Events
         _this._capturePointerEvents = [
             'pointerup',
@@ -5374,7 +5370,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // initialize default options
         _this._initDefaults();
         var shouldInitializeBody = true;
-        var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].Passive;
+        var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             if (config.pos) {
@@ -5404,9 +5400,9 @@ var ActorImpl = /** @class */ (function (_super) {
         // Initialize default collider to be a box
         if (shouldInitializeBody) {
             _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_9__["Body"]({
-                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__["Collider"]({
+                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_15__["Collider"]({
                     type: collisionType,
-                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(_this._width, _this._height, _this.anchor)
+                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(_this._width, _this._height, _this.anchor)
                 })
             });
         }
@@ -5820,8 +5816,8 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to add
      */
     ActorImpl.prototype.add = function (actor) {
-        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].PreventCollision;
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["addItemToArray"](actor, this.children)) {
+        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].PreventCollision;
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_12__["addItemToArray"](actor, this.children)) {
             actor.parent = this;
         }
     };
@@ -5830,7 +5826,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to remove
      */
     ActorImpl.prototype.remove = function (actor) {
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["removeItemFromArray"](actor, this.children)) {
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_12__["removeItemFromArray"](actor, this.children)) {
             actor.parent = null;
         }
     };
@@ -5852,7 +5848,6 @@ var ActorImpl = /** @class */ (function (_super) {
             if (!this.currentDrawing) {
                 this.currentDrawing = arguments[1];
             }
-            this._effectsDirty = true;
         }
         else {
             if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_4__["Sprite"]) {
@@ -5907,7 +5902,7 @@ var ActorImpl = /** @class */ (function (_super) {
         },
         set: function (width) {
             this._width = width / this.scale.x;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: false,
@@ -5919,7 +5914,7 @@ var ActorImpl = /** @class */ (function (_super) {
         },
         set: function (height) {
             this._height = height / this.scale.y;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: false,
@@ -6012,10 +6007,6 @@ var ActorImpl = /** @class */ (function (_super) {
         return this.body.collider.shape.getClosestLineBetween(actor.body.collider.shape).getLength() <= distance;
     };
     // #endregion
-    ActorImpl.prototype._reapplyEffects = function (drawing) {
-        drawing.removeEffect(this._opacityFx);
-        drawing.addEffect(this._opacityFx);
-    };
     // #region Update
     /**
      * Called by the Engine, updates the state of the actor
@@ -6033,12 +6024,6 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         if (this.opacity === 0) {
             this.visible = false;
-        }
-        // calculate changing opacity
-        if (this.previousOpacity !== this.opacity) {
-            this.previousOpacity = this.opacity;
-            this._opacityFx.opacity = this.opacity;
-            this._effectsDirty = true;
         }
         // capture old transform
         this.body.captureOldTransform();
@@ -6112,11 +6097,7 @@ var ActorImpl = /** @class */ (function (_super) {
             // See https://github.com/excaliburjs/Excalibur/pull/619 for discussion on this formula
             var offsetX = (this._width - drawing.width * drawing.scale.x) * this.anchor.x;
             var offsetY = (this._height - drawing.height * drawing.scale.y) * this.anchor.y;
-            if (this._effectsDirty) {
-                this._reapplyEffects(this.currentDrawing);
-                this._effectsDirty = false;
-            }
-            this.currentDrawing.draw(ctx, offsetX, offsetY);
+            this.currentDrawing.draw({ ctx: ctx, x: offsetX, y: offsetY, opacity: this.opacity });
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {
@@ -6246,10 +6227,10 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     ActorImpl.maxId = 0;
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_14__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_14__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sy", null);
     return ActorImpl;
 }(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
@@ -11920,6 +11901,17 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 
 
 
@@ -11972,6 +11964,7 @@ var AnimationImpl = /** @class */ (function () {
         this.drawHeight = 0;
         this.width = 0;
         this.height = 0;
+        this._opacity = 1;
         var engine = engineOrConfig;
         if (engineOrConfig && !(engineOrConfig instanceof _Engine__WEBPACK_IMPORTED_MODULE_2__["Engine"])) {
             var config = engineOrConfig;
@@ -11998,7 +11991,7 @@ var AnimationImpl = /** @class */ (function () {
      * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
      */
     AnimationImpl.prototype.opacity = function (value) {
-        this.addEffect(new _SpriteEffects__WEBPACK_IMPORTED_MODULE_0__["Opacity"](value));
+        this._opacity = value;
     };
     /**
      * Applies the grayscale effect to a sprite, removing color information.
@@ -12133,23 +12126,25 @@ var AnimationImpl = /** @class */ (function () {
     };
     AnimationImpl.prototype.draw = function (ctxOrOptions, x, y) {
         if (ctxOrOptions instanceof CanvasRenderingContext2D) {
-            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y, flipHorizontal: this.flipHorizontal, flipVertical: this.flipVertical });
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
         }
         else {
             this._drawWithOptions(ctxOrOptions);
         }
     };
     AnimationImpl.prototype._drawWithOptions = function (options) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        var animOptions = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, opacity: (_g = options.opacity) !== null && _g !== void 0 ? _g : this._opacity });
         this.tick();
         this._updateValues();
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            currSprite.draw(options);
+            currSprite.draw(animOptions);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
             currSprite = this.sprites[_Util_Util__WEBPACK_IMPORTED_MODULE_3__["clamp"](this.freezeFrame, 0, this.sprites.length - 1)];
-            currSprite.draw(options);
+            currSprite.draw(animOptions);
         }
         // add the calculated width
         if (currSprite) {
@@ -12772,7 +12767,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Polygon", function() { return Polygon; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/Util */ "./Util/Util.ts");
 var __assign = (undefined && undefined.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -12784,7 +12778,6 @@ var __assign = (undefined && undefined.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-
 
 /**
  * Creates a closed polygon drawing given a list of [[Vector]]s.
@@ -12858,7 +12851,8 @@ var Polygon = /** @class */ (function () {
         }
     };
     Polygon.prototype._drawWithOptions = function (options) {
-        var _a = __assign(__assign({}, options), { rotation: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.rotation, this.rotation), drawWidth: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.drawWidth, this.drawWidth), drawHeight: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.drawHeight, this.drawHeight), flipHorizontal: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.flipHorizontal, this.flipHorizontal), flipVertical: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.flipVertical, this.flipVertical), anchor: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.anchor, this.anchor), offset: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.offset, this.offset), opacity: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(options.opacity, this.opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _j = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, offset: (_g = options.offset) !== null && _g !== void 0 ? _g : this.offset, opacity: (_h = options.opacity) !== null && _h !== void 0 ? _h : this.opacity }), ctx = _j.ctx, x = _j.x, y = _j.y, rotation = _j.rotation, drawWidth = _j.drawWidth, drawHeight = _j.drawHeight, anchor = _j.anchor, offset = _j.offset, opacity = _j.opacity, flipHorizontal = _j.flipHorizontal, flipVertical = _j.flipVertical;
         var xpoint = drawWidth * anchor.x + offset.x + x;
         var ypoint = drawHeight * anchor.y + offset.y + y;
         ctx.save();
@@ -12891,7 +12885,7 @@ var Polygon = /** @class */ (function () {
             ctx.scale(1, -1);
         }
         var oldAlpha = ctx.globalAlpha;
-        ctx.globalAlpha = Object(_Util_Util__WEBPACK_IMPORTED_MODULE_1__["nullish"])(opacity, 1);
+        ctx.globalAlpha = opacity !== null && opacity !== void 0 ? opacity : 1;
         ctx.stroke();
         ctx.globalAlpha = oldAlpha;
         ctx.restore();
@@ -13062,7 +13056,6 @@ var SpriteImpl = /** @class */ (function () {
      */
     SpriteImpl.prototype.opacity = function (value) {
         this._opacity = value;
-        // this.addEffect(new Effects.Opacity(value));
     };
     /**
      * Applies the [[Grayscale]] effect to a sprite, removing color information.
@@ -13159,17 +13152,19 @@ var SpriteImpl = /** @class */ (function () {
         var naturalHeight = this._texture.image.naturalHeight || 0;
         this._spriteCtx.clearRect(0, 0, this.width, this.height);
         this._spriteCtx.drawImage(this._texture.image, Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.x, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.y, 0, naturalHeight), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.width, 0, naturalWidth), Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["clamp"])(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
-        this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
-        var len = this.effects.length;
-        for (var i = 0; i < len; i++) {
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    this.effects[i].updatePixel(x, y, this._pixelData);
+        if (this.effects.length > 0) {
+            this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
+            var len = this.effects.length;
+            for (var i = 0; i < len; i++) {
+                for (var y = 0; y < this.height; y++) {
+                    for (var x = 0; x < this.width; x++) {
+                        this.effects[i].updatePixel(x, y, this._pixelData);
+                    }
                 }
             }
+            this._spriteCtx.clearRect(0, 0, this.width, this.height);
+            this._spriteCtx.putImageData(this._pixelData, 0, 0);
         }
-        this._spriteCtx.clearRect(0, 0, this.width, this.height);
-        this._spriteCtx.putImageData(this._pixelData, 0, 0);
         this._dirtyEffect = false;
     };
     /**
@@ -13204,7 +13199,8 @@ var SpriteImpl = /** @class */ (function () {
         }
     };
     SpriteImpl.prototype._drawWithOptions = function (options) {
-        var _a = __assign(__assign({}, options), { rotation: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.rotation, this.rotation), drawWidth: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.drawWidth, this.drawWidth), drawHeight: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.drawHeight, this.drawHeight), flipHorizontal: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.flipHorizontal, this.flipHorizontal), flipVertical: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.flipVertical, this.flipVertical), anchor: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.anchor, this.anchor), offset: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.offset, this.offset), opacity: Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(options.opacity, this._opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _j = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, offset: (_g = options.offset) !== null && _g !== void 0 ? _g : this.offset, opacity: (_h = options.opacity) !== null && _h !== void 0 ? _h : this._opacity }), ctx = _j.ctx, x = _j.x, y = _j.y, rotation = _j.rotation, drawWidth = _j.drawWidth, drawHeight = _j.drawHeight, anchor = _j.anchor, offset = _j.offset, opacity = _j.opacity, flipHorizontal = _j.flipHorizontal, flipVertical = _j.flipVertical;
         if (this._dirtyEffect) {
             this._applyEffects();
         }
@@ -13227,7 +13223,7 @@ var SpriteImpl = /** @class */ (function () {
             this._applyEffects();
         }
         var oldAlpha = ctx.globalAlpha;
-        ctx.globalAlpha = Object(_Util_Util__WEBPACK_IMPORTED_MODULE_5__["nullish"])(opacity, 1);
+        ctx.globalAlpha = opacity !== null && opacity !== void 0 ? opacity : 1;
         ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, drawWidth, drawHeight);
         ctx.globalAlpha = oldAlpha;
         ctx.restore();
@@ -26363,7 +26359,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6924+37f1a57";
+var EX_VERSION = "0.25.0-alpha.6928+d60209c";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

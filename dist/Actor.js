@@ -29,7 +29,6 @@ import { Vector } from './Algebra';
 import { Body } from './Collision/Body';
 import { Configurable } from './Configurable';
 import * as Traits from './Traits/Index';
-import * as Effects from './Drawing/SpriteEffects';
 import * as Util from './Util/Util';
 import { CollisionType } from './Collision/CollisionType';
 import { obsolete } from './Util/Decorators';
@@ -92,7 +91,6 @@ var ActorImpl = /** @class */ (function (_super) {
         _this.children = [];
         _this._isInitialized = false;
         _this.frames = {};
-        _this._effectsDirty = false;
         /**
          * Access to the current drawing for the actor, this can be
          * an [[Animation]], [[Sprite]], or [[Polygon]].
@@ -138,7 +136,6 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         _this._zIndex = 0;
         _this._isKilled = false;
-        _this._opacityFx = new Effects.Opacity(_this.opacity);
         // #region Events
         _this._capturePointerEvents = [
             'pointerup',
@@ -648,7 +645,6 @@ var ActorImpl = /** @class */ (function (_super) {
             if (!this.currentDrawing) {
                 this.currentDrawing = arguments[1];
             }
-            this._effectsDirty = true;
         }
         else {
             if (arguments[0] instanceof Sprite) {
@@ -808,10 +804,6 @@ var ActorImpl = /** @class */ (function (_super) {
         return this.body.collider.shape.getClosestLineBetween(actor.body.collider.shape).getLength() <= distance;
     };
     // #endregion
-    ActorImpl.prototype._reapplyEffects = function (drawing) {
-        drawing.removeEffect(this._opacityFx);
-        drawing.addEffect(this._opacityFx);
-    };
     // #region Update
     /**
      * Called by the Engine, updates the state of the actor
@@ -829,12 +821,6 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         if (this.opacity === 0) {
             this.visible = false;
-        }
-        // calculate changing opacity
-        if (this.previousOpacity !== this.opacity) {
-            this.previousOpacity = this.opacity;
-            this._opacityFx.opacity = this.opacity;
-            this._effectsDirty = true;
         }
         // capture old transform
         this.body.captureOldTransform();
@@ -908,11 +894,7 @@ var ActorImpl = /** @class */ (function (_super) {
             // See https://github.com/excaliburjs/Excalibur/pull/619 for discussion on this formula
             var offsetX = (this._width - drawing.width * drawing.scale.x) * this.anchor.x;
             var offsetY = (this._height - drawing.height * drawing.scale.y) * this.anchor.y;
-            if (this._effectsDirty) {
-                this._reapplyEffects(this.currentDrawing);
-                this._effectsDirty = false;
-            }
-            this.currentDrawing.draw(ctx, offsetX, offsetY);
+            this.currentDrawing.draw({ ctx: ctx, x: offsetX, y: offsetY, opacity: this.opacity });
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {

@@ -27,7 +27,7 @@ import { Color } from './Color';
 import { Texture } from '../Resources/Texture';
 import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
-import { clamp, nullish } from '../Util/Util';
+import { clamp } from '../Util/Util';
 import { Configurable } from '../Configurable';
 /**
  * @hidden
@@ -139,7 +139,6 @@ var SpriteImpl = /** @class */ (function () {
      */
     SpriteImpl.prototype.opacity = function (value) {
         this._opacity = value;
-        // this.addEffect(new Effects.Opacity(value));
     };
     /**
      * Applies the [[Grayscale]] effect to a sprite, removing color information.
@@ -236,17 +235,19 @@ var SpriteImpl = /** @class */ (function () {
         var naturalHeight = this._texture.image.naturalHeight || 0;
         this._spriteCtx.clearRect(0, 0, this.width, this.height);
         this._spriteCtx.drawImage(this._texture.image, clamp(this.x, 0, naturalWidth), clamp(this.y, 0, naturalHeight), clamp(this.width, 0, naturalWidth), clamp(this.height, 0, naturalHeight), 0, 0, this.width, this.height);
-        this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
-        var len = this.effects.length;
-        for (var i = 0; i < len; i++) {
-            for (var y = 0; y < this.height; y++) {
-                for (var x = 0; x < this.width; x++) {
-                    this.effects[i].updatePixel(x, y, this._pixelData);
+        if (this.effects.length > 0) {
+            this._pixelData = this._spriteCtx.getImageData(0, 0, this.width, this.height);
+            var len = this.effects.length;
+            for (var i = 0; i < len; i++) {
+                for (var y = 0; y < this.height; y++) {
+                    for (var x = 0; x < this.width; x++) {
+                        this.effects[i].updatePixel(x, y, this._pixelData);
+                    }
                 }
             }
+            this._spriteCtx.clearRect(0, 0, this.width, this.height);
+            this._spriteCtx.putImageData(this._pixelData, 0, 0);
         }
-        this._spriteCtx.clearRect(0, 0, this.width, this.height);
-        this._spriteCtx.putImageData(this._pixelData, 0, 0);
         this._dirtyEffect = false;
     };
     /**
@@ -281,7 +282,8 @@ var SpriteImpl = /** @class */ (function () {
         }
     };
     SpriteImpl.prototype._drawWithOptions = function (options) {
-        var _a = __assign(__assign({}, options), { rotation: nullish(options.rotation, this.rotation), drawWidth: nullish(options.drawWidth, this.drawWidth), drawHeight: nullish(options.drawHeight, this.drawHeight), flipHorizontal: nullish(options.flipHorizontal, this.flipHorizontal), flipVertical: nullish(options.flipVertical, this.flipVertical), anchor: nullish(options.anchor, this.anchor), offset: nullish(options.offset, this.offset), opacity: nullish(options.opacity, this._opacity) }), ctx = _a.ctx, x = _a.x, y = _a.y, rotation = _a.rotation, drawWidth = _a.drawWidth, drawHeight = _a.drawHeight, anchor = _a.anchor, offset = _a.offset, opacity = _a.opacity, flipHorizontal = _a.flipHorizontal, flipVertical = _a.flipVertical;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _j = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, offset: (_g = options.offset) !== null && _g !== void 0 ? _g : this.offset, opacity: (_h = options.opacity) !== null && _h !== void 0 ? _h : this._opacity }), ctx = _j.ctx, x = _j.x, y = _j.y, rotation = _j.rotation, drawWidth = _j.drawWidth, drawHeight = _j.drawHeight, anchor = _j.anchor, offset = _j.offset, opacity = _j.opacity, flipHorizontal = _j.flipHorizontal, flipVertical = _j.flipVertical;
         if (this._dirtyEffect) {
             this._applyEffects();
         }
@@ -304,7 +306,7 @@ var SpriteImpl = /** @class */ (function () {
             this._applyEffects();
         }
         var oldAlpha = ctx.globalAlpha;
-        ctx.globalAlpha = nullish(opacity, 1);
+        ctx.globalAlpha = opacity !== null && opacity !== void 0 ? opacity : 1;
         ctx.drawImage(this._spriteCanvas, 0, 0, this.width, this.height, -xpoint, -ypoint, drawWidth, drawHeight);
         ctx.globalAlpha = oldAlpha;
         ctx.restore();

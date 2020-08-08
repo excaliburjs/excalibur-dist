@@ -11,6 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import * as Effects from './SpriteEffects';
 import { Vector } from '../Algebra';
 import { Engine } from '../Engine';
@@ -63,6 +74,7 @@ var AnimationImpl = /** @class */ (function () {
         this.drawHeight = 0;
         this.width = 0;
         this.height = 0;
+        this._opacity = 1;
         var engine = engineOrConfig;
         if (engineOrConfig && !(engineOrConfig instanceof Engine)) {
             var config = engineOrConfig;
@@ -89,7 +101,7 @@ var AnimationImpl = /** @class */ (function () {
      * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
      */
     AnimationImpl.prototype.opacity = function (value) {
-        this.addEffect(new Effects.Opacity(value));
+        this._opacity = value;
     };
     /**
      * Applies the grayscale effect to a sprite, removing color information.
@@ -224,23 +236,25 @@ var AnimationImpl = /** @class */ (function () {
     };
     AnimationImpl.prototype.draw = function (ctxOrOptions, x, y) {
         if (ctxOrOptions instanceof CanvasRenderingContext2D) {
-            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y, flipHorizontal: this.flipHorizontal, flipVertical: this.flipVertical });
+            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
         }
         else {
             this._drawWithOptions(ctxOrOptions);
         }
     };
     AnimationImpl.prototype._drawWithOptions = function (options) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        var animOptions = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, opacity: (_g = options.opacity) !== null && _g !== void 0 ? _g : this._opacity });
         this.tick();
         this._updateValues();
         var currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
-            currSprite.draw(options);
+            currSprite.draw(animOptions);
         }
         if (this.freezeFrame !== -1 && this.currentFrame >= this.sprites.length) {
             currSprite = this.sprites[Util.clamp(this.freezeFrame, 0, this.sprites.length - 1)];
-            currSprite.draw(options);
+            currSprite.draw(animOptions);
         }
         // add the calculated width
         if (currSprite) {

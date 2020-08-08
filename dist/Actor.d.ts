@@ -227,7 +227,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     frames: {
         [key: string]: Drawable;
     };
-    private _effectsDirty;
     /**
      * Access to the current drawing for the actor, this can be
      * an [[Animation]], [[Sprite]], or [[Polygon]].
@@ -269,7 +268,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     capturePointer: Traits.CapturePointerConfig;
     private _zIndex;
     private _isKilled;
-    private _opacityFx;
     /**
      * @param x       The starting x coordinate of the actor
      * @param y       The starting y coordinate of the actor
@@ -614,7 +612,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * @param distance  Distance in pixels to test
      */
     within(actor: Actor, distance: number): boolean;
-    protected _reapplyEffects(drawing: Drawable): void;
     /**
      * Called by the Engine, updates the state of the actor
      * @param engine The reference to the current game engine

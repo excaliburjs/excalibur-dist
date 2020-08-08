@@ -47,6 +47,7 @@ export declare class AnimationImpl implements Drawable {
     drawHeight: number;
     width: number;
     height: number;
+    private _opacity;
     /**
      * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
      *

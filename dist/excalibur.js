@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6974+d22e79b - 2020-8-14
+ * excalibur - 0.25.0-alpha.6981+f26c80d - 2020-8-17
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -26363,7 +26363,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6974+d22e79b";
+var EX_VERSION = "0.25.0-alpha.6981+f26c80d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -75,12 +75,22 @@ export var EventTypes;
  */
 var GameEvent = /** @class */ (function () {
     function GameEvent() {
+        this._bubbles = true;
+    }
+    Object.defineProperty(GameEvent.prototype, "bubbles", {
         /**
          * If set to false, prevents event from propagating to other actors. If true it will be propagated
          * to all actors that apply.
          */
-        this.bubbles = true;
-    }
+        get: function () {
+            return this._bubbles;
+        },
+        set: function (value) {
+            this._bubbles = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * Prevents event from bubbling
      */

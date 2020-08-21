@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.6988+f60b1bb - 2020-8-17
+ * excalibur - 0.25.0-alpha.6999+5b501d7 - 2020-8-21
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -3750,28 +3750,6 @@ defineIterator(String, 'String', function (iterated) {
 
 /***/ }),
 
-/***/ "../../node_modules/css-loader/dist/cjs.js!./Loader.css":
-/*!*************************************************************************************************!*\
-  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/css-loader/dist/cjs.js!./Loader.css ***!
-  \*************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "../../node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(false);
-// Module
-___CSS_LOADER_EXPORT___.push([module.i, "/* Buttons styles start */\n\nbutton#excalibur-play {\n  display: inline-block;\n  position: relative;\n  z-index: 999;\n  border-radius: 6px;\n  border: none;\n  /*border: 3px solid;\n    border-color: white;\n    box-shadow: 0 0 10px #ccc;*/\n  padding: 1rem 1.5rem 1rem 4rem;\n  margin: 0;\n  text-decoration: none;\n  background: #00b233;\n  color: #ffffff;\n  font-family: sans-serif;\n  font-size: 2rem;\n  line-height: 1;\n  cursor: pointer;\n  text-align: center;\n  transition: background 250ms ease-in-out, transform 150ms ease;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n\n  -webkit-animation: excalibur-button-fadein 200ms; /* Safari, Chrome and Opera > 12.1 */\n  -moz-animation: excalibur-button-fadein 200ms; /* Firefox < 16 */\n  -ms-animation: excalibur-button-fadein 200ms; /* Internet Explorer */\n  -o-animation: excalibur-button-fadein 200ms; /* Opera < 12.1 */\n  animation: excalibur-button-fadein 200ms;\n}\n\n/*\nbutton#excalibur-play {\n  display: none;\n}*/\n\nbutton#excalibur-play:after {\n  position: absolute;\n  content: '';\n  border: 8px solid;\n  border-color: transparent transparent transparent white;\n  left: 35px;\n  top: 24px;\n  width: 0;\n  height: 0;\n}\n\nbutton#excalibur-play:before {\n  position: absolute;\n  content: '';\n  border: 3px solid;\n  left: 19px;\n  top: 14px;\n  border-radius: 20px;\n  width: 30px;\n  height: 30px;\n}\n\nbutton#excalibur-play:hover,\nbutton#excalibur-play:focus {\n  background: #00982c;\n}\n\nbutton#excalibur-play:focus {\n  outline: 1px solid #fff;\n  outline-offset: -4px;\n}\n\nbutton#excalibur-play:active {\n  transform: scale(0.99);\n}\n\n@keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Firefox < 16 */\n@-moz-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Safari, Chrome and Opera > 12.1 */\n@-webkit-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Internet Explorer */\n@-ms-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Opera < 12.1 */\n@-o-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n", ""]);
-// Exports
-/* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
 /***/ "../../node_modules/css-loader/dist/runtime/api.js":
 /*!********************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/css-loader/dist/runtime/api.js ***!
@@ -5097,8 +5075,11 @@ var ActionContext = /** @class */ (function () {
 /*!*******************************!*\
   !*** ./Actions/Actionable.ts ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -5108,7 +5089,7 @@ var ActionContext = /** @class */ (function () {
 /*!**************************!*\
   !*** ./Actions/Index.ts ***!
   \**************************/
-/*! no static exports found */
+/*! exports provided: ActionContext, RotationType, Actions, Internal */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5118,9 +5099,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _ActionContext__WEBPACK_IMPORTED_MODULE_0__["ActionContext"]; });
 
 /* harmony import */ var _Actionable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actionable */ "./Actions/Actionable.ts");
-/* harmony import */ var _Actionable__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_Actionable__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actionable__WEBPACK_IMPORTED_MODULE_1__) if(["default","Actions","Internal","ActionContext"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actionable__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _RotationType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RotationType */ "./Actions/RotationType.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _RotationType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RotationType */ "./Actions/RotationType.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _RotationType__WEBPACK_IMPORTED_MODULE_2__["RotationType"]; });
 
 /* harmony import */ var _Action__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Action */ "./Actions/Action.ts");
@@ -5209,7 +5188,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -6898,7 +6877,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -9692,8 +9671,11 @@ var CollisionJumpTable = {
 /*!****************************************!*\
   !*** ./Collision/CollisionResolver.ts ***!
   \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -9703,8 +9685,11 @@ var CollisionJumpTable = {
 /*!*************************************!*\
   !*** ./Collision/CollisionShape.ts ***!
   \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -11169,7 +11154,7 @@ var Edge = /** @class */ (function () {
 /*!****************************!*\
   !*** ./Collision/Index.ts ***!
   \****************************/
-/*! no static exports found */
+/*! exports provided: Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11217,15 +11202,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Edge__WEBPACK_IMPORTED_MODULE_11__["Edge"]; });
 
 /* harmony import */ var _CollisionShape__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./CollisionShape */ "./Collision/CollisionShape.ts");
-/* harmony import */ var _CollisionShape__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_CollisionShape__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _CollisionShape__WEBPACK_IMPORTED_MODULE_12__) if(["default","Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _CollisionShape__WEBPACK_IMPORTED_MODULE_12__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CollisionResolver */ "./Collision/CollisionResolver.ts");
-/* harmony import */ var _CollisionResolver__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_CollisionResolver__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__) if(["default","Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Physics */ "./Collision/Physics.ts");
-/* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_Physics__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Physics__WEBPACK_IMPORTED_MODULE_14__) if(["default","Body","isCollider","Collider","BoundingBox","Circle","CollisionContact","CollisionJumpTable","ClosestLine","ClosestLineJumpTable","CollisionGroup","CollisionGroupManager","TreeNode","DynamicTree","DynamicTreeCollisionBroadphase","Edge"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Physics__WEBPACK_IMPORTED_MODULE_14__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _CollisionResolver__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CollisionResolver */ "./Collision/CollisionResolver.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _Physics__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Physics */ "./Collision/Physics.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _Pair__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Pair */ "./Collision/Pair.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Pair__WEBPACK_IMPORTED_MODULE_15__["Pair"]; });
 
 /* harmony import */ var _ConvexPolygon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ConvexPolygon */ "./Collision/ConvexPolygon.ts");
@@ -11367,8 +11346,11 @@ var Pair = /** @class */ (function () {
 /*!******************************!*\
   !*** ./Collision/Physics.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -11499,7 +11481,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -11896,7 +11878,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -12923,7 +12905,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -13517,7 +13499,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -13926,7 +13908,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -15054,7 +15036,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -15127,12 +15109,22 @@ var EventTypes;
  */
 var GameEvent = /** @class */ (function () {
     function GameEvent() {
+        this._bubbles = true;
+    }
+    Object.defineProperty(GameEvent.prototype, "bubbles", {
         /**
          * If set to false, prevents event from propagating to other actors. If true it will be propagated
          * to all actors that apply.
          */
-        this.bubbles = true;
-    }
+        get: function () {
+            return this._bubbles;
+        },
+        set: function (value) {
+            this._bubbles = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * Prevents event from bubbling
      */
@@ -15695,7 +15687,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -15807,8 +15799,11 @@ var NativeSoundProcessedEvent = /** @class */ (function (_super) {
 /*!******************************!*\
   !*** ./Input/EngineInput.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -15833,7 +15828,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -16218,7 +16213,7 @@ var Axes;
 /*!************************!*\
   !*** ./Input/Index.ts ***!
   \************************/
-/*! no static exports found */
+/*! exports provided: Gamepads, Gamepad, Buttons, Axes, PointerType, PointerScope, Pointer, Pointers, NativePointerButton, PointerButton, WheelDeltaMode, PointerEvent, PointerEventFactory, PointerDragEvent, PointerUpEvent, PointerDownEvent, PointerMoveEvent, PointerEnterEvent, PointerLeaveEvent, PointerCancelEvent, WheelEvent, createPointerEventByName, Keys, KeyEvent, Keyboard */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16279,9 +16274,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Keyboard", function() { return _Keyboard__WEBPACK_IMPORTED_MODULE_4__["Keyboard"]; });
 
 /* harmony import */ var _EngineInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./EngineInput */ "./Input/EngineInput.ts");
-/* harmony import */ var _EngineInput__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_EngineInput__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _EngineInput__WEBPACK_IMPORTED_MODULE_5__) if(["default","Gamepads","Gamepad","Buttons","Axes","PointerType","PointerScope","Pointer","Pointers","NativePointerButton","PointerButton","WheelDeltaMode","PointerEvent","PointerEventFactory","PointerDragEvent","PointerUpEvent","PointerDownEvent","PointerMoveEvent","PointerEnterEvent","PointerLeaveEvent","PointerCancelEvent","WheelEvent","createPointerEventByName","Keys","KeyEvent","Keyboard"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _EngineInput__WEBPACK_IMPORTED_MODULE_5__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/**
+/* empty/unused harmony star reexport *//**
  * Provides support for mice, keyboards, and controllers.
  *
  * [[include:Input.md]]
@@ -16318,7 +16311,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -16545,7 +16538,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -16812,7 +16805,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -17184,7 +17177,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -17621,8 +17614,11 @@ var Pointers = /** @class */ (function (_super) {
 /*!*****************************!*\
   !*** ./Interfaces/Audio.ts ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17660,8 +17656,11 @@ var ExResponse = /** @class */ (function () {
 /*!********************************!*\
   !*** ./Interfaces/Drawable.ts ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17671,8 +17670,11 @@ var ExResponse = /** @class */ (function () {
 /*!*******************************!*\
   !*** ./Interfaces/Evented.ts ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17682,39 +17684,23 @@ var ExResponse = /** @class */ (function () {
 /*!*****************************!*\
   !*** ./Interfaces/Index.ts ***!
   \*****************************/
-/*! no static exports found */
+/*! exports provided: ExResponse */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Trait__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Trait */ "./Interfaces/Trait.ts");
-/* harmony import */ var _Trait__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Trait__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Trait__WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Trait__WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Audio */ "./Interfaces/Audio.ts");
-/* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_Audio__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Audio__WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Audio__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _AudioImplementation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioImplementation */ "./Interfaces/AudioImplementation.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _Audio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Audio */ "./Interfaces/Audio.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _AudioImplementation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AudioImplementation */ "./Interfaces/AudioImplementation.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _AudioImplementation__WEBPACK_IMPORTED_MODULE_2__["ExResponse"]; });
 
 /* harmony import */ var _Drawable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawable */ "./Interfaces/Drawable.ts");
-/* harmony import */ var _Drawable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_Drawable__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Drawable__WEBPACK_IMPORTED_MODULE_3__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Drawable__WEBPACK_IMPORTED_MODULE_3__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Evented */ "./Interfaces/Evented.ts");
-/* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_Evented__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Evented__WEBPACK_IMPORTED_MODULE_4__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Evented__WEBPACK_IMPORTED_MODULE_4__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loadable */ "./Interfaces/Loadable.ts");
-/* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_Loadable__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Loadable__WEBPACK_IMPORTED_MODULE_5__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Loadable__WEBPACK_IMPORTED_MODULE_5__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Interfaces/Loader.ts");
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_Loader__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Loader__WEBPACK_IMPORTED_MODULE_6__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Loader__WEBPACK_IMPORTED_MODULE_6__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
-/* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
-/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__) if(["default","ExResponse"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-
+/* empty/unused harmony star reexport *//* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Evented */ "./Interfaces/Evented.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loadable */ "./Interfaces/Loadable.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Interfaces/Loader.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
+/* empty/unused harmony star reexport *//* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
+/* empty/unused harmony star reexport */
 
 
 
@@ -17731,8 +17717,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************!*\
   !*** ./Interfaces/LifecycleEvents.ts ***!
   \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17742,8 +17731,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************!*\
   !*** ./Interfaces/Loadable.ts ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17753,8 +17745,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!******************************!*\
   !*** ./Interfaces/Loader.ts ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17764,8 +17759,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************************!*\
   !*** ./Interfaces/PointerEventHandlers.ts ***!
   \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17775,8 +17773,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************!*\
   !*** ./Interfaces/Trait.ts ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -17806,7 +17807,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -18171,18 +18172,21 @@ var Label = /** @class */ (function (_super) {
 /*!********************!*\
   !*** ./Loader.css ***!
   \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "../../node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
 
-        var result = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!./Loader.css */ "../../node_modules/css-loader/dist/cjs.js!./Loader.css");
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(false);
+// Module
+___CSS_LOADER_EXPORT___.push([module.i, "/* Buttons styles start */\n\nbutton#excalibur-play {\n  display: inline-block;\n  position: relative;\n  z-index: 999;\n  border-radius: 6px;\n  border: none;\n  /*border: 3px solid;\n    border-color: white;\n    box-shadow: 0 0 10px #ccc;*/\n  padding: 1rem 1.5rem 1rem 4rem;\n  margin: 0;\n  text-decoration: none;\n  background: #00b233;\n  color: #ffffff;\n  font-family: sans-serif;\n  font-size: 2rem;\n  line-height: 1;\n  cursor: pointer;\n  text-align: center;\n  transition: background 250ms ease-in-out, transform 150ms ease;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n\n  -webkit-animation: excalibur-button-fadein 200ms; /* Safari, Chrome and Opera > 12.1 */\n  -moz-animation: excalibur-button-fadein 200ms; /* Firefox < 16 */\n  -ms-animation: excalibur-button-fadein 200ms; /* Internet Explorer */\n  -o-animation: excalibur-button-fadein 200ms; /* Opera < 12.1 */\n  animation: excalibur-button-fadein 200ms;\n}\n\n/*\nbutton#excalibur-play {\n  display: none;\n}*/\n\nbutton#excalibur-play:after {\n  position: absolute;\n  content: '';\n  border: 8px solid;\n  border-color: transparent transparent transparent white;\n  left: 35px;\n  top: 24px;\n  width: 0;\n  height: 0;\n}\n\nbutton#excalibur-play:before {\n  position: absolute;\n  content: '';\n  border: 3px solid;\n  left: 19px;\n  top: 14px;\n  border-radius: 20px;\n  width: 30px;\n  height: 30px;\n}\n\nbutton#excalibur-play:hover,\nbutton#excalibur-play:focus {\n  background: #00982c;\n}\n\nbutton#excalibur-play:focus {\n  outline: 1px solid #fff;\n  outline-offset: -4px;\n}\n\nbutton#excalibur-play:active {\n  transform: scale(0.99);\n}\n\n@keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Firefox < 16 */\n@-moz-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Safari, Chrome and Opera > 12.1 */\n@-webkit-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Internet Explorer */\n@-ms-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n/* Opera < 12.1 */\n@-o-keyframes excalibur-button-fadein {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n", ""]);
+// Exports
+/* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
-        if (typeof result === "string") {
-            module.exports = result;
-        } else {
-            module.exports = result.toString();
-        }
-    
 
 /***/ }),
 
@@ -18217,12 +18221,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/DrawUtil */ "./Util/DrawUtil.ts");
 /* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader.logo.png */ "./Loader.logo.png");
 /* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Loader.css */ "./Loader.css");
-/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_Loader_css__WEBPACK_IMPORTED_MODULE_7__);
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -18333,7 +18336,7 @@ var Loader = /** @class */ (function (_super) {
         _this.backgroundColor = '#176BAA';
         _this.suppressPlayButton = false;
         /** Loads the css from Loader.css */
-        _this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_7___default.a.toString();
+        _this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_7__["default"].toString();
         /**
          * Get/set play button text
          */
@@ -19419,7 +19422,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -20300,7 +20303,7 @@ var ColorBlindCorrector = /** @class */ (function () {
 /*!*********************************!*\
   !*** ./PostProcessing/Index.ts ***!
   \*********************************/
-/*! no static exports found */
+/*! exports provided: ColorBlindness, ColorBlindCorrector */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20311,9 +20314,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _ColorBlindCorrector__WEBPACK_IMPORTED_MODULE_0__["ColorBlindCorrector"]; });
 
 /* harmony import */ var _PostProcessor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostProcessor */ "./PostProcessing/PostProcessor.ts");
-/* harmony import */ var _PostProcessor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_PostProcessor__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessor__WEBPACK_IMPORTED_MODULE_1__) if(["default","ColorBlindness","ColorBlindCorrector"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessor__WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-
+/* empty/unused harmony star reexport */
 
 
 
@@ -20323,8 +20324,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************!*\
   !*** ./PostProcessing/PostProcessor.ts ***!
   \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
 
 
@@ -20551,7 +20555,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21108,7 +21112,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21300,7 +21304,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21657,7 +21661,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -21988,7 +21992,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -22109,7 +22113,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -23252,7 +23256,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -23360,7 +23364,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -24049,7 +24053,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -26059,7 +26063,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! no static exports found */
+/*! exports provided: EX_VERSION, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, AudioTagInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26263,9 +26267,53 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["UIActor"]; });
 
 /* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Actions_Index__WEBPACK_IMPORTED_MODULE_23__) if(["default","EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["ActionContext"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RotationType", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["RotationType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Actions", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Actions"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Internal", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["Internal"]; });
+
 /* harmony import */ var _Collision_Index__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./Collision/Index */ "./Collision/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Collision_Index__WEBPACK_IMPORTED_MODULE_24__) if(["default","EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Body", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Body"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isCollider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["isCollider"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collider", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Collider"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundingBox", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["BoundingBox"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Circle", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Circle"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionContact", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionContact"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionJumpTable"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLine", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLine"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ClosestLineJumpTable", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ClosestLineJumpTable"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroup", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroup"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CollisionGroupManager", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["CollisionGroupManager"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TreeNode", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["TreeNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTree", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTree"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DynamicTreeCollisionBroadphase", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["DynamicTreeCollisionBroadphase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Edge", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Edge"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Pair", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Pair"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConvexPolygon", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["ConvexPolygon"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Side", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Side"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Shape", function() { return _Collision_Index__WEBPACK_IMPORTED_MODULE_24__["Shape"]; });
+
 /* harmony import */ var _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./Drawing/Index */ "./Drawing/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Animation", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Animation"]; });
 
@@ -26282,7 +26330,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_25__["Effects"]; });
 
 /* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__) if(["default","EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["ExResponse"]; });
+
 /* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinGenerator"]; });
 
@@ -26291,7 +26340,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Random", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["Random"]; });
 
 /* harmony import */ var _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./PostProcessing/Index */ "./PostProcessing/Index.ts");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__) if(["default","EX_VERSION","Actor","CollisionType","Label","FontStyle","FontUnit","TextAlign","BaseAlign","Particle","ParticleEmitter","EmitterType","TileMap","Cell","TileSprite","Events","Input","Traits","Util","ScrollPreventionMode","Engine","DisplayMode","Resolution","Screen","Vector","Ray","Line","Projection","GlobalCoordinates","vec","StrategyContainer","Axis","LockCameraToActorStrategy","LockCameraToActorAxisStrategy","ElasticToActorStrategy","RadiusAroundActorStrategy","LimitCameraBoundsStrategy","Camera","Class","Configurable","Debug","FrameStats","PhysicsStats","EventDispatcher","MediaEvent","NativeSoundEvent","NativeSoundProcessedEvent","EventTypes","GameEvent","KillEvent","PreKillEvent","PostKillEvent","GameStartEvent","GameStopEvent","PreDrawEvent","PostDrawEvent","PreDebugDrawEvent","PostDebugDrawEvent","PreUpdateEvent","PostUpdateEvent","PreFrameEvent","PostFrameEvent","GamepadConnectEvent","GamepadDisconnectEvent","GamepadButtonEvent","GamepadAxisEvent","SubscribeEvent","UnsubscribeEvent","VisibleEvent","HiddenEvent","PreCollisionEvent","PostCollisionEvent","CollisionStartEvent","CollisionEndEvent","InitializeEvent","ActivateEvent","DeactivateEvent","ExitViewPortEvent","EnterViewPortEvent","EnterTriggerEvent","ExitTriggerEvent","Loader","CollisionResolutionStrategy","BroadphaseStrategy","Integrator","Physics","PromiseState","Promise","Scene","Timer","Trigger","ScreenElement","UIActor","Animation","Color","Polygon","Sprite","SpriteSheet","SpriteFont","Effects","PerlinGenerator","PerlinDrawer2D","Random"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindness", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindness"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ColorBlindCorrector", function() { return _PostProcessing_Index__WEBPACK_IMPORTED_MODULE_28__["ColorBlindCorrector"]; });
+
 /* harmony import */ var _Resources_Index__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./Resources/Index */ "./Resources/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["Resource"]; });
 
@@ -26363,7 +26415,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.6988+f60b1bb";
+var EX_VERSION = "0.25.0-alpha.6999+5b501d7";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

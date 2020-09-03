@@ -103,7 +103,7 @@ export { Resolution };
 /**
  * The Screen handles all aspects of interacting with the screen for Excalibur.
  *
- * [[include:Screen.md]]
+ * [[include:Screens.md]]
  */
 var Screen = /** @class */ (function () {
     function Screen(options) {

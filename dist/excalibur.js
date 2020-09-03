@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.24.4 - 2020-9-3
+ * excalibur - 0.25.0-alpha.7107+bda5f08 - 2020-9-3
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -22814,7 +22814,7 @@ var Resolution = /** @class */ (function () {
 /**
  * The Screen handles all aspects of interacting with the screen for Excalibur.
  *
- * [[include:Screen.md]]
+ * [[include:Screens.md]]
  */
 var Screen = /** @class */ (function () {
     function Screen(options) {
@@ -26415,7 +26415,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.24.4";
+var EX_VERSION = "0.25.0-alpha.7107+bda5f08";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

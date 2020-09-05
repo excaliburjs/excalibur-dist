@@ -12,7 +12,7 @@ var SortedList = /** @class */ (function () {
         if (node == null) {
             return false;
         }
-        else if (this._getComparable.call(element) === node.getKey()) {
+        else if (this._getComparable(element) === node.getKey()) {
             if (node.getData().indexOf(element) > -1) {
                 return true;
             }
@@ -20,7 +20,7 @@ var SortedList = /** @class */ (function () {
                 return false;
             }
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (this._getComparable(element) < node.getKey()) {
             return this._find(node.getLeft(), element);
         }
         else {
@@ -47,7 +47,7 @@ var SortedList = /** @class */ (function () {
     };
     SortedList.prototype.add = function (element) {
         if (this._root == null) {
-            this._root = new BinaryTreeNode(this._getComparable.call(element), [element], null, null);
+            this._root = new BinaryTreeNode(this._getComparable(element), [element], null, null);
             return true;
         }
         else {
@@ -56,7 +56,7 @@ var SortedList = /** @class */ (function () {
     };
     SortedList.prototype._insert = function (node, element) {
         if (node != null) {
-            if (this._getComparable.call(element) === node.getKey()) {
+            if (this._getComparable(element) === node.getKey()) {
                 if (node.getData().indexOf(element) > -1) {
                     return false; // the element we're trying to insert already exists
                 }
@@ -65,9 +65,9 @@ var SortedList = /** @class */ (function () {
                     return true;
                 }
             }
-            else if (this._getComparable.call(element) < node.getKey()) {
+            else if (this._getComparable(element) < node.getKey()) {
                 if (node.getLeft() == null) {
-                    node.setLeft(new BinaryTreeNode(this._getComparable.call(element), [element], null, null));
+                    node.setLeft(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
                     return true;
                 }
                 else {
@@ -76,7 +76,7 @@ var SortedList = /** @class */ (function () {
             }
             else {
                 if (node.getRight() == null) {
-                    node.setRight(new BinaryTreeNode(this._getComparable.call(element), [element], null, null));
+                    node.setRight(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
                     return true;
                 }
                 else {
@@ -93,7 +93,7 @@ var SortedList = /** @class */ (function () {
         if (node == null) {
             return null;
         }
-        else if (this._getComparable.call(element) === node.getKey()) {
+        else if (this._getComparable(element) === node.getKey()) {
             var elementIndex = node.getData().indexOf(element);
             // if the node contains the element, remove the element
             if (elementIndex > -1) {
@@ -123,7 +123,7 @@ var SortedList = /** @class */ (function () {
                 }
             }
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (this._getComparable(element) < node.getKey()) {
             node.setLeft(this._remove(node.getLeft(), element));
             return node;
         }
@@ -157,7 +157,7 @@ var SortedList = /** @class */ (function () {
             node.setRight(this._cleanup(node.getRight(), temp));
             return node;
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (element.getKey() < node.getKey()) {
             node.setLeft(this._cleanup(node.getLeft(), element));
             return node;
         }

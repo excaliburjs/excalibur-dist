@@ -9,6 +9,9 @@ import { Class } from './Class';
 import { CanInitialize, CanActivate, CanDeactivate, CanUpdate, CanDraw } from './Interfaces/LifecycleEvents';
 import * as Events from './Events';
 import { Trigger } from './Trigger';
+import { QueryManager } from './EntityComponentSystem/QueryManager';
+import { EntityManager } from './EntityComponentSystem/EntityManager';
+import { SystemManager } from './EntityComponentSystem/SystemManager';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -27,6 +30,9 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * The actors in the current scene
      */
     actors: Actor[];
+    queryManager: QueryManager;
+    entityManager: EntityManager;
+    systemManager: SystemManager;
     /**
      * Physics bodies in the current scene
      */
@@ -56,31 +62,31 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
     private _cancelQueue;
     private _logger;
     constructor(_engine: Engine);
-    on(eventName: Events.initialize, handler: (event: InitializeEvent) => void): void;
+    on(eventName: Events.initialize, handler: (event: InitializeEvent<Scene>) => void): void;
     on(eventName: Events.activate, handler: (event: ActivateEvent) => void): void;
     on(eventName: Events.deactivate, handler: (event: DeactivateEvent) => void): void;
-    on(eventName: Events.preupdate, handler: (event: PreUpdateEvent) => void): void;
-    on(eventName: Events.postupdate, handler: (event: PostUpdateEvent) => void): void;
+    on(eventName: Events.preupdate, handler: (event: PreUpdateEvent<Scene>) => void): void;
+    on(eventName: Events.postupdate, handler: (event: PostUpdateEvent<Scene>) => void): void;
     on(eventName: Events.predraw, handler: (event: PreDrawEvent) => void): void;
     on(eventName: Events.postdraw, handler: (event: PostDrawEvent) => void): void;
     on(eventName: Events.predebugdraw, handler: (event: PreDebugDrawEvent) => void): void;
     on(eventName: Events.postdebugdraw, handler: (event: PostDebugDrawEvent) => void): void;
     on(eventName: string, handler: (event: GameEvent<any>) => void): void;
-    once(eventName: Events.initialize, handler: (event: InitializeEvent) => void): void;
+    once(eventName: Events.initialize, handler: (event: InitializeEvent<Scene>) => void): void;
     once(eventName: Events.activate, handler: (event: ActivateEvent) => void): void;
     once(eventName: Events.deactivate, handler: (event: DeactivateEvent) => void): void;
-    once(eventName: Events.preupdate, handler: (event: PreUpdateEvent) => void): void;
-    once(eventName: Events.postupdate, handler: (event: PostUpdateEvent) => void): void;
+    once(eventName: Events.preupdate, handler: (event: PreUpdateEvent<Scene>) => void): void;
+    once(eventName: Events.postupdate, handler: (event: PostUpdateEvent<Scene>) => void): void;
     once(eventName: Events.predraw, handler: (event: PreDrawEvent) => void): void;
     once(eventName: Events.postdraw, handler: (event: PostDrawEvent) => void): void;
     once(eventName: Events.predebugdraw, handler: (event: PreDebugDrawEvent) => void): void;
     once(eventName: Events.postdebugdraw, handler: (event: PostDebugDrawEvent) => void): void;
     once(eventName: string, handler: (event: GameEvent<any>) => void): void;
-    off(eventName: Events.initialize, handler?: (event: InitializeEvent) => void): void;
+    off(eventName: Events.initialize, handler?: (event: InitializeEvent<Scene>) => void): void;
     off(eventName: Events.activate, handler?: (event: ActivateEvent) => void): void;
     off(eventName: Events.deactivate, handler?: (event: DeactivateEvent) => void): void;
-    off(eventName: Events.preupdate, handler?: (event: PreUpdateEvent) => void): void;
-    off(eventName: Events.postupdate, handler?: (event: PostUpdateEvent) => void): void;
+    off(eventName: Events.preupdate, handler?: (event: PreUpdateEvent<Scene>) => void): void;
+    off(eventName: Events.postupdate, handler?: (event: PostUpdateEvent<Scene>) => void): void;
     off(eventName: Events.predraw, handler?: (event: PreDrawEvent) => void): void;
     off(eventName: Events.postdraw, handler?: (event: PostDrawEvent) => void): void;
     off(eventName: Events.predebugdraw, handler?: (event: PreDebugDrawEvent) => void): void;

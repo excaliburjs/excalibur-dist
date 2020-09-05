@@ -36,6 +36,7 @@ export * from './Interfaces/Index';
 export * from './Math/Index';
 export * from './PostProcessing/Index';
 export * from './Resources/Index';
+export * from './EntityComponentSystem/index';
 // ex.Events namespace
 import * as events from './Events';
 export { events as Events };

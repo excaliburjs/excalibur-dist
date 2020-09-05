@@ -150,7 +150,14 @@ var TileMapImpl = /** @class */ (function (_super) {
         }
         return null;
     };
+    TileMapImpl.prototype.onPreUpdate = function (_engine, _delta) {
+        // Override me
+    };
+    TileMapImpl.prototype.onPostUpdate = function (_engine, _delta) {
+        // Override me
+    };
     TileMapImpl.prototype.update = function (engine, delta) {
+        this.onPreUpdate(engine, delta);
         this.emit('preupdate', new Events.PreUpdateEvent(engine, delta, this));
         var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Vector(0, 0));
         var worldCoordsLowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
@@ -158,6 +165,7 @@ var TileMapImpl = /** @class */ (function (_super) {
         this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.y) / this.cellHeight) + 2, 0);
+        this.onPostUpdate(engine, delta);
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
     };
     /**

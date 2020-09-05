@@ -1,0 +1,1 @@
+{"version":3,"file":"Util.js","sourceRoot":"","sources":["../../../src/engine/EntityComponentSystem/Util.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,IAAM,YAAY,GAAG,UAAC,KAAe;IAC1C,IAAM,GAAG,GAAG,KAAK,CAAC,IAAI,CAAC,UAAC,CAAC,EAAE,CAAC,IAAK,OAAA,CAAC,CAAC,aAAa,CAAC,CAAC,CAAC,EAAlB,CAAkB,CAAC,CAAC,IAAI,CAAC,GAAG,CAAC,CAAC;IAC/D,OAAO,GAAG,CAAC;AACb,CAAC,CAAC"}

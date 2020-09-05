@@ -4,14 +4,14 @@
 export declare class SortedList<T> {
     private _getComparable;
     private _root;
-    constructor(getComparable: () => any);
-    find(element: any): boolean;
+    constructor(getComparable: (item: T) => number);
+    find(element: T): boolean;
     private _find;
     get(key: number): any[];
     private _get;
-    add(element: any): boolean;
+    add(element: T): boolean;
     private _insert;
-    removeByComparable(element: any): void;
+    removeByComparable(element: T): void;
     private _remove;
     private _cleanup;
     private _findMinNode;
@@ -21,20 +21,20 @@ export declare class SortedList<T> {
 /**
  * A tree node part of [[SortedList]]
  */
-export declare class BinaryTreeNode {
+export declare class BinaryTreeNode<T> {
     private _key;
     private _data;
     private _left;
     private _right;
-    constructor(key: number, data: Array<any>, left: BinaryTreeNode, right: BinaryTreeNode);
+    constructor(key: number, data: Array<T>, left: BinaryTreeNode<T>, right: BinaryTreeNode<T>);
     getKey(): number;
     setKey(key: number): void;
-    getData(): Array<any>;
-    setData(data: any): void;
-    getLeft(): BinaryTreeNode;
-    setLeft(left: BinaryTreeNode): void;
-    getRight(): BinaryTreeNode;
-    setRight(right: BinaryTreeNode): void;
+    getData(): T[];
+    setData(data: T[]): void;
+    getLeft(): BinaryTreeNode<T>;
+    setLeft(left: BinaryTreeNode<T>): void;
+    getRight(): BinaryTreeNode<T>;
+    setRight(right: BinaryTreeNode<T>): void;
 }
 /**
  * Mock element for testing

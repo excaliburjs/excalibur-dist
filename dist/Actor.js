@@ -17,9 +17,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Class } from './Class';
 import { Texture } from './Resources/Texture';
-import { InitializeEvent, KillEvent, PreUpdateEvent, PreDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostKillEvent, PreKillEvent } from './Events';
+import { KillEvent, PreUpdateEvent, PreDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostKillEvent, PreKillEvent } from './Events';
 import { Color } from './Drawing/Color';
 import { Sprite } from './Drawing/Sprite';
 import { Animation } from './Drawing/Animation';
@@ -35,6 +34,7 @@ import { CollisionType } from './Collision/CollisionType';
 import { obsolete } from './Util/Decorators';
 import { Collider } from './Collision/Collider';
 import { Shape } from './Collision/Shape';
+import { Entity } from './EntityComponentSystem/Entity';
 export function isActor(x) {
     return x instanceof Actor;
 }
@@ -90,7 +90,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
-        _this._isInitialized = false;
         _this.frames = {};
         /**
          * Access to the current drawing for the actor, this can be
@@ -486,16 +485,6 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.onInitialize = function (_engine) {
         // Override me
     };
-    Object.defineProperty(ActorImpl.prototype, "isInitialized", {
-        /**
-         * Gets whether the actor is Initialized
-         */
-        get: function () {
-            return this._isInitialized;
-        },
-        enumerable: false,
-        configurable: true
-    });
     /**
      * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
      *
@@ -504,11 +493,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._initialize = function (engine) {
-        if (!this.isInitialized) {
-            this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new InitializeEvent(engine, this));
-            this._isInitialized = true;
-        }
+        _super.prototype._initialize.call(this, engine);
         for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
             var child = _a[_i];
             child._initialize(engine);
@@ -1036,7 +1021,7 @@ var ActorImpl = /** @class */ (function (_super) {
         obsolete({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sy", null);
     return ActorImpl;
-}(Class));
+}(Entity));
 export { ActorImpl };
 /**
  * The most important primitive in Excalibur is an `Actor`. Anything that

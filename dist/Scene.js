@@ -25,6 +25,10 @@ import { Class } from './Class';
 import * as Util from './Util/Util';
 import * as ActorUtils from './Util/Actors';
 import { Trigger } from './Trigger';
+import { QueryManager } from './EntityComponentSystem/QueryManager';
+import { EntityManager } from './EntityComponentSystem/EntityManager';
+import { SystemManager } from './EntityComponentSystem/SystemManager';
+import { SystemType } from './EntityComponentSystem/System';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -42,6 +46,9 @@ var Scene = /** @class */ (function (_super) {
          * The actors in the current scene
          */
         _this.actors = [];
+        _this.queryManager = new QueryManager(_this);
+        _this.entityManager = new EntityManager(_this);
+        _this.systemManager = new SystemManager(_this);
         /**
          * Physics bodies in the current scene
          */
@@ -247,6 +254,8 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.update = function (engine, delta) {
         this._preupdate(engine, delta);
+        this.systemManager.updateSystems(SystemType.Update, engine, delta);
+        this.entityManager.processRemovals();
         if (this.camera) {
             this.camera.update(engine, delta);
         }
@@ -333,6 +342,8 @@ var Scene = /** @class */ (function (_super) {
         if (this.camera) {
             this.camera.draw(ctx);
         }
+        this.systemManager.updateSystems(SystemType.Draw, this._engine, delta);
+        this.entityManager.processRemovals();
         var i, len;
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
             this.tileMaps[i].draw(ctx, delta);

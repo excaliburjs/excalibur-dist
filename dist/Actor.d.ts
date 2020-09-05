@@ -1,4 +1,3 @@
-import { Class } from './Class';
 import { Texture } from './Resources/Texture';
 import { InitializeEvent, KillEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostCollisionEvent, PreCollisionEvent, CollisionStartEvent, CollisionEndEvent, PostKillEvent, PreKillEvent, GameEvent, ExitTriggerEvent, EnterTriggerEvent, EnterViewPortEvent, ExitViewPortEvent } from './Events';
 import { PointerEvent, WheelEvent, PointerDragEvent } from './Input/PointerEvents';
@@ -20,6 +19,7 @@ import * as Traits from './Traits/Index';
 import * as Events from './Events';
 import { PointerEvents } from './Interfaces/PointerEventHandlers';
 import { CollisionType } from './Collision/CollisionType';
+import { Entity } from './EntityComponentSystem/Entity';
 export declare function isActor(x: any): x is Actor;
 /**
  * [[include:Constructors.md]]
@@ -46,7 +46,7 @@ export interface ActorDefaults {
 /**
  * @hidden
  */
-export declare class ActorImpl extends Class implements Actionable, Eventable, PointerEvents, CanInitialize, CanUpdate, CanDraw, CanBeKilled {
+export declare class ActorImpl extends Entity implements Actionable, Eventable, PointerEvents, CanInitialize, CanUpdate, CanDraw, CanBeKilled {
     /**
      * Indicates the next id to be set
      */
@@ -223,7 +223,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      * The children of this actor
      */
     children: Actor[];
-    private _isInitialized;
     frames: {
         [key: string]: Drawable;
     };
@@ -285,10 +284,6 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
      */
     onInitialize(_engine: Engine): void;
     /**
-     * Gets whether the actor is Initialized
-     */
-    get isInitialized(): boolean;
-    /**
      * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
      *
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
@@ -341,9 +336,9 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     on(eventName: Events.kill, handler: (event: KillEvent) => void): void;
     on(eventName: Events.prekill, handler: (event: PreKillEvent) => void): void;
     on(eventName: Events.postkill, handler: (event: PostKillEvent) => void): void;
-    on(eventName: Events.initialize, handler: (event: InitializeEvent) => void): void;
-    on(eventName: Events.preupdate, handler: (event: PreUpdateEvent) => void): void;
-    on(eventName: Events.postupdate, handler: (event: PostUpdateEvent) => void): void;
+    on(eventName: Events.initialize, handler: (event: InitializeEvent<Actor>) => void): void;
+    on(eventName: Events.preupdate, handler: (event: PreUpdateEvent<Actor>) => void): void;
+    on(eventName: Events.postupdate, handler: (event: PostUpdateEvent<Actor>) => void): void;
     on(eventName: Events.predraw, handler: (event: PreDrawEvent) => void): void;
     on(eventName: Events.postdraw, handler: (event: PostDrawEvent) => void): void;
     on(eventName: Events.predebugdraw, handler: (event: PreDebugDrawEvent) => void): void;
@@ -403,9 +398,9 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     once(eventName: Events.kill, handler: (event: KillEvent) => void): void;
     once(eventName: Events.postkill, handler: (event: PostKillEvent) => void): void;
     once(eventName: Events.prekill, handler: (event: PreKillEvent) => void): void;
-    once(eventName: Events.initialize, handler: (event: InitializeEvent) => void): void;
-    once(eventName: Events.preupdate, handler: (event: PreUpdateEvent) => void): void;
-    once(eventName: Events.postupdate, handler: (event: PostUpdateEvent) => void): void;
+    once(eventName: Events.initialize, handler: (event: InitializeEvent<Actor>) => void): void;
+    once(eventName: Events.preupdate, handler: (event: PreUpdateEvent<Actor>) => void): void;
+    once(eventName: Events.postupdate, handler: (event: PostUpdateEvent<Actor>) => void): void;
     once(eventName: Events.predraw, handler: (event: PreDrawEvent) => void): void;
     once(eventName: Events.postdraw, handler: (event: PostDrawEvent) => void): void;
     once(eventName: Events.predebugdraw, handler: (event: PreDebugDrawEvent) => void): void;
@@ -476,9 +471,9 @@ export declare class ActorImpl extends Class implements Actionable, Eventable, P
     off(eventName: Events.pointerdragmove, handler?: (event: PointerDragEvent) => void): void;
     off(eventName: Events.prekill, handler?: (event: PreKillEvent) => void): void;
     off(eventName: Events.postkill, handler?: (event: PostKillEvent) => void): void;
-    off(eventName: Events.initialize, handler?: (event: Events.InitializeEvent) => void): void;
-    off(eventName: Events.postupdate, handler?: (event: Events.PostUpdateEvent) => void): void;
-    off(eventName: Events.preupdate, handler?: (event: Events.PreUpdateEvent) => void): void;
+    off(eventName: Events.initialize, handler?: (event: Events.InitializeEvent<Actor>) => void): void;
+    off(eventName: Events.postupdate, handler?: (event: Events.PostUpdateEvent<Actor>) => void): void;
+    off(eventName: Events.preupdate, handler?: (event: Events.PreUpdateEvent<Actor>) => void): void;
     off(eventName: Events.postdraw, handler?: (event: Events.PostDrawEvent) => void): void;
     off(eventName: Events.predraw, handler?: (event: Events.PreDrawEvent) => void): void;
     off(eventName: Events.enterviewport, handler?: (event: EnterViewPortEvent) => void): void;

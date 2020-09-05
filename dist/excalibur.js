@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7125+69f8f48 - 2020-9-5
+ * excalibur - 0.25.0-alpha.7130+855ce51 - 2020-9-5
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5167,24 +5167,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isActor", function() { return isActor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActorImpl", function() { return ActorImpl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Actor", function() { return Actor; });
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
-/* harmony import */ var _Drawing_Animation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Drawing/Animation */ "./Drawing/Animation.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
-/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
-/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _Resources_Texture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Resources/Texture */ "./Resources/Texture.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawing/Sprite */ "./Drawing/Sprite.ts");
+/* harmony import */ var _Drawing_Animation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Drawing/Animation */ "./Drawing/Animation.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Actions/ActionContext */ "./Actions/ActionContext.ts");
+/* harmony import */ var _Actions_Action__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Actions/Action */ "./Actions/Action.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Collision_Body__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Collision/Body */ "./Collision/Body.ts");
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
+/* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _EntityComponentSystem_Entity__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./EntityComponentSystem/Entity */ "./EntityComponentSystem/Entity.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5264,7 +5264,7 @@ var ActorImpl = /** @class */ (function (_super) {
         /**
          * Convenience reference to the global logger
          */
-        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance();
+        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance();
         /**
          * The scene that the actor is in
          */
@@ -5277,7 +5277,6 @@ var ActorImpl = /** @class */ (function (_super) {
          * The children of this actor
          */
         _this.children = [];
-        _this._isInitialized = false;
         _this.frames = {};
         /**
          * Access to the current drawing for the actor, this can be
@@ -5355,7 +5354,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // initialize default options
         _this._initDefaults();
         var shouldInitializeBody = true;
-        var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].Passive;
+        var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             if (config.pos) {
@@ -5384,10 +5383,10 @@ var ActorImpl = /** @class */ (function (_super) {
         _this._height = height || 0;
         // Initialize default collider to be a box
         if (shouldInitializeBody) {
-            _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_10__["Body"]({
-                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_16__["Collider"]({
+            _this.body = new _Collision_Body__WEBPACK_IMPORTED_MODULE_9__["Body"]({
+                collider: new _Collision_Collider__WEBPACK_IMPORTED_MODULE_15__["Collider"]({
                     type: collisionType,
-                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(_this._width, _this._height, _this.anchor)
+                    shape: _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(_this._width, _this._height, _this.anchor)
                 })
             });
         }
@@ -5400,12 +5399,12 @@ var ActorImpl = /** @class */ (function (_super) {
             _this.opacity = color.a;
         }
         // Build default pipeline
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_12__["TileMapCollisionDetection"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_12__["OffscreenCulling"]());
-        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_12__["CapturePointer"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["TileMapCollisionDetection"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["OffscreenCulling"]());
+        _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["CapturePointer"]());
         // Build the action queue
-        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_8__["ActionQueue"](_this);
-        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_7__["ActionContext"](_this);
+        _this.actionQueue = new _Actions_Action__WEBPACK_IMPORTED_MODULE_7__["ActionQueue"](_this);
+        _this.actions = new _Actions_ActionContext__WEBPACK_IMPORTED_MODULE_6__["ActionContext"](_this);
         return _this;
     }
     Object.defineProperty(ActorImpl.prototype, "body", {
@@ -5673,16 +5672,6 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.onInitialize = function (_engine) {
         // Override me
     };
-    Object.defineProperty(ActorImpl.prototype, "isInitialized", {
-        /**
-         * Gets whether the actor is Initialized
-         */
-        get: function () {
-            return this._isInitialized;
-        },
-        enumerable: false,
-        configurable: true
-    });
     /**
      * Initializes this actor and all it's child actors, meant to be called by the Scene before first update not by users of Excalibur.
      *
@@ -5691,11 +5680,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._initialize = function (engine) {
-        if (!this.isInitialized) {
-            this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_2__["InitializeEvent"](engine, this));
-            this._isInitialized = true;
-        }
+        _super.prototype._initialize.call(this, engine);
         for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
             var child = _a[_i];
             child._initialize(engine);
@@ -5737,7 +5722,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._prekill = function (_scene) {
-        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreKillEvent"](this));
+        _super.prototype.emit.call(this, 'prekill', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreKillEvent"](this));
         this.onPreKill(_scene);
     };
     /**
@@ -5755,7 +5740,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postkill = function (_scene) {
-        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostKillEvent"](this));
+        _super.prototype.emit.call(this, 'postkill', new _Events__WEBPACK_IMPORTED_MODULE_1__["PostKillEvent"](this));
         this.onPostKill(_scene);
     };
     /**
@@ -5773,7 +5758,7 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.kill = function () {
         if (this.scene) {
             this._prekill(this.scene);
-            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_2__["KillEvent"](this));
+            this.emit('kill', new _Events__WEBPACK_IMPORTED_MODULE_1__["KillEvent"](this));
             this._isKilled = true;
             this.scene.remove(this);
             this._postkill(this.scene);
@@ -5801,8 +5786,8 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to add
      */
     ActorImpl.prototype.add = function (actor) {
-        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_14__["CollisionType"].PreventCollision;
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["addItemToArray"](actor, this.children)) {
+        actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].PreventCollision;
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_12__["addItemToArray"](actor, this.children)) {
             actor.parent = this;
         }
     };
@@ -5811,7 +5796,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param actor The child actor to remove
      */
     ActorImpl.prototype.remove = function (actor) {
-        if (_Util_Util__WEBPACK_IMPORTED_MODULE_13__["removeItemFromArray"](actor, this.children)) {
+        if (_Util_Util__WEBPACK_IMPORTED_MODULE_12__["removeItemFromArray"](actor, this.children)) {
             actor.parent = null;
         }
     };
@@ -5823,7 +5808,7 @@ var ActorImpl = /** @class */ (function (_super) {
                 this.currentDrawing = this.frames[key];
             }
             else {
-                _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
+                _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
             }
         }
     };
@@ -5835,10 +5820,10 @@ var ActorImpl = /** @class */ (function (_super) {
             }
         }
         else {
-            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_4__["Sprite"]) {
+            if (arguments[0] instanceof _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_3__["Sprite"]) {
                 this.addDrawing('default', arguments[0]);
             }
-            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_1__["Texture"]) {
+            if (arguments[0] instanceof _Resources_Texture__WEBPACK_IMPORTED_MODULE_0__["Texture"]) {
                 this.addDrawing('default', arguments[0].asSprite());
             }
         }
@@ -5876,7 +5861,7 @@ var ActorImpl = /** @class */ (function (_super) {
          * Get the center point of an actor
          */
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.pos.x + this.width / 2 - this.anchor.x * this.width, this.pos.y + this.height / 2 - this.anchor.y * this.height);
         },
         enumerable: false,
         configurable: true
@@ -5887,7 +5872,7 @@ var ActorImpl = /** @class */ (function (_super) {
         },
         set: function (width) {
             this._width = width / this.scale.x;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: false,
@@ -5899,7 +5884,7 @@ var ActorImpl = /** @class */ (function (_super) {
         },
         set: function (height) {
             this._height = height / this.scale.y;
-            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_17__["Shape"].Box(this._width, this._height, this.anchor);
+            this.body.collider.shape = _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__["Shape"].Box(this._width, this._height, this.anchor);
             this.body.markCollisionShapeDirty();
         },
         enumerable: false,
@@ -5950,17 +5935,17 @@ var ActorImpl = /** @class */ (function (_super) {
         // rotate around root anchor
         var ra = root.getWorldPos(); // 10, 10
         var r = this.getWorldRotation();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y).rotate(r, ra);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](x, y).rotate(r, ra);
     };
     /**
      * Gets the global scale of the Actor
      */
     ActorImpl.prototype.getGlobalScale = function () {
         if (!this.parent) {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x, this.scale.y);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.scale.x, this.scale.y);
         }
         var parentScale = this.parent.getGlobalScale();
-        return new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
+        return new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.scale.x * parentScale.x, this.scale.y * parentScale.y);
     };
     // #region Collision
     /**
@@ -5974,7 +5959,7 @@ var ActorImpl = /** @class */ (function (_super) {
         // These shenanigans are to handle child actor containment,
         // the only time getWorldPos and pos are different is a child actor
         var childShift = this.getWorldPos().sub(this.pos);
-        var containment = this.body.collider.bounds.translate(childShift).contains(new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](x, y));
+        var containment = this.body.collider.bounds.translate(childShift).contains(new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](x, y));
         if (recurse) {
             return (containment ||
                 this.children.some(function (child) {
@@ -6003,7 +5988,7 @@ var ActorImpl = /** @class */ (function (_super) {
         this._preupdate(engine, delta);
         // Tick animations
         var drawing = this.currentDrawing;
-        if (drawing && drawing instanceof _Drawing_Animation__WEBPACK_IMPORTED_MODULE_5__["Animation"]) {
+        if (drawing && drawing instanceof _Drawing_Animation__WEBPACK_IMPORTED_MODULE_4__["Animation"]) {
             drawing.tick(delta, engine.stats.currFrame.id);
         }
         // Update action queue
@@ -6053,7 +6038,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._preupdate = function (engine, delta) {
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreUpdateEvent"](engine, delta, this));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreUpdateEvent"](engine, delta, this));
         this.onPreUpdate(engine, delta);
     };
     /**
@@ -6063,7 +6048,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postupdate = function (engine, delta) {
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreUpdateEvent"](engine, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreUpdateEvent"](engine, delta, this));
         this.onPostUpdate(engine, delta);
     };
     // endregion
@@ -6091,7 +6076,7 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {
-                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
+                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
             }
         }
         ctx.restore();
@@ -6127,7 +6112,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._predraw = function (ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDrawEvent"](ctx, delta, this));
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreDrawEvent"](ctx, delta, this));
         this.onPreDraw(ctx, delta);
     };
     /**
@@ -6137,7 +6122,7 @@ var ActorImpl = /** @class */ (function (_super) {
      * @internal
      */
     ActorImpl.prototype._postdraw = function (ctx, delta) {
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDrawEvent"](ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreDrawEvent"](ctx, delta, this));
         this.onPostDraw(ctx, delta);
     };
     /**
@@ -6146,7 +6131,7 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     /* istanbul ignore next */
     ActorImpl.prototype.debugDraw = function (ctx) {
-        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDebugDrawEvent"](ctx, this));
+        this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_1__["PreDebugDrawEvent"](ctx, this));
         this.body.collider.debugDraw(ctx);
         // Draw actor bounding box
         var bb = this.body.collider.localBounds.translate(this.getWorldPos());
@@ -6154,19 +6139,19 @@ var ActorImpl = /** @class */ (function (_super) {
         // Draw actor Id
         ctx.fillText('id: ' + this.id, bb.left + 3, bb.top + 10);
         // Draw actor anchor Vector
-        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
+        ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Yellow.toString();
         ctx.beginPath();
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, 3, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
         // Culling Box debug draw
         for (var j = 0; j < this.traits.length; j++) {
-            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_12__["OffscreenCulling"]) {
+            if (this.traits[j] instanceof _Traits_Index__WEBPACK_IMPORTED_MODULE_11__["OffscreenCulling"]) {
                 this.traits[j].cullingBox.debugDraw(ctx); // eslint-disable-line
             }
         }
         // Unit Circle debug draw
-        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
+        ctx.strokeStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Yellow.toString();
         ctx.beginPath();
         var radius = Math.min(this.width, this.height);
         ctx.arc(this.getWorldPos().x, this.getWorldPos().y, radius, 0, Math.PI * 2);
@@ -6180,7 +6165,7 @@ var ActorImpl = /** @class */ (function (_super) {
         };
         var oldFont = ctx.font;
         for (var tick in ticks) {
-            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_3__["Color"].Yellow.toString();
+            ctx.fillStyle = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Yellow.toString();
             ctx.font = '14px';
             ctx.textAlign = 'center';
             ctx.fillText(tick, this.getWorldPos().x + Math.cos(ticks[tick]) * (radius + 10), this.getWorldPos().y + Math.sin(ticks[tick]) * (radius + 10));
@@ -6190,7 +6175,7 @@ var ActorImpl = /** @class */ (function (_super) {
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].debugDraw(ctx);
         }
-        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostDebugDrawEvent"](ctx, this));
+        this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_1__["PostDebugDrawEvent"](ctx, this));
     };
     /**
      * Returns the full array of ancestors
@@ -6210,20 +6195,20 @@ var ActorImpl = /** @class */ (function (_super) {
      * Indicates the next id to be set
      */
     ActorImpl.defaults = {
-        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_9__["Vector"].Half
+        anchor: _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"].Half
     };
     /**
      * Indicates the next id to be set
      */
     ActorImpl.maxId = 0;
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_14__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);
     __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_14__["obsolete"])({ message: 'ex.Actor.sy will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sy", null);
     return ActorImpl;
-}(_Class__WEBPACK_IMPORTED_MODULE_0__["Class"]));
+}(_EntityComponentSystem_Entity__WEBPACK_IMPORTED_MODULE_17__["Entity"]));
 
 /**
  * The most important primitive in Excalibur is an `Actor`. Anything that
@@ -6243,7 +6228,7 @@ var Actor = /** @class */ (function (_super) {
         return _super.call(this, xOrConfig, y, width, height, color) || this;
     }
     return Actor;
-}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_11__["Configurable"])(ActorImpl)));
+}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_10__["Configurable"])(ActorImpl)));
 
 
 
@@ -14861,6 +14846,891 @@ var AnimationNode = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./EntityComponentSystem/Component.ts":
+/*!********************************************!*\
+  !*** ./EntityComponentSystem/Component.ts ***!
+  \********************************************/
+/*! exports provided: Component, TagComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TagComponent", function() { return TagComponent; });
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+function hasClone(x) {
+    return !!(x === null || x === void 0 ? void 0 : x.clone);
+}
+/**
+ * Components are containers for state in Excalibur, the are meant to convey capabilities that an Entity posesses
+ *
+ * Implementations of Component must have a zero-arg constructor
+ */
+var Component = /** @class */ (function () {
+    function Component() {
+    }
+    Component.prototype.clone = function () {
+        var newComponent = new this.constructor();
+        for (var prop in this) {
+            if (this.hasOwnProperty(prop)) {
+                var val = this[prop];
+                if (hasClone(val) && prop !== 'owner' && prop !== 'clone') {
+                    newComponent[prop] = val.clone();
+                }
+                else {
+                    newComponent[prop] = val;
+                }
+            }
+        }
+        return newComponent;
+    };
+    return Component;
+}());
+
+/**
+ * Tag components are a way of tagging a component with label and a simple value
+ */
+var TagComponent = /** @class */ (function (_super) {
+    __extends(TagComponent, _super);
+    function TagComponent(type, value) {
+        var _this = _super.call(this) || this;
+        _this.type = type;
+        _this.value = value;
+        return _this;
+    }
+    return TagComponent;
+}(Component));
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/Entity.ts":
+/*!*****************************************!*\
+  !*** ./EntityComponentSystem/Entity.ts ***!
+  \*****************************************/
+/*! exports provided: AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddedComponent", function() { return AddedComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAddedComponent", function() { return isAddedComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RemovedComponent", function() { return RemovedComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRemovedComponent", function() { return isRemovedComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Entity", function() { return Entity; });
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Component */ "./EntityComponentSystem/Component.ts");
+/* harmony import */ var _Util_Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/Observable */ "./Util/Observable.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Class */ "./Class.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Events */ "./Events.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+var AddedComponent = /** @class */ (function () {
+    function AddedComponent(data) {
+        this.data = data;
+        this.type = 'Component Added';
+    }
+    return AddedComponent;
+}());
+
+function isAddedComponent(x) {
+    return !!x && x.type === 'Component Added';
+}
+var RemovedComponent = /** @class */ (function () {
+    function RemovedComponent(data) {
+        this.data = data;
+        this.type = 'Component Removed';
+    }
+    return RemovedComponent;
+}());
+
+function isRemovedComponent(x) {
+    return !!x && x.type === 'Component Removed';
+}
+var Entity = /** @class */ (function (_super) {
+    __extends(Entity, _super);
+    function Entity() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        /**
+         * The unique identifier for the entity
+         */
+        _this.id = Entity._ID++;
+        /**
+         * Whether this entity is active, if set to false it will be reclaimed
+         */
+        _this.active = true;
+        _this._componentsToRemove = [];
+        _this._typesMemo = [];
+        _this._dirty = true;
+        _this._handleChanges = {
+            defineProperty: function (obj, prop, descriptor) {
+                obj[prop] = descriptor.value;
+                _this.changes.notifyAll(new AddedComponent({
+                    component: descriptor.value,
+                    entity: _this
+                }));
+                return true;
+            },
+            deleteProperty: function (obj, prop) {
+                if (prop in obj) {
+                    _this.changes.notifyAll(new RemovedComponent({
+                        component: obj[prop],
+                        entity: _this
+                    }));
+                    delete obj[prop];
+                    return true;
+                }
+                return false;
+            }
+        };
+        _this.components = new Proxy({}, _this._handleChanges);
+        _this.changes = new _Util_Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"]();
+        _this._isInitialized = false;
+        return _this;
+    }
+    Entity.prototype.kill = function () {
+        this.active = false;
+    };
+    Entity.prototype.isKilled = function () {
+        return !this.active;
+    };
+    Object.defineProperty(Entity.prototype, "types", {
+        /**
+         * The types of the components on the Entity
+         */
+        get: function () {
+            return this._dirty ? (this._typesMemo = Object.keys(this.components)) : this._typesMemo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Creates a deep copy of the entity and a copy of all its components
+     */
+    Entity.prototype.clone = function () {
+        var newEntity = new Entity();
+        for (var _i = 0, _a = this.types; _i < _a.length; _i++) {
+            var c = _a[_i];
+            newEntity.addComponent(this.components[c].clone());
+        }
+        return newEntity;
+    };
+    Entity.prototype.addComponent = function (componentOrEntity, force) {
+        if (force === void 0) { force = false; }
+        // If you use an entity as a "prefab" or template
+        if (componentOrEntity instanceof Entity) {
+            for (var c in componentOrEntity.components) {
+                this.addComponent(componentOrEntity.components[c].clone());
+            }
+            // Normal component case
+        }
+        else {
+            // if component already exists, skip if not forced
+            if (this.components[componentOrEntity.type] && !force) {
+                return this;
+            }
+            // Remove existing component type if exists when forced
+            if (this.components[componentOrEntity.type] && force) {
+                this.removeComponent(componentOrEntity);
+            }
+            // todo circular dependencies will be a problem
+            if (componentOrEntity.dependencies && componentOrEntity.dependencies.length) {
+                for (var _i = 0, _a = componentOrEntity.dependencies; _i < _a.length; _i++) {
+                    var ctor = _a[_i];
+                    this.addComponent(new ctor());
+                    this._dirty = true;
+                }
+            }
+            componentOrEntity.owner = this;
+            this.components[componentOrEntity.type] = componentOrEntity;
+            if (componentOrEntity.onAdd) {
+                this._dirty = true;
+                componentOrEntity.onAdd(this);
+            }
+        }
+        return this;
+    };
+    /**
+     * Removes a component from the entity, by default removals are deferred to the end of entity processing to avoid consistency issues
+     *
+     * Components can be force removed with the `force` flag, the removal is not deferred and happens immediately
+     * @param componentOrType
+     * @param force
+     */
+    Entity.prototype.removeComponent = function (componentOrType, force) {
+        if (force === void 0) { force = false; }
+        if (force) {
+            if (typeof componentOrType === 'string') {
+                this._removeComponentByType(componentOrType);
+            }
+            else if (componentOrType instanceof _Component__WEBPACK_IMPORTED_MODULE_0__["Component"]) {
+                this._removeComponentByType(componentOrType.type);
+            }
+        }
+        else {
+            this._componentsToRemove.push(componentOrType);
+        }
+        return this;
+    };
+    Entity.prototype._removeComponentByType = function (type) {
+        if (this.components[type]) {
+            this.components[type].owner = null;
+            if (this.components[type].onRemove) {
+                this.components[type].onRemove(this);
+            }
+            delete this.components[type];
+            this._dirty = true;
+        }
+    };
+    /**
+     * @hidden
+     * @internal
+     */
+    Entity.prototype.processRemoval = function () {
+        for (var _i = 0, _a = this._componentsToRemove; _i < _a.length; _i++) {
+            var componentOrType = _a[_i];
+            var type = typeof componentOrType === 'string' ? componentOrType : componentOrType.type;
+            this._removeComponentByType(type);
+        }
+        this._componentsToRemove.length = 0;
+    };
+    Entity.prototype.has = function (type) {
+        return !!this.components[type];
+    };
+    Object.defineProperty(Entity.prototype, "isInitialized", {
+        /**
+         * Gets whether the actor is Initialized
+         */
+        get: function () {
+            return this._isInitialized;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Initializes this entity, meant to be called by the Scene before first update not by users of Excalibur.
+     *
+     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *
+     * @internal
+     */
+    Entity.prototype._initialize = function (engine) {
+        if (!this.isInitialized) {
+            this.onInitialize(engine);
+            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_3__["InitializeEvent"](engine, this));
+            this._isInitialized = true;
+        }
+    };
+    /**
+     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *
+     * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
+     * @internal
+     */
+    Entity.prototype._preupdate = function (engine, delta) {
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PreUpdateEvent"](engine, delta, this));
+        this.onPreUpdate(engine, delta);
+    };
+    /**
+     * It is not recommended that internal excalibur methods be overriden, do so at your own risk.
+     *
+     * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
+     * @internal
+     */
+    Entity.prototype._postupdate = function (engine, delta) {
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_3__["PostUpdateEvent"](engine, delta, this));
+        this.onPostUpdate(engine, delta);
+    };
+    /**
+     * `onInitialize` is called before the first update of the entity. This method is meant to be
+     * overridden.
+     *
+     * Synonymous with the event handler `.on('initialize', (evt) => {...})`
+     */
+    Entity.prototype.onInitialize = function (_engine) {
+        // Override me
+    };
+    /**
+     * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
+     *
+     * `onPreUpdate` is called directly before an entity is updated.
+     */
+    Entity.prototype.onPreUpdate = function (_engine, _delta) {
+        // Override me
+    };
+    /**
+     * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('postupdate', (evt) =>{...})`
+     *
+     * `onPostUpdate` is called directly after an entity is updated.
+     */
+    Entity.prototype.onPostUpdate = function (_engine, _delta) {
+        // Override me
+    };
+    Entity._ID = 0;
+    return Entity;
+}(_Class__WEBPACK_IMPORTED_MODULE_2__["Class"]));
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/EntityManager.ts":
+/*!************************************************!*\
+  !*** ./EntityComponentSystem/EntityManager.ts ***!
+  \************************************************/
+/*! exports provided: EntityManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EntityManager", function() { return EntityManager; });
+/* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .. */ "./index.ts");
+
+
+// Add/Remove entitys and components
+var EntityManager = /** @class */ (function () {
+    function EntityManager(_scene) {
+        this._scene = _scene;
+        this.entities = [];
+        this._entityIndex = {};
+    }
+    /**
+     * EntityManager observes changes on entities
+     * @param message
+     */
+    EntityManager.prototype.notify = function (message) {
+        if (Object(_Entity__WEBPACK_IMPORTED_MODULE_0__["isAddedComponent"])(message)) {
+            // we don't need the component, it's already on the entity
+            this._scene.queryManager.addEntity(message.data.entity);
+        }
+        if (Object(_Entity__WEBPACK_IMPORTED_MODULE_0__["isRemovedComponent"])(message)) {
+            this._scene.queryManager.removeComponent(message.data.entity, message.data.component);
+        }
+    };
+    /**
+     * Adds an entity to be tracked by the EntityManager
+     * @param entity
+     */
+    EntityManager.prototype.addEntity = function (entity) {
+        if (entity) {
+            this._entityIndex[entity.id] = entity;
+            this.entities.push(entity);
+            this._scene.queryManager.addEntity(entity);
+            entity.changes.register(this);
+        }
+    };
+    EntityManager.prototype.removeEntity = function (idOrEntity) {
+        var id = 0;
+        if (idOrEntity instanceof _Entity__WEBPACK_IMPORTED_MODULE_0__["Entity"]) {
+            id = idOrEntity.id;
+        }
+        else {
+            id = idOrEntity;
+        }
+        var entity = this._entityIndex[id];
+        delete this._entityIndex[id];
+        if (entity) {
+            ___WEBPACK_IMPORTED_MODULE_1__["Util"].removeItemFromArray(entity, this.entities);
+            this._scene.queryManager.removeEntity(entity);
+            entity.changes.unregister(this);
+        }
+    };
+    EntityManager.prototype.processRemovals = function () {
+        for (var _i = 0, _a = this.entities; _i < _a.length; _i++) {
+            var entity = _a[_i];
+            entity.processRemoval();
+        }
+    };
+    EntityManager.prototype.getById = function (id) {
+        return this._entityIndex[id];
+    };
+    return EntityManager;
+}());
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/Query.ts":
+/*!****************************************!*\
+  !*** ./EntityComponentSystem/Query.ts ***!
+  \****************************************/
+/*! exports provided: Query */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return Query; });
+/* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony import */ var _Util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util */ "./EntityComponentSystem/Util.ts");
+/* harmony import */ var _Util_Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Util/Observable */ "./Util/Observable.ts");
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! .. */ "./index.ts");
+/* harmony import */ var _System__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./System */ "./EntityComponentSystem/System.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+/**
+ * Represents query for entities that match a list of types that is cached and observable
+ *
+ * Queries can be strongly typed by supplying a type union in the optional type parameter
+ * ```typescript
+ * const queryAB = new ex.Query<ComponentTypeA, ComponentTypeB>(['A', 'B']);
+ * ```
+ */
+var Query = /** @class */ (function (_super) {
+    __extends(Query, _super);
+    function Query(types) {
+        var _this = _super.call(this) || this;
+        _this.types = types;
+        _this.entities = [];
+        return _this;
+    }
+    Object.defineProperty(Query.prototype, "key", {
+        get: function () {
+            return Object(_Util__WEBPACK_IMPORTED_MODULE_1__["buildTypeKey"])(this.types);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Add an entity to the query, will only be added if the entity matches the query types
+     * @param entity
+     */
+    Query.prototype.addEntity = function (entity) {
+        if (!___WEBPACK_IMPORTED_MODULE_3__["Util"].contains(this.entities, entity) && this.matches(entity)) {
+            this.entities.push(entity);
+            this.notifyAll(new _System__WEBPACK_IMPORTED_MODULE_4__["AddedEntity"](entity));
+        }
+    };
+    /**
+     * If the entity is part of the query it will be removed regardless of types
+     * @param entity
+     */
+    Query.prototype.removeEntity = function (entity) {
+        if (___WEBPACK_IMPORTED_MODULE_3__["Util"].removeItemFromArray(entity, this.entities)) {
+            this.notifyAll(new _System__WEBPACK_IMPORTED_MODULE_4__["RemovedEntity"](entity));
+        }
+    };
+    /**
+     * Removes all entities and observers from the query
+     */
+    Query.prototype.clear = function () {
+        this.entities.length = 0;
+        for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
+            var observer = _a[_i];
+            this.unregister(observer);
+        }
+    };
+    Query.prototype.matches = function (typesOrEntity) {
+        var types = [];
+        if (typesOrEntity instanceof _Entity__WEBPACK_IMPORTED_MODULE_0__["Entity"]) {
+            types = typesOrEntity.types;
+        }
+        else {
+            types = typesOrEntity;
+        }
+        var matches = true;
+        for (var _i = 0, _a = this.types; _i < _a.length; _i++) {
+            var type = _a[_i];
+            matches = matches && types.indexOf(type) > -1;
+            if (!matches) {
+                return false;
+            }
+        }
+        return matches;
+    };
+    return Query;
+}(_Util_Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]));
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/QueryManager.ts":
+/*!***********************************************!*\
+  !*** ./EntityComponentSystem/QueryManager.ts ***!
+  \***********************************************/
+/*! exports provided: QueryManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueryManager", function() { return QueryManager; });
+/* harmony import */ var _Util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Util */ "./EntityComponentSystem/Util.ts");
+/* harmony import */ var _Query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Query */ "./EntityComponentSystem/Query.ts");
+
+
+/**
+ * The query manager is responsible for updating all queries when entities/components change
+ */
+var QueryManager = /** @class */ (function () {
+    function QueryManager(scene) {
+        this.scene = scene;
+        this._queries = {};
+    }
+    /**
+     * Adds a query to the manager and populates with any entities that match
+     * @param query
+     */
+    QueryManager.prototype._addQuery = function (query) {
+        this._queries[Object(_Util__WEBPACK_IMPORTED_MODULE_0__["buildTypeKey"])(query.types)] = query;
+        for (var _i = 0, _a = this.scene.entityManager.entities; _i < _a.length; _i++) {
+            var entity = _a[_i];
+            query.addEntity(entity);
+        }
+    };
+    /**
+     * Removes the query if there are no observers left
+     * @param query
+     */
+    QueryManager.prototype.maybeRemoveQuery = function (query) {
+        if (query.observers.length === 0) {
+            query.clear();
+            delete this._queries[Object(_Util__WEBPACK_IMPORTED_MODULE_0__["buildTypeKey"])(query.types)];
+        }
+    };
+    /**
+     * Adds the entity to any matching query in the query manage
+     * @param entity
+     */
+    QueryManager.prototype.addEntity = function (entity) {
+        for (var queryType in this._queries) {
+            if (this._queries[queryType]) {
+                this._queries[queryType].addEntity(entity);
+            }
+        }
+    };
+    /**
+     * Removes an entity from queries if the removed component disqualifies it
+     * @param entity
+     * @param component
+     */
+    QueryManager.prototype.removeComponent = function (entity, component) {
+        for (var queryType in this._queries) {
+            if (this._queries[queryType].matches(entity.types.concat([component.type]))) {
+                this._queries[queryType].removeEntity(entity);
+            }
+        }
+    };
+    /**
+     * Removes an entity from all queries it is currently a part of
+     * @param entity
+     */
+    QueryManager.prototype.removeEntity = function (entity) {
+        for (var queryType in this._queries) {
+            if (this._queries[queryType].entities.indexOf(entity) > -1) {
+                this._queries[queryType].removeEntity(entity);
+            }
+        }
+    };
+    /**
+     * Creates a populated query and returns, if the query already exists that will be returned instead of a new instance
+     * @param types
+     */
+    QueryManager.prototype.createQuery = function (types) {
+        var maybeExistingQuery = this.getQuery(types);
+        if (maybeExistingQuery) {
+            return maybeExistingQuery;
+        }
+        var query = new _Query__WEBPACK_IMPORTED_MODULE_1__["Query"](types);
+        this._addQuery(query);
+        return query;
+    };
+    /**
+     * Retrieves an existing query by types if it exists otherwise returns null
+     * @param types
+     */
+    QueryManager.prototype.getQuery = function (types) {
+        var key = Object(_Util__WEBPACK_IMPORTED_MODULE_0__["buildTypeKey"])(types);
+        if (this._queries[key]) {
+            return this._queries[key];
+        }
+        return null;
+    };
+    return QueryManager;
+}());
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/System.ts":
+/*!*****************************************!*\
+  !*** ./EntityComponentSystem/System.ts ***!
+  \*****************************************/
+/*! exports provided: SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SystemType", function() { return SystemType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "System", function() { return System; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddedEntity", function() { return AddedEntity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAddedSystemEntity", function() { return isAddedSystemEntity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RemovedEntity", function() { return RemovedEntity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRemoveSystemEntity", function() { return isRemoveSystemEntity; });
+var SystemType;
+(function (SystemType) {
+    SystemType["Update"] = "update";
+    SystemType["Draw"] = "draw";
+})(SystemType || (SystemType = {}));
+/**
+ * An Excalibur [[System]] that updates entities of certain types.
+ * Systems are scene specific
+ */
+var System = /** @class */ (function () {
+    function System() {
+        /**
+         * System can execute in priority order, by default all systems are priority 0. Lower values indicated higher priority.
+         * For a system to execute before all other a lower priority value (-1 for example) must be set.
+         * For a system to exectue after all other a higher priority value (10 for example) must be set.
+         */
+        this.priority = 0;
+    }
+    /**
+     * Systems observe when entities match their types or no longer match their types, override
+     * @param _entityAddedOrRemoved
+     */
+    System.prototype.notify = function (_entityAddedOrRemoved) {
+        // Override me
+    };
+    return System;
+}());
+
+/**
+ * An [[Entity]] with [[Component]] types that matches a [[System]] types exists in the current scene.
+ */
+var AddedEntity = /** @class */ (function () {
+    function AddedEntity(data) {
+        this.data = data;
+        this.type = 'Entity Added';
+    }
+    return AddedEntity;
+}());
+
+function isAddedSystemEntity(x) {
+    return !!x && x.type === 'Entity Added';
+}
+/**
+ * An [[Entity]] with [[Component]] types that no longer matches a [[System]] types exists in the current scene.
+ */
+var RemovedEntity = /** @class */ (function () {
+    function RemovedEntity(data) {
+        this.data = data;
+        this.type = 'Entity Removed';
+    }
+    return RemovedEntity;
+}());
+
+function isRemoveSystemEntity(x) {
+    return !!x && x.type === 'Entity Removed';
+}
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/SystemManager.ts":
+/*!************************************************!*\
+  !*** ./EntityComponentSystem/SystemManager.ts ***!
+  \************************************************/
+/*! exports provided: SystemManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SystemManager", function() { return SystemManager; });
+/* harmony import */ var ___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! .. */ "./index.ts");
+
+/**
+ * The SystemManager is responsible for keeping track of all systems in a scene.
+ * Systems are scene specific
+ */
+var SystemManager = /** @class */ (function () {
+    function SystemManager(_scene) {
+        this._scene = _scene;
+        this.systems = [];
+    }
+    /**
+     * Adds a system to the manager, it will now be updated every frame
+     * @param system
+     */
+    SystemManager.prototype.addSystem = function (system) {
+        // validate system has types
+        if (!system.types || system.types.length === 0) {
+            throw new Error("Attempted to add a System without any types");
+        }
+        var query = this._scene.queryManager.createQuery(system.types);
+        this.systems.push(system);
+        // TODO polyfil stable .sort(), this mechanism relies on a stable sort
+        this.systems.sort(function (a, b) { return a.priority - b.priority; });
+        query.register(system);
+    };
+    /**
+     * Removes a system from the manager, it will no longer be updated
+     * @param system
+     */
+    SystemManager.prototype.removeSystem = function (system) {
+        ___WEBPACK_IMPORTED_MODULE_0__["Util"].removeItemFromArray(system, this.systems);
+        var query = this._scene.queryManager.getQuery(system.types);
+        if (query) {
+            query.unregister(system);
+            this._scene.queryManager.maybeRemoveQuery(query);
+        }
+    };
+    /**
+     * Updates all systems
+     * @param engine
+     * @param delta
+     */
+    SystemManager.prototype.updateSystems = function (type, engine, delta) {
+        var systems = this.systems.filter(function (s) { return s.systemType === type; });
+        for (var _i = 0, systems_1 = systems; _i < systems_1.length; _i++) {
+            var s = systems_1[_i];
+            if (s.preupdate) {
+                s.preupdate(engine, delta);
+            }
+        }
+        for (var _a = 0, systems_2 = systems; _a < systems_2.length; _a++) {
+            var s = systems_2[_a];
+            var entities = this._scene.queryManager.getQuery(s.types).entities;
+            s.update(entities, delta);
+        }
+        for (var _b = 0, systems_3 = systems; _b < systems_3.length; _b++) {
+            var s = systems_3[_b];
+            if (s.postupdate) {
+                s.postupdate(engine, delta);
+            }
+        }
+    };
+    return SystemManager;
+}());
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/Util.ts":
+/*!***************************************!*\
+  !*** ./EntityComponentSystem/Util.ts ***!
+  \***************************************/
+/*! exports provided: buildTypeKey */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildTypeKey", function() { return buildTypeKey; });
+var buildTypeKey = function (types) {
+    var key = types.sort(function (a, b) { return a.localeCompare(b); }).join('+');
+    return key;
+};
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/index.ts":
+/*!****************************************!*\
+  !*** ./EntityComponentSystem/index.ts ***!
+  \****************************************/
+/*! exports provided: Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Component */ "./EntityComponentSystem/Component.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return _Component__WEBPACK_IMPORTED_MODULE_0__["Component"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TagComponent", function() { return _Component__WEBPACK_IMPORTED_MODULE_0__["TagComponent"]; });
+
+/* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddedComponent", function() { return _Entity__WEBPACK_IMPORTED_MODULE_1__["AddedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isAddedComponent", function() { return _Entity__WEBPACK_IMPORTED_MODULE_1__["isAddedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RemovedComponent", function() { return _Entity__WEBPACK_IMPORTED_MODULE_1__["RemovedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRemovedComponent", function() { return _Entity__WEBPACK_IMPORTED_MODULE_1__["isRemovedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Entity", function() { return _Entity__WEBPACK_IMPORTED_MODULE_1__["Entity"]; });
+
+/* harmony import */ var _EntityManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EntityManager */ "./EntityComponentSystem/EntityManager.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EntityManager", function() { return _EntityManager__WEBPACK_IMPORTED_MODULE_2__["EntityManager"]; });
+
+/* harmony import */ var _Query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Query */ "./EntityComponentSystem/Query.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return _Query__WEBPACK_IMPORTED_MODULE_3__["Query"]; });
+
+/* harmony import */ var _QueryManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./QueryManager */ "./EntityComponentSystem/QueryManager.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "QueryManager", function() { return _QueryManager__WEBPACK_IMPORTED_MODULE_4__["QueryManager"]; });
+
+/* harmony import */ var _System__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./System */ "./EntityComponentSystem/System.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemType", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["SystemType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "System", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["System"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddedEntity", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["AddedEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isAddedSystemEntity", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["isAddedSystemEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RemovedEntity", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["RemovedEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRemoveSystemEntity", function() { return _System__WEBPACK_IMPORTED_MODULE_5__["isRemoveSystemEntity"]; });
+
+/* harmony import */ var _SystemManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SystemManager */ "./EntityComponentSystem/SystemManager.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemManager", function() { return _SystemManager__WEBPACK_IMPORTED_MODULE_6__["SystemManager"]; });
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
 /***/ "./EventDispatcher.ts":
 /*!****************************!*\
   !*** ./EventDispatcher.ts ***!
@@ -17704,7 +18574,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************!*\
   !*** ./Interfaces/Index.ts ***!
   \*****************************/
-/*! exports provided: ExResponse */
+/*! exports provided: ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17719,7 +18589,23 @@ __webpack_require__.r(__webpack_exports__);
 /* empty/unused harmony star reexport *//* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loadable */ "./Interfaces/Loadable.ts");
 /* empty/unused harmony star reexport *//* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Interfaces/Loader.ts");
 /* empty/unused harmony star reexport *//* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
-/* empty/unused harmony star reexport *//* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_initialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_initialize"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnInitialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnInitialize"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_preupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_preupdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPreUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnPreUpdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_postupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_postupdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnPostUpdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasPreDraw"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasPostDraw"]; });
+
+/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
 /* empty/unused harmony star reexport */
 
 
@@ -17737,12 +18623,43 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************!*\
   !*** ./Interfaces/LifecycleEvents.ts ***!
   \***************************************/
-/*! no exports provided */
+/*! exports provided: has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "has_initialize", function() { return has_initialize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasOnInitialize", function() { return hasOnInitialize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "has_preupdate", function() { return has_preupdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasOnPreUpdate", function() { return hasOnPreUpdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "has_postupdate", function() { return has_postupdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return hasOnPostUpdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return hasPreDraw; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return hasPostDraw; });
+function has_initialize(a) {
+    return !!a._initialize;
+}
+function hasOnInitialize(a) {
+    return !!a.onInitialize;
+}
+function has_preupdate(a) {
+    return !!a._preupdate;
+}
+function hasOnPreUpdate(a) {
+    return !!a.onPreUpdate;
+}
+function has_postupdate(a) {
+    return !!a.onPostUpdate;
+}
+function hasOnPostUpdate(a) {
+    return !!a.onPostUpdate;
+}
+function hasPreDraw(a) {
+    return !!a.onPreDraw;
+}
+function hasPostDraw(a) {
+    return !!a.onPostDraw;
+}
 
 
 /***/ }),
@@ -22064,6 +22981,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
 /* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
 /* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony import */ var _EntityComponentSystem_QueryManager__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./EntityComponentSystem/QueryManager */ "./EntityComponentSystem/QueryManager.ts");
+/* harmony import */ var _EntityComponentSystem_EntityManager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./EntityComponentSystem/EntityManager */ "./EntityComponentSystem/EntityManager.ts");
+/* harmony import */ var _EntityComponentSystem_SystemManager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./EntityComponentSystem/SystemManager */ "./EntityComponentSystem/SystemManager.ts");
+/* harmony import */ var _EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./EntityComponentSystem/System */ "./EntityComponentSystem/System.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -22077,6 +22998,10 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
+
+
 
 
 
@@ -22108,6 +23033,9 @@ var Scene = /** @class */ (function (_super) {
          * The actors in the current scene
          */
         _this.actors = [];
+        _this.queryManager = new _EntityComponentSystem_QueryManager__WEBPACK_IMPORTED_MODULE_14__["QueryManager"](_this);
+        _this.entityManager = new _EntityComponentSystem_EntityManager__WEBPACK_IMPORTED_MODULE_15__["EntityManager"](_this);
+        _this.systemManager = new _EntityComponentSystem_SystemManager__WEBPACK_IMPORTED_MODULE_16__["SystemManager"](_this);
         /**
          * Physics bodies in the current scene
          */
@@ -22313,6 +23241,8 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.update = function (engine, delta) {
         this._preupdate(engine, delta);
+        this.systemManager.updateSystems(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__["SystemType"].Update, engine, delta);
+        this.entityManager.processRemovals();
         if (this.camera) {
             this.camera.update(engine, delta);
         }
@@ -22399,6 +23329,8 @@ var Scene = /** @class */ (function (_super) {
         if (this.camera) {
             this.camera.draw(ctx);
         }
+        this.systemManager.updateSystems(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__["SystemType"].Draw, this._engine, delta);
+        this.entityManager.processRemovals();
         var i, len;
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
             this.tileMaps[i].draw(ctx, delta);
@@ -23467,7 +24399,14 @@ var TileMapImpl = /** @class */ (function (_super) {
         }
         return null;
     };
+    TileMapImpl.prototype.onPreUpdate = function (_engine, _delta) {
+        // Override me
+    };
+    TileMapImpl.prototype.onPostUpdate = function (_engine, _delta) {
+        // Override me
+    };
     TileMapImpl.prototype.update = function (engine, delta) {
+        this.onPreUpdate(engine, delta);
         this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_5__["PreUpdateEvent"](engine, delta, this));
         var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](0, 0));
         var worldCoordsLowerRight = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](engine.canvas.clientWidth, engine.canvas.clientHeight));
@@ -23475,6 +24414,7 @@ var TileMapImpl = /** @class */ (function (_super) {
         this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.y) / this.cellHeight) + 2, 0);
+        this.onPostUpdate(engine, delta);
         this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_5__["PostUpdateEvent"](engine, delta, this));
     };
     /**
@@ -25247,6 +26187,39 @@ var ScreenAppender = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./Util/Observable.ts":
+/*!****************************!*\
+  !*** ./Util/Observable.ts ***!
+  \****************************/
+/*! exports provided: Observable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Observable", function() { return Observable; });
+var Observable = /** @class */ (function () {
+    function Observable() {
+        this.observers = [];
+    }
+    Observable.prototype.register = function (observer) {
+        this.observers.push(observer);
+    };
+    Observable.prototype.unregister = function (observer) {
+        var i = this.observers.indexOf(observer);
+        if (i !== -1) {
+            this.observers.splice(i, 1);
+        }
+    };
+    Observable.prototype.notifyAll = function (message) {
+        this.observers.forEach(function (o) { return o.notify(message); });
+    };
+    return Observable;
+}());
+
+
+
+/***/ }),
+
 /***/ "./Util/SortedList.ts":
 /*!****************************!*\
   !*** ./Util/SortedList.ts ***!
@@ -25273,7 +26246,7 @@ var SortedList = /** @class */ (function () {
         if (node == null) {
             return false;
         }
-        else if (this._getComparable.call(element) === node.getKey()) {
+        else if (this._getComparable(element) === node.getKey()) {
             if (node.getData().indexOf(element) > -1) {
                 return true;
             }
@@ -25281,7 +26254,7 @@ var SortedList = /** @class */ (function () {
                 return false;
             }
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (this._getComparable(element) < node.getKey()) {
             return this._find(node.getLeft(), element);
         }
         else {
@@ -25308,7 +26281,7 @@ var SortedList = /** @class */ (function () {
     };
     SortedList.prototype.add = function (element) {
         if (this._root == null) {
-            this._root = new BinaryTreeNode(this._getComparable.call(element), [element], null, null);
+            this._root = new BinaryTreeNode(this._getComparable(element), [element], null, null);
             return true;
         }
         else {
@@ -25317,7 +26290,7 @@ var SortedList = /** @class */ (function () {
     };
     SortedList.prototype._insert = function (node, element) {
         if (node != null) {
-            if (this._getComparable.call(element) === node.getKey()) {
+            if (this._getComparable(element) === node.getKey()) {
                 if (node.getData().indexOf(element) > -1) {
                     return false; // the element we're trying to insert already exists
                 }
@@ -25326,9 +26299,9 @@ var SortedList = /** @class */ (function () {
                     return true;
                 }
             }
-            else if (this._getComparable.call(element) < node.getKey()) {
+            else if (this._getComparable(element) < node.getKey()) {
                 if (node.getLeft() == null) {
-                    node.setLeft(new BinaryTreeNode(this._getComparable.call(element), [element], null, null));
+                    node.setLeft(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
                     return true;
                 }
                 else {
@@ -25337,7 +26310,7 @@ var SortedList = /** @class */ (function () {
             }
             else {
                 if (node.getRight() == null) {
-                    node.setRight(new BinaryTreeNode(this._getComparable.call(element), [element], null, null));
+                    node.setRight(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
                     return true;
                 }
                 else {
@@ -25354,7 +26327,7 @@ var SortedList = /** @class */ (function () {
         if (node == null) {
             return null;
         }
-        else if (this._getComparable.call(element) === node.getKey()) {
+        else if (this._getComparable(element) === node.getKey()) {
             var elementIndex = node.getData().indexOf(element);
             // if the node contains the element, remove the element
             if (elementIndex > -1) {
@@ -25384,7 +26357,7 @@ var SortedList = /** @class */ (function () {
                 }
             }
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (this._getComparable(element) < node.getKey()) {
             node.setLeft(this._remove(node.getLeft(), element));
             return node;
         }
@@ -25418,7 +26391,7 @@ var SortedList = /** @class */ (function () {
             node.setRight(this._cleanup(node.getRight(), temp));
             return node;
         }
-        else if (this._getComparable.call(element) < node.getKey()) {
+        else if (element.getKey() < node.getKey()) {
             node.setLeft(this._cleanup(node.getLeft(), element));
             return node;
         }
@@ -26018,7 +26991,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26287,6 +27260,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExResponse", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["ExResponse"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_initialize", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["has_initialize"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnInitialize", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["hasOnInitialize"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_preupdate", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["has_preupdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPreUpdate", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["hasOnPreUpdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_postupdate", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["has_postupdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["hasOnPostUpdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["hasPreDraw"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return _Interfaces_Index__WEBPACK_IMPORTED_MODULE_26__["hasPostDraw"]; });
+
 /* harmony import */ var _Math_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Math/Index */ "./Math/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PerlinGenerator", function() { return _Math_Index__WEBPACK_IMPORTED_MODULE_27__["PerlinGenerator"]; });
 
@@ -26320,59 +27309,95 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ParseGif", function() { return _Resources_Index__WEBPACK_IMPORTED_MODULE_29__["ParseGif"]; });
 
+/* harmony import */ var _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./EntityComponentSystem/index */ "./EntityComponentSystem/index.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["Component"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TagComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["TagComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddedComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["AddedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isAddedComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["isAddedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RemovedComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["RemovedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRemovedComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["isRemovedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Entity", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["Entity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EntityManager", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["EntityManager"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["Query"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "QueryManager", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["QueryManager"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemType", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["SystemType"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "System", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["System"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AddedEntity", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["AddedEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isAddedSystemEntity", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["isAddedSystemEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RemovedEntity", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["RemovedEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRemoveSystemEntity", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["isRemoveSystemEntity"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemManager", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_30__["SystemManager"]; });
+
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_12__; });
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_30__; });
-/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_31__; });
-/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_32__; });
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserComponent"]; });
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_31__; });
+/* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Traits", function() { return _Traits_Index__WEBPACK_IMPORTED_MODULE_32__; });
+/* harmony import */ var _Util_Index__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./Util/Index */ "./Util/Index.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return _Util_Index__WEBPACK_IMPORTED_MODULE_33__; });
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserComponent", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_34__["BrowserComponent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_33__["BrowserEvents"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserEvents", function() { return _Util_Browser__WEBPACK_IMPORTED_MODULE_34__["BrowserEvents"]; });
 
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["maxMessages"]; });
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "maxMessages", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_35__["maxMessages"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["resetObsoleteCounter"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resetObsoleteCounter", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_35__["resetObsoleteCounter"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_34__["obsolete"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "obsolete", function() { return _Util_Decorators__WEBPACK_IMPORTED_MODULE_35__["obsolete"]; });
 
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_35__["Detector"]; });
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Detector", function() { return _Util_Detector__WEBPACK_IMPORTED_MODULE_36__["Detector"]; });
 
-/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_36__["CullingBox"]; });
+/* harmony import */ var _Util_CullingBox__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/CullingBox */ "./Util/CullingBox.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CullingBox", function() { return _Util_CullingBox__WEBPACK_IMPORTED_MODULE_37__["CullingBox"]; });
 
-/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_37__["EasingFunctions"]; });
+/* harmony import */ var _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/EasingFunctions */ "./Util/EasingFunctions.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EasingFunctions", function() { return _Util_EasingFunctions__WEBPACK_IMPORTED_MODULE_38__["EasingFunctions"]; });
 
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["LogLevel"]; });
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_39__["LogLevel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["Logger"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Logger", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_39__["Logger"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ConsoleAppender"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ConsoleAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_39__["ConsoleAppender"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_38__["ScreenAppender"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenAppender", function() { return _Util_Log__WEBPACK_IMPORTED_MODULE_39__["ScreenAppender"]; });
 
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["SortedList"]; });
+/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_40__["SortedList"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["BinaryTreeNode"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_40__["BinaryTreeNode"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_39__["MockedElement"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return _Util_SortedList__WEBPACK_IMPORTED_MODULE_40__["MockedElement"]; });
 
 /**
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7125+69f8f48";
+var EX_VERSION = "0.25.0-alpha.7130+855ce51";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything
 // that will be exposed as the `ex` global variable.
+
 
 
 

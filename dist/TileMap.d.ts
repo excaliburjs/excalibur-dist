@@ -25,8 +25,8 @@ export declare class TileMapImpl extends Class {
     cellHeight: number;
     rows: number;
     cols: number;
-    on(eventName: Events.preupdate, handler: (event: Events.PreUpdateEvent) => void): void;
-    on(eventName: Events.postupdate, handler: (event: Events.PostUpdateEvent) => void): void;
+    on(eventName: Events.preupdate, handler: (event: Events.PreUpdateEvent<TileMap>) => void): void;
+    on(eventName: Events.postupdate, handler: (event: Events.PostUpdateEvent<TileMap>) => void): void;
     on(eventName: Events.predraw, handler: (event: Events.PreDrawEvent) => void): void;
     on(eventName: Events.postdraw, handler: (event: Events.PostDrawEvent) => void): void;
     on(eventName: string, handler: (event: Events.GameEvent<any>) => void): void;
@@ -58,6 +58,8 @@ export declare class TileMapImpl extends Class {
      * returns `null` if no cell was found.
      */
     getCellByPoint(x: number, y: number): Cell;
+    onPreUpdate(_engine: Engine, _delta: number): void;
+    onPostUpdate(_engine: Engine, _delta: number): void;
     update(engine: Engine, delta: number): void;
     /**
      * Draws the tile map to the screen. Called by the [[Scene]].

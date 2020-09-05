@@ -22,9 +22,6 @@ var AudioInstanceFactory = /** @class */ (function () {
     function AudioInstanceFactory() {
     }
     AudioInstanceFactory.create = function (src) {
-        if (typeof src === 'string') {
-            return new AudioTagInstance(src);
-        }
         if (src instanceof AudioBuffer) {
             return new WebAudioInstance(src);
         }
@@ -135,63 +132,6 @@ var AudioInstance = /** @class */ (function () {
     return AudioInstance;
 }());
 export { AudioInstance };
-/**
- * Internal class representing a HTML5 audio instance
- */
-/* istanbul ignore next */
-var AudioTagInstance = /** @class */ (function (_super) {
-    __extends(AudioTagInstance, _super);
-    function AudioTagInstance(src) {
-        var _this = _super.call(this, src) || this;
-        _this._instance = new Audio(src);
-        return _this;
-    }
-    Object.defineProperty(AudioTagInstance.prototype, "volume", {
-        get: function () {
-            return this._volume;
-        },
-        set: function (value) {
-            value = Util.clamp(value, 0, 1.0);
-            this._volume = value;
-            this._instance.volume = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    AudioTagInstance.prototype.pause = function () {
-        if (!this._isPlaying) {
-            return;
-        }
-        this._instance.pause();
-        this._isPaused = true;
-        this._isPlaying = false;
-    };
-    AudioTagInstance.prototype.stop = function () {
-        _super.prototype.stop.call(this);
-        this._instance.pause();
-        this._instance.currentTime = 0;
-        this._handleOnEnded();
-    };
-    AudioTagInstance.prototype._startPlayBack = function () {
-        _super.prototype._startPlayBack.call(this);
-        this._instance.load();
-        this._instance.loop = this.loop;
-        this._instance.play();
-        this._wireUpOnEnded();
-    };
-    AudioTagInstance.prototype._resumePlayBack = function () {
-        _super.prototype._resumePlayBack.call(this);
-        this._instance.play();
-        this._wireUpOnEnded();
-    };
-    AudioTagInstance.prototype._handleOnEnded = function () {
-        this._isPlaying = false;
-        this._isPaused = false;
-        this._playingPromise.resolve(true);
-    };
-    return AudioTagInstance;
-}(AudioInstance));
-export { AudioTagInstance };
 /**
  * Internal class representing a Web Audio AudioBufferSourceNode instance
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API

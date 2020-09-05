@@ -38,21 +38,6 @@ export declare class AudioInstance implements Audio {
     protected _handleOnEnded(): void;
 }
 /**
- * Internal class representing a HTML5 audio instance
- */
-export declare class AudioTagInstance extends AudioInstance {
-    set volume(value: number);
-    get volume(): number;
-    protected _src: string;
-    protected _instance: HTMLAudioElement;
-    constructor(src: string);
-    pause(): void;
-    stop(): void;
-    protected _startPlayBack(): void;
-    protected _resumePlayBack(): void;
-    protected _handleOnEnded(): void;
-}
-/**
  * Internal class representing a Web Audio AudioBufferSourceNode instance
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
  */

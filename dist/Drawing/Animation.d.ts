@@ -4,10 +4,17 @@ import { Color } from './Color';
 import { Drawable, DrawOptions } from '../Interfaces/Drawable';
 import { Vector } from '../Algebra';
 import { Engine } from '../Engine';
+export interface HasTick {
+    /**
+     *
+     * @param elapsedMilliseconds The amount of real world time in milliseconds that has elapsed that must be updated in the animation
+     */
+    tick(elapsedMilliseconds: number, idempotencyToken?: number): void;
+}
 /**
  * @hidden
  */
-export declare class AnimationImpl implements Drawable {
+export declare class AnimationImpl implements Drawable, HasTick {
     /**
      * The sprite frames to play, in order. See [[SpriteSheet.getAnimationForAll]] to quickly
      * generate an [[Animation]].
@@ -21,7 +28,8 @@ export declare class AnimationImpl implements Drawable {
      * Current frame index being shown
      */
     currentFrame: number;
-    private _oldTime;
+    private _timeLeftInFrame;
+    private _idempotencyToken;
     anchor: Vector;
     rotation: number;
     scale: Vector;
@@ -128,7 +136,7 @@ export declare class AnimationImpl implements Drawable {
      * calculates whether to change to the frame.
      * @internal
      */
-    tick(): void;
+    tick(elapsed: number, idempotencyToken?: number): void;
     private _updateValues;
     /**
      * Skips ahead a specified number of frames in the animation

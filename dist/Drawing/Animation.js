@@ -49,7 +49,8 @@ var AnimationImpl = /** @class */ (function () {
          * Current frame index being shown
          */
         this.currentFrame = 0;
-        this._oldTime = Date.now();
+        this._timeLeftInFrame = 0;
+        this._idempotencyToken = -1;
         this.anchor = Vector.Zero;
         this.rotation = 0.0;
         this.scale = Vector.One;
@@ -86,6 +87,7 @@ var AnimationImpl = /** @class */ (function () {
         this.sprites = sprites;
         this.speed = speed;
         this._engine = engine;
+        this._timeLeftInFrame = this.speed;
         if (loop != null) {
             this.loop = loop;
         }
@@ -215,11 +217,23 @@ var AnimationImpl = /** @class */ (function () {
      * calculates whether to change to the frame.
      * @internal
      */
-    AnimationImpl.prototype.tick = function () {
-        var time = Date.now();
-        if (time - this._oldTime > this.speed) {
+    AnimationImpl.prototype.tick = function (elapsed, idempotencyToken) {
+        if (this._idempotencyToken === idempotencyToken) {
+            return;
+        }
+        this._idempotencyToken = idempotencyToken;
+        this._timeLeftInFrame -= elapsed;
+        if (this._timeLeftInFrame <= 0) {
             this.currentFrame = this.loop ? (this.currentFrame + 1) % this.sprites.length : this.currentFrame + 1;
-            this._oldTime = time;
+            this._timeLeftInFrame = this.speed;
+        }
+        this._updateValues();
+        var current = this.sprites[this.currentFrame];
+        if (current) {
+            this.width = current.width;
+            this.height = current.height;
+            this.drawWidth = current.drawWidth;
+            this.drawHeight = current.drawHeight;
         }
     };
     AnimationImpl.prototype._updateValues = function () {
@@ -245,7 +259,6 @@ var AnimationImpl = /** @class */ (function () {
     AnimationImpl.prototype._drawWithOptions = function (options) {
         var _a, _b, _c, _d, _e, _f, _g;
         var animOptions = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, opacity: (_g = options.opacity) !== null && _g !== void 0 ? _g : this._opacity });
-        this.tick();
         this._updateValues();
         var currSprite;
         if (this.currentFrame < this.sprites.length) {

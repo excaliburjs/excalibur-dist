@@ -22,6 +22,7 @@ import { Texture } from './Resources/Texture';
 import { InitializeEvent, KillEvent, PreUpdateEvent, PreDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PostKillEvent, PreKillEvent } from './Events';
 import { Color } from './Drawing/Color';
 import { Sprite } from './Drawing/Sprite';
+import { Animation } from './Drawing/Animation';
 import { Logger } from './Util/Log';
 import { ActionContext } from './Actions/ActionContext';
 import { ActionQueue } from './Actions/Action';
@@ -813,6 +814,11 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.prototype.update = function (engine, delta) {
         this._initialize(engine);
         this._preupdate(engine, delta);
+        // Tick animations
+        var drawing = this.currentDrawing;
+        if (drawing && drawing instanceof Animation) {
+            drawing.tick(delta, engine.stats.currFrame.id);
+        }
         // Update action queue
         this.actionQueue.update(delta);
         // Update color only opacity

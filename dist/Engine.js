@@ -826,7 +826,6 @@ O|===|* >________________>\n\
                 var delta = elapsed * game.timescale;
                 // reset frame stats (reuse existing instances)
                 var frameId = game.stats.prevFrame.id + 1;
-                game.stats.prevFrame.reset(game.stats.currFrame);
                 game.stats.currFrame.reset();
                 game.stats.currFrame.id = frameId;
                 game.stats.currFrame.delta = delta;
@@ -840,6 +839,7 @@ O|===|* >________________>\n\
                 game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                 lastTime = now;
                 game.emit('postframe', new PostFrameEvent(game, game.stats.currFrame));
+                game.stats.prevFrame.reset(game.stats.currFrame);
             }
             catch (e) {
                 window.cancelAnimationFrame(game._requestId);

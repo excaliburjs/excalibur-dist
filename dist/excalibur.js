@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7143+95ca7cf - 2020-9-8
+ * excalibur - 0.25.0-alpha.7155+13abcb6 - 2020-9-11
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5810,6 +5810,9 @@ var ActorImpl = /** @class */ (function (_super) {
             else {
                 _Util_Log__WEBPACK_IMPORTED_MODULE_5__["Logger"].getInstance().error("the specified drawing key " + key + " does not exist");
             }
+        }
+        if (this.currentDrawing && this.currentDrawing instanceof _Drawing_Animation__WEBPACK_IMPORTED_MODULE_4__["Animation"]) {
+            this.currentDrawing.tick(0);
         }
     };
     ActorImpl.prototype.addDrawing = function () {
@@ -27392,7 +27395,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7143+95ca7cf";
+var EX_VERSION = "0.25.0-alpha.7155+13abcb6";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

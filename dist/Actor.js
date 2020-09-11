@@ -624,6 +624,9 @@ var ActorImpl = /** @class */ (function (_super) {
                 Logger.getInstance().error("the specified drawing key " + key + " does not exist");
             }
         }
+        if (this.currentDrawing && this.currentDrawing instanceof Animation) {
+            this.currentDrawing.tick(0);
+        }
     };
     ActorImpl.prototype.addDrawing = function () {
         if (arguments.length === 2) {

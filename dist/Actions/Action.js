@@ -33,6 +33,8 @@ var EaseTo = /** @class */ (function () {
             this._initialize();
             this._initialized = true;
         }
+        // Need to update lerp time first, otherwise the first update will always be zero
+        this._currentLerpTime += delta;
         var newX = this.actor.pos.x;
         var newY = this.actor.pos.y;
         if (this._currentLerpTime < this._lerpDuration) {
@@ -52,13 +54,14 @@ var EaseTo = /** @class */ (function () {
             else {
                 newY = this.easingFcn(this._currentLerpTime, this._lerpStart.y, this._lerpEnd.y, this._lerpDuration);
             }
-            this.actor.pos.x = newX;
-            this.actor.pos.y = newY;
-            this._currentLerpTime += delta;
+            // Given the lerp position figure out the velocity in pixels per second
+            this.actor.vel.x = (newX - this.actor.pos.x) / (delta / 1000);
+            this.actor.vel.y = (newY - this.actor.pos.y) / (delta / 1000);
         }
         else {
             this.actor.pos.x = this._lerpEnd.x;
             this.actor.pos.y = this._lerpEnd.y;
+            this.actor.vel = Vector.Zero;
             //this._lerpStart = null;
             //this._lerpEnd = null;
             //this._currentLerpTime = 0;
@@ -71,6 +74,8 @@ var EaseTo = /** @class */ (function () {
         this._initialized = false;
     };
     EaseTo.prototype.stop = function () {
+        this.actor.vel.y = 0;
+        this.actor.vel.x = 0;
         this._stopped = true;
     };
     return EaseTo;

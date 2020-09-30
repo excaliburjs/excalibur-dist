@@ -1,6 +1,11 @@
 import { AudioContextFactory } from '../Resources/Sound/AudioContext';
 import { Promise, PromiseState } from '../Promises';
 import { Logger } from './Log';
+/**
+ * Patch for detecting legacy web audio in browsers
+ * @internal
+ * @param source
+ */
 function isLegacyWebAudioSource(source) {
     return !!source.playbackState;
 }

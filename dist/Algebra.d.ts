@@ -60,7 +60,8 @@ export declare class Vector implements Clonable<Vector> {
     setTo(x: number, y: number): void;
     /**
      * Compares this point against another and tests for equality
-     * @param point  The other point to compare to
+     * @param vector The other point to compare to
+     * @param tolerance Amount of euclidean distance off we are willing to tolerate
      */
     equals(vector: Vector, tolerance?: number): boolean;
     /**
@@ -109,7 +110,7 @@ export declare class Vector implements Clonable<Vector> {
     addEqual(v: Vector): Vector;
     /**
      * Subtracts a vector from this one modifying the original
-     * @parallel v The vector to subtract
+     * @param v The vector to subtract
      */
     subEqual(v: Vector): Vector;
     /**

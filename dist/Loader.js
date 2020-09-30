@@ -311,6 +311,11 @@ var Loader = /** @class */ (function (_super) {
                 }
             };
         });
+        /**
+         * Helper to load in order
+         * @param list
+         * @param index
+         */
         function loadNext(list, index) {
             if (!list[index]) {
                 return;

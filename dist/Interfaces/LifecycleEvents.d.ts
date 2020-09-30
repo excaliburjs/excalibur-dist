@@ -4,26 +4,46 @@ import { Scene } from '../Scene';
 export interface _initialize {
     _initialize(engine: Engine): void;
 }
+/**
+ * Type guard checking for internal initialize method
+ * @internal
+ * @param a
+ */
 export declare function has_initialize(a: any): a is _initialize;
 export interface OnInitialize {
     onInitialize(engine: Engine): void;
 }
+/**
+ *
+ */
 export declare function hasOnInitialize(a: any): a is OnInitialize;
 export interface _preupdate {
     _preupdate(engine: Engine, delta: number): void;
 }
+/**
+ *
+ */
 export declare function has_preupdate(a: any): a is _preupdate;
 export interface OnPreUpdate {
     onPreUpdate(engine: Engine, delta: number): void;
 }
+/**
+ *
+ */
 export declare function hasOnPreUpdate(a: any): a is OnPreUpdate;
 export interface _postupdate {
     _postupdate(engine: Engine, delta: number): void;
 }
+/**
+ *
+ */
 export declare function has_postupdate(a: any): a is _postupdate;
 export interface OnPostUpdate {
     onPostUpdate(engine: Engine, delta: number): void;
 }
+/**
+ *
+ */
 export declare function hasOnPostUpdate(a: any): a is OnPostUpdate;
 export interface CanInitialize {
     /**
@@ -115,7 +135,13 @@ export interface CanDraw extends OnPreDraw, OnPostDraw {
     off(eventName: Events.predraw, handler?: (event: Events.PreDrawEvent) => void): void;
     off(eventName: Events.postdraw, handler?: (event: Events.PostDrawEvent) => void): void;
 }
+/**
+ *
+ */
 export declare function hasPreDraw(a: any): a is OnPreDraw;
+/**
+ *
+ */
 export declare function hasPostDraw(a: any): a is OnPostDraw;
 export interface CanBeKilled {
     /**

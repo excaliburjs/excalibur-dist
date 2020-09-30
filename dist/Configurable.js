@@ -11,6 +11,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/**
+ * Configurable helper extends base type and makes all properties available as option bag arguments
+ * @internal
+ * @param base
+ */
 export function Configurable(base) {
     return /** @class */ (function (_super) {
         __extends(class_1, _super);

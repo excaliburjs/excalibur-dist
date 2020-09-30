@@ -15,6 +15,9 @@ import { Component } from './Component';
 import { Observable } from '../Util/Observable';
 import { Class } from '../Class';
 import { InitializeEvent, PreUpdateEvent, PostUpdateEvent } from '../Events';
+/**
+ * AddedComponent message
+ */
 var AddedComponent = /** @class */ (function () {
     function AddedComponent(data) {
         this.data = data;
@@ -23,9 +26,15 @@ var AddedComponent = /** @class */ (function () {
     return AddedComponent;
 }());
 export { AddedComponent };
+/**
+ * Type guard to know if message is f an Added Component
+ */
 export function isAddedComponent(x) {
     return !!x && x.type === 'Component Added';
 }
+/**
+ * RemovedComponent message
+ */
 var RemovedComponent = /** @class */ (function () {
     function RemovedComponent(data) {
         this.data = data;
@@ -34,6 +43,9 @@ var RemovedComponent = /** @class */ (function () {
     return RemovedComponent;
 }());
 export { RemovedComponent };
+/**
+ * Type guard to know if message is for a Removed Component
+ */
 export function isRemovedComponent(x) {
     return !!x && x.type === 'Component Removed';
 }

@@ -25,6 +25,9 @@ export declare function point(ctx: CanvasRenderingContext2D, color: Color, point
 /**
  * Draw the vector as a line onto the canvas starting a origin point.
  */
+/**
+ *
+ */
 export declare function vector(ctx: CanvasRenderingContext2D, color: Color, origin: Vector, vector: Vector, scale?: number): void;
 /**
  * Represents border radius values
@@ -56,8 +59,11 @@ export interface BorderRadius {
  * @param width The width of the rectangle
  * @param height The height of the rectangle
  * @param radius The border radius of the rectangle
- * @param fill The [[Color]] to fill rectangle with
  * @param stroke The [[Color]] to stroke rectangle with
+ * @param fill The [[Color]] to fill rectangle with
  */
 export declare function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius?: number | BorderRadius, stroke?: Color, fill?: Color): void;
+/**
+ *
+ */
 export declare function circle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, stroke?: Color, fill?: Color): void;

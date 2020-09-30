@@ -37,6 +37,10 @@ var AddedEntity = /** @class */ (function () {
     return AddedEntity;
 }());
 export { AddedEntity };
+/**
+ * Type guard to check for AddedEntity messages
+ * @param x
+ */
 export function isAddedSystemEntity(x) {
     return !!x && x.type === 'Entity Added';
 }
@@ -51,6 +55,9 @@ var RemovedEntity = /** @class */ (function () {
     return RemovedEntity;
 }());
 export { RemovedEntity };
+/**
+ *
+ */
 export function isRemoveSystemEntity(x) {
     return !!x && x.type === 'Entity Removed';
 }

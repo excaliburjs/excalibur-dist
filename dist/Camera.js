@@ -48,7 +48,7 @@ var StrategyContainer = /** @class */ (function () {
      * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
-     * @param target Target actor to elastically follow
+     * @param actor Target actor to elastically follow
      * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
      * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
      */
@@ -57,7 +57,7 @@ var StrategyContainer = /** @class */ (function () {
     };
     /**
      * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
-     * @param target Target actor to follow when it is "radius" pixels away
+     * @param actor Target actor to follow when it is "radius" pixels away
      * @param radius Number of pixels away before the camera will follow
      */
     StrategyContainer.prototype.radiusAroundActor = function (actor, radius) {
@@ -645,7 +645,6 @@ var Camera = /** @class */ (function (_super) {
     /**
      * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
      * @param ctx    Canvas context to apply transformations
-     * @param delta  The number of milliseconds since the last update
      */
     Camera.prototype.draw = function (ctx) {
         var focus = this.getFocus();

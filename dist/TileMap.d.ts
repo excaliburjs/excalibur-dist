@@ -31,7 +31,7 @@ export declare class TileMapImpl extends Class {
     on(eventName: Events.postdraw, handler: (event: Events.PostDrawEvent) => void): void;
     on(eventName: string, handler: (event: Events.GameEvent<any>) => void): void;
     /**
-     * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
+     * @param xOrConfig     The x coordinate to anchor the TileMap's upper left corner (should not be changed once set) or TileMap option bag
      * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
      * @param cellWidth     The individual width of each cell (in pixels) (should not be changed once set)
      * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
@@ -120,7 +120,7 @@ export declare class CellImpl {
     solid: boolean;
     sprites: TileSprite[];
     /**
-     * @param x       Gets or sets x coordinate of the cell in world coordinates
+     * @param xOrConfig Gets or sets x coordinate of the cell in world coordinates or cell option bag
      * @param y       Gets or sets y coordinate of the cell in world coordinates
      * @param width   Gets or sets the width of the cell
      * @param height  Gets or sets the height of the cell

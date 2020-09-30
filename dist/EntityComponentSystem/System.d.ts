@@ -58,6 +58,10 @@ export declare class AddedEntity implements Message<Entity> {
     readonly type: 'Entity Added';
     constructor(data: Entity);
 }
+/**
+ * Type guard to check for AddedEntity messages
+ * @param x
+ */
 export declare function isAddedSystemEntity(x: Message<Entity>): x is AddedEntity;
 /**
  * An [[Entity]] with [[Component]] types that no longer matches a [[System]] types exists in the current scene.
@@ -67,4 +71,7 @@ export declare class RemovedEntity implements Message<Entity> {
     readonly type: 'Entity Removed';
     constructor(data: Entity);
 }
+/**
+ *
+ */
 export declare function isRemoveSystemEntity(x: Message<Entity>): x is RemovedEntity;

@@ -35,6 +35,10 @@ import { obsolete } from './Util/Decorators';
 import { Collider } from './Collision/Collider';
 import { Shape } from './Collision/Shape';
 import { Entity } from './EntityComponentSystem/Entity';
+/**
+ * Type guard for checking if something is an Actor
+ * @param x
+ */
 export function isActor(x) {
     return x instanceof Actor;
 }
@@ -45,11 +49,11 @@ var ActorImpl = /** @class */ (function (_super) {
     __extends(ActorImpl, _super);
     // #endregion
     /**
-     * @param x       The starting x coordinate of the actor
-     * @param y       The starting y coordinate of the actor
-     * @param width   The starting width of the actor
-     * @param height  The starting height of the actor
-     * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
+     * @param xOrConfig The starting x coordinate of the actor, or an option bag of [[ActorArgs]]
+     * @param y         The starting y coordinate of the actor
+     * @param width     The starting width of the actor
+     * @param height    The starting height of the actor
+     * @param color     The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
      * initial [[opacity]].
      */
     function ActorImpl(xOrConfig, y, width, height, color) {

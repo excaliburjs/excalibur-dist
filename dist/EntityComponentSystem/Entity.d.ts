@@ -3,21 +3,36 @@ import { Observable, Message } from '../Util/Observable';
 import { Class } from '../Class';
 import { OnInitialize, OnPreUpdate, OnPostUpdate } from '../Interfaces/LifecycleEvents';
 import { Engine } from '../Engine';
+/**
+ * Interface holding an entity component pair
+ */
 export interface EntityComponent {
     component: Component;
     entity: Entity;
 }
+/**
+ * AddedComponent message
+ */
 export declare class AddedComponent implements Message<EntityComponent> {
     data: EntityComponent;
     readonly type: 'Component Added';
     constructor(data: EntityComponent);
 }
+/**
+ * Type guard to know if message is f an Added Component
+ */
 export declare function isAddedComponent(x: Message<EntityComponent>): x is AddedComponent;
+/**
+ * RemovedComponent message
+ */
 export declare class RemovedComponent implements Message<EntityComponent> {
     data: EntityComponent;
     readonly type: 'Component Removed';
     constructor(data: EntityComponent);
 }
+/**
+ * Type guard to know if message is for a Removed Component
+ */
 export declare function isRemovedComponent(x: Message<EntityComponent>): x is RemovedComponent;
 export declare type ComponentMap = {
     [type: string]: Component;

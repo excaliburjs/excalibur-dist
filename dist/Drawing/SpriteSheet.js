@@ -24,7 +24,7 @@ import { Configurable } from '../Configurable';
  */
 var SpriteSheetImpl = /** @class */ (function () {
     /**
-     * @param image     The backing image texture to build the SpriteSheet
+     * @param imageOrConfigOrSprites The backing image texture to build the SpriteSheet, option bag, or sprite list
      * @param columns   The number of columns in the image texture
      * @param rows      The number of rows in the image texture
      * @param spWidth   The width of each individual sprite in pixels
@@ -195,7 +195,7 @@ export { SpriteSheet };
 var SpriteFontImpl = /** @class */ (function (_super) {
     __extends(SpriteFontImpl, _super);
     /**
-     * @param image           The backing image texture to build the SpriteFont
+     * @param imageOrConfig   The backing image texture to build the SpriteFont or the sprite font option bag
      * @param alphabet        A string representing all the characters in the image, in row major order.
      * @param caseInsensitive  Indicate whether this font takes case into account
      * @param columns         The number of columns of characters in the image

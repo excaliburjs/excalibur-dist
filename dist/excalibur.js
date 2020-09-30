@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7158+8947c58 - 2020-9-12
+ * excalibur - 0.25.0-alpha.7178+a462a5d - 2020-9-30
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5227,6 +5227,10 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+/**
+ * Type guard for checking if something is an Actor
+ * @param x
+ */
 function isActor(x) {
     return x instanceof Actor;
 }
@@ -5237,11 +5241,11 @@ var ActorImpl = /** @class */ (function (_super) {
     __extends(ActorImpl, _super);
     // #endregion
     /**
-     * @param x       The starting x coordinate of the actor
-     * @param y       The starting y coordinate of the actor
-     * @param width   The starting width of the actor
-     * @param height  The starting height of the actor
-     * @param color   The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
+     * @param xOrConfig The starting x coordinate of the actor, or an option bag of [[ActorArgs]]
+     * @param y         The starting y coordinate of the actor
+     * @param width     The starting width of the actor
+     * @param height    The starting height of the actor
+     * @param color     The starting color of the actor. Leave null to draw a transparent actor. The opacity of the color will be used as the
      * initial [[opacity]].
      */
     function ActorImpl(xOrConfig, y, width, height, color) {
@@ -6388,7 +6392,8 @@ var Vector = /** @class */ (function () {
     };
     /**
      * Compares this point against another and tests for equality
-     * @param point  The other point to compare to
+     * @param vector The other point to compare to
+     * @param tolerance Amount of euclidean distance off we are willing to tolerate
      */
     Vector.prototype.equals = function (vector, tolerance) {
         if (tolerance === void 0) { tolerance = 0.001; }
@@ -6477,7 +6482,7 @@ var Vector = /** @class */ (function () {
     };
     /**
      * Subtracts a vector from this one modifying the original
-     * @parallel v The vector to subtract
+     * @param v The vector to subtract
      */
     Vector.prototype.subEqual = function (v) {
         this.x -= v.x;
@@ -6923,7 +6928,7 @@ var StrategyContainer = /** @class */ (function () {
      * If cameraFriction < cameraElasticity < 1.0, the behavior will be an oscillating spring that will over
      * correct and bounce around the target
      *
-     * @param target Target actor to elastically follow
+     * @param actor Target actor to elastically follow
      * @param cameraElasticity [0 - 1.0] The higher the elasticity the more force that will drive the camera towards the target
      * @param cameraFriction [0 - 1.0] The higher the friction the more that the camera will resist motion towards the target
      */
@@ -6932,7 +6937,7 @@ var StrategyContainer = /** @class */ (function () {
     };
     /**
      * Creates and adds the [[RadiusAroundActorStrategy]] on the current camera
-     * @param target Target actor to follow when it is "radius" pixels away
+     * @param actor Target actor to follow when it is "radius" pixels away
      * @param radius Number of pixels away before the camera will follow
      */
     StrategyContainer.prototype.radiusAroundActor = function (actor, radius) {
@@ -7520,7 +7525,6 @@ var Camera = /** @class */ (function (_super) {
     /**
      * Applies the relevant transformations to the game canvas to "move" or apply effects to the Camera
      * @param ctx    Canvas context to apply transformations
-     * @param delta  The number of milliseconds since the last update
      */
     Camera.prototype.draw = function (ctx) {
         var focus = this.getFocus();
@@ -11490,6 +11494,11 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/**
+ * Configurable helper extends base type and makes all properties available as option bag arguments
+ * @internal
+ * @param base
+ */
 function Configurable(base) {
     return /** @class */ (function (_super) {
         __extends(class_1, _super);
@@ -11910,8 +11919,8 @@ var AnimationImpl = /** @class */ (function () {
     /**
      * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
      *
-     * @param engine  Reference to the current game engine
-     * @param images  An array of sprites to create the frames for the animation
+     * @param engineOrConfig  Reference to the current game engine
+     * @param sprites  An array of sprites to create the frames for the animation
      * @param speed   The number in milliseconds to display each frame in the animation
      * @param loop    Indicates whether the animation should loop after it is completed
      */
@@ -12950,7 +12959,7 @@ var __assign = (undefined && undefined.__assign) || function () {
  */
 var SpriteImpl = /** @class */ (function () {
     /**
-     * @param image   The backing image texture to build the Sprite
+     * @param imageOrConfig  The backing image texture to build the Sprite, or Sprite option bag
      * @param x      The x position of the sprite
      * @param y      The y position of the sprite
      * @param width  The width of the sprite in pixels
@@ -13534,7 +13543,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
  */
 var SpriteSheetImpl = /** @class */ (function () {
     /**
-     * @param image     The backing image texture to build the SpriteSheet
+     * @param imageOrConfigOrSprites The backing image texture to build the SpriteSheet, option bag, or sprite list
      * @param columns   The number of columns in the image texture
      * @param rows      The number of rows in the image texture
      * @param spWidth   The width of each individual sprite in pixels
@@ -13705,7 +13714,7 @@ var SpriteSheet = /** @class */ (function (_super) {
 var SpriteFontImpl = /** @class */ (function (_super) {
     __extends(SpriteFontImpl, _super);
     /**
-     * @param image           The backing image texture to build the SpriteFont
+     * @param imageOrConfig   The backing image texture to build the SpriteFont or the sprite font option bag
      * @param alphabet        A string representing all the characters in the image, in row major order.
      * @param caseInsensitive  Indicate whether this font takes case into account
      * @param columns         The number of columns of characters in the image
@@ -14878,6 +14887,10 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+/**
+ * Type guard to check if a component implements clone
+ * @param x
+ */
 function hasClone(x) {
     return !!(x === null || x === void 0 ? void 0 : x.clone);
 }
@@ -14960,6 +14973,9 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
+/**
+ * AddedComponent message
+ */
 var AddedComponent = /** @class */ (function () {
     function AddedComponent(data) {
         this.data = data;
@@ -14968,9 +14984,15 @@ var AddedComponent = /** @class */ (function () {
     return AddedComponent;
 }());
 
+/**
+ * Type guard to know if message is f an Added Component
+ */
 function isAddedComponent(x) {
     return !!x && x.type === 'Component Added';
 }
+/**
+ * RemovedComponent message
+ */
 var RemovedComponent = /** @class */ (function () {
     function RemovedComponent(data) {
         this.data = data;
@@ -14979,6 +15001,9 @@ var RemovedComponent = /** @class */ (function () {
     return RemovedComponent;
 }());
 
+/**
+ * Type guard to know if message is for a Removed Component
+ */
 function isRemovedComponent(x) {
     return !!x && x.type === 'Component Removed';
 }
@@ -15559,6 +15584,10 @@ var AddedEntity = /** @class */ (function () {
     return AddedEntity;
 }());
 
+/**
+ * Type guard to check for AddedEntity messages
+ * @param x
+ */
 function isAddedSystemEntity(x) {
     return !!x && x.type === 'Entity Added';
 }
@@ -15573,6 +15602,9 @@ var RemovedEntity = /** @class */ (function () {
     return RemovedEntity;
 }());
 
+/**
+ *
+ */
 function isRemoveSystemEntity(x) {
     return !!x && x.type === 'Entity Removed';
 }
@@ -15630,8 +15662,9 @@ var SystemManager = /** @class */ (function () {
     };
     /**
      * Updates all systems
-     * @param engine
-     * @param delta
+     * @param type whether this is an update or draw system
+     * @param engine engine reference
+     * @param delta time in milliseconds
      */
     SystemManager.prototype.updateSystems = function (type, engine, delta) {
         var systems = this.systems.filter(function (s) { return s.systemType === type; });
@@ -17758,7 +17791,6 @@ var PointerEvent = /** @class */ (function (_super) {
      * @param pointerType         The type of pointer
      * @param button              The button pressed (if [[PointerType.Mouse]])
      * @param ev                  The raw DOM event being handled
-     * @param pos                 (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
      */
     function PointerEvent(coordinates, pointer, index, pointerType, button, ev) {
         var _this = _super.call(this) || this;
@@ -18026,6 +18058,9 @@ var WheelEvent = /** @class */ (function (_super) {
     return WheelEvent;
 }(_Events__WEBPACK_IMPORTED_MODULE_0__["GameEvent"]));
 
+/**
+ *
+ */
 function createPointerEventByName(eventName, coordinates, pointer, index, pointerType, button, ev) {
     var factory;
     switch (eventName) {
@@ -18644,27 +18679,53 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return hasOnPostUpdate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return hasPreDraw; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return hasPostDraw; });
+/**
+ * Type guard checking for internal initialize method
+ * @internal
+ * @param a
+ */
 function has_initialize(a) {
     return !!a._initialize;
 }
+/**
+ *
+ */
 function hasOnInitialize(a) {
     return !!a.onInitialize;
 }
+/**
+ *
+ */
 function has_preupdate(a) {
     return !!a._preupdate;
 }
+/**
+ *
+ */
 function hasOnPreUpdate(a) {
     return !!a.onPreUpdate;
 }
+/**
+ *
+ */
 function has_postupdate(a) {
     return !!a.onPostUpdate;
 }
+/**
+ *
+ */
 function hasOnPostUpdate(a) {
     return !!a.onPostUpdate;
 }
+/**
+ *
+ */
 function hasPreDraw(a) {
     return !!a.onPreDraw;
 }
+/**
+ *
+ */
 function hasPostDraw(a) {
     return !!a.onPostDraw;
 }
@@ -18872,7 +18933,7 @@ var FontStyle;
 var LabelImpl = /** @class */ (function (_super) {
     __extends(LabelImpl, _super);
     /**
-     * @param text        The text of the label
+     * @param textOrConfig    The text of the label, or label option bag
      * @param x           The x position of the label
      * @param y           The y position of the label
      * @param fontFamily  Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
@@ -19479,6 +19540,11 @@ var Loader = /** @class */ (function (_super) {
                 }
             };
         });
+        /**
+         * Helper to load in order
+         * @param list
+         * @param index
+         */
         function loadNext(list, index) {
             if (!list[index]) {
                 return;
@@ -19624,9 +19690,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Linear interpolation between a and b
+ * @internal
+ * @param time number between [0, 1]
+ * @param a starting number
+ * @param b ending number
+ */
 function _lerp(time, a, b) {
     return a + time * (b - a);
 }
+/**
+ * Reduce t by a quintic function that produces a desired effect
+ * @internal
+ * @param t
+ */
 function _fade(t) {
     return t * t * t * (t * (t * 6 - 15) + 10);
 }
@@ -20235,6 +20313,7 @@ var Random = /** @class */ (function () {
     };
     /**
      * Returns a new array randomly picking elements in the original (not reused)
+     * @param array Array to pick elements out of
      * @param numPicks must be less than or equal to the number of elements in the array.
      */
     Random.prototype._pickSetWithoutDuplicates = function (array, numPicks) {
@@ -20256,6 +20335,7 @@ var Random = /** @class */ (function () {
     };
     /**
      * Returns a new array random picking elements from the original allowing duplicates
+     * @param array Array to pick elements out of
      * @param numPicks can be any positive number
      */
     Random.prototype._pickSetWithDuplicates = function (array, numPicks) {
@@ -20531,10 +20611,10 @@ var Particle = /** @class */ (function (_super) {
 var ParticleEmitterImpl = /** @class */ (function (_super) {
     __extends(ParticleEmitterImpl, _super);
     /**
-     * @param x       The x position of the emitter
-     * @param y       The y position of the emitter
-     * @param width   The width of the emitter
-     * @param height  The height of the emitter
+     * @param xOrConfig The x position of the emitter, or the particle emitter options bag
+     * @param y         The y position of the emitter
+     * @param width     The width of the emitter
+     * @param height    The height of the emitter
      */
     function ParticleEmitterImpl(xOrConfig, y, width, height) {
         var _this = _super.call(this, typeof xOrConfig === 'number' ? { pos: new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](xOrConfig, y), width: width, height: height } : xOrConfig) || this;
@@ -20985,6 +21065,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_es_function__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_es_function__WEBPACK_IMPORTED_MODULE_1__);
 
 
+/**
+ * Polyfill adding function
+ */
 function polyfill() {
     /* istanbul ignore next */
     if (typeof window === 'undefined') {
@@ -24179,7 +24262,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var ScreenElement = /** @class */ (function (_super) {
     __extends(ScreenElement, _super);
     /**
-     * @param x       The starting x coordinate of the actor
+     * @param xOrConfig  The starting x coordinate of the actor or the actor option bag
      * @param y       The starting y coordinate of the actor
      * @param width   The starting width of the actor
      * @param height  The starting height of the actor
@@ -24281,7 +24364,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var TileMapImpl = /** @class */ (function (_super) {
     __extends(TileMapImpl, _super);
     /**
-     * @param x             The x coordinate to anchor the TileMap's upper left corner (should not be changed once set)
+     * @param xOrConfig     The x coordinate to anchor the TileMap's upper left corner (should not be changed once set) or TileMap option bag
      * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
      * @param cellWidth     The individual width of each cell (in pixels) (should not be changed once set)
      * @param cellHeight    The individual height of each cell (in pixels) (should not be changed once set)
@@ -24541,7 +24624,7 @@ var TileSprite = /** @class */ (function () {
  */
 var CellImpl = /** @class */ (function () {
     /**
-     * @param x       Gets or sets x coordinate of the cell in world coordinates
+     * @param xOrConfig Gets or sets x coordinate of the cell in world coordinates or cell option bag
      * @param y       Gets or sets y coordinate of the cell in world coordinates
      * @param width   Gets or sets the width of the cell
      * @param height  Gets or sets the height of the cell
@@ -25104,9 +25187,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Type guard to detect if something is an actor
+ * @deprecated
+ * @param actor
+ */
 function isVanillaActor(actor) {
     return !(actor instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) && !(actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_2__["Trigger"]) && !(actor instanceof _Label__WEBPACK_IMPORTED_MODULE_1__["Label"]);
 }
+/**
+ * Type guard to detect a screen element
+ * TODO: Move to screen element
+ */
 function isScreenElement(actor) {
     return actor instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"];
 }
@@ -25641,6 +25733,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "circle", function() { return circle; });
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 
+/* istanbul ignore next */
 /**
  * Draw a line on canvas context
  *
@@ -25653,7 +25746,6 @@ __webpack_require__.r(__webpack_exports__);
  * @param thickness The line thickness
  * @param cap The [[LineCapStyle]] (butt, round, or square)
  */
-/* istanbul ignore next */
 function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
     if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
     if (thickness === void 0) { thickness = 1; }
@@ -25667,10 +25759,10 @@ function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
     ctx.closePath();
     ctx.stroke();
 }
+/* istanbul ignore next */
 /**
  * Draw the vector as a point onto the canvas.
  */
-/* istanbul ignore next */
 function point(ctx, color, point) {
     if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Red; }
     ctx.beginPath();
@@ -25683,6 +25775,9 @@ function point(ctx, color, point) {
  * Draw the vector as a line onto the canvas starting a origin point.
  */
 /* istanbul ignore next */
+/**
+ *
+ */
 function vector(ctx, color, origin, vector, scale) {
     if (scale === void 0) { scale = 1.0; }
     var c = color ? color.toString() : 'blue';
@@ -25703,8 +25798,8 @@ function vector(ctx, color, origin, vector, scale) {
  * @param width The width of the rectangle
  * @param height The height of the rectangle
  * @param radius The border radius of the rectangle
- * @param fill The [[Color]] to fill rectangle with
  * @param stroke The [[Color]] to stroke rectangle with
+ * @param fill The [[Color]] to fill rectangle with
  */
 function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
     if (radius === void 0) { radius = 5; }
@@ -25743,6 +25838,9 @@ function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
         ctx.stroke();
     }
 }
+/**
+ *
+ */
 function circle(ctx, x, y, radius, stroke, fill) {
     if (stroke === void 0) { stroke = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].White; }
     if (fill === void 0) { fill = null; }
@@ -26614,6 +26712,10 @@ function extend() {
     }
     return extended;
 }
+/**
+ * Encode a string in base64
+ * @deprecated This method is marked for removal
+ */
 function base64Encode(inputStr) {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     var outputStr = '';
@@ -26657,14 +26759,23 @@ function nullish(nullishVal, defaultVal) {
 function clamp(val, min, max) {
     return Math.min(Math.max(min, val), max);
 }
+/**
+ * Find a random floating point number in range
+ */
 function randomInRange(min, max, random) {
     if (random === void 0) { random = new _Math_Random__WEBPACK_IMPORTED_MODULE_1__["Random"](); }
     return random ? random.floating(min, max) : min + Math.random() * (max - min);
 }
+/**
+ * Find a random integer in a range
+ */
 function randomIntInRange(min, max, random) {
     if (random === void 0) { random = new _Math_Random__WEBPACK_IMPORTED_MODULE_1__["Random"](); }
     return random ? random.integer(min, max) : Math.round(randomInRange(min, max));
 }
+/**
+ * Convert an angle to be the equivalent in the range [0, 2PI]
+ */
 function canonicalizeAngle(angle) {
     var tmpAngle = angle;
     if (angle > TwoPI) {
@@ -26679,12 +26790,21 @@ function canonicalizeAngle(angle) {
     }
     return tmpAngle;
 }
+/**
+ * Convert radians to degrees
+ */
 function toDegrees(radians) {
     return (180 / Math.PI) * radians;
 }
+/**
+ * Convert degrees to radians
+ */
 function toRadians(degrees) {
     return (degrees / 180) * Math.PI;
 }
+/**
+ * Find the screen position of an HTML element
+ */
 function getPosition(el) {
     var oLeft = 0, oTop = 0;
     var calcOffsetLeft = function (parent) {
@@ -26703,6 +26823,10 @@ function getPosition(el) {
     calcOffsetTop(el);
     return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](oLeft, oTop);
 }
+/**
+ * Add an item to an array list
+ * @deprecated
+ */
 function addItemToArray(item, array) {
     if (array.indexOf(item) === -1) {
         array.push(item);
@@ -26710,6 +26834,10 @@ function addItemToArray(item, array) {
     }
     return false;
 }
+/**
+ * Remove an item from an list
+ * @deprecated
+ */
 function removeItemFromArray(item, array) {
     var index = -1;
     if ((index = array.indexOf(item)) > -1) {
@@ -26718,6 +26846,10 @@ function removeItemFromArray(item, array) {
     }
     return false;
 }
+/**
+ * See if an array contains something
+ * @deprecated
+ */
 function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] === obj) {
@@ -26726,6 +26858,11 @@ function contains(array, obj) {
     }
     return false;
 }
+/**
+ * Get the opposit side
+ * TODO: Move to Side type
+ * @deprecated
+ */
 function getOppositeSide(side) {
     if (side === _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Top) {
         return _Collision_Side__WEBPACK_IMPORTED_MODULE_2__["Side"].Bottom;
@@ -26744,6 +26881,7 @@ function getOppositeSide(side) {
 /**
  * Returns the side in the direction of the vector supplied
  * @param direction Vector to check
+ * TODO: Move to Side type
  */
 function getSideFromDirection(direction) {
     var directions = [_Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Left, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Right, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Up, _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Down];
@@ -26760,6 +26898,7 @@ function getSideFromDirection(direction) {
 }
 /**
  * Excalibur's dynamically resizing collection
+ * @deprecated Will be removed in future releases
  */
 var Collection = /** @class */ (function () {
     /**
@@ -26924,6 +27063,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Patch for detecting legacy web audio in browsers
+ * @internal
+ * @param source
+ */
 function isLegacyWebAudioSource(source) {
     return !!source.playbackState;
 }
@@ -27400,7 +27544,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7158+8947c58";
+var EX_VERSION = "0.25.0-alpha.7178+a462a5d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

@@ -54,6 +54,10 @@ export function extend() {
     }
     return extended;
 }
+/**
+ * Encode a string in base64
+ * @deprecated This method is marked for removal
+ */
 export function base64Encode(inputStr) {
     var b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     var outputStr = '';
@@ -97,14 +101,23 @@ export function nullish(nullishVal, defaultVal) {
 export function clamp(val, min, max) {
     return Math.min(Math.max(min, val), max);
 }
+/**
+ * Find a random floating point number in range
+ */
 export function randomInRange(min, max, random) {
     if (random === void 0) { random = new Random(); }
     return random ? random.floating(min, max) : min + Math.random() * (max - min);
 }
+/**
+ * Find a random integer in a range
+ */
 export function randomIntInRange(min, max, random) {
     if (random === void 0) { random = new Random(); }
     return random ? random.integer(min, max) : Math.round(randomInRange(min, max));
 }
+/**
+ * Convert an angle to be the equivalent in the range [0, 2PI]
+ */
 export function canonicalizeAngle(angle) {
     var tmpAngle = angle;
     if (angle > TwoPI) {
@@ -119,12 +132,21 @@ export function canonicalizeAngle(angle) {
     }
     return tmpAngle;
 }
+/**
+ * Convert radians to degrees
+ */
 export function toDegrees(radians) {
     return (180 / Math.PI) * radians;
 }
+/**
+ * Convert degrees to radians
+ */
 export function toRadians(degrees) {
     return (degrees / 180) * Math.PI;
 }
+/**
+ * Find the screen position of an HTML element
+ */
 export function getPosition(el) {
     var oLeft = 0, oTop = 0;
     var calcOffsetLeft = function (parent) {
@@ -143,6 +165,10 @@ export function getPosition(el) {
     calcOffsetTop(el);
     return new Vector(oLeft, oTop);
 }
+/**
+ * Add an item to an array list
+ * @deprecated
+ */
 export function addItemToArray(item, array) {
     if (array.indexOf(item) === -1) {
         array.push(item);
@@ -150,6 +176,10 @@ export function addItemToArray(item, array) {
     }
     return false;
 }
+/**
+ * Remove an item from an list
+ * @deprecated
+ */
 export function removeItemFromArray(item, array) {
     var index = -1;
     if ((index = array.indexOf(item)) > -1) {
@@ -158,6 +188,10 @@ export function removeItemFromArray(item, array) {
     }
     return false;
 }
+/**
+ * See if an array contains something
+ * @deprecated
+ */
 export function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] === obj) {
@@ -166,6 +200,11 @@ export function contains(array, obj) {
     }
     return false;
 }
+/**
+ * Get the opposit side
+ * TODO: Move to Side type
+ * @deprecated
+ */
 export function getOppositeSide(side) {
     if (side === Side.Top) {
         return Side.Bottom;
@@ -184,6 +223,7 @@ export function getOppositeSide(side) {
 /**
  * Returns the side in the direction of the vector supplied
  * @param direction Vector to check
+ * TODO: Move to Side type
  */
 export function getSideFromDirection(direction) {
     var directions = [Vector.Left, Vector.Right, Vector.Up, Vector.Down];
@@ -200,6 +240,7 @@ export function getSideFromDirection(direction) {
 }
 /**
  * Excalibur's dynamically resizing collection
+ * @deprecated Will be removed in future releases
  */
 var Collection = /** @class */ (function () {
     /**

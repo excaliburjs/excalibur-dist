@@ -30,7 +30,7 @@ import { obsolete } from './Util/Decorators';
 var ScreenElement = /** @class */ (function (_super) {
     __extends(ScreenElement, _super);
     /**
-     * @param x       The starting x coordinate of the actor
+     * @param xOrConfig  The starting x coordinate of the actor or the actor option bag
      * @param y       The starting y coordinate of the actor
      * @param width   The starting width of the actor
      * @param height  The starting height of the actor

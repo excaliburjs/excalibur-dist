@@ -166,10 +166,10 @@ export { Particle };
 var ParticleEmitterImpl = /** @class */ (function (_super) {
     __extends(ParticleEmitterImpl, _super);
     /**
-     * @param x       The x position of the emitter
-     * @param y       The y position of the emitter
-     * @param width   The width of the emitter
-     * @param height  The height of the emitter
+     * @param xOrConfig The x position of the emitter, or the particle emitter options bag
+     * @param y         The y position of the emitter
+     * @param width     The width of the emitter
+     * @param height    The height of the emitter
      */
     function ParticleEmitterImpl(xOrConfig, y, width, height) {
         var _this = _super.call(this, typeof xOrConfig === 'number' ? { pos: new Vector(xOrConfig, y), width: width, height: height } : xOrConfig) || this;

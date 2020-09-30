@@ -25,8 +25,9 @@ export declare class SystemManager {
     removeSystem(system: System): void;
     /**
      * Updates all systems
-     * @param engine
-     * @param delta
+     * @param type whether this is an update or draw system
+     * @param engine engine reference
+     * @param delta time in milliseconds
      */
     updateSystems(type: SystemType, engine: Engine, delta: number): void;
 }

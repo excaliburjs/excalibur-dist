@@ -37,8 +37,9 @@ var SystemManager = /** @class */ (function () {
     };
     /**
      * Updates all systems
-     * @param engine
-     * @param delta
+     * @param type whether this is an update or draw system
+     * @param engine engine reference
+     * @param delta time in milliseconds
      */
     SystemManager.prototype.updateSystems = function (type, engine, delta) {
         var systems = this.systems.filter(function (s) { return s.systemType === type; });

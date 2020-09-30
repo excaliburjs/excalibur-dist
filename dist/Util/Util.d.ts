@@ -39,6 +39,10 @@ export declare function extend<T1, T2, T3>(target: T1, object2: T2, object3: T3)
  * @returns Merged object with properties from other objects
  */
 export declare function extend(target: any, ...objects: any[]): any;
+/**
+ * Encode a string in base64
+ * @deprecated This method is marked for removal
+ */
 export declare function base64Encode(inputStr: string): string;
 /**
  * Sugar that will use `nullishVal` if it's not null or undefined. Simulates the `??` operator
@@ -50,23 +54,60 @@ export declare function nullish<T>(nullishVal: T | undefined | null, defaultVal:
  * Clamps a value between a min and max inclusive
  */
 export declare function clamp(val: number, min: number, max: number): number;
+/**
+ * Find a random floating point number in range
+ */
 export declare function randomInRange(min: number, max: number, random?: Random): number;
+/**
+ * Find a random integer in a range
+ */
 export declare function randomIntInRange(min: number, max: number, random?: Random): number;
+/**
+ * Convert an angle to be the equivalent in the range [0, 2PI]
+ */
 export declare function canonicalizeAngle(angle: number): number;
+/**
+ * Convert radians to degrees
+ */
 export declare function toDegrees(radians: number): number;
+/**
+ * Convert degrees to radians
+ */
 export declare function toRadians(degrees: number): number;
+/**
+ * Find the screen position of an HTML element
+ */
 export declare function getPosition(el: HTMLElement): Vector;
+/**
+ * Add an item to an array list
+ * @deprecated
+ */
 export declare function addItemToArray<T>(item: T, array: T[]): boolean;
+/**
+ * Remove an item from an list
+ * @deprecated
+ */
 export declare function removeItemFromArray<T>(item: T, array: T[]): boolean;
+/**
+ * See if an array contains something
+ * @deprecated
+ */
 export declare function contains(array: Array<any>, obj: any): boolean;
+/**
+ * Get the opposit side
+ * TODO: Move to Side type
+ * @deprecated
+ */
 export declare function getOppositeSide(side: Side): Side;
 /**
  * Returns the side in the direction of the vector supplied
  * @param direction Vector to check
+ * TODO: Move to Side type
  */
 export declare function getSideFromDirection(direction: Vector): Side;
 /**
  * Excalibur's dynamically resizing collection
+ * @deprecated Will be removed in future releases
  */
 export declare class Collection<T> {
     /**

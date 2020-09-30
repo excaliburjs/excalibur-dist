@@ -57,7 +57,6 @@ var PointerEvent = /** @class */ (function (_super) {
      * @param pointerType         The type of pointer
      * @param button              The button pressed (if [[PointerType.Mouse]])
      * @param ev                  The raw DOM event being handled
-     * @param pos                 (Will be added to signature in 0.14.0 release) The position of the event (in world coordinates)
      */
     function PointerEvent(coordinates, pointer, index, pointerType, button, ev) {
         var _this = _super.call(this) || this;
@@ -325,6 +324,9 @@ var WheelEvent = /** @class */ (function (_super) {
     return WheelEvent;
 }(GameEvent));
 export { WheelEvent };
+/**
+ *
+ */
 export function createPointerEventByName(eventName, coordinates, pointer, index, pointerType, button, ev) {
     var factory;
     switch (eventName) {

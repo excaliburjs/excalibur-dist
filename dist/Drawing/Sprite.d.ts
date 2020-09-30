@@ -35,7 +35,7 @@ export declare class SpriteImpl implements Drawable {
     private _pixelsLoaded;
     private _dirtyEffect;
     /**
-     * @param image   The backing image texture to build the Sprite
+     * @param imageOrConfig  The backing image texture to build the Sprite, or Sprite option bag
      * @param x      The x position of the sprite
      * @param y      The y position of the sprite
      * @param width  The width of the sprite in pixels

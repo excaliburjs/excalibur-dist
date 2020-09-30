@@ -77,11 +77,13 @@ export declare class Random {
     pickSet<T>(array: Array<T>, numPicks: number, allowDuplicates?: boolean): Array<T>;
     /**
      * Returns a new array randomly picking elements in the original (not reused)
+     * @param array Array to pick elements out of
      * @param numPicks must be less than or equal to the number of elements in the array.
      */
     private _pickSetWithoutDuplicates;
     /**
      * Returns a new array random picking elements from the original allowing duplicates
+     * @param array Array to pick elements out of
      * @param numPicks can be any positive number
      */
     private _pickSetWithDuplicates;

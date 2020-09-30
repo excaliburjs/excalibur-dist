@@ -1,4 +1,5 @@
 import { Color } from '../Drawing/Color';
+/* istanbul ignore next */
 /**
  * Draw a line on canvas context
  *
@@ -11,7 +12,6 @@ import { Color } from '../Drawing/Color';
  * @param thickness The line thickness
  * @param cap The [[LineCapStyle]] (butt, round, or square)
  */
-/* istanbul ignore next */
 export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
     if (color === void 0) { color = Color.Red; }
     if (thickness === void 0) { thickness = 1; }
@@ -25,10 +25,10 @@ export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
     ctx.closePath();
     ctx.stroke();
 }
+/* istanbul ignore next */
 /**
  * Draw the vector as a point onto the canvas.
  */
-/* istanbul ignore next */
 export function point(ctx, color, point) {
     if (color === void 0) { color = Color.Red; }
     ctx.beginPath();
@@ -41,6 +41,9 @@ export function point(ctx, color, point) {
  * Draw the vector as a line onto the canvas starting a origin point.
  */
 /* istanbul ignore next */
+/**
+ *
+ */
 export function vector(ctx, color, origin, vector, scale) {
     if (scale === void 0) { scale = 1.0; }
     var c = color ? color.toString() : 'blue';
@@ -61,8 +64,8 @@ export function vector(ctx, color, origin, vector, scale) {
  * @param width The width of the rectangle
  * @param height The height of the rectangle
  * @param radius The border radius of the rectangle
- * @param fill The [[Color]] to fill rectangle with
  * @param stroke The [[Color]] to stroke rectangle with
+ * @param fill The [[Color]] to fill rectangle with
  */
 export function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
     if (radius === void 0) { radius = 5; }
@@ -101,6 +104,9 @@ export function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
         ctx.stroke();
     }
 }
+/**
+ *
+ */
 export function circle(ctx, x, y, radius, stroke, fill) {
     if (stroke === void 0) { stroke = Color.White; }
     if (fill === void 0) { fill = null; }

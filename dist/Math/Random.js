@@ -138,6 +138,7 @@ var Random = /** @class */ (function () {
     };
     /**
      * Returns a new array randomly picking elements in the original (not reused)
+     * @param array Array to pick elements out of
      * @param numPicks must be less than or equal to the number of elements in the array.
      */
     Random.prototype._pickSetWithoutDuplicates = function (array, numPicks) {
@@ -159,6 +160,7 @@ var Random = /** @class */ (function () {
     };
     /**
      * Returns a new array random picking elements from the original allowing duplicates
+     * @param array Array to pick elements out of
      * @param numPicks can be any positive number
      */
     Random.prototype._pickSetWithDuplicates = function (array, numPicks) {

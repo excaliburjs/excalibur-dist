@@ -35,13 +35,7 @@ var WebAudio = /** @class */ (function () {
             source.buffer = buffer;
             source.connect(audioContext.destination);
             source.onended = function () { return (ended = true); };
-            if (source.noteOn) {
-                // deprecated
-                source.noteOn(0);
-            }
-            else {
-                source.start(0);
-            }
+            source.start(0);
             // by checking the play state after some time, we know if we're really unlocked
             setTimeout(function () {
                 if (isLegacyWebAudioSource(source)) {

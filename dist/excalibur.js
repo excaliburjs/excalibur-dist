@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7231+76ee100 - 2020-10-1
+ * excalibur - 0.25.0-alpha.7232+ff8c874 - 2020-10-1
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -27118,13 +27118,7 @@ var WebAudio = /** @class */ (function () {
             source.buffer = buffer;
             source.connect(audioContext.destination);
             source.onended = function () { return (ended = true); };
-            if (source.noteOn) {
-                // deprecated
-                source.noteOn(0);
-            }
-            else {
-                source.start(0);
-            }
+            source.start(0);
             // by checking the play state after some time, we know if we're really unlocked
             setTimeout(function () {
                 if (isLegacyWebAudioSource(source)) {
@@ -27565,7 +27559,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7231+76ee100";
+var EX_VERSION = "0.25.0-alpha.7232+ff8c874";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

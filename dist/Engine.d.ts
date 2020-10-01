@@ -244,7 +244,8 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Indicates whether the engine should draw with debug information
      */
-    isDebug: boolean;
+    private _isDebug;
+    get isDebug(): boolean;
     debugColor: Color;
     /**
      * Sets the background color for the engine.
@@ -548,6 +549,15 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      */
     _postdraw(_ctx: CanvasRenderingContext2D, delta: number): void;
     onPostDraw(_ctx: CanvasRenderingContext2D, _delta: number): void;
+    /**
+     * Enable or disable Excalibur debugging functionality.
+     * @param toggle a value that debug drawing will be changed to
+     */
+    showDebug(toggle: boolean): void;
+    /**
+     * Toggle Excalibur debugging functionality.
+     */
+    toggleDebug(): boolean;
     /**
      * Starts the internal game loop for Excalibur after loading
      * any provided assets.

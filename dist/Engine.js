@@ -115,7 +115,7 @@ var Engine = /** @class */ (function (_super) {
         /**
          * Indicates whether the engine should draw with debug information
          */
-        _this.isDebug = false;
+        _this._isDebug = false;
         _this.debugColor = new Color(255, 255, 255);
         /**
          * Sets the Transparency for the engine.
@@ -356,6 +356,13 @@ O|===|* >________________>\n\
          */
         get: function () {
             return this.screen.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Engine.prototype, "isDebug", {
+        get: function () {
+            return this._isDebug;
         },
         enumerable: false,
         configurable: true
@@ -760,6 +767,20 @@ O|===|* >________________>\n\
     };
     Engine.prototype.onPostDraw = function (_ctx, _delta) {
         // Override me
+    };
+    /**
+     * Enable or disable Excalibur debugging functionality.
+     * @param toggle a value that debug drawing will be changed to
+     */
+    Engine.prototype.showDebug = function (toggle) {
+        this._isDebug = toggle;
+    };
+    /**
+     * Toggle Excalibur debugging functionality.
+     */
+    Engine.prototype.toggleDebug = function () {
+        this._isDebug = !this._isDebug;
+        return this._isDebug;
     };
     /**
      * Starts the internal game loop for Excalibur after loading

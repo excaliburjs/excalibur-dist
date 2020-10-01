@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7230+99be984 - 2020-10-1
+ * excalibur - 0.25.0-alpha.7231+76ee100 - 2020-10-1
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -14043,7 +14043,7 @@ var Engine = /** @class */ (function (_super) {
         /**
          * Indicates whether the engine should draw with debug information
          */
-        _this.isDebug = false;
+        _this._isDebug = false;
         _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_12__["Color"](255, 255, 255);
         /**
          * Sets the Transparency for the engine.
@@ -14284,6 +14284,13 @@ O|===|* >________________>\n\
          */
         get: function () {
             return this.screen.pixelRatio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Engine.prototype, "isDebug", {
+        get: function () {
+            return this._isDebug;
         },
         enumerable: false,
         configurable: true
@@ -14688,6 +14695,20 @@ O|===|* >________________>\n\
     };
     Engine.prototype.onPostDraw = function (_ctx, _delta) {
         // Override me
+    };
+    /**
+     * Enable or disable Excalibur debugging functionality.
+     * @param toggle a value that debug drawing will be changed to
+     */
+    Engine.prototype.showDebug = function (toggle) {
+        this._isDebug = toggle;
+    };
+    /**
+     * Toggle Excalibur debugging functionality.
+     */
+    Engine.prototype.toggleDebug = function () {
+        this._isDebug = !this._isDebug;
+        return this._isDebug;
     };
     /**
      * Starts the internal game loop for Excalibur after loading
@@ -27544,7 +27565,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7230+99be984";
+var EX_VERSION = "0.25.0-alpha.7231+76ee100";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

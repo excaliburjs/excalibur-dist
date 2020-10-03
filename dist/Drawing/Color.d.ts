@@ -53,6 +53,12 @@ export declare class Color {
      */
     static fromRGB(r: number, g: number, b: number, a?: number): Color;
     /**
+     * Creates a new instance of Color from a rgb string
+     *
+     * @param string  CSS color string of the form rgba(255, 255, 255, 1) or rgb(255, 255, 255)
+     */
+    static fromRGBString(string: string): Color;
+    /**
      * Creates a new instance of Color from a hex string
      *
      * @param hex  CSS color string of the form #ffffff, the alpha component is optional

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7266+2e36f1b - 2020-10-3
+ * excalibur - 0.25.0-alpha.7274+0e832fd - 2020-10-3
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -12240,6 +12240,28 @@ var Color = /** @class */ (function () {
      */
     Color.fromRGB = function (r, g, b, a) {
         return new Color(r, g, b, a);
+    };
+    /**
+     * Creates a new instance of Color from a rgb string
+     *
+     * @param string  CSS color string of the form rgba(255, 255, 255, 1) or rgb(255, 255, 255)
+     */
+    Color.fromRGBString = function (string) {
+        var rgbaRegEx = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i;
+        var match = null;
+        if ((match = string.match(rgbaRegEx))) {
+            var r = parseInt(match[1], 10);
+            var g = parseInt(match[2], 10);
+            var b = parseInt(match[3], 10);
+            var a = 1;
+            if (match[4]) {
+                a = parseFloat(match[4]);
+            }
+            return new Color(r, g, b, a);
+        }
+        else {
+            throw new Error('Invalid rgb/a string: ' + string);
+        }
     };
     /**
      * Creates a new instance of Color from a hex string
@@ -27559,7 +27581,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7266+2e36f1b";
+var EX_VERSION = "0.25.0-alpha.7274+0e832fd";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

@@ -39,6 +39,28 @@ var Color = /** @class */ (function () {
         return new Color(r, g, b, a);
     };
     /**
+     * Creates a new instance of Color from a rgb string
+     *
+     * @param string  CSS color string of the form rgba(255, 255, 255, 1) or rgb(255, 255, 255)
+     */
+    Color.fromRGBString = function (string) {
+        var rgbaRegEx = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)/i;
+        var match = null;
+        if ((match = string.match(rgbaRegEx))) {
+            var r = parseInt(match[1], 10);
+            var g = parseInt(match[2], 10);
+            var b = parseInt(match[3], 10);
+            var a = 1;
+            if (match[4]) {
+                a = parseFloat(match[4]);
+            }
+            return new Color(r, g, b, a);
+        }
+        else {
+            throw new Error('Invalid rgb/a string: ' + string);
+        }
+    };
+    /**
      * Creates a new instance of Color from a hex string
      *
      * @param hex  CSS color string of the form #ffffff, the alpha component is optional

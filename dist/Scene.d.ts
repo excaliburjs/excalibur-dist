@@ -61,7 +61,7 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
     private _timers;
     private _cancelQueue;
     private _logger;
-    constructor(_engine: Engine);
+    constructor(_engine?: Engine);
     on(eventName: Events.initialize, handler: (event: InitializeEvent<Scene>) => void): void;
     on(eventName: Events.activate, handler: (event: ActivateEvent) => void): void;
     on(eventName: Events.deactivate, handler: (event: DeactivateEvent) => void): void;

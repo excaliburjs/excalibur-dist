@@ -66,7 +66,7 @@ var Scene = /** @class */ (function (_super) {
          */
         _this.screenElements = [];
         _this._isInitialized = false;
-        _this._sortedDrawingTree = new SortedList(Actor.prototype.getZIndex);
+        _this._sortedDrawingTree = new SortedList(function (a) { return a.z; });
         _this._broadphase = new DynamicTreeCollisionBroadphase();
         _this._killQueue = [];
         _this._triggerKillQueue = [];

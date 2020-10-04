@@ -672,9 +672,11 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param newIndex new z-index to assign
      */
     ActorImpl.prototype.setZIndex = function (newIndex) {
-        this.scene.cleanupDrawTree(this);
-        this._zIndex = newIndex;
-        this.scene.updateDrawTree(this);
+        var _a, _b;
+        var newZ = newIndex;
+        (_a = this.scene) === null || _a === void 0 ? void 0 : _a.cleanupDrawTree(this);
+        this._zIndex = newZ;
+        (_b = this.scene) === null || _b === void 0 ? void 0 : _b.updateDrawTree(this);
     };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**

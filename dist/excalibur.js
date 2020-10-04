@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7283+42474f8 - 2020-10-4
+ * excalibur - 0.25.0-alpha.7284+79e5f1d - 2020-10-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -5864,9 +5864,11 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param newIndex new z-index to assign
      */
     ActorImpl.prototype.setZIndex = function (newIndex) {
-        this.scene.cleanupDrawTree(this);
-        this._zIndex = newIndex;
-        this.scene.updateDrawTree(this);
+        var _a, _b;
+        var newZ = newIndex;
+        (_a = this.scene) === null || _a === void 0 ? void 0 : _a.cleanupDrawTree(this);
+        this._zIndex = newZ;
+        (_b = this.scene) === null || _b === void 0 ? void 0 : _b.updateDrawTree(this);
     };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**
@@ -23187,7 +23189,7 @@ var Scene = /** @class */ (function (_super) {
          */
         _this.screenElements = [];
         _this._isInitialized = false;
-        _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](_Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"].prototype.getZIndex);
+        _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](function (a) { return a.z; });
         _this._broadphase = new _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__["DynamicTreeCollisionBroadphase"]();
         _this._killQueue = [];
         _this._triggerKillQueue = [];
@@ -26450,7 +26452,7 @@ var SortedList = /** @class */ (function () {
             }
             else if (this._getComparable(element) < node.getKey()) {
                 if (node.getLeft() == null) {
-                    node.setLeft(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
+                    node.setLeft(new BinaryTreeNode(this._getComparable(element), [element], null, null));
                     return true;
                 }
                 else {
@@ -26459,7 +26461,7 @@ var SortedList = /** @class */ (function () {
             }
             else {
                 if (node.getRight() == null) {
-                    node.setRight(new BinaryTreeNode(this._getComparable.call(element, element), [element], null, null));
+                    node.setRight(new BinaryTreeNode(this._getComparable(element), [element], null, null));
                     return true;
                 }
                 else {
@@ -27581,7 +27583,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7283+42474f8";
+var EX_VERSION = "0.25.0-alpha.7284+79e5f1d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

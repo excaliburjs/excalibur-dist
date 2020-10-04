@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7274+0e832fd - 2020-10-3
+ * excalibur - 0.25.0-alpha.7277+a45e4a9 - 2020-10-4
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -9450,16 +9450,16 @@ var CollisionGroupManager = /** @class */ (function () {
      * @param mask Optionally provide your own 32-bit mask, if none is provide the manager will generate one
      */
     CollisionGroupManager.create = function (name, mask) {
-        if (this._currentGroup > this._MAX_GROUPS) {
+        if (this._CURRENT_GROUP > this._MAX_GROUPS) {
             throw new Error("Cannot have more than " + this._MAX_GROUPS + " collision groups");
         }
-        if (this._groups.get(name)) {
+        if (this._GROUPS.get(name)) {
             throw new Error("Collision group " + name + " already exists");
         }
-        var group = new _CollisionGroup__WEBPACK_IMPORTED_MODULE_0__["CollisionGroup"](name, this._currentBit, mask !== undefined ? mask : ~this._currentBit);
-        this._currentBit = (this._currentBit << 1) | 0;
-        this._currentGroup++;
-        this._groups.set(name, group);
+        var group = new _CollisionGroup__WEBPACK_IMPORTED_MODULE_0__["CollisionGroup"](name, this._CURRENT_BIT, mask !== undefined ? mask : ~this._CURRENT_BIT);
+        this._CURRENT_BIT = (this._CURRENT_BIT << 1) | 0;
+        this._CURRENT_GROUP++;
+        this._GROUPS.set(name, group);
         return group;
     };
     Object.defineProperty(CollisionGroupManager, "groups", {
@@ -9467,7 +9467,7 @@ var CollisionGroupManager = /** @class */ (function () {
          * Get all collision groups currently tracked by excalibur
          */
         get: function () {
-            return Array.from(this._groups.values());
+            return Array.from(this._GROUPS.values());
         },
         enumerable: false,
         configurable: true
@@ -9477,22 +9477,22 @@ var CollisionGroupManager = /** @class */ (function () {
      * @param name
      */
     CollisionGroupManager.groupByName = function (name) {
-        return this._groups.get(name);
+        return this._GROUPS.get(name);
     };
     /**
      * Resets the managers internal group management state
      */
     CollisionGroupManager.reset = function () {
-        this._groups = new Map();
-        this._currentBit = this._STARTING_BIT;
-        this._currentGroup = 1;
+        this._GROUPS = new Map();
+        this._CURRENT_BIT = this._STARTING_BIT;
+        this._CURRENT_GROUP = 1;
     };
     // using bitmasking the maximum number of groups is 32, because that is the highest 32bit integer that JS can present.
     CollisionGroupManager._STARTING_BIT = 1 | 0;
     CollisionGroupManager._MAX_GROUPS = 32;
-    CollisionGroupManager._currentGroup = 1;
-    CollisionGroupManager._currentBit = CollisionGroupManager._STARTING_BIT;
-    CollisionGroupManager._groups = new Map();
+    CollisionGroupManager._CURRENT_GROUP = 1;
+    CollisionGroupManager._CURRENT_BIT = CollisionGroupManager._STARTING_BIT;
+    CollisionGroupManager._GROUPS = new Map();
     return CollisionGroupManager;
 }());
 
@@ -14080,7 +14080,7 @@ var Engine = /** @class */ (function (_super) {
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
-        options = __assign(__assign({}, Engine._DefaultEngineOptions), options);
+        options = __assign(__assign({}, Engine._DEFAULT_ENGINE_OPTIONS), options);
         // Initialize browser events facade
         _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_17__["BrowserEvents"](window, document);
         // Check compatibility
@@ -14874,7 +14874,7 @@ O|===|* >________________>\n\
     /**
      * Default [[EngineOptions]]
      */
-    Engine._DefaultEngineOptions = {
+    Engine._DEFAULT_ENGINE_OPTIONS = {
         width: 0,
         height: 0,
         enableCanvasTransparency: true,
@@ -16756,10 +16756,10 @@ var NativeSoundEvent = /** @class */ (function (_super) {
 
 var NativeSoundProcessedEvent = /** @class */ (function (_super) {
     __extends(NativeSoundProcessedEvent, _super);
-    function NativeSoundProcessedEvent(target, processedData) {
+    function NativeSoundProcessedEvent(target, _processedData) {
         var _this = _super.call(this, target, 'NativeSoundProcessedEvent') || this;
-        _this.processedData = processedData;
-        _this.data = _this.processedData;
+        _this._processedData = _processedData;
+        _this.data = _this._processedData;
         return _this;
     }
     return NativeSoundProcessedEvent;
@@ -26135,22 +26135,22 @@ var Logger = /** @class */ (function () {
          * messages if equal to or above this level. Default: [[LogLevel.Info]]
          */
         this.defaultLevel = LogLevel.Info;
-        if (Logger._instance) {
+        if (Logger._INSTANCE) {
             throw new Error('Logger is a singleton');
         }
-        Logger._instance = this;
+        Logger._INSTANCE = this;
         // Default console appender
-        Logger._instance.addAppender(new ConsoleAppender());
-        return Logger._instance;
+        Logger._INSTANCE.addAppender(new ConsoleAppender());
+        return Logger._INSTANCE;
     }
     /**
      * Gets the current static instance of Logger
      */
     Logger.getInstance = function () {
-        if (Logger._instance == null) {
-            Logger._instance = new Logger();
+        if (Logger._INSTANCE == null) {
+            Logger._INSTANCE = new Logger();
         }
-        return Logger._instance;
+        return Logger._INSTANCE;
     };
     /**
      * Adds a new [[Appender]] to the list of appenders to write to
@@ -26235,7 +26235,7 @@ var Logger = /** @class */ (function () {
         }
         this._log(LogLevel.Fatal, args);
     };
-    Logger._instance = null;
+    Logger._INSTANCE = null;
     return Logger;
 }());
 
@@ -27124,7 +27124,7 @@ var WebAudio = /** @class */ (function () {
      */
     WebAudio.unlock = function () {
         var promise = new _Promises__WEBPACK_IMPORTED_MODULE_1__["Promise"]();
-        if (WebAudio._unlocked || !_Resources_Sound_AudioContext__WEBPACK_IMPORTED_MODULE_0__["AudioContextFactory"].create()) {
+        if (WebAudio._UNLOCKED || !_Resources_Sound_AudioContext__WEBPACK_IMPORTED_MODULE_0__["AudioContextFactory"].create()) {
             return promise.resolve(true);
         }
         var unlockTimeoutTimer = setTimeout(function () {
@@ -27145,12 +27145,12 @@ var WebAudio = /** @class */ (function () {
             setTimeout(function () {
                 if (isLegacyWebAudioSource(source)) {
                     if (source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE) {
-                        WebAudio._unlocked = true;
+                        WebAudio._UNLOCKED = true;
                     }
                 }
                 else {
                     if (audioContext.currentTime > 0 || ended) {
-                        WebAudio._unlocked = true;
+                        WebAudio._UNLOCKED = true;
                     }
                 }
             }, 0);
@@ -27166,9 +27166,9 @@ var WebAudio = /** @class */ (function () {
         return promise;
     };
     WebAudio.isUnlocked = function () {
-        return this._unlocked;
+        return this._UNLOCKED;
     };
-    WebAudio._unlocked = false;
+    WebAudio._UNLOCKED = false;
     return WebAudio;
 }());
 
@@ -27581,7 +27581,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7274+0e832fd";
+var EX_VERSION = "0.25.0-alpha.7277+a45e4a9";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

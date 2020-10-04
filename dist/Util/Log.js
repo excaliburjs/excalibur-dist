@@ -25,22 +25,22 @@ var Logger = /** @class */ (function () {
          * messages if equal to or above this level. Default: [[LogLevel.Info]]
          */
         this.defaultLevel = LogLevel.Info;
-        if (Logger._instance) {
+        if (Logger._INSTANCE) {
             throw new Error('Logger is a singleton');
         }
-        Logger._instance = this;
+        Logger._INSTANCE = this;
         // Default console appender
-        Logger._instance.addAppender(new ConsoleAppender());
-        return Logger._instance;
+        Logger._INSTANCE.addAppender(new ConsoleAppender());
+        return Logger._INSTANCE;
     }
     /**
      * Gets the current static instance of Logger
      */
     Logger.getInstance = function () {
-        if (Logger._instance == null) {
-            Logger._instance = new Logger();
+        if (Logger._INSTANCE == null) {
+            Logger._INSTANCE = new Logger();
         }
-        return Logger._instance;
+        return Logger._INSTANCE;
     };
     /**
      * Adds a new [[Appender]] to the list of appenders to write to
@@ -125,7 +125,7 @@ var Logger = /** @class */ (function () {
         }
         this._log(LogLevel.Fatal, args);
     };
-    Logger._instance = null;
+    Logger._INSTANCE = null;
     return Logger;
 }());
 export { Logger };

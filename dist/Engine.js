@@ -130,7 +130,7 @@ var Engine = /** @class */ (function (_super) {
         _this._timescale = 1.0;
         _this._isLoading = false;
         _this._isInitialized = false;
-        options = __assign(__assign({}, Engine._DefaultEngineOptions), options);
+        options = __assign(__assign({}, Engine._DEFAULT_ENGINE_OPTIONS), options);
         // Initialize browser events facade
         _this.browser = new BrowserEvents(window, document);
         // Check compatibility
@@ -924,7 +924,7 @@ O|===|* >________________>\n\
     /**
      * Default [[EngineOptions]]
      */
-    Engine._DefaultEngineOptions = {
+    Engine._DEFAULT_ENGINE_OPTIONS = {
         width: 0,
         height: 0,
         enableCanvasTransparency: true,

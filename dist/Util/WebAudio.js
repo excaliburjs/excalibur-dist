@@ -19,7 +19,7 @@ var WebAudio = /** @class */ (function () {
      */
     WebAudio.unlock = function () {
         var promise = new Promise();
-        if (WebAudio._unlocked || !AudioContextFactory.create()) {
+        if (WebAudio._UNLOCKED || !AudioContextFactory.create()) {
             return promise.resolve(true);
         }
         var unlockTimeoutTimer = setTimeout(function () {
@@ -40,12 +40,12 @@ var WebAudio = /** @class */ (function () {
             setTimeout(function () {
                 if (isLegacyWebAudioSource(source)) {
                     if (source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE) {
-                        WebAudio._unlocked = true;
+                        WebAudio._UNLOCKED = true;
                     }
                 }
                 else {
                     if (audioContext.currentTime > 0 || ended) {
-                        WebAudio._unlocked = true;
+                        WebAudio._UNLOCKED = true;
                     }
                 }
             }, 0);
@@ -61,9 +61,9 @@ var WebAudio = /** @class */ (function () {
         return promise;
     };
     WebAudio.isUnlocked = function () {
-        return this._unlocked;
+        return this._UNLOCKED;
     };
-    WebAudio._unlocked = false;
+    WebAudio._UNLOCKED = false;
     return WebAudio;
 }());
 export { WebAudio };

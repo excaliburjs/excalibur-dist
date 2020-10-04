@@ -309,7 +309,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
     /**
      * Default [[EngineOptions]]
      */
-    private static _DefaultEngineOptions;
+    private static _DEFAULT_ENGINE_OPTIONS;
     /**
      * Creates a new game using the given [[EngineOptions]]. By default, if no options are provided,
      * the game will be rendered full screen (taking up all available browser window space).

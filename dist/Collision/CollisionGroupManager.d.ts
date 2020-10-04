@@ -5,9 +5,9 @@ import { CollisionGroup } from './CollisionGroup';
 export declare class CollisionGroupManager {
     private static _STARTING_BIT;
     private static _MAX_GROUPS;
-    private static _currentGroup;
-    private static _currentBit;
-    private static _groups;
+    private static _CURRENT_GROUP;
+    private static _CURRENT_BIT;
+    private static _GROUPS;
     /**
      * Create a new named collision group up to a max of 32.
      * @param name Name for the collision group

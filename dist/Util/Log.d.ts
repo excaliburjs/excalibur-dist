@@ -16,7 +16,7 @@ export declare enum LogLevel {
  * [[include:Logger.md]]
  */
 export declare class Logger {
-    private static _instance;
+    private static _INSTANCE;
     private _appenders;
     constructor();
     /**

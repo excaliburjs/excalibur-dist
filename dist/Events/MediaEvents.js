@@ -97,10 +97,10 @@ var NativeSoundEvent = /** @class */ (function (_super) {
 export { NativeSoundEvent };
 var NativeSoundProcessedEvent = /** @class */ (function (_super) {
     __extends(NativeSoundProcessedEvent, _super);
-    function NativeSoundProcessedEvent(target, processedData) {
+    function NativeSoundProcessedEvent(target, _processedData) {
         var _this = _super.call(this, target, 'NativeSoundProcessedEvent') || this;
-        _this.processedData = processedData;
-        _this.data = _this.processedData;
+        _this._processedData = _processedData;
+        _this.data = _this._processedData;
         return _this;
     }
     return NativeSoundProcessedEvent;

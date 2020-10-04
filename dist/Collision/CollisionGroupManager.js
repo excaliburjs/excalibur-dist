@@ -11,16 +11,16 @@ var CollisionGroupManager = /** @class */ (function () {
      * @param mask Optionally provide your own 32-bit mask, if none is provide the manager will generate one
      */
     CollisionGroupManager.create = function (name, mask) {
-        if (this._currentGroup > this._MAX_GROUPS) {
+        if (this._CURRENT_GROUP > this._MAX_GROUPS) {
             throw new Error("Cannot have more than " + this._MAX_GROUPS + " collision groups");
         }
-        if (this._groups.get(name)) {
+        if (this._GROUPS.get(name)) {
             throw new Error("Collision group " + name + " already exists");
         }
-        var group = new CollisionGroup(name, this._currentBit, mask !== undefined ? mask : ~this._currentBit);
-        this._currentBit = (this._currentBit << 1) | 0;
-        this._currentGroup++;
-        this._groups.set(name, group);
+        var group = new CollisionGroup(name, this._CURRENT_BIT, mask !== undefined ? mask : ~this._CURRENT_BIT);
+        this._CURRENT_BIT = (this._CURRENT_BIT << 1) | 0;
+        this._CURRENT_GROUP++;
+        this._GROUPS.set(name, group);
         return group;
     };
     Object.defineProperty(CollisionGroupManager, "groups", {
@@ -28,7 +28,7 @@ var CollisionGroupManager = /** @class */ (function () {
          * Get all collision groups currently tracked by excalibur
          */
         get: function () {
-            return Array.from(this._groups.values());
+            return Array.from(this._GROUPS.values());
         },
         enumerable: false,
         configurable: true
@@ -38,22 +38,22 @@ var CollisionGroupManager = /** @class */ (function () {
      * @param name
      */
     CollisionGroupManager.groupByName = function (name) {
-        return this._groups.get(name);
+        return this._GROUPS.get(name);
     };
     /**
      * Resets the managers internal group management state
      */
     CollisionGroupManager.reset = function () {
-        this._groups = new Map();
-        this._currentBit = this._STARTING_BIT;
-        this._currentGroup = 1;
+        this._GROUPS = new Map();
+        this._CURRENT_BIT = this._STARTING_BIT;
+        this._CURRENT_GROUP = 1;
     };
     // using bitmasking the maximum number of groups is 32, because that is the highest 32bit integer that JS can present.
     CollisionGroupManager._STARTING_BIT = 1 | 0;
     CollisionGroupManager._MAX_GROUPS = 32;
-    CollisionGroupManager._currentGroup = 1;
-    CollisionGroupManager._currentBit = CollisionGroupManager._STARTING_BIT;
-    CollisionGroupManager._groups = new Map();
+    CollisionGroupManager._CURRENT_GROUP = 1;
+    CollisionGroupManager._CURRENT_BIT = CollisionGroupManager._STARTING_BIT;
+    CollisionGroupManager._GROUPS = new Map();
     return CollisionGroupManager;
 }());
 export { CollisionGroupManager };

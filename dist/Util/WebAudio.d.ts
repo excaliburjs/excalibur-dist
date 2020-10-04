@@ -5,7 +5,7 @@ export interface LegacyWebAudioSource {
     FINISHED_STATE: 'finished';
 }
 export declare class WebAudio {
-    private static _unlocked;
+    private static _UNLOCKED;
     /**
      * Play an empty sound to unlock Safari WebAudio context. Call this function
      * right after a user interaction event.

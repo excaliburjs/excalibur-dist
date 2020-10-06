@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7299+1e8ba0c - 2020-10-6
+ * excalibur - 0.25.0-alpha.7300+2a95573 - 2020-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -24045,7 +24045,17 @@ var Screen = /** @class */ (function () {
     Screen.prototype.applyResolutionAndViewport = function () {
         this._canvas.width = this.scaledWidth;
         this._canvas.height = this.scaledHeight;
-        this._canvas.style.imageRendering = this._antialiasing ? 'auto' : 'pixelated';
+        if (this._antialiasing) {
+            this._canvas.style.imageRendering = 'auto';
+        }
+        else {
+            this._canvas.style.imageRendering = 'pixelated';
+            // Fall back to 'crisp-edges' if 'pixelated' is not supported
+            // Currently for firefox https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
+            if (this._canvas.style.imageRendering === '') {
+                this._canvas.style.imageRendering = 'crisp-edges';
+            }
+        }
         this._canvas.style.width = this.viewport.width + 'px';
         this._canvas.style.height = this.viewport.height + 'px';
         // After messing with the canvas width/height the graphics context is invalidated and needs to have some properties reset
@@ -27632,7 +27642,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7299+1e8ba0c";
+var EX_VERSION = "0.25.0-alpha.7300+2a95573";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

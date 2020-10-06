@@ -236,7 +236,17 @@ var Screen = /** @class */ (function () {
     Screen.prototype.applyResolutionAndViewport = function () {
         this._canvas.width = this.scaledWidth;
         this._canvas.height = this.scaledHeight;
-        this._canvas.style.imageRendering = this._antialiasing ? 'auto' : 'pixelated';
+        if (this._antialiasing) {
+            this._canvas.style.imageRendering = 'auto';
+        }
+        else {
+            this._canvas.style.imageRendering = 'pixelated';
+            // Fall back to 'crisp-edges' if 'pixelated' is not supported
+            // Currently for firefox https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
+            if (this._canvas.style.imageRendering === '') {
+                this._canvas.style.imageRendering = 'crisp-edges';
+            }
+        }
         this._canvas.style.width = this.viewport.width + 'px';
         this._canvas.style.height = this.viewport.height + 'px';
         // After messing with the canvas width/height the graphics context is invalidated and needs to have some properties reset

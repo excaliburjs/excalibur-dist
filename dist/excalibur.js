@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7285+03c4faa - 2020-10-4
+ * excalibur - 0.25.0-alpha.7292+b019787 - 2020-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -18981,7 +18981,7 @@ var LabelImpl = /** @class */ (function (_super) {
      * @param textOrConfig    The text of the label, or label option bag
      * @param x           The x position of the label
      * @param y           The y position of the label
-     * @param fontFamily  Use any valid CSS font string for the label's font. Web fonts are supported. Default is `10px sans-serif`.
+     * @param fontFamily  Use a value that is valid for the CSS `font-family` property. The default is `sans-serif`.
      * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
      * over a css font.
      */
@@ -27583,7 +27583,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7285+03c4faa";
+var EX_VERSION = "0.25.0-alpha.7292+b019787";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

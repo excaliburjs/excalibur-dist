@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7295+475ada1 - 2020-10-6
+ * excalibur - 0.25.0-alpha.7298+bdd5316 - 2020-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -6090,7 +6090,7 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {
-                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](this.width * this.anchor.x, this.height * this.anchor.y));
+                this.body.collider.shape.draw(ctx, this.color, new _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"](0, 0));
             }
         }
         ctx.restore();
@@ -9835,10 +9835,7 @@ var ConvexPolygon = /** @class */ (function () {
         var len = this.points.length;
         this._transformedPoints.length = 0; // clear out old transform
         for (var i = 0; i < len; i++) {
-            this._transformedPoints[i] = this.points[i]
-                .scale(scale)
-                .rotate(angle)
-                .add(pos);
+            this._transformedPoints[i] = this.points[i].scale(scale).rotate(angle).add(pos);
         }
     };
     /**
@@ -10110,18 +10107,17 @@ var ConvexPolygon = /** @class */ (function () {
     ConvexPolygon.prototype.draw = function (ctx, color, pos) {
         if (color === void 0) { color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__["Color"].Green; }
         if (pos === void 0) { pos = _Algebra__WEBPACK_IMPORTED_MODULE_6__["Vector"].Zero; }
+        var basePos = pos.add(this.offset);
         ctx.beginPath();
         ctx.fillStyle = color.toString();
-        var newPos = pos.add(this.offset);
-        // Iterate through the supplied points and construct a 'polygon'
-        var firstPoint = this.points[0].add(newPos);
-        ctx.moveTo(firstPoint.x, firstPoint.y);
+        ctx.moveTo(basePos.x, basePos.y);
+        var diffToBase = this.points[0].sub(basePos);
         this.points
-            .map(function (p) { return p.add(newPos); })
+            .map(function (p) { return p.sub(diffToBase); })
             .forEach(function (point) {
             ctx.lineTo(point.x, point.y);
         });
-        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.lineTo(basePos.x, basePos.y);
         ctx.closePath();
         ctx.fill();
     };
@@ -27557,7 +27553,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7295+475ada1";
+var EX_VERSION = "0.25.0-alpha.7298+bdd5316";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

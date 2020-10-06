@@ -69,10 +69,7 @@ var ConvexPolygon = /** @class */ (function () {
         var len = this.points.length;
         this._transformedPoints.length = 0; // clear out old transform
         for (var i = 0; i < len; i++) {
-            this._transformedPoints[i] = this.points[i]
-                .scale(scale)
-                .rotate(angle)
-                .add(pos);
+            this._transformedPoints[i] = this.points[i].scale(scale).rotate(angle).add(pos);
         }
     };
     /**
@@ -344,18 +341,17 @@ var ConvexPolygon = /** @class */ (function () {
     ConvexPolygon.prototype.draw = function (ctx, color, pos) {
         if (color === void 0) { color = Color.Green; }
         if (pos === void 0) { pos = Vector.Zero; }
+        var basePos = pos.add(this.offset);
         ctx.beginPath();
         ctx.fillStyle = color.toString();
-        var newPos = pos.add(this.offset);
-        // Iterate through the supplied points and construct a 'polygon'
-        var firstPoint = this.points[0].add(newPos);
-        ctx.moveTo(firstPoint.x, firstPoint.y);
+        ctx.moveTo(basePos.x, basePos.y);
+        var diffToBase = this.points[0].sub(basePos);
         this.points
-            .map(function (p) { return p.add(newPos); })
+            .map(function (p) { return p.sub(diffToBase); })
             .forEach(function (point) {
             ctx.lineTo(point.x, point.y);
         });
-        ctx.lineTo(firstPoint.x, firstPoint.y);
+        ctx.lineTo(basePos.x, basePos.y);
         ctx.closePath();
         ctx.fill();
     };

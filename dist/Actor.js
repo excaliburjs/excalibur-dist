@@ -898,7 +898,7 @@ var ActorImpl = /** @class */ (function (_super) {
         }
         else {
             if (this.color && this.body && this.body.collider && this.body.collider.shape) {
-                this.body.collider.shape.draw(ctx, this.color, new Vector(this.width * this.anchor.x, this.height * this.anchor.y));
+                this.body.collider.shape.draw(ctx, this.color, new Vector(0, 0));
             }
         }
         ctx.restore();

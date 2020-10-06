@@ -11,18 +11,11 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 import { Vector } from './Algebra';
 import { Actor } from './Actor';
 import * as Traits from './Traits/Index';
 import { CollisionType } from './Collision/CollisionType';
 import { Shape } from './Collision/Shape';
-import { obsolete } from './Util/Decorators';
 /**
  * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
  * not participate in collisions. Drawn on top of all other actors.
@@ -66,19 +59,4 @@ var ScreenElement = /** @class */ (function (_super) {
     return ScreenElement;
 }(Actor));
 export { ScreenElement };
-/**
- * Legacy UIActor constructor
- * @obsolete UIActor constructor will be removed in v0.25.0 use [[ScreenElement]] instead
- */
-var UIActor = /** @class */ (function (_super) {
-    __extends(UIActor, _super);
-    function UIActor() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    UIActor = __decorate([
-        obsolete({ message: 'Will be removed in v0.25.0', alternateMethod: 'ScreenElement' })
-    ], UIActor);
-    return UIActor;
-}(ScreenElement));
-export { UIActor };
 //# sourceMappingURL=ScreenElement.js.map

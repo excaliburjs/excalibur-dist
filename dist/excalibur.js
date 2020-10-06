@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7292+b019787 - 2020-10-6
+ * excalibur - 0.25.0-alpha.7295+475ada1 - 2020-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -24262,19 +24262,17 @@ var Screen = /** @class */ (function () {
 /*!**************************!*\
   !*** ./ScreenElement.ts ***!
   \**************************/
-/*! exports provided: ScreenElement, UIActor */
+/*! exports provided: ScreenElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return ScreenElement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return UIActor; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
 /* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
 /* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 /* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
-/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24288,13 +24286,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 
 
 
@@ -24342,21 +24333,6 @@ var ScreenElement = /** @class */ (function (_super) {
     };
     return ScreenElement;
 }(_Actor__WEBPACK_IMPORTED_MODULE_1__["Actor"]));
-
-/**
- * Legacy UIActor constructor
- * @obsolete UIActor constructor will be removed in v0.25.0 use [[ScreenElement]] instead
- */
-var UIActor = /** @class */ (function (_super) {
-    __extends(UIActor, _super);
-    function UIActor() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    UIActor = __decorate([
-        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_5__["obsolete"])({ message: 'Will be removed in v0.25.0', alternateMethod: 'ScreenElement' })
-    ], UIActor);
-    return UIActor;
-}(ScreenElement));
 
 
 
@@ -27182,7 +27158,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, UIActor, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27383,8 +27359,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenElement", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["ScreenElement"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UIActor", function() { return _ScreenElement__WEBPACK_IMPORTED_MODULE_22__["UIActor"]; });
-
 /* harmony import */ var _Actions_Index__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./Actions/Index */ "./Actions/Index.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActionContext", function() { return _Actions_Index__WEBPACK_IMPORTED_MODULE_23__["ActionContext"]; });
 
@@ -27583,7 +27557,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7292+b019787";
+var EX_VERSION = "0.25.0-alpha.7295+475ada1";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

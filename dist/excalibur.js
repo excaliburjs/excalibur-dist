@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7298+bdd5316 - 2020-10-6
+ * excalibur - 0.25.0-alpha.7299+1e8ba0c - 2020-10-6
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -17300,52 +17300,144 @@ var __extends = (undefined && undefined.__extends) || (function () {
  */
 var Keys;
 (function (Keys) {
-    Keys[Keys["Num1"] = 97] = "Num1";
-    Keys[Keys["Num2"] = 98] = "Num2";
-    Keys[Keys["Num3"] = 99] = "Num3";
-    Keys[Keys["Num4"] = 100] = "Num4";
-    Keys[Keys["Num5"] = 101] = "Num5";
-    Keys[Keys["Num6"] = 102] = "Num6";
-    Keys[Keys["Num7"] = 103] = "Num7";
-    Keys[Keys["Num8"] = 104] = "Num8";
-    Keys[Keys["Num9"] = 105] = "Num9";
-    Keys[Keys["Num0"] = 96] = "Num0";
-    Keys[Keys["Numlock"] = 144] = "Numlock";
-    Keys[Keys["Semicolon"] = 186] = "Semicolon";
-    Keys[Keys["A"] = 65] = "A";
-    Keys[Keys["B"] = 66] = "B";
-    Keys[Keys["C"] = 67] = "C";
-    Keys[Keys["D"] = 68] = "D";
-    Keys[Keys["E"] = 69] = "E";
-    Keys[Keys["F"] = 70] = "F";
-    Keys[Keys["G"] = 71] = "G";
-    Keys[Keys["H"] = 72] = "H";
-    Keys[Keys["I"] = 73] = "I";
-    Keys[Keys["J"] = 74] = "J";
-    Keys[Keys["K"] = 75] = "K";
-    Keys[Keys["L"] = 76] = "L";
-    Keys[Keys["M"] = 77] = "M";
-    Keys[Keys["N"] = 78] = "N";
-    Keys[Keys["O"] = 79] = "O";
-    Keys[Keys["P"] = 80] = "P";
-    Keys[Keys["Q"] = 81] = "Q";
-    Keys[Keys["R"] = 82] = "R";
-    Keys[Keys["S"] = 83] = "S";
-    Keys[Keys["T"] = 84] = "T";
-    Keys[Keys["U"] = 85] = "U";
-    Keys[Keys["V"] = 86] = "V";
-    Keys[Keys["W"] = 87] = "W";
-    Keys[Keys["X"] = 88] = "X";
-    Keys[Keys["Y"] = 89] = "Y";
-    Keys[Keys["Z"] = 90] = "Z";
-    Keys[Keys["Shift"] = 16] = "Shift";
-    Keys[Keys["Alt"] = 18] = "Alt";
-    Keys[Keys["Up"] = 38] = "Up";
-    Keys[Keys["Down"] = 40] = "Down";
-    Keys[Keys["Left"] = 37] = "Left";
-    Keys[Keys["Right"] = 39] = "Right";
-    Keys[Keys["Space"] = 32] = "Space";
-    Keys[Keys["Esc"] = 27] = "Esc";
+    // NUMPAD
+    Keys["Num0"] = "Numpad0";
+    Keys["Num1"] = "Numpad1";
+    Keys["Num2"] = "Numpad2";
+    Keys["Num3"] = "Numpad3";
+    Keys["Num4"] = "Numpad4";
+    Keys["Num5"] = "Numpad5";
+    Keys["Num6"] = "Numpad6";
+    Keys["Num7"] = "Numpad7";
+    Keys["Num8"] = "Numpad8";
+    Keys["Num9"] = "Numpad9";
+    Keys["NumAdd"] = "NumpadAdd";
+    Keys["NumSubtract"] = "NumpadSubtract";
+    Keys["NumMultiply"] = "NumpadMultiply";
+    Keys["NumDivide"] = "NumpadDivide";
+    // NumComma = 'NumpadComma', // not x-browser
+    Keys["NumDecimal"] = "NumpadDecimal";
+    Keys["Numpad0"] = "Numpad0";
+    Keys["Numpad1"] = "Numpad1";
+    Keys["Numpad2"] = "Numpad2";
+    Keys["Numpad3"] = "Numpad3";
+    Keys["Numpad4"] = "Numpad4";
+    Keys["Numpad5"] = "Numpad5";
+    Keys["Numpad6"] = "Numpad6";
+    Keys["Numpad7"] = "Numpad7";
+    Keys["Numpad8"] = "Numpad8";
+    Keys["Numpad9"] = "Numpad9";
+    Keys["NumpadAdd"] = "NumpadAdd";
+    Keys["NumpadSubtract"] = "NumpadSubtract";
+    Keys["NumpadMultiply"] = "NumpadMultiply";
+    Keys["NumpadDivide"] = "NumpadDivide";
+    // NumpadComma = 'NumpadComma', // not x-browser
+    Keys["NumpadDecimal"] = "NumpadDecimal";
+    // MODIFIERS
+    Keys["NumLock"] = "NumLock";
+    Keys["ShiftLeft"] = "ShiftLeft";
+    Keys["ShiftRight"] = "ShiftRight";
+    Keys["AltLeft"] = "AltLeft";
+    Keys["AltRight"] = "AltRight";
+    // NUMBERS
+    Keys["Key0"] = "Digit0";
+    Keys["Key1"] = "Digit1";
+    Keys["Key2"] = "Digit2";
+    Keys["Key3"] = "Digit3";
+    Keys["Key4"] = "Digit4";
+    Keys["Key5"] = "Digit5";
+    Keys["Key6"] = "Digit6";
+    Keys["Key7"] = "Digit7";
+    Keys["Key8"] = "Digit8";
+    Keys["Key9"] = "Digit9";
+    Keys["Digit0"] = "Digit0";
+    Keys["Digit1"] = "Digit1";
+    Keys["Digit2"] = "Digit2";
+    Keys["Digit3"] = "Digit3";
+    Keys["Digit4"] = "Digit4";
+    Keys["Digit5"] = "Digit5";
+    Keys["Digit6"] = "Digit6";
+    Keys["Digit7"] = "Digit7";
+    Keys["Digit8"] = "Digit8";
+    Keys["Digit9"] = "Digit9";
+    // LETTERS
+    Keys["A"] = "KeyA";
+    Keys["B"] = "KeyB";
+    Keys["C"] = "KeyC";
+    Keys["D"] = "KeyD";
+    Keys["E"] = "KeyE";
+    Keys["F"] = "KeyF";
+    Keys["G"] = "KeyG";
+    Keys["H"] = "KeyH";
+    Keys["I"] = "KeyI";
+    Keys["J"] = "KeyJ";
+    Keys["K"] = "KeyK";
+    Keys["L"] = "KeyL";
+    Keys["M"] = "KeyM";
+    Keys["N"] = "KeyN";
+    Keys["O"] = "KeyO";
+    Keys["P"] = "KeyP";
+    Keys["Q"] = "KeyQ";
+    Keys["R"] = "KeyR";
+    Keys["S"] = "KeyS";
+    Keys["T"] = "KeyT";
+    Keys["U"] = "KeyU";
+    Keys["V"] = "KeyV";
+    Keys["W"] = "KeyW";
+    Keys["X"] = "KeyX";
+    Keys["Y"] = "KeyY";
+    Keys["Z"] = "KeyZ";
+    Keys["KeyA"] = "KeyA";
+    Keys["KeyB"] = "KeyB";
+    Keys["KeyC"] = "KeyC";
+    Keys["KeyD"] = "KeyD";
+    Keys["KeyE"] = "KeyE";
+    Keys["KeyF"] = "KeyF";
+    Keys["KeyG"] = "KeyG";
+    Keys["KeyH"] = "KeyH";
+    Keys["KeyI"] = "KeyI";
+    Keys["KeyJ"] = "KeyJ";
+    Keys["KeyK"] = "KeyK";
+    Keys["KeyL"] = "KeyL";
+    Keys["KeyM"] = "KeyM";
+    Keys["KeyN"] = "KeyN";
+    Keys["KeyO"] = "KeyO";
+    Keys["KeyP"] = "KeyP";
+    Keys["KeyQ"] = "KeyQ";
+    Keys["KeyR"] = "KeyR";
+    Keys["KeyS"] = "KeyS";
+    Keys["KeyT"] = "KeyT";
+    Keys["KeyU"] = "KeyU";
+    Keys["KeyV"] = "KeyV";
+    Keys["KeyW"] = "KeyW";
+    Keys["KeyX"] = "KeyX";
+    Keys["KeyY"] = "KeyY";
+    Keys["KeyZ"] = "KeyZ";
+    // SYMBOLS
+    Keys["Semicolon"] = "Semicolon";
+    Keys["Quote"] = "Quote";
+    Keys["Comma"] = "Comma";
+    Keys["Minus"] = "Minus";
+    Keys["Period"] = "Period";
+    Keys["Slash"] = "Slash";
+    Keys["Equal"] = "Equal";
+    Keys["BracketLeft"] = "BracketLeft";
+    Keys["Backslash"] = "Backslash";
+    Keys["BracketRight"] = "BracketRight";
+    Keys["Backquote"] = "Backquote";
+    // DIRECTIONS
+    Keys["Up"] = "ArrowUp";
+    Keys["Down"] = "ArrowDown";
+    Keys["Left"] = "ArrowLeft";
+    Keys["Right"] = "ArrowRight";
+    Keys["ArrowUp"] = "ArrowUp";
+    Keys["ArrowDown"] = "ArrowDown";
+    Keys["ArrowLeft"] = "ArrowLeft";
+    Keys["ArrowRight"] = "ArrowRight";
+    // OTHER
+    Keys["Space"] = "Space";
+    Keys["Esc"] = "Escape";
+    Keys["Escape"] = "Escape";
 })(Keys || (Keys = {}));
 /**
  * Event thrown on a game object for a key event
@@ -17413,7 +17505,7 @@ var Keyboard = /** @class */ (function (_super) {
         });
         // key up is on window because canvas cannot have focus
         global.addEventListener('keyup', function (ev) {
-            var code = _this._normalizeKeyCode(ev.keyCode);
+            var code = ev.code;
             var key = _this._keys.indexOf(code);
             _this._keys.splice(key, 1);
             _this._keysUp.push(code);
@@ -17424,7 +17516,7 @@ var Keyboard = /** @class */ (function (_super) {
         });
         // key down is on window because canvas cannot have focus
         global.addEventListener('keydown', function (ev) {
-            var code = _this._normalizeKeyCode(ev.keyCode);
+            var code = ev.code;
             if (_this._keys.indexOf(code) === -1) {
                 _this._keys.push(code);
                 _this._keysDown.push(code);
@@ -17469,19 +17561,6 @@ var Keyboard = /** @class */ (function (_super) {
      */
     Keyboard.prototype.wasReleased = function (key) {
         return this._keysUp.indexOf(key) > -1;
-    };
-    /**
-     * Normalizes some browser event key codes to map to standard Excalibur key codes
-     * @param code Event keyCode
-     * @see http://unixpapa.com/js/key.html
-     */
-    Keyboard.prototype._normalizeKeyCode = function (code) {
-        switch (code) {
-            case 59: // : ; in Firefox, Opera
-                return Keys.Semicolon;
-            default:
-                return code;
-        }
     };
     return Keyboard;
 }(_Class__WEBPACK_IMPORTED_MODULE_1__["Class"]));
@@ -27553,7 +27632,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7298+bdd5316";
+var EX_VERSION = "0.25.0-alpha.7299+1e8ba0c";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

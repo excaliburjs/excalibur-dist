@@ -332,8 +332,6 @@ export { SpriteImpl };
 /**
  * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
  * images or parts of images from a [[Texture]] resource to the screen.
- *
- * [[include:Sprites.md]]
  */
 var Sprite = /** @class */ (function (_super) {
     __extends(Sprite, _super);

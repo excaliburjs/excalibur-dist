@@ -16,8 +16,6 @@ import { GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, Gamepa
 /**
  * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
  * to provide controller support for your games.
- *
- * [[include:Gamepads.md]]
  */
 var Gamepads = /** @class */ (function (_super) {
     __extends(Gamepads, _super);

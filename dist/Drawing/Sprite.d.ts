@@ -124,9 +124,6 @@ export declare class SpriteImpl implements Drawable {
      */
     clone(): SpriteImpl;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface SpriteArgs extends Partial<SpriteImpl> {
     image?: Texture;
     x?: number;
@@ -142,8 +139,6 @@ declare const Sprite_base: typeof SpriteImpl;
 /**
  * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
  * images or parts of images from a [[Texture]] resource to the screen.
- *
- * [[include:Sprites.md]]
  */
 export declare class Sprite extends Sprite_base {
     constructor(config: SpriteArgs);

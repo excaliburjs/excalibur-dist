@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7300+2a95573 - 2020-10-6
+ * excalibur - 0.25.0-alpha.7307+77170f8 - 2020-10-7
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -4777,8 +4777,6 @@ __webpack_require__.r(__webpack_exports__);
  * [[Actor|Actors]] such as following, moving, rotating, and
  * more. You can implement your own actions by implementing
  * the [[Action]] interface.
- *
- * [[include:Actions.md]]
  */
 var ActionContext = /** @class */ (function () {
     function ActionContext() {
@@ -6229,12 +6227,6 @@ var ActorImpl = /** @class */ (function (_super) {
  * can move on the screen, collide with another `Actor`, respond to events,
  * or interact with the current scene, must be an actor. An `Actor` **must**
  * be part of a [[Scene]] for it to be drawn to the screen.
- *
- * [[include:Actors.md]]
- *
- *
- * [[include:Constructors.md]]
- *
  */
 var Actor = /** @class */ (function (_super) {
     __extends(Actor, _super);
@@ -7116,7 +7108,6 @@ var LimitCameraBoundsStrategy = /** @class */ (function () {
  * to move around your game and set focus. They are used to determine
  * what is "off screen" and can be used to scale the game.
  *
- * [[include:Cameras.md]]
  */
 var Camera = /** @class */ (function (_super) {
     __extends(Camera, _super);
@@ -8360,9 +8351,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * This is a circle collision shape for the excalibur rigid body physics simulation
- *
- * Example:
- * [[include:CircleShape.md]]
  */
 var Circle = /** @class */ (function () {
     function Circle(options) {
@@ -9774,9 +9762,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Polygon collision shape for detecting collisions
- *
- * Example:
- * [[include:BoxAndPolygonShape.md]]
  */
 var ConvexPolygon = /** @class */ (function () {
     function ConvexPolygon(options) {
@@ -10884,9 +10869,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Edge is a single line collision shape to create collisions with a single line.
- *
- * Example:
- * [[include:EdgeShape.md]]
  */
 var Edge = /** @class */ (function () {
     function Edge(options) {
@@ -12173,8 +12155,6 @@ var AnimationImpl = /** @class */ (function () {
 /**
  * Animations allow you to display a series of images one after another,
  * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
- *
- * [[include:Animations.md]]
  */
 var Animation = /** @class */ (function (_super) {
     __extends(Animation, _super);
@@ -12210,8 +12190,6 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
  * Provides standard colors (e.g. [[Color.Black]])
  * but you can also create custom colors using RGB, HSL, or Hex. Also provides
  * useful color operations like [[Color.lighten]], [[Color.darken]], and more.
- *
- * [[include:Colors.md]]
  */
 var Color = /** @class */ (function () {
     /**
@@ -13277,8 +13255,6 @@ var SpriteImpl = /** @class */ (function () {
 /**
  * A [[Sprite]] is one of the main drawing primitives. It is responsible for drawing
  * images or parts of images from a [[Texture]] resource to the screen.
- *
- * [[include:Sprites.md]]
  */
 var Sprite = /** @class */ (function (_super) {
     __extends(Sprite, _super);
@@ -13314,8 +13290,6 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * These effects can be applied to any bitmap image but are mainly used
  * for [[Sprite]] effects or [[Animation]] effects.
- *
- * [[include:SpriteEffects.md]]
  */
 /**
  * @typedoc
@@ -13720,8 +13694,6 @@ var SpriteSheetImpl = /** @class */ (function () {
  * Sprite sheets are a useful mechanism for slicing up image resources into
  * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
  * in row major order in the [[SpriteSheet]].
- *
- * [[include:SpriteSheets.md]]
  */
 var SpriteSheet = /** @class */ (function (_super) {
     __extends(SpriteSheet, _super);
@@ -13902,8 +13874,6 @@ var SpriteFontImpl = /** @class */ (function (_super) {
  * Sprite fonts are a used in conjunction with a [[Label]] to specify
  * a particular bitmap as a font. Note that some font features are not
  * supported by Sprite fonts.
- *
- * [[include:SpriteFonts.md]]
  */
 var SpriteFont = /** @class */ (function (_super) {
     __extends(SpriteFont, _super);
@@ -14013,8 +13983,6 @@ var ScrollPreventionMode;
  * The [[Engine]] is the main driver for a game. It is responsible for
  * starting/stopping the game, maintaining state, transmitting events,
  * loading resources, and managing the scene.
- *
- * [[include:Engine.md]]
  */
 var Engine = /** @class */ (function (_super) {
     __extends(Engine, _super);
@@ -15825,15 +15793,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventDispatcher", function() { return EventDispatcher; });
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Events */ "./Events.ts");
 
-/**
- * Excalibur's internal event dispatcher implementation.
- * Callbacks are fired immediately after an event is published.
- * Typically you will use [[Class.eventDispatcher]] since most classes in
- * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
- * yourself.
- *
- * [[include:Events.md]]
- */
 var EventDispatcher = /** @class */ (function () {
     /**
      * @param target  The object that will be the recipient of events from this event dispatcher
@@ -16814,8 +16773,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
 /**
  * Excalibur leverages the HTML5 Gamepad API [where it is supported](http://caniuse.com/#feat=gamepad)
  * to provide controller support for your games.
- *
- * [[include:Gamepads.md]]
  */
 var Gamepads = /** @class */ (function (_super) {
     __extends(Gamepads, _super);
@@ -17248,8 +17205,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EngineInput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./EngineInput */ "./Input/EngineInput.ts");
 /* empty/unused harmony star reexport *//**
  * Provides support for mice, keyboards, and controllers.
- *
- * [[include:Input.md]]
  */
 /**
  * @typedoc
@@ -17457,8 +17412,6 @@ var KeyEvent = /** @class */ (function (_super) {
 
 /**
  * Provides keyboard support for Excalibur.
- *
- * [[include:Keyboard.md]]
  */
 var Keyboard = /** @class */ (function (_super) {
     __extends(Keyboard, _super);
@@ -18255,8 +18208,6 @@ var ScrollWheelNormalizationFactor = -1 / 40;
 /**
  * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
  * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
- *
- * [[include:Pointers.md]]
  */
 var Pointers = /** @class */ (function (_super) {
     __extends(Pointers, _super);
@@ -19279,8 +19230,6 @@ var LabelImpl = /** @class */ (function (_super) {
 /**
  * Labels are the way to draw small amounts of text to the screen. They are
  * actors and inherit all of the benefits and capabilities.
- *
- * [[include:Labels.md]]
  */
 var Label = /** @class */ (function (_super) {
     __extends(Label, _super);
@@ -20299,8 +20248,6 @@ __webpack_require__.r(__webpack_exports__);
  * A pseudo-random utility to add seeded random support for help in
  * generating things like terrain or reproducible randomness. Uses the
  * [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) algorithm.
- *
- * [[include:Random.md]]
  */
 /**
  * 32-bit mask
@@ -20940,8 +20887,6 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
  * Using a particle emitter is a great way to create interesting effects
  * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
  * extend [[Actor]] allowing you to use all of the features that come with.
- *
- * [[include:Particles.md]]
  */
 var ParticleEmitter = /** @class */ (function (_super) {
     __extends(ParticleEmitter, _super);
@@ -21012,8 +20957,6 @@ var Integrator;
 })(Integrator || (Integrator = {}));
 /**
  * The [[Physics]] object is the global configuration object for all Excalibur physics.
- *
- * [[include:Physics.md]]
  */
 /* istanbul ignore next */
 var Physics = /** @class */ (function () {
@@ -21257,8 +21200,6 @@ var ColorBlindness;
  * It is possible to use this on every game, but the game's performance
  * will suffer measurably. It's better to use it as a helpful tool while developing your game.
  * Remember, the best practice is to design with color blindness in mind.
- *
- * [[include:ColorBlind.md]]
  */
 var ColorBlindCorrector = /** @class */ (function () {
     function ColorBlindCorrector(engine, simulate, colorMode) {
@@ -21507,8 +21448,6 @@ var PromiseState;
  * Promises are used to do asynchronous work and they are useful for
  * creating a chain of actions. In Excalibur they are used for loading,
  * sounds, animation, actions, and more.
- *
- * [[include:Promises.md]]
  */
 var Promise = /** @class */ (function () {
     function Promise() {
@@ -21721,8 +21660,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * The [[Texture]] object allows games built in Excalibur to load image resources.
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
- *
- * [[include:Textures.md]]
  */
 var Gif = /** @class */ (function (_super) {
     __extends(Gif, _super);
@@ -22273,8 +22210,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
 /**
  * The [[Resource]] type allows games built in Excalibur to load generic resources.
  * For any type of remote resource it is recommended to use [[Resource]] for preloading.
- *
- * [[include:Resources.md]]
  */
 var Resource = /** @class */ (function (_super) {
     __extends(Resource, _super);
@@ -22764,8 +22699,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
- *
- * [[include:Sounds.md]]
  */
 var Sound = /** @class */ (function (_super) {
     __extends(Sound, _super);
@@ -23091,8 +23024,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * The [[Texture]] object allows games built in Excalibur to load image resources.
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
- *
- * [[include:Textures.md]]
  */
 var Texture = /** @class */ (function (_super) {
     __extends(Texture, _super);
@@ -23233,8 +23164,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
  * actors in a scene. Only actors in scenes will be updated and drawn.
  *
  * Typical usages of a scene include: levels, menus, loading screens, etc.
- *
- * [[include:Scenes.md]]
  */
 var Scene = /** @class */ (function (_super) {
     __extends(Scene, _super);
@@ -23911,8 +23840,6 @@ var Resolution = /** @class */ (function () {
 
 /**
  * The Screen handles all aspects of interacting with the screen for Excalibur.
- *
- * [[include:Screens.md]]
  */
 var Screen = /** @class */ (function () {
     function Screen(options) {
@@ -24699,8 +24626,6 @@ var TileMapImpl = /** @class */ (function (_super) {
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
  * without the overhead of actors.
- *
- * [[include:TileMaps.md]]
  */
 var TileMap = /** @class */ (function (_super) {
     __extends(TileMap, _super);
@@ -25177,8 +25102,6 @@ var triggerDefaults = {
  * Triggers are a method of firing arbitrary code on collision. These are useful
  * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
  * are invisible, and can only be seen when [[Trigger.visible]] is set to `true`.
- *
- * [[include:Triggers.md]]
  */
 var Trigger = /** @class */ (function (_super) {
     __extends(Trigger, _super);
@@ -26187,8 +26110,6 @@ var LogLevel;
  * Static singleton that represents the logging facility for Excalibur.
  * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
  * Derive from [[Appender]] to create your own logging appenders.
- *
- * [[include:Logger.md]]
  */
 var Logger = /** @class */ (function () {
     function Logger() {
@@ -27642,7 +27563,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7300+2a95573";
+var EX_VERSION = "0.25.0-alpha.7307+77170f8";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

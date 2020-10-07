@@ -290,8 +290,6 @@ export { AnimationImpl };
 /**
  * Animations allow you to display a series of images one after another,
  * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
- *
- * [[include:Animations.md]]
  */
 var Animation = /** @class */ (function (_super) {
     __extends(Animation, _super);

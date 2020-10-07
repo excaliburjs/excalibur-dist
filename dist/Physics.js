@@ -40,8 +40,6 @@ export var Integrator;
 })(Integrator || (Integrator = {}));
 /**
  * The [[Physics]] object is the global configuration object for all Excalibur physics.
- *
- * [[include:Physics.md]]
  */
 /* istanbul ignore next */
 var Physics = /** @class */ (function () {

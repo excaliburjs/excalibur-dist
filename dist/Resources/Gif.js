@@ -20,8 +20,6 @@ import { SpriteSheet } from '../Drawing/SpriteSheet';
  * The [[Texture]] object allows games built in Excalibur to load image resources.
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
- *
- * [[include:Textures.md]]
  */
 var Gif = /** @class */ (function (_super) {
     __extends(Gif, _super);

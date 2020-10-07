@@ -7,8 +7,6 @@ import { EasingFunction } from '../Util/EasingFunctions';
  * [[Actor|Actors]] such as following, moving, rotating, and
  * more. You can implement your own actions by implementing
  * the [[Action]] interface.
- *
- * [[include:Actions.md]]
  */
 export declare class ActionContext {
     private _actors;

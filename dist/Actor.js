@@ -1037,12 +1037,6 @@ export { ActorImpl };
  * can move on the screen, collide with another `Actor`, respond to events,
  * or interact with the current scene, must be an actor. An `Actor` **must**
  * be part of a [[Scene]] for it to be drawn to the screen.
- *
- * [[include:Actors.md]]
- *
- *
- * [[include:Constructors.md]]
- *
  */
 var Actor = /** @class */ (function (_super) {
     __extends(Actor, _super);

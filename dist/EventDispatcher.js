@@ -1,13 +1,4 @@
 import { GameEvent, SubscribeEvent, UnsubscribeEvent } from './Events';
-/**
- * Excalibur's internal event dispatcher implementation.
- * Callbacks are fired immediately after an event is published.
- * Typically you will use [[Class.eventDispatcher]] since most classes in
- * Excalibur inherit from [[Class]]. You will rarely create an `EventDispatcher`
- * yourself.
- *
- * [[include:Events.md]]
- */
 var EventDispatcher = /** @class */ (function () {
     /**
      * @param target  The object that will be the recipient of events from this event dispatcher

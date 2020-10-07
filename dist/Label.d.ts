@@ -99,9 +99,6 @@ export declare enum FontStyle {
     Italic = 1,
     Oblique = 2
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface LabelArgs extends Partial<LabelImpl> {
     x?: number;
     y?: number;
@@ -215,8 +212,6 @@ declare const Label_base: typeof LabelImpl;
 /**
  * Labels are the way to draw small amounts of text to the screen. They are
  * actors and inherit all of the benefits and capabilities.
- *
- * [[include:Labels.md]]
  */
 export declare class Label extends Label_base {
     constructor();

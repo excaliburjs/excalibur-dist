@@ -6,8 +6,6 @@ import { EasingFunctions } from '../Util/EasingFunctions';
  * [[Actor|Actors]] such as following, moving, rotating, and
  * more. You can implement your own actions by implementing
  * the [[Action]] interface.
- *
- * [[include:Actions.md]]
  */
 var ActionContext = /** @class */ (function () {
     function ActionContext() {

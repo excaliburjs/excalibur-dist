@@ -176,8 +176,6 @@ var KeyEvent = /** @class */ (function (_super) {
 export { KeyEvent };
 /**
  * Provides keyboard support for Excalibur.
- *
- * [[include:Keyboard.md]]
  */
 var Keyboard = /** @class */ (function (_super) {
     __extends(Keyboard, _super);

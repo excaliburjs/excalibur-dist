@@ -163,9 +163,6 @@ export declare class AnimationImpl implements Drawable, HasTick {
      */
     play(x: number, y: number): void;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface AnimationArgs extends Partial<AnimationImpl> {
     engine: Engine;
     sprites: Sprite[];
@@ -183,8 +180,6 @@ declare const Animation_base: typeof AnimationImpl;
 /**
  * Animations allow you to display a series of images one after another,
  * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
- *
- * [[include:Animations.md]]
  */
 export declare class Animation extends Animation_base {
     constructor(config: AnimationArgs);

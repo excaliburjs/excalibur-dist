@@ -22,8 +22,6 @@ import { canPlayFile } from '../../Util/Sound';
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
- *
- * [[include:Sounds.md]]
  */
 var Sound = /** @class */ (function (_super) {
     __extends(Sound, _super);

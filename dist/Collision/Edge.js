@@ -8,9 +8,6 @@ import { Color } from '../Drawing/Color';
 import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * Edge is a single line collision shape to create collisions with a single line.
- *
- * Example:
- * [[include:EdgeShape.md]]
  */
 var Edge = /** @class */ (function () {
     function Edge(options) {

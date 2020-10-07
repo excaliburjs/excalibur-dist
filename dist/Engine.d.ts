@@ -126,8 +126,6 @@ export interface EngineOptions {
  * The [[Engine]] is the main driver for a game. It is responsible for
  * starting/stopping the game, maintaining state, transmitting events,
  * loading resources, and managing the scene.
- *
- * [[include:Engine.md]]
  */
 export declare class Engine extends Class implements CanInitialize, CanUpdate, CanDraw {
     /**

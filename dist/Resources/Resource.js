@@ -17,8 +17,6 @@ import { Logger } from '../Util/Log';
 /**
  * The [[Resource]] type allows games built in Excalibur to load generic resources.
  * For any type of remote resource it is recommended to use [[Resource]] for preloading.
- *
- * [[include:Resources.md]]
  */
 var Resource = /** @class */ (function (_super) {
     __extends(Resource, _super);

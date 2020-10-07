@@ -3,8 +3,6 @@ import { Engine } from '../Engine';
 /**
  * An interface describing loadable resources in Excalibur. Built-in loadable
  * resources include [[Texture]], [[Sound]], and a generic [[Resource]].
- *
- * [[include:Loadables.md]]
  */
 export interface Loadable {
     /**

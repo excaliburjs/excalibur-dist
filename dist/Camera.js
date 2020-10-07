@@ -234,7 +234,6 @@ export { LimitCameraBoundsStrategy };
  * to move around your game and set focus. They are used to determine
  * what is "off screen" and can be used to scale the game.
  *
- * [[include:Cameras.md]]
  */
 var Camera = /** @class */ (function (_super) {
     __extends(Camera, _super);

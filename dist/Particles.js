@@ -375,8 +375,6 @@ export { ParticleEmitterImpl };
  * Using a particle emitter is a great way to create interesting effects
  * in your game, like smoke, fire, water, explosions, etc. `ParticleEmitter`
  * extend [[Actor]] allowing you to use all of the features that come with.
- *
- * [[include:Particles.md]]
  */
 var ParticleEmitter = /** @class */ (function (_super) {
     __extends(ParticleEmitter, _super);

@@ -27,8 +27,6 @@ var ScrollWheelNormalizationFactor = -1 / 40;
 /**
  * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
  * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
- *
- * [[include:Pointers.md]]
  */
 var Pointers = /** @class */ (function (_super) {
     __extends(Pointers, _super);

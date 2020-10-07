@@ -8,9 +8,6 @@ import { Vector, Line, Ray, Projection } from '../Algebra';
 import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * Polygon collision shape for detecting collisions
- *
- * Example:
- * [[include:BoxAndPolygonShape.md]]
  */
 var ConvexPolygon = /** @class */ (function () {
     function ConvexPolygon(options) {

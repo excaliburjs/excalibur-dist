@@ -65,8 +65,6 @@ export var ScrollPreventionMode;
  * The [[Engine]] is the main driver for a game. It is responsible for
  * starting/stopping the game, maintaining state, transmitting events,
  * loading resources, and managing the scene.
- *
- * [[include:Engine.md]]
  */
 var Engine = /** @class */ (function (_super) {
     __extends(Engine, _super);

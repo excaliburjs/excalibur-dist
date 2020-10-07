@@ -30,8 +30,6 @@ export declare enum Integrator {
 }
 /**
  * The [[Physics]] object is the global configuration object for all Excalibur physics.
- *
- * [[include:Physics.md]]
  */
 export declare class Physics {
     /**

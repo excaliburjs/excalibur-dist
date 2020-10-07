@@ -9,8 +9,6 @@ import { Actor } from '../Actor';
 /**
  * Handles pointer events (mouse, touch, stylus, etc.) and normalizes to
  * [W3C Pointer Events](http://www.w3.org/TR/pointerevents/).
- *
- * [[include:Pointers.md]]
  */
 export declare class Pointers extends Class {
     private _engine;

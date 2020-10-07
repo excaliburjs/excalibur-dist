@@ -348,8 +348,6 @@ export { LabelImpl };
 /**
  * Labels are the way to draw small amounts of text to the screen. They are
  * actors and inherit all of the benefits and capabilities.
- *
- * [[include:Labels.md]]
  */
 var Label = /** @class */ (function (_super) {
     __extends(Label, _super);

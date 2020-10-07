@@ -12,8 +12,6 @@ export declare enum LogLevel {
  * Static singleton that represents the logging facility for Excalibur.
  * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
  * Derive from [[Appender]] to create your own logging appenders.
- *
- * [[include:Logger.md]]
  */
 export declare class Logger {
     private static _INSTANCE;

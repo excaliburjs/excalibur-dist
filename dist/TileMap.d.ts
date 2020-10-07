@@ -73,9 +73,6 @@ export declare class TileMapImpl extends Class {
      */
     debugDraw(ctx: CanvasRenderingContext2D): void;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface TileMapArgs extends Partial<TileMapImpl> {
     x: number;
     y: number;
@@ -88,8 +85,6 @@ declare const TileMap_base: typeof TileMapImpl;
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
  * without the overhead of actors.
- *
- * [[include:TileMaps.md]]
  */
 export declare class TileMap extends TileMap_base {
     constructor(config: TileMapArgs);
@@ -144,9 +139,6 @@ export declare class CellImpl {
      */
     clearSprites(): void;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface CellArgs extends Partial<CellImpl> {
     x: number;
     y: number;

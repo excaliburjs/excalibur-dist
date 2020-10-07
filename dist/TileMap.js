@@ -253,8 +253,6 @@ export { TileMapImpl };
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
  * without the overhead of actors.
- *
- * [[include:TileMaps.md]]
  */
 var TileMap = /** @class */ (function (_super) {
     __extends(TileMap, _super);

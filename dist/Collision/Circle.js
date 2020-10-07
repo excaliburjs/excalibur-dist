@@ -8,9 +8,6 @@ import { Color } from '../Drawing/Color';
 import { ClosestLineJumpTable } from './ClosestLineJumpTable';
 /**
  * This is a circle collision shape for the excalibur rigid body physics simulation
- *
- * Example:
- * [[include:CircleShape.md]]
  */
 var Circle = /** @class */ (function () {
     function Circle(options) {

@@ -181,8 +181,6 @@ export { SpriteSheetImpl };
  * Sprite sheets are a useful mechanism for slicing up image resources into
  * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
  * in row major order in the [[SpriteSheet]].
- *
- * [[include:SpriteSheets.md]]
  */
 var SpriteSheet = /** @class */ (function (_super) {
     __extends(SpriteSheet, _super);
@@ -363,8 +361,6 @@ export { SpriteFontImpl };
  * Sprite fonts are a used in conjunction with a [[Label]] to specify
  * a particular bitmap as a font. Note that some font features are not
  * supported by Sprite fonts.
- *
- * [[include:SpriteFonts.md]]
  */
 var SpriteFont = /** @class */ (function (_super) {
     __extends(SpriteFont, _super);

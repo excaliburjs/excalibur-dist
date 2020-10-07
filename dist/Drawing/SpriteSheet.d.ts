@@ -65,9 +65,6 @@ export declare class SpriteSheetImpl {
      */
     getAnimationByCoords(engine: Engine, spriteCoordinates: SpriteArgs[], speed: number): Animation;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface SpriteSheetArgs extends Partial<SpriteSheetImpl> {
     image: Texture;
     sprites?: Sprite[];
@@ -82,8 +79,6 @@ declare const SpriteSheet_base: typeof SpriteSheetImpl;
  * Sprite sheets are a useful mechanism for slicing up image resources into
  * separate sprites or for generating in game animations. [[Sprite|Sprites]] are organized
  * in row major order in the [[SpriteSheet]].
- *
- * [[include:SpriteSheets.md]]
  */
 export declare class SpriteSheet extends SpriteSheet_base {
     constructor(config: SpriteSheetArgs);
@@ -147,9 +142,6 @@ export interface SpriteFontOptions {
     baseAlign?: BaseAlign;
     maxWidth?: number;
 }
-/**
- * [[include:Constructors.md]]
- */
 export interface SpriteFontArgs extends SpriteSheetArgs {
     image: Texture;
     columns: number;
@@ -164,8 +156,6 @@ declare const SpriteFont_base: typeof SpriteFontImpl;
  * Sprite fonts are a used in conjunction with a [[Label]] to specify
  * a particular bitmap as a font. Note that some font features are not
  * supported by Sprite fonts.
- *
- * [[include:SpriteFonts.md]]
  */
 export declare class SpriteFont extends SpriteFont_base {
     constructor(config: SpriteFontArgs);

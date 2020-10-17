@@ -3,6 +3,7 @@
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
 export declare const EX_VERSION: string;
+export * from './Flags';
 export * from './Engine';
 export * from './Screen';
 export { Actor, ActorArgs } from './Actor';

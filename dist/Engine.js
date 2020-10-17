@@ -23,6 +23,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { EX_VERSION } from './';
+import { Flags } from './Flags';
 import { polyfill } from './Polyfill';
 polyfill();
 import { Promise } from './Promises';
@@ -129,6 +130,7 @@ var Engine = /** @class */ (function (_super) {
         _this._isLoading = false;
         _this._isInitialized = false;
         options = __assign(__assign({}, Engine._DEFAULT_ENGINE_OPTIONS), options);
+        Flags.freeze();
         // Initialize browser events facade
         _this.browser = new BrowserEvents(window, document);
         // Check compatibility

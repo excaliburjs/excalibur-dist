@@ -13,11 +13,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 import { BoundingBox } from './Collision/BoundingBox';
 import { Color } from './Drawing/Color';
-import { Class } from './Class';
-import { Vector } from './Algebra';
+import { vec, Vector } from './Algebra';
 import { Logger } from './Util/Log';
 import * as Events from './Events';
 import { Configurable } from './Configurable';
+import { Entity } from './EntityComponentSystem/Entity';
+import { CanvasDrawComponent } from './Drawing/CanvasDrawComponent';
+import { TransformComponent } from './EntityComponentSystem/Components/TransformComponent';
 /**
  * @hidden
  */
@@ -42,6 +44,11 @@ var TileMapImpl = /** @class */ (function (_super) {
         _this._spriteSheets = {};
         _this.logger = Logger.getInstance();
         _this.data = [];
+        _this.z = 0;
+        _this.visible = true;
+        _this.isOffscreen = false;
+        _this.rotation = 0;
+        _this.scale = Vector.One;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             xOrConfig = config.x;
@@ -72,8 +79,21 @@ var TileMapImpl = /** @class */ (function (_super) {
         for (var i = 0; i < cols; i++) {
             _loop_1(i);
         }
+        _this.addComponent(new TransformComponent());
+        _this.addComponent(new CanvasDrawComponent(function (ctx, delta) { return _this.draw(ctx, delta); }));
         return _this;
     }
+    Object.defineProperty(TileMapImpl.prototype, "pos", {
+        get: function () {
+            return vec(this.x, this.y);
+        },
+        set: function (val) {
+            this.x = val.x;
+            this.y = val.y;
+        },
+        enumerable: false,
+        configurable: true
+    });
     TileMapImpl.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -175,8 +195,6 @@ var TileMapImpl = /** @class */ (function (_super) {
      */
     TileMapImpl.prototype.draw = function (ctx, delta) {
         this.emit('predraw', new Events.PreDrawEvent(ctx, delta, this));
-        ctx.save();
-        ctx.translate(this.x, this.y);
         var x = this._onScreenXStart;
         var xEnd = Math.min(this._onScreenXEnd, this.cols);
         var y = this._onScreenYStart;
@@ -207,7 +225,6 @@ var TileMapImpl = /** @class */ (function (_super) {
             }
             y = this._onScreenYStart;
         }
-        ctx.restore();
         this.emit('postdraw', new Events.PostDrawEvent(ctx, delta, this));
     };
     /**
@@ -248,7 +265,7 @@ var TileMapImpl = /** @class */ (function (_super) {
         ctx.restore();
     };
     return TileMapImpl;
-}(Class));
+}(Entity));
 export { TileMapImpl };
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision

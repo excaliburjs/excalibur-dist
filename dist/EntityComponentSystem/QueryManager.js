@@ -4,8 +4,8 @@ import { Query } from './Query';
  * The query manager is responsible for updating all queries when entities/components change
  */
 var QueryManager = /** @class */ (function () {
-    function QueryManager(scene) {
-        this.scene = scene;
+    function QueryManager(_world) {
+        this._world = _world;
         this._queries = {};
     }
     /**
@@ -14,7 +14,7 @@ var QueryManager = /** @class */ (function () {
      */
     QueryManager.prototype._addQuery = function (query) {
         this._queries[buildTypeKey(query.types)] = query;
-        for (var _i = 0, _a = this.scene.entityManager.entities; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this._world.entityManager.entities; _i < _a.length; _i++) {
             var entity = _a[_i];
             query.addEntity(entity);
         }
@@ -58,9 +58,7 @@ var QueryManager = /** @class */ (function () {
      */
     QueryManager.prototype.removeEntity = function (entity) {
         for (var queryType in this._queries) {
-            if (this._queries[queryType].entities.indexOf(entity) > -1) {
-                this._queries[queryType].removeEntity(entity);
-            }
+            this._queries[queryType].removeEntity(entity);
         }
     };
     /**

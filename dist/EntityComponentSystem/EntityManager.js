@@ -2,8 +2,8 @@ import { Entity, isAddedComponent, isRemovedComponent } from './Entity';
 import { Util } from '..';
 // Add/Remove entitys and components
 var EntityManager = /** @class */ (function () {
-    function EntityManager(_scene) {
-        this._scene = _scene;
+    function EntityManager(_world) {
+        this._world = _world;
         this.entities = [];
         this._entityIndex = {};
     }
@@ -14,10 +14,10 @@ var EntityManager = /** @class */ (function () {
     EntityManager.prototype.notify = function (message) {
         if (isAddedComponent(message)) {
             // we don't need the component, it's already on the entity
-            this._scene.queryManager.addEntity(message.data.entity);
+            this._world.queryManager.addEntity(message.data.entity);
         }
         if (isRemovedComponent(message)) {
-            this._scene.queryManager.removeComponent(message.data.entity, message.data.component);
+            this._world.queryManager.removeComponent(message.data.entity, message.data.component);
         }
     };
     /**
@@ -28,7 +28,7 @@ var EntityManager = /** @class */ (function () {
         if (entity) {
             this._entityIndex[entity.id] = entity;
             this.entities.push(entity);
-            this._scene.queryManager.addEntity(entity);
+            this._world.queryManager.addEntity(entity);
             entity.changes.register(this);
         }
     };
@@ -44,18 +44,24 @@ var EntityManager = /** @class */ (function () {
         delete this._entityIndex[id];
         if (entity) {
             Util.removeItemFromArray(entity, this.entities);
-            this._scene.queryManager.removeEntity(entity);
+            this._world.queryManager.removeEntity(entity);
             entity.changes.unregister(this);
         }
     };
-    EntityManager.prototype.processRemovals = function () {
+    EntityManager.prototype.processComponentRemovals = function () {
         for (var _i = 0, _a = this.entities; _i < _a.length; _i++) {
             var entity = _a[_i];
-            entity.processRemoval();
+            entity.processComponentRemoval();
         }
     };
     EntityManager.prototype.getById = function (id) {
         return this._entityIndex[id];
+    };
+    EntityManager.prototype.clear = function () {
+        for (var _i = 0, _a = this.entities; _i < _a.length; _i++) {
+            var entity = _a[_i];
+            this.removeEntity(entity);
+        }
     };
     return EntityManager;
 }());

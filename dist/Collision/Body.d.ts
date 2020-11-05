@@ -2,6 +2,7 @@ import { Vector } from '../Algebra';
 import { Actor } from '../Actor';
 import { Collider } from './Collider';
 import { Clonable } from '../Interfaces/Clonable';
+import { TransformComponent } from '../EntityComponentSystem/Components/TransformComponent';
 export interface BodyOptions {
     /**
      * Optionally the actor associated with this body
@@ -31,12 +32,14 @@ export declare class Body implements Clonable<Body> {
     get center(): Vector;
     set collider(collider: Collider);
     get collider(): Collider;
+    get transform(): TransformComponent;
     /**
      * The (x, y) position of the actor this will be in the middle of the actor if the
      * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
      * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
      */
-    pos: Vector;
+    get pos(): Vector;
+    set pos(val: Vector);
     /**
      * The position of the actor last frame (x, y) in pixels
      */
@@ -73,7 +76,8 @@ export declare class Body implements Clonable<Body> {
     /**
      * The rotation of the actor in radians
      */
-    rotation: number;
+    get rotation(): number;
+    set rotation(val: number);
     /**
      * The scale vector of the actor
      * @obsolete ex.Body.scale will be removed in v0.25.0

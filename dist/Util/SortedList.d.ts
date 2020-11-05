@@ -1,5 +1,6 @@
 /**
  * A sorted list implementation. NOTE: this implementation is not self-balancing
+ * @deprecated
  */
 export declare class SortedList<T> {
     private _getComparable;
@@ -20,6 +21,7 @@ export declare class SortedList<T> {
 }
 /**
  * A tree node part of [[SortedList]]
+ * @deprecated
  */
 export declare class BinaryTreeNode<T> {
     private _key;
@@ -40,6 +42,7 @@ export declare class BinaryTreeNode<T> {
  * Mock element for testing
  *
  * @internal
+ * @deprecated
  */
 export declare class MockedElement {
     private _key;

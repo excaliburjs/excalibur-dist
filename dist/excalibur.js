@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7423+c8bd853 - 2020-11-4
+ * excalibur - 0.25.0-alpha.7428+e6fe439 - 2020-11-5
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -160,6 +160,48 @@ __webpack_require__(/*! ../../modules/es.function.has-instance */ "../../node_mo
 var path = __webpack_require__(/*! ../../internals/path */ "../../node_modules/core-js/internals/path.js");
 
 module.exports = path.Function;
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/es/object/index.js":
+/*!****************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/es/object/index.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es.symbol */ "../../node_modules/core-js/modules/es.symbol.js");
+__webpack_require__(/*! ../../modules/es.object.assign */ "../../node_modules/core-js/modules/es.object.assign.js");
+__webpack_require__(/*! ../../modules/es.object.create */ "../../node_modules/core-js/modules/es.object.create.js");
+__webpack_require__(/*! ../../modules/es.object.define-property */ "../../node_modules/core-js/modules/es.object.define-property.js");
+__webpack_require__(/*! ../../modules/es.object.define-properties */ "../../node_modules/core-js/modules/es.object.define-properties.js");
+__webpack_require__(/*! ../../modules/es.object.entries */ "../../node_modules/core-js/modules/es.object.entries.js");
+__webpack_require__(/*! ../../modules/es.object.freeze */ "../../node_modules/core-js/modules/es.object.freeze.js");
+__webpack_require__(/*! ../../modules/es.object.from-entries */ "../../node_modules/core-js/modules/es.object.from-entries.js");
+__webpack_require__(/*! ../../modules/es.object.get-own-property-descriptor */ "../../node_modules/core-js/modules/es.object.get-own-property-descriptor.js");
+__webpack_require__(/*! ../../modules/es.object.get-own-property-descriptors */ "../../node_modules/core-js/modules/es.object.get-own-property-descriptors.js");
+__webpack_require__(/*! ../../modules/es.object.get-own-property-names */ "../../node_modules/core-js/modules/es.object.get-own-property-names.js");
+__webpack_require__(/*! ../../modules/es.object.get-prototype-of */ "../../node_modules/core-js/modules/es.object.get-prototype-of.js");
+__webpack_require__(/*! ../../modules/es.object.is */ "../../node_modules/core-js/modules/es.object.is.js");
+__webpack_require__(/*! ../../modules/es.object.is-extensible */ "../../node_modules/core-js/modules/es.object.is-extensible.js");
+__webpack_require__(/*! ../../modules/es.object.is-frozen */ "../../node_modules/core-js/modules/es.object.is-frozen.js");
+__webpack_require__(/*! ../../modules/es.object.is-sealed */ "../../node_modules/core-js/modules/es.object.is-sealed.js");
+__webpack_require__(/*! ../../modules/es.object.keys */ "../../node_modules/core-js/modules/es.object.keys.js");
+__webpack_require__(/*! ../../modules/es.object.prevent-extensions */ "../../node_modules/core-js/modules/es.object.prevent-extensions.js");
+__webpack_require__(/*! ../../modules/es.object.seal */ "../../node_modules/core-js/modules/es.object.seal.js");
+__webpack_require__(/*! ../../modules/es.object.set-prototype-of */ "../../node_modules/core-js/modules/es.object.set-prototype-of.js");
+__webpack_require__(/*! ../../modules/es.object.values */ "../../node_modules/core-js/modules/es.object.values.js");
+__webpack_require__(/*! ../../modules/es.object.to-string */ "../../node_modules/core-js/modules/es.object.to-string.js");
+__webpack_require__(/*! ../../modules/es.object.define-getter */ "../../node_modules/core-js/modules/es.object.define-getter.js");
+__webpack_require__(/*! ../../modules/es.object.define-setter */ "../../node_modules/core-js/modules/es.object.define-setter.js");
+__webpack_require__(/*! ../../modules/es.object.lookup-getter */ "../../node_modules/core-js/modules/es.object.lookup-getter.js");
+__webpack_require__(/*! ../../modules/es.object.lookup-setter */ "../../node_modules/core-js/modules/es.object.lookup-setter.js");
+__webpack_require__(/*! ../../modules/es.math.to-string-tag */ "../../node_modules/core-js/modules/es.math.to-string-tag.js");
+__webpack_require__(/*! ../../modules/es.json.to-string-tag */ "../../node_modules/core-js/modules/es.json.to-string-tag.js");
+var path = __webpack_require__(/*! ../../internals/path */ "../../node_modules/core-js/internals/path.js");
+
+module.exports = path.Object;
 
 
 /***/ }),
@@ -1087,6 +1129,28 @@ module.exports = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, I
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/internals/define-well-known-symbol.js":
+/*!***********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/define-well-known-symbol.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var path = __webpack_require__(/*! ../internals/path */ "../../node_modules/core-js/internals/path.js");
+var has = __webpack_require__(/*! ../internals/has */ "../../node_modules/core-js/internals/has.js");
+var wrappedWellKnownSymbolModule = __webpack_require__(/*! ../internals/well-known-symbol-wrapped */ "../../node_modules/core-js/internals/well-known-symbol-wrapped.js");
+var defineProperty = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js").f;
+
+module.exports = function (NAME) {
+  var Symbol = path.Symbol || (path.Symbol = {});
+  if (!has(Symbol, NAME)) defineProperty(Symbol, NAME, {
+    value: wrappedWellKnownSymbolModule.f(NAME)
+  });
+};
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/internals/descriptors.js":
 /*!**********************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/descriptors.js ***!
@@ -1314,6 +1378,22 @@ var flattenIntoArray = function (target, original, source, sourceLen, start, dep
 };
 
 module.exports = flattenIntoArray;
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/freezing.js":
+/*!*******************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/freezing.js ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+
+module.exports = !fails(function () {
+  return Object.isExtensible(Object.preventExtensions({}));
+});
 
 
 /***/ }),
@@ -1571,6 +1651,78 @@ module.exports = store.inspectSource;
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/internals/internal-metadata.js":
+/*!****************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/internal-metadata.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var hiddenKeys = __webpack_require__(/*! ../internals/hidden-keys */ "../../node_modules/core-js/internals/hidden-keys.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+var has = __webpack_require__(/*! ../internals/has */ "../../node_modules/core-js/internals/has.js");
+var defineProperty = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js").f;
+var uid = __webpack_require__(/*! ../internals/uid */ "../../node_modules/core-js/internals/uid.js");
+var FREEZING = __webpack_require__(/*! ../internals/freezing */ "../../node_modules/core-js/internals/freezing.js");
+
+var METADATA = uid('meta');
+var id = 0;
+
+var isExtensible = Object.isExtensible || function () {
+  return true;
+};
+
+var setMetadata = function (it) {
+  defineProperty(it, METADATA, { value: {
+    objectID: 'O' + ++id, // object ID
+    weakData: {}          // weak collections IDs
+  } });
+};
+
+var fastKey = function (it, create) {
+  // return a primitive with prefix
+  if (!isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+  if (!has(it, METADATA)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return 'F';
+    // not necessary to add metadata
+    if (!create) return 'E';
+    // add missing metadata
+    setMetadata(it);
+  // return object ID
+  } return it[METADATA].objectID;
+};
+
+var getWeakData = function (it, create) {
+  if (!has(it, METADATA)) {
+    // can't set metadata to uncaught frozen object
+    if (!isExtensible(it)) return true;
+    // not necessary to add metadata
+    if (!create) return false;
+    // add missing metadata
+    setMetadata(it);
+  // return the store of weak collections IDs
+  } return it[METADATA].weakData;
+};
+
+// add metadata on freeze-family methods calling
+var onFreeze = function (it) {
+  if (FREEZING && meta.REQUIRED && isExtensible(it) && !has(it, METADATA)) setMetadata(it);
+  return it;
+};
+
+var meta = module.exports = {
+  REQUIRED: false,
+  fastKey: fastKey,
+  getWeakData: getWeakData,
+  onFreeze: onFreeze
+};
+
+hiddenKeys[METADATA] = true;
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/internals/internal-state.js":
 /*!*************************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/internal-state.js ***!
@@ -1740,6 +1892,60 @@ module.exports = false;
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/internals/iterate.js":
+/*!******************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/iterate.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__(/*! ../internals/an-object */ "../../node_modules/core-js/internals/an-object.js");
+var isArrayIteratorMethod = __webpack_require__(/*! ../internals/is-array-iterator-method */ "../../node_modules/core-js/internals/is-array-iterator-method.js");
+var toLength = __webpack_require__(/*! ../internals/to-length */ "../../node_modules/core-js/internals/to-length.js");
+var bind = __webpack_require__(/*! ../internals/function-bind-context */ "../../node_modules/core-js/internals/function-bind-context.js");
+var getIteratorMethod = __webpack_require__(/*! ../internals/get-iterator-method */ "../../node_modules/core-js/internals/get-iterator-method.js");
+var callWithSafeIterationClosing = __webpack_require__(/*! ../internals/call-with-safe-iteration-closing */ "../../node_modules/core-js/internals/call-with-safe-iteration-closing.js");
+
+var Result = function (stopped, result) {
+  this.stopped = stopped;
+  this.result = result;
+};
+
+var iterate = module.exports = function (iterable, fn, that, AS_ENTRIES, IS_ITERATOR) {
+  var boundFunction = bind(fn, that, AS_ENTRIES ? 2 : 1);
+  var iterator, iterFn, index, length, result, next, step;
+
+  if (IS_ITERATOR) {
+    iterator = iterable;
+  } else {
+    iterFn = getIteratorMethod(iterable);
+    if (typeof iterFn != 'function') throw TypeError('Target is not iterable');
+    // optimisation for array iterators
+    if (isArrayIteratorMethod(iterFn)) {
+      for (index = 0, length = toLength(iterable.length); length > index; index++) {
+        result = AS_ENTRIES
+          ? boundFunction(anObject(step = iterable[index])[0], step[1])
+          : boundFunction(iterable[index]);
+        if (result && result instanceof Result) return result;
+      } return new Result(false);
+    }
+    iterator = iterFn.call(iterable);
+  }
+
+  next = iterator.next;
+  while (!(step = next.call(iterator)).done) {
+    result = callWithSafeIterationClosing(iterator, boundFunction, step.value, AS_ENTRIES);
+    if (typeof result == 'object' && result && result instanceof Result) return result;
+  } return new Result(false);
+};
+
+iterate.stop = function (result) {
+  return new Result(true, result);
+};
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/internals/iterators-core.js":
 /*!*************************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/iterators-core.js ***!
@@ -1832,6 +2038,70 @@ var inspectSource = __webpack_require__(/*! ../internals/inspect-source */ "../.
 var WeakMap = global.WeakMap;
 
 module.exports = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/object-assign.js":
+/*!************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-assign.js ***!
+  \************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var objectKeys = __webpack_require__(/*! ../internals/object-keys */ "../../node_modules/core-js/internals/object-keys.js");
+var getOwnPropertySymbolsModule = __webpack_require__(/*! ../internals/object-get-own-property-symbols */ "../../node_modules/core-js/internals/object-get-own-property-symbols.js");
+var propertyIsEnumerableModule = __webpack_require__(/*! ../internals/object-property-is-enumerable */ "../../node_modules/core-js/internals/object-property-is-enumerable.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var IndexedObject = __webpack_require__(/*! ../internals/indexed-object */ "../../node_modules/core-js/internals/indexed-object.js");
+
+var nativeAssign = Object.assign;
+var defineProperty = Object.defineProperty;
+
+// `Object.assign` method
+// https://tc39.github.io/ecma262/#sec-object.assign
+module.exports = !nativeAssign || fails(function () {
+  // should have correct order of operations (Edge bug)
+  if (DESCRIPTORS && nativeAssign({ b: 1 }, nativeAssign(defineProperty({}, 'a', {
+    enumerable: true,
+    get: function () {
+      defineProperty(this, 'b', {
+        value: 3,
+        enumerable: false
+      });
+    }
+  }), { b: 2 })).b !== 1) return true;
+  // should work with symbols and should have deterministic property order (V8 bug)
+  var A = {};
+  var B = {};
+  // eslint-disable-next-line no-undef
+  var symbol = Symbol();
+  var alphabet = 'abcdefghijklmnopqrst';
+  A[symbol] = 7;
+  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+  return nativeAssign({}, A)[symbol] != 7 || objectKeys(nativeAssign({}, B)).join('') != alphabet;
+}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+  var T = toObject(target);
+  var argumentsLength = arguments.length;
+  var index = 1;
+  var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+  var propertyIsEnumerable = propertyIsEnumerableModule.f;
+  while (argumentsLength > index) {
+    var S = IndexedObject(arguments[index++]);
+    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
+    var length = keys.length;
+    var j = 0;
+    var key;
+    while (length > j) {
+      key = keys[j++];
+      if (!DESCRIPTORS || propertyIsEnumerable.call(S, key)) T[key] = S[key];
+    }
+  } return T;
+} : nativeAssign;
 
 
 /***/ }),
@@ -2014,6 +2284,39 @@ exports.f = DESCRIPTORS ? nativeGetOwnPropertyDescriptor : function getOwnProper
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/internals/object-get-own-property-names-external.js":
+/*!*************************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-get-own-property-names-external.js ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-object */ "../../node_modules/core-js/internals/to-indexed-object.js");
+var nativeGetOwnPropertyNames = __webpack_require__(/*! ../internals/object-get-own-property-names */ "../../node_modules/core-js/internals/object-get-own-property-names.js").f;
+
+var toString = {}.toString;
+
+var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+  ? Object.getOwnPropertyNames(window) : [];
+
+var getWindowNames = function (it) {
+  try {
+    return nativeGetOwnPropertyNames(it);
+  } catch (error) {
+    return windowNames.slice();
+  }
+};
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+module.exports.f = function getOwnPropertyNames(it) {
+  return windowNames && toString.call(it) == '[object Window]'
+    ? getWindowNames(it)
+    : nativeGetOwnPropertyNames(toIndexedObject(it));
+};
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/internals/object-get-own-property-names.js":
 /*!****************************************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-get-own-property-names.js ***!
@@ -2147,6 +2450,31 @@ exports.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/internals/object-prototype-accessors-forced.js":
+/*!********************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-prototype-accessors-forced.js ***!
+  \********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var IS_PURE = __webpack_require__(/*! ../internals/is-pure */ "../../node_modules/core-js/internals/is-pure.js");
+var global = __webpack_require__(/*! ../internals/global */ "../../node_modules/core-js/internals/global.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+
+// Forced replacement object prototype accessors methods
+module.exports = IS_PURE || !fails(function () {
+  var key = Math.random();
+  // In FF throws only define methods
+  // eslint-disable-next-line no-undef, no-useless-call
+  __defineSetter__.call(null, key, function () { /* empty */ });
+  delete global[key];
+});
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/internals/object-set-prototype-of.js":
 /*!**********************************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-set-prototype-of.js ***!
@@ -2178,6 +2506,70 @@ module.exports = Object.setPrototypeOf || ('__proto__' in {} ? function () {
     return O;
   };
 }() : undefined);
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/object-to-array.js":
+/*!**************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-to-array.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var objectKeys = __webpack_require__(/*! ../internals/object-keys */ "../../node_modules/core-js/internals/object-keys.js");
+var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-object */ "../../node_modules/core-js/internals/to-indexed-object.js");
+var propertyIsEnumerable = __webpack_require__(/*! ../internals/object-property-is-enumerable */ "../../node_modules/core-js/internals/object-property-is-enumerable.js").f;
+
+// `Object.{ entries, values }` methods implementation
+var createMethod = function (TO_ENTRIES) {
+  return function (it) {
+    var O = toIndexedObject(it);
+    var keys = objectKeys(O);
+    var length = keys.length;
+    var i = 0;
+    var result = [];
+    var key;
+    while (length > i) {
+      key = keys[i++];
+      if (!DESCRIPTORS || propertyIsEnumerable.call(O, key)) {
+        result.push(TO_ENTRIES ? [key, O[key]] : O[key]);
+      }
+    }
+    return result;
+  };
+};
+
+module.exports = {
+  // `Object.entries` method
+  // https://tc39.github.io/ecma262/#sec-object.entries
+  entries: createMethod(true),
+  // `Object.values` method
+  // https://tc39.github.io/ecma262/#sec-object.values
+  values: createMethod(false)
+};
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/object-to-string.js":
+/*!***************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/object-to-string.js ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var TO_STRING_TAG_SUPPORT = __webpack_require__(/*! ../internals/to-string-tag-support */ "../../node_modules/core-js/internals/to-string-tag-support.js");
+var classof = __webpack_require__(/*! ../internals/classof */ "../../node_modules/core-js/internals/classof.js");
+
+// `Object.prototype.toString` method implementation
+// https://tc39.github.io/ecma262/#sec-object.prototype.tostring
+module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
+  return '[object ' + classof(this) + ']';
+};
 
 
 /***/ }),
@@ -2275,6 +2667,23 @@ var TEMPLATE = String(String).split('String');
 module.exports = function (it) {
   if (it == undefined) throw TypeError("Can't call method on " + it);
   return it;
+};
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/same-value.js":
+/*!*********************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/same-value.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// `SameValue` abstract operation
+// https://tc39.github.io/ecma262/#sec-samevalue
+module.exports = Object.is || function is(x, y) {
+  // eslint-disable-next-line no-self-compare
+  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
 
 
@@ -2623,6 +3032,20 @@ module.exports = NATIVE_SYMBOL
   && !Symbol.sham
   // eslint-disable-next-line no-undef
   && typeof Symbol.iterator == 'symbol';
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/internals/well-known-symbol-wrapped.js":
+/*!************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/internals/well-known-symbol-wrapped.js ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ "../../node_modules/core-js/internals/well-known-symbol.js");
+
+exports.f = wellKnownSymbol;
 
 
 /***/ }),
@@ -3709,6 +4132,664 @@ if (DESCRIPTORS && !(NAME in FunctionPrototype)) {
 
 /***/ }),
 
+/***/ "../../node_modules/core-js/modules/es.json.to-string-tag.js":
+/*!******************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.json.to-string-tag.js ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(/*! ../internals/global */ "../../node_modules/core-js/internals/global.js");
+var setToStringTag = __webpack_require__(/*! ../internals/set-to-string-tag */ "../../node_modules/core-js/internals/set-to-string-tag.js");
+
+// JSON[@@toStringTag] property
+// https://tc39.github.io/ecma262/#sec-json-@@tostringtag
+setToStringTag(global.JSON, 'JSON', true);
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.math.to-string-tag.js":
+/*!******************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.math.to-string-tag.js ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setToStringTag = __webpack_require__(/*! ../internals/set-to-string-tag */ "../../node_modules/core-js/internals/set-to-string-tag.js");
+
+// Math[@@toStringTag] property
+// https://tc39.github.io/ecma262/#sec-math-@@tostringtag
+setToStringTag(Math, 'Math', true);
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.assign.js":
+/*!*************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.assign.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var assign = __webpack_require__(/*! ../internals/object-assign */ "../../node_modules/core-js/internals/object-assign.js");
+
+// `Object.assign` method
+// https://tc39.github.io/ecma262/#sec-object.assign
+$({ target: 'Object', stat: true, forced: Object.assign !== assign }, {
+  assign: assign
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.create.js":
+/*!*************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.create.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var create = __webpack_require__(/*! ../internals/object-create */ "../../node_modules/core-js/internals/object-create.js");
+
+// `Object.create` method
+// https://tc39.github.io/ecma262/#sec-object.create
+$({ target: 'Object', stat: true, sham: !DESCRIPTORS }, {
+  create: create
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.define-getter.js":
+/*!********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.define-getter.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var FORCED = __webpack_require__(/*! ../internals/object-prototype-accessors-forced */ "../../node_modules/core-js/internals/object-prototype-accessors-forced.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var aFunction = __webpack_require__(/*! ../internals/a-function */ "../../node_modules/core-js/internals/a-function.js");
+var definePropertyModule = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js");
+
+// `Object.prototype.__defineGetter__` method
+// https://tc39.github.io/ecma262/#sec-object.prototype.__defineGetter__
+if (DESCRIPTORS) {
+  $({ target: 'Object', proto: true, forced: FORCED }, {
+    __defineGetter__: function __defineGetter__(P, getter) {
+      definePropertyModule.f(toObject(this), P, { get: aFunction(getter), enumerable: true, configurable: true });
+    }
+  });
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.define-properties.js":
+/*!************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.define-properties.js ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var defineProperties = __webpack_require__(/*! ../internals/object-define-properties */ "../../node_modules/core-js/internals/object-define-properties.js");
+
+// `Object.defineProperties` method
+// https://tc39.github.io/ecma262/#sec-object.defineproperties
+$({ target: 'Object', stat: true, forced: !DESCRIPTORS, sham: !DESCRIPTORS }, {
+  defineProperties: defineProperties
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.define-property.js":
+/*!**********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.define-property.js ***!
+  \**********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var objectDefinePropertyModile = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js");
+
+// `Object.defineProperty` method
+// https://tc39.github.io/ecma262/#sec-object.defineproperty
+$({ target: 'Object', stat: true, forced: !DESCRIPTORS, sham: !DESCRIPTORS }, {
+  defineProperty: objectDefinePropertyModile.f
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.define-setter.js":
+/*!********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.define-setter.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var FORCED = __webpack_require__(/*! ../internals/object-prototype-accessors-forced */ "../../node_modules/core-js/internals/object-prototype-accessors-forced.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var aFunction = __webpack_require__(/*! ../internals/a-function */ "../../node_modules/core-js/internals/a-function.js");
+var definePropertyModule = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js");
+
+// `Object.prototype.__defineSetter__` method
+// https://tc39.github.io/ecma262/#sec-object.prototype.__defineSetter__
+if (DESCRIPTORS) {
+  $({ target: 'Object', proto: true, forced: FORCED }, {
+    __defineSetter__: function __defineSetter__(P, setter) {
+      definePropertyModule.f(toObject(this), P, { set: aFunction(setter), enumerable: true, configurable: true });
+    }
+  });
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.entries.js":
+/*!**************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.entries.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var $entries = __webpack_require__(/*! ../internals/object-to-array */ "../../node_modules/core-js/internals/object-to-array.js").entries;
+
+// `Object.entries` method
+// https://tc39.github.io/ecma262/#sec-object.entries
+$({ target: 'Object', stat: true }, {
+  entries: function entries(O) {
+    return $entries(O);
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.freeze.js":
+/*!*************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.freeze.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var FREEZING = __webpack_require__(/*! ../internals/freezing */ "../../node_modules/core-js/internals/freezing.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+var onFreeze = __webpack_require__(/*! ../internals/internal-metadata */ "../../node_modules/core-js/internals/internal-metadata.js").onFreeze;
+
+var nativeFreeze = Object.freeze;
+var FAILS_ON_PRIMITIVES = fails(function () { nativeFreeze(1); });
+
+// `Object.freeze` method
+// https://tc39.github.io/ecma262/#sec-object.freeze
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES, sham: !FREEZING }, {
+  freeze: function freeze(it) {
+    return nativeFreeze && isObject(it) ? nativeFreeze(onFreeze(it)) : it;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.from-entries.js":
+/*!*******************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.from-entries.js ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var iterate = __webpack_require__(/*! ../internals/iterate */ "../../node_modules/core-js/internals/iterate.js");
+var createProperty = __webpack_require__(/*! ../internals/create-property */ "../../node_modules/core-js/internals/create-property.js");
+
+// `Object.fromEntries` method
+// https://github.com/tc39/proposal-object-from-entries
+$({ target: 'Object', stat: true }, {
+  fromEntries: function fromEntries(iterable) {
+    var obj = {};
+    iterate(iterable, function (k, v) {
+      createProperty(obj, k, v);
+    }, undefined, true);
+    return obj;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.get-own-property-descriptor.js":
+/*!**********************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.get-own-property-descriptor.js ***!
+  \**********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-object */ "../../node_modules/core-js/internals/to-indexed-object.js");
+var nativeGetOwnPropertyDescriptor = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ "../../node_modules/core-js/internals/object-get-own-property-descriptor.js").f;
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeGetOwnPropertyDescriptor(1); });
+var FORCED = !DESCRIPTORS || FAILS_ON_PRIMITIVES;
+
+// `Object.getOwnPropertyDescriptor` method
+// https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptor
+$({ target: 'Object', stat: true, forced: FORCED, sham: !DESCRIPTORS }, {
+  getOwnPropertyDescriptor: function getOwnPropertyDescriptor(it, key) {
+    return nativeGetOwnPropertyDescriptor(toIndexedObject(it), key);
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.get-own-property-descriptors.js":
+/*!***********************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.get-own-property-descriptors.js ***!
+  \***********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var ownKeys = __webpack_require__(/*! ../internals/own-keys */ "../../node_modules/core-js/internals/own-keys.js");
+var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-object */ "../../node_modules/core-js/internals/to-indexed-object.js");
+var getOwnPropertyDescriptorModule = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ "../../node_modules/core-js/internals/object-get-own-property-descriptor.js");
+var createProperty = __webpack_require__(/*! ../internals/create-property */ "../../node_modules/core-js/internals/create-property.js");
+
+// `Object.getOwnPropertyDescriptors` method
+// https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptors
+$({ target: 'Object', stat: true, sham: !DESCRIPTORS }, {
+  getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
+    var O = toIndexedObject(object);
+    var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
+    var keys = ownKeys(O);
+    var result = {};
+    var index = 0;
+    var key, descriptor;
+    while (keys.length > index) {
+      descriptor = getOwnPropertyDescriptor(O, key = keys[index++]);
+      if (descriptor !== undefined) createProperty(result, key, descriptor);
+    }
+    return result;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.get-own-property-names.js":
+/*!*****************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.get-own-property-names.js ***!
+  \*****************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var nativeGetOwnPropertyNames = __webpack_require__(/*! ../internals/object-get-own-property-names-external */ "../../node_modules/core-js/internals/object-get-own-property-names-external.js").f;
+
+var FAILS_ON_PRIMITIVES = fails(function () { return !Object.getOwnPropertyNames(1); });
+
+// `Object.getOwnPropertyNames` method
+// https://tc39.github.io/ecma262/#sec-object.getownpropertynames
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  getOwnPropertyNames: nativeGetOwnPropertyNames
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.get-prototype-of.js":
+/*!***********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.get-prototype-of.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var nativeGetPrototypeOf = __webpack_require__(/*! ../internals/object-get-prototype-of */ "../../node_modules/core-js/internals/object-get-prototype-of.js");
+var CORRECT_PROTOTYPE_GETTER = __webpack_require__(/*! ../internals/correct-prototype-getter */ "../../node_modules/core-js/internals/correct-prototype-getter.js");
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeGetPrototypeOf(1); });
+
+// `Object.getPrototypeOf` method
+// https://tc39.github.io/ecma262/#sec-object.getprototypeof
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES, sham: !CORRECT_PROTOTYPE_GETTER }, {
+  getPrototypeOf: function getPrototypeOf(it) {
+    return nativeGetPrototypeOf(toObject(it));
+  }
+});
+
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.is-extensible.js":
+/*!********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.is-extensible.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+
+var nativeIsExtensible = Object.isExtensible;
+var FAILS_ON_PRIMITIVES = fails(function () { nativeIsExtensible(1); });
+
+// `Object.isExtensible` method
+// https://tc39.github.io/ecma262/#sec-object.isextensible
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  isExtensible: function isExtensible(it) {
+    return isObject(it) ? nativeIsExtensible ? nativeIsExtensible(it) : true : false;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.is-frozen.js":
+/*!****************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.is-frozen.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+
+var nativeIsFrozen = Object.isFrozen;
+var FAILS_ON_PRIMITIVES = fails(function () { nativeIsFrozen(1); });
+
+// `Object.isFrozen` method
+// https://tc39.github.io/ecma262/#sec-object.isfrozen
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  isFrozen: function isFrozen(it) {
+    return isObject(it) ? nativeIsFrozen ? nativeIsFrozen(it) : false : true;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.is-sealed.js":
+/*!****************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.is-sealed.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+
+var nativeIsSealed = Object.isSealed;
+var FAILS_ON_PRIMITIVES = fails(function () { nativeIsSealed(1); });
+
+// `Object.isSealed` method
+// https://tc39.github.io/ecma262/#sec-object.issealed
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  isSealed: function isSealed(it) {
+    return isObject(it) ? nativeIsSealed ? nativeIsSealed(it) : false : true;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.is.js":
+/*!*********************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.is.js ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var is = __webpack_require__(/*! ../internals/same-value */ "../../node_modules/core-js/internals/same-value.js");
+
+// `Object.is` method
+// https://tc39.github.io/ecma262/#sec-object.is
+$({ target: 'Object', stat: true }, {
+  is: is
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.keys.js":
+/*!***********************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.keys.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var nativeKeys = __webpack_require__(/*! ../internals/object-keys */ "../../node_modules/core-js/internals/object-keys.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeKeys(1); });
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  keys: function keys(it) {
+    return nativeKeys(toObject(it));
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.lookup-getter.js":
+/*!********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.lookup-getter.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var FORCED = __webpack_require__(/*! ../internals/object-prototype-accessors-forced */ "../../node_modules/core-js/internals/object-prototype-accessors-forced.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var toPrimitive = __webpack_require__(/*! ../internals/to-primitive */ "../../node_modules/core-js/internals/to-primitive.js");
+var getPrototypeOf = __webpack_require__(/*! ../internals/object-get-prototype-of */ "../../node_modules/core-js/internals/object-get-prototype-of.js");
+var getOwnPropertyDescriptor = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ "../../node_modules/core-js/internals/object-get-own-property-descriptor.js").f;
+
+// `Object.prototype.__lookupGetter__` method
+// https://tc39.github.io/ecma262/#sec-object.prototype.__lookupGetter__
+if (DESCRIPTORS) {
+  $({ target: 'Object', proto: true, forced: FORCED }, {
+    __lookupGetter__: function __lookupGetter__(P) {
+      var O = toObject(this);
+      var key = toPrimitive(P, true);
+      var desc;
+      do {
+        if (desc = getOwnPropertyDescriptor(O, key)) return desc.get;
+      } while (O = getPrototypeOf(O));
+    }
+  });
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.lookup-setter.js":
+/*!********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.lookup-setter.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var FORCED = __webpack_require__(/*! ../internals/object-prototype-accessors-forced */ "../../node_modules/core-js/internals/object-prototype-accessors-forced.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var toPrimitive = __webpack_require__(/*! ../internals/to-primitive */ "../../node_modules/core-js/internals/to-primitive.js");
+var getPrototypeOf = __webpack_require__(/*! ../internals/object-get-prototype-of */ "../../node_modules/core-js/internals/object-get-prototype-of.js");
+var getOwnPropertyDescriptor = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ "../../node_modules/core-js/internals/object-get-own-property-descriptor.js").f;
+
+// `Object.prototype.__lookupSetter__` method
+// https://tc39.github.io/ecma262/#sec-object.prototype.__lookupSetter__
+if (DESCRIPTORS) {
+  $({ target: 'Object', proto: true, forced: FORCED }, {
+    __lookupSetter__: function __lookupSetter__(P) {
+      var O = toObject(this);
+      var key = toPrimitive(P, true);
+      var desc;
+      do {
+        if (desc = getOwnPropertyDescriptor(O, key)) return desc.set;
+      } while (O = getPrototypeOf(O));
+    }
+  });
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.prevent-extensions.js":
+/*!*************************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.prevent-extensions.js ***!
+  \*************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+var onFreeze = __webpack_require__(/*! ../internals/internal-metadata */ "../../node_modules/core-js/internals/internal-metadata.js").onFreeze;
+var FREEZING = __webpack_require__(/*! ../internals/freezing */ "../../node_modules/core-js/internals/freezing.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+
+var nativePreventExtensions = Object.preventExtensions;
+var FAILS_ON_PRIMITIVES = fails(function () { nativePreventExtensions(1); });
+
+// `Object.preventExtensions` method
+// https://tc39.github.io/ecma262/#sec-object.preventextensions
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES, sham: !FREEZING }, {
+  preventExtensions: function preventExtensions(it) {
+    return nativePreventExtensions && isObject(it) ? nativePreventExtensions(onFreeze(it)) : it;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.seal.js":
+/*!***********************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.seal.js ***!
+  \***********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+var onFreeze = __webpack_require__(/*! ../internals/internal-metadata */ "../../node_modules/core-js/internals/internal-metadata.js").onFreeze;
+var FREEZING = __webpack_require__(/*! ../internals/freezing */ "../../node_modules/core-js/internals/freezing.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+
+var nativeSeal = Object.seal;
+var FAILS_ON_PRIMITIVES = fails(function () { nativeSeal(1); });
+
+// `Object.seal` method
+// https://tc39.github.io/ecma262/#sec-object.seal
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES, sham: !FREEZING }, {
+  seal: function seal(it) {
+    return nativeSeal && isObject(it) ? nativeSeal(onFreeze(it)) : it;
+  }
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.set-prototype-of.js":
+/*!***********************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.set-prototype-of.js ***!
+  \***********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var setPrototypeOf = __webpack_require__(/*! ../internals/object-set-prototype-of */ "../../node_modules/core-js/internals/object-set-prototype-of.js");
+
+// `Object.setPrototypeOf` method
+// https://tc39.github.io/ecma262/#sec-object.setprototypeof
+$({ target: 'Object', stat: true }, {
+  setPrototypeOf: setPrototypeOf
+});
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.to-string.js":
+/*!****************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.to-string.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var TO_STRING_TAG_SUPPORT = __webpack_require__(/*! ../internals/to-string-tag-support */ "../../node_modules/core-js/internals/to-string-tag-support.js");
+var redefine = __webpack_require__(/*! ../internals/redefine */ "../../node_modules/core-js/internals/redefine.js");
+var toString = __webpack_require__(/*! ../internals/object-to-string */ "../../node_modules/core-js/internals/object-to-string.js");
+
+// `Object.prototype.toString` method
+// https://tc39.github.io/ecma262/#sec-object.prototype.tostring
+if (!TO_STRING_TAG_SUPPORT) {
+  redefine(Object.prototype, 'toString', toString, { unsafe: true });
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.object.values.js":
+/*!*************************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.object.values.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var $values = __webpack_require__(/*! ../internals/object-to-array */ "../../node_modules/core-js/internals/object-to-array.js").values;
+
+// `Object.values` method
+// https://tc39.github.io/ecma262/#sec-object.values
+$({ target: 'Object', stat: true }, {
+  values: function values(O) {
+    return $values(O);
+  }
+});
+
+
+/***/ }),
+
 /***/ "../../node_modules/core-js/modules/es.string.iterator.js":
 /*!***************************************************************************************************!*\
   !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.string.iterator.js ***!
@@ -3746,6 +4827,329 @@ defineIterator(String, 'String', function (iterated) {
   state.index += point.length;
   return { value: point, done: false };
 });
+
+
+/***/ }),
+
+/***/ "../../node_modules/core-js/modules/es.symbol.js":
+/*!******************************************************************************************!*\
+  !*** /home/travis/build/excaliburjs/Excalibur/node_modules/core-js/modules/es.symbol.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "../../node_modules/core-js/internals/export.js");
+var global = __webpack_require__(/*! ../internals/global */ "../../node_modules/core-js/internals/global.js");
+var getBuiltIn = __webpack_require__(/*! ../internals/get-built-in */ "../../node_modules/core-js/internals/get-built-in.js");
+var IS_PURE = __webpack_require__(/*! ../internals/is-pure */ "../../node_modules/core-js/internals/is-pure.js");
+var DESCRIPTORS = __webpack_require__(/*! ../internals/descriptors */ "../../node_modules/core-js/internals/descriptors.js");
+var NATIVE_SYMBOL = __webpack_require__(/*! ../internals/native-symbol */ "../../node_modules/core-js/internals/native-symbol.js");
+var USE_SYMBOL_AS_UID = __webpack_require__(/*! ../internals/use-symbol-as-uid */ "../../node_modules/core-js/internals/use-symbol-as-uid.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "../../node_modules/core-js/internals/fails.js");
+var has = __webpack_require__(/*! ../internals/has */ "../../node_modules/core-js/internals/has.js");
+var isArray = __webpack_require__(/*! ../internals/is-array */ "../../node_modules/core-js/internals/is-array.js");
+var isObject = __webpack_require__(/*! ../internals/is-object */ "../../node_modules/core-js/internals/is-object.js");
+var anObject = __webpack_require__(/*! ../internals/an-object */ "../../node_modules/core-js/internals/an-object.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "../../node_modules/core-js/internals/to-object.js");
+var toIndexedObject = __webpack_require__(/*! ../internals/to-indexed-object */ "../../node_modules/core-js/internals/to-indexed-object.js");
+var toPrimitive = __webpack_require__(/*! ../internals/to-primitive */ "../../node_modules/core-js/internals/to-primitive.js");
+var createPropertyDescriptor = __webpack_require__(/*! ../internals/create-property-descriptor */ "../../node_modules/core-js/internals/create-property-descriptor.js");
+var nativeObjectCreate = __webpack_require__(/*! ../internals/object-create */ "../../node_modules/core-js/internals/object-create.js");
+var objectKeys = __webpack_require__(/*! ../internals/object-keys */ "../../node_modules/core-js/internals/object-keys.js");
+var getOwnPropertyNamesModule = __webpack_require__(/*! ../internals/object-get-own-property-names */ "../../node_modules/core-js/internals/object-get-own-property-names.js");
+var getOwnPropertyNamesExternal = __webpack_require__(/*! ../internals/object-get-own-property-names-external */ "../../node_modules/core-js/internals/object-get-own-property-names-external.js");
+var getOwnPropertySymbolsModule = __webpack_require__(/*! ../internals/object-get-own-property-symbols */ "../../node_modules/core-js/internals/object-get-own-property-symbols.js");
+var getOwnPropertyDescriptorModule = __webpack_require__(/*! ../internals/object-get-own-property-descriptor */ "../../node_modules/core-js/internals/object-get-own-property-descriptor.js");
+var definePropertyModule = __webpack_require__(/*! ../internals/object-define-property */ "../../node_modules/core-js/internals/object-define-property.js");
+var propertyIsEnumerableModule = __webpack_require__(/*! ../internals/object-property-is-enumerable */ "../../node_modules/core-js/internals/object-property-is-enumerable.js");
+var createNonEnumerableProperty = __webpack_require__(/*! ../internals/create-non-enumerable-property */ "../../node_modules/core-js/internals/create-non-enumerable-property.js");
+var redefine = __webpack_require__(/*! ../internals/redefine */ "../../node_modules/core-js/internals/redefine.js");
+var shared = __webpack_require__(/*! ../internals/shared */ "../../node_modules/core-js/internals/shared.js");
+var sharedKey = __webpack_require__(/*! ../internals/shared-key */ "../../node_modules/core-js/internals/shared-key.js");
+var hiddenKeys = __webpack_require__(/*! ../internals/hidden-keys */ "../../node_modules/core-js/internals/hidden-keys.js");
+var uid = __webpack_require__(/*! ../internals/uid */ "../../node_modules/core-js/internals/uid.js");
+var wellKnownSymbol = __webpack_require__(/*! ../internals/well-known-symbol */ "../../node_modules/core-js/internals/well-known-symbol.js");
+var wrappedWellKnownSymbolModule = __webpack_require__(/*! ../internals/well-known-symbol-wrapped */ "../../node_modules/core-js/internals/well-known-symbol-wrapped.js");
+var defineWellKnownSymbol = __webpack_require__(/*! ../internals/define-well-known-symbol */ "../../node_modules/core-js/internals/define-well-known-symbol.js");
+var setToStringTag = __webpack_require__(/*! ../internals/set-to-string-tag */ "../../node_modules/core-js/internals/set-to-string-tag.js");
+var InternalStateModule = __webpack_require__(/*! ../internals/internal-state */ "../../node_modules/core-js/internals/internal-state.js");
+var $forEach = __webpack_require__(/*! ../internals/array-iteration */ "../../node_modules/core-js/internals/array-iteration.js").forEach;
+
+var HIDDEN = sharedKey('hidden');
+var SYMBOL = 'Symbol';
+var PROTOTYPE = 'prototype';
+var TO_PRIMITIVE = wellKnownSymbol('toPrimitive');
+var setInternalState = InternalStateModule.set;
+var getInternalState = InternalStateModule.getterFor(SYMBOL);
+var ObjectPrototype = Object[PROTOTYPE];
+var $Symbol = global.Symbol;
+var $stringify = getBuiltIn('JSON', 'stringify');
+var nativeGetOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
+var nativeDefineProperty = definePropertyModule.f;
+var nativeGetOwnPropertyNames = getOwnPropertyNamesExternal.f;
+var nativePropertyIsEnumerable = propertyIsEnumerableModule.f;
+var AllSymbols = shared('symbols');
+var ObjectPrototypeSymbols = shared('op-symbols');
+var StringToSymbolRegistry = shared('string-to-symbol-registry');
+var SymbolToStringRegistry = shared('symbol-to-string-registry');
+var WellKnownSymbolsStore = shared('wks');
+var QObject = global.QObject;
+// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+var USE_SETTER = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
+
+// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+var setSymbolDescriptor = DESCRIPTORS && fails(function () {
+  return nativeObjectCreate(nativeDefineProperty({}, 'a', {
+    get: function () { return nativeDefineProperty(this, 'a', { value: 7 }).a; }
+  })).a != 7;
+}) ? function (O, P, Attributes) {
+  var ObjectPrototypeDescriptor = nativeGetOwnPropertyDescriptor(ObjectPrototype, P);
+  if (ObjectPrototypeDescriptor) delete ObjectPrototype[P];
+  nativeDefineProperty(O, P, Attributes);
+  if (ObjectPrototypeDescriptor && O !== ObjectPrototype) {
+    nativeDefineProperty(ObjectPrototype, P, ObjectPrototypeDescriptor);
+  }
+} : nativeDefineProperty;
+
+var wrap = function (tag, description) {
+  var symbol = AllSymbols[tag] = nativeObjectCreate($Symbol[PROTOTYPE]);
+  setInternalState(symbol, {
+    type: SYMBOL,
+    tag: tag,
+    description: description
+  });
+  if (!DESCRIPTORS) symbol.description = description;
+  return symbol;
+};
+
+var isSymbol = USE_SYMBOL_AS_UID ? function (it) {
+  return typeof it == 'symbol';
+} : function (it) {
+  return Object(it) instanceof $Symbol;
+};
+
+var $defineProperty = function defineProperty(O, P, Attributes) {
+  if (O === ObjectPrototype) $defineProperty(ObjectPrototypeSymbols, P, Attributes);
+  anObject(O);
+  var key = toPrimitive(P, true);
+  anObject(Attributes);
+  if (has(AllSymbols, key)) {
+    if (!Attributes.enumerable) {
+      if (!has(O, HIDDEN)) nativeDefineProperty(O, HIDDEN, createPropertyDescriptor(1, {}));
+      O[HIDDEN][key] = true;
+    } else {
+      if (has(O, HIDDEN) && O[HIDDEN][key]) O[HIDDEN][key] = false;
+      Attributes = nativeObjectCreate(Attributes, { enumerable: createPropertyDescriptor(0, false) });
+    } return setSymbolDescriptor(O, key, Attributes);
+  } return nativeDefineProperty(O, key, Attributes);
+};
+
+var $defineProperties = function defineProperties(O, Properties) {
+  anObject(O);
+  var properties = toIndexedObject(Properties);
+  var keys = objectKeys(properties).concat($getOwnPropertySymbols(properties));
+  $forEach(keys, function (key) {
+    if (!DESCRIPTORS || $propertyIsEnumerable.call(properties, key)) $defineProperty(O, key, properties[key]);
+  });
+  return O;
+};
+
+var $create = function create(O, Properties) {
+  return Properties === undefined ? nativeObjectCreate(O) : $defineProperties(nativeObjectCreate(O), Properties);
+};
+
+var $propertyIsEnumerable = function propertyIsEnumerable(V) {
+  var P = toPrimitive(V, true);
+  var enumerable = nativePropertyIsEnumerable.call(this, P);
+  if (this === ObjectPrototype && has(AllSymbols, P) && !has(ObjectPrototypeSymbols, P)) return false;
+  return enumerable || !has(this, P) || !has(AllSymbols, P) || has(this, HIDDEN) && this[HIDDEN][P] ? enumerable : true;
+};
+
+var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(O, P) {
+  var it = toIndexedObject(O);
+  var key = toPrimitive(P, true);
+  if (it === ObjectPrototype && has(AllSymbols, key) && !has(ObjectPrototypeSymbols, key)) return;
+  var descriptor = nativeGetOwnPropertyDescriptor(it, key);
+  if (descriptor && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key])) {
+    descriptor.enumerable = true;
+  }
+  return descriptor;
+};
+
+var $getOwnPropertyNames = function getOwnPropertyNames(O) {
+  var names = nativeGetOwnPropertyNames(toIndexedObject(O));
+  var result = [];
+  $forEach(names, function (key) {
+    if (!has(AllSymbols, key) && !has(hiddenKeys, key)) result.push(key);
+  });
+  return result;
+};
+
+var $getOwnPropertySymbols = function getOwnPropertySymbols(O) {
+  var IS_OBJECT_PROTOTYPE = O === ObjectPrototype;
+  var names = nativeGetOwnPropertyNames(IS_OBJECT_PROTOTYPE ? ObjectPrototypeSymbols : toIndexedObject(O));
+  var result = [];
+  $forEach(names, function (key) {
+    if (has(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || has(ObjectPrototype, key))) {
+      result.push(AllSymbols[key]);
+    }
+  });
+  return result;
+};
+
+// `Symbol` constructor
+// https://tc39.github.io/ecma262/#sec-symbol-constructor
+if (!NATIVE_SYMBOL) {
+  $Symbol = function Symbol() {
+    if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor');
+    var description = !arguments.length || arguments[0] === undefined ? undefined : String(arguments[0]);
+    var tag = uid(description);
+    var setter = function (value) {
+      if (this === ObjectPrototype) setter.call(ObjectPrototypeSymbols, value);
+      if (has(this, HIDDEN) && has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
+      setSymbolDescriptor(this, tag, createPropertyDescriptor(1, value));
+    };
+    if (DESCRIPTORS && USE_SETTER) setSymbolDescriptor(ObjectPrototype, tag, { configurable: true, set: setter });
+    return wrap(tag, description);
+  };
+
+  redefine($Symbol[PROTOTYPE], 'toString', function toString() {
+    return getInternalState(this).tag;
+  });
+
+  redefine($Symbol, 'withoutSetter', function (description) {
+    return wrap(uid(description), description);
+  });
+
+  propertyIsEnumerableModule.f = $propertyIsEnumerable;
+  definePropertyModule.f = $defineProperty;
+  getOwnPropertyDescriptorModule.f = $getOwnPropertyDescriptor;
+  getOwnPropertyNamesModule.f = getOwnPropertyNamesExternal.f = $getOwnPropertyNames;
+  getOwnPropertySymbolsModule.f = $getOwnPropertySymbols;
+
+  wrappedWellKnownSymbolModule.f = function (name) {
+    return wrap(wellKnownSymbol(name), name);
+  };
+
+  if (DESCRIPTORS) {
+    // https://github.com/tc39/proposal-Symbol-description
+    nativeDefineProperty($Symbol[PROTOTYPE], 'description', {
+      configurable: true,
+      get: function description() {
+        return getInternalState(this).description;
+      }
+    });
+    if (!IS_PURE) {
+      redefine(ObjectPrototype, 'propertyIsEnumerable', $propertyIsEnumerable, { unsafe: true });
+    }
+  }
+}
+
+$({ global: true, wrap: true, forced: !NATIVE_SYMBOL, sham: !NATIVE_SYMBOL }, {
+  Symbol: $Symbol
+});
+
+$forEach(objectKeys(WellKnownSymbolsStore), function (name) {
+  defineWellKnownSymbol(name);
+});
+
+$({ target: SYMBOL, stat: true, forced: !NATIVE_SYMBOL }, {
+  // `Symbol.for` method
+  // https://tc39.github.io/ecma262/#sec-symbol.for
+  'for': function (key) {
+    var string = String(key);
+    if (has(StringToSymbolRegistry, string)) return StringToSymbolRegistry[string];
+    var symbol = $Symbol(string);
+    StringToSymbolRegistry[string] = symbol;
+    SymbolToStringRegistry[symbol] = string;
+    return symbol;
+  },
+  // `Symbol.keyFor` method
+  // https://tc39.github.io/ecma262/#sec-symbol.keyfor
+  keyFor: function keyFor(sym) {
+    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol');
+    if (has(SymbolToStringRegistry, sym)) return SymbolToStringRegistry[sym];
+  },
+  useSetter: function () { USE_SETTER = true; },
+  useSimple: function () { USE_SETTER = false; }
+});
+
+$({ target: 'Object', stat: true, forced: !NATIVE_SYMBOL, sham: !DESCRIPTORS }, {
+  // `Object.create` method
+  // https://tc39.github.io/ecma262/#sec-object.create
+  create: $create,
+  // `Object.defineProperty` method
+  // https://tc39.github.io/ecma262/#sec-object.defineproperty
+  defineProperty: $defineProperty,
+  // `Object.defineProperties` method
+  // https://tc39.github.io/ecma262/#sec-object.defineproperties
+  defineProperties: $defineProperties,
+  // `Object.getOwnPropertyDescriptor` method
+  // https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptors
+  getOwnPropertyDescriptor: $getOwnPropertyDescriptor
+});
+
+$({ target: 'Object', stat: true, forced: !NATIVE_SYMBOL }, {
+  // `Object.getOwnPropertyNames` method
+  // https://tc39.github.io/ecma262/#sec-object.getownpropertynames
+  getOwnPropertyNames: $getOwnPropertyNames,
+  // `Object.getOwnPropertySymbols` method
+  // https://tc39.github.io/ecma262/#sec-object.getownpropertysymbols
+  getOwnPropertySymbols: $getOwnPropertySymbols
+});
+
+// Chrome 38 and 39 `Object.getOwnPropertySymbols` fails on primitives
+// https://bugs.chromium.org/p/v8/issues/detail?id=3443
+$({ target: 'Object', stat: true, forced: fails(function () { getOwnPropertySymbolsModule.f(1); }) }, {
+  getOwnPropertySymbols: function getOwnPropertySymbols(it) {
+    return getOwnPropertySymbolsModule.f(toObject(it));
+  }
+});
+
+// `JSON.stringify` method behavior with symbols
+// https://tc39.github.io/ecma262/#sec-json.stringify
+if ($stringify) {
+  var FORCED_JSON_STRINGIFY = !NATIVE_SYMBOL || fails(function () {
+    var symbol = $Symbol();
+    // MS Edge converts symbol values to JSON as {}
+    return $stringify([symbol]) != '[null]'
+      // WebKit converts symbol values to JSON as null
+      || $stringify({ a: symbol }) != '{}'
+      // V8 throws on boxed symbols
+      || $stringify(Object(symbol)) != '{}';
+  });
+
+  $({ target: 'JSON', stat: true, forced: FORCED_JSON_STRINGIFY }, {
+    // eslint-disable-next-line no-unused-vars
+    stringify: function stringify(it, replacer, space) {
+      var args = [it];
+      var index = 1;
+      var $replacer;
+      while (arguments.length > index) args.push(arguments[index++]);
+      $replacer = replacer;
+      if (!isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
+      if (!isArray(replacer)) replacer = function (key, value) {
+        if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
+        if (!isSymbol(value)) return value;
+      };
+      args[1] = replacer;
+      return $stringify.apply(null, args);
+    }
+  });
+}
+
+// `Symbol.prototype[@@toPrimitive]` method
+// https://tc39.github.io/ecma262/#sec-symbol.prototype-@@toprimitive
+if (!$Symbol[PROTOTYPE][TO_PRIMITIVE]) {
+  createNonEnumerableProperty($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+}
+// `Symbol.prototype[@@toStringTag]` property
+// https://tc39.github.io/ecma262/#sec-symbol.prototype-@@tostringtag
+setToStringTag($Symbol, SYMBOL);
+
+hiddenKeys[HIDDEN] = true;
 
 
 /***/ }),
@@ -5188,6 +6592,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Collision_Collider__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Collision/Collider */ "./Collision/Collider.ts");
 /* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
 /* harmony import */ var _EntityComponentSystem_Entity__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./EntityComponentSystem/Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony import */ var _Drawing_CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Drawing/CanvasDrawComponent */ "./Drawing/CanvasDrawComponent.ts");
+/* harmony import */ var _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./EntityComponentSystem/Components/TransformComponent */ "./EntityComponentSystem/Components/TransformComponent.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5207,6 +6613,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -5248,10 +6656,6 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     function ActorImpl(xOrConfig, y, width, height, color) {
         var _this = _super.call(this) || this;
-        /**
-         * The unique identifier for the actor
-         */
-        _this.id = ActorImpl.maxId++;
         _this._height = 0;
         _this._width = 0;
         /**
@@ -5328,7 +6732,6 @@ var ActorImpl = /** @class */ (function (_super) {
             captureMoveEvents: false,
             captureDragEvents: false
         };
-        _this._zIndex = 0;
         _this._isKilled = false;
         // #region Events
         _this._capturePointerEvents = [
@@ -5360,6 +6763,8 @@ var ActorImpl = /** @class */ (function (_super) {
         ];
         // initialize default options
         _this._initDefaults();
+        _this.addComponent(new _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_19__["TransformComponent"]());
+        _this.addComponent(new _Drawing_CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_18__["CanvasDrawComponent"](function (ctx, delta) { return _this.draw(ctx, delta); }));
         var shouldInitializeBody = true;
         var collisionType = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
@@ -5796,6 +7201,9 @@ var ActorImpl = /** @class */ (function (_super) {
         actor.body.collider.type = _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_13__["CollisionType"].PreventCollision;
         if (_Util_Util__WEBPACK_IMPORTED_MODULE_12__["addItemToArray"](actor, this.children)) {
             actor.parent = this;
+            if (this.scene) {
+                this.scene.world.add(actor);
+            }
         }
     };
     /**
@@ -5851,22 +7259,20 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
+     * @deprecated Use actor.z
      */
     ActorImpl.prototype.getZIndex = function () {
-        return this._zIndex;
+        return this.components.transform.z;
     };
     /**
      * Sets the z-index of an actor and updates it in the drawing list for the scene.
      * The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
      * @param newIndex new z-index to assign
+     * @deprecated Use actor.z
      */
     ActorImpl.prototype.setZIndex = function (newIndex) {
-        var _a, _b;
-        var newZ = newIndex;
-        (_a = this.scene) === null || _a === void 0 ? void 0 : _a.cleanupDrawTree(this);
-        this._zIndex = newZ;
-        (_b = this.scene) === null || _b === void 0 ? void 0 : _b.updateDrawTree(this);
+        this.components.transform.z = newIndex;
     };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**
@@ -6071,10 +7477,6 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param delta The time since the last draw in milliseconds
      */
     ActorImpl.prototype.draw = function (ctx, delta) {
-        ctx.save();
-        ctx.translate(this.pos.x, this.pos.y);
-        ctx.rotate(this.rotation);
-        ctx.scale(this.scale.x, this.scale.y);
         // translate canvas by anchor offset
         ctx.save();
         ctx.translate(-(this._width * this.anchor.x), -(this._height * this.anchor.y));
@@ -6092,14 +7494,7 @@ var ActorImpl = /** @class */ (function (_super) {
             }
         }
         ctx.restore();
-        // Draw child actors
-        for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].visible) {
-                this.children[i].draw(ctx, delta);
-            }
-        }
         this._postdraw(ctx, delta);
-        ctx.restore();
     };
     /**
      * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('predraw', (evt) =>{...})`
@@ -6209,10 +7604,6 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.defaults = {
         anchor: _Algebra__WEBPACK_IMPORTED_MODULE_8__["Vector"].Half
     };
-    /**
-     * Indicates the next id to be set
-     */
-    ActorImpl.maxId = 0;
     __decorate([
         Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_14__["obsolete"])({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);
@@ -7654,12 +9045,6 @@ var Body = /** @class */ (function () {
     function Body(_a) {
         var actor = _a.actor, collider = _a.collider;
         /**
-         * The (x, y) position of the actor this will be in the middle of the actor if the
-         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-         */
-        this.pos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
-        /**
          * The position of the actor last frame (x, y) in pixels
          */
         this.oldPos = new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](0, 0);
@@ -7692,10 +9077,6 @@ var Body = /** @class */ (function () {
          * Gets/sets the rotation of the body from the last frame.
          */
         this.oldRotation = 0; // radians
-        /**
-         * The rotation of the actor in radians
-         */
-        this.rotation = 0; // radians
         /**
          * The scale vector of the actor
          * @obsolete ex.Body.scale will be removed in v0.25.0
@@ -7774,6 +9155,41 @@ var Body = /** @class */ (function () {
                 this._collider.body = this;
                 this._wireColliderEventsToActor();
             }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "transform", {
+        get: function () {
+            return this.actor.components.transform;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "pos", {
+        /**
+         * The (x, y) position of the actor this will be in the middle of the actor if the
+         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+         */
+        get: function () {
+            return this.transform.pos;
+        },
+        set: function (val) {
+            this.transform.pos = val;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "rotation", {
+        /**
+         * The rotation of the actor in radians
+         */
+        get: function () {
+            return this.transform.rotation;
+        },
+        set: function (val) {
+            this.transform.rotation = val;
         },
         enumerable: false,
         configurable: true
@@ -12168,6 +13584,169 @@ var Animation = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./Drawing/CanvasDrawComponent.ts":
+/*!****************************************!*\
+  !*** ./Drawing/CanvasDrawComponent.ts ***!
+  \****************************************/
+/*! exports provided: CanvasDrawComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawComponent", function() { return CanvasDrawComponent; });
+/* harmony import */ var _EntityComponentSystem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../EntityComponentSystem */ "./EntityComponentSystem/index.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+var CanvasDrawComponent = /** @class */ (function (_super) {
+    __extends(CanvasDrawComponent, _super);
+    function CanvasDrawComponent(draw) {
+        var _a;
+        var _this = _super.call(this) || this;
+        _this.draw = draw;
+        _this.type = 'canvas';
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        _this.draw = (_a = _this.draw) !== null && _a !== void 0 ? _a : (function () { });
+        return _this;
+    }
+    return CanvasDrawComponent;
+}(_EntityComponentSystem__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+
+
+
+/***/ }),
+
+/***/ "./Drawing/CanvasDrawingSystem.ts":
+/*!****************************************!*\
+  !*** ./Drawing/CanvasDrawingSystem.ts ***!
+  \****************************************/
+/*! exports provided: CanvasDrawingSystem */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawingSystem", function() { return CanvasDrawingSystem; });
+/* harmony import */ var _EntityComponentSystem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../EntityComponentSystem */ "./EntityComponentSystem/index.ts");
+/* harmony import */ var _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../EntityComponentSystem/Components/TransformComponent */ "./EntityComponentSystem/Components/TransformComponent.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * Draws anything with a transform and a "draw" method
+ */
+var CanvasDrawingSystem = /** @class */ (function (_super) {
+    __extends(CanvasDrawingSystem, _super);
+    function CanvasDrawingSystem() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.types = ['transform', 'canvas'];
+        _this.systemType = _EntityComponentSystem__WEBPACK_IMPORTED_MODULE_0__["SystemType"].Draw;
+        _this.priority = -1;
+        return _this;
+    }
+    CanvasDrawingSystem.prototype.initialize = function (scene) {
+        this._ctx = scene.engine.ctx;
+        this._engine = scene.engine;
+        this._camera = scene.camera;
+    };
+    CanvasDrawingSystem.prototype.sort = function (a, b) {
+        return a.components.transform.z - b.components.transform.z;
+    };
+    CanvasDrawingSystem.prototype.update = function (entities, delta) {
+        this._clearScreen();
+        var transform;
+        var canvasdraw;
+        var length = entities.length;
+        for (var i = 0; i < length; i++) {
+            if (entities[i].visible && !entities[i].isOffScreen) {
+                transform = entities[i].components.transform;
+                canvasdraw = entities[i].components.canvas;
+                this._ctx.save();
+                this._pushCameraTransform(transform);
+                this._ctx.save();
+                this._applyTransform(entities[i]);
+                canvasdraw.draw(this._ctx, delta);
+                this._ctx.restore();
+                this._popCameraTransform(transform);
+                this._ctx.restore();
+            }
+            if (this._engine.isDebug) {
+                this._ctx.save();
+                this._pushCameraTransform(transform);
+                this._ctx.strokeStyle = 'yellow';
+                entities[i].debugDraw(this._ctx);
+                this._popCameraTransform(transform);
+                this._ctx.restore();
+            }
+        }
+        if (this._engine.isDebug) {
+            this._ctx.save();
+            this._camera.draw(this._ctx);
+            this._camera.debugDraw(this._ctx);
+            this._ctx.restore();
+        }
+    };
+    CanvasDrawingSystem.prototype._applyTransform = function (actor) {
+        var parent = actor.parent;
+        while (parent) {
+            this._ctx.translate(parent.pos.x, parent.pos.y);
+            this._ctx.rotate(parent.rotation);
+            this._ctx.scale(parent.scale.x, parent.scale.y);
+            parent = parent.parent;
+        }
+        this._ctx.translate(actor.pos.x, actor.pos.y);
+        this._ctx.rotate(actor.rotation);
+        this._ctx.scale(actor.scale.x, actor.scale.y);
+    };
+    CanvasDrawingSystem.prototype._clearScreen = function () {
+        this._ctx.clearRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
+        this._ctx.fillStyle = this._engine.backgroundColor.toString();
+        this._ctx.fillRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
+    };
+    CanvasDrawingSystem.prototype._pushCameraTransform = function (transform) {
+        if (transform.coordPlane === _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_1__["CoordPlane"].World) {
+            // Apply camera transform to place entity in world space
+            this._ctx.save();
+            if (this._camera) {
+                this._camera.draw(this._ctx);
+            }
+        }
+    };
+    CanvasDrawingSystem.prototype._popCameraTransform = function (transform) {
+        if (transform.coordPlane === _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_1__["CoordPlane"].World) {
+            // Restore back to screen space from world space if we were drawing an entity there
+            this._ctx.restore();
+        }
+    };
+    return CanvasDrawingSystem;
+}(_EntityComponentSystem__WEBPACK_IMPORTED_MODULE_0__["System"]));
+
+
+
+/***/ }),
+
 /***/ "./Drawing/Color.ts":
 /*!**************************!*\
   !*** ./Drawing/Color.ts ***!
@@ -12727,7 +14306,7 @@ var HSLColor = /** @class */ (function () {
 /*!**************************!*\
   !*** ./Drawing/Index.ts ***!
   \**************************/
-/*! exports provided: Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects */
+/*! exports provided: Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, CanvasDrawComponent, CanvasDrawingSystem, Effects */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12749,8 +14328,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _SpriteSheet__WEBPACK_IMPORTED_MODULE_4__["SpriteFont"]; });
 
-/* harmony import */ var _SpriteEffects__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SpriteEffects */ "./Drawing/SpriteEffects.ts");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _SpriteEffects__WEBPACK_IMPORTED_MODULE_5__; });
+/* harmony import */ var _CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CanvasDrawComponent */ "./Drawing/CanvasDrawComponent.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawComponent", function() { return _CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_5__["CanvasDrawComponent"]; });
+
+/* harmony import */ var _CanvasDrawingSystem__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CanvasDrawingSystem */ "./Drawing/CanvasDrawingSystem.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawingSystem", function() { return _CanvasDrawingSystem__WEBPACK_IMPORTED_MODULE_6__["CanvasDrawingSystem"]; });
+
+/* harmony import */ var _SpriteEffects__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SpriteEffects */ "./Drawing/SpriteEffects.ts");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _SpriteEffects__WEBPACK_IMPORTED_MODULE_7__; });
+
+
 
 
 
@@ -13903,20 +15490,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Polyfill */ "./Polyfill.ts");
 /* harmony import */ var _Promises__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Promises */ "./Promises.ts");
 /* harmony import */ var _Screen__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Screen */ "./Screen.ts");
-/* harmony import */ var _ScreenElement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ScreenElement */ "./ScreenElement.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
-/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
-/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
-/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Loader.ts");
+/* harmony import */ var _Util_Detector__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Detector */ "./Util/Detector.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
+/* harmony import */ var _Scene__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Scene */ "./Scene.ts");
+/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Debug */ "./Debug.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
+/* harmony import */ var _Util_Browser__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Browser */ "./Util/Browser.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13941,12 +15526,16 @@ var __assign = (undefined && undefined.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_2__["polyfill"])();
-
-
 
 
 
@@ -14034,7 +15623,7 @@ var Engine = /** @class */ (function (_super) {
          * Indicates whether the engine should draw with debug information
          */
         _this._isDebug = false;
-        _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_13__["Color"](255, 255, 255);
+        _this.debugColor = new _Drawing_Color__WEBPACK_IMPORTED_MODULE_10__["Color"](255, 255, 255);
         /**
          * Sets the Transparency for the engine.
          */
@@ -14043,7 +15632,7 @@ var Engine = /** @class */ (function (_super) {
          * The action to take when a fatal exception is thrown
          */
         _this.onFatalException = function (e) {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_12__["Logger"].getInstance().fatal(e);
+            _Util_Log__WEBPACK_IMPORTED_MODULE_9__["Logger"].getInstance().fatal(e);
         };
         _this._timescale = 1.0;
         _this._isLoading = false;
@@ -14051,9 +15640,9 @@ var Engine = /** @class */ (function (_super) {
         options = __assign(__assign({}, Engine._DEFAULT_ENGINE_OPTIONS), options);
         _Flags__WEBPACK_IMPORTED_MODULE_1__["Flags"].freeze();
         // Initialize browser events facade
-        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_18__["BrowserEvents"](window, document);
+        _this.browser = new _Util_Browser__WEBPACK_IMPORTED_MODULE_15__["BrowserEvents"](window, document);
         // Check compatibility
-        var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_10__["Detector"]();
+        var detector = new _Util_Detector__WEBPACK_IMPORTED_MODULE_7__["Detector"]();
         if (!options.suppressMinimumBrowserFeatureDetection && !(_this._compatible = detector.test())) {
             var message = document.createElement('div');
             message.innerText = 'Sorry, your browser does not support all the features needed for Excalibur';
@@ -14091,9 +15680,9 @@ O|===|* >________________>\n\
         if (options.suppressPlayButton) {
             _this._suppressPlayButton = true;
         }
-        _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_12__["Logger"].getInstance();
+        _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_9__["Logger"].getInstance();
         // If debug is enabled, let's log browser features to the console.
-        if (_this._logger.defaultLevel === _Util_Log__WEBPACK_IMPORTED_MODULE_12__["LogLevel"].Debug) {
+        if (_this._logger.defaultLevel === _Util_Log__WEBPACK_IMPORTED_MODULE_9__["LogLevel"].Debug) {
             detector.logBrowserFeatures();
         }
         _this._logger.debug('Building engine...');
@@ -14139,10 +15728,10 @@ O|===|* >________________>\n\
             _this.backgroundColor = options.backgroundColor.clone();
         }
         _this.enableCanvasTransparency = options.enableCanvasTransparency;
-        _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_9__["Loader"]();
-        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_15__["Debug"](_this);
+        _this._loader = new _Loader__WEBPACK_IMPORTED_MODULE_6__["Loader"]();
+        _this.debug = new _Debug__WEBPACK_IMPORTED_MODULE_12__["Debug"](_this);
         _this._initialize(options);
-        _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_14__["Scene"](_this);
+        _this.rootScene = _this.currentScene = new _Scene__WEBPACK_IMPORTED_MODULE_11__["Scene"](_this);
         _this.addScene('root', _this.rootScene);
         _this.goToScene('root');
         return _this;
@@ -14315,7 +15904,7 @@ O|===|* >________________>\n\
          */
         set: function (value) {
             if (value <= 0) {
-                _Util_Log__WEBPACK_IMPORTED_MODULE_12__["Logger"].getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
+                _Util_Log__WEBPACK_IMPORTED_MODULE_9__["Logger"].getInstance().error('Cannot set engine.timescale to a value of 0 or less than 0.');
                 return;
             }
             this._timescale = value;
@@ -14333,6 +15922,7 @@ O|===|* >________________>\n\
      * @param animation  Animation to play
      * @param x          x game coordinate to play the animation
      * @param y          y game coordinate to play the animation
+     * @deprecated
      */
     Engine.prototype.playAnimation = function (animation, x, y) {
         this._animations.push(new AnimationNode(animation, x, y));
@@ -14381,7 +15971,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype.removeScene = function (entity) {
-        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_14__["Scene"]) {
+        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_11__["Scene"]) {
             // remove scene
             for (var key in this.scenes) {
                 if (this.scenes.hasOwnProperty(key)) {
@@ -14397,65 +15987,21 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.add = function (entity) {
-        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_5__["ScreenElement"]) {
-            this.currentScene.addScreenElement(entity);
-            return;
-        }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_6__["Actor"]) {
-            this._addChild(entity);
-        }
-        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_7__["Timer"]) {
-            this.addTimer(entity);
-        }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_8__["TileMap"]) {
-            this.addTileMap(entity);
-        }
         if (arguments.length === 2) {
             this.addScene(arguments[0], arguments[1]);
         }
+        this.currentScene.add(entity);
     };
     Engine.prototype.remove = function (entity) {
-        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_5__["ScreenElement"]) {
-            this.currentScene.removeScreenElement(entity);
-            return;
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_5__["Actor"]) {
+            this.currentScene.remove(entity);
         }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_6__["Actor"]) {
-            this._removeChild(entity);
-        }
-        if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_7__["Timer"]) {
-            this.removeTimer(entity);
-        }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_8__["TileMap"]) {
-            this.removeTileMap(entity);
-        }
-        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_14__["Scene"]) {
+        if (entity instanceof _Scene__WEBPACK_IMPORTED_MODULE_11__["Scene"]) {
             this.removeScene(entity);
         }
         if (typeof entity === 'string') {
             this.removeScene(entity);
         }
-    };
-    /**
-     * Adds an actor to the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.add(actor)`.
-     *
-     * Actors can only be drawn if they are a member of a scene, and only
-     * the [[currentScene]] may be drawn or updated.
-     *
-     * @param actor  The actor to add to the [[currentScene]]
-     */
-    Engine.prototype._addChild = function (actor) {
-        this.currentScene.add(actor);
-    };
-    /**
-     * Removes an actor from the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.remove(actor)`.
-     * Actors that are removed from a scene will no longer be drawn or updated.
-     *
-     * @param actor  The actor to remove from the [[currentScene]].
-     */
-    Engine.prototype._removeChild = function (actor) {
-        this.currentScene.remove(actor);
     };
     /**
      * Changes the currently updating and drawing scene to a different,
@@ -14470,7 +16016,7 @@ O|===|* >________________>\n\
             // only deactivate when initialized
             if (this.currentScene.isInitialized) {
                 this.currentScene._deactivate.call(this.currentScene, [oldScene, newScene]);
-                this.currentScene.eventDispatcher.emit('deactivate', new _Events__WEBPACK_IMPORTED_MODULE_11__["DeactivateEvent"](newScene, this.currentScene));
+                this.currentScene.eventDispatcher.emit('deactivate', new _Events__WEBPACK_IMPORTED_MODULE_8__["DeactivateEvent"](newScene, this.currentScene));
             }
             // set current scene to new one
             this.currentScene = newScene;
@@ -14478,7 +16024,7 @@ O|===|* >________________>\n\
             // initialize the current scene if has not been already
             this.currentScene._initialize(this);
             this.currentScene._activate.call(this.currentScene, [oldScene, newScene]);
-            this.currentScene.eventDispatcher.emit('activate', new _Events__WEBPACK_IMPORTED_MODULE_11__["ActivateEvent"](oldScene, this.currentScene));
+            this.currentScene.eventDispatcher.emit('activate', new _Events__WEBPACK_IMPORTED_MODULE_8__["ActivateEvent"](oldScene, this.currentScene));
         }
         else {
             this._logger.error('Scene', key, 'does not exist!');
@@ -14506,12 +16052,12 @@ O|===|* >________________>\n\
         this.pageScrollPreventionMode = options.scrollPreventionMode;
         // initialize inputs
         this.input = {
-            keyboard: new _Input_Index__WEBPACK_IMPORTED_MODULE_17__["Keyboard"](),
-            pointers: new _Input_Index__WEBPACK_IMPORTED_MODULE_17__["Pointers"](this),
-            gamepads: new _Input_Index__WEBPACK_IMPORTED_MODULE_17__["Gamepads"]()
+            keyboard: new _Input_Index__WEBPACK_IMPORTED_MODULE_14__["Keyboard"](),
+            pointers: new _Input_Index__WEBPACK_IMPORTED_MODULE_14__["Pointers"](this),
+            gamepads: new _Input_Index__WEBPACK_IMPORTED_MODULE_14__["Gamepads"]()
         };
         this.input.keyboard.init();
-        this.input.pointers.init(options && options.pointerScope === _Input_Index__WEBPACK_IMPORTED_MODULE_17__["PointerScope"].Document ? document : this.canvas);
+        this.input.pointers.init(options && options.pointerScope === _Input_Index__WEBPACK_IMPORTED_MODULE_14__["PointerScope"].Document ? document : this.canvas);
         this.input.gamepads.init();
         // Issue #385 make use of the visibility api
         // https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
@@ -14531,11 +16077,11 @@ O|===|* >________________>\n\
         }
         this.browser.document.on(visibilityChange, function () {
             if (document[hidden]) {
-                _this.eventDispatcher.emit('hidden', new _Events__WEBPACK_IMPORTED_MODULE_11__["HiddenEvent"](_this));
+                _this.eventDispatcher.emit('hidden', new _Events__WEBPACK_IMPORTED_MODULE_8__["HiddenEvent"](_this));
                 _this._logger.debug('Window hidden');
             }
             else {
-                _this.eventDispatcher.emit('visible', new _Events__WEBPACK_IMPORTED_MODULE_11__["VisibleEvent"](_this));
+                _this.eventDispatcher.emit('visible', new _Events__WEBPACK_IMPORTED_MODULE_8__["VisibleEvent"](_this));
                 _this._logger.debug('Window visible');
             }
         });
@@ -14574,7 +16120,7 @@ O|===|* >________________>\n\
     Engine.prototype._overrideInitialize = function (engine) {
         if (!this.isInitialized) {
             this.onInitialize(engine);
-            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_11__["InitializeEvent"](engine, this));
+            _super.prototype.emit.call(this, 'initialize', new _Events__WEBPACK_IMPORTED_MODULE_8__["InitializeEvent"](engine, this));
             this._isInitialized = true;
         }
     };
@@ -14613,7 +16159,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._preupdate = function (delta) {
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_11__["PreUpdateEvent"](this, delta, this));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_8__["PreUpdateEvent"](this, delta, this));
         this.onPreUpdate(this, delta);
     };
     Engine.prototype.onPreUpdate = function (_engine, _delta) {
@@ -14623,7 +16169,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._postupdate = function (delta) {
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_11__["PostUpdateEvent"](this, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_8__["PostUpdateEvent"](this, delta, this));
         this.onPostUpdate(this, delta);
     };
     Engine.prototype.onPostUpdate = function (_engine, _delta) {
@@ -14657,7 +16203,7 @@ O|===|* >________________>\n\
             this.ctx.fillStyle = this.debugColor.toString();
             var keys = this.input.keyboard.getKeys();
             for (var j = 0; j < keys.length; j++) {
-                this.ctx.fillText(keys[j].toString() + ' : ' + (_Input_Index__WEBPACK_IMPORTED_MODULE_17__["Keys"][keys[j]] ? _Input_Index__WEBPACK_IMPORTED_MODULE_17__["Keys"][keys[j]] : 'Not Mapped'), 100, 10 * j + 10);
+                this.ctx.fillText(keys[j].toString() + ' : ' + (_Input_Index__WEBPACK_IMPORTED_MODULE_14__["Keys"][keys[j]] ? _Input_Index__WEBPACK_IMPORTED_MODULE_14__["Keys"][keys[j]] : 'Not Mapped'), 100, 10 * j + 10);
             }
             this.ctx.fillText('FPS:' + this.stats.currFrame.fps.toFixed(2).toString(), 10, 10);
         }
@@ -14671,7 +16217,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._predraw = function (_ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_11__["PreDrawEvent"](_ctx, delta, this));
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_8__["PreDrawEvent"](_ctx, delta, this));
         this.onPreDraw(_ctx, delta);
     };
     Engine.prototype.onPreDraw = function (_ctx, _delta) {
@@ -14681,7 +16227,7 @@ O|===|* >________________>\n\
      * @internal
      */
     Engine.prototype._postdraw = function (_ctx, delta) {
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_11__["PostDrawEvent"](_ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_8__["PostDrawEvent"](_ctx, delta, this));
         this.onPostDraw(_ctx, delta);
     };
     Engine.prototype.onPostDraw = function (_ctx, _delta) {
@@ -14730,7 +16276,7 @@ O|===|* >________________>\n\
         loadingComplete.then(function () {
             _this.screen.popResolutionAndViewport();
             _this.screen.applyResolutionAndViewport();
-            _this.emit('start', new _Events__WEBPACK_IMPORTED_MODULE_11__["GameStartEvent"](_this));
+            _this.emit('start', new _Events__WEBPACK_IMPORTED_MODULE_8__["GameStartEvent"](_this));
         });
         if (!this._hasStarted) {
             this._hasStarted = true;
@@ -14752,7 +16298,7 @@ O|===|* >________________>\n\
             }
             try {
                 game._requestId = raf(mainloop);
-                game.emit('preframe', new _Events__WEBPACK_IMPORTED_MODULE_11__["PreFrameEvent"](game, game.stats.prevFrame));
+                game.emit('preframe', new _Events__WEBPACK_IMPORTED_MODULE_8__["PreFrameEvent"](game, game.stats.prevFrame));
                 // Get the time to calculate time-elapsed
                 var now = nowFn();
                 var elapsed = Math.floor(now - lastTime) || 1;
@@ -14778,7 +16324,7 @@ O|===|* >________________>\n\
                 game.stats.currFrame.duration.update = afterUpdate - beforeUpdate;
                 game.stats.currFrame.duration.draw = afterDraw - afterUpdate;
                 lastTime = now;
-                game.emit('postframe', new _Events__WEBPACK_IMPORTED_MODULE_11__["PostFrameEvent"](game, game.stats.currFrame));
+                game.emit('postframe', new _Events__WEBPACK_IMPORTED_MODULE_8__["PostFrameEvent"](game, game.stats.currFrame));
                 game.stats.prevFrame.reset(game.stats.currFrame);
             }
             catch (e) {
@@ -14793,7 +16339,7 @@ O|===|* >________________>\n\
      */
     Engine.prototype.stop = function () {
         if (this._hasStarted) {
-            this.emit('stop', new _Events__WEBPACK_IMPORTED_MODULE_11__["GameStopEvent"](this));
+            this.emit('stop', new _Events__WEBPACK_IMPORTED_MODULE_8__["GameStopEvent"](this));
             this.browser.pause();
             this._hasStarted = false;
             this._logger.debug('Game stopped');
@@ -14849,19 +16395,23 @@ O|===|* >________________>\n\
         enableCanvasTransparency: true,
         canvasElementId: '',
         canvasElement: undefined,
-        pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_17__["PointerScope"].Document,
+        pointerScope: _Input_Index__WEBPACK_IMPORTED_MODULE_14__["PointerScope"].Document,
         suppressConsoleBootMessage: null,
         suppressMinimumBrowserFeatureDetection: null,
         suppressHiDPIScaling: null,
         suppressPlayButton: null,
         scrollPreventionMode: ScrollPreventionMode.Canvas,
-        backgroundColor: _Drawing_Color__WEBPACK_IMPORTED_MODULE_13__["Color"].fromHex('#2185d0') // Excalibur blue
+        backgroundColor: _Drawing_Color__WEBPACK_IMPORTED_MODULE_10__["Color"].fromHex('#2185d0') // Excalibur blue
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_16__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0' })
+    ], Engine.prototype, "playAnimation", null);
     return Engine;
-}(_Class__WEBPACK_IMPORTED_MODULE_16__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_13__["Class"]));
 
 /**
  * @internal
+ * @deprecated
  */
 var AnimationNode = /** @class */ (function () {
     function AnimationNode(animation, x, y) {
@@ -14869,6 +16419,9 @@ var AnimationNode = /** @class */ (function () {
         this.x = x;
         this.y = y;
     }
+    AnimationNode = __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_16__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0' })
+    ], AnimationNode);
     return AnimationNode;
 }());
 
@@ -14909,11 +16462,26 @@ function hasClone(x) {
 /**
  * Components are containers for state in Excalibur, the are meant to convey capabilities that an Entity posesses
  *
- * Implementations of Component must have a zero-arg constructor
+ * Implementations of Component must have a zero-arg constructor to support dependecies
+ *
+ * ```typescript
+ * class MyComponent extends ex.Component<'my'> {
+ *   public readonly type = 'my';
+ *   // zero arg support required if you want to use component dependencies
+ *   constructor(public optionalPos?: ex.Vector) {}
+ * }
+ * ```
  */
 var Component = /** @class */ (function () {
     function Component() {
+        /**
+         * Current owning [[Entity]], if any, of this component. Null if not added to any [[Entity]]
+         */
+        this.owner = null;
     }
+    /**
+     * Clones any properties on this component, if that property value has a `clone()` method it will be called
+     */
     Component.prototype.clone = function () {
         var newComponent = new this.constructor();
         for (var prop in this) {
@@ -14934,6 +16502,14 @@ var Component = /** @class */ (function () {
 
 /**
  * Tag components are a way of tagging a component with label and a simple value
+ *
+ * For example:
+ *
+ * ```typescript
+ * const isOffscreen = new TagComponent('offscreen');
+ * entity.addComponent(isOffscreen);
+ * entity.tags.includes
+ * ```
  */
 var TagComponent = /** @class */ (function (_super) {
     __extends(TagComponent, _super);
@@ -14945,6 +16521,85 @@ var TagComponent = /** @class */ (function (_super) {
     }
     return TagComponent;
 }(Component));
+
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/Components/TransformComponent.ts":
+/*!****************************************************************!*\
+  !*** ./EntityComponentSystem/Components/TransformComponent.ts ***!
+  \****************************************************************/
+/*! exports provided: CoordPlane, TransformComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CoordPlane", function() { return CoordPlane; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TransformComponent", function() { return TransformComponent; });
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Algebra */ "./Algebra.ts");
+/* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Component */ "./EntityComponentSystem/Component.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * Enum representing the coordinate plane for the position 2D vector in the [[TransformComponent]]
+ */
+var CoordPlane;
+(function (CoordPlane) {
+    /**
+     * The world coordinate plane (default) represents world space, any entities drawn with world
+     * space move when the camera moves.
+     */
+    CoordPlane["World"] = "world";
+    /**
+     * The screen coordinate plane represents screen space, entities drawn in screen space are pinned
+     * to screen coordinates ignoring the camera.
+     */
+    CoordPlane["Screen"] = "screen";
+})(CoordPlane || (CoordPlane = {}));
+var TransformComponent = /** @class */ (function (_super) {
+    __extends(TransformComponent, _super);
+    function TransformComponent() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.type = 'transform';
+        /**
+         * The [[coordinate plane|CoordPlane]] for this transform for the entity.
+         */
+        _this.coordPlane = CoordPlane.World;
+        /**
+         * The current position of the entity in world space or in screen space depending on the the [[coordinate plan|CoordPlane]]
+         */
+        _this.pos = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].Zero;
+        /**
+         * The z-index ordering of the entity, a higher values are drawn on top of lower values.
+         * For example z=99 would be drawn on top of z=0.
+         */
+        _this.z = 0;
+        /**
+         * The rotation of the entity in radians. For example `Math.PI` radians is the same as 180 degrees.
+         */
+        _this.rotation = 0;
+        /**
+         * The scale of the entity.
+         */
+        _this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"].One;
+        return _this;
+    }
+    return TransformComponent;
+}(_Component__WEBPACK_IMPORTED_MODULE_1__["Component"]));
 
 
 
@@ -15019,6 +16674,17 @@ var RemovedComponent = /** @class */ (function () {
 function isRemovedComponent(x) {
     return !!x && x.type === 'Component Removed';
 }
+/**
+ * An Entity is the base type of anything that can have behavior in Excalibur, they are part of the built in entity component system
+ *
+ * Entities can be strongly typed with the components they contain
+ *
+ * ```typescript
+ * const entity = new Entity<ComponentA | ComponentB>();
+ * entity.components.a; // Type ComponentA
+ * entity.components.b; // Type ComponentB
+ * ```
+ */
 var Entity = /** @class */ (function (_super) {
     __extends(Entity, _super);
     function Entity() {
@@ -15031,12 +16697,19 @@ var Entity = /** @class */ (function (_super) {
          * Whether this entity is active, if set to false it will be reclaimed
          */
         _this.active = true;
-        _this._componentsToRemove = [];
+        _this._tagsMemo = [];
         _this._typesMemo = [];
-        _this._dirty = true;
+        /**
+         * Bucket to hold on to deferred removals
+         */
+        _this._componentsToRemove = [];
+        /**
+         * Proxy handler for component changes, responsible for notifying observers
+         */
         _this._handleChanges = {
             defineProperty: function (obj, prop, descriptor) {
                 obj[prop] = descriptor.value;
+                _this._rebuildMemos();
                 _this.changes.notifyAll(new AddedComponent({
                     component: descriptor.value,
                     entity: _this
@@ -15050,32 +16723,65 @@ var Entity = /** @class */ (function (_super) {
                         entity: _this
                     }));
                     delete obj[prop];
+                    _this._rebuildMemos();
                     return true;
                 }
                 return false;
             }
         };
+        /**
+         * Dictionary that holds entity components
+         */
         _this.components = new Proxy({}, _this._handleChanges);
+        /**
+         * Observable that keeps track of component add or remove changes on the entity
+         */
         _this.changes = new _Util_Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"]();
         _this._isInitialized = false;
         return _this;
     }
+    /**
+     * Kill the entity, means it will no longer be updated. Kills are deferred to the end of the update.
+     */
     Entity.prototype.kill = function () {
         this.active = false;
     };
     Entity.prototype.isKilled = function () {
         return !this.active;
     };
+    Object.defineProperty(Entity.prototype, "tags", {
+        /**
+         * Specifically get the tags on the entity from [[TagComponent]]
+         */
+        get: function () {
+            return this._tagsMemo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Check if a tag exists on the entity
+     * @param tag name to check for
+     */
+    Entity.prototype.hasTag = function (tag) {
+        return this.tags.includes(tag);
+    };
     Object.defineProperty(Entity.prototype, "types", {
         /**
          * The types of the components on the Entity
          */
         get: function () {
-            return this._dirty ? (this._typesMemo = Object.keys(this.components)) : this._typesMemo;
+            return this._typesMemo;
         },
         enumerable: false,
         configurable: true
     });
+    Entity.prototype._rebuildMemos = function () {
+        this._tagsMemo = Object.values(this.components)
+            .filter(function (c) { return c instanceof _Component__WEBPACK_IMPORTED_MODULE_0__["TagComponent"]; })
+            .map(function (c) { return c.type; });
+        this._typesMemo = Object.keys(this.components);
+    };
     /**
      * Creates a deep copy of the entity and a copy of all its components
      */
@@ -15087,12 +16793,17 @@ var Entity = /** @class */ (function (_super) {
         }
         return newEntity;
     };
+    /**
+     * Adds a component to the entity, or adds a copy of all the components from another entity as a "prefab"
+     * @param componentOrEntity Component or Entity to add copy of components from
+     * @param force Optionally overwrite any existing components of the same type
+     */
     Entity.prototype.addComponent = function (componentOrEntity, force) {
         if (force === void 0) { force = false; }
         // If you use an entity as a "prefab" or template
         if (componentOrEntity instanceof Entity) {
             for (var c in componentOrEntity.components) {
-                this.addComponent(componentOrEntity.components[c].clone());
+                this.addComponent(componentOrEntity.components[c].clone(), force);
             }
             // Normal component case
         }
@@ -15110,13 +16821,11 @@ var Entity = /** @class */ (function (_super) {
                 for (var _i = 0, _a = componentOrEntity.dependencies; _i < _a.length; _i++) {
                     var ctor = _a[_i];
                     this.addComponent(new ctor());
-                    this._dirty = true;
                 }
             }
             componentOrEntity.owner = this;
             this.components[componentOrEntity.type] = componentOrEntity;
             if (componentOrEntity.onAdd) {
-                this._dirty = true;
                 componentOrEntity.onAdd(this);
             }
         }
@@ -15151,14 +16860,13 @@ var Entity = /** @class */ (function (_super) {
                 this.components[type].onRemove(this);
             }
             delete this.components[type];
-            this._dirty = true;
         }
     };
     /**
      * @hidden
      * @internal
      */
-    Entity.prototype.processRemoval = function () {
+    Entity.prototype.processComponentRemoval = function () {
         for (var _i = 0, _a = this._componentsToRemove; _i < _a.length; _i++) {
             var componentOrType = _a[_i];
             var type = typeof componentOrType === 'string' ? componentOrType : componentOrType.type;
@@ -15166,6 +16874,10 @@ var Entity = /** @class */ (function (_super) {
         }
         this._componentsToRemove.length = 0;
     };
+    /**
+     * Check if a component type exists
+     * @param type
+     */
     Entity.prototype.has = function (type) {
         return !!this.components[type];
     };
@@ -15262,8 +16974,8 @@ __webpack_require__.r(__webpack_exports__);
 
 // Add/Remove entitys and components
 var EntityManager = /** @class */ (function () {
-    function EntityManager(_scene) {
-        this._scene = _scene;
+    function EntityManager(_world) {
+        this._world = _world;
         this.entities = [];
         this._entityIndex = {};
     }
@@ -15274,10 +16986,10 @@ var EntityManager = /** @class */ (function () {
     EntityManager.prototype.notify = function (message) {
         if (Object(_Entity__WEBPACK_IMPORTED_MODULE_0__["isAddedComponent"])(message)) {
             // we don't need the component, it's already on the entity
-            this._scene.queryManager.addEntity(message.data.entity);
+            this._world.queryManager.addEntity(message.data.entity);
         }
         if (Object(_Entity__WEBPACK_IMPORTED_MODULE_0__["isRemovedComponent"])(message)) {
-            this._scene.queryManager.removeComponent(message.data.entity, message.data.component);
+            this._world.queryManager.removeComponent(message.data.entity, message.data.component);
         }
     };
     /**
@@ -15288,7 +17000,7 @@ var EntityManager = /** @class */ (function () {
         if (entity) {
             this._entityIndex[entity.id] = entity;
             this.entities.push(entity);
-            this._scene.queryManager.addEntity(entity);
+            this._world.queryManager.addEntity(entity);
             entity.changes.register(this);
         }
     };
@@ -15304,18 +17016,24 @@ var EntityManager = /** @class */ (function () {
         delete this._entityIndex[id];
         if (entity) {
             ___WEBPACK_IMPORTED_MODULE_1__["Util"].removeItemFromArray(entity, this.entities);
-            this._scene.queryManager.removeEntity(entity);
+            this._world.queryManager.removeEntity(entity);
             entity.changes.unregister(this);
         }
     };
-    EntityManager.prototype.processRemovals = function () {
+    EntityManager.prototype.processComponentRemovals = function () {
         for (var _i = 0, _a = this.entities; _i < _a.length; _i++) {
             var entity = _a[_i];
-            entity.processRemoval();
+            entity.processComponentRemoval();
         }
     };
     EntityManager.prototype.getById = function (id) {
         return this._entityIndex[id];
+    };
+    EntityManager.prototype.clear = function () {
+        for (var _i = 0, _a = this.entities; _i < _a.length; _i++) {
+            var entity = _a[_i];
+            this.removeEntity(entity);
+        }
     };
     return EntityManager;
 }());
@@ -15370,23 +17088,37 @@ var Query = /** @class */ (function (_super) {
     function Query(types) {
         var _this = _super.call(this) || this;
         _this.types = types;
-        _this.entities = [];
+        _this._entities = [];
         return _this;
     }
     Object.defineProperty(Query.prototype, "key", {
         get: function () {
-            return Object(_Util__WEBPACK_IMPORTED_MODULE_1__["buildTypeKey"])(this.types);
+            if (this._key) {
+                return this._key;
+            }
+            return (this._key = Object(_Util__WEBPACK_IMPORTED_MODULE_1__["buildTypeKey"])(this.types));
         },
         enumerable: false,
         configurable: true
     });
     /**
+     * Returns a list of entities that match the query
+     *
+     * @param sort Optional sorting function to sort entities returned from the query
+     */
+    Query.prototype.getEntities = function (sort) {
+        if (sort) {
+            this._entities.sort(sort);
+        }
+        return this._entities;
+    };
+    /**
      * Add an entity to the query, will only be added if the entity matches the query types
      * @param entity
      */
     Query.prototype.addEntity = function (entity) {
-        if (!___WEBPACK_IMPORTED_MODULE_3__["Util"].contains(this.entities, entity) && this.matches(entity)) {
-            this.entities.push(entity);
+        if (!___WEBPACK_IMPORTED_MODULE_3__["Util"].contains(this._entities, entity) && this.matches(entity)) {
+            this._entities.push(entity);
             this.notifyAll(new _System__WEBPACK_IMPORTED_MODULE_4__["AddedEntity"](entity));
         }
     };
@@ -15395,7 +17127,7 @@ var Query = /** @class */ (function (_super) {
      * @param entity
      */
     Query.prototype.removeEntity = function (entity) {
-        if (___WEBPACK_IMPORTED_MODULE_3__["Util"].removeItemFromArray(entity, this.entities)) {
+        if (___WEBPACK_IMPORTED_MODULE_3__["Util"].removeItemFromArray(entity, this._entities)) {
             this.notifyAll(new _System__WEBPACK_IMPORTED_MODULE_4__["RemovedEntity"](entity));
         }
     };
@@ -15403,7 +17135,7 @@ var Query = /** @class */ (function (_super) {
      * Removes all entities and observers from the query
      */
     Query.prototype.clear = function () {
-        this.entities.length = 0;
+        this._entities.length = 0;
         for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
             var observer = _a[_i];
             this.unregister(observer);
@@ -15452,8 +17184,8 @@ __webpack_require__.r(__webpack_exports__);
  * The query manager is responsible for updating all queries when entities/components change
  */
 var QueryManager = /** @class */ (function () {
-    function QueryManager(scene) {
-        this.scene = scene;
+    function QueryManager(_world) {
+        this._world = _world;
         this._queries = {};
     }
     /**
@@ -15462,7 +17194,7 @@ var QueryManager = /** @class */ (function () {
      */
     QueryManager.prototype._addQuery = function (query) {
         this._queries[Object(_Util__WEBPACK_IMPORTED_MODULE_0__["buildTypeKey"])(query.types)] = query;
-        for (var _i = 0, _a = this.scene.entityManager.entities; _i < _a.length; _i++) {
+        for (var _i = 0, _a = this._world.entityManager.entities; _i < _a.length; _i++) {
             var entity = _a[_i];
             query.addEntity(entity);
         }
@@ -15506,9 +17238,7 @@ var QueryManager = /** @class */ (function () {
      */
     QueryManager.prototype.removeEntity = function (entity) {
         for (var queryType in this._queries) {
-            if (this._queries[queryType].entities.indexOf(entity) > -1) {
-                this._queries[queryType].removeEntity(entity);
-            }
+            this._queries[queryType].removeEntity(entity);
         }
     };
     /**
@@ -15557,6 +17287,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAddedSystemEntity", function() { return isAddedSystemEntity; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RemovedEntity", function() { return RemovedEntity; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRemoveSystemEntity", function() { return isRemoveSystemEntity; });
+/**
+ * Enum that determines whether to run the system in the update or draw phase
+ */
 var SystemType;
 (function (SystemType) {
     SystemType["Update"] = "update";
@@ -15565,6 +17298,21 @@ var SystemType;
 /**
  * An Excalibur [[System]] that updates entities of certain types.
  * Systems are scene specific
+ *
+ * Excalibur Systems currently require at least 1 Component type to operated
+ *
+ * Multiple types are declared as a type union
+ * For example:
+ *
+ * ```typescript
+ * class MySystem extends System<ComponentA | ComponentB> {
+ *   public readonly types = ['a', 'b'] as const;
+ *   public readonly systemType = SystemType.Update;
+ *   public update(entities: Entity<ComponentA | ComponentB>) {
+ *      ...
+ *   }
+ * }
+ * ```
  */
 var System = /** @class */ (function () {
     function System() {
@@ -15615,7 +17363,7 @@ var RemovedEntity = /** @class */ (function () {
 }());
 
 /**
- *
+ * type guard to check for the RemovedEntity message
  */
 function isRemoveSystemEntity(x) {
     return !!x && x.type === 'Entity Removed';
@@ -15641,8 +17389,11 @@ __webpack_require__.r(__webpack_exports__);
  * Systems are scene specific
  */
 var SystemManager = /** @class */ (function () {
-    function SystemManager(_scene) {
-        this._scene = _scene;
+    function SystemManager(_world) {
+        this._world = _world;
+        /**
+         * List of systems, to add a new system call [[SystemManager.addSystem]]
+         */
         this.systems = [];
     }
     /**
@@ -15654,11 +17405,13 @@ var SystemManager = /** @class */ (function () {
         if (!system.types || system.types.length === 0) {
             throw new Error("Attempted to add a System without any types");
         }
-        var query = this._scene.queryManager.createQuery(system.types);
+        var query = this._world.queryManager.createQuery(system.types);
         this.systems.push(system);
-        // TODO polyfil stable .sort(), this mechanism relies on a stable sort
         this.systems.sort(function (a, b) { return a.priority - b.priority; });
         query.register(system);
+        if (system.initialize) {
+            system.initialize(this._world.context);
+        }
     };
     /**
      * Removes a system from the manager, it will no longer be updated
@@ -15666,10 +17419,10 @@ var SystemManager = /** @class */ (function () {
      */
     SystemManager.prototype.removeSystem = function (system) {
         ___WEBPACK_IMPORTED_MODULE_0__["Util"].removeItemFromArray(system, this.systems);
-        var query = this._scene.queryManager.getQuery(system.types);
+        var query = this._world.queryManager.getQuery(system.types);
         if (query) {
             query.unregister(system);
-            this._scene.queryManager.maybeRemoveQuery(query);
+            this._world.queryManager.maybeRemoveQuery(query);
         }
     };
     /**
@@ -15688,7 +17441,7 @@ var SystemManager = /** @class */ (function () {
         }
         for (var _a = 0, systems_2 = systems; _a < systems_2.length; _a++) {
             var s = systems_2[_a];
-            var entities = this._scene.queryManager.getQuery(s.types).entities;
+            var entities = this._world.queryManager.getQuery(s.types).getEntities(s.sort);
             s.update(entities, delta);
         }
         for (var _b = 0, systems_3 = systems; _b < systems_3.length; _b++) {
@@ -15696,6 +17449,12 @@ var SystemManager = /** @class */ (function () {
             if (s.postupdate) {
                 s.postupdate(engine, delta);
             }
+        }
+    };
+    SystemManager.prototype.clear = function () {
+        for (var _i = 0, _a = this.systems; _i < _a.length; _i++) {
+            var system = _a[_i];
+            this.removeSystem(system);
         }
     };
     return SystemManager;
@@ -15715,10 +17474,87 @@ var SystemManager = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildTypeKey", function() { return buildTypeKey; });
+var __spreadArrays = (undefined && undefined.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var buildTypeKey = function (types) {
-    var key = types.sort(function (a, b) { return a.localeCompare(b); }).join('+');
+    var key = __spreadArrays(types).sort(function (a, b) { return a.localeCompare(b); }).join('+');
     return key;
 };
+
+
+/***/ }),
+
+/***/ "./EntityComponentSystem/World.ts":
+/*!****************************************!*\
+  !*** ./EntityComponentSystem/World.ts ***!
+  \****************************************/
+/*! exports provided: World */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "World", function() { return World; });
+/* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony import */ var _EntityManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EntityManager */ "./EntityComponentSystem/EntityManager.ts");
+/* harmony import */ var _QueryManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./QueryManager */ "./EntityComponentSystem/QueryManager.ts");
+/* harmony import */ var _System__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./System */ "./EntityComponentSystem/System.ts");
+/* harmony import */ var _SystemManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SystemManager */ "./EntityComponentSystem/SystemManager.ts");
+
+
+
+
+
+/**
+ * The World is a self-contained entity component system for a particular context.
+ */
+var World = /** @class */ (function () {
+    /**
+     * The context type is passed to the system updates
+     * @param context
+     */
+    function World(context) {
+        this.context = context;
+        this.queryManager = new _QueryManager__WEBPACK_IMPORTED_MODULE_2__["QueryManager"](this);
+        this.entityManager = new _EntityManager__WEBPACK_IMPORTED_MODULE_1__["EntityManager"](this);
+        this.systemManager = new _SystemManager__WEBPACK_IMPORTED_MODULE_4__["SystemManager"](this);
+    }
+    /**
+     * Update systems by type and time elapsed in milliseconds
+     */
+    World.prototype.update = function (type, delta) {
+        this.systemManager.updateSystems(type, this.context, delta);
+        this.entityManager.processComponentRemovals();
+    };
+    World.prototype.add = function (entityOrSystem) {
+        if (entityOrSystem instanceof _Entity__WEBPACK_IMPORTED_MODULE_0__["Entity"]) {
+            this.entityManager.addEntity(entityOrSystem);
+        }
+        if (entityOrSystem instanceof _System__WEBPACK_IMPORTED_MODULE_3__["System"]) {
+            this.systemManager.addSystem(entityOrSystem);
+        }
+    };
+    World.prototype.remove = function (entityOrSystem) {
+        if (entityOrSystem instanceof _Entity__WEBPACK_IMPORTED_MODULE_0__["Entity"]) {
+            this.entityManager.removeEntity(entityOrSystem);
+        }
+        if (entityOrSystem instanceof _System__WEBPACK_IMPORTED_MODULE_3__["System"]) {
+            this.systemManager.removeSystem(entityOrSystem);
+        }
+    };
+    World.prototype.clearEntities = function () {
+        this.entityManager.clear();
+    };
+    World.prototype.clearSystems = function () {
+        this.systemManager.clear();
+    };
+    return World;
+}());
+
 
 
 /***/ }),
@@ -15727,7 +17563,7 @@ var buildTypeKey = function (types) {
 /*!****************************************!*\
   !*** ./EntityComponentSystem/index.ts ***!
   \****************************************/
-/*! exports provided: Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager */
+/*! exports provided: Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15772,6 +17608,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _SystemManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SystemManager */ "./EntityComponentSystem/SystemManager.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemManager", function() { return _SystemManager__WEBPACK_IMPORTED_MODULE_6__["SystemManager"]; });
+
+/* harmony import */ var _World__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./World */ "./EntityComponentSystem/World.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "World", function() { return _World__WEBPACK_IMPORTED_MODULE_7__["World"]; });
+
 
 
 
@@ -19250,9 +21090,6 @@ var LabelImpl = /** @class */ (function (_super) {
     };
     LabelImpl.prototype.draw = function (ctx, delta) {
         ctx.save();
-        ctx.translate(this.pos.x, this.pos.y);
-        ctx.scale(this.scale.x, this.scale.y);
-        ctx.rotate(this.rotation);
         if (this._textShadowOn) {
             ctx.save();
             ctx.translate(this._shadowOffsetX, this._shadowOffsetY);
@@ -20906,13 +22743,13 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         var dx = vel * Math.cos(angle);
         var dy = vel * Math.sin(angle);
         if (this.emitterType === EmitterType.Rectangle) {
-            ranX = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.x, this.pos.x + this.width, this.random);
-            ranY = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](this.pos.y, this.pos.y + this.height, this.random);
+            ranX = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](0, this.width, this.random);
+            ranY = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](0, this.height, this.random);
         }
         else if (this.emitterType === EmitterType.Circle) {
             var radius = _Util_Util__WEBPACK_IMPORTED_MODULE_3__["randomInRange"](0, this.radius, this.random);
-            ranX = radius * Math.cos(angle) + this.pos.x;
-            ranY = radius * Math.sin(angle) + this.pos.y;
+            ranX = radius * Math.cos(angle);
+            ranY = radius * Math.sin(angle);
         }
         var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](ranX, ranY), new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](dx, dy), this.acceleration, this.startSize, this.endSize);
         p.fadeFlag = this.fadeFlag;
@@ -21204,8 +23041,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "polyfill", function() { return polyfill; });
 /* harmony import */ var core_js_es_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/es/array */ "../../node_modules/core-js/es/array/index.js");
 /* harmony import */ var core_js_es_array__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_es_array__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_es_function__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/es/function */ "../../node_modules/core-js/es/function/index.js");
-/* harmony import */ var core_js_es_function__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_es_function__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_es_object__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/es/object */ "../../node_modules/core-js/es/object/index.js");
+/* harmony import */ var core_js_es_object__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_es_object__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_es_function__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/es/function */ "../../node_modules/core-js/es/function/index.js");
+/* harmony import */ var core_js_es_function__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_es_function__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 /**
@@ -23195,18 +25035,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
 /* harmony import */ var _Timer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Timer */ "./Timer.ts");
 /* harmony import */ var _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Collision/DynamicTreeCollisionBroadphase */ "./Collision/DynamicTreeCollisionBroadphase.ts");
-/* harmony import */ var _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/SortedList */ "./Util/SortedList.ts");
-/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
-/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
-/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-/* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
-/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
-/* harmony import */ var _EntityComponentSystem_QueryManager__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./EntityComponentSystem/QueryManager */ "./EntityComponentSystem/QueryManager.ts");
-/* harmony import */ var _EntityComponentSystem_EntityManager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./EntityComponentSystem/EntityManager */ "./EntityComponentSystem/EntityManager.ts");
-/* harmony import */ var _EntityComponentSystem_SystemManager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./EntityComponentSystem/SystemManager */ "./EntityComponentSystem/SystemManager.ts");
-/* harmony import */ var _EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./EntityComponentSystem/System */ "./EntityComponentSystem/System.ts");
+/* harmony import */ var _TileMap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TileMap */ "./TileMap.ts");
+/* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Camera */ "./Camera.ts");
+/* harmony import */ var _Actor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Actor */ "./Actor.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+/* harmony import */ var _Util_Actors__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Util/Actors */ "./Util/Actors.ts");
+/* harmony import */ var _Trigger__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Trigger */ "./Trigger.ts");
+/* harmony import */ var _EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./EntityComponentSystem/System */ "./EntityComponentSystem/System.ts");
+/* harmony import */ var _Drawing_CanvasDrawingSystem__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Drawing/CanvasDrawingSystem */ "./Drawing/CanvasDrawingSystem.ts");
+/* harmony import */ var _Util_Decorators__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Util/Decorators */ "./Util/Decorators.ts");
+/* harmony import */ var _EntityComponentSystem_World__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./EntityComponentSystem/World */ "./EntityComponentSystem/World.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -23220,7 +25059,12 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
@@ -23253,9 +25097,10 @@ var Scene = /** @class */ (function (_super) {
          * The actors in the current scene
          */
         _this.actors = [];
-        _this.queryManager = new _EntityComponentSystem_QueryManager__WEBPACK_IMPORTED_MODULE_14__["QueryManager"](_this);
-        _this.entityManager = new _EntityComponentSystem_EntityManager__WEBPACK_IMPORTED_MODULE_15__["EntityManager"](_this);
-        _this.systemManager = new _EntityComponentSystem_SystemManager__WEBPACK_IMPORTED_MODULE_16__["SystemManager"](_this);
+        /**
+         * The ECS world for the scene
+         */
+        _this.world = new _EntityComponentSystem_World__WEBPACK_IMPORTED_MODULE_16__["World"](_this);
         /**
          * Physics bodies in the current scene
          */
@@ -23268,26 +25113,32 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        /**
-         * The [[ScreenElement]]s in a scene, if any; these are drawn last
-         */
-        _this.screenElements = [];
         _this._isInitialized = false;
-        _this._sortedDrawingTree = new _Util_SortedList__WEBPACK_IMPORTED_MODULE_6__["SortedList"](function (a) { return a.z; });
         _this._broadphase = new _Collision_DynamicTreeCollisionBroadphase__WEBPACK_IMPORTED_MODULE_5__["DynamicTreeCollisionBroadphase"]();
         _this._killQueue = [];
         _this._triggerKillQueue = [];
         _this._timers = [];
         _this._cancelQueue = [];
         _this._logger = _Util_Log__WEBPACK_IMPORTED_MODULE_3__["Logger"].getInstance();
-        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_8__["Camera"]();
-        _this._engine = _engine;
+        _this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_7__["Camera"]();
         if (_engine) {
-            _this.camera.x = _engine.halfDrawWidth;
-            _this.camera.y = _engine.halfDrawHeight;
+            _this.engine = _engine;
+            _this.camera.x = _this.engine.halfDrawWidth;
+            _this.camera.y = _this.engine.halfDrawHeight;
         }
         return _this;
     }
+    Object.defineProperty(Scene.prototype, "screenElements", {
+        /**
+         * The [[ScreenElement]]s in a scene, if any; these are drawn last
+         * @deprecated
+         */
+        get: function () {
+            return this.actors.filter(function (a) { return a instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]; });
+        },
+        enumerable: false,
+        configurable: true
+    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -23356,7 +25207,7 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype._initializeChildren = function () {
         for (var _i = 0, _a = this.actors; _i < _a.length; _i++) {
             var child = _a[_i];
-            child._initialize(this._engine);
+            child._initialize(this.engine);
         }
     };
     Object.defineProperty(Scene.prototype, "isInitialized", {
@@ -23378,11 +25229,13 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype._initialize = function (engine) {
         if (!this.isInitialized) {
-            this._engine = engine;
+            this.engine = engine;
             if (this.camera) {
                 this.camera.x = engine.halfDrawWidth;
                 this.camera.y = engine.halfDrawHeight;
             }
+            // Initialize systems
+            this.world.add(new _Drawing_CanvasDrawingSystem__WEBPACK_IMPORTED_MODULE_14__["CanvasDrawingSystem"]());
             // This order is important! we want to be sure any custom init that add actors
             // fire before the actor init
             this.onInitialize.call(this, engine);
@@ -23461,8 +25314,7 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.update = function (engine, delta) {
         this._preupdate(engine, delta);
-        this.systemManager.updateSystems(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__["SystemType"].Update, engine, delta);
-        this.entityManager.processRemovals();
+        this.world.update(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_13__["SystemType"].Update, delta);
         if (this.camera) {
             this.camera.update(engine, delta);
         }
@@ -23476,10 +25328,6 @@ var Scene = /** @class */ (function (_super) {
         for (var _i = 0, _a = this._timers; _i < _a.length; _i++) {
             var timer = _a[_i];
             timer.update(delta);
-        }
-        // Cycle through actors updating UI actors
-        for (i = 0, len = this.screenElements.length; i < len; i++) {
-            this.screenElements[i].update(engine, delta);
         }
         // Cycle through actors updating tile maps
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -23523,6 +25371,7 @@ var Scene = /** @class */ (function (_super) {
         this._postupdate(engine, delta);
     };
     Scene.prototype._processKillQueue = function (killQueue, collection) {
+        var _this = this;
         // Remove actors from scene graph after being killed
         var actorIndex;
         for (var _i = 0, killQueue_1 = killQueue; _i < killQueue_1.length; _i++) {
@@ -23531,8 +25380,9 @@ var Scene = /** @class */ (function (_super) {
             if (killed.isKilled()) {
                 actorIndex = collection.indexOf(killed);
                 if (actorIndex > -1) {
-                    this._sortedDrawingTree.removeByComparable(killed);
                     collection.splice(actorIndex, 1);
+                    this.world.remove(killed);
+                    killed.children.forEach(function (c) { return _this.world.remove(c); });
                 }
             }
         }
@@ -23545,39 +25395,7 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.draw = function (ctx, delta) {
         this._predraw(ctx, delta);
-        ctx.save();
-        if (this.camera) {
-            this.camera.draw(ctx);
-        }
-        this.systemManager.updateSystems(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_17__["SystemType"].Draw, this._engine, delta);
-        this.entityManager.processRemovals();
-        var i, len;
-        for (i = 0, len = this.tileMaps.length; i < len; i++) {
-            this.tileMaps[i].draw(ctx, delta);
-        }
-        var sortedChildren = this._sortedDrawingTree.list();
-        for (i = 0, len = sortedChildren.length; i < len; i++) {
-            // only draw actors that are visible and on screen
-            if (sortedChildren[i].visible && !sortedChildren[i].isOffScreen) {
-                sortedChildren[i].draw(ctx, delta);
-            }
-        }
-        if (this._engine && this._engine.isDebug) {
-            ctx.strokeStyle = 'yellow';
-            this.debugDraw(ctx);
-        }
-        ctx.restore();
-        for (i = 0, len = this.screenElements.length; i < len; i++) {
-            // only draw ui actors that are visible and on screen
-            if (this.screenElements[i].visible) {
-                this.screenElements[i].draw(ctx, delta);
-            }
-        }
-        if (this._engine && this._engine.isDebug) {
-            for (i = 0, len = this.screenElements.length; i < len; i++) {
-                this.screenElements[i].debugDraw(ctx);
-            }
-        }
+        this.world.update(_EntityComponentSystem_System__WEBPACK_IMPORTED_MODULE_13__["SystemType"].Draw, delta);
         this._postdraw(ctx, delta);
     };
     /**
@@ -23587,18 +25405,7 @@ var Scene = /** @class */ (function (_super) {
     /* istanbul ignore next */
     Scene.prototype.debugDraw = function (ctx) {
         this.emit('predebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PreDebugDrawEvent"](ctx, this));
-        var i, len;
-        for (i = 0, len = this.tileMaps.length; i < len; i++) {
-            this.tileMaps[i].debugDraw(ctx);
-        }
-        for (i = 0, len = this.actors.length; i < len; i++) {
-            this.actors[i].debugDraw(ctx);
-        }
-        for (i = 0, len = this.triggers.length; i < len; i++) {
-            this.triggers[i].debugDraw(ctx);
-        }
         this._broadphase.debugDraw(ctx, 20);
-        this.camera.debugDraw(ctx);
         this.emit('postdebugdraw', new _Events__WEBPACK_IMPORTED_MODULE_2__["PostDebugDrawEvent"](ctx, this));
     };
     /**
@@ -23608,45 +25415,58 @@ var Scene = /** @class */ (function (_super) {
         return this.actors.indexOf(actor) > -1;
     };
     Scene.prototype.add = function (entity) {
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
+        var _this = this;
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_8__["Actor"]) {
             entity.unkill();
         }
-        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.screenElements, entity)) {
-                this.addScreenElement(entity);
-            }
-            return;
-        }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.actors, entity)) {
-                this._addChild(entity);
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_8__["Actor"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_10__["contains"](this.actors, entity)) {
+                this._broadphase.track(entity.body);
+                entity.scene = this;
+                if (entity instanceof _Trigger__WEBPACK_IMPORTED_MODULE_12__["Trigger"]) {
+                    this.triggers.push(entity);
+                }
+                else {
+                    this.actors.push(entity);
+                }
+                this.world.add(entity);
+                entity.children.forEach(function (c) { return _this.world.add(c); });
             }
             return;
         }
         if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_4__["Timer"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this._timers, entity)) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_10__["contains"](this._timers, entity)) {
                 this.addTimer(entity);
             }
             return;
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
-            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.tileMaps, entity)) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_6__["TileMap"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_10__["contains"](this.tileMaps, entity)) {
                 this.addTileMap(entity);
             }
         }
     };
     Scene.prototype.remove = function (entity) {
-        if (entity instanceof _ScreenElement__WEBPACK_IMPORTED_MODULE_0__["ScreenElement"]) {
-            this.removeScreenElement(entity);
-            return;
-        }
-        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_9__["Actor"]) {
-            this._removeChild(entity);
+        if (entity instanceof _Actor__WEBPACK_IMPORTED_MODULE_8__["Actor"]) {
+            if (!_Util_Util__WEBPACK_IMPORTED_MODULE_10__["contains"](this.actors, entity)) {
+                return;
+            }
+            this._broadphase.untrack(entity.body);
+            if (entity instanceof _Trigger__WEBPACK_IMPORTED_MODULE_12__["Trigger"]) {
+                this._triggerKillQueue.push(entity);
+            }
+            else {
+                if (!entity.isKilled()) {
+                    entity.kill();
+                }
+                this._killQueue.push(entity);
+            }
+            entity.parent = null;
         }
         if (entity instanceof _Timer__WEBPACK_IMPORTED_MODULE_4__["Timer"]) {
             this.removeTimer(entity);
         }
-        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_7__["TileMap"]) {
+        if (entity instanceof _TileMap__WEBPACK_IMPORTED_MODULE_6__["TileMap"]) {
             this.removeTileMap(entity);
         }
     };
@@ -23654,67 +25474,36 @@ var Scene = /** @class */ (function (_super) {
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
      * @todo Should this be `ScreenElement` only?
+     * @deprecated
      */
     Scene.prototype.addScreenElement = function (actor) {
-        this.screenElements.push(actor);
-        actor.scene = this;
+        this.add(actor);
     };
     /**
      * Removes an actor as a piece of UI
+     * @deprecated
      */
     Scene.prototype.removeScreenElement = function (actor) {
-        var index = this.screenElements.indexOf(actor);
-        if (index > -1) {
-            this.screenElements.splice(index, 1);
-        }
-    };
-    /**
-     * Adds an actor to the scene, once this is done the actor will be drawn and updated.
-     */
-    Scene.prototype._addChild = function (actor) {
-        this._broadphase.track(actor.body);
-        actor.scene = this;
-        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_13__["Trigger"]) {
-            this.triggers.push(actor);
-        }
-        else {
-            this.actors.push(actor);
-        }
-        this._sortedDrawingTree.add(actor);
+        this.remove(actor);
     };
     /**
      * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
+     * @deprecated
      */
     Scene.prototype.addTileMap = function (tileMap) {
         this.tileMaps.push(tileMap);
+        this.world.add(tileMap);
     };
     /**
      * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
+     * @deprecated
      */
     Scene.prototype.removeTileMap = function (tileMap) {
         var index = this.tileMaps.indexOf(tileMap);
         if (index > -1) {
             this.tileMaps.splice(index, 1);
+            this.world.remove(tileMap);
         }
-    };
-    /**
-     * Removes an actor from the scene, it will no longer be drawn or updated.
-     */
-    Scene.prototype._removeChild = function (actor) {
-        if (!_Util_Util__WEBPACK_IMPORTED_MODULE_11__["contains"](this.actors, actor)) {
-            return;
-        }
-        this._broadphase.untrack(actor.body);
-        if (actor instanceof _Trigger__WEBPACK_IMPORTED_MODULE_13__["Trigger"]) {
-            this._triggerKillQueue.push(actor);
-        }
-        else {
-            if (!actor.isKilled()) {
-                actor.kill();
-            }
-            this._killQueue.push(actor);
-        }
-        actor.parent = null;
     };
     /**
      * Adds a [[Timer]] to the scene
@@ -23751,27 +25540,9 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype.isTimerActive = function (timer) {
         return this._timers.indexOf(timer) > -1 && !timer.complete;
     };
-    /**
-     * Removes the given actor from the sorted drawing tree
-     */
-    Scene.prototype.cleanupDrawTree = function (actor) {
-        this._sortedDrawingTree.removeByComparable(actor);
-    };
-    /**
-     * Updates the given actor's position in the sorted drawing tree
-     */
-    Scene.prototype.updateDrawTree = function (actor) {
-        this._sortedDrawingTree.add(actor);
-    };
-    /**
-     * Checks if an actor is in this scene's sorted draw tree
-     */
-    Scene.prototype.isActorInDrawTree = function (actor) {
-        return this._sortedDrawingTree.find(actor);
-    };
     Scene.prototype.isCurrentScene = function () {
-        if (this._engine) {
-            return this._engine.currentScene === this;
+        if (this.engine) {
+            return this.engine.currentScene === this;
         }
         return false;
     };
@@ -23785,7 +25556,7 @@ var Scene = /** @class */ (function (_super) {
             engine.stats.currFrame.actors.alive++;
             for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
                 var child = _e[_d];
-                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_12__["isScreenElement"](child)) {
+                if (_Util_Actors__WEBPACK_IMPORTED_MODULE_11__["isScreenElement"](child)) {
                     engine.stats.currFrame.actors.ui++;
                 }
                 else {
@@ -23794,8 +25565,26 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({
+            message: 'Will be removed in excalibur v0.26.0',
+            alternateMethod: 'ScreenElements now are normal actors with a Transform Coordinate Plane of Screen'
+        })
+    ], Scene.prototype, "screenElements", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+    ], Scene.prototype, "addScreenElement", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+    ], Scene.prototype, "removeScreenElement", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+    ], Scene.prototype, "addTileMap", null);
+    __decorate([
+        Object(_Util_Decorators__WEBPACK_IMPORTED_MODULE_15__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+    ], Scene.prototype, "removeTileMap", null);
     return Scene;
-}(_Class__WEBPACK_IMPORTED_MODULE_10__["Class"]));
+}(_Class__WEBPACK_IMPORTED_MODULE_9__["Class"]));
 
 
 
@@ -24365,6 +26154,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Traits_Index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Traits/Index */ "./Traits/Index.ts");
 /* harmony import */ var _Collision_CollisionType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Collision/CollisionType */ "./Collision/CollisionType.ts");
 /* harmony import */ var _Collision_Shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Collision/Shape */ "./Collision/Shape.ts");
+/* harmony import */ var _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./EntityComponentSystem/Components/TransformComponent */ "./EntityComponentSystem/Components/TransformComponent.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24378,6 +26168,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 
@@ -24403,6 +26194,7 @@ var ScreenElement = /** @class */ (function (_super) {
         else {
             _this = _super.call(this, xOrConfig) || this;
         }
+        _this.components.transform.coordPlane = _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_5__["CoordPlane"].Screen;
         _this.traits = [];
         _this.traits.push(new _Traits_Index__WEBPACK_IMPORTED_MODULE_2__["CapturePointer"]());
         _this.anchor.setTo(0, 0);
@@ -24446,11 +26238,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Cell", function() { return Cell; });
 /* harmony import */ var _Collision_BoundingBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Collision/BoundingBox */ "./Collision/BoundingBox.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Events */ "./Events.ts");
-/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Algebra */ "./Algebra.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Events */ "./Events.ts");
+/* harmony import */ var _Configurable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Configurable */ "./Configurable.ts");
+/* harmony import */ var _EntityComponentSystem_Entity__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./EntityComponentSystem/Entity */ "./EntityComponentSystem/Entity.ts");
+/* harmony import */ var _Drawing_CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Drawing/CanvasDrawComponent */ "./Drawing/CanvasDrawComponent.ts");
+/* harmony import */ var _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./EntityComponentSystem/Components/TransformComponent */ "./EntityComponentSystem/Components/TransformComponent.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -24464,6 +26258,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
 
 
 
@@ -24493,8 +26289,13 @@ var TileMapImpl = /** @class */ (function (_super) {
         _this._onScreenYStart = 0;
         _this._onScreenYEnd = 9999;
         _this._spriteSheets = {};
-        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_4__["Logger"].getInstance();
+        _this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_3__["Logger"].getInstance();
         _this.data = [];
+        _this.z = 0;
+        _this.visible = true;
+        _this.isOffscreen = false;
+        _this.rotation = 0;
+        _this.scale = _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"].One;
         if (xOrConfig && typeof xOrConfig === 'object') {
             var config = xOrConfig;
             xOrConfig = config.x;
@@ -24525,8 +26326,21 @@ var TileMapImpl = /** @class */ (function (_super) {
         for (var i = 0; i < cols; i++) {
             _loop_1(i);
         }
+        _this.addComponent(new _EntityComponentSystem_Components_TransformComponent__WEBPACK_IMPORTED_MODULE_8__["TransformComponent"]());
+        _this.addComponent(new _Drawing_CanvasDrawComponent__WEBPACK_IMPORTED_MODULE_7__["CanvasDrawComponent"](function (ctx, delta) { return _this.draw(ctx, delta); }));
         return _this;
     }
+    Object.defineProperty(TileMapImpl.prototype, "pos", {
+        get: function () {
+            return Object(_Algebra__WEBPACK_IMPORTED_MODULE_2__["vec"])(this.x, this.y);
+        },
+        set: function (val) {
+            this.x = val.x;
+            this.y = val.y;
+        },
+        enumerable: false,
+        configurable: true
+    });
     TileMapImpl.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -24571,7 +26385,7 @@ var TileMapImpl = /** @class */ (function (_super) {
             if (Math.abs(accum.y) < Math.abs(next.y)) {
                 y = next.y;
             }
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](x, y);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](x, y);
         });
         return result;
     };
@@ -24611,15 +26425,15 @@ var TileMapImpl = /** @class */ (function (_super) {
     };
     TileMapImpl.prototype.update = function (engine, delta) {
         this.onPreUpdate(engine, delta);
-        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_5__["PreUpdateEvent"](engine, delta, this));
-        var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](0, 0));
-        var worldCoordsLowerRight = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](engine.canvas.clientWidth, engine.canvas.clientHeight));
+        this.emit('preupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreUpdateEvent"](engine, delta, this));
+        var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](0, 0));
+        var worldCoordsLowerRight = engine.screenToWorldCoordinates(new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](engine.canvas.clientWidth, engine.canvas.clientHeight));
         this._onScreenXStart = Math.max(Math.floor((worldCoordsUpperLeft.x - this.x) / this.cellWidth) - 2, 0);
         this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.y) / this.cellHeight) + 2, 0);
         this.onPostUpdate(engine, delta);
-        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_5__["PostUpdateEvent"](engine, delta, this));
+        this.emit('postupdate', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostUpdateEvent"](engine, delta, this));
     };
     /**
      * Draws the tile map to the screen. Called by the [[Scene]].
@@ -24627,9 +26441,7 @@ var TileMapImpl = /** @class */ (function (_super) {
      * @param delta  The number of milliseconds since the last draw
      */
     TileMapImpl.prototype.draw = function (ctx, delta) {
-        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_5__["PreDrawEvent"](ctx, delta, this));
-        ctx.save();
-        ctx.translate(this.x, this.y);
+        this.emit('predraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PreDrawEvent"](ctx, delta, this));
         var x = this._onScreenXStart;
         var xEnd = Math.min(this._onScreenXEnd, this.cols);
         var y = this._onScreenYStart;
@@ -24660,8 +26472,7 @@ var TileMapImpl = /** @class */ (function (_super) {
             }
             y = this._onScreenYStart;
         }
-        ctx.restore();
-        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_5__["PostDrawEvent"](ctx, delta, this));
+        this.emit('postdraw', new _Events__WEBPACK_IMPORTED_MODULE_4__["PostDrawEvent"](ctx, delta, this));
     };
     /**
      * Draws all the tile map's debug info. Called by the [[Scene]].
@@ -24701,7 +26512,7 @@ var TileMapImpl = /** @class */ (function (_super) {
         ctx.restore();
     };
     return TileMapImpl;
-}(_Class__WEBPACK_IMPORTED_MODULE_2__["Class"]));
+}(_EntityComponentSystem_Entity__WEBPACK_IMPORTED_MODULE_6__["Entity"]));
 
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
@@ -24713,7 +26524,7 @@ var TileMap = /** @class */ (function (_super) {
         return _super.call(this, xOrConfig, y, cellWidth, cellHeight, rows, cols) || this;
     }
     return TileMap;
-}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_6__["Configurable"])(TileMapImpl)));
+}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_5__["Configurable"])(TileMapImpl)));
 
 /**
  * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
@@ -24776,7 +26587,7 @@ var CellImpl = /** @class */ (function () {
     });
     Object.defineProperty(CellImpl.prototype, "center", {
         get: function () {
-            return new _Algebra__WEBPACK_IMPORTED_MODULE_3__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
+            return new _Algebra__WEBPACK_IMPORTED_MODULE_2__["Vector"](this.x + this.width / 2, this.y + this.height / 2);
         },
         enumerable: false,
         configurable: true
@@ -24821,7 +26632,7 @@ var Cell = /** @class */ (function (_super) {
         return _super.call(this, xOrConfig, y, width, height, index, solid, sprites) || this;
     }
     return Cell;
-}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_6__["Configurable"])(CellImpl)));
+}(Object(_Configurable__WEBPACK_IMPORTED_MODULE_5__["Configurable"])(CellImpl)));
 
 
 
@@ -25054,7 +26865,7 @@ var OffscreenCulling = /** @class */ (function () {
             isSpriteOffScreen = this.cullingBox.isSpriteOffScreen(actor, engine);
         }
         var actorBoundsOffscreen = false;
-        if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport) {
+        if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport && !actor.parent) {
             actorBoundsOffscreen = !engine.currentScene.camera.viewport.intersect(actor.body.collider.bounds);
         }
         if (!actor.isOffScreen) {
@@ -26445,8 +28256,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SortedList", function() { return SortedList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BinaryTreeNode", function() { return BinaryTreeNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MockedElement", function() { return MockedElement; });
+/* harmony import */ var _Decorators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Decorators */ "./Util/Decorators.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 /**
  * A sorted list implementation. NOTE: this implementation is not self-balancing
+ * @deprecated
  */
 var SortedList = /** @class */ (function () {
     function SortedList(getComparable) {
@@ -26634,11 +28454,15 @@ var SortedList = /** @class */ (function () {
             this._list(treeNode.getRight(), results);
         }
     };
+    SortedList = __decorate([
+        Object(_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use built in JS array.sort' })
+    ], SortedList);
     return SortedList;
 }());
 
 /**
  * A tree node part of [[SortedList]]
+ * @deprecated
  */
 var BinaryTreeNode = /** @class */ (function () {
     function BinaryTreeNode(key, data, left, right) {
@@ -26671,6 +28495,9 @@ var BinaryTreeNode = /** @class */ (function () {
     BinaryTreeNode.prototype.setRight = function (right) {
         this._right = right;
     };
+    BinaryTreeNode = __decorate([
+        Object(_Decorators__WEBPACK_IMPORTED_MODULE_0__["obsolete"])({ message: 'Will be removed in excalibur v0.26.0' })
+    ], BinaryTreeNode);
     return BinaryTreeNode;
 }());
 
@@ -26678,6 +28505,7 @@ var BinaryTreeNode = /** @class */ (function () {
  * Mock element for testing
  *
  * @internal
+ * @deprecated
  */
 var MockedElement = /** @class */ (function () {
     function MockedElement(key) {
@@ -26931,7 +28759,7 @@ function getPosition(el) {
     return new _Algebra__WEBPACK_IMPORTED_MODULE_0__["Vector"](oLeft, oTop);
 }
 /**
- * Add an item to an array list
+ * Add an item to an array list if it doesn't already exist. Returns true if added, false if not and already exists in the array.
  * @deprecated
  */
 function addItemToArray(item, array) {
@@ -26943,7 +28771,6 @@ function addItemToArray(item, array) {
 }
 /**
  * Remove an item from an list
- * @deprecated
  */
 function removeItemFromArray(item, array) {
     var index = -1;
@@ -26955,7 +28782,6 @@ function removeItemFromArray(item, array) {
 }
 /**
  * See if an array contains something
- * @deprecated
  */
 function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {
@@ -27244,7 +29070,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Flags, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, Flags, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, CanvasDrawComponent, CanvasDrawingSystem, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27509,6 +29335,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpriteFont", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_26__["SpriteFont"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawComponent", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_26__["CanvasDrawComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CanvasDrawingSystem", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_26__["CanvasDrawingSystem"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Effects", function() { return _Drawing_Index__WEBPACK_IMPORTED_MODULE_26__["Effects"]; });
 
 /* harmony import */ var _Interfaces_Index__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./Interfaces/Index */ "./Interfaces/Index.ts");
@@ -27598,6 +29428,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SystemManager", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_31__["SystemManager"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "World", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_31__["World"]; });
+
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_13__; });
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_32__; });
@@ -27646,7 +29478,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7423+c8bd853";
+var EX_VERSION = "0.25.0-alpha.7428+e6fe439";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

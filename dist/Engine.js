@@ -22,16 +22,19 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { EX_VERSION } from './';
 import { Flags } from './Flags';
 import { polyfill } from './Polyfill';
 polyfill();
 import { Promise } from './Promises';
 import { Screen, DisplayMode } from './Screen';
-import { ScreenElement } from './ScreenElement';
 import { Actor } from './Actor';
-import { Timer } from './Timer';
-import { TileMap } from './TileMap';
 import { Loader } from './Loader';
 import { Detector } from './Util/Detector';
 import { VisibleEvent, HiddenEvent, GameStartEvent, GameStopEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, DeactivateEvent, ActivateEvent, PreDrawEvent, PostDrawEvent, InitializeEvent } from './Events';
@@ -42,6 +45,7 @@ import { Debug } from './Debug';
 import { Class } from './Class';
 import * as Input from './Input/Index';
 import { BrowserEvents } from './Util/Browser';
+import { obsolete } from './Util/Decorators';
 /**
  * Enum representing the different mousewheel event bubble prevention
  */
@@ -414,6 +418,7 @@ O|===|* >________________>\n\
      * @param animation  Animation to play
      * @param x          x game coordinate to play the animation
      * @param y          y game coordinate to play the animation
+     * @deprecated
      */
     Engine.prototype.playAnimation = function (animation, x, y) {
         this._animations.push(new AnimationNode(animation, x, y));
@@ -478,36 +483,14 @@ O|===|* >________________>\n\
         }
     };
     Engine.prototype.add = function (entity) {
-        if (entity instanceof ScreenElement) {
-            this.currentScene.addScreenElement(entity);
-            return;
-        }
-        if (entity instanceof Actor) {
-            this._addChild(entity);
-        }
-        if (entity instanceof Timer) {
-            this.addTimer(entity);
-        }
-        if (entity instanceof TileMap) {
-            this.addTileMap(entity);
-        }
         if (arguments.length === 2) {
             this.addScene(arguments[0], arguments[1]);
         }
+        this.currentScene.add(entity);
     };
     Engine.prototype.remove = function (entity) {
-        if (entity instanceof ScreenElement) {
-            this.currentScene.removeScreenElement(entity);
-            return;
-        }
         if (entity instanceof Actor) {
-            this._removeChild(entity);
-        }
-        if (entity instanceof Timer) {
-            this.removeTimer(entity);
-        }
-        if (entity instanceof TileMap) {
-            this.removeTileMap(entity);
+            this.currentScene.remove(entity);
         }
         if (entity instanceof Scene) {
             this.removeScene(entity);
@@ -515,28 +498,6 @@ O|===|* >________________>\n\
         if (typeof entity === 'string') {
             this.removeScene(entity);
         }
-    };
-    /**
-     * Adds an actor to the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.add(actor)`.
-     *
-     * Actors can only be drawn if they are a member of a scene, and only
-     * the [[currentScene]] may be drawn or updated.
-     *
-     * @param actor  The actor to add to the [[currentScene]]
-     */
-    Engine.prototype._addChild = function (actor) {
-        this.currentScene.add(actor);
-    };
-    /**
-     * Removes an actor from the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.remove(actor)`.
-     * Actors that are removed from a scene will no longer be drawn or updated.
-     *
-     * @param actor  The actor to remove from the [[currentScene]].
-     */
-    Engine.prototype._removeChild = function (actor) {
-        this.currentScene.remove(actor);
     };
     /**
      * Changes the currently updating and drawing scene to a different,
@@ -938,11 +899,15 @@ O|===|* >________________>\n\
         scrollPreventionMode: ScrollPreventionMode.Canvas,
         backgroundColor: Color.fromHex('#2185d0') // Excalibur blue
     };
+    __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0' })
+    ], Engine.prototype, "playAnimation", null);
     return Engine;
 }(Class));
 export { Engine };
 /**
  * @internal
+ * @deprecated
  */
 var AnimationNode = /** @class */ (function () {
     function AnimationNode(animation, x, y) {
@@ -950,6 +915,9 @@ var AnimationNode = /** @class */ (function () {
         this.x = x;
         this.y = y;
     }
+    AnimationNode = __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0' })
+    ], AnimationNode);
     return AnimationNode;
 }());
 //# sourceMappingURL=Engine.js.map

@@ -29,23 +29,37 @@ var Query = /** @class */ (function (_super) {
     function Query(types) {
         var _this = _super.call(this) || this;
         _this.types = types;
-        _this.entities = [];
+        _this._entities = [];
         return _this;
     }
     Object.defineProperty(Query.prototype, "key", {
         get: function () {
-            return buildTypeKey(this.types);
+            if (this._key) {
+                return this._key;
+            }
+            return (this._key = buildTypeKey(this.types));
         },
         enumerable: false,
         configurable: true
     });
     /**
+     * Returns a list of entities that match the query
+     *
+     * @param sort Optional sorting function to sort entities returned from the query
+     */
+    Query.prototype.getEntities = function (sort) {
+        if (sort) {
+            this._entities.sort(sort);
+        }
+        return this._entities;
+    };
+    /**
      * Add an entity to the query, will only be added if the entity matches the query types
      * @param entity
      */
     Query.prototype.addEntity = function (entity) {
-        if (!Util.contains(this.entities, entity) && this.matches(entity)) {
-            this.entities.push(entity);
+        if (!Util.contains(this._entities, entity) && this.matches(entity)) {
+            this._entities.push(entity);
             this.notifyAll(new AddedEntity(entity));
         }
     };
@@ -54,7 +68,7 @@ var Query = /** @class */ (function (_super) {
      * @param entity
      */
     Query.prototype.removeEntity = function (entity) {
-        if (Util.removeItemFromArray(entity, this.entities)) {
+        if (Util.removeItemFromArray(entity, this._entities)) {
             this.notifyAll(new RemovedEntity(entity));
         }
     };
@@ -62,7 +76,7 @@ var Query = /** @class */ (function (_super) {
      * Removes all entities and observers from the query
      */
     Query.prototype.clear = function () {
-        this.entities.length = 0;
+        this._entities.length = 0;
         for (var _i = 0, _a = this.observers; _i < _a.length; _i++) {
             var observer = _a[_i];
             this.unregister(observer);

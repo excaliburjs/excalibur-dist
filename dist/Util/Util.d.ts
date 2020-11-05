@@ -79,18 +79,16 @@ export declare function toRadians(degrees: number): number;
  */
 export declare function getPosition(el: HTMLElement): Vector;
 /**
- * Add an item to an array list
+ * Add an item to an array list if it doesn't already exist. Returns true if added, false if not and already exists in the array.
  * @deprecated
  */
 export declare function addItemToArray<T>(item: T, array: T[]): boolean;
 /**
  * Remove an item from an list
- * @deprecated
  */
 export declare function removeItemFromArray<T>(item: T, array: T[]): boolean;
 /**
  * See if an array contains something
- * @deprecated
  */
 export declare function contains(array: Array<any>, obj: any): boolean;
 /**

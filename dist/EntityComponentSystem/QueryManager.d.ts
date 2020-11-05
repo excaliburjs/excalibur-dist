@@ -1,14 +1,14 @@
 import { Entity } from './Entity';
 import { Query } from './Query';
 import { Component } from './Component';
-import { Scene } from '../Scene';
+import { World } from './World';
 /**
  * The query manager is responsible for updating all queries when entities/components change
  */
 export declare class QueryManager {
-    scene: Scene;
+    private _world;
     private _queries;
-    constructor(scene: Scene);
+    constructor(_world: World<any>);
     /**
      * Adds a query to the manager and populates with any entities that match
      * @param query
@@ -39,10 +39,10 @@ export declare class QueryManager {
      * Creates a populated query and returns, if the query already exists that will be returned instead of a new instance
      * @param types
      */
-    createQuery<T extends Component = Component>(types: string[]): Query<T>;
+    createQuery<T extends Component = Component>(types: readonly string[]): Query<T>;
     /**
      * Retrieves an existing query by types if it exists otherwise returns null
      * @param types
      */
-    getQuery<T extends Component = Component>(types: string[]): Query<T>;
+    getQuery<T extends Component = Component>(types: readonly string[]): Query<T>;
 }

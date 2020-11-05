@@ -42,6 +42,17 @@ export declare type ComponentMapper<PossibleComponentTypes extends Component> = 
     [TypeName in PossibleComponentTypes['type']]: MapTypeNameToComponent<TypeName, PossibleComponentTypes>;
 } & ComponentMap;
 export declare type ExcludeType<TypeUnion, TypeNameOrType> = TypeNameOrType extends string ? Exclude<TypeUnion, Component<TypeNameOrType>> : Exclude<TypeUnion, TypeNameOrType>;
+/**
+ * An Entity is the base type of anything that can have behavior in Excalibur, they are part of the built in entity component system
+ *
+ * Entities can be strongly typed with the components they contain
+ *
+ * ```typescript
+ * const entity = new Entity<ComponentA | ComponentB>();
+ * entity.components.a; // Type ComponentA
+ * entity.components.b; // Type ComponentB
+ * ```
+ */
 export declare class Entity<KnownComponents extends Component = never> extends Class implements OnInitialize, OnPreUpdate, OnPostUpdate {
     private static _ID;
     /**
@@ -52,22 +63,52 @@ export declare class Entity<KnownComponents extends Component = never> extends C
      * Whether this entity is active, if set to false it will be reclaimed
      */
     active: boolean;
+    /**
+     * Kill the entity, means it will no longer be updated. Kills are deferred to the end of the update.
+     */
     kill(): void;
     isKilled(): boolean;
-    private _componentsToRemove;
+    /**
+     * Specifically get the tags on the entity from [[TagComponent]]
+     */
+    get tags(): string[];
+    /**
+     * Check if a tag exists on the entity
+     * @param tag name to check for
+     */
+    hasTag(tag: string): boolean;
     /**
      * The types of the components on the Entity
      */
     get types(): string[];
+    private _tagsMemo;
     private _typesMemo;
-    private _dirty;
+    private _rebuildMemos;
+    /**
+     * Bucket to hold on to deferred removals
+     */
+    private _componentsToRemove;
+    /**
+     * Proxy handler for component changes, responsible for notifying observers
+     */
     private _handleChanges;
+    /**
+     * Dictionary that holds entity components
+     */
     components: ComponentMapper<KnownComponents>;
+    /**
+     * Observable that keeps track of component add or remove changes on the entity
+     */
     changes: Observable<AddedComponent | RemovedComponent>;
     /**
      * Creates a deep copy of the entity and a copy of all its components
      */
     clone(): Entity;
+    /**
+     * Adds a component to the entity, or adds a copy of all the components from another entity as a "prefab"
+     * @param componentOrEntity Component or Entity to add copy of components from
+     * @param force Optionally overwrite any existing components of the same type
+     */
     addComponent<T extends Component>(componentOrEntity: T | Entity<T>, force?: boolean): Entity<KnownComponents | T>;
     /**
      * Removes a component from the entity, by default removals are deferred to the end of entity processing to avoid consistency issues
@@ -82,7 +123,11 @@ export declare class Entity<KnownComponents extends Component = never> extends C
      * @hidden
      * @internal
      */
-    processRemoval(): void;
+    processComponentRemoval(): void;
+    /**
+     * Check if a component type exists
+     * @param type
+     */
     has(type: string): boolean;
     private _isInitialized;
     /**

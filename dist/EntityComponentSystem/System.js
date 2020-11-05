@@ -1,3 +1,6 @@
+/**
+ * Enum that determines whether to run the system in the update or draw phase
+ */
 export var SystemType;
 (function (SystemType) {
     SystemType["Update"] = "update";
@@ -6,6 +9,21 @@ export var SystemType;
 /**
  * An Excalibur [[System]] that updates entities of certain types.
  * Systems are scene specific
+ *
+ * Excalibur Systems currently require at least 1 Component type to operated
+ *
+ * Multiple types are declared as a type union
+ * For example:
+ *
+ * ```typescript
+ * class MySystem extends System<ComponentA | ComponentB> {
+ *   public readonly types = ['a', 'b'] as const;
+ *   public readonly systemType = SystemType.Update;
+ *   public update(entities: Entity<ComponentA | ComponentB>) {
+ *      ...
+ *   }
+ * }
+ * ```
  */
 var System = /** @class */ (function () {
     function System() {
@@ -56,7 +74,7 @@ var RemovedEntity = /** @class */ (function () {
 }());
 export { RemovedEntity };
 /**
- *
+ * type guard to check for the RemovedEntity message
  */
 export function isRemoveSystemEntity(x) {
     return !!x && x.type === 'Entity Removed';

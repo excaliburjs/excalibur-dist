@@ -13,12 +13,6 @@ var Body = /** @class */ (function () {
     function Body(_a) {
         var actor = _a.actor, collider = _a.collider;
         /**
-         * The (x, y) position of the actor this will be in the middle of the actor if the
-         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-         */
-        this.pos = new Vector(0, 0);
-        /**
          * The position of the actor last frame (x, y) in pixels
          */
         this.oldPos = new Vector(0, 0);
@@ -51,10 +45,6 @@ var Body = /** @class */ (function () {
          * Gets/sets the rotation of the body from the last frame.
          */
         this.oldRotation = 0; // radians
-        /**
-         * The rotation of the actor in radians
-         */
-        this.rotation = 0; // radians
         /**
          * The scale vector of the actor
          * @obsolete ex.Body.scale will be removed in v0.25.0
@@ -133,6 +123,41 @@ var Body = /** @class */ (function () {
                 this._collider.body = this;
                 this._wireColliderEventsToActor();
             }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "transform", {
+        get: function () {
+            return this.actor.components.transform;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "pos", {
+        /**
+         * The (x, y) position of the actor this will be in the middle of the actor if the
+         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+         */
+        get: function () {
+            return this.transform.pos;
+        },
+        set: function (val) {
+            this.transform.pos = val;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Body.prototype, "rotation", {
+        /**
+         * The rotation of the actor in radians
+         */
+        get: function () {
+            return this.transform.rotation;
+        },
+        set: function (val) {
+            this.transform.rotation = val;
         },
         enumerable: false,
         configurable: true

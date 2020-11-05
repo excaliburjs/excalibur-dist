@@ -11,10 +11,17 @@ import { AddedEntity, RemovedEntity } from './System';
  * ```
  */
 export declare class Query<T extends Component = Component> extends Observable<AddedEntity | RemovedEntity> {
-    types: string[];
-    entities: Entity<T>[];
+    types: readonly string[];
+    private _entities;
+    private _key;
     get key(): string;
-    constructor(types: string[]);
+    constructor(types: readonly string[]);
+    /**
+     * Returns a list of entities that match the query
+     *
+     * @param sort Optional sorting function to sort entities returned from the query
+     */
+    getEntities(sort?: (a: Entity<T>, b: Entity<T>) => number): Entity<T>[];
     /**
      * Add an entity to the query, will only be added if the entity matches the query types
      * @param entity

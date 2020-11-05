@@ -4,8 +4,11 @@ import { Util } from '..';
  * Systems are scene specific
  */
 var SystemManager = /** @class */ (function () {
-    function SystemManager(_scene) {
-        this._scene = _scene;
+    function SystemManager(_world) {
+        this._world = _world;
+        /**
+         * List of systems, to add a new system call [[SystemManager.addSystem]]
+         */
         this.systems = [];
     }
     /**
@@ -17,11 +20,13 @@ var SystemManager = /** @class */ (function () {
         if (!system.types || system.types.length === 0) {
             throw new Error("Attempted to add a System without any types");
         }
-        var query = this._scene.queryManager.createQuery(system.types);
+        var query = this._world.queryManager.createQuery(system.types);
         this.systems.push(system);
-        // TODO polyfil stable .sort(), this mechanism relies on a stable sort
         this.systems.sort(function (a, b) { return a.priority - b.priority; });
         query.register(system);
+        if (system.initialize) {
+            system.initialize(this._world.context);
+        }
     };
     /**
      * Removes a system from the manager, it will no longer be updated
@@ -29,10 +34,10 @@ var SystemManager = /** @class */ (function () {
      */
     SystemManager.prototype.removeSystem = function (system) {
         Util.removeItemFromArray(system, this.systems);
-        var query = this._scene.queryManager.getQuery(system.types);
+        var query = this._world.queryManager.getQuery(system.types);
         if (query) {
             query.unregister(system);
-            this._scene.queryManager.maybeRemoveQuery(query);
+            this._world.queryManager.maybeRemoveQuery(query);
         }
     };
     /**
@@ -51,7 +56,7 @@ var SystemManager = /** @class */ (function () {
         }
         for (var _a = 0, systems_2 = systems; _a < systems_2.length; _a++) {
             var s = systems_2[_a];
-            var entities = this._scene.queryManager.getQuery(s.types).entities;
+            var entities = this._world.queryManager.getQuery(s.types).getEntities(s.sort);
             s.update(entities, delta);
         }
         for (var _b = 0, systems_3 = systems; _b < systems_3.length; _b++) {
@@ -59,6 +64,12 @@ var SystemManager = /** @class */ (function () {
             if (s.postupdate) {
                 s.postupdate(engine, delta);
             }
+        }
+    };
+    SystemManager.prototype.clear = function () {
+        for (var _i = 0, _a = this.systems; _i < _a.length; _i++) {
+            var system = _a[_i];
+            this.removeSystem(system);
         }
     };
     return SystemManager;

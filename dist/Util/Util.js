@@ -166,7 +166,7 @@ export function getPosition(el) {
     return new Vector(oLeft, oTop);
 }
 /**
- * Add an item to an array list
+ * Add an item to an array list if it doesn't already exist. Returns true if added, false if not and already exists in the array.
  * @deprecated
  */
 export function addItemToArray(item, array) {
@@ -178,7 +178,6 @@ export function addItemToArray(item, array) {
 }
 /**
  * Remove an item from an list
- * @deprecated
  */
 export function removeItemFromArray(item, array) {
     var index = -1;
@@ -190,7 +189,6 @@ export function removeItemFromArray(item, array) {
 }
 /**
  * See if an array contains something
- * @deprecated
  */
 export function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {

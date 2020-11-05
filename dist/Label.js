@@ -288,9 +288,6 @@ var LabelImpl = /** @class */ (function (_super) {
     };
     LabelImpl.prototype.draw = function (ctx, delta) {
         ctx.save();
-        ctx.translate(this.pos.x, this.pos.y);
-        ctx.scale(this.scale.x, this.scale.y);
-        ctx.rotate(this.rotation);
         if (this._textShadowOn) {
             ctx.save();
             ctx.translate(this._shadowOffsetX, this._shadowOffsetY);

@@ -314,13 +314,13 @@ var ParticleEmitterImpl = /** @class */ (function (_super) {
         var dx = vel * Math.cos(angle);
         var dy = vel * Math.sin(angle);
         if (this.emitterType === EmitterType.Rectangle) {
-            ranX = Util.randomInRange(this.pos.x, this.pos.x + this.width, this.random);
-            ranY = Util.randomInRange(this.pos.y, this.pos.y + this.height, this.random);
+            ranX = Util.randomInRange(0, this.width, this.random);
+            ranY = Util.randomInRange(0, this.height, this.random);
         }
         else if (this.emitterType === EmitterType.Circle) {
             var radius = Util.randomInRange(0, this.radius, this.random);
-            ranX = radius * Math.cos(angle) + this.pos.x;
-            ranY = radius * Math.sin(angle) + this.pos.y;
+            ranX = radius * Math.cos(angle);
+            ranY = radius * Math.sin(angle);
         }
         var p = new Particle(this, this.particleLife, this.opacity, this.beginColor, this.endColor, new Vector(ranX, ranY), new Vector(dx, dy), this.acceleration, this.startSize, this.endSize);
         p.fadeFlag = this.fadeFlag;

@@ -357,6 +357,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * @param animation  Animation to play
      * @param x          x game coordinate to play the animation
      * @param y          y game coordinate to play the animation
+     * @deprecated
      */
     playAnimation(animation: Animation, x: number, y: number): void;
     /**
@@ -462,24 +463,6 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * @param screenElement  The ScreenElement to remove from the [[currentScene]]
      */
     remove(screenElement: ScreenElement): void;
-    /**
-     * Adds an actor to the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.add(actor)`.
-     *
-     * Actors can only be drawn if they are a member of a scene, and only
-     * the [[currentScene]] may be drawn or updated.
-     *
-     * @param actor  The actor to add to the [[currentScene]]
-     */
-    protected _addChild(actor: Actor): void;
-    /**
-     * Removes an actor from the [[currentScene]] of the game. This is synonymous
-     * to calling `engine.currentScene.remove(actor)`.
-     * Actors that are removed from a scene will no longer be drawn or updated.
-     *
-     * @param actor  The actor to remove from the [[currentScene]].
-     */
-    protected _removeChild(actor: Actor): void;
     /**
      * Changes the currently updating and drawing scene to a different,
      * named scene. Calls the [[Scene]] lifecycle events.

@@ -1,15 +1,17 @@
 import { BoundingBox } from './Collision/BoundingBox';
-import { Class } from './Class';
 import { Engine } from './Engine';
 import { Vector } from './Algebra';
 import { Actor } from './Actor';
 import { Logger } from './Util/Log';
 import { SpriteSheet } from './Drawing/SpriteSheet';
 import * as Events from './Events';
+import { Entity } from './EntityComponentSystem/Entity';
+import { CanvasDrawComponent } from './Drawing/CanvasDrawComponent';
+import { TransformComponent } from './EntityComponentSystem/Components/TransformComponent';
 /**
  * @hidden
  */
-export declare class TileMapImpl extends Class {
+export declare class TileMapImpl extends Entity<TransformComponent | CanvasDrawComponent> {
     private _collidingX;
     private _collidingY;
     private _onScreenXStart;
@@ -21,10 +23,17 @@ export declare class TileMapImpl extends Class {
     data: Cell[];
     x: number;
     y: number;
+    z: number;
+    visible: boolean;
+    isOffscreen: boolean;
+    rotation: number;
+    scale: Vector;
     cellWidth: number;
     cellHeight: number;
     rows: number;
     cols: number;
+    get pos(): Vector;
+    set pos(val: Vector);
     on(eventName: Events.preupdate, handler: (event: Events.PreUpdateEvent<TileMap>) => void): void;
     on(eventName: Events.postupdate, handler: (event: Events.PostUpdateEvent<TileMap>) => void): void;
     on(eventName: Events.predraw, handler: (event: Events.PreDrawEvent) => void): void;

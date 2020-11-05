@@ -16,6 +16,7 @@ import { Actor } from './Actor';
 import * as Traits from './Traits/Index';
 import { CollisionType } from './Collision/CollisionType';
 import { Shape } from './Collision/Shape';
+import { CoordPlane } from './EntityComponentSystem/Components/TransformComponent';
 /**
  * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
  * not participate in collisions. Drawn on top of all other actors.
@@ -36,6 +37,7 @@ var ScreenElement = /** @class */ (function (_super) {
         else {
             _this = _super.call(this, xOrConfig) || this;
         }
+        _this.components.transform.coordPlane = CoordPlane.Screen;
         _this.traits = [];
         _this.traits.push(new Traits.CapturePointer());
         _this.anchor.setTo(0, 0);

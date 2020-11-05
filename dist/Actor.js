@@ -35,6 +35,8 @@ import { obsolete } from './Util/Decorators';
 import { Collider } from './Collision/Collider';
 import { Shape } from './Collision/Shape';
 import { Entity } from './EntityComponentSystem/Entity';
+import { CanvasDrawComponent } from './Drawing/CanvasDrawComponent';
+import { TransformComponent } from './EntityComponentSystem/Components/TransformComponent';
 /**
  * Type guard for checking if something is an Actor
  * @param x
@@ -58,10 +60,6 @@ var ActorImpl = /** @class */ (function (_super) {
      */
     function ActorImpl(xOrConfig, y, width, height, color) {
         var _this = _super.call(this) || this;
-        /**
-         * The unique identifier for the actor
-         */
-        _this.id = ActorImpl.maxId++;
         _this._height = 0;
         _this._width = 0;
         /**
@@ -138,7 +136,6 @@ var ActorImpl = /** @class */ (function (_super) {
             captureMoveEvents: false,
             captureDragEvents: false
         };
-        _this._zIndex = 0;
         _this._isKilled = false;
         // #region Events
         _this._capturePointerEvents = [
@@ -170,6 +167,8 @@ var ActorImpl = /** @class */ (function (_super) {
         ];
         // initialize default options
         _this._initDefaults();
+        _this.addComponent(new TransformComponent());
+        _this.addComponent(new CanvasDrawComponent(function (ctx, delta) { return _this.draw(ctx, delta); }));
         var shouldInitializeBody = true;
         var collisionType = CollisionType.Passive;
         if (xOrConfig && typeof xOrConfig === 'object') {
@@ -606,6 +605,9 @@ var ActorImpl = /** @class */ (function (_super) {
         actor.body.collider.type = CollisionType.PreventCollision;
         if (Util.addItemToArray(actor, this.children)) {
             actor.parent = this;
+            if (this.scene) {
+                this.scene.world.add(actor);
+            }
         }
     };
     /**
@@ -661,22 +663,20 @@ var ActorImpl = /** @class */ (function (_super) {
     /**
      * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
+     * @deprecated Use actor.z
      */
     ActorImpl.prototype.getZIndex = function () {
-        return this._zIndex;
+        return this.components.transform.z;
     };
     /**
      * Sets the z-index of an actor and updates it in the drawing list for the scene.
      * The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
      * @param newIndex new z-index to assign
+     * @deprecated Use actor.z
      */
     ActorImpl.prototype.setZIndex = function (newIndex) {
-        var _a, _b;
-        var newZ = newIndex;
-        (_a = this.scene) === null || _a === void 0 ? void 0 : _a.cleanupDrawTree(this);
-        this._zIndex = newZ;
-        (_b = this.scene) === null || _b === void 0 ? void 0 : _b.updateDrawTree(this);
+        this.components.transform.z = newIndex;
     };
     Object.defineProperty(ActorImpl.prototype, "center", {
         /**
@@ -881,10 +881,6 @@ var ActorImpl = /** @class */ (function (_super) {
      * @param delta The time since the last draw in milliseconds
      */
     ActorImpl.prototype.draw = function (ctx, delta) {
-        ctx.save();
-        ctx.translate(this.pos.x, this.pos.y);
-        ctx.rotate(this.rotation);
-        ctx.scale(this.scale.x, this.scale.y);
         // translate canvas by anchor offset
         ctx.save();
         ctx.translate(-(this._width * this.anchor.x), -(this._height * this.anchor.y));
@@ -902,14 +898,7 @@ var ActorImpl = /** @class */ (function (_super) {
             }
         }
         ctx.restore();
-        // Draw child actors
-        for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].visible) {
-                this.children[i].draw(ctx, delta);
-            }
-        }
         this._postdraw(ctx, delta);
-        ctx.restore();
     };
     /**
      * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('predraw', (evt) =>{...})`
@@ -1019,10 +1008,6 @@ var ActorImpl = /** @class */ (function (_super) {
     ActorImpl.defaults = {
         anchor: Vector.Half
     };
-    /**
-     * Indicates the next id to be set
-     */
-    ActorImpl.maxId = 0;
     __decorate([
         obsolete({ message: 'ex.Actor.sx will be removed in v0.25.0', alternateMethod: 'Set width and height directly in constructor' })
     ], ActorImpl.prototype, "sx", null);

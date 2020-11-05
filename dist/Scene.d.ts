@@ -9,9 +9,7 @@ import { Class } from './Class';
 import { CanInitialize, CanActivate, CanDeactivate, CanUpdate, CanDraw } from './Interfaces/LifecycleEvents';
 import * as Events from './Events';
 import { Trigger } from './Trigger';
-import { QueryManager } from './EntityComponentSystem/QueryManager';
-import { EntityManager } from './EntityComponentSystem/EntityManager';
-import { SystemManager } from './EntityComponentSystem/SystemManager';
+import { World } from './EntityComponentSystem/World';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -28,9 +26,10 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * The actors in the current scene
      */
     actors: Actor[];
-    queryManager: QueryManager;
-    entityManager: EntityManager;
-    systemManager: SystemManager;
+    /**
+     * The ECS world for the scene
+     */
+    world: World<this>;
     /**
      * Physics bodies in the current scene
      */
@@ -46,13 +45,13 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
     /**
      * Access to the Excalibur engine
      */
-    private _engine;
+    engine: Engine;
     /**
      * The [[ScreenElement]]s in a scene, if any; these are drawn last
+     * @deprecated
      */
-    screenElements: Actor[];
+    get screenElements(): ScreenElement[];
     private _isInitialized;
-    private _sortedDrawingTree;
     private _broadphase;
     private _killQueue;
     private _triggerKillQueue;
@@ -259,28 +258,24 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
      * @todo Should this be `ScreenElement` only?
+     * @deprecated
      */
     addScreenElement(actor: Actor): void;
     /**
      * Removes an actor as a piece of UI
+     * @deprecated
      */
     removeScreenElement(actor: Actor): void;
     /**
-     * Adds an actor to the scene, once this is done the actor will be drawn and updated.
-     */
-    protected _addChild(actor: Actor): void;
-    /**
      * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
+     * @deprecated
      */
     addTileMap(tileMap: TileMap): void;
     /**
      * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
+     * @deprecated
      */
     removeTileMap(tileMap: TileMap): void;
-    /**
-     * Removes an actor from the scene, it will no longer be drawn or updated.
-     */
-    protected _removeChild(actor: Actor): void;
     /**
      * Adds a [[Timer]] to the scene
      * @param timer  The timer to add
@@ -301,18 +296,6 @@ export declare class Scene extends Class implements CanInitialize, CanActivate, 
      * Tests whether a [[Timer]] is active in the scene
      */
     isTimerActive(timer: Timer): boolean;
-    /**
-     * Removes the given actor from the sorted drawing tree
-     */
-    cleanupDrawTree(actor: Actor): void;
-    /**
-     * Updates the given actor's position in the sorted drawing tree
-     */
-    updateDrawTree(actor: Actor): void;
-    /**
-     * Checks if an actor is in this scene's sorted draw tree
-     */
-    isActorInDrawTree(actor: Actor): boolean;
     isCurrentScene(): boolean;
     private _collectActorStats;
 }

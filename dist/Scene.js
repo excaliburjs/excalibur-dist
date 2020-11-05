@@ -11,13 +11,18 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 import { ScreenElement } from './ScreenElement';
 import { Physics } from './Physics';
 import { InitializeEvent, PreUpdateEvent, PostUpdateEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent } from './Events';
 import { Logger } from './Util/Log';
 import { Timer } from './Timer';
 import { DynamicTreeCollisionBroadphase } from './Collision/DynamicTreeCollisionBroadphase';
-import { SortedList } from './Util/SortedList';
 import { TileMap } from './TileMap';
 import { Camera } from './Camera';
 import { Actor } from './Actor';
@@ -25,10 +30,10 @@ import { Class } from './Class';
 import * as Util from './Util/Util';
 import * as ActorUtils from './Util/Actors';
 import { Trigger } from './Trigger';
-import { QueryManager } from './EntityComponentSystem/QueryManager';
-import { EntityManager } from './EntityComponentSystem/EntityManager';
-import { SystemManager } from './EntityComponentSystem/SystemManager';
 import { SystemType } from './EntityComponentSystem/System';
+import { CanvasDrawingSystem } from './Drawing/CanvasDrawingSystem';
+import { obsolete } from './Util/Decorators';
+import { World } from './EntityComponentSystem/World';
 /**
  * [[Actor|Actors]] are composed together into groupings called Scenes in
  * Excalibur. The metaphor models the same idea behind real world
@@ -44,9 +49,10 @@ var Scene = /** @class */ (function (_super) {
          * The actors in the current scene
          */
         _this.actors = [];
-        _this.queryManager = new QueryManager(_this);
-        _this.entityManager = new EntityManager(_this);
-        _this.systemManager = new SystemManager(_this);
+        /**
+         * The ECS world for the scene
+         */
+        _this.world = new World(_this);
         /**
          * Physics bodies in the current scene
          */
@@ -59,12 +65,7 @@ var Scene = /** @class */ (function (_super) {
          * The [[TileMap]]s in the scene, if any
          */
         _this.tileMaps = [];
-        /**
-         * The [[ScreenElement]]s in a scene, if any; these are drawn last
-         */
-        _this.screenElements = [];
         _this._isInitialized = false;
-        _this._sortedDrawingTree = new SortedList(function (a) { return a.z; });
         _this._broadphase = new DynamicTreeCollisionBroadphase();
         _this._killQueue = [];
         _this._triggerKillQueue = [];
@@ -72,13 +73,24 @@ var Scene = /** @class */ (function (_super) {
         _this._cancelQueue = [];
         _this._logger = Logger.getInstance();
         _this.camera = new Camera();
-        _this._engine = _engine;
         if (_engine) {
-            _this.camera.x = _engine.halfDrawWidth;
-            _this.camera.y = _engine.halfDrawHeight;
+            _this.engine = _engine;
+            _this.camera.x = _this.engine.halfDrawWidth;
+            _this.camera.y = _this.engine.halfDrawHeight;
         }
         return _this;
     }
+    Object.defineProperty(Scene.prototype, "screenElements", {
+        /**
+         * The [[ScreenElement]]s in a scene, if any; these are drawn last
+         * @deprecated
+         */
+        get: function () {
+            return this.actors.filter(function (a) { return a instanceof ScreenElement; });
+        },
+        enumerable: false,
+        configurable: true
+    });
     Scene.prototype.on = function (eventName, handler) {
         _super.prototype.on.call(this, eventName, handler);
     };
@@ -147,7 +159,7 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype._initializeChildren = function () {
         for (var _i = 0, _a = this.actors; _i < _a.length; _i++) {
             var child = _a[_i];
-            child._initialize(this._engine);
+            child._initialize(this.engine);
         }
     };
     Object.defineProperty(Scene.prototype, "isInitialized", {
@@ -169,11 +181,13 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype._initialize = function (engine) {
         if (!this.isInitialized) {
-            this._engine = engine;
+            this.engine = engine;
             if (this.camera) {
                 this.camera.x = engine.halfDrawWidth;
                 this.camera.y = engine.halfDrawHeight;
             }
+            // Initialize systems
+            this.world.add(new CanvasDrawingSystem());
             // This order is important! we want to be sure any custom init that add actors
             // fire before the actor init
             this.onInitialize.call(this, engine);
@@ -252,8 +266,7 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.update = function (engine, delta) {
         this._preupdate(engine, delta);
-        this.systemManager.updateSystems(SystemType.Update, engine, delta);
-        this.entityManager.processRemovals();
+        this.world.update(SystemType.Update, delta);
         if (this.camera) {
             this.camera.update(engine, delta);
         }
@@ -267,10 +280,6 @@ var Scene = /** @class */ (function (_super) {
         for (var _i = 0, _a = this._timers; _i < _a.length; _i++) {
             var timer = _a[_i];
             timer.update(delta);
-        }
-        // Cycle through actors updating UI actors
-        for (i = 0, len = this.screenElements.length; i < len; i++) {
-            this.screenElements[i].update(engine, delta);
         }
         // Cycle through actors updating tile maps
         for (i = 0, len = this.tileMaps.length; i < len; i++) {
@@ -314,6 +323,7 @@ var Scene = /** @class */ (function (_super) {
         this._postupdate(engine, delta);
     };
     Scene.prototype._processKillQueue = function (killQueue, collection) {
+        var _this = this;
         // Remove actors from scene graph after being killed
         var actorIndex;
         for (var _i = 0, killQueue_1 = killQueue; _i < killQueue_1.length; _i++) {
@@ -322,8 +332,9 @@ var Scene = /** @class */ (function (_super) {
             if (killed.isKilled()) {
                 actorIndex = collection.indexOf(killed);
                 if (actorIndex > -1) {
-                    this._sortedDrawingTree.removeByComparable(killed);
                     collection.splice(actorIndex, 1);
+                    this.world.remove(killed);
+                    killed.children.forEach(function (c) { return _this.world.remove(c); });
                 }
             }
         }
@@ -336,39 +347,7 @@ var Scene = /** @class */ (function (_super) {
      */
     Scene.prototype.draw = function (ctx, delta) {
         this._predraw(ctx, delta);
-        ctx.save();
-        if (this.camera) {
-            this.camera.draw(ctx);
-        }
-        this.systemManager.updateSystems(SystemType.Draw, this._engine, delta);
-        this.entityManager.processRemovals();
-        var i, len;
-        for (i = 0, len = this.tileMaps.length; i < len; i++) {
-            this.tileMaps[i].draw(ctx, delta);
-        }
-        var sortedChildren = this._sortedDrawingTree.list();
-        for (i = 0, len = sortedChildren.length; i < len; i++) {
-            // only draw actors that are visible and on screen
-            if (sortedChildren[i].visible && !sortedChildren[i].isOffScreen) {
-                sortedChildren[i].draw(ctx, delta);
-            }
-        }
-        if (this._engine && this._engine.isDebug) {
-            ctx.strokeStyle = 'yellow';
-            this.debugDraw(ctx);
-        }
-        ctx.restore();
-        for (i = 0, len = this.screenElements.length; i < len; i++) {
-            // only draw ui actors that are visible and on screen
-            if (this.screenElements[i].visible) {
-                this.screenElements[i].draw(ctx, delta);
-            }
-        }
-        if (this._engine && this._engine.isDebug) {
-            for (i = 0, len = this.screenElements.length; i < len; i++) {
-                this.screenElements[i].debugDraw(ctx);
-            }
-        }
+        this.world.update(SystemType.Draw, delta);
         this._postdraw(ctx, delta);
     };
     /**
@@ -378,18 +357,7 @@ var Scene = /** @class */ (function (_super) {
     /* istanbul ignore next */
     Scene.prototype.debugDraw = function (ctx) {
         this.emit('predebugdraw', new PreDebugDrawEvent(ctx, this));
-        var i, len;
-        for (i = 0, len = this.tileMaps.length; i < len; i++) {
-            this.tileMaps[i].debugDraw(ctx);
-        }
-        for (i = 0, len = this.actors.length; i < len; i++) {
-            this.actors[i].debugDraw(ctx);
-        }
-        for (i = 0, len = this.triggers.length; i < len; i++) {
-            this.triggers[i].debugDraw(ctx);
-        }
         this._broadphase.debugDraw(ctx, 20);
-        this.camera.debugDraw(ctx);
         this.emit('postdebugdraw', new PostDebugDrawEvent(ctx, this));
     };
     /**
@@ -399,18 +367,22 @@ var Scene = /** @class */ (function (_super) {
         return this.actors.indexOf(actor) > -1;
     };
     Scene.prototype.add = function (entity) {
+        var _this = this;
         if (entity instanceof Actor) {
             entity.unkill();
         }
-        if (entity instanceof ScreenElement) {
-            if (!Util.contains(this.screenElements, entity)) {
-                this.addScreenElement(entity);
-            }
-            return;
-        }
         if (entity instanceof Actor) {
             if (!Util.contains(this.actors, entity)) {
-                this._addChild(entity);
+                this._broadphase.track(entity.body);
+                entity.scene = this;
+                if (entity instanceof Trigger) {
+                    this.triggers.push(entity);
+                }
+                else {
+                    this.actors.push(entity);
+                }
+                this.world.add(entity);
+                entity.children.forEach(function (c) { return _this.world.add(c); });
             }
             return;
         }
@@ -427,12 +399,21 @@ var Scene = /** @class */ (function (_super) {
         }
     };
     Scene.prototype.remove = function (entity) {
-        if (entity instanceof ScreenElement) {
-            this.removeScreenElement(entity);
-            return;
-        }
         if (entity instanceof Actor) {
-            this._removeChild(entity);
+            if (!Util.contains(this.actors, entity)) {
+                return;
+            }
+            this._broadphase.untrack(entity.body);
+            if (entity instanceof Trigger) {
+                this._triggerKillQueue.push(entity);
+            }
+            else {
+                if (!entity.isKilled()) {
+                    entity.kill();
+                }
+                this._killQueue.push(entity);
+            }
+            entity.parent = null;
         }
         if (entity instanceof Timer) {
             this.removeTimer(entity);
@@ -445,67 +426,36 @@ var Scene = /** @class */ (function (_super) {
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
      * @todo Should this be `ScreenElement` only?
+     * @deprecated
      */
     Scene.prototype.addScreenElement = function (actor) {
-        this.screenElements.push(actor);
-        actor.scene = this;
+        this.add(actor);
     };
     /**
      * Removes an actor as a piece of UI
+     * @deprecated
      */
     Scene.prototype.removeScreenElement = function (actor) {
-        var index = this.screenElements.indexOf(actor);
-        if (index > -1) {
-            this.screenElements.splice(index, 1);
-        }
-    };
-    /**
-     * Adds an actor to the scene, once this is done the actor will be drawn and updated.
-     */
-    Scene.prototype._addChild = function (actor) {
-        this._broadphase.track(actor.body);
-        actor.scene = this;
-        if (actor instanceof Trigger) {
-            this.triggers.push(actor);
-        }
-        else {
-            this.actors.push(actor);
-        }
-        this._sortedDrawingTree.add(actor);
+        this.remove(actor);
     };
     /**
      * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
+     * @deprecated
      */
     Scene.prototype.addTileMap = function (tileMap) {
         this.tileMaps.push(tileMap);
+        this.world.add(tileMap);
     };
     /**
      * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
+     * @deprecated
      */
     Scene.prototype.removeTileMap = function (tileMap) {
         var index = this.tileMaps.indexOf(tileMap);
         if (index > -1) {
             this.tileMaps.splice(index, 1);
+            this.world.remove(tileMap);
         }
-    };
-    /**
-     * Removes an actor from the scene, it will no longer be drawn or updated.
-     */
-    Scene.prototype._removeChild = function (actor) {
-        if (!Util.contains(this.actors, actor)) {
-            return;
-        }
-        this._broadphase.untrack(actor.body);
-        if (actor instanceof Trigger) {
-            this._triggerKillQueue.push(actor);
-        }
-        else {
-            if (!actor.isKilled()) {
-                actor.kill();
-            }
-            this._killQueue.push(actor);
-        }
-        actor.parent = null;
     };
     /**
      * Adds a [[Timer]] to the scene
@@ -542,27 +492,9 @@ var Scene = /** @class */ (function (_super) {
     Scene.prototype.isTimerActive = function (timer) {
         return this._timers.indexOf(timer) > -1 && !timer.complete;
     };
-    /**
-     * Removes the given actor from the sorted drawing tree
-     */
-    Scene.prototype.cleanupDrawTree = function (actor) {
-        this._sortedDrawingTree.removeByComparable(actor);
-    };
-    /**
-     * Updates the given actor's position in the sorted drawing tree
-     */
-    Scene.prototype.updateDrawTree = function (actor) {
-        this._sortedDrawingTree.add(actor);
-    };
-    /**
-     * Checks if an actor is in this scene's sorted draw tree
-     */
-    Scene.prototype.isActorInDrawTree = function (actor) {
-        return this._sortedDrawingTree.find(actor);
-    };
     Scene.prototype.isCurrentScene = function () {
-        if (this._engine) {
-            return this._engine.currentScene === this;
+        if (this.engine) {
+            return this.engine.currentScene === this;
         }
         return false;
     };
@@ -585,6 +517,24 @@ var Scene = /** @class */ (function (_super) {
             }
         }
     };
+    __decorate([
+        obsolete({
+            message: 'Will be removed in excalibur v0.26.0',
+            alternateMethod: 'ScreenElements now are normal actors with a Transform Coordinate Plane of Screen'
+        })
+    ], Scene.prototype, "screenElements", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+    ], Scene.prototype, "addScreenElement", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+    ], Scene.prototype, "removeScreenElement", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+    ], Scene.prototype, "addTileMap", null);
+    __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+    ], Scene.prototype, "removeTileMap", null);
     return Scene;
 }(Class));
 export { Scene };

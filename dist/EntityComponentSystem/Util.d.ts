@@ -1,1 +1,1 @@
-export declare const buildTypeKey: (types: string[]) => string;
+export declare const buildTypeKey: (types: readonly string[]) => string;

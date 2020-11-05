@@ -20,6 +20,8 @@ import * as Events from './Events';
 import { PointerEvents } from './Interfaces/PointerEventHandlers';
 import { CollisionType } from './Collision/CollisionType';
 import { Entity } from './EntityComponentSystem/Entity';
+import { CanvasDrawComponent } from './Drawing/CanvasDrawComponent';
+import { TransformComponent } from './EntityComponentSystem/Components/TransformComponent';
 /**
  * Type guard for checking if something is an Actor
  * @param x
@@ -47,19 +49,11 @@ export interface ActorDefaults {
 /**
  * @hidden
  */
-export declare class ActorImpl extends Entity implements Actionable, Eventable, PointerEvents, CanInitialize, CanUpdate, CanDraw, CanBeKilled {
+export declare class ActorImpl extends Entity<TransformComponent | CanvasDrawComponent> implements Actionable, Eventable, PointerEvents, CanInitialize, CanUpdate, CanDraw, CanBeKilled {
     /**
      * Indicates the next id to be set
      */
     static defaults: ActorDefaults;
-    /**
-     * Indicates the next id to be set
-     */
-    static maxId: number;
-    /**
-     * The unique identifier for the actor
-     */
-    id: number;
     /**
      * The physics body the is associated with this actor. The body is the container for all physical properties, like position, velocity,
      * acceleration, mass, inertia, etc.
@@ -266,7 +260,6 @@ export declare class ActorImpl extends Entity implements Actionable, Eventable, 
      * Configuration for [[CapturePointer]] trait
      */
     capturePointer: Traits.CapturePointerConfig;
-    private _zIndex;
     private _isKilled;
     /**
      * @param xOrConfig The starting x coordinate of the actor, or an option bag of [[ActorArgs]]
@@ -562,6 +555,7 @@ export declare class ActorImpl extends Entity implements Actionable, Eventable, 
     /**
      * Gets the z-index of an actor. The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
+     * @deprecated Use actor.z
      */
     getZIndex(): number;
     /**
@@ -569,6 +563,7 @@ export declare class ActorImpl extends Entity implements Actionable, Eventable, 
      * The z-index determines the relative order an actor is drawn in.
      * Actors with a higher z-index are drawn on top of actors with a lower z-index
      * @param newIndex new z-index to assign
+     * @deprecated Use actor.z
      */
     setZIndex(newIndex: number): void;
     /**

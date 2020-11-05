@@ -1,13 +1,13 @@
 import { Entity, RemovedComponent, AddedComponent } from './Entity';
 import { Observer } from '../Util/Observable';
-import { Scene } from '../Scene';
+import { World } from './World';
 export declare class EntityManager implements Observer<RemovedComponent | AddedComponent> {
-    private _scene;
+    private _world;
     entities: Entity[];
     _entityIndex: {
         [entityId: string]: Entity;
     };
-    constructor(_scene: Scene);
+    constructor(_world: World<any>);
     /**
      * EntityManager observes changes on entities
      * @param message
@@ -20,6 +20,7 @@ export declare class EntityManager implements Observer<RemovedComponent | AddedC
     addEntity(entity: Entity): void;
     removeEntity(entity: Entity): void;
     removeEntity(id: number): void;
-    processRemovals(): void;
+    processComponentRemovals(): void;
     getById(id: number): Entity;
+    clear(): void;
 }

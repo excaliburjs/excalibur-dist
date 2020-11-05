@@ -5,4 +5,5 @@ export * from './Query';
 export * from './QueryManager';
 export * from './System';
 export * from './SystemManager';
+export * from './World';
 //# sourceMappingURL=index.js.map

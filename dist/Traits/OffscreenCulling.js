@@ -11,7 +11,7 @@ var OffscreenCulling = /** @class */ (function () {
             isSpriteOffScreen = this.cullingBox.isSpriteOffScreen(actor, engine);
         }
         var actorBoundsOffscreen = false;
-        if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport) {
+        if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport && !actor.parent) {
             actorBoundsOffscreen = !engine.currentScene.camera.viewport.intersect(actor.body.collider.bounds);
         }
         if (!actor.isOffScreen) {

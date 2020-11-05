@@ -1,5 +1,13 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { obsolete } from './Decorators';
 /**
  * A sorted list implementation. NOTE: this implementation is not self-balancing
+ * @deprecated
  */
 var SortedList = /** @class */ (function () {
     function SortedList(getComparable) {
@@ -187,11 +195,15 @@ var SortedList = /** @class */ (function () {
             this._list(treeNode.getRight(), results);
         }
     };
+    SortedList = __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use built in JS array.sort' })
+    ], SortedList);
     return SortedList;
 }());
 export { SortedList };
 /**
  * A tree node part of [[SortedList]]
+ * @deprecated
  */
 var BinaryTreeNode = /** @class */ (function () {
     function BinaryTreeNode(key, data, left, right) {
@@ -224,6 +236,9 @@ var BinaryTreeNode = /** @class */ (function () {
     BinaryTreeNode.prototype.setRight = function (right) {
         this._right = right;
     };
+    BinaryTreeNode = __decorate([
+        obsolete({ message: 'Will be removed in excalibur v0.26.0' })
+    ], BinaryTreeNode);
     return BinaryTreeNode;
 }());
 export { BinaryTreeNode };
@@ -231,6 +246,7 @@ export { BinaryTreeNode };
  * Mock element for testing
  *
  * @internal
+ * @deprecated
  */
 var MockedElement = /** @class */ (function () {
     function MockedElement(key) {

@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7428+e6fe439 - 2020-11-5
+ * excalibur - 0.25.0-alpha.7429+179f3e4 - 2020-11-7
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -17563,7 +17563,7 @@ var World = /** @class */ (function () {
 /*!****************************************!*\
   !*** ./EntityComponentSystem/index.ts ***!
   \****************************************/
-/*! exports provided: Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World */
+/*! exports provided: Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World, CoordPlane, TransformComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17611,6 +17611,12 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _World__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./World */ "./EntityComponentSystem/World.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "World", function() { return _World__WEBPACK_IMPORTED_MODULE_7__["World"]; });
+
+/* harmony import */ var _Components_TransformComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Components/TransformComponent */ "./EntityComponentSystem/Components/TransformComponent.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CoordPlane", function() { return _Components_TransformComponent__WEBPACK_IMPORTED_MODULE_8__["CoordPlane"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TransformComponent", function() { return _Components_TransformComponent__WEBPACK_IMPORTED_MODULE_8__["TransformComponent"]; });
+
 
 
 
@@ -29070,7 +29076,7 @@ var WebAudio = /** @class */ (function () {
 /*!******************!*\
   !*** ./index.ts ***!
   \******************/
-/*! exports provided: EX_VERSION, Flags, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, CanvasDrawComponent, CanvasDrawingSystem, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
+/*! exports provided: EX_VERSION, Flags, ScrollPreventionMode, Engine, DisplayMode, Resolution, Screen, Actor, CollisionType, Vector, Ray, Line, Projection, GlobalCoordinates, vec, StrategyContainer, Axis, LockCameraToActorStrategy, LockCameraToActorAxisStrategy, ElasticToActorStrategy, RadiusAroundActorStrategy, LimitCameraBoundsStrategy, Camera, Class, Configurable, Debug, FrameStats, PhysicsStats, EventDispatcher, MediaEvent, NativeSoundEvent, NativeSoundProcessedEvent, EventTypes, GameEvent, KillEvent, PreKillEvent, PostKillEvent, GameStartEvent, GameStopEvent, PreDrawEvent, PostDrawEvent, PreDebugDrawEvent, PostDebugDrawEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GamepadConnectEvent, GamepadDisconnectEvent, GamepadButtonEvent, GamepadAxisEvent, SubscribeEvent, UnsubscribeEvent, VisibleEvent, HiddenEvent, PreCollisionEvent, PostCollisionEvent, CollisionStartEvent, CollisionEndEvent, InitializeEvent, ActivateEvent, DeactivateEvent, ExitViewPortEvent, EnterViewPortEvent, EnterTriggerEvent, ExitTriggerEvent, Label, FontStyle, FontUnit, TextAlign, BaseAlign, Loader, Particle, ParticleEmitter, EmitterType, CollisionResolutionStrategy, BroadphaseStrategy, Integrator, Physics, PromiseState, Promise, Scene, TileMap, Cell, TileSprite, Timer, Trigger, ScreenElement, ActionContext, RotationType, Actions, Internal, Body, isCollider, Collider, BoundingBox, Circle, CollisionContact, CollisionJumpTable, ClosestLine, ClosestLineJumpTable, CollisionGroup, CollisionGroupManager, TreeNode, DynamicTree, DynamicTreeCollisionBroadphase, Edge, Pair, ConvexPolygon, Side, Shape, Animation, Color, Polygon, Sprite, SpriteSheet, SpriteFont, CanvasDrawComponent, CanvasDrawingSystem, Effects, ExResponse, has_initialize, hasOnInitialize, has_preupdate, hasOnPreUpdate, has_postupdate, hasOnPostUpdate, hasPreDraw, hasPostDraw, PerlinGenerator, PerlinDrawer2D, Random, ColorBlindness, ColorBlindCorrector, Resource, Sound, AudioContextFactory, AudioInstanceFactory, AudioInstance, WebAudioInstance, Texture, Gif, Stream, ParseGif, Component, TagComponent, AddedComponent, isAddedComponent, RemovedComponent, isRemovedComponent, Entity, EntityManager, Query, QueryManager, SystemType, System, AddedEntity, isAddedSystemEntity, RemovedEntity, isRemoveSystemEntity, SystemManager, World, CoordPlane, TransformComponent, Events, Input, Traits, Util, BrowserComponent, BrowserEvents, maxMessages, resetObsoleteCounter, obsolete, Detector, CullingBox, EasingFunctions, LogLevel, Logger, ConsoleAppender, ScreenAppender, SortedList, BinaryTreeNode, MockedElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29430,6 +29436,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "World", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_31__["World"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CoordPlane", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_31__["CoordPlane"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TransformComponent", function() { return _EntityComponentSystem_index__WEBPACK_IMPORTED_MODULE_31__["TransformComponent"]; });
+
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Events", function() { return _Events__WEBPACK_IMPORTED_MODULE_13__; });
 /* harmony import */ var _Input_Index__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./Input/Index */ "./Input/Index.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Input", function() { return _Input_Index__WEBPACK_IMPORTED_MODULE_32__; });
@@ -29478,7 +29488,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-var EX_VERSION = "0.25.0-alpha.7428+e6fe439";
+var EX_VERSION = "0.25.0-alpha.7429+179f3e4";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

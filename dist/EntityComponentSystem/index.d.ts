@@ -6,3 +6,4 @@ export * from './QueryManager';
 export * from './System';
 export * from './SystemManager';
 export * from './World';
+export * from './Components/TransformComponent';

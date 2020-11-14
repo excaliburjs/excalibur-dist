@@ -1,15 +1,11 @@
-var ExResponse = /** @class */ (function () {
-    function ExResponse() {
-    }
-    ExResponse.type = {
-        any: '',
-        blob: 'blob',
-        json: 'json',
-        text: 'text',
-        document: 'document',
-        arraybuffer: 'arraybuffer'
-    };
-    return ExResponse;
-}());
-export { ExResponse };
+export class ExResponse {
+}
+ExResponse.type = {
+    any: '',
+    blob: 'blob',
+    json: 'json',
+    text: 'text',
+    document: 'document',
+    arraybuffer: 'arraybuffer'
+};
 //# sourceMappingURL=AudioImplementation.js.map

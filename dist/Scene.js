@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -41,137 +28,126 @@ import { World } from './EntityComponentSystem/World';
  *
  * Typical usages of a scene include: levels, menus, loading screens, etc.
  */
-var Scene = /** @class */ (function (_super) {
-    __extends(Scene, _super);
-    function Scene(_engine) {
-        var _this = _super.call(this) || this;
+export class Scene extends Class {
+    constructor(_engine) {
+        super();
         /**
          * The actors in the current scene
          */
-        _this.actors = [];
+        this.actors = [];
         /**
          * The ECS world for the scene
          */
-        _this.world = new World(_this);
+        this.world = new World(this);
         /**
          * Physics bodies in the current scene
          */
-        _this._bodies = [];
+        this._bodies = [];
         /**
          * The triggers in the current scene
          */
-        _this.triggers = [];
+        this.triggers = [];
         /**
          * The [[TileMap]]s in the scene, if any
          */
-        _this.tileMaps = [];
-        _this._isInitialized = false;
-        _this._broadphase = new DynamicTreeCollisionBroadphase();
-        _this._killQueue = [];
-        _this._triggerKillQueue = [];
-        _this._timers = [];
-        _this._cancelQueue = [];
-        _this._logger = Logger.getInstance();
-        _this.camera = new Camera();
+        this.tileMaps = [];
+        this._isInitialized = false;
+        this._broadphase = new DynamicTreeCollisionBroadphase();
+        this._killQueue = [];
+        this._triggerKillQueue = [];
+        this._timers = [];
+        this._cancelQueue = [];
+        this._logger = Logger.getInstance();
+        this.camera = new Camera();
         if (_engine) {
-            _this.engine = _engine;
-            _this.camera.x = _this.engine.halfDrawWidth;
-            _this.camera.y = _this.engine.halfDrawHeight;
+            this.engine = _engine;
+            this.camera.x = this.engine.halfDrawWidth;
+            this.camera.y = this.engine.halfDrawHeight;
         }
-        return _this;
     }
-    Object.defineProperty(Scene.prototype, "screenElements", {
-        /**
-         * The [[ScreenElement]]s in a scene, if any; these are drawn last
-         * @deprecated
-         */
-        get: function () {
-            return this.actors.filter(function (a) { return a instanceof ScreenElement; });
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Scene.prototype.on = function (eventName, handler) {
-        _super.prototype.on.call(this, eventName, handler);
-    };
-    Scene.prototype.once = function (eventName, handler) {
-        _super.prototype.once.call(this, eventName, handler);
-    };
-    Scene.prototype.off = function (eventName, handler) {
-        _super.prototype.off.call(this, eventName, handler);
-    };
+    /**
+     * The [[ScreenElement]]s in a scene, if any; these are drawn last
+     * @deprecated
+     */
+    get screenElements() {
+        return this.actors.filter((a) => a instanceof ScreenElement);
+    }
+    on(eventName, handler) {
+        super.on(eventName, handler);
+    }
+    once(eventName, handler) {
+        super.once(eventName, handler);
+    }
+    off(eventName, handler) {
+        super.off(eventName, handler);
+    }
     /**
      * This is called before the first update of the [[Scene]]. Initializes scene members like the camera. This method is meant to be
      * overridden. This is where initialization of child actors should take place.
      */
-    Scene.prototype.onInitialize = function (_engine) {
+    onInitialize(_engine) {
         // will be overridden
-    };
+    }
     /**
      * This is called when the scene is made active and started. It is meant to be overridden,
      * this is where you should setup any DOM UI or event handlers needed for the scene.
      */
-    Scene.prototype.onActivate = function (_oldScene, _newScene) {
+    onActivate(_oldScene, _newScene) {
         // will be overridden
-    };
+    }
     /**
      * This is called when the scene is made transitioned away from and stopped. It is meant to be overridden,
      * this is where you should cleanup any DOM UI or event handlers needed for the scene.
      */
-    Scene.prototype.onDeactivate = function (_oldScene, _newScene) {
+    onDeactivate(_oldScene, _newScene) {
         // will be overridden
-    };
+    }
     /**
      * Safe to override onPreUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
      *
      * `onPreUpdate` is called directly before a scene is updated.
      */
-    Scene.prototype.onPreUpdate = function (_engine, _delta) {
+    onPreUpdate(_engine, _delta) {
         // will be overridden
-    };
+    }
     /**
      * Safe to override onPostUpdate lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
      *
      * `onPostUpdate` is called directly after a scene is updated.
      */
-    Scene.prototype.onPostUpdate = function (_engine, _delta) {
+    onPostUpdate(_engine, _delta) {
         // will be overridden
-    };
+    }
     /**
      * Safe to override onPreDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
      *
      * `onPreDraw` is called directly before a scene is drawn.
      */
-    Scene.prototype.onPreDraw = function (_ctx, _delta) {
+    onPreDraw(_ctx, _delta) {
         // will be overridden
-    };
+    }
     /**
      * Safe to override onPostDraw lifecycle event handler. Synonymous with `.on('preupdate', (evt) =>{...})`
      *
      * `onPostDraw` is called directly after a scene is drawn.
      */
-    Scene.prototype.onPostDraw = function (_ctx, _delta) {
+    onPostDraw(_ctx, _delta) {
         // will be overridden
-    };
+    }
     /**
      * Initializes actors in the scene
      */
-    Scene.prototype._initializeChildren = function () {
-        for (var _i = 0, _a = this.actors; _i < _a.length; _i++) {
-            var child = _a[_i];
+    _initializeChildren() {
+        for (const child of this.actors) {
             child._initialize(this.engine);
         }
-    };
-    Object.defineProperty(Scene.prototype, "isInitialized", {
-        /**
-         * Gets whether or not the [[Scene]] has been initialized
-         */
-        get: function () {
-            return this._isInitialized;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * Gets whether or not the [[Scene]] has been initialized
+     */
+    get isInitialized() {
+        return this._isInitialized;
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
@@ -179,7 +155,7 @@ var Scene = /** @class */ (function (_super) {
      * Excalibur
      * @internal
      */
-    Scene.prototype._initialize = function (engine) {
+    _initialize(engine) {
         if (!this.isInitialized) {
             this.engine = engine;
             if (this.camera) {
@@ -196,47 +172,47 @@ var Scene = /** @class */ (function (_super) {
             this.eventDispatcher.emit('initialize', new InitializeEvent(engine, this));
             this._isInitialized = true;
         }
-    };
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Activates the scene with the base behavior, then calls the overridable `onActivate` implementation.
      * @internal
      */
-    Scene.prototype._activate = function (oldScene, newScene) {
+    _activate(oldScene, newScene) {
         this._logger.debug('Scene.onActivate', this);
         this.onActivate(oldScene, newScene);
-    };
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Deactivates the scene with the base behavior, then calls the overridable `onDeactivate` implementation.
      * @internal
      */
-    Scene.prototype._deactivate = function (oldScene, newScene) {
+    _deactivate(oldScene, newScene) {
         this._logger.debug('Scene.onDeactivate', this);
         this.onDeactivate(oldScene, newScene);
-    };
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPreUpdate]] lifecycle event
      * @internal
      */
-    Scene.prototype._preupdate = function (_engine, delta) {
+    _preupdate(_engine, delta) {
         this.emit('preupdate', new PreUpdateEvent(_engine, delta, this));
         this.onPreUpdate(_engine, delta);
-    };
+    }
     /**
      *  It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
      * Internal _preupdate handler for [[onPostUpdate]] lifecycle event
      * @internal
      */
-    Scene.prototype._postupdate = function (_engine, delta) {
+    _postupdate(_engine, delta) {
         this.emit('postupdate', new PostUpdateEvent(_engine, delta, this));
         this.onPostUpdate(_engine, delta);
-    };
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
@@ -244,10 +220,10 @@ var Scene = /** @class */ (function (_super) {
      *
      * @internal
      */
-    Scene.prototype._predraw = function (_ctx, _delta) {
+    _predraw(_ctx, _delta) {
         this.emit('predraw', new PreDrawEvent(_ctx, _delta, this));
         this.onPreDraw(_ctx, _delta);
-    };
+    }
     /**
      * It is not recommended that internal excalibur methods be overridden, do so at your own risk.
      *
@@ -255,30 +231,29 @@ var Scene = /** @class */ (function (_super) {
      *
      * @internal
      */
-    Scene.prototype._postdraw = function (_ctx, _delta) {
+    _postdraw(_ctx, _delta) {
         this.emit('postdraw', new PostDrawEvent(_ctx, _delta, this));
         this.onPostDraw(_ctx, _delta);
-    };
+    }
     /**
      * Updates all the actors and timers in the scene. Called by the [[Engine]].
      * @param engine  Reference to the current Engine
      * @param delta   The number of milliseconds since the last update
      */
-    Scene.prototype.update = function (engine, delta) {
+    update(engine, delta) {
         this._preupdate(engine, delta);
         this.world.update(SystemType.Update, delta);
         if (this.camera) {
             this.camera.update(engine, delta);
         }
-        var i, len;
+        let i, len;
         // Remove timers in the cancel queue before updating them
         for (i = 0, len = this._cancelQueue.length; i < len; i++) {
             this.removeTimer(this._cancelQueue[i]);
         }
         this._cancelQueue.length = 0;
         // Cycle through timers updating timers
-        for (var _i = 0, _a = this._timers; _i < _a.length; _i++) {
-            var timer = _a[_i];
+        for (const timer of this._timers) {
             timer.update(delta);
         }
         // Cycle through actors updating tile maps
@@ -298,13 +273,13 @@ var Scene = /** @class */ (function (_super) {
         engine.input.pointers.dispatchPointerEvents();
         // Run the broadphase and narrowphase
         if (this._broadphase && Physics.enabled) {
-            var beforeBroadphase = Date.now();
+            const beforeBroadphase = Date.now();
             this._broadphase.update(this._bodies, delta);
-            var pairs = this._broadphase.broadphase(this._bodies, delta, engine.stats.currFrame);
-            var afterBroadphase = Date.now();
-            var beforeNarrowphase = Date.now();
-            var iter = Physics.collisionPasses;
-            var collisionDelta = delta / iter;
+            let pairs = this._broadphase.broadphase(this._bodies, delta, engine.stats.currFrame);
+            const afterBroadphase = Date.now();
+            const beforeNarrowphase = Date.now();
+            let iter = Physics.collisionPasses;
+            const collisionDelta = delta / iter;
             while (iter > 0) {
                 // Run the narrowphase
                 pairs = this._broadphase.narrowphase(pairs, engine.stats.currFrame);
@@ -313,7 +288,7 @@ var Scene = /** @class */ (function (_super) {
                 this._broadphase.runCollisionStartEnd(pairs);
                 iter--;
             }
-            var afterNarrowphase = Date.now();
+            const afterNarrowphase = Date.now();
             engine.stats.currFrame.physics.broadphase = afterBroadphase - beforeBroadphase;
             engine.stats.currFrame.physics.narrowphase = afterNarrowphase - beforeNarrowphase;
         }
@@ -321,53 +296,50 @@ var Scene = /** @class */ (function (_super) {
         this._processKillQueue(this._killQueue, this.actors);
         this._processKillQueue(this._triggerKillQueue, this.triggers);
         this._postupdate(engine, delta);
-    };
-    Scene.prototype._processKillQueue = function (killQueue, collection) {
-        var _this = this;
+    }
+    _processKillQueue(killQueue, collection) {
         // Remove actors from scene graph after being killed
-        var actorIndex;
-        for (var _i = 0, killQueue_1 = killQueue; _i < killQueue_1.length; _i++) {
-            var killed = killQueue_1[_i];
+        let actorIndex;
+        for (const killed of killQueue) {
             //don't remove actors that were readded during the same frame they were killed
             if (killed.isKilled()) {
                 actorIndex = collection.indexOf(killed);
                 if (actorIndex > -1) {
                     collection.splice(actorIndex, 1);
                     this.world.remove(killed);
-                    killed.children.forEach(function (c) { return _this.world.remove(c); });
+                    killed.children.forEach((c) => this.world.remove(c));
                 }
             }
         }
         killQueue.length = 0;
-    };
+    }
     /**
      * Draws all the actors in the Scene. Called by the [[Engine]].
      * @param ctx    The current rendering context
      * @param delta  The number of milliseconds since the last draw
      */
-    Scene.prototype.draw = function (ctx, delta) {
+    draw(ctx, delta) {
         this._predraw(ctx, delta);
         this.world.update(SystemType.Draw, delta);
         this._postdraw(ctx, delta);
-    };
+    }
     /**
      * Draws all the actors' debug information in the Scene. Called by the [[Engine]].
      * @param ctx  The current rendering context
      */
     /* istanbul ignore next */
-    Scene.prototype.debugDraw = function (ctx) {
+    debugDraw(ctx) {
         this.emit('predebugdraw', new PreDebugDrawEvent(ctx, this));
         this._broadphase.debugDraw(ctx, 20);
         this.emit('postdebugdraw', new PostDebugDrawEvent(ctx, this));
-    };
+    }
     /**
      * Checks whether an actor is contained in this scene or not
      */
-    Scene.prototype.contains = function (actor) {
+    contains(actor) {
         return this.actors.indexOf(actor) > -1;
-    };
-    Scene.prototype.add = function (entity) {
-        var _this = this;
+    }
+    add(entity) {
         if (entity instanceof Actor) {
             entity.unkill();
         }
@@ -382,7 +354,7 @@ var Scene = /** @class */ (function (_super) {
                     this.actors.push(entity);
                 }
                 this.world.add(entity);
-                entity.children.forEach(function (c) { return _this.world.add(c); });
+                entity.children.forEach((c) => this.world.add(c));
             }
             return;
         }
@@ -397,8 +369,8 @@ var Scene = /** @class */ (function (_super) {
                 this.addTileMap(entity);
             }
         }
-    };
-    Scene.prototype.remove = function (entity) {
+    }
+    remove(entity) {
         if (entity instanceof Actor) {
             if (!Util.contains(this.actors, entity)) {
                 return;
@@ -421,93 +393,90 @@ var Scene = /** @class */ (function (_super) {
         if (entity instanceof TileMap) {
             this.removeTileMap(entity);
         }
-    };
+    }
     /**
      * Adds (any) actor to act as a piece of UI, meaning it is always positioned
      * in screen coordinates. UI actors do not participate in collisions.
      * @todo Should this be `ScreenElement` only?
      * @deprecated
      */
-    Scene.prototype.addScreenElement = function (actor) {
+    addScreenElement(actor) {
         this.add(actor);
-    };
+    }
     /**
      * Removes an actor as a piece of UI
      * @deprecated
      */
-    Scene.prototype.removeScreenElement = function (actor) {
+    removeScreenElement(actor) {
         this.remove(actor);
-    };
+    }
     /**
      * Adds a [[TileMap]] to the scene, once this is done the TileMap will be drawn and updated.
      * @deprecated
      */
-    Scene.prototype.addTileMap = function (tileMap) {
+    addTileMap(tileMap) {
         this.tileMaps.push(tileMap);
         this.world.add(tileMap);
-    };
+    }
     /**
      * Removes a [[TileMap]] from the scene, it will no longer be drawn or updated.
      * @deprecated
      */
-    Scene.prototype.removeTileMap = function (tileMap) {
-        var index = this.tileMaps.indexOf(tileMap);
+    removeTileMap(tileMap) {
+        const index = this.tileMaps.indexOf(tileMap);
         if (index > -1) {
             this.tileMaps.splice(index, 1);
             this.world.remove(tileMap);
         }
-    };
+    }
     /**
      * Adds a [[Timer]] to the scene
      * @param timer  The timer to add
      */
-    Scene.prototype.addTimer = function (timer) {
+    addTimer(timer) {
         this._timers.push(timer);
         timer.scene = this;
         return timer;
-    };
+    }
     /**
      * Removes a [[Timer]] from the scene.
      * @warning Can be dangerous, use [[cancelTimer]] instead
      * @param timer  The timer to remove
      */
-    Scene.prototype.removeTimer = function (timer) {
-        var i = this._timers.indexOf(timer);
+    removeTimer(timer) {
+        const i = this._timers.indexOf(timer);
         if (i !== -1) {
             this._timers.splice(i, 1);
         }
         return timer;
-    };
+    }
     /**
      * Cancels a [[Timer]], removing it from the scene nicely
      * @param timer  The timer to cancel
      */
-    Scene.prototype.cancelTimer = function (timer) {
+    cancelTimer(timer) {
         this._cancelQueue.push(timer);
         return timer;
-    };
+    }
     /**
      * Tests whether a [[Timer]] is active in the scene
      */
-    Scene.prototype.isTimerActive = function (timer) {
+    isTimerActive(timer) {
         return this._timers.indexOf(timer) > -1 && !timer.complete;
-    };
-    Scene.prototype.isCurrentScene = function () {
+    }
+    isCurrentScene() {
         if (this.engine) {
             return this.engine.currentScene === this;
         }
         return false;
-    };
-    Scene.prototype._collectActorStats = function (engine) {
-        for (var _i = 0, _a = this.screenElements; _i < _a.length; _i++) {
-            var _ui = _a[_i];
+    }
+    _collectActorStats(engine) {
+        for (const _ui of this.screenElements) {
             engine.stats.currFrame.actors.ui++;
         }
-        for (var _b = 0, _c = this.actors; _b < _c.length; _b++) {
-            var actor = _c[_b];
+        for (const actor of this.actors) {
             engine.stats.currFrame.actors.alive++;
-            for (var _d = 0, _e = actor.children; _d < _e.length; _d++) {
-                var child = _e[_d];
+            for (const child of actor.children) {
                 if (ActorUtils.isScreenElement(child)) {
                     engine.stats.currFrame.actors.ui++;
                 }
@@ -516,26 +485,24 @@ var Scene = /** @class */ (function (_super) {
                 }
             }
         }
-    };
-    __decorate([
-        obsolete({
-            message: 'Will be removed in excalibur v0.26.0',
-            alternateMethod: 'ScreenElements now are normal actors with a Transform Coordinate Plane of Screen'
-        })
-    ], Scene.prototype, "screenElements", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
-    ], Scene.prototype, "addScreenElement", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
-    ], Scene.prototype, "removeScreenElement", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
-    ], Scene.prototype, "addTileMap", null);
-    __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
-    ], Scene.prototype, "removeTileMap", null);
-    return Scene;
-}(Class));
-export { Scene };
+    }
+}
+__decorate([
+    obsolete({
+        message: 'Will be removed in excalibur v0.26.0',
+        alternateMethod: 'ScreenElements now are normal actors with a Transform Coordinate Plane of Screen'
+    })
+], Scene.prototype, "screenElements", null);
+__decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+], Scene.prototype, "addScreenElement", null);
+__decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+], Scene.prototype, "removeScreenElement", null);
+__decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.add' })
+], Scene.prototype, "addTileMap", null);
+__decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use Scene.remove' })
+], Scene.prototype, "removeTileMap", null);
 //# sourceMappingURL=Scene.js.map

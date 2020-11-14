@@ -42,7 +42,9 @@ export declare class SpriteImpl implements Drawable {
      * @param height The height of the sprite in pixels
      */
     constructor(imageOrConfig: Texture | SpriteArgs, x: number, y: number, width: number, height: number);
+    private _initPixelsFromTexture;
     private _loadPixels;
+    private _flushTexture;
     private _opacity;
     /**
      * Applies the [[Opacity]] effect to a sprite, setting the alpha of all pixels to a given value

@@ -41,7 +41,7 @@
  * `(player1.group & blocks1.mask) === 1`
  * `(0b001 & 0b011) === 1`
  */
-var CollisionGroup = /** @class */ (function () {
+export class CollisionGroup {
     /**
      * **STOP!!** It is preferred that [[CollisionGroupManager.create]] is used to create collision groups
      *  unless you know how to construct the proper bitmasks. See https://github.com/excaliburjs/Excalibur/issues/1091 for more info.
@@ -49,54 +49,40 @@ var CollisionGroup = /** @class */ (function () {
      * @param category 32 bit category for the group, should be a unique power of 2. For example `0b001` or `0b010`
      * @param mask 32 bit mask of category, or `~category` generally. For a category of `0b001`, the mask would be `0b110`
      */
-    function CollisionGroup(name, category, mask) {
+    constructor(name, category, mask) {
         this._name = name;
         this._category = category;
         this._mask = mask;
     }
-    Object.defineProperty(CollisionGroup.prototype, "name", {
-        /**
-         * Get the name of the collision group
-         */
-        get: function () {
-            return this._name;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(CollisionGroup.prototype, "category", {
-        /**
-         * Get the category of the collision group, a 32 bit number which should be a unique power of 2
-         */
-        get: function () {
-            return this._category;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(CollisionGroup.prototype, "mask", {
-        /**
-         * Get the mask for this collision group
-         */
-        get: function () {
-            return this._mask;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * Get the name of the collision group
+     */
+    get name() {
+        return this._name;
+    }
+    /**
+     * Get the category of the collision group, a 32 bit number which should be a unique power of 2
+     */
+    get category() {
+        return this._category;
+    }
+    /**
+     * Get the mask for this collision group
+     */
+    get mask() {
+        return this._mask;
+    }
     /**
      * Evaluates whether 2 collision groups can collide
      * @param other  CollisionGroup
      */
-    CollisionGroup.prototype.canCollide = function (other) {
+    canCollide(other) {
         return (this.category & other.mask) !== 0 && (other.category & this.mask) !== 0;
-    };
-    /**
-     * The `All` [[CollisionGroup]] is a special group that collides with all other groups including itself,
-     * it is the default collision group on colliders.
-     */
-    CollisionGroup.All = new CollisionGroup('Collide with all groups', -1, -1);
-    return CollisionGroup;
-}());
-export { CollisionGroup };
+    }
+}
+/**
+ * The `All` [[CollisionGroup]] is a special group that collides with all other groups including itself,
+ * it is the default collision group on colliders.
+ */
+CollisionGroup.All = new CollisionGroup('Collide with all groups', -1, -1);
 //# sourceMappingURL=CollisionGroup.js.map

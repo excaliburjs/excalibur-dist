@@ -23,8 +23,8 @@ function _fade(t) {
  * Generates perlin noise based on the 2002 Siggraph paper http://mrl.nyu.edu/~perlin/noise/
  * Also https://flafla2.github.io/2014/08/09/perlinnoise.html
  */
-var PerlinGenerator = /** @class */ (function () {
-    function PerlinGenerator(options) {
+export class PerlinGenerator {
+    constructor(options) {
         this._perm = [
             151,
             160,
@@ -302,16 +302,16 @@ var PerlinGenerator = /** @class */ (function () {
             this._random = new Random();
         }
         this._perm = this._random.shuffle(this._perm);
-        for (var i = 0; i < 512; i++) {
+        for (let i = 0; i < 512; i++) {
             this._p[i] = this._perm[i % 256] & 0xff;
         }
     }
-    PerlinGenerator.prototype.noise = function () {
-        var amp = this.amplitude;
-        var freq = this.frequency;
-        var total = 0;
-        var maxValue = 0;
-        for (var i = 0; i < this.octaves; i++) {
+    noise() {
+        let amp = this.amplitude;
+        let freq = this.frequency;
+        let total = 0;
+        let maxValue = 0;
+        for (let i = 0; i < this.octaves; i++) {
             switch (arguments.length) {
                 case 1:
                     total += this._noise1d(arguments[0] * freq) * amp;
@@ -331,105 +331,103 @@ var PerlinGenerator = /** @class */ (function () {
             freq *= 2;
         }
         return total / maxValue;
-    };
+    }
     /**
      * Generates a list starting at 0 and ending at 1 of continuous perlin noise, by default the step is 1/length;
      *
      */
-    PerlinGenerator.prototype.sequence = function (length, step) {
+    sequence(length, step) {
         if (!step) {
             step = 1 / length;
         }
-        var array = new Array(length);
-        for (var i = 0; i < length; i++) {
+        const array = new Array(length);
+        for (let i = 0; i < length; i++) {
             array[i] = this.noise(i * step);
         }
         return array;
-    };
+    }
     /**
      * Generates a 2D grid of perlin noise given a step value packed into a 1D array i = (x + y*width),
      * by default the step will 1/(min(dimension))
      */
-    PerlinGenerator.prototype.grid = function (width, height, step) {
+    grid(width, height, step) {
         if (!step) {
             step = 1 / Math.min(width, height);
         }
-        var array = new Array(width * height);
-        for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
+        const array = new Array(width * height);
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
                 array[x + y * width] = this.noise(x * step, y * step);
             }
         }
         return array;
-    };
-    PerlinGenerator.prototype._gradient3d = function (hash, x, y, z) {
-        var h = hash & 0xf;
-        var u = h < 8 ? x : y;
-        var v = h < 4 ? y : h === 12 || h === 14 ? x : z;
-        return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
-    };
-    PerlinGenerator.prototype._gradient2d = function (hash, x, y) {
-        var value = (hash & 1) === 0 ? x : y;
-        return (hash & 2) === 0 ? -value : value;
-    };
-    PerlinGenerator.prototype._gradient1d = function (hash, x) {
-        return (hash & 1) === 0 ? -x : x;
-    };
-    PerlinGenerator.prototype._noise1d = function (x) {
-        var intX = Math.floor(x) & 0xff; // force 0-255 integers to lookup in permutation
+    }
+    _gradient3d(hash, x, y, z) {
+        const h = hash & 0xf;
+        const u = h < 8 ? x : y;
+        const v = h < 4 ? y : h === 12 || h === 14 ? x : z;
+        return ((h & 0b1) === 0 ? u : -u) + ((h & 0b10) === 0 ? v : -v);
+    }
+    _gradient2d(hash, x, y) {
+        const value = (hash & 0b1) === 0 ? x : y;
+        return (hash & 0b10) === 0 ? -value : value;
+    }
+    _gradient1d(hash, x) {
+        return (hash & 0b1) === 0 ? -x : x;
+    }
+    _noise1d(x) {
+        const intX = Math.floor(x) & 0xff; // force 0-255 integers to lookup in permutation
         x -= Math.floor(x);
-        var fadeX = _fade(x);
+        const fadeX = _fade(x);
         return (_lerp(fadeX, this._gradient1d(this._p[intX], x), this._gradient1d(this._p[intX + 1], x - 1)) + 1) / 2;
-    };
-    PerlinGenerator.prototype._noise2d = function (x, y) {
-        var intX = Math.floor(x) & 0xff;
-        var intY = Math.floor(y) & 0xff;
+    }
+    _noise2d(x, y) {
+        const intX = Math.floor(x) & 0xff;
+        const intY = Math.floor(y) & 0xff;
         x -= Math.floor(x);
         y -= Math.floor(y);
-        var fadeX = _fade(x);
-        var fadeY = _fade(y);
-        var a = this._p[intX] + intY;
-        var b = this._p[intX + 1] + intY;
+        const fadeX = _fade(x);
+        const fadeY = _fade(y);
+        const a = this._p[intX] + intY;
+        const b = this._p[intX + 1] + intY;
         return ((_lerp(fadeY, _lerp(fadeX, this._gradient2d(this._p[a], x, y), this._gradient2d(this._p[b], x - 1, y)), _lerp(fadeX, this._gradient2d(this._p[a + 1], x, y - 1), this._gradient2d(this._p[b + 1], x - 1, y - 1))) +
             1) /
             2);
-    };
-    PerlinGenerator.prototype._noise3d = function (x, y, z) {
-        var intX = Math.floor(x) & 0xff;
-        var intY = Math.floor(y) & 0xff;
-        var intZ = Math.floor(z) & 0xff;
+    }
+    _noise3d(x, y, z) {
+        const intX = Math.floor(x) & 0xff;
+        const intY = Math.floor(y) & 0xff;
+        const intZ = Math.floor(z) & 0xff;
         x -= Math.floor(x);
         y -= Math.floor(y);
         z -= Math.floor(z);
-        var fadeX = _fade(x);
-        var fadeY = _fade(y);
-        var fadeZ = _fade(z);
-        var a = this._p[intX] + intY;
-        var b = this._p[intX + 1] + intY;
-        var aa = this._p[a] + intZ;
-        var ba = this._p[b] + intZ;
-        var ab = this._p[a + 1] + intZ;
-        var bb = this._p[b + 1] + intZ;
+        const fadeX = _fade(x);
+        const fadeY = _fade(y);
+        const fadeZ = _fade(z);
+        const a = this._p[intX] + intY;
+        const b = this._p[intX + 1] + intY;
+        const aa = this._p[a] + intZ;
+        const ba = this._p[b] + intZ;
+        const ab = this._p[a + 1] + intZ;
+        const bb = this._p[b + 1] + intZ;
         return ((_lerp(fadeZ, _lerp(fadeY, _lerp(fadeX, this._gradient3d(this._p[aa], x, y, z), this._gradient3d(this._p[ba], x - 1, y, z)), _lerp(fadeX, this._gradient3d(this._p[ab], x, y - 1, z), this._gradient3d(this._p[bb], x - 1, y - 1, z))), _lerp(fadeY, _lerp(fadeX, this._gradient3d(this._p[aa + 1], x, y, z - 1), this._gradient3d(this._p[ba + 1], x - 1, y, z - 1)), _lerp(fadeX, this._gradient3d(this._p[ab + 1], x, y - 1, z - 1), this._gradient3d(this._p[bb + 1], x - 1, y - 1, z - 1)))) +
             1) /
             2);
-    };
-    return PerlinGenerator;
-}());
-export { PerlinGenerator };
+    }
+}
 /**
  * A helper to draw 2D perlin maps given a perlin generator and a function
  */
-var PerlinDrawer2D = /** @class */ (function () {
+export class PerlinDrawer2D {
     /**
      * @param generator - An existing perlin generator
      * @param colorFcn - A color function that takes a value between [0, 255] derived from the perlin generator, and returns a color
      */
-    function PerlinDrawer2D(generator, colorFcn) {
+    constructor(generator, colorFcn) {
         this.generator = generator;
         this.colorFcn = colorFcn;
         if (!colorFcn) {
-            this.colorFcn = function (val) {
+            this.colorFcn = (val) => {
                 return val < 125 ? Color.Black : Color.White;
             };
         }
@@ -437,28 +435,28 @@ var PerlinDrawer2D = /** @class */ (function () {
     /**
      * Returns an image of 2D perlin noise
      */
-    PerlinDrawer2D.prototype.image = function (width, height) {
-        var image = document.createElement('img');
-        var canvas = document.createElement('canvas');
+    image(width, height) {
+        const image = document.createElement('img');
+        const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        var ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         this.draw(ctx, 0, 0, width, height);
         image.src = canvas.toDataURL();
         return image;
-    };
+    }
     /**
      * This draws a 2D perlin grid on a canvas context, not recommended to be called every frame due to performance
      */
-    PerlinDrawer2D.prototype.draw = function (ctx, x, y, width, height) {
-        var grid = this.generator.grid(width, height);
-        var imageData = ctx.getImageData(x, y, width, height);
-        for (var j = 0; j < height; j++) {
-            for (var i = 0; i < width; i++) {
-                var val = grid[i + width * j];
-                var c = Math.floor(val * 255) & 0xff;
-                var pixel = (i + j * imageData.width) * 4;
-                var color = this.colorFcn(c);
+    draw(ctx, x, y, width, height) {
+        const grid = this.generator.grid(width, height);
+        const imageData = ctx.getImageData(x, y, width, height);
+        for (let j = 0; j < height; j++) {
+            for (let i = 0; i < width; i++) {
+                const val = grid[i + width * j];
+                const c = Math.floor(val * 255) & 0xff;
+                const pixel = (i + j * imageData.width) * 4;
+                const color = this.colorFcn(c);
                 imageData.data[pixel] = color.r;
                 imageData.data[pixel + 1] = color.g;
                 imageData.data[pixel + 2] = color.b;
@@ -466,8 +464,6 @@ var PerlinDrawer2D = /** @class */ (function () {
             }
         }
         ctx.putImageData(imageData, x, y);
-    };
-    return PerlinDrawer2D;
-}());
-export { PerlinDrawer2D };
+    }
+}
 //# sourceMappingURL=PerlinNoise.js.map

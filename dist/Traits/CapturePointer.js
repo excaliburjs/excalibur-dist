@@ -1,10 +1,8 @@
 /**
  * Revises pointer events path accordingly to the actor
  */
-var CapturePointer = /** @class */ (function () {
-    function CapturePointer() {
-    }
-    CapturePointer.prototype.update = function (actor, engine) {
+export class CapturePointer {
+    update(actor, engine) {
         if (!actor.enableCapturePointer) {
             return;
         }
@@ -12,8 +10,6 @@ var CapturePointer = /** @class */ (function () {
             return;
         }
         engine.input.pointers.checkAndUpdateActorUnderPointer(actor);
-    };
-    return CapturePointer;
-}());
-export { CapturePointer };
+    }
+}
 //# sourceMappingURL=CapturePointer.js.map

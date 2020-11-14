@@ -9,14 +9,14 @@ import { obsolete } from './Decorators';
  * A sorted list implementation. NOTE: this implementation is not self-balancing
  * @deprecated
  */
-var SortedList = /** @class */ (function () {
-    function SortedList(getComparable) {
+let SortedList = class SortedList {
+    constructor(getComparable) {
         this._getComparable = getComparable;
     }
-    SortedList.prototype.find = function (element) {
+    find(element) {
         return this._find(this._root, element);
-    };
-    SortedList.prototype._find = function (node, element) {
+    }
+    _find(node, element) {
         if (node == null) {
             return false;
         }
@@ -34,12 +34,12 @@ var SortedList = /** @class */ (function () {
         else {
             return this._find(node.getRight(), element);
         }
-    };
+    }
     // returns the array of elements at a specific key value
-    SortedList.prototype.get = function (key) {
+    get(key) {
         return this._get(this._root, key);
-    };
-    SortedList.prototype._get = function (node, key) {
+    }
+    _get(node, key) {
         if (node == null) {
             return [];
         }
@@ -52,8 +52,8 @@ var SortedList = /** @class */ (function () {
         else {
             return this._get(node.getRight(), key);
         }
-    };
-    SortedList.prototype.add = function (element) {
+    }
+    add(element) {
         if (this._root == null) {
             this._root = new BinaryTreeNode(this._getComparable(element), [element], null, null);
             return true;
@@ -61,8 +61,8 @@ var SortedList = /** @class */ (function () {
         else {
             return this._insert(this._root, element);
         }
-    };
-    SortedList.prototype._insert = function (node, element) {
+    }
+    _insert(node, element) {
         if (node != null) {
             if (this._getComparable(element) === node.getKey()) {
                 if (node.getData().indexOf(element) > -1) {
@@ -93,16 +93,16 @@ var SortedList = /** @class */ (function () {
             }
         }
         return false;
-    };
-    SortedList.prototype.removeByComparable = function (element) {
+    }
+    removeByComparable(element) {
         this._root = this._remove(this._root, element);
-    };
-    SortedList.prototype._remove = function (node, element) {
+    }
+    _remove(node, element) {
         if (node == null) {
             return null;
         }
         else if (this._getComparable(element) === node.getKey()) {
-            var elementIndex = node.getData().indexOf(element);
+            const elementIndex = node.getData().indexOf(element);
             // if the node contains the element, remove the element
             if (elementIndex > -1) {
                 node.getData().splice(elementIndex, 1);
@@ -119,7 +119,7 @@ var SortedList = /** @class */ (function () {
                         return node.getLeft();
                     }
                     // if node has 2 children
-                    var temp = this._findMinNode(node.getRight());
+                    const temp = this._findMinNode(node.getRight());
                     node.setKey(temp.getKey());
                     node.setData(temp.getData());
                     node.setRight(this._cleanup(node.getRight(), temp)); //"cleanup nodes" (move them up recursively)
@@ -140,10 +140,10 @@ var SortedList = /** @class */ (function () {
             return node;
         }
         return null;
-    };
+    }
     // called once we have successfully removed the element we wanted, recursively corrects the part of the tree below the removed node
-    SortedList.prototype._cleanup = function (node, element) {
-        var comparable = element.getKey();
+    _cleanup(node, element) {
+        const comparable = element.getKey();
         if (node == null) {
             return null;
         }
@@ -159,7 +159,7 @@ var SortedList = /** @class */ (function () {
                 return node.getLeft();
             }
             // if node has 2 children
-            var temp = this._findMinNode(node.getRight());
+            const temp = this._findMinNode(node.getRight());
             node.setKey(temp.getKey());
             node.setData(temp.getData());
             node.setRight(this._cleanup(node.getRight(), temp));
@@ -173,74 +173,72 @@ var SortedList = /** @class */ (function () {
             node.setRight(this._cleanup(node.getRight(), element));
             return node;
         }
-    };
-    SortedList.prototype._findMinNode = function (node) {
-        var current = node;
+    }
+    _findMinNode(node) {
+        let current = node;
         while (current.getLeft() != null) {
             current = current.getLeft();
         }
         return current;
-    };
-    SortedList.prototype.list = function () {
-        var results = new Array();
+    }
+    list() {
+        const results = new Array();
         this._list(this._root, results);
         return results;
-    };
-    SortedList.prototype._list = function (treeNode, results) {
+    }
+    _list(treeNode, results) {
         if (treeNode != null) {
             this._list(treeNode.getLeft(), results);
-            treeNode.getData().forEach(function (element) {
+            treeNode.getData().forEach((element) => {
                 results.push(element);
             });
             this._list(treeNode.getRight(), results);
         }
-    };
-    SortedList = __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use built in JS array.sort' })
-    ], SortedList);
-    return SortedList;
-}());
+    }
+};
+SortedList = __decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0', alternateMethod: 'Use built in JS array.sort' })
+], SortedList);
 export { SortedList };
 /**
  * A tree node part of [[SortedList]]
  * @deprecated
  */
-var BinaryTreeNode = /** @class */ (function () {
-    function BinaryTreeNode(key, data, left, right) {
+let BinaryTreeNode = class BinaryTreeNode {
+    constructor(key, data, left, right) {
         this._key = key;
         this._data = data;
         this._left = left;
         this._right = right;
     }
-    BinaryTreeNode.prototype.getKey = function () {
+    getKey() {
         return this._key;
-    };
-    BinaryTreeNode.prototype.setKey = function (key) {
+    }
+    setKey(key) {
         this._key = key;
-    };
-    BinaryTreeNode.prototype.getData = function () {
+    }
+    getData() {
         return this._data;
-    };
-    BinaryTreeNode.prototype.setData = function (data) {
+    }
+    setData(data) {
         this._data = data;
-    };
-    BinaryTreeNode.prototype.getLeft = function () {
+    }
+    getLeft() {
         return this._left;
-    };
-    BinaryTreeNode.prototype.setLeft = function (left) {
+    }
+    setLeft(left) {
         this._left = left;
-    };
-    BinaryTreeNode.prototype.getRight = function () {
+    }
+    getRight() {
         return this._right;
-    };
-    BinaryTreeNode.prototype.setRight = function (right) {
+    }
+    setRight(right) {
         this._right = right;
-    };
-    BinaryTreeNode = __decorate([
-        obsolete({ message: 'Will be removed in excalibur v0.26.0' })
-    ], BinaryTreeNode);
-    return BinaryTreeNode;
-}());
+    }
+};
+BinaryTreeNode = __decorate([
+    obsolete({ message: 'Will be removed in excalibur v0.26.0' })
+], BinaryTreeNode);
 export { BinaryTreeNode };
 /**
  * Mock element for testing
@@ -248,18 +246,16 @@ export { BinaryTreeNode };
  * @internal
  * @deprecated
  */
-var MockedElement = /** @class */ (function () {
-    function MockedElement(key) {
+export class MockedElement {
+    constructor(key) {
         this._key = 0;
         this._key = key;
     }
-    MockedElement.prototype.getTheKey = function () {
+    getTheKey() {
         return this._key;
-    };
-    MockedElement.prototype.setKey = function (key) {
+    }
+    setKey(key) {
         this._key = key;
-    };
-    return MockedElement;
-}());
-export { MockedElement };
+    }
+}
 //# sourceMappingURL=SortedList.js.map

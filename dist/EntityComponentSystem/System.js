@@ -25,8 +25,8 @@ export var SystemType;
  * }
  * ```
  */
-var System = /** @class */ (function () {
-    function System() {
+export class System {
+    constructor() {
         /**
          * System can execute in priority order, by default all systems are priority 0. Lower values indicated higher priority.
          * For a system to execute before all other a lower priority value (-1 for example) must be set.
@@ -38,23 +38,19 @@ var System = /** @class */ (function () {
      * Systems observe when entities match their types or no longer match their types, override
      * @param _entityAddedOrRemoved
      */
-    System.prototype.notify = function (_entityAddedOrRemoved) {
+    notify(_entityAddedOrRemoved) {
         // Override me
-    };
-    return System;
-}());
-export { System };
+    }
+}
 /**
  * An [[Entity]] with [[Component]] types that matches a [[System]] types exists in the current scene.
  */
-var AddedEntity = /** @class */ (function () {
-    function AddedEntity(data) {
+export class AddedEntity {
+    constructor(data) {
         this.data = data;
         this.type = 'Entity Added';
     }
-    return AddedEntity;
-}());
-export { AddedEntity };
+}
 /**
  * Type guard to check for AddedEntity messages
  * @param x
@@ -65,14 +61,12 @@ export function isAddedSystemEntity(x) {
 /**
  * An [[Entity]] with [[Component]] types that no longer matches a [[System]] types exists in the current scene.
  */
-var RemovedEntity = /** @class */ (function () {
-    function RemovedEntity(data) {
+export class RemovedEntity {
+    constructor(data) {
         this.data = data;
         this.type = 'Entity Removed';
     }
-    return RemovedEntity;
-}());
-export { RemovedEntity };
+}
 /**
  * type guard to check for the RemovedEntity message
  */

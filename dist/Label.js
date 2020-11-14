@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { Color } from './Drawing/Color';
 import { Actor } from './Actor';
 import { Configurable } from './Configurable';
@@ -119,8 +106,7 @@ export var FontStyle;
 /**
  * @hidden
  */
-var LabelImpl = /** @class */ (function (_super) {
-    __extends(LabelImpl, _super);
+export class LabelImpl extends Actor {
     /**
      * @param textOrConfig    The text of the label, or label option bag
      * @param x           The x position of the label
@@ -129,41 +115,41 @@ var LabelImpl = /** @class */ (function (_super) {
      * @param spriteFont  Use an Excalibur sprite font for the label's font, if a SpriteFont is provided it will take precedence
      * over a css font.
      */
-    function LabelImpl(textOrConfig, x, y, fontFamily, spriteFont) {
-        var _this = _super.call(this, textOrConfig && typeof textOrConfig === 'object' ? textOrConfig : { pos: new Vector(x, y) }) || this;
+    constructor(textOrConfig, x, y, fontFamily, spriteFont) {
+        super(textOrConfig && typeof textOrConfig === 'object' ? textOrConfig : { pos: new Vector(x, y) });
         /**
          * Sets or gets the bold property of the label's text, by default it's false
          */
-        _this.bold = false;
+        this.bold = false;
         /**
          * The font size in the selected units, default is 10 (default units is pixel)
          */
-        _this.fontSize = 10;
+        this.fontSize = 10;
         /**
          * The font style for this label, the default is [[FontStyle.Normal]]
          */
-        _this.fontStyle = FontStyle.Normal;
+        this.fontStyle = FontStyle.Normal;
         /**
          * The css units for a font size such as px, pt, em (SpriteFont only support px), by default is 'px';
          */
-        _this.fontUnit = FontUnit.Px;
+        this.fontUnit = FontUnit.Px;
         /**
          * Gets or sets the horizontal text alignment property for the label.
          */
-        _this.textAlign = TextAlign.Left;
+        this.textAlign = TextAlign.Left;
         /**
          * Gets or sets the baseline alignment property for the label.
          */
-        _this.baseAlign = BaseAlign.Bottom;
+        this.baseAlign = BaseAlign.Bottom;
         /**
          * Gets or sets the letter spacing on a Label. Only supported with Sprite Fonts.
          */
-        _this.letterSpacing = 0; //px
+        this.letterSpacing = 0; //px
         /**
          * Whether or not the [[SpriteFont]] will be case-sensitive when matching characters.
          */
-        _this.caseInsensitive = true;
-        var text = '';
+        this.caseInsensitive = true;
+        let text = '';
         if (textOrConfig && typeof textOrConfig === 'object') {
             fontFamily = textOrConfig.fontFamily;
             spriteFont = textOrConfig.spriteFont;
@@ -172,32 +158,31 @@ var LabelImpl = /** @class */ (function (_super) {
         else {
             text = textOrConfig;
         }
-        _this.text = text || '';
-        _this.color = Color.Black;
-        _this.spriteFont = spriteFont;
-        _this.body.collider.type = CollisionType.PreventCollision;
-        _this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
-        _this._textShadowOn = false;
-        _this._shadowOffsetX = 0;
-        _this._shadowOffsetY = 0;
+        this.text = text || '';
+        this.color = Color.Black;
+        this.spriteFont = spriteFont;
+        this.body.collider.type = CollisionType.PreventCollision;
+        this.fontFamily = fontFamily || 'sans-serif'; // coalesce to default canvas font
+        this._textShadowOn = false;
+        this._shadowOffsetX = 0;
+        this._shadowOffsetY = 0;
         if (spriteFont) {
             //this._textSprites = spriteFont.getTextSprites();
         }
-        return _this;
     }
     /**
      * Returns the width of the text in the label (in pixels);
      * @param ctx  Rendering context to measure the string with
      */
-    LabelImpl.prototype.getTextWidth = function (ctx) {
-        var oldFont = ctx.font;
+    getTextWidth(ctx) {
+        const oldFont = ctx.font;
         ctx.font = this._fontString;
-        var width = ctx.measureText(this.text).width;
+        const width = ctx.measureText(this.text).width;
         ctx.font = oldFont;
         return width;
-    };
-    // TypeScript doesn't support string enums :(
-    LabelImpl.prototype._lookupFontUnit = function (fontUnit) {
+    }
+    /* istanbul ignore next */
+    _lookupFontUnit(fontUnit) {
         switch (fontUnit) {
             case FontUnit.Em:
                 return 'em';
@@ -212,8 +197,9 @@ var LabelImpl = /** @class */ (function (_super) {
             default:
                 return 'px';
         }
-    };
-    LabelImpl.prototype._lookupTextAlign = function (textAlign) {
+    }
+    /* istanbul ignore next */
+    _lookupTextAlign(textAlign) {
         switch (textAlign) {
             case TextAlign.Left:
                 return 'left';
@@ -228,8 +214,9 @@ var LabelImpl = /** @class */ (function (_super) {
             default:
                 return 'start';
         }
-    };
-    LabelImpl.prototype._lookupBaseAlign = function (baseAlign) {
+    }
+    /* istanbul ignore next */
+    _lookupBaseAlign(baseAlign) {
         switch (baseAlign) {
             case BaseAlign.Alphabetic:
                 return 'alphabetic';
@@ -246,9 +233,10 @@ var LabelImpl = /** @class */ (function (_super) {
             default:
                 return 'alphabetic';
         }
-    };
-    LabelImpl.prototype._lookupFontStyle = function (fontStyle) {
-        var boldstring = this.bold ? ' bold' : '';
+    }
+    /* istanbul ignore next */
+    _lookupFontStyle(fontStyle) {
+        const boldstring = this.bold ? ' bold' : '';
         switch (fontStyle) {
             case FontStyle.Italic:
                 return 'italic' + boldstring;
@@ -259,34 +247,34 @@ var LabelImpl = /** @class */ (function (_super) {
             default:
                 return 'normal' + boldstring;
         }
-    };
+    }
     /**
      * Sets the text shadow for sprite fonts
      * @param offsetX      The x offset in pixels to place the shadow
      * @param offsetY      The y offset in pixels to place the shadow
      * @param shadowColor  The color of the text shadow
      */
-    LabelImpl.prototype.setTextShadow = function (offsetX, offsetY, shadowColor) {
+    setTextShadow(offsetX, offsetY, shadowColor) {
         this.spriteFont.setTextShadow(offsetX, offsetY, shadowColor);
-    };
+    }
     /**
      * Toggles text shadows on or off, only applies when using sprite fonts
      */
-    LabelImpl.prototype.useTextShadow = function (on) {
+    useTextShadow(on) {
         this.spriteFont.useTextShadow(on);
-    };
+    }
     /**
      * Clears the current text shadow
      */
-    LabelImpl.prototype.clearTextShadow = function () {
+    clearTextShadow() {
         this._textShadowOn = false;
         this._shadowOffsetX = 0;
         this._shadowOffsetY = 0;
-    };
-    LabelImpl.prototype.update = function (engine, delta) {
-        _super.prototype.update.call(this, engine, delta);
-    };
-    LabelImpl.prototype.draw = function (ctx, delta) {
+    }
+    update(engine, delta) {
+        super.update(engine, delta);
+    }
+    draw(ctx, delta) {
         ctx.save();
         if (this._textShadowOn) {
             ctx.save();
@@ -295,10 +283,10 @@ var LabelImpl = /** @class */ (function (_super) {
             ctx.restore();
         }
         this._fontDraw(ctx);
-        _super.prototype.draw.call(this, ctx, delta);
+        super.draw(ctx, delta);
         ctx.restore();
-    };
-    LabelImpl.prototype._fontDraw = function (ctx) {
+    }
+    _fontDraw(ctx) {
         if (this.spriteFont) {
             this.spriteFont.draw(ctx, this.text, 0, 0, {
                 color: this.color.clone(),
@@ -310,8 +298,8 @@ var LabelImpl = /** @class */ (function (_super) {
             });
         }
         else {
-            var oldAlign = ctx.textAlign;
-            var oldTextBaseline = ctx.textBaseline;
+            const oldAlign = ctx.textAlign;
+            const oldTextBaseline = ctx.textBaseline;
             ctx.textAlign = this._lookupTextAlign(this.textAlign);
             ctx.textBaseline = this._lookupBaseAlign(this.baseAlign);
             if (this.color) {
@@ -328,30 +316,21 @@ var LabelImpl = /** @class */ (function (_super) {
             ctx.textAlign = oldAlign;
             ctx.textBaseline = oldTextBaseline;
         }
-    };
-    Object.defineProperty(LabelImpl.prototype, "_fontString", {
-        get: function () {
-            return this._lookupFontStyle(this.fontStyle) + " " + this.fontSize + this._lookupFontUnit(this.fontUnit) + " " + this.fontFamily;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    LabelImpl.prototype.debugDraw = function (ctx) {
-        _super.prototype.debugDraw.call(this, ctx);
-    };
-    return LabelImpl;
-}(Actor));
-export { LabelImpl };
+    }
+    get _fontString() {
+        return `${this._lookupFontStyle(this.fontStyle)} ${this.fontSize}${this._lookupFontUnit(this.fontUnit)} ${this.fontFamily}`;
+    }
+    debugDraw(ctx) {
+        super.debugDraw(ctx);
+    }
+}
 /**
  * Labels are the way to draw small amounts of text to the screen. They are
  * actors and inherit all of the benefits and capabilities.
  */
-var Label = /** @class */ (function (_super) {
-    __extends(Label, _super);
-    function Label(textOrConfig, x, y, fontFamily, spriteFont) {
-        return _super.call(this, textOrConfig, x, y, fontFamily, spriteFont) || this;
+export class Label extends Configurable(LabelImpl) {
+    constructor(textOrConfig, x, y, fontFamily, spriteFont) {
+        super(textOrConfig, x, y, fontFamily, spriteFont);
     }
-    return Label;
-}(Configurable(LabelImpl)));
-export { Label };
+}
 //# sourceMappingURL=Label.js.map

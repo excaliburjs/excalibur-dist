@@ -1,4 +1,3 @@
-import { Promise } from '../Promises';
 export interface LegacyWebAudioSource {
     playbackState: string;
     PLAYING_STATE: 'playing';

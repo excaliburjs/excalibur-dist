@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { BoundingBox } from './Collision/BoundingBox';
 import { Color } from './Drawing/Color';
 import { vec, Vector } from './Algebra';
@@ -23,8 +10,7 @@ import { TransformComponent } from './EntityComponentSystem/Components/Transform
 /**
  * @hidden
  */
-var TileMapImpl = /** @class */ (function (_super) {
-    __extends(TileMapImpl, _super);
+export class TileMapImpl extends Entity {
     /**
      * @param xOrConfig     The x coordinate to anchor the TileMap's upper left corner (should not be changed once set) or TileMap option bag
      * @param y             The y coordinate to anchor the TileMap's upper left corner (should not be changed once set)
@@ -33,24 +19,24 @@ var TileMapImpl = /** @class */ (function (_super) {
      * @param rows          The number of rows in the TileMap (should not be changed once set)
      * @param cols          The number of cols in the TileMap (should not be changed once set)
      */
-    function TileMapImpl(xOrConfig, y, cellWidth, cellHeight, rows, cols) {
-        var _this = _super.call(this) || this;
-        _this._collidingX = -1;
-        _this._collidingY = -1;
-        _this._onScreenXStart = 0;
-        _this._onScreenXEnd = 9999;
-        _this._onScreenYStart = 0;
-        _this._onScreenYEnd = 9999;
-        _this._spriteSheets = {};
-        _this.logger = Logger.getInstance();
-        _this.data = [];
-        _this.z = 0;
-        _this.visible = true;
-        _this.isOffscreen = false;
-        _this.rotation = 0;
-        _this.scale = Vector.One;
+    constructor(xOrConfig, y, cellWidth, cellHeight, rows, cols) {
+        super();
+        this._collidingX = -1;
+        this._collidingY = -1;
+        this._onScreenXStart = 0;
+        this._onScreenXEnd = 9999;
+        this._onScreenYStart = 0;
+        this._onScreenYEnd = 9999;
+        this._spriteSheets = {};
+        this.logger = Logger.getInstance();
+        this.data = [];
+        this.z = 0;
+        this.visible = true;
+        this.isOffscreen = false;
+        this.rotation = 0;
+        this.scale = Vector.One;
         if (xOrConfig && typeof xOrConfig === 'object') {
-            var config = xOrConfig;
+            const config = xOrConfig;
             xOrConfig = config.x;
             y = config.y;
             cellWidth = config.cellWidth;
@@ -58,67 +44,56 @@ var TileMapImpl = /** @class */ (function (_super) {
             rows = config.rows;
             cols = config.cols;
         }
-        _this.x = xOrConfig;
-        _this.y = y;
-        _this.cellWidth = cellWidth;
-        _this.cellHeight = cellHeight;
-        _this.rows = rows;
-        _this.cols = cols;
-        _this.data = new Array(rows * cols);
-        var _loop_1 = function (i) {
-            var _loop_2 = function (j) {
-                (function () {
-                    var cd = new Cell(i * cellWidth + xOrConfig, j * cellHeight + y, cellWidth, cellHeight, i + j * cols);
-                    _this.data[i + j * cols] = cd;
+        this.x = xOrConfig;
+        this.y = y;
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new Array(rows * cols);
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                (() => {
+                    const cd = new Cell(i * cellWidth + xOrConfig, j * cellHeight + y, cellWidth, cellHeight, i + j * cols);
+                    this.data[i + j * cols] = cd;
                 })();
-            };
-            for (var j = 0; j < rows; j++) {
-                _loop_2(j);
             }
-        };
-        for (var i = 0; i < cols; i++) {
-            _loop_1(i);
         }
-        _this.addComponent(new TransformComponent());
-        _this.addComponent(new CanvasDrawComponent(function (ctx, delta) { return _this.draw(ctx, delta); }));
-        return _this;
+        this.addComponent(new TransformComponent());
+        this.addComponent(new CanvasDrawComponent((ctx, delta) => this.draw(ctx, delta)));
     }
-    Object.defineProperty(TileMapImpl.prototype, "pos", {
-        get: function () {
-            return vec(this.x, this.y);
-        },
-        set: function (val) {
-            this.x = val.x;
-            this.y = val.y;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    TileMapImpl.prototype.on = function (eventName, handler) {
-        _super.prototype.on.call(this, eventName, handler);
-    };
-    TileMapImpl.prototype.registerSpriteSheet = function (key, spriteSheet) {
+    get pos() {
+        return vec(this.x, this.y);
+    }
+    set pos(val) {
+        this.x = val.x;
+        this.y = val.y;
+    }
+    on(eventName, handler) {
+        super.on(eventName, handler);
+    }
+    registerSpriteSheet(key, spriteSheet) {
         this._spriteSheets[key] = spriteSheet;
-    };
+    }
     /**
      * Returns the intersection vector that can be used to resolve collisions with actors. If there
      * is no collision null is returned.
      */
-    TileMapImpl.prototype.collides = function (actor) {
-        var width = actor.pos.x + actor.width;
-        var height = actor.pos.y + actor.height;
-        var actorBounds = actor.body.collider.bounds;
-        var overlaps = [];
+    collides(actor) {
+        const width = actor.pos.x + actor.width;
+        const height = actor.pos.y + actor.height;
+        const actorBounds = actor.body.collider.bounds;
+        const overlaps = [];
         if (actor.width <= 0 || actor.height <= 0) {
             return null;
         }
         // trace points for overlap
-        for (var x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
-            for (var y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {
-                var cell = this.getCellByPoint(x, y);
+        for (let x = actorBounds.left; x <= width; x += Math.min(actor.width / 2, this.cellWidth / 2)) {
+            for (let y = actorBounds.top; y <= height; y += Math.min(actor.height / 2, this.cellHeight / 2)) {
+                const cell = this.getCellByPoint(x, y);
                 if (cell && cell.solid) {
-                    var overlap = actorBounds.intersect(cell.bounds);
-                    var dir = actor.center.sub(cell.center);
+                    const overlap = actorBounds.intersect(cell.bounds);
+                    const dir = actor.center.sub(cell.center);
                     if (overlap && overlap.dot(dir) > 0) {
                         overlaps.push(overlap);
                     }
@@ -129,9 +104,9 @@ var TileMapImpl = /** @class */ (function (_super) {
             return null;
         }
         // Return the smallest change other than zero
-        var result = overlaps.reduce(function (accum, next) {
-            var x = accum.x;
-            var y = accum.y;
+        const result = overlaps.reduce((accum, next) => {
+            let x = accum.x;
+            let y = accum.y;
             if (Math.abs(accum.x) < Math.abs(next.x)) {
                 x = next.x;
             }
@@ -141,76 +116,76 @@ var TileMapImpl = /** @class */ (function (_super) {
             return new Vector(x, y);
         });
         return result;
-    };
+    }
     /**
      * Returns the [[Cell]] by index (row major order)
      */
-    TileMapImpl.prototype.getCellByIndex = function (index) {
+    getCellByIndex(index) {
         return this.data[index];
-    };
+    }
     /**
      * Returns the [[Cell]] by its x and y coordinates
      */
-    TileMapImpl.prototype.getCell = function (x, y) {
+    getCell(x, y) {
         if (x < 0 || y < 0 || x >= this.cols || y >= this.rows) {
             return null;
         }
         return this.data[x + y * this.cols];
-    };
+    }
     /**
      * Returns the [[Cell]] by testing a point in global coordinates,
      * returns `null` if no cell was found.
      */
-    TileMapImpl.prototype.getCellByPoint = function (x, y) {
+    getCellByPoint(x, y) {
         x = Math.floor((x - this.x) / this.cellWidth);
         y = Math.floor((y - this.y) / this.cellHeight);
-        var cell = this.getCell(x, y);
+        const cell = this.getCell(x, y);
         if (x >= 0 && y >= 0 && x < this.cols && y < this.rows && cell) {
             return cell;
         }
         return null;
-    };
-    TileMapImpl.prototype.onPreUpdate = function (_engine, _delta) {
+    }
+    onPreUpdate(_engine, _delta) {
         // Override me
-    };
-    TileMapImpl.prototype.onPostUpdate = function (_engine, _delta) {
+    }
+    onPostUpdate(_engine, _delta) {
         // Override me
-    };
-    TileMapImpl.prototype.update = function (engine, delta) {
+    }
+    update(engine, delta) {
         this.onPreUpdate(engine, delta);
         this.emit('preupdate', new Events.PreUpdateEvent(engine, delta, this));
-        var worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Vector(0, 0));
-        var worldCoordsLowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
+        const worldCoordsUpperLeft = engine.screenToWorldCoordinates(new Vector(0, 0));
+        const worldCoordsLowerRight = engine.screenToWorldCoordinates(new Vector(engine.canvas.clientWidth, engine.canvas.clientHeight));
         this._onScreenXStart = Math.max(Math.floor((worldCoordsUpperLeft.x - this.x) / this.cellWidth) - 2, 0);
         this._onScreenYStart = Math.max(Math.floor((worldCoordsUpperLeft.y - this.y) / this.cellHeight) - 2, 0);
         this._onScreenXEnd = Math.max(Math.floor((worldCoordsLowerRight.x - this.x) / this.cellWidth) + 2, 0);
         this._onScreenYEnd = Math.max(Math.floor((worldCoordsLowerRight.y - this.y) / this.cellHeight) + 2, 0);
         this.onPostUpdate(engine, delta);
         this.emit('postupdate', new Events.PostUpdateEvent(engine, delta, this));
-    };
+    }
     /**
      * Draws the tile map to the screen. Called by the [[Scene]].
      * @param ctx    The current rendering context
      * @param delta  The number of milliseconds since the last draw
      */
-    TileMapImpl.prototype.draw = function (ctx, delta) {
+    draw(ctx, delta) {
         this.emit('predraw', new Events.PreDrawEvent(ctx, delta, this));
-        var x = this._onScreenXStart;
-        var xEnd = Math.min(this._onScreenXEnd, this.cols);
-        var y = this._onScreenYStart;
-        var yEnd = Math.min(this._onScreenYEnd, this.rows);
-        var cs, csi, cslen;
+        let x = this._onScreenXStart;
+        const xEnd = Math.min(this._onScreenXEnd, this.cols);
+        let y = this._onScreenYStart;
+        const yEnd = Math.min(this._onScreenYEnd, this.rows);
+        let cs, csi, cslen;
         for (x; x < xEnd; x++) {
             for (y; y < yEnd; y++) {
                 // get non-negative tile sprites
-                cs = this.getCell(x, y).sprites.filter(function (s) {
+                cs = this.getCell(x, y).sprites.filter((s) => {
                     return s.spriteId > -1;
                 });
                 for (csi = 0, cslen = cs.length; csi < cslen; csi++) {
-                    var ss = this._spriteSheets[cs[csi].spriteSheetKey];
+                    const ss = this._spriteSheets[cs[csi].spriteSheetKey];
                     // draw sprite, warning if sprite doesn't exist
                     if (ss) {
-                        var sprite = ss.getSprite(cs[csi].spriteId);
+                        const sprite = ss.getSprite(cs[csi].spriteId);
                         if (sprite) {
                             sprite.draw(ctx, x * this.cellWidth, y * this.cellHeight);
                         }
@@ -226,29 +201,29 @@ var TileMapImpl = /** @class */ (function (_super) {
             y = this._onScreenYStart;
         }
         this.emit('postdraw', new Events.PostDrawEvent(ctx, delta, this));
-    };
+    }
     /**
      * Draws all the tile map's debug info. Called by the [[Scene]].
      * @param ctx  The current rendering context
      */
-    TileMapImpl.prototype.debugDraw = function (ctx) {
-        var width = this.cols * this.cellWidth;
-        var height = this.rows * this.cellHeight;
+    debugDraw(ctx) {
+        const width = this.cols * this.cellWidth;
+        const height = this.rows * this.cellHeight;
         ctx.save();
         ctx.strokeStyle = Color.Red.toString();
-        for (var x = 0; x < this.cols + 1; x++) {
+        for (let x = 0; x < this.cols + 1; x++) {
             ctx.beginPath();
             ctx.moveTo(this.x + x * this.cellWidth, this.y);
             ctx.lineTo(this.x + x * this.cellWidth, this.y + height);
             ctx.stroke();
         }
-        for (var y = 0; y < this.rows + 1; y++) {
+        for (let y = 0; y < this.rows + 1; y++) {
             ctx.beginPath();
             ctx.moveTo(this.x, this.y + y * this.cellHeight);
             ctx.lineTo(this.x + width, this.y + y * this.cellHeight);
             ctx.stroke();
         }
-        var solid = Color.Red;
+        const solid = Color.Red;
         solid.a = 0.3;
         this.data
             .filter(function (cell) {
@@ -263,41 +238,34 @@ var TileMapImpl = /** @class */ (function (_super) {
             ctx.fillRect(this.x + this._collidingX * this.cellWidth, this.y + this._collidingY * this.cellHeight, this.cellWidth, this.cellHeight);
         }
         ctx.restore();
-    };
-    return TileMapImpl;
-}(Entity));
-export { TileMapImpl };
+    }
+}
 /**
  * The [[TileMap]] class provides a lightweight way to do large complex scenes with collision
  * without the overhead of actors.
  */
-var TileMap = /** @class */ (function (_super) {
-    __extends(TileMap, _super);
-    function TileMap(xOrConfig, y, cellWidth, cellHeight, rows, cols) {
-        return _super.call(this, xOrConfig, y, cellWidth, cellHeight, rows, cols) || this;
+export class TileMap extends Configurable(TileMapImpl) {
+    constructor(xOrConfig, y, cellWidth, cellHeight, rows, cols) {
+        super(xOrConfig, y, cellWidth, cellHeight, rows, cols);
     }
-    return TileMap;
-}(Configurable(TileMapImpl)));
-export { TileMap };
+}
 /**
  * Tile sprites are used to render a specific sprite from a [[TileMap]]'s spritesheet(s)
  */
-var TileSprite = /** @class */ (function () {
+export class TileSprite {
     /**
      * @param spriteSheetKey  The key of the spritesheet to use
      * @param spriteId        The index of the sprite in the [[SpriteSheet]]
      */
-    function TileSprite(spriteSheetKey, spriteId) {
+    constructor(spriteSheetKey, spriteId) {
         this.spriteSheetKey = spriteSheetKey;
         this.spriteId = spriteId;
     }
-    return TileSprite;
-}());
-export { TileSprite };
+}
 /**
  * @hidden
  */
-var CellImpl = /** @class */ (function () {
+export class CellImpl {
     /**
      * @param xOrConfig Gets or sets x coordinate of the cell in world coordinates or cell option bag
      * @param y       Gets or sets y coordinate of the cell in world coordinates
@@ -307,13 +275,11 @@ var CellImpl = /** @class */ (function () {
      * @param solid   Gets or sets whether this cell is solid
      * @param sprites The list of tile sprites to use to draw in this cell (in order)
      */
-    function CellImpl(xOrConfig, y, width, height, index, solid, sprites) {
-        if (solid === void 0) { solid = false; }
-        if (sprites === void 0) { sprites = []; }
+    constructor(xOrConfig, y, width, height, index, solid = false, sprites = []) {
         this.solid = false;
         this.sprites = [];
         if (xOrConfig && typeof xOrConfig === 'object') {
-            var config = xOrConfig;
+            const config = xOrConfig;
             xOrConfig = config.x;
             y = config.y;
             width = config.width;
@@ -331,44 +297,34 @@ var CellImpl = /** @class */ (function () {
         this.sprites = sprites;
         this._bounds = new BoundingBox(this.x, this.y, this.x + this.width, this.y + this.height);
     }
-    Object.defineProperty(CellImpl.prototype, "bounds", {
-        get: function () {
-            return this._bounds;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(CellImpl.prototype, "center", {
-        get: function () {
-            return new Vector(this.x + this.width / 2, this.y + this.height / 2);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    get bounds() {
+        return this._bounds;
+    }
+    get center() {
+        return new Vector(this.x + this.width / 2, this.y + this.height / 2);
+    }
     /**
      * Add another [[TileSprite]] to this cell
      */
-    CellImpl.prototype.pushSprite = function (tileSprite) {
+    pushSprite(tileSprite) {
         this.sprites.push(tileSprite);
-    };
+    }
     /**
      * Remove an instance of [[TileSprite]] from this cell
      */
-    CellImpl.prototype.removeSprite = function (tileSprite) {
-        var index = -1;
+    removeSprite(tileSprite) {
+        let index = -1;
         if ((index = this.sprites.indexOf(tileSprite)) > -1) {
             this.sprites.splice(index, 1);
         }
-    };
+    }
     /**
      * Clear all sprites from this cell
      */
-    CellImpl.prototype.clearSprites = function () {
+    clearSprites() {
         this.sprites.length = 0;
-    };
-    return CellImpl;
-}());
-export { CellImpl };
+    }
+}
 /**
  * TileMap Cell
  *
@@ -379,12 +335,9 @@ export { CellImpl };
  * of the sprites in the array so the last one will be drawn on top. You can
  * use transparency to create layers this way.
  */
-var Cell = /** @class */ (function (_super) {
-    __extends(Cell, _super);
-    function Cell(xOrConfig, y, width, height, index, solid, sprites) {
-        return _super.call(this, xOrConfig, y, width, height, index, solid, sprites) || this;
+export class Cell extends Configurable(CellImpl) {
+    constructor(xOrConfig, y, width, height, index, solid, sprites) {
+        super(xOrConfig, y, width, height, index, solid, sprites);
     }
-    return Cell;
-}(Configurable(CellImpl)));
-export { Cell };
+}
 //# sourceMappingURL=TileMap.js.map

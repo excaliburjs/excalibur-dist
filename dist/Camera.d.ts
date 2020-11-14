@@ -1,6 +1,5 @@
 import { Engine } from './Engine';
 import { EasingFunction } from './Util/EasingFunctions';
-import { PromiseLike, Promise } from './Promises';
 import { Vector } from './Algebra';
 import { Actor } from './Actor';
 import { CanUpdate, CanInitialize } from './Interfaces/LifecycleEvents';
@@ -193,6 +192,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     private _lerpDuration;
     private _lerpStart;
     private _lerpEnd;
+    private _lerpResolve;
     private _lerpPromise;
     protected _isShaking: boolean;
     private _shakeMagnitudeX;
@@ -206,6 +206,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
     private _zoomEnd;
     private _currentZoomTime;
     private _zoomDuration;
+    private _zoomResolve;
     private _zoomPromise;
     private _zoomEasing;
     private _easing;
@@ -258,7 +259,7 @@ export declare class Camera extends Class implements CanUpdate, CanInitialize {
      * @returns A [[Promise]] that resolves when movement is finished, including if it's interrupted.
      *          The [[Promise]] value is the [[Vector]] of the target position. It will be rejected if a move cannot be made.
      */
-    move(pos: Vector, duration: number, easingFn?: EasingFunction): PromiseLike<Vector>;
+    move(pos: Vector, duration: number, easingFn?: EasingFunction): Promise<Vector>;
     /**
      * Sets the camera to shake at the specified magnitudes for the specified duration
      * @param magnitudeX  The x magnitude of the shake

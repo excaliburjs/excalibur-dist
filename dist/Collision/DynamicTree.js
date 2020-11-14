@@ -4,8 +4,8 @@ import { Logger } from '../Util/Log';
 /**
  * Dynamic Tree Node used for tracking bounds within the tree
  */
-var TreeNode = /** @class */ (function () {
-    function TreeNode(parent) {
+export class TreeNode {
+    constructor(parent) {
         this.parent = parent;
         this.parent = parent || null;
         this.body = null;
@@ -14,12 +14,10 @@ var TreeNode = /** @class */ (function () {
         this.right = null;
         this.height = 0;
     }
-    TreeNode.prototype.isLeaf = function () {
+    isLeaf() {
         return !this.left && !this.right;
-    };
-    return TreeNode;
-}());
-export { TreeNode };
+    }
+}
 /**
  * The DynamicTrees provides a spatial partitioning data structure for quickly querying for overlapping bounding boxes for
  * all tracked bodies. The worst case performance of this is O(n*log(n)) where n is the number of bodies in the tree.
@@ -27,9 +25,8 @@ export { TreeNode };
  * Internally the bounding boxes are organized as a balanced binary tree of bounding boxes, where the leaf nodes are tracked bodies.
  * Every non-leaf node is a bounding box that contains child bounding boxes.
  */
-var DynamicTree = /** @class */ (function () {
-    function DynamicTree(worldBounds) {
-        if (worldBounds === void 0) { worldBounds = new BoundingBox(-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE); }
+export class DynamicTree {
+    constructor(worldBounds = new BoundingBox(-Number.MAX_VALUE, -Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE)) {
         this.worldBounds = worldBounds;
         this.root = null;
         this.nodes = {};
@@ -37,7 +34,7 @@ var DynamicTree = /** @class */ (function () {
     /**
      * Inserts a node into the dynamic tree
      */
-    DynamicTree.prototype._insert = function (leaf) {
+    _insert(leaf) {
         // If there are no nodes in the tree, make this the root leaf
         if (this.root === null) {
             this.root = leaf;
@@ -45,23 +42,23 @@ var DynamicTree = /** @class */ (function () {
             return;
         }
         // Search the tree for a node that is not a leaf and find the best place to insert
-        var leafAABB = leaf.bounds;
-        var currentRoot = this.root;
+        const leafAABB = leaf.bounds;
+        let currentRoot = this.root;
         while (!currentRoot.isLeaf()) {
-            var left = currentRoot.left;
-            var right = currentRoot.right;
-            var area = currentRoot.bounds.getPerimeter();
-            var combinedAABB = currentRoot.bounds.combine(leafAABB);
-            var combinedArea = combinedAABB.getPerimeter();
+            const left = currentRoot.left;
+            const right = currentRoot.right;
+            const area = currentRoot.bounds.getPerimeter();
+            const combinedAABB = currentRoot.bounds.combine(leafAABB);
+            const combinedArea = combinedAABB.getPerimeter();
             // Calculate cost heuristic for creating a new parent and leaf
-            var cost = 2 * combinedArea;
+            const cost = 2 * combinedArea;
             // Minimum cost of pushing the leaf down the tree
-            var inheritanceCost = 2 * (combinedArea - area);
+            const inheritanceCost = 2 * (combinedArea - area);
             // Cost of descending
-            var leftCost = 0;
-            var leftCombined = leafAABB.combine(left.bounds);
-            var newArea = void 0;
-            var oldArea = void 0;
+            let leftCost = 0;
+            const leftCombined = leafAABB.combine(left.bounds);
+            let newArea;
+            let oldArea;
             if (left.isLeaf()) {
                 leftCost = leftCombined.getPerimeter() + inheritanceCost;
             }
@@ -70,8 +67,8 @@ var DynamicTree = /** @class */ (function () {
                 newArea = leftCombined.getPerimeter();
                 leftCost = newArea - oldArea + inheritanceCost;
             }
-            var rightCost = 0;
-            var rightCombined = leafAABB.combine(right.bounds);
+            let rightCost = 0;
+            const rightCombined = leafAABB.combine(right.bounds);
             if (right.isLeaf()) {
                 rightCost = rightCombined.getPerimeter() + inheritanceCost;
             }
@@ -93,8 +90,8 @@ var DynamicTree = /** @class */ (function () {
             }
         }
         // Create the new parent node and insert into the tree
-        var oldParent = currentRoot.parent;
-        var newParent = new TreeNode(oldParent);
+        const oldParent = currentRoot.parent;
+        const newParent = new TreeNode(oldParent);
         newParent.bounds = leafAABB.combine(currentRoot.bounds);
         newParent.height = currentRoot.height + 1;
         if (oldParent !== null) {
@@ -119,7 +116,7 @@ var DynamicTree = /** @class */ (function () {
             this.root = newParent;
         }
         // Walk up the tree fixing heights and AABBs
-        var currentNode = leaf.parent;
+        let currentNode = leaf.parent;
         while (currentNode) {
             currentNode = this._balance(currentNode);
             if (!currentNode.left) {
@@ -132,18 +129,18 @@ var DynamicTree = /** @class */ (function () {
             currentNode.bounds = currentNode.left.bounds.combine(currentNode.right.bounds);
             currentNode = currentNode.parent;
         }
-    };
+    }
     /**
      * Removes a node from the dynamic tree
      */
-    DynamicTree.prototype._remove = function (leaf) {
+    _remove(leaf) {
         if (leaf === this.root) {
             this.root = null;
             return;
         }
-        var parent = leaf.parent;
-        var grandParent = parent.parent;
-        var sibling;
+        const parent = leaf.parent;
+        const grandParent = parent.parent;
+        let sibling;
         if (parent.left === leaf) {
             sibling = parent.right;
         }
@@ -158,7 +155,7 @@ var DynamicTree = /** @class */ (function () {
                 grandParent.right = sibling;
             }
             sibling.parent = grandParent;
-            var currentNode = grandParent;
+            let currentNode = grandParent;
             while (currentNode) {
                 currentNode = this._balance(currentNode);
                 currentNode.bounds = currentNode.left.bounds.combine(currentNode.right.bounds);
@@ -170,12 +167,12 @@ var DynamicTree = /** @class */ (function () {
             this.root = sibling;
             sibling.parent = null;
         }
-    };
+    }
     /**
      * Tracks a body in the dynamic tree
      */
-    DynamicTree.prototype.trackBody = function (body) {
-        var node = new TreeNode();
+    trackBody(body) {
+        const node = new TreeNode();
         node.body = body;
         node.bounds = body.collider.bounds;
         node.bounds.left -= 2;
@@ -184,16 +181,16 @@ var DynamicTree = /** @class */ (function () {
         node.bounds.bottom += 2;
         this.nodes[body.id] = node;
         this._insert(node);
-    };
+    }
     /**
      * Updates the dynamic tree given the current bounds of each body being tracked
      */
-    DynamicTree.prototype.updateBody = function (body) {
-        var node = this.nodes[body.id];
+    updateBody(body) {
+        const node = this.nodes[body.id];
         if (!node) {
             return false;
         }
-        var b = body.collider.bounds;
+        const b = body.collider.bounds;
         // if the body is outside the world no longer update it
         if (!this.worldBounds.contains(b)) {
             Logger.getInstance().warn('Collider with id ' + body.id + ' is outside the world bounds and will no longer be tracked for physics');
@@ -208,8 +205,8 @@ var DynamicTree = /** @class */ (function () {
         b.top -= Physics.boundsPadding;
         b.right += Physics.boundsPadding;
         b.bottom += Physics.boundsPadding;
-        var multdx = body.vel.x * Physics.dynamicTreeVelocityMultiplier;
-        var multdy = body.vel.y * Physics.dynamicTreeVelocityMultiplier;
+        const multdx = body.vel.x * Physics.dynamicTreeVelocityMultiplier;
+        const multdy = body.vel.y * Physics.dynamicTreeVelocityMultiplier;
         if (multdx < 0) {
             b.left += multdx;
         }
@@ -225,39 +222,39 @@ var DynamicTree = /** @class */ (function () {
         node.bounds = b;
         this._insert(node);
         return true;
-    };
+    }
     /**
      * Untracks a body from the dynamic tree
      */
-    DynamicTree.prototype.untrackBody = function (body) {
-        var node = this.nodes[body.collider.id];
+    untrackBody(body) {
+        const node = this.nodes[body.collider.id];
         if (!node) {
             return;
         }
         this._remove(node);
         this.nodes[body.collider.id] = null;
         delete this.nodes[body.collider.id];
-    };
+    }
     /**
      * Balances the tree about a node
      */
-    DynamicTree.prototype._balance = function (node) {
+    _balance(node) {
         if (node === null) {
             throw new Error('Cannot balance at null node');
         }
         if (node.isLeaf() || node.height < 2) {
             return node;
         }
-        var left = node.left;
-        var right = node.right;
-        var a = node;
-        var b = left;
-        var c = right;
-        var d = left.left;
-        var e = left.right;
-        var f = right.left;
-        var g = right.right;
-        var balance = c.height - b.height;
+        const left = node.left;
+        const right = node.right;
+        const a = node;
+        const b = left;
+        const c = right;
+        const d = left.left;
+        const e = left.right;
+        const f = right.left;
+        const g = right.right;
+        const balance = c.height - b.height;
         // Rotate c node up
         if (balance > 1) {
             // Swap the right node with it's parent
@@ -341,16 +338,16 @@ var DynamicTree = /** @class */ (function () {
             return b;
         }
         return node;
-    };
+    }
     /**
      * Returns the internal height of the tree, shorter trees are better. Performance drops as the tree grows
      */
-    DynamicTree.prototype.getHeight = function () {
+    getHeight() {
         if (this.root === null) {
             return 0;
         }
         return this.root.height;
-    };
+    }
     /**
      * Queries the Dynamic Axis Aligned Tree for bodies that could be colliding with the provided body.
      *
@@ -358,9 +355,9 @@ var DynamicTree = /** @class */ (function () {
      * that you are complete with your query and you do not want to continue. Returning false will continue searching
      * the tree until all possible colliders have been returned.
      */
-    DynamicTree.prototype.query = function (body, callback) {
-        var bounds = body.collider.bounds;
-        var helper = function (currentNode) {
+    query(body, callback) {
+        const bounds = body.collider.bounds;
+        const helper = (currentNode) => {
             if (currentNode && currentNode.bounds.intersect(bounds)) {
                 if (currentNode.isLeaf() && currentNode.body !== body) {
                     if (callback.call(body, currentNode.body)) {
@@ -374,7 +371,7 @@ var DynamicTree = /** @class */ (function () {
             return false;
         };
         helper(this.root);
-    };
+    }
     /**
      * Queries the Dynamic Axis Aligned Tree for bodies that could be intersecting. By default the raycast query uses an infinitely
      * long ray to test the tree specified by `max`.
@@ -383,9 +380,8 @@ var DynamicTree = /** @class */ (function () {
      * callback indicates that your are complete with your query and do not want to continue. Return false will continue searching
      * the tree until all possible bodies that would intersect with the ray have been returned.
      */
-    DynamicTree.prototype.rayCastQuery = function (ray, max, callback) {
-        if (max === void 0) { max = Infinity; }
-        var helper = function (currentNode) {
+    rayCastQuery(ray, max = Infinity, callback) {
+        const helper = (currentNode) => {
             if (currentNode && currentNode.bounds.rayCast(ray, max)) {
                 if (currentNode.isLeaf()) {
                     if (callback.call(ray, currentNode.body)) {
@@ -401,9 +397,9 @@ var DynamicTree = /** @class */ (function () {
             return false; // ray missed
         };
         helper(this.root);
-    };
-    DynamicTree.prototype.getNodes = function () {
-        var helper = function (currentNode) {
+    }
+    getNodes() {
+        const helper = (currentNode) => {
             if (currentNode) {
                 return [currentNode].concat(helper(currentNode.left), helper(currentNode.right));
             }
@@ -412,10 +408,10 @@ var DynamicTree = /** @class */ (function () {
             }
         };
         return helper(this.root);
-    };
-    DynamicTree.prototype.debugDraw = function (ctx) {
+    }
+    debugDraw(ctx) {
         // draw all the nodes in the Dynamic Tree
-        var helper = function (currentNode) {
+        const helper = (currentNode) => {
             if (currentNode) {
                 if (currentNode.isLeaf()) {
                     ctx.lineWidth = 1;
@@ -435,8 +431,6 @@ var DynamicTree = /** @class */ (function () {
             }
         };
         helper(this.root);
-    };
-    return DynamicTree;
-}());
-export { DynamicTree };
+    }
+}
 //# sourceMappingURL=DynamicTree.js.map

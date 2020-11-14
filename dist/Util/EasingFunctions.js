@@ -46,11 +46,9 @@ import { obsolete } from '../Util/Decorators';
  * }
  * ```
  */
-var EasingFunctions = /** @class */ (function () {
-    function EasingFunctions() {
-    }
-    EasingFunctions.CreateReversibleEasingFunction = function (easing) {
-        return function (time, start, end, duration) {
+export class EasingFunctions {
+    static CreateReversibleEasingFunction(easing) {
+        return (time, start, end, duration) => {
             if (end < start) {
                 return start - (easing(time, end, start, duration) - end);
             }
@@ -58,65 +56,63 @@ var EasingFunctions = /** @class */ (function () {
                 return easing(time, start, end, duration);
             }
         };
-    };
-    EasingFunctions.CreateReversableEasingFunction = function (easing) {
+    }
+    static CreateReversableEasingFunction(easing) {
         return EasingFunctions.CreateReversibleEasingFunction(easing);
-    };
-    EasingFunctions.CreateVectorEasingFunction = function (easing) {
-        return function (time, start, end, duration) {
+    }
+    static CreateVectorEasingFunction(easing) {
+        return (time, start, end, duration) => {
             return new Vector(easing(time, start.x, end.x, duration), easing(time, start.y, end.y, duration));
         };
-    };
-    EasingFunctions.Linear = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        return (endValue * currentTime) / duration + startValue;
-    });
-    EasingFunctions.EaseInQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration;
-        return endValue * currentTime * currentTime + startValue;
-    });
-    EasingFunctions.EaseOutQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration;
-        return -endValue * currentTime * (currentTime - 2) + startValue;
-    });
-    EasingFunctions.EaseInOutQuad = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration / 2;
-        if (currentTime < 1) {
-            return (endValue / 2) * currentTime * currentTime + startValue;
-        }
-        currentTime--;
-        return (-endValue / 2) * (currentTime * (currentTime - 2) - 1) + startValue;
-    });
-    EasingFunctions.EaseInCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration;
-        return endValue * currentTime * currentTime * currentTime + startValue;
-    });
-    EasingFunctions.EaseOutCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration;
-        currentTime--;
-        return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
-    });
-    EasingFunctions.EaseInOutCubic = EasingFunctions.CreateReversibleEasingFunction(function (currentTime, startValue, endValue, duration) {
-        endValue = endValue - startValue;
-        currentTime /= duration / 2;
-        if (currentTime < 1) {
-            return (endValue / 2) * currentTime * currentTime * currentTime + startValue;
-        }
-        currentTime -= 2;
-        return (endValue / 2) * (currentTime * currentTime * currentTime + 2) + startValue;
-    });
-    __decorate([
-        obsolete({
-            message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
-            alternateMethod: 'CreateReversibleEasingFunction'
-        })
-    ], EasingFunctions, "CreateReversableEasingFunction", null);
-    return EasingFunctions;
-}());
-export { EasingFunctions };
+    }
+}
+EasingFunctions.Linear = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    return (endValue * currentTime) / duration + startValue;
+});
+EasingFunctions.EaseInQuad = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration;
+    return endValue * currentTime * currentTime + startValue;
+});
+EasingFunctions.EaseOutQuad = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration;
+    return -endValue * currentTime * (currentTime - 2) + startValue;
+});
+EasingFunctions.EaseInOutQuad = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration / 2;
+    if (currentTime < 1) {
+        return (endValue / 2) * currentTime * currentTime + startValue;
+    }
+    currentTime--;
+    return (-endValue / 2) * (currentTime * (currentTime - 2) - 1) + startValue;
+});
+EasingFunctions.EaseInCubic = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration;
+    return endValue * currentTime * currentTime * currentTime + startValue;
+});
+EasingFunctions.EaseOutCubic = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration;
+    currentTime--;
+    return endValue * (currentTime * currentTime * currentTime + 1) + startValue;
+});
+EasingFunctions.EaseInOutCubic = EasingFunctions.CreateReversibleEasingFunction((currentTime, startValue, endValue, duration) => {
+    endValue = endValue - startValue;
+    currentTime /= duration / 2;
+    if (currentTime < 1) {
+        return (endValue / 2) * currentTime * currentTime * currentTime + startValue;
+    }
+    currentTime -= 2;
+    return (endValue / 2) * (currentTime * currentTime * currentTime + 2) + startValue;
+});
+__decorate([
+    obsolete({
+        message: 'Alias for incorrect spelling used in older versions, will be removed in v0.25.0',
+        alternateMethod: 'CreateReversibleEasingFunction'
+    })
+], EasingFunctions, "CreateReversableEasingFunction", null);
 //# sourceMappingURL=EasingFunctions.js.map

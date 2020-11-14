@@ -15,8 +15,8 @@ export var LogLevel;
  * Excalibur comes built-in with a [[ConsoleAppender]] and [[ScreenAppender]].
  * Derive from [[Appender]] to create your own logging appenders.
  */
-var Logger = /** @class */ (function () {
-    function Logger() {
+export class Logger {
+    constructor() {
         this._appenders = [];
         /**
          * Gets or sets the default logging level. Excalibur will only log
@@ -34,118 +34,94 @@ var Logger = /** @class */ (function () {
     /**
      * Gets the current static instance of Logger
      */
-    Logger.getInstance = function () {
+    static getInstance() {
         if (Logger._INSTANCE == null) {
             Logger._INSTANCE = new Logger();
         }
         return Logger._INSTANCE;
-    };
+    }
     /**
      * Adds a new [[Appender]] to the list of appenders to write to
      */
-    Logger.prototype.addAppender = function (appender) {
+    addAppender(appender) {
         this._appenders.push(appender);
-    };
+    }
     /**
      * Clears all appenders from the logger
      */
-    Logger.prototype.clearAppenders = function () {
+    clearAppenders() {
         this._appenders.length = 0;
-    };
+    }
     /**
      * Logs a message at a given LogLevel
      * @param level  The LogLevel`to log the message at
      * @param args   An array of arguments to write to an appender
      */
-    Logger.prototype._log = function (level, args) {
+    _log(level, args) {
         if (level == null) {
             level = this.defaultLevel;
         }
-        var len = this._appenders.length;
-        for (var i = 0; i < len; i++) {
+        const len = this._appenders.length;
+        for (let i = 0; i < len; i++) {
             if (level >= this.defaultLevel) {
                 this._appenders[i].log(level, args);
             }
         }
-    };
+    }
     /**
      * Writes a log message at the [[LogLevel.Debug]] level
      * @param args  Accepts any number of arguments
      */
-    Logger.prototype.debug = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    debug(...args) {
         this._log(LogLevel.Debug, args);
-    };
+    }
     /**
      * Writes a log message at the [[LogLevel.Info]] level
      * @param args  Accepts any number of arguments
      */
-    Logger.prototype.info = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    info(...args) {
         this._log(LogLevel.Info, args);
-    };
+    }
     /**
      * Writes a log message at the [[LogLevel.Warn]] level
      * @param args  Accepts any number of arguments
      */
-    Logger.prototype.warn = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    warn(...args) {
         this._log(LogLevel.Warn, args);
-    };
+    }
     /**
      * Writes a log message at the [[LogLevel.Error]] level
      * @param args  Accepts any number of arguments
      */
-    Logger.prototype.error = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    error(...args) {
         this._log(LogLevel.Error, args);
-    };
+    }
     /**
      * Writes a log message at the [[LogLevel.Fatal]] level
      * @param args  Accepts any number of arguments
      */
-    Logger.prototype.fatal = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
+    fatal(...args) {
         this._log(LogLevel.Fatal, args);
-    };
-    Logger._INSTANCE = null;
-    return Logger;
-}());
-export { Logger };
+    }
+}
+Logger._INSTANCE = null;
 /**
  * Console appender for browsers (i.e. `console.log`)
  */
-var ConsoleAppender = /** @class */ (function () {
-    function ConsoleAppender() {
-    }
+export class ConsoleAppender {
     /**
      * Logs a message at the given [[LogLevel]]
      * @param level  Level to log at
      * @param args   Arguments to log
      */
-    ConsoleAppender.prototype.log = function (level, args) {
+    log(level, args) {
         // Check for console support
         if (!console && !console.log && console.warn && console.error) {
             // todo maybe do something better than nothing
             return;
         }
         // Create a new console args array
-        var consoleArgs = [];
+        const consoleArgs = [];
         consoleArgs.unshift.apply(consoleArgs, args);
         consoleArgs.unshift('[' + LogLevel[level] + '] : ');
         if (level < LogLevel.Warn) {
@@ -176,19 +152,17 @@ var ConsoleAppender = /** @class */ (function () {
                 console.error(consoleArgs.join(' '));
             }
         }
-    };
-    return ConsoleAppender;
-}());
-export { ConsoleAppender };
+    }
+}
 /**
  * On-screen (canvas) appender
  */
-var ScreenAppender = /** @class */ (function () {
+export class ScreenAppender {
     /**
      * @param width   Width of the screen appender in pixels
      * @param height  Height of the screen appender in pixels
      */
-    function ScreenAppender(width, height) {
+    constructor(width, height) {
         // @todo Clean this up
         this._messages = [];
         this._canvas = document.createElement('canvas');
@@ -204,20 +178,18 @@ var ScreenAppender = /** @class */ (function () {
      * @param level  Level to log at
      * @param args   Arguments to log
      */
-    ScreenAppender.prototype.log = function (level, args) {
-        var message = args.join(',');
+    log(level, args) {
+        const message = args.join(',');
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
         this._messages.unshift('[' + LogLevel[level] + '] : ' + message);
-        var pos = 10;
-        var opacity = 1.0;
-        for (var i = 0; i < this._messages.length; i++) {
+        let pos = 10;
+        let opacity = 1.0;
+        for (let i = 0; i < this._messages.length; i++) {
             this._ctx.fillStyle = 'rgba(255,255,255,' + opacity.toFixed(2) + ')';
             this._ctx.fillText(this._messages[i], 200, pos);
             pos += 10;
             opacity = opacity > 0 ? opacity - 0.05 : 0;
         }
-    };
-    return ScreenAppender;
-}());
-export { ScreenAppender };
+    }
+}
 //# sourceMappingURL=Log.js.map

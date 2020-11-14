@@ -1,5 +1,4 @@
 import { Color } from './Drawing/Color';
-import { Promise } from './Promises';
 import { Engine } from './Engine';
 import { Loadable } from './Interfaces/Loadable';
 import { CanLoad } from './Interfaces/Loader';

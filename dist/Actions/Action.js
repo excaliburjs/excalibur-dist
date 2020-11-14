@@ -9,8 +9,8 @@ import { Vector } from '../Algebra';
 import { Logger } from '../Util/Log';
 import * as Util from '../Util/Util';
 import { obsolete } from '../Util/Decorators';
-var EaseTo = /** @class */ (function () {
-    function EaseTo(actor, x, y, duration, easingFcn) {
+export class EaseTo {
+    constructor(actor, x, y, duration, easingFcn) {
         this.actor = actor;
         this.easingFcn = easingFcn;
         this._currentLerpTime = 0;
@@ -23,20 +23,20 @@ var EaseTo = /** @class */ (function () {
         this._lerpDuration = duration;
         this._lerpEnd = new Vector(x, y);
     }
-    EaseTo.prototype._initialize = function () {
+    _initialize() {
         this._lerpStart = new Vector(this.actor.pos.x, this.actor.pos.y);
         this._currentLerpTime = 0;
         this._distance = this._lerpStart.distance(this._lerpEnd);
-    };
-    EaseTo.prototype.update = function (delta) {
+    }
+    update(delta) {
         if (!this._initialized) {
             this._initialize();
             this._initialized = true;
         }
         // Need to update lerp time first, otherwise the first update will always be zero
         this._currentLerpTime += delta;
-        var newX = this.actor.pos.x;
-        var newY = this.actor.pos.y;
+        let newX = this.actor.pos.x;
+        let newY = this.actor.pos.y;
         if (this._currentLerpTime < this._lerpDuration) {
             if (this._lerpEnd.x < this._lerpStart.x) {
                 newX =
@@ -66,37 +66,35 @@ var EaseTo = /** @class */ (function () {
             //this._lerpEnd = null;
             //this._currentLerpTime = 0;
         }
-    };
-    EaseTo.prototype.isComplete = function (actor) {
+    }
+    isComplete(actor) {
         return this._stopped || new Vector(actor.pos.x, actor.pos.y).distance(this._lerpStart) >= this._distance;
-    };
-    EaseTo.prototype.reset = function () {
+    }
+    reset() {
         this._initialized = false;
-    };
-    EaseTo.prototype.stop = function () {
+    }
+    stop() {
         this.actor.vel.y = 0;
         this.actor.vel.x = 0;
         this._stopped = true;
-    };
-    return EaseTo;
-}());
-export { EaseTo };
-var MoveTo = /** @class */ (function () {
-    function MoveTo(actor, destx, desty, speed) {
+    }
+}
+export class MoveTo {
+    constructor(actor, destx, desty, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
         this._end = new Vector(destx, desty);
         this._speed = speed;
     }
-    MoveTo.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._start = new Vector(this._actor.pos.x, this._actor.pos.y);
             this._distance = this._start.distance(this._end);
             this._dir = this._end.sub(this._start).normalize();
         }
-        var m = this._dir.scale(this._speed);
+        const m = this._dir.scale(this._speed);
         this._actor.vel.x = m.x;
         this._actor.vel.y = m.y;
         if (this.isComplete(this._actor)) {
@@ -105,23 +103,21 @@ var MoveTo = /** @class */ (function () {
             this._actor.vel.y = 0;
             this._actor.vel.x = 0;
         }
-    };
-    MoveTo.prototype.isComplete = function (actor) {
+    }
+    isComplete(actor) {
         return this._stopped || new Vector(actor.pos.x, actor.pos.y).distance(this._start) >= this._distance;
-    };
-    MoveTo.prototype.stop = function () {
+    }
+    stop() {
         this._actor.vel.y = 0;
         this._actor.vel.x = 0;
         this._stopped = true;
-    };
-    MoveTo.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return MoveTo;
-}());
-export { MoveTo };
-var MoveBy = /** @class */ (function () {
-    function MoveBy(actor, offsetX, offsetY, speed) {
+    }
+}
+export class MoveBy {
+    constructor(actor, offsetX, offsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
@@ -132,7 +128,7 @@ var MoveBy = /** @class */ (function () {
             throw new Error('Speed must be greater than 0 pixels per second');
         }
     }
-    MoveBy.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._start = new Vector(this._actor.pos.x, this._actor.pos.y);
@@ -147,23 +143,21 @@ var MoveBy = /** @class */ (function () {
             this._actor.vel.y = 0;
             this._actor.vel.x = 0;
         }
-    };
-    MoveBy.prototype.isComplete = function (actor) {
+    }
+    isComplete(actor) {
         return this._stopped || actor.pos.distance(this._start) >= this._distance;
-    };
-    MoveBy.prototype.stop = function () {
+    }
+    stop() {
         this._actor.vel.y = 0;
         this._actor.vel.x = 0;
         this._stopped = true;
-    };
-    MoveBy.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return MoveBy;
-}());
-export { MoveBy };
-var Follow = /** @class */ (function () {
-    function Follow(actor, actorToFollow, followDistance) {
+    }
+}
+export class Follow {
+    constructor(actor, actorToFollow, followDistance) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
@@ -173,13 +167,13 @@ var Follow = /** @class */ (function () {
         this._maximumDistance = followDistance !== undefined ? followDistance : this._current.distance(this._end);
         this._speed = 0;
     }
-    Follow.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._distanceBetween = this._current.distance(this._end);
             this._dir = this._end.sub(this._current).normalize();
         }
-        var actorToFollowSpeed = Math.sqrt(Math.pow(this._actorToFollow.vel.x, 2) + Math.pow(this._actorToFollow.vel.y, 2));
+        const actorToFollowSpeed = Math.sqrt(Math.pow(this._actorToFollow.vel.x, 2) + Math.pow(this._actorToFollow.vel.y, 2));
         if (actorToFollowSpeed !== 0) {
             this._speed = actorToFollowSpeed;
         }
@@ -190,7 +184,7 @@ var Follow = /** @class */ (function () {
         this._distanceBetween = this._current.distance(this._end);
         this._dir = this._end.sub(this._current).normalize();
         if (this._distanceBetween >= this._maximumDistance) {
-            var m = this._dir.scale(this._speed);
+            const m = this._dir.scale(this._speed);
             this._actor.vel.x = m.x;
             this._actor.vel.y = m.y;
         }
@@ -204,24 +198,22 @@ var Follow = /** @class */ (function () {
             this._actor.vel.y = 0;
             this._actor.vel.x = 0;
         }
-    };
-    Follow.prototype.stop = function () {
+    }
+    stop() {
         this._actor.vel.y = 0;
         this._actor.vel.x = 0;
         this._stopped = true;
-    };
-    Follow.prototype.isComplete = function () {
+    }
+    isComplete() {
         // the actor following should never stop unless specified to do so
         return this._stopped;
-    };
-    Follow.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return Follow;
-}());
-export { Follow };
-var Meet = /** @class */ (function () {
-    function Meet(actor, actorToMeet, speed) {
+    }
+}
+export class Meet {
+    constructor(actor, actorToMeet, speed) {
         this._started = false;
         this._stopped = false;
         this._speedWasSpecified = false;
@@ -234,13 +226,13 @@ var Meet = /** @class */ (function () {
             this._speedWasSpecified = true;
         }
     }
-    Meet.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._distanceBetween = this._current.distance(this._end);
             this._dir = this._end.sub(this._current).normalize();
         }
-        var actorToMeetSpeed = Math.sqrt(Math.pow(this._actorToMeet.vel.x, 2) + Math.pow(this._actorToMeet.vel.y, 2));
+        const actorToMeetSpeed = Math.sqrt(Math.pow(this._actorToMeet.vel.x, 2) + Math.pow(this._actorToMeet.vel.y, 2));
         if (actorToMeetSpeed !== 0 && !this._speedWasSpecified) {
             this._speed = actorToMeetSpeed;
         }
@@ -250,7 +242,7 @@ var Meet = /** @class */ (function () {
         this._end.y = this._actorToMeet.pos.y;
         this._distanceBetween = this._current.distance(this._end);
         this._dir = this._end.sub(this._current).normalize();
-        var m = this._dir.scale(this._speed);
+        const m = this._dir.scale(this._speed);
         this._actor.vel.x = m.x;
         this._actor.vel.y = m.y;
         if (this.isComplete()) {
@@ -259,23 +251,21 @@ var Meet = /** @class */ (function () {
             this._actor.vel.y = 0;
             this._actor.vel.x = 0;
         }
-    };
-    Meet.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped || this._distanceBetween <= 1;
-    };
-    Meet.prototype.stop = function () {
+    }
+    stop() {
         this._actor.vel.y = 0;
         this._actor.vel.x = 0;
         this._stopped = true;
-    };
-    Meet.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return Meet;
-}());
-export { Meet };
-var RotateTo = /** @class */ (function () {
-    function RotateTo(actor, angleRadians, speed, rotationType) {
+    }
+}
+export class RotateTo {
+    constructor(actor, angleRadians, speed, rotationType) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
@@ -283,12 +273,12 @@ var RotateTo = /** @class */ (function () {
         this._speed = speed;
         this._rotationType = rotationType || RotationType.ShortestPath;
     }
-    RotateTo.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._start = this._actor.rotation;
-            var distance1 = Math.abs(this._end - this._start);
-            var distance2 = Util.TwoPI - distance1;
+            const distance1 = Math.abs(this._end - this._start);
+            const distance2 = Util.TwoPI - distance1;
             if (distance1 > distance2) {
                 this._shortDistance = distance2;
                 this._longDistance = distance1;
@@ -343,23 +333,21 @@ var RotateTo = /** @class */ (function () {
             this._actor.rx = 0;
             this._stopped = true;
         }
-    };
-    RotateTo.prototype.isComplete = function () {
-        var distanceTravelled = Math.abs(this._actor.rotation - this._start);
+    }
+    isComplete() {
+        const distanceTravelled = Math.abs(this._actor.rotation - this._start);
         return this._stopped || distanceTravelled >= Math.abs(this._distance);
-    };
-    RotateTo.prototype.stop = function () {
+    }
+    stop() {
         this._actor.rx = 0;
         this._stopped = true;
-    };
-    RotateTo.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return RotateTo;
-}());
-export { RotateTo };
-var RotateBy = /** @class */ (function () {
-    function RotateBy(actor, angleRadiansOffset, speed, rotationType) {
+    }
+}
+export class RotateBy {
+    constructor(actor, angleRadiansOffset, speed, rotationType) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
@@ -367,13 +355,13 @@ var RotateBy = /** @class */ (function () {
         this._offset = angleRadiansOffset;
         this._rotationType = rotationType || RotationType.ShortestPath;
     }
-    RotateBy.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._start = this._actor.rotation;
             this._end = this._start + this._offset;
-            var distance1 = Math.abs(this._end - this._start);
-            var distance2 = Util.TwoPI - distance1;
+            const distance1 = Math.abs(this._end - this._start);
+            const distance2 = Util.TwoPI - distance1;
             if (distance1 > distance2) {
                 this._shortDistance = distance2;
                 this._longDistance = distance1;
@@ -428,23 +416,21 @@ var RotateBy = /** @class */ (function () {
             this._actor.rx = 0;
             this._stopped = true;
         }
-    };
-    RotateBy.prototype.isComplete = function () {
-        var distanceTravelled = Math.abs(this._actor.rotation - this._start);
+    }
+    isComplete() {
+        const distanceTravelled = Math.abs(this._actor.rotation - this._start);
         return this._stopped || distanceTravelled >= Math.abs(this._distance);
-    };
-    RotateBy.prototype.stop = function () {
+    }
+    stop() {
         this._actor.rx = 0;
         this._stopped = true;
-    };
-    RotateBy.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return RotateBy;
-}());
-export { RotateBy };
-var ScaleTo = /** @class */ (function () {
-    function ScaleTo(actor, scaleX, scaleY, speedX, speedY) {
+    }
+}
+let ScaleTo = class ScaleTo {
+    constructor(actor, scaleX, scaleY, speedX, speedY) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
@@ -453,7 +439,7 @@ var ScaleTo = /** @class */ (function () {
         this._speedX = speedX;
         this._speedY = speedY;
     }
-    ScaleTo.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._startX = this._actor.scale.x;
@@ -462,14 +448,14 @@ var ScaleTo = /** @class */ (function () {
             this._distanceY = Math.abs(this._endY - this._startY);
         }
         if (!(Math.abs(this._actor.scale.x - this._startX) >= this._distanceX)) {
-            var directionX = this._endY < this._startY ? -1 : 1;
+            const directionX = this._endY < this._startY ? -1 : 1;
             this._actor.sx = this._speedX * directionX;
         }
         else {
             this._actor.sx = 0;
         }
         if (!(Math.abs(this._actor.scale.y - this._startY) >= this._distanceY)) {
-            var directionY = this._endY < this._startY ? -1 : 1;
+            const directionY = this._endY < this._startY ? -1 : 1;
             this._actor.sy = this._speedY * directionY;
         }
         else {
@@ -481,34 +467,33 @@ var ScaleTo = /** @class */ (function () {
             this._actor.sx = 0;
             this._actor.sy = 0;
         }
-    };
-    ScaleTo.prototype.isComplete = function () {
+    }
+    isComplete() {
         return (this._stopped ||
             (Math.abs(this._actor.scale.y - this._startX) >= this._distanceX && Math.abs(this._actor.scale.y - this._startY) >= this._distanceY));
-    };
-    ScaleTo.prototype.stop = function () {
+    }
+    stop() {
         this._actor.sx = 0;
         this._actor.sy = 0;
         this._stopped = true;
-    };
-    ScaleTo.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    ScaleTo = __decorate([
-        obsolete({ message: 'ex.Action.ScaleTo will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
-    ], ScaleTo);
-    return ScaleTo;
-}());
+    }
+};
+ScaleTo = __decorate([
+    obsolete({ message: 'ex.Action.ScaleTo will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
+], ScaleTo);
 export { ScaleTo };
-var ScaleBy = /** @class */ (function () {
-    function ScaleBy(actor, scaleOffsetX, scaleOffsetY, speed) {
+let ScaleBy = class ScaleBy {
+    constructor(actor, scaleOffsetX, scaleOffsetY, speed) {
         this._started = false;
         this._stopped = false;
         this._actor = actor;
         this._offset = new Vector(scaleOffsetX, scaleOffsetY);
         this._speedX = this._speedY = speed;
     }
-    ScaleBy.prototype.update = function (_delta) {
+    update(_delta) {
         if (!this._started) {
             this._started = true;
             this._startScale = this._actor.scale.clone();
@@ -525,58 +510,54 @@ var ScaleBy = /** @class */ (function () {
             this._actor.sx = 0;
             this._actor.sy = 0;
         }
-    };
-    ScaleBy.prototype.isComplete = function () {
+    }
+    isComplete() {
         return (this._stopped ||
             (Math.abs(this._actor.scale.x - this._startScale.x) >= this._distanceX &&
                 Math.abs(this._actor.scale.y - this._startScale.y) >= this._distanceY));
-    };
-    ScaleBy.prototype.stop = function () {
+    }
+    stop() {
         this._actor.sx = 0;
         this._actor.sy = 0;
         this._stopped = true;
-    };
-    ScaleBy.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    ScaleBy = __decorate([
-        obsolete({ message: 'ex.Action.ScaleBy will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
-    ], ScaleBy);
-    return ScaleBy;
-}());
+    }
+};
+ScaleBy = __decorate([
+    obsolete({ message: 'ex.Action.ScaleBy will be removed in v0.25.0', alternateMethod: 'Set width and hight directly' })
+], ScaleBy);
 export { ScaleBy };
-var Delay = /** @class */ (function () {
-    function Delay(actor, delay) {
+export class Delay {
+    constructor(actor, delay) {
         this._elapsedTime = 0;
         this._started = false;
         this._stopped = false;
         this._actor = actor;
         this._delay = delay;
     }
-    Delay.prototype.update = function (delta) {
+    update(delta) {
         if (!this._started) {
             this._started = true;
         }
         this.x = this._actor.pos.x;
         this.y = this._actor.pos.y;
         this._elapsedTime += delta;
-    };
-    Delay.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped || this._elapsedTime >= this._delay;
-    };
-    Delay.prototype.stop = function () {
+    }
+    stop() {
         this._stopped = true;
-    };
-    Delay.prototype.reset = function () {
+    }
+    reset() {
         this._elapsedTime = 0;
         this._started = false;
-    };
-    return Delay;
-}());
-export { Delay };
-var Blink = /** @class */ (function () {
-    function Blink(actor, timeVisible, timeNotVisible, numBlinks) {
-        if (numBlinks === void 0) { numBlinks = 1; }
+    }
+}
+export class Blink {
+    constructor(actor, timeVisible, timeNotVisible, numBlinks = 1) {
         this._timeVisible = 0;
         this._timeNotVisible = 0;
         this._elapsedTime = 0;
@@ -588,7 +569,7 @@ var Blink = /** @class */ (function () {
         this._timeNotVisible = timeNotVisible;
         this._duration = (timeVisible + timeNotVisible) * numBlinks;
     }
-    Blink.prototype.update = function (delta) {
+    update(delta) {
         if (!this._started) {
             this._started = true;
         }
@@ -605,24 +586,22 @@ var Blink = /** @class */ (function () {
         if (this.isComplete()) {
             this._actor.visible = true;
         }
-    };
-    Blink.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped || this._totalTime >= this._duration;
-    };
-    Blink.prototype.stop = function () {
+    }
+    stop() {
         this._actor.visible = true;
         this._stopped = true;
-    };
-    Blink.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
         this._elapsedTime = 0;
         this._totalTime = 0;
-    };
-    return Blink;
-}());
-export { Blink };
-var Fade = /** @class */ (function () {
-    function Fade(actor, endOpacity, speed) {
+    }
+}
+export class Fade {
+    constructor(actor, endOpacity, speed) {
         this._multiplier = 1;
         this._started = false;
         this._stopped = false;
@@ -630,7 +609,7 @@ var Fade = /** @class */ (function () {
         this._endOpacity = endOpacity;
         this._speed = speed;
     }
-    Fade.prototype.update = function (delta) {
+    update(delta) {
         if (!this._started) {
             this._started = true;
             // determine direction when we start
@@ -649,79 +628,73 @@ var Fade = /** @class */ (function () {
             this._actor.opacity = this._endOpacity;
         }
         Logger.getInstance().debug('[Action fade] Actor opacity:', this._actor.opacity);
-    };
-    Fade.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped || Math.abs(this._actor.opacity - this._endOpacity) < 0.05;
-    };
-    Fade.prototype.stop = function () {
+    }
+    stop() {
         this._stopped = true;
-    };
-    Fade.prototype.reset = function () {
+    }
+    reset() {
         this._started = false;
-    };
-    return Fade;
-}());
-export { Fade };
-var Die = /** @class */ (function () {
-    function Die(actor) {
+    }
+}
+export class Die {
+    constructor(actor) {
         this._stopped = false;
         this._actor = actor;
     }
-    Die.prototype.update = function (_delta) {
+    update(_delta) {
         this._actor.actionQueue.clearActions();
         this._actor.kill();
         this._stopped = true;
-    };
-    Die.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped;
-    };
-    Die.prototype.stop = function () {
+    }
+    stop() {
         return;
-    };
-    Die.prototype.reset = function () {
+    }
+    reset() {
         return;
-    };
-    return Die;
-}());
-export { Die };
-var CallMethod = /** @class */ (function () {
-    function CallMethod(actor, method) {
+    }
+}
+export class CallMethod {
+    constructor(actor, method) {
         this._method = null;
         this._actor = null;
         this._hasBeenCalled = false;
         this._actor = actor;
         this._method = method;
     }
-    CallMethod.prototype.update = function (_delta) {
+    update(_delta) {
         this._method.call(this._actor);
         this._hasBeenCalled = true;
-    };
-    CallMethod.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._hasBeenCalled;
-    };
-    CallMethod.prototype.reset = function () {
+    }
+    reset() {
         this._hasBeenCalled = false;
-    };
-    CallMethod.prototype.stop = function () {
+    }
+    stop() {
         this._hasBeenCalled = true;
-    };
-    return CallMethod;
-}());
-export { CallMethod };
-var Repeat = /** @class */ (function () {
-    function Repeat(actor, repeat, actions) {
+    }
+}
+export class Repeat {
+    constructor(actor, repeat, actions) {
         this._stopped = false;
         this._actor = actor;
         this._actionQueue = new ActionQueue(actor);
         this._repeat = repeat;
         this._originalRepeat = repeat;
-        var len = actions.length;
-        for (var i = 0; i < len; i++) {
+        const len = actions.length;
+        for (let i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
     }
-    Repeat.prototype.update = function (delta) {
+    update(delta) {
         this.x = this._actor.pos.x;
         this.y = this._actor.pos.y;
         if (!this._actionQueue.hasNext()) {
@@ -729,31 +702,29 @@ var Repeat = /** @class */ (function () {
             this._repeat--;
         }
         this._actionQueue.update(delta);
-    };
-    Repeat.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped || this._repeat <= 0;
-    };
-    Repeat.prototype.stop = function () {
+    }
+    stop() {
         this._stopped = true;
-    };
-    Repeat.prototype.reset = function () {
+    }
+    reset() {
         this._repeat = this._originalRepeat;
-    };
-    return Repeat;
-}());
-export { Repeat };
-var RepeatForever = /** @class */ (function () {
-    function RepeatForever(actor, actions) {
+    }
+}
+export class RepeatForever {
+    constructor(actor, actions) {
         this._stopped = false;
         this._actor = actor;
         this._actionQueue = new ActionQueue(actor);
-        var len = actions.length;
-        for (var i = 0; i < len; i++) {
+        const len = actions.length;
+        for (let i = 0; i < len; i++) {
             actions[i].reset();
             this._actionQueue.add(actions[i]);
         }
     }
-    RepeatForever.prototype.update = function (delta) {
+    update(delta) {
         this.x = this._actor.pos.x;
         this.y = this._actor.pos.y;
         if (this._stopped) {
@@ -763,20 +734,18 @@ var RepeatForever = /** @class */ (function () {
             this._actionQueue.reset();
         }
         this._actionQueue.update(delta);
-    };
-    RepeatForever.prototype.isComplete = function () {
+    }
+    isComplete() {
         return this._stopped;
-    };
-    RepeatForever.prototype.stop = function () {
+    }
+    stop() {
         this._stopped = true;
         this._actionQueue.clearActions();
-    };
-    RepeatForever.prototype.reset = function () {
+    }
+    reset() {
         return;
-    };
-    return RepeatForever;
-}());
-export { RepeatForever };
+    }
+}
 /**
  * Action Queues
  *
@@ -787,41 +756,41 @@ export { RepeatForever };
  * advanced users to adjust the actions currently being executed in the
  * queue.
  */
-var ActionQueue = /** @class */ (function () {
-    function ActionQueue(actor) {
+export class ActionQueue {
+    constructor(actor) {
         this._actions = [];
         this._completedActions = [];
         this._actor = actor;
     }
-    ActionQueue.prototype.add = function (action) {
+    add(action) {
         this._actions.push(action);
-    };
-    ActionQueue.prototype.remove = function (action) {
-        var index = this._actions.indexOf(action);
+    }
+    remove(action) {
+        const index = this._actions.indexOf(action);
         this._actions.splice(index, 1);
-    };
-    ActionQueue.prototype.clearActions = function () {
+    }
+    clearActions() {
         this._actions.length = 0;
         this._completedActions.length = 0;
         if (this._currentAction) {
             this._currentAction.stop();
         }
-    };
-    ActionQueue.prototype.getActions = function () {
+    }
+    getActions() {
         return this._actions.concat(this._completedActions);
-    };
-    ActionQueue.prototype.hasNext = function () {
+    }
+    hasNext() {
         return this._actions.length > 0;
-    };
-    ActionQueue.prototype.reset = function () {
+    }
+    reset() {
         this._actions = this.getActions();
-        var len = this._actions.length;
-        for (var i = 0; i < len; i++) {
+        const len = this._actions.length;
+        for (let i = 0; i < len; i++) {
             this._actions[i].reset();
         }
         this._completedActions = [];
-    };
-    ActionQueue.prototype.update = function (delta) {
+    }
+    update(delta) {
         if (this._actions.length > 0) {
             this._currentAction = this._actions[0];
             this._currentAction.update(delta);
@@ -829,8 +798,6 @@ var ActionQueue = /** @class */ (function () {
                 this._completedActions.push(this._actions.shift());
             }
         }
-    };
-    return ActionQueue;
-}());
-export { ActionQueue };
+    }
+}
 //# sourceMappingURL=Action.js.map

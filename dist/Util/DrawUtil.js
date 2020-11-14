@@ -12,10 +12,7 @@ import { Color } from '../Drawing/Color';
  * @param thickness The line thickness
  * @param cap The [[LineCapStyle]] (butt, round, or square)
  */
-export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
-    if (color === void 0) { color = Color.Red; }
-    if (thickness === void 0) { thickness = 1; }
-    if (cap === void 0) { cap = 'butt'; }
+export function line(ctx, color = Color.Red, x1, y1, x2, y2, thickness = 1, cap = 'butt') {
     ctx.beginPath();
     ctx.lineWidth = thickness;
     ctx.lineCap = cap;
@@ -29,8 +26,7 @@ export function line(ctx, color, x1, y1, x2, y2, thickness, cap) {
 /**
  * Draw the vector as a point onto the canvas.
  */
-export function point(ctx, color, point) {
-    if (color === void 0) { color = Color.Red; }
+export function point(ctx, color = Color.Red, point) {
     ctx.beginPath();
     ctx.strokeStyle = color.toString();
     ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
@@ -44,10 +40,9 @@ export function point(ctx, color, point) {
 /**
  *
  */
-export function vector(ctx, color, origin, vector, scale) {
-    if (scale === void 0) { scale = 1.0; }
-    var c = color ? color.toString() : 'blue';
-    var v = vector.scale(scale);
+export function vector(ctx, color, origin, vector, scale = 1.0) {
+    const c = color ? color.toString() : 'blue';
+    const v = vector.scale(scale);
     ctx.beginPath();
     ctx.strokeStyle = c;
     ctx.moveTo(origin.x, origin.y);
@@ -67,19 +62,16 @@ export function vector(ctx, color, origin, vector, scale) {
  * @param stroke The [[Color]] to stroke rectangle with
  * @param fill The [[Color]] to fill rectangle with
  */
-export function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
-    if (radius === void 0) { radius = 5; }
-    if (stroke === void 0) { stroke = Color.White; }
-    if (fill === void 0) { fill = null; }
-    var br;
+export function roundRect(ctx, x, y, width, height, radius = 5, stroke = Color.White, fill = null) {
+    let br;
     if (typeof radius === 'number') {
         br = { tl: radius, tr: radius, br: radius, bl: radius };
     }
     else {
-        var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
-        for (var prop in defaultRadius) {
+        const defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+        for (const prop in defaultRadius) {
             if (defaultRadius.hasOwnProperty(prop)) {
-                var side = prop;
+                const side = prop;
                 br[side] = radius[side] || defaultRadius[side];
             }
         }
@@ -107,9 +99,7 @@ export function roundRect(ctx, x, y, width, height, radius, stroke, fill) {
 /**
  *
  */
-export function circle(ctx, x, y, radius, stroke, fill) {
-    if (stroke === void 0) { stroke = Color.White; }
-    if (fill === void 0) { fill = null; }
+export function circle(ctx, x, y, radius, stroke = Color.White, fill = null) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.closePath();

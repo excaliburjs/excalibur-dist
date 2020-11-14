@@ -1,32 +1,16 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
+import { Flags } from '../Flags';
 import { Logger } from './Log';
-import * as Util from './Util';
-export var maxMessages = 5;
-var obsoleteMessage = {};
-export var resetObsoleteCounter = function () {
-    for (var message in obsoleteMessage) {
+import { extend } from './Util';
+export const maxMessages = 5;
+const obsoleteMessage = {};
+export const resetObsoleteCounter = () => {
+    for (const message in obsoleteMessage) {
         obsoleteMessage[message] = 0;
     }
 };
-var logMessage = function (message, options) {
-    if (obsoleteMessage[message] < maxMessages) {
+const logMessage = (message, options) => {
+    const suppressObsoleteMessages = Flags.isEnabled('suppress-obsolete-message');
+    if (obsoleteMessage[message] < maxMessages && !suppressObsoleteMessages) {
         Logger.getInstance().warn(message);
         // tslint:disable-next-line: no-console
         if (console.trace && options.showStackTrace) {
@@ -41,7 +25,7 @@ var logMessage = function (message, options) {
  * method do the deprecated one. Inspired by https://github.com/jayphelps/core-decorators.js
  */
 export function obsolete(options) {
-    options = Util.extend({}, {
+    options = extend({}, {
         message: 'This feature will be removed in future versions of Excalibur.',
         alternateMethod: null,
         showStackTrack: false
@@ -51,22 +35,23 @@ export function obsolete(options) {
             !(typeof descriptor.value === 'function' || typeof descriptor.get === 'function' || typeof descriptor.set === 'function')) {
             throw new SyntaxError('Only classes/functions/getters/setters can be marked as obsolete');
         }
-        var methodSignature = "" + (target.name || '') + (target.name && property ? '.' : '') + (property ? property : '');
-        var message = methodSignature + " is marked obsolete: " + options.message +
-            (options.alternateMethod ? " Use " + options.alternateMethod + " instead" : '');
+        const methodSignature = `${target.name || ''}${target.name && property ? '.' : ''}${property ? property : ''}`;
+        const message = `${methodSignature} is marked obsolete: ${options.message}` +
+            (options.alternateMethod ? ` Use ${options.alternateMethod} instead` : '');
         if (!obsoleteMessage[message]) {
             obsoleteMessage[message] = 0;
         }
         // If descriptor is null it is a class
-        var method = descriptor ? __assign({}, descriptor) : target;
+        const method = descriptor ? Object.assign({}, descriptor) : target;
         if (!descriptor) {
-            var constructor = function () {
-                var args = Array.prototype.slice.call(arguments);
-                logMessage(message, options);
-                return new (method.bind.apply(method, __spreadArrays([void 0], args)))();
-            };
-            constructor.prototype = method.prototype;
-            return constructor;
+            // with es2015 classes we need to change our decoration tactic
+            class DecoratedClass extends method {
+                constructor(...args) {
+                    logMessage(message, options);
+                    super(...args);
+                }
+            }
+            return DecoratedClass;
         }
         if (descriptor && descriptor.value) {
             method.value = function () {

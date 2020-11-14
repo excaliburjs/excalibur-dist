@@ -1,14 +1,12 @@
 import { Audio } from '../../Interfaces/Audio';
 import { Engine } from '../../Engine';
 import { Resource } from '../Resource';
-import { AudioInstance } from './AudioInstance';
-import { Promise } from '../../Promises';
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  */
-export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio {
+export declare class Sound extends Resource<ArrayBuffer> implements Audio {
     /**
      * Indicates whether the clip should loop when complete
      * @param value  Set the looping flag
@@ -21,7 +19,7 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
     /**
      * Return array of Current AudioInstances playing or being paused
      */
-    get instances(): AudioInstance[];
+    get instances(): Audio[];
     path: string;
     private _loop;
     private _volume;
@@ -31,6 +29,7 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
     private _tracks;
     private _engine;
     private _wasPlayingOnHidden;
+    private _processedDataResolve;
     private _processedData;
     private _audioContext;
     /**
@@ -60,18 +59,19 @@ export declare class Sound extends Resource<Blob | ArrayBuffer> implements Audio
      */
     stop(): void;
     setData(data: any): void;
-    processData(data: Blob | ArrayBuffer): Promise<string | AudioBuffer>;
+    processData(data: ArrayBuffer): Promise<AudioBuffer>;
     /**
      * Get Id of provided AudioInstance in current trackList
      * @param track [[AudioInstance]] which Id is to be given
      */
-    getTrackId(track: AudioInstance): number;
+    getTrackId(track: Audio): number;
     private _resumePlayback;
+    /**
+     * Starts playback, returns a promise that resolves when playback is complete
+     */
     private _startPlayback;
     private _processArrayBufferData;
-    private _processBlobData;
     private _setProcessedData;
     private _createNewTrack;
     private _getTrackInstance;
-    private _detectResponseType;
 }

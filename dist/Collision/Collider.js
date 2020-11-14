@@ -17,9 +17,8 @@ export function isCollider(x) {
  * Collider describes material properties like shape,
  * bounds, friction of the physics object. Only **one** collider can be associated with a body at a time
  */
-var Collider = /** @class */ (function () {
-    function Collider(_a) {
-        var body = _a.body, type = _a.type, group = _a.group, shape = _a.shape, offset = _a.offset, _b = _a.useShapeInertia, useShapeInertia = _b === void 0 ? true : _b;
+export class Collider {
+    constructor({ body, type, group, shape, offset, useShapeInertia = true }) {
         this._events = new EventDispatcher(this);
         /**
          * Gets or sets the current collision type of this collider. By
@@ -65,7 +64,7 @@ var Collider = /** @class */ (function () {
     /**
      * Returns a clone of the current collider, not associated with any body
      */
-    Collider.prototype.clone = function () {
+    clone() {
         return new Collider({
             body: null,
             type: this.type,
@@ -73,160 +72,132 @@ var Collider = /** @class */ (function () {
             group: this.group,
             offset: this.offset
         });
-    };
-    Object.defineProperty(Collider.prototype, "id", {
-        /**
-         * Get the unique id of the collider
-         */
-        get: function () {
-            return this.body ? this.body.id : -1;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Collider.prototype, "shape", {
-        /*
-         * Get the shape of the collider as a [[CollisionShape]]
-         */
-        get: function () {
-            return this._shape;
-        },
-        /**
-         * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
-         */
-        set: function (shape) {
-            this._shape = shape;
-            this._shape.collider = this;
-            if (this.useShapeInertia) {
-                this.inertia = isNaN(this._shape.inertia) ? this.inertia : this._shape.inertia;
-            }
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Collider.prototype, "center", {
-        /**
-         * The center of the collider in world space
-         */
-        get: function () {
-            return this.bounds.center;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Collider.prototype, "active", {
-        /**
-         * Is this collider active, if false it wont collide
-         */
-        get: function () {
-            return this.body.active;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * Get the unique id of the collider
+     */
+    get id() {
+        return this.body ? this.body.id : -1;
+    }
+    /*
+     * Get the shape of the collider as a [[CollisionShape]]
+     */
+    get shape() {
+        return this._shape;
+    }
+    /**
+     * Set the shape of the collider as a [[CollisionShape]], if useShapeInertia is set the collider will use inertia from the shape.
+     */
+    set shape(shape) {
+        this._shape = shape;
+        this._shape.collider = this;
+        if (this.useShapeInertia) {
+            this.inertia = isNaN(this._shape.inertia) ? this.inertia : this._shape.inertia;
+        }
+    }
+    /**
+     * The center of the collider in world space
+     */
+    get center() {
+        return this.bounds.center;
+    }
+    /**
+     * Is this collider active, if false it wont collide
+     */
+    get active() {
+        return this.body.active;
+    }
     /**
      * Collide 2 colliders and product a collision contact if there is a collision, null if none
      *
      * Collision vector is in the direction of the other collider. Away from this collider, this -> other.
      * @param other
      */
-    Collider.prototype.collide = function (other) {
+    collide(other) {
         return this.shape.collide(other.shape);
-    };
+    }
     /**
      * Find the closest line between 2 colliders
      *
      * Line is in the direction of the other collider. Away from this collider, this -> other.
      * @param other Other collider
      */
-    Collider.prototype.getClosestLineBetween = function (other) {
+    getClosestLineBetween(other) {
         return this.shape.getClosestLineBetween(other.shape);
-    };
-    Object.defineProperty(Collider.prototype, "offset", {
-        /**
-         * Gets the current pixel offset of the collider
-         */
-        get: function () {
-            return this.shape.offset.clone();
-        },
-        /**
-         * Sets the pixel offset of the collider
-         */
-        set: function (offset) {
-            this.shape.offset = offset.clone();
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * Gets the current pixel offset of the collider
+     */
+    get offset() {
+        return this.shape.offset.clone();
+    }
+    /**
+     * Sets the pixel offset of the collider
+     */
+    set offset(offset) {
+        this.shape.offset = offset.clone();
+    }
     /**
      * Returns a boolean indicating whether this body collided with
      * or was in stationary contact with
      * the body of the other [[Collider]]
      */
-    Collider.prototype.touching = function (other) {
-        var pair = new Pair(this, other);
+    touching(other) {
+        const pair = new Pair(this, other);
         pair.collide();
         if (pair.collision) {
             return true;
         }
         return false;
-    };
-    Object.defineProperty(Collider.prototype, "bounds", {
-        /**
-         * Returns the collider's [[BoundingBox]] calculated for this instant in world space.
-         * If there is no shape, a point bounding box is returned
-         */
-        get: function () {
-            if (this.shape) {
-                return this.shape.bounds;
-            }
-            if (this.body) {
-                return new BoundingBox().translate(this.body.pos);
-            }
-            return new BoundingBox();
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Collider.prototype, "localBounds", {
-        /**
-         * Returns the collider's [[BoundingBox]] relative to the body's position.
-         * If there is no shape, a point bounding box is returned
-         */
-        get: function () {
-            if (this.shape) {
-                return this.shape.localBounds;
-            }
-            return new BoundingBox();
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * Returns the collider's [[BoundingBox]] calculated for this instant in world space.
+     * If there is no shape, a point bounding box is returned
+     */
+    get bounds() {
+        if (this.shape) {
+            return this.shape.bounds;
+        }
+        if (this.body) {
+            return new BoundingBox().translate(this.body.pos);
+        }
+        return new BoundingBox();
+    }
+    /**
+     * Returns the collider's [[BoundingBox]] relative to the body's position.
+     * If there is no shape, a point bounding box is returned
+     */
+    get localBounds() {
+        if (this.shape) {
+            return this.shape.localBounds;
+        }
+        return new BoundingBox();
+    }
     /**
      * Updates the collision shapes geometry and internal caches if needed
      */
-    Collider.prototype.update = function () {
+    update() {
         if (this.shape) {
             this.shape.recalc();
         }
-    };
-    Collider.prototype.emit = function (eventName, event) {
+    }
+    emit(eventName, event) {
         this._events.emit(eventName, event);
-    };
-    Collider.prototype.on = function (eventName, handler) {
+    }
+    on(eventName, handler) {
         this._events.on(eventName, handler);
-    };
-    Collider.prototype.off = function (eventName, handler) {
+    }
+    off(eventName, handler) {
         this._events.off(eventName, handler);
-    };
-    Collider.prototype.once = function (eventName, handler) {
+    }
+    once(eventName, handler) {
         this._events.once(eventName, handler);
-    };
-    Collider.prototype.clear = function () {
+    }
+    clear() {
         this._events.clear();
-    };
+    }
     /* istanbul ignore next */
-    Collider.prototype.debugDraw = function (ctx) {
+    debugDraw(ctx) {
         // Draw motion vectors
         if (Physics.showMotionVectors) {
             DrawUtil.vector(ctx, Color.Yellow, this.body.pos, this.body.acc.add(Physics.acc));
@@ -239,8 +210,6 @@ var Collider = /** @class */ (function () {
         if (Physics.showArea) {
             this.shape.debugDraw(ctx, Color.Green);
         }
-    };
-    return Collider;
-}());
-export { Collider };
+    }
+}
 //# sourceMappingURL=Collider.js.map

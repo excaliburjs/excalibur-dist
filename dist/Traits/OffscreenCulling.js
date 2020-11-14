@@ -1,16 +1,16 @@
 import { CullingBox } from './../Util/CullingBox';
 import { ExitViewPortEvent, EnterViewPortEvent } from '../Events';
-var OffscreenCulling = /** @class */ (function () {
-    function OffscreenCulling() {
+export class OffscreenCulling {
+    constructor() {
         this.cullingBox = new CullingBox();
     }
-    OffscreenCulling.prototype.update = function (actor, engine) {
-        var events = actor.eventDispatcher;
-        var isSpriteOffScreen = true;
+    update(actor, engine) {
+        const events = actor.eventDispatcher;
+        let isSpriteOffScreen = true;
         if (actor.currentDrawing != null) {
             isSpriteOffScreen = this.cullingBox.isSpriteOffScreen(actor, engine);
         }
-        var actorBoundsOffscreen = false;
+        let actorBoundsOffscreen = false;
         if (engine && engine.currentScene && engine.currentScene.camera && engine.currentScene.camera.viewport && !actor.parent) {
             actorBoundsOffscreen = !engine.currentScene.camera.viewport.intersect(actor.body.collider.bounds);
         }
@@ -26,8 +26,6 @@ var OffscreenCulling = /** @class */ (function () {
                 actor.isOffScreen = false;
             }
         }
-    };
-    return OffscreenCulling;
-}());
-export { OffscreenCulling };
+    }
+}
 //# sourceMappingURL=OffscreenCulling.js.map

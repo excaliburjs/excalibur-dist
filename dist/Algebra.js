@@ -9,96 +9,68 @@ import { obsolete } from './Util/Decorators';
 /**
  * A 2D vector on a plane.
  */
-var Vector = /** @class */ (function () {
+export class Vector {
     /**
      * @param x  X component of the Vector
      * @param y  Y component of the Vector
      */
-    function Vector(x, y) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;
     }
-    Object.defineProperty(Vector, "Zero", {
-        /**
-         * A (0, 0) vector
-         */
-        get: function () {
-            return new Vector(0, 0);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "One", {
-        /**
-         * A (1, 1) vector
-         */
-        get: function () {
-            return new Vector(1, 1);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "Half", {
-        /**
-         * A (0.5, 0.5) vector
-         */
-        get: function () {
-            return new Vector(0.5, 0.5);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "Up", {
-        /**
-         * A unit vector pointing up (0, -1)
-         */
-        get: function () {
-            return new Vector(0, -1);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "Down", {
-        /**
-         * A unit vector pointing down (0, 1)
-         */
-        get: function () {
-            return new Vector(0, 1);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "Left", {
-        /**
-         * A unit vector pointing left (-1, 0)
-         */
-        get: function () {
-            return new Vector(-1, 0);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Vector, "Right", {
-        /**
-         * A unit vector pointing right (1, 0)
-         */
-        get: function () {
-            return new Vector(1, 0);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * A (0, 0) vector
+     */
+    static get Zero() {
+        return new Vector(0, 0);
+    }
+    /**
+     * A (1, 1) vector
+     */
+    static get One() {
+        return new Vector(1, 1);
+    }
+    /**
+     * A (0.5, 0.5) vector
+     */
+    static get Half() {
+        return new Vector(0.5, 0.5);
+    }
+    /**
+     * A unit vector pointing up (0, -1)
+     */
+    static get Up() {
+        return new Vector(0, -1);
+    }
+    /**
+     * A unit vector pointing down (0, 1)
+     */
+    static get Down() {
+        return new Vector(0, 1);
+    }
+    /**
+     * A unit vector pointing left (-1, 0)
+     */
+    static get Left() {
+        return new Vector(-1, 0);
+    }
+    /**
+     * A unit vector pointing right (1, 0)
+     */
+    static get Right() {
+        return new Vector(1, 0);
+    }
     /**
      * Returns a vector of unit length in the direction of the specified angle in Radians.
      * @param angle The angle to generate the vector
      */
-    Vector.fromAngle = function (angle) {
+    static fromAngle(angle) {
         return new Vector(Math.cos(angle), Math.sin(angle));
-    };
+    }
     /**
      * Checks if vector is not null, undefined, or if any of its components are NaN or Infinity.
      */
-    Vector.isValid = function (vec) {
+    static isValid(vec) {
         if (vec === null || vec === undefined) {
             return false;
         }
@@ -109,209 +81,202 @@ var Vector = /** @class */ (function () {
             return false;
         }
         return true;
-    };
+    }
     /**
      * Calculates distance between two Vectors
      * @param vec1
      * @param vec2
      */
-    Vector.distance = function (vec1, vec2) {
+    static distance(vec1, vec2) {
         return Math.sqrt(Math.pow(vec1.x - vec2.x, 2) + Math.pow(vec1.y - vec2.y, 2));
-    };
+    }
     /**
      * Sets the x and y components at once
      */
-    Vector.prototype.setTo = function (x, y) {
+    setTo(x, y) {
         this.x = x;
         this.y = y;
-    };
+    }
     /**
      * Compares this point against another and tests for equality
      * @param vector The other point to compare to
      * @param tolerance Amount of euclidean distance off we are willing to tolerate
      */
-    Vector.prototype.equals = function (vector, tolerance) {
-        if (tolerance === void 0) { tolerance = 0.001; }
+    equals(vector, tolerance = 0.001) {
         return Math.abs(this.x - vector.x) <= tolerance && Math.abs(this.y - vector.y) <= tolerance;
-    };
+    }
     /**
      * The distance to another vector. If no other Vector is specified, this will return the [[magnitude]].
      * @param v  The other vector. Leave blank to use origin vector.
      */
-    Vector.prototype.distance = function (v) {
+    distance(v) {
         if (!v) {
             v = Vector.Zero;
         }
         return Math.sqrt(Math.pow(this.x - v.x, 2) + Math.pow(this.y - v.y, 2));
-    };
+    }
     /**
      * The magnitude (size) of the Vector
      * @obsolete magnitude will be removed in favour of '.size' in version 0.25.0
      */
-    Vector.prototype.magnitude = function () {
+    magnitude() {
         return this.distance();
-    };
-    Object.defineProperty(Vector.prototype, "size", {
-        /**
-         * The size(magnitude) of the Vector
-         */
-        get: function () {
-            return this.distance();
-        },
-        set: function (newLength) {
-            var v = this.normalize().scale(newLength);
-            this.x = v.x;
-            this.y = v.y;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * The size(magnitude) of the Vector
+     */
+    get size() {
+        return this.distance();
+    }
+    set size(newLength) {
+        const v = this.normalize().scale(newLength);
+        this.x = v.x;
+        this.y = v.y;
+    }
     /**
      * Normalizes a vector to have a magnitude of 1.
      */
-    Vector.prototype.normalize = function () {
-        var d = this.distance();
+    normalize() {
+        const d = this.distance();
         if (d > 0) {
             return new Vector(this.x / d, this.y / d);
         }
         else {
             return new Vector(0, 1);
         }
-    };
+    }
     /**
      * Returns the average (midpoint) between the current point and the specified
      */
-    Vector.prototype.average = function (vec) {
+    average(vec) {
         return this.add(vec).scale(0.5);
-    };
-    Vector.prototype.scale = function (sizeOrScale) {
+    }
+    scale(sizeOrScale) {
         if (sizeOrScale instanceof Vector) {
             return new Vector(this.x * sizeOrScale.x, this.y * sizeOrScale.y);
         }
         else {
             return new Vector(this.x * sizeOrScale, this.y * sizeOrScale);
         }
-    };
+    }
     /**
      * Adds one vector to another
      * @param v The vector to add
      */
-    Vector.prototype.add = function (v) {
+    add(v) {
         return new Vector(this.x + v.x, this.y + v.y);
-    };
+    }
     /**
      * Subtracts a vector from another, if you subtract vector `B.sub(A)` the resulting vector points from A -> B
      * @param v The vector to subtract
      */
-    Vector.prototype.sub = function (v) {
+    sub(v) {
         return new Vector(this.x - v.x, this.y - v.y);
-    };
+    }
     /**
      * Adds one vector to this one modifying the original
      * @param v The vector to add
      */
-    Vector.prototype.addEqual = function (v) {
+    addEqual(v) {
         this.x += v.x;
         this.y += v.y;
         return this;
-    };
+    }
     /**
      * Subtracts a vector from this one modifying the original
      * @param v The vector to subtract
      */
-    Vector.prototype.subEqual = function (v) {
+    subEqual(v) {
         this.x -= v.x;
         this.y -= v.y;
         return this;
-    };
+    }
     /**
      * Scales this vector by a factor of size and modifies the original
      */
-    Vector.prototype.scaleEqual = function (size) {
+    scaleEqual(size) {
         this.x *= size;
         this.y *= size;
         return this;
-    };
+    }
     /**
      * Performs a dot product with another vector
      * @param v  The vector to dot
      */
-    Vector.prototype.dot = function (v) {
+    dot(v) {
         return this.x * v.x + this.y * v.y;
-    };
-    Vector.prototype.cross = function (v) {
+    }
+    cross(v) {
         if (v instanceof Vector) {
             return this.x * v.y - this.y * v.x;
         }
         else if (typeof v === 'number') {
             return new Vector(v * this.y, -v * this.x);
         }
-    };
+    }
     /**
      * Returns the perpendicular vector to this one
      */
-    Vector.prototype.perpendicular = function () {
+    perpendicular() {
         return new Vector(this.y, -this.x);
-    };
+    }
     /**
      * Returns the normal vector to this one, same as the perpendicular of length 1
      */
-    Vector.prototype.normal = function () {
+    normal() {
         return this.perpendicular().normalize();
-    };
+    }
     /**
      * Negate the current vector
      */
-    Vector.prototype.negate = function () {
+    negate() {
         return this.scale(-1);
-    };
+    }
     /**
      * Returns the angle of this vector.
      */
-    Vector.prototype.toAngle = function () {
+    toAngle() {
         return Math.atan2(this.y, this.x);
-    };
+    }
     /**
      * Rotates the current vector around a point by a certain number of
      * degrees in radians
      */
-    Vector.prototype.rotate = function (angle, anchor) {
+    rotate(angle, anchor) {
         if (!anchor) {
             anchor = new Vector(0, 0);
         }
-        var sinAngle = Math.sin(angle);
-        var cosAngle = Math.cos(angle);
-        var x = cosAngle * (this.x - anchor.x) - sinAngle * (this.y - anchor.y) + anchor.x;
-        var y = sinAngle * (this.x - anchor.x) + cosAngle * (this.y - anchor.y) + anchor.y;
+        const sinAngle = Math.sin(angle);
+        const cosAngle = Math.cos(angle);
+        const x = cosAngle * (this.x - anchor.x) - sinAngle * (this.y - anchor.y) + anchor.x;
+        const y = sinAngle * (this.x - anchor.x) + cosAngle * (this.y - anchor.y) + anchor.y;
         return new Vector(x, y);
-    };
+    }
     /**
      * Creates new vector that has the same values as the previous.
      */
-    Vector.prototype.clone = function () {
+    clone() {
         return new Vector(this.x, this.y);
-    };
+    }
     /**
      * Returns a string representation of the vector.
      */
-    Vector.prototype.toString = function () {
-        return "(" + this.x + ", " + this.y + ")";
-    };
-    __decorate([
-        obsolete({ message: 'will be removed in favour of `.size` in version 0.25.0' })
-    ], Vector.prototype, "magnitude", null);
-    return Vector;
-}());
-export { Vector };
+    toString() {
+        return `(${this.x}, ${this.y})`;
+    }
+}
+__decorate([
+    obsolete({ message: 'will be removed in favour of `.size` in version 0.25.0' })
+], Vector.prototype, "magnitude", null);
 /**
  * A 2D ray that can be cast into the scene to do collision detection
  */
-var Ray = /** @class */ (function () {
+export class Ray {
     /**
      * @param pos The starting position for the ray
      * @param dir The vector indicating the direction of the ray
      */
-    function Ray(pos, dir) {
+    constructor(pos, dir) {
         this.pos = pos;
         this.dir = dir.normalize();
     }
@@ -320,129 +285,115 @@ var Ray = /** @class */ (function () {
      * This number indicates the mathematical intersection time.
      * @param line  The line to test
      */
-    Ray.prototype.intersect = function (line) {
-        var numerator = line.begin.sub(this.pos);
+    intersect(line) {
+        const numerator = line.begin.sub(this.pos);
         // Test is line and ray are parallel and non intersecting
         if (this.dir.cross(line.getSlope()) === 0 && numerator.cross(this.dir) !== 0) {
             return -1;
         }
         // Lines are parallel
-        var divisor = this.dir.cross(line.getSlope());
+        const divisor = this.dir.cross(line.getSlope());
         if (divisor === 0) {
             return -1;
         }
-        var t = numerator.cross(line.getSlope()) / divisor;
+        const t = numerator.cross(line.getSlope()) / divisor;
         if (t >= 0) {
-            var u = numerator.cross(this.dir) / divisor / line.getLength();
+            const u = numerator.cross(this.dir) / divisor / line.getLength();
             if (u >= 0 && u <= 1) {
                 return t;
             }
         }
         return -1;
-    };
+    }
     /**
      * Returns the point of intersection given the intersection time
      */
-    Ray.prototype.getPoint = function (time) {
+    getPoint(time) {
         return this.pos.add(this.dir.scale(time));
-    };
-    return Ray;
-}());
-export { Ray };
+    }
+}
 /**
  * A 2D line segment
  */
-var Line = /** @class */ (function () {
+export class Line {
     /**
      * @param begin  The starting point of the line segment
      * @param end  The ending point of the line segment
      */
-    function Line(begin, end) {
+    constructor(begin, end) {
         this.begin = begin;
         this.end = end;
     }
-    Object.defineProperty(Line.prototype, "slope", {
-        /**
-         * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
-         */
-        get: function () {
-            return (this.end.y - this.begin.y) / (this.end.x - this.begin.x);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Line.prototype, "intercept", {
-        /**
-         * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
-         */
-        get: function () {
-            return this.begin.y - this.slope * this.begin.x;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * Gets the raw slope (m) of the line. Will return (+/-)Infinity for vertical lines.
+     */
+    get slope() {
+        return (this.end.y - this.begin.y) / (this.end.x - this.begin.x);
+    }
+    /**
+     * Gets the Y-intercept (b) of the line. Will return (+/-)Infinity if there is no intercept.
+     */
+    get intercept() {
+        return this.begin.y - this.slope * this.begin.x;
+    }
     /**
      * Gets the normal of the line
      */
-    Line.prototype.normal = function () {
+    normal() {
         return this.end.sub(this.begin).normal();
-    };
+    }
     /**
      * Returns the slope of the line in the form of a vector of length 1
      */
-    Line.prototype.getSlope = function () {
-        var begin = this.begin;
-        var end = this.end;
-        var distance = begin.distance(end);
+    getSlope() {
+        const begin = this.begin;
+        const end = this.end;
+        const distance = begin.distance(end);
         return end.sub(begin).scale(1 / distance);
-    };
+    }
     /**
      * Returns the edge of the line as vector, the length of the vector is the length of the edge
      */
-    Line.prototype.getEdge = function () {
-        var begin = this.begin;
-        var end = this.end;
+    getEdge() {
+        const begin = this.begin;
+        const end = this.end;
         return end.sub(begin);
-    };
+    }
     /**
      * Returns the length of the line segment in pixels
      */
-    Line.prototype.getLength = function () {
-        var begin = this.begin;
-        var end = this.end;
-        var distance = begin.distance(end);
+    getLength() {
+        const begin = this.begin;
+        const end = this.end;
+        const distance = begin.distance(end);
         return distance;
-    };
-    Object.defineProperty(Line.prototype, "midpoint", {
-        /**
-         * Returns the midpoint of the edge
-         */
-        get: function () {
-            return this.begin.add(this.end).scale(0.5);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    /**
+     * Returns the midpoint of the edge
+     */
+    get midpoint() {
+        return this.begin.add(this.end).scale(0.5);
+    }
     /**
      * Flips the direction of the line segment
      */
-    Line.prototype.flip = function () {
+    flip() {
         return new Line(this.end, this.begin);
-    };
+    }
     /**
      * Find the perpendicular distance from the line to a point
      * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
      * @param point
      */
-    Line.prototype.distanceToPoint = function (point) {
-        var x0 = point.x;
-        var y0 = point.y;
-        var l = this.getLength();
-        var dy = this.end.y - this.begin.y;
-        var dx = this.end.x - this.begin.x;
-        var distance = Math.abs(dy * x0 - dx * y0 + this.end.x * this.begin.y - this.end.y * this.begin.x) / l;
+    distanceToPoint(point) {
+        const x0 = point.x;
+        const y0 = point.y;
+        const l = this.getLength();
+        const dy = this.end.y - this.begin.y;
+        const dx = this.end.x - this.begin.x;
+        const distance = Math.abs(dy * x0 - dx * y0 + this.end.x * this.begin.y - this.end.y * this.begin.x) / l;
         return distance;
-    };
+    }
     /**
      * Find the perpendicular line from the line to a point
      * https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
@@ -452,11 +403,11 @@ var Line = /** @class */ (function () {
      * n is a unit vector in direction of the line
      * @param point
      */
-    Line.prototype.findVectorToPoint = function (point) {
-        var aMinusP = this.begin.sub(point);
-        var n = this.getSlope();
+    findVectorToPoint(point) {
+        const aMinusP = this.begin.sub(point);
+        const n = this.getSlope();
         return aMinusP.sub(n.scale(aMinusP.dot(n)));
-    };
+    }
     /**
      * Finds a point on the line given only an X or a Y value. Given an X value, the function returns
      * a new point with the calculated Y value and vice-versa.
@@ -465,11 +416,9 @@ var Line = /** @class */ (function () {
      * @param y The known Y value of the target point
      * @returns A new point with the other calculated axis value
      */
-    Line.prototype.findPoint = function (x, y) {
-        if (x === void 0) { x = null; }
-        if (y === void 0) { y = null; }
-        var m = this.slope;
-        var b = this.intercept;
+    findPoint(x = null, y = null) {
+        const m = this.slope;
+        const b = this.intercept;
         if (x !== null) {
             return new Vector(x, m * x + b);
         }
@@ -479,13 +428,13 @@ var Line = /** @class */ (function () {
         else {
             throw new Error('You must provide an X or a Y value');
         }
-    };
+    }
     /**
      * @see http://stackoverflow.com/a/11908158/109458
      */
-    Line.prototype.hasPoint = function () {
-        var currPoint;
-        var threshold = 0;
+    hasPoint() {
+        let currPoint;
+        let threshold = 0;
         if (typeof arguments[0] === 'number' && typeof arguments[1] === 'number') {
             currPoint = new Vector(arguments[0], arguments[1]);
             threshold = arguments[2] || 0;
@@ -497,11 +446,11 @@ var Line = /** @class */ (function () {
         else {
             throw 'Could not determine the arguments for Vector.hasPoint';
         }
-        var dxc = currPoint.x - this.begin.x;
-        var dyc = currPoint.y - this.begin.y;
-        var dx1 = this.end.x - this.begin.x;
-        var dy1 = this.end.y - this.begin.y;
-        var cross = dxc * dy1 - dyc * dx1;
+        const dxc = currPoint.x - this.begin.x;
+        const dyc = currPoint.y - this.begin.y;
+        const dx1 = this.end.x - this.begin.x;
+        const dy1 = this.end.y - this.begin.y;
+        const cross = dxc * dy1 - dyc * dx1;
         // check whether point lines on the line
         if (Math.abs(cross) > threshold) {
             return false;
@@ -513,22 +462,20 @@ var Line = /** @class */ (function () {
         else {
             return dy1 > 0 ? this.begin.y <= currPoint.y && currPoint.y <= this.end.y : this.end.y <= currPoint.y && currPoint.y <= this.begin.y;
         }
-    };
-    return Line;
-}());
-export { Line };
+    }
+}
 /**
  * A 1 dimensional projection on an axis, used to test overlaps
  */
-var Projection = /** @class */ (function () {
-    function Projection(min, max) {
+export class Projection {
+    constructor(min, max) {
         this.min = min;
         this.max = max;
     }
-    Projection.prototype.overlaps = function (projection) {
+    overlaps(projection) {
         return this.max > projection.min && projection.max > this.min;
-    };
-    Projection.prototype.getOverlap = function (projection) {
+    }
+    getOverlap(projection) {
         if (this.overlaps(projection)) {
             if (this.max > projection.max) {
                 return projection.max - this.min;
@@ -538,21 +485,19 @@ var Projection = /** @class */ (function () {
             }
         }
         return 0;
-    };
-    return Projection;
-}());
-export { Projection };
-var GlobalCoordinates = /** @class */ (function () {
-    function GlobalCoordinates(worldPos, pagePos, screenPos) {
+    }
+}
+export class GlobalCoordinates {
+    constructor(worldPos, pagePos, screenPos) {
         this.worldPos = worldPos;
         this.pagePos = pagePos;
         this.screenPos = screenPos;
     }
-    GlobalCoordinates.fromPagePosition = function (xOrPos, yOrEngine, engineOrUndefined) {
-        var pageX;
-        var pageY;
-        var pagePos;
-        var engine;
+    static fromPagePosition(xOrPos, yOrEngine, engineOrUndefined) {
+        let pageX;
+        let pageY;
+        let pagePos;
+        let engine;
         if (arguments.length === 3) {
             pageX = xOrPos;
             pageY = yOrEngine;
@@ -565,15 +510,13 @@ var GlobalCoordinates = /** @class */ (function () {
             pageY = pagePos.y;
             engine = yOrEngine;
         }
-        var screenX = pageX - Util.getPosition(engine.canvas).x;
-        var screenY = pageY - Util.getPosition(engine.canvas).y;
-        var screenPos = new Vector(screenX, screenY);
-        var worldPos = engine.screenToWorldCoordinates(screenPos);
+        const screenX = pageX - Util.getPosition(engine.canvas).x;
+        const screenY = pageY - Util.getPosition(engine.canvas).y;
+        const screenPos = new Vector(screenX, screenY);
+        const worldPos = engine.screenToWorldCoordinates(screenPos);
         return new GlobalCoordinates(worldPos, pagePos, screenPos);
-    };
-    return GlobalCoordinates;
-}());
-export { GlobalCoordinates };
+    }
+}
 /**
  * Shorthand for creating new Vectors - returns a new Vector instance with the
  * provided X and Y components.

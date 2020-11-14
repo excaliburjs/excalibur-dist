@@ -1,12 +1,11 @@
 import { Resource } from './Resource';
-import { Promise } from '../Promises';
 import { Sprite } from '../Drawing/Sprite';
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-export declare class Texture extends Resource<HTMLImageElement> {
+export declare class Texture extends Resource<string> {
     path: string;
     bustCache: boolean;
     /**
@@ -20,7 +19,8 @@ export declare class Texture extends Resource<HTMLImageElement> {
     /**
      * A [[Promise]] that resolves when the Texture is loaded.
      */
-    loaded: Promise<any>;
+    private _loadedResolve;
+    loaded: Promise<HTMLImageElement>;
     private _isLoaded;
     private _sprite;
     /**

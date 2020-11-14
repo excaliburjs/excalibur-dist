@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { Vector } from './Algebra';
 import { Actor } from './Actor';
 import * as Traits from './Traits/Index';
@@ -21,44 +8,38 @@ import { CoordPlane } from './EntityComponentSystem/Components/TransformComponen
  * Helper [[Actor]] primitive for drawing UI's, optimized for UI drawing. Does
  * not participate in collisions. Drawn on top of all other actors.
  */
-var ScreenElement = /** @class */ (function (_super) {
-    __extends(ScreenElement, _super);
+export class ScreenElement extends Actor {
     /**
      * @param xOrConfig  The starting x coordinate of the actor or the actor option bag
      * @param y       The starting y coordinate of the actor
      * @param width   The starting width of the actor
      * @param height  The starting height of the actor
      */
-    function ScreenElement(xOrConfig, y, width, height) {
-        var _this = this;
+    constructor(xOrConfig, y, width, height) {
         if (typeof xOrConfig !== 'object') {
-            _this = _super.call(this, xOrConfig, y, width, height) || this;
+            super(xOrConfig, y, width, height);
         }
         else {
-            _this = _super.call(this, xOrConfig) || this;
+            super(xOrConfig);
         }
-        _this.components.transform.coordPlane = CoordPlane.Screen;
-        _this.traits = [];
-        _this.traits.push(new Traits.CapturePointer());
-        _this.anchor.setTo(0, 0);
-        _this.body.collider.type = CollisionType.PreventCollision;
-        _this.body.collider.shape = Shape.Box(_this.width, _this.height, _this.anchor);
-        _this.enableCapturePointer = true;
-        return _this;
+        this.components.transform.coordPlane = CoordPlane.Screen;
+        this.traits = [];
+        this.traits.push(new Traits.CapturePointer());
+        this.anchor.setTo(0, 0);
+        this.body.collider.type = CollisionType.PreventCollision;
+        this.body.collider.shape = Shape.Box(this.width, this.height, this.anchor);
+        this.enableCapturePointer = true;
     }
-    ScreenElement.prototype._initialize = function (engine) {
+    _initialize(engine) {
         this._engine = engine;
-        _super.prototype._initialize.call(this, engine);
-    };
-    ScreenElement.prototype.contains = function (x, y, useWorld) {
-        if (useWorld === void 0) { useWorld = true; }
+        super._initialize(engine);
+    }
+    contains(x, y, useWorld = true) {
         if (useWorld) {
-            return _super.prototype.contains.call(this, x, y);
+            return super.contains(x, y);
         }
-        var coords = this._engine.worldToScreenCoordinates(new Vector(x, y));
-        return _super.prototype.contains.call(this, coords.x, coords.y);
-    };
-    return ScreenElement;
-}(Actor));
-export { ScreenElement };
+        const coords = this._engine.worldToScreenCoordinates(new Vector(x, y));
+        return super.contains(coords.x, coords.y);
+    }
+}
 //# sourceMappingURL=ScreenElement.js.map

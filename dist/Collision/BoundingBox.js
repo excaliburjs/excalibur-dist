@@ -5,7 +5,7 @@ import { Side } from './Side';
 /**
  * Axis Aligned collision primitive for Excalibur.
  */
-var BoundingBox = /** @class */ (function () {
+export class BoundingBox {
     /**
      * Constructor allows passing of either an object with all coordinate components,
      * or the coordinate components passed separately.
@@ -15,11 +15,7 @@ var BoundingBox = /** @class */ (function () {
      * @param right   x coordinate of the right edge
      * @param bottom  y coordinate of the bottom edge
      */
-    function BoundingBox(leftOrOptions, top, right, bottom) {
-        if (leftOrOptions === void 0) { leftOrOptions = 0; }
-        if (top === void 0) { top = 0; }
-        if (right === void 0) { right = 0; }
-        if (bottom === void 0) { bottom = 0; }
+    constructor(leftOrOptions = 0, top = 0, right = 0, bottom = 0) {
         if (typeof leftOrOptions === 'object') {
             this.left = leftOrOptions.left;
             this.top = leftOrOptions.top;
@@ -37,7 +33,7 @@ var BoundingBox = /** @class */ (function () {
      * Given bounding box A & B, returns the side relative to A when intersection is performed.
      * @param intersection Intersection vector between 2 bounding boxes
      */
-    BoundingBox.getSideFromIntersection = function (intersection) {
+    static getSideFromIntersection(intersection) {
         if (!intersection) {
             return Side.None;
         }
@@ -56,13 +52,13 @@ var BoundingBox = /** @class */ (function () {
             }
         }
         return Side.None;
-    };
-    BoundingBox.fromPoints = function (points) {
-        var minX = Infinity;
-        var minY = Infinity;
-        var maxX = -Infinity;
-        var maxY = -Infinity;
-        for (var i = 0; i < points.length; i++) {
+    }
+    static fromPoints(points) {
+        let minX = Infinity;
+        let minY = Infinity;
+        let maxX = -Infinity;
+        let maxY = -Infinity;
+        for (let i = 0; i < points.length; i++) {
             if (points[i].x < minX) {
                 minX = points[i].x;
             }
@@ -77,80 +73,64 @@ var BoundingBox = /** @class */ (function () {
             }
         }
         return new BoundingBox(minX, minY, maxX, maxY);
-    };
-    BoundingBox.fromDimension = function (width, height, anchor, pos) {
-        if (anchor === void 0) { anchor = Vector.Half; }
-        if (pos === void 0) { pos = Vector.Zero; }
+    }
+    static fromDimension(width, height, anchor = Vector.Half, pos = Vector.Zero) {
         return new BoundingBox(-width * anchor.x + pos.x, -height * anchor.y + pos.y, width - width * anchor.x + pos.x, height - height * anchor.y + pos.y);
-    };
-    Object.defineProperty(BoundingBox.prototype, "width", {
-        /**
-         * Returns the calculated width of the bounding box
-         */
-        get: function () {
-            return this.right - this.left;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(BoundingBox.prototype, "height", {
-        /**
-         * Returns the calculated height of the bounding box
-         */
-        get: function () {
-            return this.bottom - this.top;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(BoundingBox.prototype, "center", {
-        /**
-         * Returns the center of the bounding box
-         */
-        get: function () {
-            return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
-        },
-        enumerable: false,
-        configurable: true
-    });
-    BoundingBox.prototype.translate = function (pos) {
+    }
+    /**
+     * Returns the calculated width of the bounding box
+     */
+    get width() {
+        return this.right - this.left;
+    }
+    /**
+     * Returns the calculated height of the bounding box
+     */
+    get height() {
+        return this.bottom - this.top;
+    }
+    /**
+     * Returns the center of the bounding box
+     */
+    get center() {
+        return new Vector((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+    }
+    translate(pos) {
         return new BoundingBox(this.left + pos.x, this.top + pos.y, this.right + pos.x, this.bottom + pos.y);
-    };
+    }
     /**
      * Rotates a bounding box by and angle and around a point, if no point is specified (0, 0) is used by default. The resulting bounding
      * box is also axis-align. This is useful when a new axis-aligned bounding box is needed for rotated geometry.
      */
-    BoundingBox.prototype.rotate = function (angle, point) {
-        if (point === void 0) { point = Vector.Zero; }
-        var points = this.getPoints().map(function (p) { return p.rotate(angle, point); });
+    rotate(angle, point = Vector.Zero) {
+        const points = this.getPoints().map((p) => p.rotate(angle, point));
         return BoundingBox.fromPoints(points);
-    };
-    BoundingBox.prototype.scale = function (scale, point) {
-        if (point === void 0) { point = Vector.Zero; }
-        var shifted = this.translate(point);
+    }
+    scale(scale, point = Vector.Zero) {
+        const shifted = this.translate(point);
         return new BoundingBox(shifted.left * scale.x, shifted.top * scale.y, shifted.right * scale.x, shifted.bottom * scale.y);
-    };
+    }
     /**
      * Returns the perimeter of the bounding box
      */
-    BoundingBox.prototype.getPerimeter = function () {
-        var wx = this.width;
-        var wy = this.height;
+    getPerimeter() {
+        const wx = this.width;
+        const wy = this.height;
         return 2 * (wx + wy);
-    };
-    BoundingBox.prototype.getPoints = function () {
-        var results = [];
+    }
+    getPoints() {
+        const results = [];
         results.push(new Vector(this.left, this.top));
         results.push(new Vector(this.right, this.top));
         results.push(new Vector(this.right, this.bottom));
         results.push(new Vector(this.left, this.bottom));
         return results;
-    };
+    }
     /**
      * Creates a Polygon collision area from the points of the bounding box
      */
-    BoundingBox.prototype.toPolygon = function (actor) {
-        var maybeCollider = null;
+    toPolygon(actor) {
+        let maybeCollider = null;
         if (actor && actor.body && actor.body.collider) {
             maybeCollider = actor.body.collider;
         }
@@ -159,48 +139,46 @@ var BoundingBox = /** @class */ (function () {
             points: this.getPoints(),
             offset: Vector.Zero
         });
-    };
+    }
     /**
      * Determines whether a ray intersects with a bounding box
      */
-    BoundingBox.prototype.rayCast = function (ray, farClipDistance) {
-        if (farClipDistance === void 0) { farClipDistance = Infinity; }
+    rayCast(ray, farClipDistance = Infinity) {
         // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/
-        var tmin = -Infinity;
-        var tmax = +Infinity;
-        var xinv = ray.dir.x === 0 ? Number.MAX_VALUE : 1 / ray.dir.x;
-        var yinv = ray.dir.y === 0 ? Number.MAX_VALUE : 1 / ray.dir.y;
-        var tx1 = (this.left - ray.pos.x) * xinv;
-        var tx2 = (this.right - ray.pos.x) * xinv;
+        let tmin = -Infinity;
+        let tmax = +Infinity;
+        const xinv = ray.dir.x === 0 ? Number.MAX_VALUE : 1 / ray.dir.x;
+        const yinv = ray.dir.y === 0 ? Number.MAX_VALUE : 1 / ray.dir.y;
+        const tx1 = (this.left - ray.pos.x) * xinv;
+        const tx2 = (this.right - ray.pos.x) * xinv;
         tmin = Math.min(tx1, tx2);
         tmax = Math.max(tx1, tx2);
-        var ty1 = (this.top - ray.pos.y) * yinv;
-        var ty2 = (this.bottom - ray.pos.y) * yinv;
+        const ty1 = (this.top - ray.pos.y) * yinv;
+        const ty2 = (this.bottom - ray.pos.y) * yinv;
         tmin = Math.max(tmin, Math.min(ty1, ty2));
         tmax = Math.min(tmax, Math.max(ty1, ty2));
         return tmax >= Math.max(0, tmin) && tmin < farClipDistance;
-    };
-    BoundingBox.prototype.rayCastTime = function (ray, farClipDistance) {
-        if (farClipDistance === void 0) { farClipDistance = Infinity; }
+    }
+    rayCastTime(ray, farClipDistance = Infinity) {
         // algorithm from https://tavianator.com/fast-branchless-raybounding-box-intersections/
-        var tmin = -Infinity;
-        var tmax = +Infinity;
-        var xinv = ray.dir.x === 0 ? Number.MAX_VALUE : 1 / ray.dir.x;
-        var yinv = ray.dir.y === 0 ? Number.MAX_VALUE : 1 / ray.dir.y;
-        var tx1 = (this.left - ray.pos.x) * xinv;
-        var tx2 = (this.right - ray.pos.x) * xinv;
+        let tmin = -Infinity;
+        let tmax = +Infinity;
+        const xinv = ray.dir.x === 0 ? Number.MAX_VALUE : 1 / ray.dir.x;
+        const yinv = ray.dir.y === 0 ? Number.MAX_VALUE : 1 / ray.dir.y;
+        const tx1 = (this.left - ray.pos.x) * xinv;
+        const tx2 = (this.right - ray.pos.x) * xinv;
         tmin = Math.min(tx1, tx2);
         tmax = Math.max(tx1, tx2);
-        var ty1 = (this.top - ray.pos.y) * yinv;
-        var ty2 = (this.bottom - ray.pos.y) * yinv;
+        const ty1 = (this.top - ray.pos.y) * yinv;
+        const ty2 = (this.bottom - ray.pos.y) * yinv;
         tmin = Math.max(tmin, Math.min(ty1, ty2));
         tmax = Math.min(tmax, Math.max(ty1, ty2));
         if (tmax >= Math.max(0, tmin) && tmin < farClipDistance) {
             return tmin;
         }
         return -1;
-    };
-    BoundingBox.prototype.contains = function (val) {
+    }
+    contains(val) {
         if (val instanceof Vector) {
             return this.left <= val.x && this.top <= val.y && this.bottom >= val.y && this.right >= val.x;
         }
@@ -211,22 +189,18 @@ var BoundingBox = /** @class */ (function () {
             return false;
         }
         return false;
-    };
+    }
     /**
      * Combines this bounding box and another together returning a new bounding box
      * @param other  The bounding box to combine
      */
-    BoundingBox.prototype.combine = function (other) {
-        var compositeBB = new BoundingBox(Math.min(this.left, other.left), Math.min(this.top, other.top), Math.max(this.right, other.right), Math.max(this.bottom, other.bottom));
+    combine(other) {
+        const compositeBB = new BoundingBox(Math.min(this.left, other.left), Math.min(this.top, other.top), Math.max(this.right, other.right), Math.max(this.bottom, other.bottom));
         return compositeBB;
-    };
-    Object.defineProperty(BoundingBox.prototype, "dimensions", {
-        get: function () {
-            return new Vector(this.width, this.height);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    get dimensions() {
+        return new Vector(this.width, this.height);
+    }
     /**
      * Test wether this bounding box intersects with another returning
      * the intersection vector that can be used to resolve the collision. If there
@@ -235,15 +209,15 @@ var BoundingBox = /** @class */ (function () {
      * @param other  Other [[BoundingBox]] to test intersection with
      * @returns A Vector in the direction of the current BoundingBox, this <- other
      */
-    BoundingBox.prototype.intersect = function (other) {
-        var totalBoundingBox = this.combine(other);
+    intersect(other) {
+        const totalBoundingBox = this.combine(other);
         // If the total bounding box is less than or equal the sum of the 2 bounds then there is collision
         if (totalBoundingBox.width < other.width + this.width &&
             totalBoundingBox.height < other.height + this.height &&
             !totalBoundingBox.dimensions.equals(other.dimensions) &&
             !totalBoundingBox.dimensions.equals(this.dimensions)) {
             // collision
-            var overlapX = 0;
+            let overlapX = 0;
             // right edge is between the other's left and right edge
             /**
              *     +-this-+
@@ -272,7 +246,7 @@ var BoundingBox = /** @class */ (function () {
             else {
                 overlapX = other.right - this.left;
             }
-            var overlapY = 0;
+            let overlapY = 0;
             // top edge is between the other's top and bottom edge
             /**
              *     +-other-+
@@ -306,7 +280,7 @@ var BoundingBox = /** @class */ (function () {
             // Case of total containment of one bounding box by another
         }
         else if (totalBoundingBox.dimensions.equals(other.dimensions) || totalBoundingBox.dimensions.equals(this.dimensions)) {
-            var overlapX = 0;
+            let overlapX = 0;
             // this is wider than the other
             if (this.width - other.width >= 0) {
                 // This right edge is closest to the others right edge
@@ -329,7 +303,7 @@ var BoundingBox = /** @class */ (function () {
                     overlapX = this.right - other.left;
                 }
             }
-            var overlapY = 0;
+            let overlapY = 0;
             // this is taller than other
             if (this.height - other.height >= 0) {
                 // The bottom edge is closest to the others bottom edge
@@ -360,22 +334,19 @@ var BoundingBox = /** @class */ (function () {
         else {
             return null;
         }
-    };
+    }
     /**
      * Test whether the bounding box has intersected with another bounding box, returns the side of the current bb that intersected.
      * @param bb The other actor to test
      */
-    BoundingBox.prototype.intersectWithSide = function (bb) {
-        var intersect = this.intersect(bb);
+    intersectWithSide(bb) {
+        const intersect = this.intersect(bb);
         return BoundingBox.getSideFromIntersection(intersect);
-    };
+    }
     /* istanbul ignore next */
-    BoundingBox.prototype.debugDraw = function (ctx, color) {
-        if (color === void 0) { color = Color.Yellow; }
+    debugDraw(ctx, color = Color.Yellow) {
         ctx.strokeStyle = color.toString();
         ctx.strokeRect(this.left, this.top, this.width, this.height);
-    };
-    return BoundingBox;
-}());
-export { BoundingBox };
+    }
+}
 //# sourceMappingURL=BoundingBox.js.map

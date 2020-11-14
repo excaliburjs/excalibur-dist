@@ -4,8 +4,8 @@ import { ColorBlindFlags } from './DebugFlags';
  * best to do so on the `postupdate` event for [[Engine]], after all values have been
  * updated during a frame.
  */
-var Debug = /** @class */ (function () {
-    function Debug(engine) {
+export class Debug {
+    constructor(engine) {
         /**
          * Performance statistics
          */
@@ -24,15 +24,13 @@ var Debug = /** @class */ (function () {
         this._engine = engine;
         this.colorBlindMode = new ColorBlindFlags(this._engine);
     }
-    return Debug;
-}());
-export { Debug };
+}
 /**
  * Implementation of a frame's stats. Meant to have values copied via [[FrameStats.reset]], avoid
  * creating instances of this every frame.
  */
-var FrameStats = /** @class */ (function () {
-    function FrameStats() {
+export class FrameStats {
+    constructor() {
         this._id = 0;
         this._delta = 0;
         this._fps = 0;
@@ -61,7 +59,7 @@ var FrameStats = /** @class */ (function () {
      *
      * @param [otherStats] Optional stats to clone
      */
-    FrameStats.prototype.reset = function (otherStats) {
+    reset(otherStats) {
         if (otherStats) {
             this.id = otherStats.id;
             this.delta = otherStats.delta;
@@ -79,100 +77,74 @@ var FrameStats = /** @class */ (function () {
             this.duration.update = this.duration.draw = 0;
             this._physicsStats.reset();
         }
-    };
+    }
     /**
      * Provides a clone of this instance.
      */
-    FrameStats.prototype.clone = function () {
-        var fs = new FrameStats();
+    clone() {
+        const fs = new FrameStats();
         fs.reset(this);
         return fs;
-    };
-    Object.defineProperty(FrameStats.prototype, "id", {
-        /**
-         * Gets the frame's id
-         */
-        get: function () {
-            return this._id;
-        },
-        /**
-         * Sets the frame's id
-         */
-        set: function (value) {
-            this._id = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FrameStats.prototype, "delta", {
-        /**
-         * Gets the frame's delta (time since last frame)
-         */
-        get: function () {
-            return this._delta;
-        },
-        /**
-         * Sets the frame's delta (time since last frame). Internal use only.
-         * @internal
-         */
-        set: function (value) {
-            this._delta = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FrameStats.prototype, "fps", {
-        /**
-         * Gets the frame's frames-per-second (FPS)
-         */
-        get: function () {
-            return this._fps;
-        },
-        /**
-         * Sets the frame's frames-per-second (FPS). Internal use only.
-         * @internal
-         */
-        set: function (value) {
-            this._fps = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FrameStats.prototype, "actors", {
-        /**
-         * Gets the frame's actor statistics
-         */
-        get: function () {
-            return this._actorStats;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FrameStats.prototype, "duration", {
-        /**
-         * Gets the frame's duration statistics
-         */
-        get: function () {
-            return this._durationStats;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(FrameStats.prototype, "physics", {
-        /**
-         * Gets the frame's physics statistics
-         */
-        get: function () {
-            return this._physicsStats;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return FrameStats;
-}());
-export { FrameStats };
-var PhysicsStats = /** @class */ (function () {
-    function PhysicsStats() {
+    }
+    /**
+     * Gets the frame's id
+     */
+    get id() {
+        return this._id;
+    }
+    /**
+     * Sets the frame's id
+     */
+    set id(value) {
+        this._id = value;
+    }
+    /**
+     * Gets the frame's delta (time since last frame)
+     */
+    get delta() {
+        return this._delta;
+    }
+    /**
+     * Sets the frame's delta (time since last frame). Internal use only.
+     * @internal
+     */
+    set delta(value) {
+        this._delta = value;
+    }
+    /**
+     * Gets the frame's frames-per-second (FPS)
+     */
+    get fps() {
+        return this._fps;
+    }
+    /**
+     * Sets the frame's frames-per-second (FPS). Internal use only.
+     * @internal
+     */
+    set fps(value) {
+        this._fps = value;
+    }
+    /**
+     * Gets the frame's actor statistics
+     */
+    get actors() {
+        return this._actorStats;
+    }
+    /**
+     * Gets the frame's duration statistics
+     */
+    get duration() {
+        return this._durationStats;
+    }
+    /**
+     * Gets the frame's physics statistics
+     */
+    get physics() {
+        return this._physicsStats;
+    }
+}
+export class PhysicsStats {
+    constructor() {
         this._pairs = 0;
         this._collisions = 0;
         this._collidersHash = {};
@@ -186,7 +158,7 @@ var PhysicsStats = /** @class */ (function () {
      *
      * @param [otherStats] Optional stats to clone
      */
-    PhysicsStats.prototype.reset = function (otherStats) {
+    reset(otherStats) {
         if (otherStats) {
             this.pairs = otherStats.pairs;
             this.collisions = otherStats.collisions;
@@ -201,86 +173,56 @@ var PhysicsStats = /** @class */ (function () {
             this.fastBodyCollisions = this.broadphase = this.narrowphase = 0;
             this.collidersHash = {};
         }
-    };
+    }
     /**
      * Provides a clone of this instance.
      */
-    PhysicsStats.prototype.clone = function () {
-        var ps = new PhysicsStats();
+    clone() {
+        const ps = new PhysicsStats();
         ps.reset(this);
         return ps;
-    };
-    Object.defineProperty(PhysicsStats.prototype, "pairs", {
-        get: function () {
-            return this._pairs;
-        },
-        set: function (value) {
-            this._pairs = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "collisions", {
-        get: function () {
-            return this._collisions;
-        },
-        set: function (value) {
-            this._collisions = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "collidersHash", {
-        get: function () {
-            return this._collidersHash;
-        },
-        set: function (colliders) {
-            this._collidersHash = colliders;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "fastBodies", {
-        get: function () {
-            return this._fastBodies;
-        },
-        set: function (value) {
-            this._fastBodies = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "fastBodyCollisions", {
-        get: function () {
-            return this._fastBodyCollisions;
-        },
-        set: function (value) {
-            this._fastBodyCollisions = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "broadphase", {
-        get: function () {
-            return this._broadphase;
-        },
-        set: function (value) {
-            this._broadphase = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsStats.prototype, "narrowphase", {
-        get: function () {
-            return this._narrowphase;
-        },
-        set: function (value) {
-            this._narrowphase = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return PhysicsStats;
-}());
-export { PhysicsStats };
+    }
+    get pairs() {
+        return this._pairs;
+    }
+    set pairs(value) {
+        this._pairs = value;
+    }
+    get collisions() {
+        return this._collisions;
+    }
+    set collisions(value) {
+        this._collisions = value;
+    }
+    get collidersHash() {
+        return this._collidersHash;
+    }
+    set collidersHash(colliders) {
+        this._collidersHash = colliders;
+    }
+    get fastBodies() {
+        return this._fastBodies;
+    }
+    set fastBodies(value) {
+        this._fastBodies = value;
+    }
+    get fastBodyCollisions() {
+        return this._fastBodyCollisions;
+    }
+    set fastBodyCollisions(value) {
+        this._fastBodyCollisions = value;
+    }
+    get broadphase() {
+        return this._broadphase;
+    }
+    set broadphase(value) {
+        this._broadphase = value;
+    }
+    get narrowphase() {
+        return this._narrowphase;
+    }
+    set narrowphase(value) {
+        this._narrowphase = value;
+    }
+}
 //# sourceMappingURL=Debug.js.map

@@ -1,6 +1,5 @@
 import { RotationType } from './RotationType';
 import { Actor } from '../Actor';
-import { Promise } from '../Promises';
 import { EasingFunction } from '../Util/EasingFunctions';
 /**
  * The fluent Action API allows you to perform "actions" on
@@ -154,5 +153,5 @@ export declare class ActionContext {
      * Returns a promise that resolves when the current action queue up to now
      * is finished.
      */
-    asPromise<T>(): Promise<T>;
+    asPromise<T>(): Promise<T[]>;
 }

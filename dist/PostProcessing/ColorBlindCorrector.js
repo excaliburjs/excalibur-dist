@@ -11,10 +11,8 @@ export var ColorBlindness;
  * will suffer measurably. It's better to use it as a helpful tool while developing your game.
  * Remember, the best practice is to design with color blindness in mind.
  */
-var ColorBlindCorrector = /** @class */ (function () {
-    function ColorBlindCorrector(engine, simulate, colorMode) {
-        if (simulate === void 0) { simulate = false; }
-        if (colorMode === void 0) { colorMode = ColorBlindness.Protanope; }
+export class ColorBlindCorrector {
+    constructor(engine, simulate = false, colorMode = ColorBlindness.Protanope) {
         this.engine = engine;
         this.simulate = simulate;
         this.colorMode = colorMode;
@@ -87,8 +85,8 @@ var ColorBlindCorrector = /** @class */ (function () {
         // eslint-disable-next-line
         this._gl = this._internalCanvas.getContext('webgl', { preserveDrawingBuffer: true });
         this._program = this._gl.createProgram();
-        var fragmentShader = this._getShader('Fragment', this._getFragmentShaderByMode(colorMode));
-        var vertextShader = this._getShader('Vertex', this._vertexShader);
+        const fragmentShader = this._getShader('Fragment', this._getFragmentShaderByMode(colorMode));
+        const vertextShader = this._getShader('Vertex', this._vertexShader);
         this._gl.attachShader(this._program, vertextShader);
         this._gl.attachShader(this._program, fragmentShader);
         this._gl.linkProgram(this._program);
@@ -97,8 +95,8 @@ var ColorBlindCorrector = /** @class */ (function () {
         }
         this._gl.useProgram(this._program);
     }
-    ColorBlindCorrector.prototype._getFragmentShaderByMode = function (colorMode) {
-        var code = '';
+    _getFragmentShaderByMode(colorMode) {
+        let code = '';
         if (colorMode === ColorBlindness.Protanope) {
             code =
                 'float l = 0.0 * L + 2.02344 * M + -2.52581 * S;' +
@@ -124,16 +122,16 @@ var ColorBlindCorrector = /** @class */ (function () {
             this._fragmentShader = this._fragmentShader.replace('//SIMULATE//', 'gl_FragColor = correction.rgba;');
         }
         return this._fragmentShader.replace('//MODE CODE//', code);
-    };
-    ColorBlindCorrector.prototype._setRectangle = function (x, y, width, height) {
-        var x1 = x;
-        var x2 = x + width;
-        var y1 = y;
-        var y2 = y + height;
+    }
+    _setRectangle(x, y, width, height) {
+        const x1 = x;
+        const x2 = x + width;
+        const y1 = y;
+        const y2 = y + height;
         this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array([x1, y1, x2, y1, x1, y2, x1, y2, x2, y1, x2, y2]), this._gl.STATIC_DRAW);
-    };
-    ColorBlindCorrector.prototype._getShader = function (type, program) {
-        var shader;
+    }
+    _getShader(type, program) {
+        let shader;
         if (type === 'Fragment') {
             shader = this._gl.createShader(this._gl.FRAGMENT_SHADER);
         }
@@ -150,18 +148,18 @@ var ColorBlindCorrector = /** @class */ (function () {
             return null;
         }
         return shader;
-    };
-    ColorBlindCorrector.prototype.process = function (image, out) {
+    }
+    process(image, out) {
         // look up where the vertex data needs to go.
-        var positionLocation = this._gl.getAttribLocation(this._program, 'a_position');
-        var texCoordLocation = this._gl.getAttribLocation(this._program, 'a_texCoord');
-        var texCoordBuffer = this._gl.createBuffer();
+        const positionLocation = this._gl.getAttribLocation(this._program, 'a_position');
+        const texCoordLocation = this._gl.getAttribLocation(this._program, 'a_texCoord');
+        const texCoordBuffer = this._gl.createBuffer();
         this._gl.bindBuffer(this._gl.ARRAY_BUFFER, texCoordBuffer);
         this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array([0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0]), this._gl.STATIC_DRAW);
         this._gl.enableVertexAttribArray(texCoordLocation);
         this._gl.vertexAttribPointer(texCoordLocation, 2, this._gl.FLOAT, false, 0, 0);
         // Create a texture.
-        var texture = this._gl.createTexture();
+        const texture = this._gl.createTexture();
         this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
         // Set the parameters so we can render any size image.
         this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
@@ -173,11 +171,11 @@ var ColorBlindCorrector = /** @class */ (function () {
         // Upload the image into the texture.
         this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, this._gl.RGBA, this._gl.UNSIGNED_BYTE, image);
         // lookup uniforms
-        var resolutionLocation = this._gl.getUniformLocation(this._program, 'u_resolution');
+        const resolutionLocation = this._gl.getUniformLocation(this._program, 'u_resolution');
         // set the resolution
         this._gl.uniform2f(resolutionLocation, this._internalCanvas.width, this._internalCanvas.height);
         // Create a buffer for the position of the rectangle corners.
-        var positionBuffer = this._gl.createBuffer();
+        const positionBuffer = this._gl.createBuffer();
         this._gl.bindBuffer(this._gl.ARRAY_BUFFER, positionBuffer);
         this._gl.enableVertexAttribArray(positionLocation);
         this._gl.vertexAttribPointer(positionLocation, 2, this._gl.FLOAT, false, 0, 0);
@@ -186,12 +184,10 @@ var ColorBlindCorrector = /** @class */ (function () {
         // Draw the rectangle.
         this._gl.drawArrays(this._gl.TRIANGLES, 0, 6);
         // Grab transformed image from internal canvas
-        var pixelData = new Uint8Array(image.width * image.height * 4);
+        const pixelData = new Uint8Array(image.width * image.height * 4);
         this._gl.readPixels(0, 0, image.width, image.height, this._gl.RGBA, this._gl.UNSIGNED_BYTE, pixelData);
         image.data.set(pixelData);
         out.putImageData(image, 0, 0);
-    };
-    return ColorBlindCorrector;
-}());
-export { ColorBlindCorrector };
+    }
+}
 //# sourceMappingURL=ColorBlindCorrector.js.map

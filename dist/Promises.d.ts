@@ -1,11 +1,15 @@
 /**
  * Valid states for a promise to be in
+ * @deprecated Will be removed in v0.26.0
  */
 export declare enum PromiseState {
     Resolved = 0,
     Rejected = 1,
     Pending = 2
 }
+/**
+ * @deprecated Will be removed in v0.26.0
+ */
 export interface PromiseLike<T> {
     then(successCallback?: (value?: T) => any, rejectCallback?: (value?: T) => any): PromiseLike<T>;
     error(rejectCallback?: (value?: any) => any): PromiseLike<T>;
@@ -17,6 +21,7 @@ export interface PromiseLike<T> {
  * Promises are used to do asynchronous work and they are useful for
  * creating a chain of actions. In Excalibur they are used for loading,
  * sounds, animation, actions, and more.
+ * @deprecated Will be removed in v0.26.0
  */
 export declare class Promise<T> implements PromiseLike<T> {
     private _state;

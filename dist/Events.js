@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 export var EventTypes;
 (function (EventTypes) {
     EventTypes["Kill"] = "kill";
@@ -73,563 +60,413 @@ export var EventTypes;
  * some events are unique to a type, others are not.
  *
  */
-var GameEvent = /** @class */ (function () {
-    function GameEvent() {
+export class GameEvent {
+    constructor() {
         this._bubbles = true;
     }
-    Object.defineProperty(GameEvent.prototype, "bubbles", {
-        /**
-         * If set to false, prevents event from propagating to other actors. If true it will be propagated
-         * to all actors that apply.
-         */
-        get: function () {
-            return this._bubbles;
-        },
-        set: function (value) {
-            this._bubbles = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * If set to false, prevents event from propagating to other actors. If true it will be propagated
+     * to all actors that apply.
+     */
+    get bubbles() {
+        return this._bubbles;
+    }
+    set bubbles(value) {
+        this._bubbles = value;
+    }
     /**
      * Prevents event from bubbling
      */
-    GameEvent.prototype.stopPropagation = function () {
+    stopPropagation() {
         this.bubbles = false;
-    };
-    return GameEvent;
-}());
-export { GameEvent };
+    }
+}
 /**
  * The 'kill' event is emitted on actors when it is killed. The target is the actor that was killed.
  */
-var KillEvent = /** @class */ (function (_super) {
-    __extends(KillEvent, _super);
-    function KillEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class KillEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return KillEvent;
-}(GameEvent));
-export { KillEvent };
+}
 /**
  * The 'prekill' event is emitted directly before an actor is killed.
  */
-var PreKillEvent = /** @class */ (function (_super) {
-    __extends(PreKillEvent, _super);
-    function PreKillEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class PreKillEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return PreKillEvent;
-}(GameEvent));
-export { PreKillEvent };
+}
 /**
  * The 'postkill' event is emitted directly after the actor is killed.
  */
-var PostKillEvent = /** @class */ (function (_super) {
-    __extends(PostKillEvent, _super);
-    function PostKillEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class PostKillEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return PostKillEvent;
-}(GameEvent));
-export { PostKillEvent };
+}
 /**
  * The 'start' event is emitted on engine when has started and is ready for interaction.
  */
-var GameStartEvent = /** @class */ (function (_super) {
-    __extends(GameStartEvent, _super);
-    function GameStartEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class GameStartEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return GameStartEvent;
-}(GameEvent));
-export { GameStartEvent };
+}
 /**
  * The 'stop' event is emitted on engine when has been stopped and will no longer take input, update or draw.
  */
-var GameStopEvent = /** @class */ (function (_super) {
-    __extends(GameStopEvent, _super);
-    function GameStopEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class GameStopEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return GameStopEvent;
-}(GameEvent));
-export { GameStopEvent };
+}
 /**
  * The 'predraw' event is emitted on actors, scenes, and engine before drawing starts. Actors' predraw happens inside their graphics
  * transform so that all drawing takes place with the actor as the origin.
  *
  */
-var PreDrawEvent = /** @class */ (function (_super) {
-    __extends(PreDrawEvent, _super);
-    function PreDrawEvent(ctx, delta, target) {
-        var _this = _super.call(this) || this;
-        _this.ctx = ctx;
-        _this.delta = delta;
-        _this.target = target;
-        return _this;
+export class PreDrawEvent extends GameEvent {
+    constructor(ctx, delta, target) {
+        super();
+        this.ctx = ctx;
+        this.delta = delta;
+        this.target = target;
     }
-    return PreDrawEvent;
-}(GameEvent));
-export { PreDrawEvent };
+}
 /**
  * The 'postdraw' event is emitted on actors, scenes, and engine after drawing finishes. Actors' postdraw happens inside their graphics
  * transform so that all drawing takes place with the actor as the origin.
  *
  */
-var PostDrawEvent = /** @class */ (function (_super) {
-    __extends(PostDrawEvent, _super);
-    function PostDrawEvent(ctx, delta, target) {
-        var _this = _super.call(this) || this;
-        _this.ctx = ctx;
-        _this.delta = delta;
-        _this.target = target;
-        return _this;
+export class PostDrawEvent extends GameEvent {
+    constructor(ctx, delta, target) {
+        super();
+        this.ctx = ctx;
+        this.delta = delta;
+        this.target = target;
     }
-    return PostDrawEvent;
-}(GameEvent));
-export { PostDrawEvent };
+}
 /**
  * The 'predebugdraw' event is emitted on actors, scenes, and engine before debug drawing starts.
  */
-var PreDebugDrawEvent = /** @class */ (function (_super) {
-    __extends(PreDebugDrawEvent, _super);
-    function PreDebugDrawEvent(ctx, target) {
-        var _this = _super.call(this) || this;
-        _this.ctx = ctx;
-        _this.target = target;
-        return _this;
+export class PreDebugDrawEvent extends GameEvent {
+    constructor(ctx, target) {
+        super();
+        this.ctx = ctx;
+        this.target = target;
     }
-    return PreDebugDrawEvent;
-}(GameEvent));
-export { PreDebugDrawEvent };
+}
 /**
  * The 'postdebugdraw' event is emitted on actors, scenes, and engine after debug drawing starts.
  */
-var PostDebugDrawEvent = /** @class */ (function (_super) {
-    __extends(PostDebugDrawEvent, _super);
-    function PostDebugDrawEvent(ctx, target) {
-        var _this = _super.call(this) || this;
-        _this.ctx = ctx;
-        _this.target = target;
-        return _this;
+export class PostDebugDrawEvent extends GameEvent {
+    constructor(ctx, target) {
+        super();
+        this.ctx = ctx;
+        this.target = target;
     }
-    return PostDebugDrawEvent;
-}(GameEvent));
-export { PostDebugDrawEvent };
+}
 /**
  * The 'preupdate' event is emitted on actors, scenes, camera, and engine before the update starts.
  */
-var PreUpdateEvent = /** @class */ (function (_super) {
-    __extends(PreUpdateEvent, _super);
-    function PreUpdateEvent(engine, delta, target) {
-        var _this = _super.call(this) || this;
-        _this.engine = engine;
-        _this.delta = delta;
-        _this.target = target;
-        return _this;
+export class PreUpdateEvent extends GameEvent {
+    constructor(engine, delta, target) {
+        super();
+        this.engine = engine;
+        this.delta = delta;
+        this.target = target;
     }
-    return PreUpdateEvent;
-}(GameEvent));
-export { PreUpdateEvent };
+}
 /**
  * The 'postupdate' event is emitted on actors, scenes, camera, and engine after the update ends.
  */
-var PostUpdateEvent = /** @class */ (function (_super) {
-    __extends(PostUpdateEvent, _super);
-    function PostUpdateEvent(engine, delta, target) {
-        var _this = _super.call(this) || this;
-        _this.engine = engine;
-        _this.delta = delta;
-        _this.target = target;
-        return _this;
+export class PostUpdateEvent extends GameEvent {
+    constructor(engine, delta, target) {
+        super();
+        this.engine = engine;
+        this.delta = delta;
+        this.target = target;
     }
-    return PostUpdateEvent;
-}(GameEvent));
-export { PostUpdateEvent };
+}
 /**
  * The 'preframe' event is emitted on the engine, before the frame begins.
  */
-var PreFrameEvent = /** @class */ (function (_super) {
-    __extends(PreFrameEvent, _super);
-    function PreFrameEvent(engine, prevStats) {
-        var _this = _super.call(this) || this;
-        _this.engine = engine;
-        _this.prevStats = prevStats;
-        _this.target = engine;
-        return _this;
+export class PreFrameEvent extends GameEvent {
+    constructor(engine, prevStats) {
+        super();
+        this.engine = engine;
+        this.prevStats = prevStats;
+        this.target = engine;
     }
-    return PreFrameEvent;
-}(GameEvent));
-export { PreFrameEvent };
+}
 /**
  * The 'postframe' event is emitted on the engine, after a frame ends.
  */
-var PostFrameEvent = /** @class */ (function (_super) {
-    __extends(PostFrameEvent, _super);
-    function PostFrameEvent(engine, stats) {
-        var _this = _super.call(this) || this;
-        _this.engine = engine;
-        _this.stats = stats;
-        _this.target = engine;
-        return _this;
+export class PostFrameEvent extends GameEvent {
+    constructor(engine, stats) {
+        super();
+        this.engine = engine;
+        this.stats = stats;
+        this.target = engine;
     }
-    return PostFrameEvent;
-}(GameEvent));
-export { PostFrameEvent };
+}
 /**
  * Event received when a gamepad is connected to Excalibur. [[Gamepads]] receives this event.
  */
-var GamepadConnectEvent = /** @class */ (function (_super) {
-    __extends(GamepadConnectEvent, _super);
-    function GamepadConnectEvent(index, gamepad) {
-        var _this = _super.call(this) || this;
-        _this.index = index;
-        _this.gamepad = gamepad;
-        _this.target = gamepad;
-        return _this;
+export class GamepadConnectEvent extends GameEvent {
+    constructor(index, gamepad) {
+        super();
+        this.index = index;
+        this.gamepad = gamepad;
+        this.target = gamepad;
     }
-    return GamepadConnectEvent;
-}(GameEvent));
-export { GamepadConnectEvent };
+}
 /**
  * Event received when a gamepad is disconnected from Excalibur. [[Gamepads]] receives this event.
  */
-var GamepadDisconnectEvent = /** @class */ (function (_super) {
-    __extends(GamepadDisconnectEvent, _super);
-    function GamepadDisconnectEvent(index, gamepad) {
-        var _this = _super.call(this) || this;
-        _this.index = index;
-        _this.gamepad = gamepad;
-        _this.target = gamepad;
-        return _this;
+export class GamepadDisconnectEvent extends GameEvent {
+    constructor(index, gamepad) {
+        super();
+        this.index = index;
+        this.gamepad = gamepad;
+        this.target = gamepad;
     }
-    return GamepadDisconnectEvent;
-}(GameEvent));
-export { GamepadDisconnectEvent };
+}
 /**
  * Gamepad button event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
  */
-var GamepadButtonEvent = /** @class */ (function (_super) {
-    __extends(GamepadButtonEvent, _super);
+export class GamepadButtonEvent extends GameEvent {
     /**
      * @param button  The Gamepad button
      * @param value   A numeric value between 0 and 1
      */
-    function GamepadButtonEvent(button, value, target) {
-        var _this = _super.call(this) || this;
-        _this.button = button;
-        _this.value = value;
-        _this.target = target;
-        return _this;
+    constructor(button, value, target) {
+        super();
+        this.button = button;
+        this.value = value;
+        this.target = target;
     }
-    return GamepadButtonEvent;
-}(GameEvent));
-export { GamepadButtonEvent };
+}
 /**
  * Gamepad axis event. See [[Gamepads]] for information on responding to controller input. [[Gamepad]] instances receive this event;
  */
-var GamepadAxisEvent = /** @class */ (function (_super) {
-    __extends(GamepadAxisEvent, _super);
+export class GamepadAxisEvent extends GameEvent {
     /**
      * @param axis  The Gamepad axis
      * @param value A numeric value between -1 and 1
      */
-    function GamepadAxisEvent(axis, value, target) {
-        var _this = _super.call(this) || this;
-        _this.axis = axis;
-        _this.value = value;
-        _this.target = target;
-        return _this;
+    constructor(axis, value, target) {
+        super();
+        this.axis = axis;
+        this.value = value;
+        this.target = target;
     }
-    return GamepadAxisEvent;
-}(GameEvent));
-export { GamepadAxisEvent };
+}
 /**
  * Subscribe event thrown when handlers for events other than subscribe are added. Meta event that is received by
  * [[EventDispatcher|event dispatchers]].
  */
-var SubscribeEvent = /** @class */ (function (_super) {
-    __extends(SubscribeEvent, _super);
-    function SubscribeEvent(topic, handler) {
-        var _this = _super.call(this) || this;
-        _this.topic = topic;
-        _this.handler = handler;
-        return _this;
+export class SubscribeEvent extends GameEvent {
+    constructor(topic, handler) {
+        super();
+        this.topic = topic;
+        this.handler = handler;
     }
-    return SubscribeEvent;
-}(GameEvent));
-export { SubscribeEvent };
+}
 /**
  * Unsubscribe event thrown when handlers for events other than unsubscribe are removed. Meta event that is received by
  * [[EventDispatcher|event dispatchers]].
  */
-var UnsubscribeEvent = /** @class */ (function (_super) {
-    __extends(UnsubscribeEvent, _super);
-    function UnsubscribeEvent(topic, handler) {
-        var _this = _super.call(this) || this;
-        _this.topic = topic;
-        _this.handler = handler;
-        return _this;
+export class UnsubscribeEvent extends GameEvent {
+    constructor(topic, handler) {
+        super();
+        this.topic = topic;
+        this.handler = handler;
     }
-    return UnsubscribeEvent;
-}(GameEvent));
-export { UnsubscribeEvent };
+}
 /**
  * Event received by the [[Engine]] when the browser window is visible on a screen.
  */
-var VisibleEvent = /** @class */ (function (_super) {
-    __extends(VisibleEvent, _super);
-    function VisibleEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class VisibleEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return VisibleEvent;
-}(GameEvent));
-export { VisibleEvent };
+}
 /**
  * Event received by the [[Engine]] when the browser window is hidden from all screens.
  */
-var HiddenEvent = /** @class */ (function (_super) {
-    __extends(HiddenEvent, _super);
-    function HiddenEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class HiddenEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return HiddenEvent;
-}(GameEvent));
-export { HiddenEvent };
+}
 /**
  * Event thrown on an [[Actor|actor]] when a collision will occur this frame if it resolves
  */
-var PreCollisionEvent = /** @class */ (function (_super) {
-    __extends(PreCollisionEvent, _super);
+export class PreCollisionEvent extends GameEvent {
     /**
      * @param actor         The actor the event was thrown on
      * @param other         The actor that will collided with the current actor
      * @param side          The side that will be collided with the current actor
      * @param intersection  Intersection vector
      */
-    function PreCollisionEvent(actor, other, side, intersection) {
-        var _this = _super.call(this) || this;
-        _this.other = other;
-        _this.side = side;
-        _this.intersection = intersection;
-        _this.target = actor;
-        return _this;
+    constructor(actor, other, side, intersection) {
+        super();
+        this.other = other;
+        this.side = side;
+        this.intersection = intersection;
+        this.target = actor;
     }
-    Object.defineProperty(PreCollisionEvent.prototype, "actor", {
-        get: function () {
-            return this.target;
-        },
-        set: function (actor) {
-            this.target = actor;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return PreCollisionEvent;
-}(GameEvent));
-export { PreCollisionEvent };
+    get actor() {
+        return this.target;
+    }
+    set actor(actor) {
+        this.target = actor;
+    }
+}
 /**
  * Event thrown on an [[Actor|actor]] when a collision has been resolved (body reacted) this frame
  */
-var PostCollisionEvent = /** @class */ (function (_super) {
-    __extends(PostCollisionEvent, _super);
+export class PostCollisionEvent extends GameEvent {
     /**
      * @param actor         The actor the event was thrown on
      * @param other         The actor that did collide with the current actor
      * @param side          The side that did collide with the current actor
      * @param intersection  Intersection vector
      */
-    function PostCollisionEvent(actor, other, side, intersection) {
-        var _this = _super.call(this) || this;
-        _this.other = other;
-        _this.side = side;
-        _this.intersection = intersection;
-        _this.target = actor;
-        return _this;
+    constructor(actor, other, side, intersection) {
+        super();
+        this.other = other;
+        this.side = side;
+        this.intersection = intersection;
+        this.target = actor;
     }
-    Object.defineProperty(PostCollisionEvent.prototype, "actor", {
-        get: function () {
-            return this.target;
-        },
-        set: function (actor) {
-            this.target = actor;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return PostCollisionEvent;
-}(GameEvent));
-export { PostCollisionEvent };
+    get actor() {
+        return this.target;
+    }
+    set actor(actor) {
+        this.target = actor;
+    }
+}
 /**
  * Event thrown the first time an [[Actor|actor]] collides with another, after an actor is in contact normal collision events are fired.
  */
-var CollisionStartEvent = /** @class */ (function (_super) {
-    __extends(CollisionStartEvent, _super);
+export class CollisionStartEvent extends GameEvent {
     /**
      *
      * @param actor
      * @param other
      * @param pair
      */
-    function CollisionStartEvent(actor, other, pair) {
-        var _this = _super.call(this) || this;
-        _this.other = other;
-        _this.pair = pair;
-        _this.target = actor;
-        return _this;
+    constructor(actor, other, pair) {
+        super();
+        this.other = other;
+        this.pair = pair;
+        this.target = actor;
     }
-    Object.defineProperty(CollisionStartEvent.prototype, "actor", {
-        get: function () {
-            return this.target;
-        },
-        set: function (actor) {
-            this.target = actor;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return CollisionStartEvent;
-}(GameEvent));
-export { CollisionStartEvent };
+    get actor() {
+        return this.target;
+    }
+    set actor(actor) {
+        this.target = actor;
+    }
+}
 /**
  * Event thrown when the [[Actor|actor]] is no longer colliding with another
  */
-var CollisionEndEvent = /** @class */ (function (_super) {
-    __extends(CollisionEndEvent, _super);
+export class CollisionEndEvent extends GameEvent {
     /**
      *
      */
-    function CollisionEndEvent(actor, other) {
-        var _this = _super.call(this) || this;
-        _this.other = other;
-        _this.target = actor;
-        return _this;
+    constructor(actor, other) {
+        super();
+        this.other = other;
+        this.target = actor;
     }
-    Object.defineProperty(CollisionEndEvent.prototype, "actor", {
-        get: function () {
-            return this.target;
-        },
-        set: function (actor) {
-            this.target = actor;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return CollisionEndEvent;
-}(GameEvent));
-export { CollisionEndEvent };
+    get actor() {
+        return this.target;
+    }
+    set actor(actor) {
+        this.target = actor;
+    }
+}
 /**
  * Event thrown on an [[Actor]] and a [[Scene]] only once before the first update call
  */
-var InitializeEvent = /** @class */ (function (_super) {
-    __extends(InitializeEvent, _super);
+export class InitializeEvent extends GameEvent {
     /**
      * @param engine  The reference to the current engine
      */
-    function InitializeEvent(engine, target) {
-        var _this = _super.call(this) || this;
-        _this.engine = engine;
-        _this.target = target;
-        return _this;
+    constructor(engine, target) {
+        super();
+        this.engine = engine;
+        this.target = target;
     }
-    return InitializeEvent;
-}(GameEvent));
-export { InitializeEvent };
+}
 /**
  * Event thrown on a [[Scene]] on activation
  */
-var ActivateEvent = /** @class */ (function (_super) {
-    __extends(ActivateEvent, _super);
+export class ActivateEvent extends GameEvent {
     /**
      * @param oldScene  The reference to the old scene
      */
-    function ActivateEvent(oldScene, target) {
-        var _this = _super.call(this) || this;
-        _this.oldScene = oldScene;
-        _this.target = target;
-        return _this;
+    constructor(oldScene, target) {
+        super();
+        this.oldScene = oldScene;
+        this.target = target;
     }
-    return ActivateEvent;
-}(GameEvent));
-export { ActivateEvent };
+}
 /**
  * Event thrown on a [[Scene]] on deactivation
  */
-var DeactivateEvent = /** @class */ (function (_super) {
-    __extends(DeactivateEvent, _super);
+export class DeactivateEvent extends GameEvent {
     /**
      * @param newScene  The reference to the new scene
      */
-    function DeactivateEvent(newScene, target) {
-        var _this = _super.call(this) || this;
-        _this.newScene = newScene;
-        _this.target = target;
-        return _this;
+    constructor(newScene, target) {
+        super();
+        this.newScene = newScene;
+        this.target = target;
     }
-    return DeactivateEvent;
-}(GameEvent));
-export { DeactivateEvent };
+}
 /**
  * Event thrown on an [[Actor]] when it completely leaves the screen.
  */
-var ExitViewPortEvent = /** @class */ (function (_super) {
-    __extends(ExitViewPortEvent, _super);
-    function ExitViewPortEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class ExitViewPortEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return ExitViewPortEvent;
-}(GameEvent));
-export { ExitViewPortEvent };
+}
 /**
  * Event thrown on an [[Actor]] when it completely leaves the screen.
  */
-var EnterViewPortEvent = /** @class */ (function (_super) {
-    __extends(EnterViewPortEvent, _super);
-    function EnterViewPortEvent(target) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        return _this;
+export class EnterViewPortEvent extends GameEvent {
+    constructor(target) {
+        super();
+        this.target = target;
     }
-    return EnterViewPortEvent;
-}(GameEvent));
-export { EnterViewPortEvent };
-var EnterTriggerEvent = /** @class */ (function (_super) {
-    __extends(EnterTriggerEvent, _super);
-    function EnterTriggerEvent(target, actor) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.actor = actor;
-        return _this;
+}
+export class EnterTriggerEvent extends GameEvent {
+    constructor(target, actor) {
+        super();
+        this.target = target;
+        this.actor = actor;
     }
-    return EnterTriggerEvent;
-}(GameEvent));
-export { EnterTriggerEvent };
-var ExitTriggerEvent = /** @class */ (function (_super) {
-    __extends(ExitTriggerEvent, _super);
-    function ExitTriggerEvent(target, actor) {
-        var _this = _super.call(this) || this;
-        _this.target = target;
-        _this.actor = actor;
-        return _this;
+}
+export class ExitTriggerEvent extends GameEvent {
+    constructor(target, actor) {
+        super();
+        this.target = target;
+        this.actor = actor;
     }
-    return ExitTriggerEvent;
-}(GameEvent));
-export { ExitTriggerEvent };
+}
 //# sourceMappingURL=Events.js.map

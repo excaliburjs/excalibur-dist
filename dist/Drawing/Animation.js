@@ -1,27 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 import * as Effects from './SpriteEffects';
 import { Vector } from '../Algebra';
 import { Engine } from '../Engine';
@@ -30,7 +6,7 @@ import { Configurable } from '../Configurable';
 /**
  * @hidden
  */
-var AnimationImpl = /** @class */ (function () {
+export class AnimationImpl {
     /**
      * Typically you will use a [[SpriteSheet]] to generate an [[Animation]].
      *
@@ -39,7 +15,7 @@ var AnimationImpl = /** @class */ (function () {
      * @param speed   The number in milliseconds to display each frame in the animation
      * @param loop    Indicates whether the animation should loop after it is completed
      */
-    function AnimationImpl(engineOrConfig, sprites, speed, loop) {
+    constructor(engineOrConfig, sprites, speed, loop) {
         /**
          * The sprite frames to play, in order. See [[SpriteSheet.getAnimationForAll]] to quickly
          * generate an [[Animation]].
@@ -76,9 +52,9 @@ var AnimationImpl = /** @class */ (function () {
         this.width = 0;
         this.height = 0;
         this._opacity = 1;
-        var engine = engineOrConfig;
+        let engine = engineOrConfig;
         if (engineOrConfig && !(engineOrConfig instanceof Engine)) {
-            var config = engineOrConfig;
+            const config = engineOrConfig;
             engine = config.engine;
             sprites = config.sprites;
             speed = config.speed;
@@ -102,122 +78,118 @@ var AnimationImpl = /** @class */ (function () {
     /**
      * Applies the opacity effect to a sprite, setting the alpha of all pixels to a given value
      */
-    AnimationImpl.prototype.opacity = function (value) {
+    opacity(value) {
         this._opacity = value;
-    };
+    }
     /**
      * Applies the grayscale effect to a sprite, removing color information.
      */
-    AnimationImpl.prototype.grayscale = function () {
+    grayscale() {
         this.addEffect(new Effects.Grayscale());
-    };
+    }
     /**
      * Applies the invert effect to a sprite, inverting the pixel colors.
      */
-    AnimationImpl.prototype.invert = function () {
+    invert() {
         this.addEffect(new Effects.Invert());
-    };
+    }
     /**
      * Applies the fill effect to a sprite, changing the color channels of all non-transparent pixels to match a given color
      */
-    AnimationImpl.prototype.fill = function (color) {
+    fill(color) {
         this.addEffect(new Effects.Fill(color));
-    };
+    }
     /**
      * Applies the colorize effect to a sprite, changing the color channels of all pixels to be the average of the original color and the
      * provided color.
      */
-    AnimationImpl.prototype.colorize = function (color) {
+    colorize(color) {
         this.addEffect(new Effects.Colorize(color));
-    };
+    }
     /**
      * Applies the lighten effect to a sprite, changes the lightness of the color according to hsl
      */
-    AnimationImpl.prototype.lighten = function (factor) {
-        if (factor === void 0) { factor = 0.1; }
+    lighten(factor = 0.1) {
         this.addEffect(new Effects.Lighten(factor));
-    };
+    }
     /**
      * Applies the darken effect to a sprite, changes the darkness of the color according to hsl
      */
-    AnimationImpl.prototype.darken = function (factor) {
-        if (factor === void 0) { factor = 0.1; }
+    darken(factor = 0.1) {
         this.addEffect(new Effects.Darken(factor));
-    };
+    }
     /**
      * Applies the saturate effect to a sprite, saturates the color according to hsl
      */
-    AnimationImpl.prototype.saturate = function (factor) {
-        if (factor === void 0) { factor = 0.1; }
+    saturate(factor = 0.1) {
         this.addEffect(new Effects.Saturate(factor));
-    };
+    }
     /**
      * Applies the desaturate effect to a sprite, desaturates the color according to hsl
      */
-    AnimationImpl.prototype.desaturate = function (factor) {
-        if (factor === void 0) { factor = 0.1; }
+    desaturate(factor = 0.1) {
         this.addEffect(new Effects.Desaturate(factor));
-    };
+    }
     /**
      * Add a [[SpriteEffect]] manually
      */
-    AnimationImpl.prototype.addEffect = function (effect) {
-        for (var i in this.sprites) {
+    addEffect(effect) {
+        for (const i in this.sprites) {
             this.sprites[i].addEffect(effect);
         }
-    };
-    AnimationImpl.prototype.removeEffect = function (param) {
-        for (var i in this.sprites) {
+    }
+    removeEffect(param) {
+        for (const i in this.sprites) {
             this.sprites[i].removeEffect(param);
         }
-    };
+    }
     /**
      * Clear all sprite effects
      */
-    AnimationImpl.prototype.clearEffects = function () {
-        for (var i in this.sprites) {
+    clearEffects() {
+        for (const i in this.sprites) {
             this.sprites[i].clearEffects();
         }
-    };
-    AnimationImpl.prototype._setAnchor = function (point) {
+    }
+    _setAnchor(point) {
         //if (!this.anchor.equals(point)) {
-        for (var i in this.sprites) {
+        for (const i in this.sprites) {
             this.sprites[i].anchor.setTo(point.x, point.y);
         }
         //}
-    };
-    AnimationImpl.prototype._setRotation = function (radians) {
+    }
+    _setRotation(radians) {
         //if (this.rotation !== radians) {
-        for (var i in this.sprites) {
+        for (const i in this.sprites) {
             this.sprites[i].rotation = radians;
         }
         //}
-    };
-    AnimationImpl.prototype._setScale = function (scale) {
+    }
+    _setScale(scale) {
         //if (!this.scale.equals(scale)) {
-        for (var i in this.sprites) {
+        for (const i in this.sprites) {
             this.sprites[i].scale = scale;
         }
         //}
-    };
+    }
     /**
      * Resets the animation to first frame.
      */
-    AnimationImpl.prototype.reset = function () {
+    reset() {
         this.currentFrame = 0;
-    };
+    }
     /**
      * Indicates whether the animation is complete, animations that loop are never complete.
      */
-    AnimationImpl.prototype.isDone = function () {
+    isDone() {
         return !this.loop && this.currentFrame >= this.sprites.length;
-    };
+    }
     /**
      * Not meant to be called by game developers. Ticks the animation forward internally and
      * calculates whether to change to the frame.
      * @internal
      */
-    AnimationImpl.prototype.tick = function (elapsed, idempotencyToken) {
+    tick(elapsed, idempotencyToken) {
         if (this._idempotencyToken === idempotencyToken) {
             return;
         }
@@ -228,39 +200,39 @@ var AnimationImpl = /** @class */ (function () {
             this._timeLeftInFrame = this.speed;
         }
         this._updateValues();
-        var current = this.sprites[this.currentFrame];
+        const current = this.sprites[this.currentFrame];
         if (current) {
             this.width = current.width;
             this.height = current.height;
             this.drawWidth = current.drawWidth;
             this.drawHeight = current.drawHeight;
         }
-    };
-    AnimationImpl.prototype._updateValues = function () {
+    }
+    _updateValues() {
         this._setAnchor(this.anchor);
         this._setRotation(this.rotation);
         this._setScale(this.scale);
-    };
+    }
     /**
      * Skips ahead a specified number of frames in the animation
      * @param frames  Frames to skip ahead
      */
-    AnimationImpl.prototype.skip = function (frames) {
+    skip(frames) {
         this.currentFrame = (this.currentFrame + frames) % this.sprites.length;
-    };
-    AnimationImpl.prototype.draw = function (ctxOrOptions, x, y) {
+    }
+    draw(ctxOrOptions, x, y) {
         if (ctxOrOptions instanceof CanvasRenderingContext2D) {
-            this._drawWithOptions({ ctx: ctxOrOptions, x: x, y: y });
+            this._drawWithOptions({ ctx: ctxOrOptions, x, y });
         }
         else {
             this._drawWithOptions(ctxOrOptions);
         }
-    };
-    AnimationImpl.prototype._drawWithOptions = function (options) {
+    }
+    _drawWithOptions(options) {
         var _a, _b, _c, _d, _e, _f, _g;
-        var animOptions = __assign(__assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, opacity: (_g = options.opacity) !== null && _g !== void 0 ? _g : this._opacity });
+        const animOptions = Object.assign(Object.assign({}, options), { rotation: (_a = options.rotation) !== null && _a !== void 0 ? _a : this.rotation, drawWidth: (_b = options.drawWidth) !== null && _b !== void 0 ? _b : this.drawWidth, drawHeight: (_c = options.drawHeight) !== null && _c !== void 0 ? _c : this.drawHeight, flipHorizontal: (_d = options.flipHorizontal) !== null && _d !== void 0 ? _d : this.flipHorizontal, flipVertical: (_e = options.flipVertical) !== null && _e !== void 0 ? _e : this.flipVertical, anchor: (_f = options.anchor) !== null && _f !== void 0 ? _f : this.anchor, opacity: (_g = options.opacity) !== null && _g !== void 0 ? _g : this._opacity });
         this._updateValues();
-        var currSprite;
+        let currSprite;
         if (this.currentFrame < this.sprites.length) {
             currSprite = this.sprites[this.currentFrame];
             currSprite.draw(animOptions);
@@ -274,29 +246,24 @@ var AnimationImpl = /** @class */ (function () {
             this.drawWidth = currSprite.drawWidth;
             this.drawHeight = currSprite.drawHeight;
         }
-    };
+    }
     /**
      * Plays an animation at an arbitrary location in the game.
      * @param x  The x position in the game to play
      * @param y  The y position in the game to play
      */
-    AnimationImpl.prototype.play = function (x, y) {
+    play(x, y) {
         this.reset();
         this._engine.playAnimation(this, x, y);
-    };
-    return AnimationImpl;
-}());
-export { AnimationImpl };
+    }
+}
 /**
  * Animations allow you to display a series of images one after another,
  * creating the illusion of change. Generally these images will come from a [[SpriteSheet]] source.
  */
-var Animation = /** @class */ (function (_super) {
-    __extends(Animation, _super);
-    function Animation(engineOrConfig, images, speed, loop) {
-        return _super.call(this, engineOrConfig, images, speed, loop) || this;
+export class Animation extends Configurable(AnimationImpl) {
+    constructor(engineOrConfig, images, speed, loop) {
+        super(engineOrConfig, images, speed, loop);
     }
-    return Animation;
-}(Configurable(AnimationImpl)));
-export { Animation };
+}
 //# sourceMappingURL=Animation.js.map

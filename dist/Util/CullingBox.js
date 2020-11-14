@@ -1,18 +1,18 @@
 import { Vector } from '../Algebra';
 import { Color } from '../Drawing/Color';
-var CullingBox = /** @class */ (function () {
-    function CullingBox() {
+export class CullingBox {
+    constructor() {
         this._topLeft = new Vector(0, 0);
         this._topRight = new Vector(0, 0);
         this._bottomLeft = new Vector(0, 0);
         this._bottomRight = new Vector(0, 0);
     }
-    CullingBox.prototype.isSpriteOffScreen = function (actor, engine) {
-        var drawingWidth = actor.currentDrawing.drawWidth;
-        var drawingHeight = actor.currentDrawing.drawHeight;
-        var rotation = actor.rotation;
-        var anchor = actor.center;
-        var worldPos = actor.getWorldPos();
+    isSpriteOffScreen(actor, engine) {
+        const drawingWidth = actor.currentDrawing.drawWidth;
+        const drawingHeight = actor.currentDrawing.drawHeight;
+        const rotation = actor.rotation;
+        const anchor = actor.center;
+        const worldPos = actor.getWorldPos();
         this._topLeft.x = worldPos.x - drawingWidth / 2;
         this._topLeft.y = worldPos.y - drawingHeight / 2;
         this._topLeft = this._topLeft.rotate(rotation, anchor);
@@ -26,10 +26,10 @@ var CullingBox = /** @class */ (function () {
         this._bottomRight.y = worldPos.y + drawingHeight / 2;
         this._bottomRight = this._bottomRight.rotate(rotation, anchor);
         ///
-        var topLeftScreen = engine.worldToScreenCoordinates(this._topLeft);
-        var topRightScreen = engine.worldToScreenCoordinates(this._topRight);
-        var bottomLeftScreen = engine.worldToScreenCoordinates(this._bottomLeft);
-        var bottomRightScreen = engine.worldToScreenCoordinates(this._bottomRight);
+        const topLeftScreen = engine.worldToScreenCoordinates(this._topLeft);
+        const topRightScreen = engine.worldToScreenCoordinates(this._topRight);
+        const bottomLeftScreen = engine.worldToScreenCoordinates(this._bottomLeft);
+        const bottomRightScreen = engine.worldToScreenCoordinates(this._bottomRight);
         this._xCoords = [];
         this._yCoords = [];
         this._xCoords.push(topLeftScreen.x, topRightScreen.x, bottomLeftScreen.x, bottomRightScreen.x);
@@ -38,13 +38,13 @@ var CullingBox = /** @class */ (function () {
         this._yMin = Math.min.apply(null, this._yCoords);
         this._xMax = Math.max.apply(null, this._xCoords);
         this._yMax = Math.max.apply(null, this._yCoords);
-        var minWorld = engine.screenToWorldCoordinates(new Vector(this._xMin, this._yMin));
-        var maxWorld = engine.screenToWorldCoordinates(new Vector(this._xMax, this._yMax));
+        const minWorld = engine.screenToWorldCoordinates(new Vector(this._xMin, this._yMin));
+        const maxWorld = engine.screenToWorldCoordinates(new Vector(this._xMax, this._yMax));
         this._xMinWorld = minWorld.x;
         this._yMinWorld = minWorld.y;
         this._xMaxWorld = maxWorld.x;
         this._yMaxWorld = maxWorld.y;
-        var boundingPoints = [
+        const boundingPoints = [
             new Vector(this._xMin, this._yMin),
             new Vector(this._xMax, this._yMin),
             new Vector(this._xMin, this._yMax),
@@ -65,7 +65,7 @@ var CullingBox = /** @class */ (function () {
             return false;
         }
         // otherwise if any corner is visible, we're not offscreen
-        for (var i = 0; i < boundingPoints.length; i++) {
+        for (let i = 0; i < boundingPoints.length; i++) {
             if (boundingPoints[i].x > 0 &&
                 boundingPoints[i].y > 0 &&
                 boundingPoints[i].x < engine.canvas.clientWidth &&
@@ -74,8 +74,8 @@ var CullingBox = /** @class */ (function () {
             }
         }
         return true;
-    };
-    CullingBox.prototype.debugDraw = function (ctx) {
+    }
+    debugDraw(ctx) {
         // bounding rectangle
         ctx.beginPath();
         ctx.strokeStyle = Color.White.toString();
@@ -101,8 +101,6 @@ var CullingBox = /** @class */ (function () {
         ctx.arc(this._bottomRight.x, this._bottomRight.y, 5, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
-    };
-    return CullingBox;
-}());
-export { CullingBox };
+    }
+}
 //# sourceMappingURL=CullingBox.js.map

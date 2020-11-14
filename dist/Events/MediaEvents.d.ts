@@ -1,7 +1,7 @@
 import { GameEvent } from '../Events';
 import { Sound } from '../Resources/Sound/Sound';
 import { Actor } from '../Actor';
-import { AudioInstance } from '../Resources/Sound/AudioInstance';
+import { WebAudioInstance } from '../Resources/Sound/WebAudioInstance';
 export declare class MediaEvent extends GameEvent<Sound> {
     target: Sound;
     protected _name: string;
@@ -37,8 +37,8 @@ export declare class MediaEvent extends GameEvent<Sound> {
     layPath(_actor: Actor): void;
 }
 export declare class NativeSoundEvent extends MediaEvent {
-    track?: AudioInstance;
-    constructor(target: Sound, track?: AudioInstance);
+    track?: WebAudioInstance;
+    constructor(target: Sound, track?: WebAudioInstance);
 }
 export declare class NativeSoundProcessedEvent extends MediaEvent {
     private _processedData;

@@ -6,12 +6,11 @@ import { Shape } from './Shape';
 /**
  * Body describes all the physical properties pos, vel, acc, rotation, angular velocity
  */
-var Body = /** @class */ (function () {
+export class Body {
     /**
      * Constructs a new physics body associated with an actor
      */
-    function Body(_a) {
-        var actor = _a.actor, collider = _a.collider;
+    constructor({ actor, collider }) {
         /**
          * The position of the actor last frame (x, y) in pixels
          */
@@ -82,130 +81,98 @@ var Body = /** @class */ (function () {
             this.collider = collider;
         }
     }
-    Object.defineProperty(Body.prototype, "id", {
-        get: function () {
-            return this.actor ? this.actor.id : -1;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    get id() {
+        return this.actor ? this.actor.id : -1;
+    }
     /**
      * Returns a clone of this body, not associated with any actor
      */
-    Body.prototype.clone = function () {
+    clone() {
         return new Body({
             actor: null,
             collider: this.collider.clone()
         });
-    };
-    Object.defineProperty(Body.prototype, "active", {
-        get: function () {
-            return this.actor ? !this.actor.isKilled() : false;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Body.prototype, "center", {
-        get: function () {
-            return this.pos;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Body.prototype, "collider", {
-        get: function () {
-            return this._collider;
-        },
-        // TODO allow multiple colliders for a single body
-        set: function (collider) {
-            if (collider) {
-                this._collider = collider;
-                this._collider.body = this;
-                this._wireColliderEventsToActor();
-            }
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Body.prototype, "transform", {
-        get: function () {
-            return this.actor.components.transform;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Body.prototype, "pos", {
-        /**
-         * The (x, y) position of the actor this will be in the middle of the actor if the
-         * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
-         * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
-         */
-        get: function () {
-            return this.transform.pos;
-        },
-        set: function (val) {
-            this.transform.pos = val;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Body.prototype, "rotation", {
-        /**
-         * The rotation of the actor in radians
-         */
-        get: function () {
-            return this.transform.rotation;
-        },
-        set: function (val) {
-            this.transform.rotation = val;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    get active() {
+        return this.actor ? !this.actor.isKilled() : false;
+    }
+    get center() {
+        return this.pos;
+    }
+    // TODO allow multiple colliders for a single body
+    set collider(collider) {
+        if (collider) {
+            this._collider = collider;
+            this._collider.body = this;
+            this._wireColliderEventsToActor();
+        }
+    }
+    get collider() {
+        return this._collider;
+    }
+    get transform() {
+        return this.actor.components.transform;
+    }
+    /**
+     * The (x, y) position of the actor this will be in the middle of the actor if the
+     * [[Actor.anchor]] is set to (0.5, 0.5) which is default.
+     * If you want the (x, y) position to be the top left of the actor specify an anchor of (0, 0).
+     */
+    get pos() {
+        return this.transform.pos;
+    }
+    set pos(val) {
+        this.transform.pos = val;
+    }
+    /**
+     * The rotation of the actor in radians
+     */
+    get rotation() {
+        return this.transform.rotation;
+    }
+    set rotation(val) {
+        this.transform.rotation = val;
+    }
     /**
      * Add minimum translation vectors accumulated during the current frame to resolve collisions.
      */
-    Body.prototype.addMtv = function (mtv) {
+    addMtv(mtv) {
         this._totalMtv.addEqual(mtv);
-    };
+    }
     /**
      * Applies the accumulated translation vectors to the actors position
      */
-    Body.prototype.applyMtv = function () {
+    applyMtv() {
         this.pos.addEqual(this._totalMtv);
         this._totalMtv.setTo(0, 0);
-    };
+    }
     /**
      * Flags the shape dirty and must be recalculated in world space
      */
-    Body.prototype.markCollisionShapeDirty = function () {
+    markCollisionShapeDirty() {
         this._geometryDirty = true;
-    };
-    Object.defineProperty(Body.prototype, "isColliderShapeDirty", {
-        get: function () {
-            return this._geometryDirty;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    }
+    get isColliderShapeDirty() {
+        return this._geometryDirty;
+    }
     /**
      * Sets the old versions of pos, vel, acc, and scale.
      */
-    Body.prototype.captureOldTransform = function () {
+    captureOldTransform() {
         // Capture old values before integration step updates them
         this.oldVel.setTo(this.vel.x, this.vel.y);
         this.oldPos.setTo(this.pos.x, this.pos.y);
         this.oldAcc.setTo(this.acc.x, this.acc.y);
         this.oldScale.setTo(this.scale.x, this.scale.y);
         this.oldRotation = this.rotation;
-    };
+    }
     /**
      * Perform euler integration at the specified time step
      */
-    Body.prototype.integrate = function (delta) {
+    integrate(delta) {
         // Update placements based on linear algebra
-        var seconds = delta / 1000;
-        var totalAcc = this.acc.clone();
+        const seconds = delta / 1000;
+        const totalAcc = this.acc.clone();
         // Only active vanilla actors are affected by global acceleration
         if (this.collider.type === CollisionType.Active) {
             totalAcc.addEqual(Physics.acc);
@@ -223,7 +190,7 @@ var Body = /** @class */ (function () {
         // Update colliders
         this.collider.update();
         this._geometryDirty = false;
-    };
+    }
     /**
      * Sets up a box geometry based on the current bounds of the associated actor of this physics body.
      *
@@ -231,9 +198,7 @@ var Body = /** @class */ (function () {
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useBoxCollider = function (width, height, anchor, center) {
-        if (anchor === void 0) { anchor = Vector.Half; }
-        if (center === void 0) { center = Vector.Zero; }
+    useBoxCollider(width, height, anchor = Vector.Half, center = Vector.Zero) {
         if (width === null || width === undefined) {
             width = this.actor ? this.actor.width : 0;
         }
@@ -242,7 +207,7 @@ var Body = /** @class */ (function () {
         }
         this.collider.shape = Shape.Box(width, height, anchor, center);
         return this.collider;
-    };
+    }
     /**
      * Sets up a [[ConvexPolygon|convex polygon]] collision geometry based on a list of of points relative
      *  to the anchor of the associated actor
@@ -252,57 +217,52 @@ var Body = /** @class */ (function () {
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.usePolygonCollider = function (points, center) {
-        if (center === void 0) { center = Vector.Zero; }
+    usePolygonCollider(points, center = Vector.Zero) {
         this.collider.shape = Shape.Polygon(points, false, center);
         return this.collider;
-    };
+    }
     /**
      * Sets up a [[Circle|circle collision geometry]] with a specified radius in pixels.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useCircleCollider = function (radius, center) {
-        if (center === void 0) { center = Vector.Zero; }
+    useCircleCollider(radius, center = Vector.Zero) {
         this.collider.shape = Shape.Circle(radius, center);
         return this.collider;
-    };
+    }
     /**
      * Sets up an [[Edge|edge collision geometry]] with a start point and an end point relative to the anchor of the associated actor
      * of this physics body.
      *
      * By default, the box is center is at (0, 0) which means it is centered around the actors anchor.
      */
-    Body.prototype.useEdgeCollider = function (begin, end) {
+    useEdgeCollider(begin, end) {
         this.collider.shape = Shape.Edge(begin, end);
         return this.collider;
-    };
+    }
     // TODO remove this, eventually events will stay local to the thing they are around
-    Body.prototype._wireColliderEventsToActor = function () {
-        var _this = this;
+    _wireColliderEventsToActor() {
         this.collider.clear();
-        this.collider.on('precollision', function (evt) {
-            if (_this.actor) {
-                _this.actor.emit('precollision', new PreCollisionEvent(evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+        this.collider.on('precollision', (evt) => {
+            if (this.actor) {
+                this.actor.emit('precollision', new PreCollisionEvent(evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
             }
         });
-        this.collider.on('postcollision', function (evt) {
-            if (_this.actor) {
-                _this.actor.emit('postcollision', new PostCollisionEvent(evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
+        this.collider.on('postcollision', (evt) => {
+            if (this.actor) {
+                this.actor.emit('postcollision', new PostCollisionEvent(evt.target.body.actor, evt.other.body.actor, evt.side, evt.intersection));
             }
         });
-        this.collider.on('collisionstart', function (evt) {
-            if (_this.actor) {
-                _this.actor.emit('collisionstart', new CollisionStartEvent(evt.target.body.actor, evt.other.body.actor, evt.pair));
+        this.collider.on('collisionstart', (evt) => {
+            if (this.actor) {
+                this.actor.emit('collisionstart', new CollisionStartEvent(evt.target.body.actor, evt.other.body.actor, evt.pair));
             }
         });
-        this.collider.on('collisionend', function (evt) {
-            if (_this.actor) {
-                _this.actor.emit('collisionend', new CollisionEndEvent(evt.target.body.actor, evt.other.body.actor));
+        this.collider.on('collisionend', (evt) => {
+            if (this.actor) {
+                this.actor.emit('collisionend', new CollisionEndEvent(evt.target.body.actor, evt.other.body.actor));
             }
         });
-    };
-    return Body;
-}());
-export { Body };
+    }
+}
 //# sourceMappingURL=Body.js.map

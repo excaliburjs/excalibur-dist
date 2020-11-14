@@ -3,7 +3,7 @@ import { Logger } from './Log';
  * This is the list of features that will be used to log the supported
  * features to the console when Detector.logBrowserFeatures() is called.
  */
-var REPORTED_FEATURES = {
+const REPORTED_FEATURES = {
     webgl: 'WebGL',
     webaudio: 'WebAudio',
     gamepadapi: 'Gamepad API'
@@ -11,20 +11,20 @@ var REPORTED_FEATURES = {
 /**
  * Excalibur internal feature detection helper class
  */
-var Detector = /** @class */ (function () {
-    function Detector() {
+export class Detector {
+    constructor() {
         this._features = null;
         this.failedTests = [];
         // critical browser features required for ex to run
         this._criticalTests = {
             // Test canvas/2d context support
             canvasSupport: function () {
-                var elem = document.createElement('canvas');
+                const elem = document.createElement('canvas');
                 return !!(elem.getContext && elem.getContext('2d'));
             },
             // Test array buffer support ex uses for downloading binary data
             arrayBufferSupport: function () {
-                var xhr = new XMLHttpRequest();
+                const xhr = new XMLHttpRequest();
                 xhr.open('GET', '/');
                 try {
                     xhr.responseType = 'arraybuffer';
@@ -36,7 +36,7 @@ var Detector = /** @class */ (function () {
             },
             // Test data urls ex uses for sprites
             dataUrlSupport: function () {
-                var canvas = document.createElement('canvas');
+                const canvas = document.createElement('canvas');
                 return canvas.toDataURL('image/png').indexOf('data:image/png') === 0;
             },
             // Test object url support for loading
@@ -45,7 +45,7 @@ var Detector = /** @class */ (function () {
             },
             // RGBA support for colors
             rgbaSupport: function () {
-                var style = document.createElement('a').style;
+                const style = document.createElement('a').style;
                 style.cssText = 'background-color:rgba(150,255,150,.5)';
                 return ('' + style.backgroundColor).indexOf('rgba') > -1;
             }
@@ -60,7 +60,7 @@ var Detector = /** @class */ (function () {
                     window.oAudioContext);
             },
             webglSupport: function () {
-                var elem = document.createElement('canvas');
+                const elem = document.createElement('canvas');
                 return !!(elem.getContext && elem.getContext('webgl'));
             }
         };
@@ -71,22 +71,21 @@ var Detector = /** @class */ (function () {
      * treats the features as a singleton and will only calculate feature
      * support if it has not previously been done.
      */
-    Detector.prototype.getBrowserFeatures = function () {
+    getBrowserFeatures() {
         if (this._features === null) {
             this._features = this._loadBrowserFeatures();
         }
         return this._features;
-    };
+    }
     /**
      * Report on non-critical browser support for debugging purposes.
      * Use native browser console colors for visibility.
      */
-    Detector.prototype.logBrowserFeatures = function () {
-        var msg = '%cSUPPORTED BROWSER FEATURES\n==========================%c\n';
-        var args = ['font-weight: bold; color: navy', 'font-weight: normal; color: inherit'];
-        var supported = this.getBrowserFeatures();
-        for (var _i = 0, _a = Object.keys(REPORTED_FEATURES); _i < _a.length; _i++) {
-            var feature = _a[_i];
+    logBrowserFeatures() {
+        let msg = '%cSUPPORTED BROWSER FEATURES\n==========================%c\n';
+        const args = ['font-weight: bold; color: navy', 'font-weight: normal; color: inherit'];
+        const supported = this.getBrowserFeatures();
+        for (const feature of Object.keys(REPORTED_FEATURES)) {
             if (supported[feature]) {
                 msg += '(%c\u2713%c)'; // (✓)
                 args.push('font-weight: bold; color: green');
@@ -102,52 +101,51 @@ var Detector = /** @class */ (function () {
         args.unshift(msg);
         // eslint-disable-next-line no-console
         console.log.apply(console, args);
-    };
+    }
     /**
      * Executes several IIFE's to get a constant reference to supported
      * features within the current execution context.
      */
-    Detector.prototype._loadBrowserFeatures = function () {
-        var _this = this;
+    _loadBrowserFeatures() {
         return {
             // IIFE to check canvas support
-            canvas: (function () {
-                return _this._criticalTests.canvasSupport();
+            canvas: (() => {
+                return this._criticalTests.canvasSupport();
             })(),
             // IIFE to check arraybuffer support
-            arraybuffer: (function () {
-                return _this._criticalTests.arrayBufferSupport();
+            arraybuffer: (() => {
+                return this._criticalTests.arrayBufferSupport();
             })(),
             // IIFE to check dataurl support
-            dataurl: (function () {
-                return _this._criticalTests.dataUrlSupport();
+            dataurl: (() => {
+                return this._criticalTests.dataUrlSupport();
             })(),
             // IIFE to check objecturl support
-            objecturl: (function () {
-                return _this._criticalTests.objectUrlSupport();
+            objecturl: (() => {
+                return this._criticalTests.objectUrlSupport();
             })(),
             // IIFE to check rgba support
-            rgba: (function () {
-                return _this._criticalTests.rgbaSupport();
+            rgba: (() => {
+                return this._criticalTests.rgbaSupport();
             })(),
             // IIFE to check webaudio support
-            webaudio: (function () {
-                return _this._warningTest.webAudioSupport();
+            webaudio: (() => {
+                return this._warningTest.webAudioSupport();
             })(),
             // IIFE to check webgl support
-            webgl: (function () {
-                return _this._warningTest.webglSupport();
+            webgl: (() => {
+                return this._warningTest.webglSupport();
             })(),
             // IIFE to check gamepadapi support
-            gamepadapi: (function () {
+            gamepadapi: (() => {
                 return !!navigator.getGamepads;
             })()
         };
-    };
-    Detector.prototype.test = function () {
+    }
+    test() {
         // Critical test will for ex not to run
-        var failedCritical = false;
-        for (var test in this._criticalTests) {
+        let failedCritical = false;
+        for (const test in this._criticalTests) {
             if (!this._criticalTests[test].call(this)) {
                 this.failedTests.push(test);
                 Logger.getInstance().error('Critical browser feature missing, Excalibur requires:', test);
@@ -158,14 +156,12 @@ var Detector = /** @class */ (function () {
             return false;
         }
         // Warning tests do not for ex to return false to compatibility
-        for (var warning in this._warningTest) {
+        for (const warning in this._warningTest) {
             if (!this._warningTest[warning]()) {
                 Logger.getInstance().warn('Warning browser feature missing, Excalibur will have reduced performance:', warning);
             }
         }
         return true;
-    };
-    return Detector;
-}());
-export { Detector };
+    }
+}
 //# sourceMappingURL=Detector.js.map

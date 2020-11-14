@@ -1,5 +1,4 @@
 import { Resource } from './Resource';
-import { Promise } from '../Promises';
 import { Sprite } from '../Drawing/Sprite';
 import { Texture } from './Texture';
 import { Color } from '../Drawing/Color';
@@ -30,9 +29,10 @@ export declare class Gif extends Resource<Texture[]> {
     private _isLoaded;
     private _stream;
     private _gif;
-    private _texture;
+    private _textures;
     private _animation;
     private _transparentColor;
+    private _loadedResolve;
     /**
      * Populated once loading is complete
      */

@@ -1,9 +1,9 @@
 import { GameEvent, SubscribeEvent, UnsubscribeEvent } from './Events';
-var EventDispatcher = /** @class */ (function () {
+export class EventDispatcher {
     /**
      * @param target  The object that will be the recipient of events from this event dispatcher
      */
-    function EventDispatcher(target) {
+    constructor(target) {
         this._handlers = {};
         this._wiredEventDispatchers = [];
         this._target = target;
@@ -11,27 +11,27 @@ var EventDispatcher = /** @class */ (function () {
     /**
      * Clears any existing handlers or wired event dispatchers on this event dispatcher
      */
-    EventDispatcher.prototype.clear = function () {
+    clear() {
         this._handlers = {};
         this._wiredEventDispatchers = [];
-    };
+    }
     /**
      * Emits an event for target
      * @param eventName  The name of the event to publish
      * @param event      Optionally pass an event data object to the handler
      */
-    EventDispatcher.prototype.emit = function (eventName, event) {
+    emit(eventName, event) {
         if (!eventName) {
             // key not mapped
             return;
         }
         eventName = eventName.toLowerCase();
-        var target = this._target;
+        const target = this._target;
         if (!event) {
             event = new GameEvent();
         }
         event.target = target;
-        var i, len;
+        let i, len;
         if (this._handlers[eventName]) {
             i = 0;
             len = this._handlers[eventName].length;
@@ -44,13 +44,13 @@ var EventDispatcher = /** @class */ (function () {
         for (i; i < len; i++) {
             this._wiredEventDispatchers[i].emit(eventName, event);
         }
-    };
+    }
     /**
      * Subscribe an event handler to a particular event name, multiple handlers per event name are allowed.
      * @param eventName  The name of the event to subscribe to
      * @param handler    The handler callback to fire on this event
      */
-    EventDispatcher.prototype.on = function (eventName, handler) {
+    on(eventName, handler) {
         eventName = eventName.toLowerCase();
         if (!this._handlers[eventName]) {
             this._handlers[eventName] = [];
@@ -60,7 +60,7 @@ var EventDispatcher = /** @class */ (function () {
         if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
             this.emit('subscribe', new SubscribeEvent(eventName, handler));
         }
-    };
+    }
     /**
      * Unsubscribe an event handler(s) from an event. If a specific handler
      * is specified for an event, only that handler will be unsubscribed.
@@ -70,16 +70,16 @@ var EventDispatcher = /** @class */ (function () {
      * @param handler    Optionally the specific handler to unsubscribe
      *
      */
-    EventDispatcher.prototype.off = function (eventName, handler) {
+    off(eventName, handler) {
         eventName = eventName.toLowerCase();
-        var eventHandlers = this._handlers[eventName];
+        const eventHandlers = this._handlers[eventName];
         if (eventHandlers) {
             // if no explicit handler is give with the event name clear all handlers
             if (!handler) {
                 this._handlers[eventName].length = 0;
             }
             else {
-                var index = eventHandlers.indexOf(handler);
+                const index = eventHandlers.indexOf(handler);
                 this._handlers[eventName].splice(index, 1);
             }
         }
@@ -87,39 +87,36 @@ var EventDispatcher = /** @class */ (function () {
         if (eventName !== 'unsubscribe' && eventName !== 'subscribe') {
             this.emit('unsubscribe', new UnsubscribeEvent(eventName, handler));
         }
-    };
+    }
     /**
      * Once listens to an event one time, then unsubscribes from that event
      *
      * @param eventName The name of the event to subscribe to once
      * @param handler   The handler of the event that will be auto unsubscribed
      */
-    EventDispatcher.prototype.once = function (eventName, handler) {
-        var _this = this;
-        var metaHandler = function (event) {
-            var ev = event || new GameEvent();
-            ev.target = ev.target || _this._target;
-            _this.off(eventName, handler);
+    once(eventName, handler) {
+        const metaHandler = (event) => {
+            const ev = event || new GameEvent();
+            ev.target = ev.target || this._target;
+            this.off(eventName, handler);
             handler.call(ev.target, ev);
         };
         this.on(eventName, metaHandler);
-    };
+    }
     /**
      * Wires this event dispatcher to also receive events from another
      */
-    EventDispatcher.prototype.wire = function (eventDispatcher) {
+    wire(eventDispatcher) {
         eventDispatcher._wiredEventDispatchers.push(this);
-    };
+    }
     /**
      * Unwires this event dispatcher from another
      */
-    EventDispatcher.prototype.unwire = function (eventDispatcher) {
-        var index = eventDispatcher._wiredEventDispatchers.indexOf(this);
+    unwire(eventDispatcher) {
+        const index = eventDispatcher._wiredEventDispatchers.indexOf(this);
         if (index > -1) {
             eventDispatcher._wiredEventDispatchers.splice(index, 1);
         }
-    };
-    return EventDispatcher;
-}());
-export { EventDispatcher };
+    }
+}
 //# sourceMappingURL=EventDispatcher.js.map

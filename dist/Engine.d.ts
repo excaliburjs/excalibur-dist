@@ -1,6 +1,5 @@
 import { CanUpdate, CanDraw, CanInitialize } from './Interfaces/LifecycleEvents';
 import { Loadable } from './Interfaces/Loadable';
-import { Promise } from './Promises';
 import { Vector } from './Algebra';
 import { Screen, DisplayMode, AbsolutePosition, ScreenDimension } from './Screen';
 import { ScreenElement } from './ScreenElement';
@@ -8,8 +7,8 @@ import { Actor } from './Actor';
 import { Timer } from './Timer';
 import { TileMap } from './TileMap';
 import { Animation } from './Drawing/Animation';
+import { Loader } from './Loader';
 import { VisibleEvent, HiddenEvent, GameStartEvent, GameStopEvent, PreUpdateEvent, PostUpdateEvent, PreFrameEvent, PostFrameEvent, GameEvent, PreDrawEvent, PostDrawEvent } from './Events';
-import { CanLoad } from './Interfaces/Loader';
 import { Color } from './Drawing/Color';
 import { Scene } from './Scene';
 import { PostProcessor } from './PostProcessing/PostProcessor';
@@ -545,7 +544,7 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * @param loader  Optional [[Loader]] to use to load resources. The default loader is [[Loader]], override to provide your own
      * custom loader.
      */
-    start(loader?: CanLoad): Promise<any>;
+    start(loader?: Loader): Promise<any>;
     static createMainLoop(game: Engine, raf: (func: Function) => number, nowFn: () => number): () => void;
     /**
      * Stops Excalibur's main loop, useful for pausing the game.

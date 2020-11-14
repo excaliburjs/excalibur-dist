@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { Color } from './Drawing/Color';
 import { ActionQueue } from './Actions/Action';
 import { EventDispatcher } from './EventDispatcher';
@@ -19,15 +6,15 @@ import { Vector } from './Algebra';
 import { ExitTriggerEvent, EnterTriggerEvent } from './Events';
 import * as Util from './Util/Util';
 import { CollisionType } from './Collision/CollisionType';
-var triggerDefaults = {
+const triggerDefaults = {
     pos: Vector.Zero,
     width: 10,
     height: 10,
     visible: false,
-    action: function () {
+    action: () => {
         return;
     },
-    filter: function () { return true; },
+    filter: () => true,
     repeat: -1
 };
 /**
@@ -35,83 +22,77 @@ var triggerDefaults = {
  * as 'buttons', 'switches', or to trigger effects in a game. By default triggers
  * are invisible, and can only be seen when [[Trigger.visible]] is set to `true`.
  */
-var Trigger = /** @class */ (function (_super) {
-    __extends(Trigger, _super);
+export class Trigger extends Actor {
     /**
      *
      * @param opts Trigger options
      */
-    function Trigger(opts) {
-        var _this = _super.call(this, opts.pos.x, opts.pos.y, opts.width, opts.height) || this;
+    constructor(opts) {
+        super(opts.pos.x, opts.pos.y, opts.width, opts.height);
         /**
          * Action to fire when triggered by collision
          */
-        _this.action = function () {
+        this.action = () => {
             return;
         };
         /**
          * Filter to add additional granularity to action dispatch, if a filter is specified the action will only fire when
          * filter return true for the collided actor.
          */
-        _this.filter = function () { return true; };
+        this.filter = () => true;
         /**
          * Number of times to repeat before killing the trigger,
          */
-        _this.repeat = -1;
+        this.repeat = -1;
         opts = Util.extend({}, triggerDefaults, opts);
-        _this.filter = opts.filter || _this.filter;
-        _this.repeat = opts.repeat || _this.repeat;
-        _this.action = opts.action || _this.action;
+        this.filter = opts.filter || this.filter;
+        this.repeat = opts.repeat || this.repeat;
+        this.action = opts.action || this.action;
         if (opts.target) {
-            _this.target = opts.target;
+            this.target = opts.target;
         }
-        _this.visible = opts.visible;
-        _this.body.collider.type = CollisionType.Passive;
-        _this.eventDispatcher = new EventDispatcher(_this);
-        _this.actionQueue = new ActionQueue(_this);
-        _this.on('collisionstart', function (evt) {
-            if (isActor(evt.other) && _this.filter(evt.other)) {
-                _this.emit('enter', new EnterTriggerEvent(_this, evt.other));
-                _this._dispatchAction();
+        this.visible = opts.visible;
+        this.body.collider.type = CollisionType.Passive;
+        this.eventDispatcher = new EventDispatcher(this);
+        this.actionQueue = new ActionQueue(this);
+        this.on('collisionstart', (evt) => {
+            if (isActor(evt.other) && this.filter(evt.other)) {
+                this.emit('enter', new EnterTriggerEvent(this, evt.other));
+                this._dispatchAction();
                 // remove trigger if its done, -1 repeat forever
-                if (_this.repeat === 0) {
-                    _this.kill();
+                if (this.repeat === 0) {
+                    this.kill();
                 }
             }
         });
-        _this.on('collisionend', function (evt) {
-            if (isActor(evt.other) && _this.filter(evt.other)) {
-                _this.emit('exit', new ExitTriggerEvent(_this, evt.other));
+        this.on('collisionend', (evt) => {
+            if (isActor(evt.other) && this.filter(evt.other)) {
+                this.emit('exit', new ExitTriggerEvent(this, evt.other));
             }
         });
-        return _this;
     }
-    Object.defineProperty(Trigger.prototype, "target", {
-        get: function () {
-            return this._target;
-        },
-        set: function (target) {
-            this._target = target;
-            this.filter = function (actor) { return actor === target; };
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Trigger.prototype._initialize = function (engine) {
-        _super.prototype._initialize.call(this, engine);
-    };
-    Trigger.prototype._dispatchAction = function () {
+    set target(target) {
+        this._target = target;
+        this.filter = (actor) => actor === target;
+    }
+    get target() {
+        return this._target;
+    }
+    _initialize(engine) {
+        super._initialize(engine);
+    }
+    _dispatchAction() {
         this.action.call(this);
         this.repeat--;
-    };
+    }
     /* istanbul ignore next */
-    Trigger.prototype.debugDraw = function (ctx) {
-        _super.prototype.debugDraw.call(this, ctx);
+    debugDraw(ctx) {
+        super.debugDraw(ctx);
         // Meant to draw debug information about actors
         ctx.save();
         ctx.translate(this.pos.x, this.pos.y);
-        var bb = this.body.collider.bounds;
-        var wp = this.getWorldPos();
+        const bb = this.body.collider.bounds;
+        const wp = this.getWorldPos();
         bb.left = bb.left - wp.x;
         bb.right = bb.right - wp.x;
         bb.top = bb.top - wp.y;
@@ -123,8 +104,6 @@ var Trigger = /** @class */ (function (_super) {
         ctx.fillText('Trigger', 10, 10);
         bb.debugDraw(ctx);
         ctx.restore();
-    };
-    return Trigger;
-}(Actor));
-export { Trigger };
+    }
+}
 //# sourceMappingURL=Trigger.js.map

@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 import { Logger } from '../Util/Log';
 import { Class } from '../Class';
 import * as Events from '../Events';
@@ -161,39 +148,32 @@ export var Keys;
 /**
  * Event thrown on a game object for a key event
  */
-var KeyEvent = /** @class */ (function (_super) {
-    __extends(KeyEvent, _super);
+export class KeyEvent extends Events.GameEvent {
     /**
      * @param key  The key responsible for throwing the event
      */
-    function KeyEvent(key) {
-        var _this = _super.call(this) || this;
-        _this.key = key;
-        return _this;
+    constructor(key) {
+        super();
+        this.key = key;
     }
-    return KeyEvent;
-}(Events.GameEvent));
-export { KeyEvent };
+}
 /**
  * Provides keyboard support for Excalibur.
  */
-var Keyboard = /** @class */ (function (_super) {
-    __extends(Keyboard, _super);
-    function Keyboard() {
-        var _this = _super.call(this) || this;
-        _this._keys = [];
-        _this._keysUp = [];
-        _this._keysDown = [];
-        return _this;
+export class Keyboard extends Class {
+    constructor() {
+        super();
+        this._keys = [];
+        this._keysUp = [];
+        this._keysDown = [];
     }
-    Keyboard.prototype.on = function (eventName, handler) {
-        _super.prototype.on.call(this, eventName, handler);
-    };
+    on(eventName, handler) {
+        super.on(eventName, handler);
+    }
     /**
      * Initialize Keyboard event listeners
      */
-    Keyboard.prototype.init = function (global) {
-        var _this = this;
+    init(global) {
         if (!global) {
             try {
                 // Try and listen to events on top window frame if within an iframe.
@@ -202,7 +182,7 @@ var Keyboard = /** @class */ (function (_super) {
                 //
                 // Attempt to add an event listener, which triggers a DOMException on
                 // cross-origin iframes
-                var noop = function () {
+                const noop = () => {
                     return;
                 };
                 window.top.addEventListener('blur', noop);
@@ -217,69 +197,67 @@ var Keyboard = /** @class */ (function (_super) {
                     'If you are trying to embed Excalibur in a cross-origin iframe, keyboard events will not fire.');
             }
         }
-        global.addEventListener('blur', function () {
-            _this._keys.length = 0; // empties array efficiently
+        global.addEventListener('blur', () => {
+            this._keys.length = 0; // empties array efficiently
         });
         // key up is on window because canvas cannot have focus
-        global.addEventListener('keyup', function (ev) {
-            var code = ev.code;
-            var key = _this._keys.indexOf(code);
-            _this._keys.splice(key, 1);
-            _this._keysUp.push(code);
-            var keyEvent = new KeyEvent(code);
+        global.addEventListener('keyup', (ev) => {
+            const code = ev.code;
+            const key = this._keys.indexOf(code);
+            this._keys.splice(key, 1);
+            this._keysUp.push(code);
+            const keyEvent = new KeyEvent(code);
             // alias the old api, we may want to deprecate this in the future
-            _this.eventDispatcher.emit('up', keyEvent);
-            _this.eventDispatcher.emit('release', keyEvent);
+            this.eventDispatcher.emit('up', keyEvent);
+            this.eventDispatcher.emit('release', keyEvent);
         });
         // key down is on window because canvas cannot have focus
-        global.addEventListener('keydown', function (ev) {
-            var code = ev.code;
-            if (_this._keys.indexOf(code) === -1) {
-                _this._keys.push(code);
-                _this._keysDown.push(code);
-                var keyEvent = new KeyEvent(code);
-                _this.eventDispatcher.emit('down', keyEvent);
-                _this.eventDispatcher.emit('press', keyEvent);
+        global.addEventListener('keydown', (ev) => {
+            const code = ev.code;
+            if (this._keys.indexOf(code) === -1) {
+                this._keys.push(code);
+                this._keysDown.push(code);
+                const keyEvent = new KeyEvent(code);
+                this.eventDispatcher.emit('down', keyEvent);
+                this.eventDispatcher.emit('press', keyEvent);
             }
         });
-    };
-    Keyboard.prototype.update = function () {
+    }
+    update() {
         // Reset keysDown and keysUp after update is complete
         this._keysDown.length = 0;
         this._keysUp.length = 0;
         // Emit synthetic "hold" event
-        for (var i = 0; i < this._keys.length; i++) {
+        for (let i = 0; i < this._keys.length; i++) {
             this.eventDispatcher.emit('hold', new KeyEvent(this._keys[i]));
         }
-    };
+    }
     /**
      * Gets list of keys being pressed down
      */
-    Keyboard.prototype.getKeys = function () {
+    getKeys() {
         return this._keys;
-    };
+    }
     /**
      * Tests if a certain key was just pressed this frame. This is cleared at the end of the update frame.
      * @param key Test whether a key was just pressed
      */
-    Keyboard.prototype.wasPressed = function (key) {
+    wasPressed(key) {
         return this._keysDown.indexOf(key) > -1;
-    };
+    }
     /**
      * Tests if a certain key is held down. This is persisted between frames.
      * @param key  Test whether a key is held down
      */
-    Keyboard.prototype.isHeld = function (key) {
+    isHeld(key) {
         return this._keys.indexOf(key) > -1;
-    };
+    }
     /**
      * Tests if a certain key was just released this frame. This is cleared at the end of the update frame.
      * @param key  Test whether a key was just released
      */
-    Keyboard.prototype.wasReleased = function (key) {
+    wasReleased(key) {
         return this._keysUp.indexOf(key) > -1;
-    };
-    return Keyboard;
-}(Class));
-export { Keyboard };
+    }
+}
 //# sourceMappingURL=Keyboard.js.map

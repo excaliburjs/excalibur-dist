@@ -2,7 +2,7 @@
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-export var EX_VERSION = process.env.__EX_VERSION;
+export const EX_VERSION = process.env.__EX_VERSION;
 import { polyfill } from './Polyfill';
 polyfill();
 // This file is used as the bundle entry point and exports everything
@@ -24,7 +24,6 @@ export { Label, FontStyle, FontUnit, TextAlign, BaseAlign } from './Label';
 export * from './Loader';
 export { Particle, ParticleEmitter, EmitterType } from './Particles';
 export * from './Physics';
-export * from './Promises';
 export * from './Scene';
 export { TileMap, Cell, TileSprite } from './TileMap';
 export * from './Timer';
@@ -58,6 +57,7 @@ export * from './Util/EasingFunctions';
 export * from './Util/Log';
 export * from './Util/SortedList';
 // ex.Deprecated
+export * from './Promises';
 // import * as deprecated from './Deprecated';
 // export { deprecated as Deprecated };
 // export * from './Deprecated';

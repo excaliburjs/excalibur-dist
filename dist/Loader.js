@@ -1,11 +1,19 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { Color } from './Drawing/Color';
 import { WebAudio } from './Util/WebAudio';
-import { Logger } from './Util/Log';
 import { Class } from './Class';
 import * as DrawUtil from './Util/DrawUtil';
 import logoImg from './Loader.logo.png';
 import loaderCss from './Loader.css';
-import { clamp } from './Util/Util';
+import { clamp, delay } from './Util/Util';
 /**
  * Pre-loading assets
  *
@@ -114,25 +122,6 @@ export class Loader extends Class {
             buttonElement.style.display = 'none';
             return buttonElement;
         };
-        this.getData = () => {
-            return;
-        };
-        this.setData = () => {
-            return;
-        };
-        this.processData = () => {
-            return;
-        };
-        this.onprogress = (e) => {
-            Logger.getInstance().debug('[ex.Loader] Loading ' + ((100 * e.loaded) / e.total).toFixed(0));
-            return;
-        };
-        this.oncomplete = () => {
-            return;
-        };
-        this.onerror = () => {
-            return;
-        };
         if (loadables) {
             this.addResources(loadables);
         }
@@ -234,78 +223,29 @@ export class Loader extends Class {
             this._styleBlock = null;
         }
     }
+    update(_engine, _delta) {
+        // override me
+    }
     /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
      */
     load() {
-        const complete = new Promise((resolve) => {
-            const me = this;
-            if (this._resourceList.length === 0) {
-                me.showPlayButton().then(() => {
-                    // Unlock audio context in chrome after user gesture
-                    // https://github.com/excaliburjs/Excalibur/issues/262
-                    // https://github.com/excaliburjs/Excalibur/issues/1031
-                    WebAudio.unlock().then(() => {
-                        me.hidePlayButton();
-                        me.oncomplete.call(me);
-                        resolve();
-                    });
-                });
-                return;
-            }
-            const progressArray = new Array(this._resourceList.length);
-            const progressChunks = this._resourceList.length;
-            for (const index in this._resourceList) {
-                const resource = this._resourceList[index];
-                if (this._engine) {
-                    resource.wireEngine(this._engine);
-                }
-                resource.onprogress = (e) => {
-                    const total = e.total;
-                    const loaded = e.loaded;
-                    progressArray[index] = { loaded: (loaded / total) * (100 / progressChunks), total: 100 };
-                    const progressResult = progressArray.reduce(function (accum, next) {
-                        return { loaded: accum.loaded + next.loaded, total: 100 };
-                    }, { loaded: 0, total: 100 });
-                    me.onprogress.call(me, progressResult);
-                };
-                resource.oncomplete = resource.onerror = () => {
-                    me._numLoaded++;
-                    if (me._numLoaded === me._resourceCount) {
-                        setTimeout(() => {
-                            me.showPlayButton().then(() => {
-                                // Unlock audio context in chrome after user gesture
-                                // https://github.com/excaliburjs/Excalibur/issues/262
-                                // https://github.com/excaliburjs/Excalibur/issues/1031
-                                WebAudio.unlock().then(() => {
-                                    me.hidePlayButton();
-                                    me.oncomplete.call(me);
-                                    resolve();
-                                });
-                            });
-                        }, 200); // short delay in showing the button for aesthetics
-                    }
-                };
-            }
-            const loadNext = (list, index) => {
-                if (!list[index]) {
-                    return;
-                }
-                list[index].load().then(() => {
-                    loadNext(list, index + 1);
-                });
-            };
-            loadNext(this._resourceList, 0);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Promise.all(this._resourceList.map(r => r.load().finally(() => {
+                // capture progress
+                this._numLoaded++;
+            })));
+            // short delay in showing the button for aesthetics
+            yield delay(200);
+            yield this.showPlayButton();
+            // Unlock browser AudioContext in after user gesture
+            // See: https://github.com/excaliburjs/Excalibur/issues/262
+            // See: https://github.com/excaliburjs/Excalibur/issues/1031
+            yield WebAudio.unlock();
+            this.hidePlayButton();
+            return this.data = this._resourceList;
         });
-        return complete;
-    }
-    updateResourceProgress(loadedBytes, totalBytes) {
-        const chunkSize = 100 / this._resourceCount;
-        const resourceProgress = loadedBytes / totalBytes;
-        // This only works if we load 1 resource at a time
-        const totalProgress = resourceProgress * chunkSize + this.progress * 100;
-        this.onprogress({ loaded: totalProgress, total: 100 });
     }
     markResourceComplete() {
         this._numLoaded++;
@@ -375,13 +315,6 @@ export class Loader extends Class {
         const height = 20 - margin * 2;
         DrawUtil.roundRect(ctx, loadingX + margin, loadingY + margin, progressWidth > 10 ? progressWidth : 10, height, 5, null, this.loadingBarColor);
         this._engine.setAntialiasing(oldAntialias);
-    }
-    /**
-     * Perform any calculations or logic in the `update` method. The default `Loader` does not
-     * do anything in this method so it is safe to override.
-     */
-    update(_engine, _delta) {
-        // overridable update
     }
 }
 //# sourceMappingURL=Loader.js.map

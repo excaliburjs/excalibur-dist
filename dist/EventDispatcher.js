@@ -30,7 +30,12 @@ export class EventDispatcher {
         if (!event) {
             event = new GameEvent();
         }
-        event.target = target;
+        try {
+            event.target = target;
+        }
+        catch (_a) {
+            // pass
+        }
         let i, len;
         if (this._handlers[eventName]) {
             i = 0;
@@ -97,7 +102,12 @@ export class EventDispatcher {
     once(eventName, handler) {
         const metaHandler = (event) => {
             const ev = event || new GameEvent();
-            ev.target = ev.target || this._target;
+            try {
+                ev.target = ev.target || this._target;
+            }
+            catch (_a) {
+                // pass
+            }
             this.off(eventName, handler);
             handler.call(ev.target, ev);
         };

@@ -1,19 +1,20 @@
-import { Resource } from './Resource';
 import { Sprite } from '../Drawing/Sprite';
 import { Texture } from './Texture';
 import { Color } from '../Drawing/Color';
 import { SpriteSheet } from '../Drawing/SpriteSheet';
 import { Animation } from '../Drawing/Animation';
 import { Engine } from '../Engine';
+import { Loadable } from '../Interfaces/Index';
 /**
  * The [[Texture]] object allows games built in Excalibur to load image resources.
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-export declare class Gif extends Resource<Texture[]> {
+export declare class Gif implements Loadable<Texture[]> {
     path: string;
     color: Color;
     bustCache: boolean;
+    private _resource;
     /**
      * The width of the texture in pixels
      */
@@ -22,21 +23,12 @@ export declare class Gif extends Resource<Texture[]> {
      * The height of the texture in pixels
      */
     height: number;
-    /**
-     * A [[Promise]] that resolves when the Texture is loaded.
-     */
-    loaded: Promise<any>;
-    private _isLoaded;
     private _stream;
     private _gif;
     private _textures;
     private _animation;
     private _transparentColor;
-    private _loadedResolve;
-    /**
-     * Populated once loading is complete
-     */
-    images: HTMLImageElement;
+    data: Texture[];
     /**
      * @param path       Path to the image resource
      * @param color      Optionally set the color to treat as transparent the gif, by default [[Color.Magenta]]
@@ -44,14 +36,10 @@ export declare class Gif extends Resource<Texture[]> {
      */
     constructor(path: string, color?: Color, bustCache?: boolean);
     /**
-     * Returns true if the Texture is completely loaded and is ready
-     * to be drawn.
-     */
-    isLoaded(): boolean;
-    /**
      * Begins loading the texture and returns a promise to be resolved on completion
      */
     load(): Promise<Texture[]>;
+    isLoaded(): boolean;
     asSprite(id?: number): Sprite;
     asSpriteSheet(): SpriteSheet;
     asAnimation(engine: Engine, speed: number): Animation;

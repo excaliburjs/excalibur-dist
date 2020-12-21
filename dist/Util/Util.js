@@ -378,4 +378,15 @@ Collection.DefaultSize = 200;
 export function fail(message) {
     throw new Error(message);
 }
+/**
+ * Create a promise that resolves after a certain number of milliseconds
+ * @param milliseconds
+ */
+export function delay(milliseconds) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    });
+}
 //# sourceMappingURL=Util.js.map

@@ -1,12 +1,17 @@
 import { Audio } from '../../Interfaces/Audio';
 import { Engine } from '../../Engine';
-import { Resource } from '../Resource';
+import { Loadable } from '../../Interfaces/Index';
+import { Logger } from '../../Util/Log';
+import { Class } from '../../Class';
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  */
-export declare class Sound extends Resource<ArrayBuffer> implements Audio {
+export declare class Sound extends Class implements Audio, Loadable<AudioBuffer> {
+    logger: Logger;
+    data: AudioBuffer;
+    private _resource;
     /**
      * Indicates whether the clip should loop when complete
      * @param value  Set the looping flag
@@ -20,7 +25,8 @@ export declare class Sound extends Resource<ArrayBuffer> implements Audio {
      * Return array of Current AudioInstances playing or being paused
      */
     get instances(): Audio[];
-    path: string;
+    get path(): string;
+    set path(val: string);
     private _loop;
     private _volume;
     private _duration;
@@ -29,13 +35,14 @@ export declare class Sound extends Resource<ArrayBuffer> implements Audio {
     private _tracks;
     private _engine;
     private _wasPlayingOnHidden;
-    private _processedDataResolve;
-    private _processedData;
     private _audioContext;
     /**
      * @param paths A list of audio sources (clip.wav, clip.mp3, clip.ogg) for this audio clip. This is done for browser compatibility.
      */
     constructor(...paths: string[]);
+    isLoaded(): boolean;
+    load(): Promise<AudioBuffer>;
+    decodeAudio(data: ArrayBuffer): Promise<AudioBuffer>;
     wireEngine(engine: Engine): void;
     /**
      * Returns how many instances of the sound are currently playing
@@ -58,8 +65,6 @@ export declare class Sound extends Resource<ArrayBuffer> implements Audio {
      * Stop the sound if it is currently playing and rewind the track. If the sound is not playing, rewinds the track.
      */
     stop(): void;
-    setData(data: any): void;
-    processData(data: ArrayBuffer): Promise<AudioBuffer>;
     /**
      * Get Id of provided AudioInstance in current trackList
      * @param track [[AudioInstance]] which Id is to be given
@@ -70,8 +75,5 @@ export declare class Sound extends Resource<ArrayBuffer> implements Audio {
      * Starts playback, returns a promise that resolves when playback is complete
      */
     private _startPlayback;
-    private _processArrayBufferData;
-    private _setProcessedData;
-    private _createNewTrack;
     private _getTrackInstance;
 }

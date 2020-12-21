@@ -565,5 +565,5 @@ export declare class Engine extends Class implements CanInitialize, CanUpdate, C
      * will appear.
      * @param loader  Some [[Loadable]] such as a [[Loader]] collection, [[Sound]], or [[Texture]].
      */
-    load(loader: Loadable): Promise<any>;
+    load(loader: Loadable<any>): Promise<any>;
 }

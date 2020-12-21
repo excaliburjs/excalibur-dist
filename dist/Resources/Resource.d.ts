@@ -1,17 +1,17 @@
 import { Loadable } from '../Interfaces/Loadable';
-import { Class } from '../Class';
-import { Engine } from '../Engine';
 import { Logger } from '../Util/Log';
+import { EventDispatcher } from '../EventDispatcher';
 /**
  * The [[Resource]] type allows games built in Excalibur to load generic resources.
  * For any type of remote resource it is recommended to use [[Resource]] for preloading.
  */
-export declare class Resource<T> extends Class implements Loadable<T> {
+export declare class Resource<T> implements Loadable<T> {
     path: string;
     responseType: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
     bustCache: boolean;
     data: T;
     logger: Logger;
+    events: EventDispatcher;
     /**
      * @param path          Path to the remote resource
      * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
@@ -23,27 +23,9 @@ export declare class Resource<T> extends Class implements Loadable<T> {
      * to be drawn.
      */
     isLoaded(): boolean;
-    wireEngine(_engine: Engine): void;
     private _cacheBust;
-    private _start;
     /**
      * Begin loading the resource and returns a promise to be resolved on completion
      */
-    load(): Promise<any>;
-    /**
-     * Returns the loaded data once the resource is loaded
-     */
-    getData(): any;
-    /**
-     * Sets the data for this resource directly
-     */
-    setData(data: any): void;
-    /**
-     * This method is meant to be overridden to handle any additional
-     * processing. Such as decoding downloaded audio bits.
-     */
-    processData(data: T): any;
-    onprogress: (e: any) => void;
-    oncomplete: () => void;
-    onerror: (e: any) => void;
+    load(): Promise<T>;
 }

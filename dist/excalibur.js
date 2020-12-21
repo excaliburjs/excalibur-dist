@@ -1,5 +1,5 @@
 /*!
- * excalibur - 0.25.0-alpha.7609+44dbd4f - 2020-12-11
+ * excalibur - 0.25.0-alpha.7656+9e66a0d - 2020-12-21
  * https://github.com/excaliburjs/Excalibur
  * Copyright (c) 2020 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>
  * Licensed BSD-2-Clause
@@ -15343,7 +15343,7 @@ O|===|* >________________>\n\
         const ctx = this.ctx;
         this._predraw(ctx, delta);
         if (this._isLoading) {
-            this._loader.draw(ctx, delta);
+            this._loader.draw(ctx);
             // Drawing nothing else while loading
             return;
         }
@@ -16703,7 +16703,12 @@ class EventDispatcher {
         if (!event) {
             event = new _Events__WEBPACK_IMPORTED_MODULE_0__["GameEvent"]();
         }
-        event.target = target;
+        try {
+            event.target = target;
+        }
+        catch (_a) {
+            // pass
+        }
         let i, len;
         if (this._handlers[eventName]) {
             i = 0;
@@ -16770,7 +16775,12 @@ class EventDispatcher {
     once(eventName, handler) {
         const metaHandler = (event) => {
             const ev = event || new _Events__WEBPACK_IMPORTED_MODULE_0__["GameEvent"]();
-            ev.target = ev.target || this._target;
+            try {
+                ev.target = ev.target || this._target;
+            }
+            catch (_a) {
+                // pass
+            }
             this.off(eventName, handler);
             handler.call(ev.target, ev);
         };
@@ -19258,27 +19268,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Drawable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Drawable */ "./Interfaces/Drawable.ts");
 /* empty/unused harmony star reexport *//* harmony import */ var _Evented__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Evented */ "./Interfaces/Evented.ts");
 /* empty/unused harmony star reexport *//* harmony import */ var _Loadable__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loadable */ "./Interfaces/Loadable.ts");
-/* empty/unused harmony star reexport *//* harmony import */ var _Loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader */ "./Interfaces/Loader.ts");
-/* empty/unused harmony star reexport *//* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_initialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_initialize"]; });
+/* empty/unused harmony star reexport *//* harmony import */ var _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./LifecycleEvents */ "./Interfaces/LifecycleEvents.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_initialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["has_initialize"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnInitialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnInitialize"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnInitialize", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["hasOnInitialize"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_preupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_preupdate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_preupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["has_preupdate"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPreUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnPreUpdate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPreUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["hasOnPreUpdate"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_postupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["has_postupdate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "has_postupdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["has_postupdate"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasOnPostUpdate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasOnPostUpdate", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["hasOnPostUpdate"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasPreDraw"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPreDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["hasPreDraw"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_7__["hasPostDraw"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "hasPostDraw", function() { return _LifecycleEvents__WEBPACK_IMPORTED_MODULE_6__["hasPostDraw"]; });
 
-/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
+/* harmony import */ var _PointerEventHandlers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./PointerEventHandlers */ "./Interfaces/PointerEventHandlers.ts");
 /* empty/unused harmony star reexport */
-
 
 
 
@@ -19365,20 +19373,6 @@ function hasPostDraw(a) {
 /*!********************************!*\
   !*** ./Interfaces/Loadable.ts ***!
   \********************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-
-
-
-/***/ }),
-
-/***/ "./Interfaces/Loader.ts":
-/*!******************************!*\
-  !*** ./Interfaces/Loader.ts ***!
-  \******************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -19823,13 +19817,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Loader", function() { return Loader; });
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Util/WebAudio */ "./Util/WebAudio.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Util/Log */ "./Util/Log.ts");
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Class */ "./Class.ts");
-/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Util/DrawUtil */ "./Util/DrawUtil.ts");
-/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loader.logo.png */ "./Loader.logo.png");
-/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Loader.css */ "./Loader.css");
-/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
-
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Class */ "./Class.ts");
+/* harmony import */ var _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Util/DrawUtil */ "./Util/DrawUtil.ts");
+/* harmony import */ var _Loader_logo_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Loader.logo.png */ "./Loader.logo.png");
+/* harmony import */ var _Loader_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loader.css */ "./Loader.css");
+/* harmony import */ var _Util_Util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Util/Util */ "./Util/Util.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
@@ -19902,7 +19903,7 @@ __webpack_require__.r(__webpack_exports__);
  * engine.start(loader).then(() => {});
  * ```
  */
-class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
+class Loader extends _Class__WEBPACK_IMPORTED_MODULE_2__["Class"] {
     /**
      * @param loadables  Optionally provide the list of resources you want to load at constructor time
      */
@@ -19917,7 +19918,7 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
         this._totalCounts = {};
         // logo drawing stuff
         // base64 string encoding of the excalibur logo (logo-white.png)
-        this.logo = _Loader_logo_png__WEBPACK_IMPORTED_MODULE_5__["default"];
+        this.logo = _Loader_logo_png__WEBPACK_IMPORTED_MODULE_4__["default"];
         this.logoWidth = 468;
         this.logoHeight = 118;
         /**
@@ -19930,7 +19931,7 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
         this.backgroundColor = '#176BAA';
         this.suppressPlayButton = false;
         /** Loads the css from Loader.css */
-        this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_6__["default"].toString();
+        this._playButtonStyles = _Loader_css__WEBPACK_IMPORTED_MODULE_5__["default"].toString();
         /**
          * Get/set play button text
          */
@@ -19944,25 +19945,6 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
             buttonElement.textContent = this.playButtonText;
             buttonElement.style.display = 'none';
             return buttonElement;
-        };
-        this.getData = () => {
-            return;
-        };
-        this.setData = () => {
-            return;
-        };
-        this.processData = () => {
-            return;
-        };
-        this.onprogress = (e) => {
-            _Util_Log__WEBPACK_IMPORTED_MODULE_2__["Logger"].getInstance().debug('[ex.Loader] Loading ' + ((100 * e.loaded) / e.total).toFixed(0));
-            return;
-        };
-        this.oncomplete = () => {
-            return;
-        };
-        this.onerror = () => {
-            return;
         };
         if (loadables) {
             this.addResources(loadables);
@@ -20065,78 +20047,29 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
             this._styleBlock = null;
         }
     }
+    update(_engine, _delta) {
+        // override me
+    }
     /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
      */
     load() {
-        const complete = new Promise((resolve) => {
-            const me = this;
-            if (this._resourceList.length === 0) {
-                me.showPlayButton().then(() => {
-                    // Unlock audio context in chrome after user gesture
-                    // https://github.com/excaliburjs/Excalibur/issues/262
-                    // https://github.com/excaliburjs/Excalibur/issues/1031
-                    _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__["WebAudio"].unlock().then(() => {
-                        me.hidePlayButton();
-                        me.oncomplete.call(me);
-                        resolve();
-                    });
-                });
-                return;
-            }
-            const progressArray = new Array(this._resourceList.length);
-            const progressChunks = this._resourceList.length;
-            for (const index in this._resourceList) {
-                const resource = this._resourceList[index];
-                if (this._engine) {
-                    resource.wireEngine(this._engine);
-                }
-                resource.onprogress = (e) => {
-                    const total = e.total;
-                    const loaded = e.loaded;
-                    progressArray[index] = { loaded: (loaded / total) * (100 / progressChunks), total: 100 };
-                    const progressResult = progressArray.reduce(function (accum, next) {
-                        return { loaded: accum.loaded + next.loaded, total: 100 };
-                    }, { loaded: 0, total: 100 });
-                    me.onprogress.call(me, progressResult);
-                };
-                resource.oncomplete = resource.onerror = () => {
-                    me._numLoaded++;
-                    if (me._numLoaded === me._resourceCount) {
-                        setTimeout(() => {
-                            me.showPlayButton().then(() => {
-                                // Unlock audio context in chrome after user gesture
-                                // https://github.com/excaliburjs/Excalibur/issues/262
-                                // https://github.com/excaliburjs/Excalibur/issues/1031
-                                _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__["WebAudio"].unlock().then(() => {
-                                    me.hidePlayButton();
-                                    me.oncomplete.call(me);
-                                    resolve();
-                                });
-                            });
-                        }, 200); // short delay in showing the button for aesthetics
-                    }
-                };
-            }
-            const loadNext = (list, index) => {
-                if (!list[index]) {
-                    return;
-                }
-                list[index].load().then(() => {
-                    loadNext(list, index + 1);
-                });
-            };
-            loadNext(this._resourceList, 0);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Promise.all(this._resourceList.map(r => r.load().finally(() => {
+                // capture progress
+                this._numLoaded++;
+            })));
+            // short delay in showing the button for aesthetics
+            yield Object(_Util_Util__WEBPACK_IMPORTED_MODULE_6__["delay"])(200);
+            yield this.showPlayButton();
+            // Unlock browser AudioContext in after user gesture
+            // See: https://github.com/excaliburjs/Excalibur/issues/262
+            // See: https://github.com/excaliburjs/Excalibur/issues/1031
+            yield _Util_WebAudio__WEBPACK_IMPORTED_MODULE_1__["WebAudio"].unlock();
+            this.hidePlayButton();
+            return this.data = this._resourceList;
         });
-        return complete;
-    }
-    updateResourceProgress(loadedBytes, totalBytes) {
-        const chunkSize = 100 / this._resourceCount;
-        const resourceProgress = loadedBytes / totalBytes;
-        // This only works if we load 1 resource at a time
-        const totalProgress = resourceProgress * chunkSize + this.progress * 100;
-        this.onprogress({ loaded: totalProgress, total: 100 });
     }
     markResourceComplete() {
         this._numLoaded++;
@@ -20145,7 +20078,7 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
      * Returns the progess of the loader as a number between [0, 1] inclusive.
      */
     get progress() {
-        return this._resourceCount > 0 ? Object(_Util_Util__WEBPACK_IMPORTED_MODULE_7__["clamp"])(this._numLoaded, 0, this._resourceCount) / this._resourceCount : 1;
+        return this._resourceCount > 0 ? Object(_Util_Util__WEBPACK_IMPORTED_MODULE_6__["clamp"])(this._numLoaded, 0, this._resourceCount) / this._resourceCount : 1;
     }
     /**
      * Loader draw function. Draws the default Excalibur loading screen.
@@ -20199,20 +20132,13 @@ class Loader extends _Class__WEBPACK_IMPORTED_MODULE_3__["Class"] {
             loadingY = this.loadingBarPosition.y;
         }
         ctx.lineWidth = 2;
-        _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_4__["roundRect"](ctx, loadingX, loadingY, width, 20, 10, this.loadingBarColor);
+        _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__["roundRect"](ctx, loadingX, loadingY, width, 20, 10, this.loadingBarColor);
         const progress = width * this.progress;
         const margin = 5;
         const progressWidth = progress - margin * 2;
         const height = 20 - margin * 2;
-        _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_4__["roundRect"](ctx, loadingX + margin, loadingY + margin, progressWidth > 10 ? progressWidth : 10, height, 5, null, this.loadingBarColor);
+        _Util_DrawUtil__WEBPACK_IMPORTED_MODULE_3__["roundRect"](ctx, loadingX + margin, loadingY + margin, progressWidth > 10 ? progressWidth : 10, height, 5, null, this.loadingBarColor);
         this._engine.setAntialiasing(oldAntialias);
-    }
-    /**
-     * Perform any calculations or logic in the `update` method. The default `Loader` does not
-     * do anything in this method so it is safe to override.
-     */
-    update(_engine, _delta) {
-        // overridable update
     }
 }
 
@@ -22109,6 +22035,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Texture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Texture */ "./Resources/Texture.ts");
 /* harmony import */ var _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Drawing/Color */ "./Drawing/Color.ts");
 /* harmony import */ var _Drawing_SpriteSheet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Drawing/SpriteSheet */ "./Drawing/SpriteSheet.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
@@ -22118,62 +22053,40 @@ __webpack_require__.r(__webpack_exports__);
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-class Gif extends _Resource__WEBPACK_IMPORTED_MODULE_0__["Resource"] {
+class Gif {
     /**
      * @param path       Path to the image resource
      * @param color      Optionally set the color to treat as transparent the gif, by default [[Color.Magenta]]
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path, color = _Drawing_Color__WEBPACK_IMPORTED_MODULE_2__["Color"].Magenta, bustCache = true) {
-        super(path, 'arraybuffer', bustCache);
         this.path = path;
         this.color = color;
         this.bustCache = bustCache;
-        /**
-         * A [[Promise]] that resolves when the Texture is loaded.
-         */
-        this.loaded = new Promise((resolve) => {
-            this._loadedResolve = resolve;
-        });
-        this._isLoaded = false;
         this._stream = null;
         this._gif = null;
         this._textures = [];
         this._animation = null;
         this._transparentColor = null;
+        this._resource = new _Resource__WEBPACK_IMPORTED_MODULE_0__["Resource"](path, 'arraybuffer', bustCache);
         this._transparentColor = color;
-    }
-    /**
-     * Returns true if the Texture is completely loaded and is ready
-     * to be drawn.
-     */
-    isLoaded() {
-        return this._isLoaded;
     }
     /**
      * Begins loading the texture and returns a promise to be resolved on completion
      */
     load() {
-        const complete = new Promise((resolve, reject) => {
-            return super.load().then(() => {
-                this._stream = new Stream(this.getData());
-                this._gif = new ParseGif(this._stream, this._transparentColor);
-                const promises = [];
-                for (let imageIndex = 0; imageIndex < this._gif.images.length; imageIndex++) {
-                    const texture = new _Texture__WEBPACK_IMPORTED_MODULE_1__["Texture"](this._gif.images[imageIndex].src, false);
-                    this._textures.push(texture);
-                    promises.push(texture.load());
-                }
-                return Promise.all(promises).then(() => {
-                    this._isLoaded = true;
-                    this._loadedResolve(this._textures);
-                    resolve(this._textures);
-                });
-            }, () => {
-                reject('Error loading texture.');
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            const arraybuffer = yield this._resource.load();
+            this._stream = new Stream(arraybuffer);
+            this._gif = new ParseGif(this._stream, this._transparentColor);
+            const textures = this._gif.images.map(i => new _Texture__WEBPACK_IMPORTED_MODULE_1__["Texture"](i.src, false));
+            // Load all textures
+            yield Promise.all(textures.map(t => t.load()));
+            return this.data = this._textures = textures;
         });
-        return complete;
+    }
+    isLoaded() {
+        return !!this.data;
     }
     asSprite(id = 0) {
         const sprite = this._textures[id].asSprite();
@@ -22625,36 +22538,27 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Resource", function() { return Resource; });
-/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Class */ "./Class.ts");
-/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _EventDispatcher__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../EventDispatcher */ "./EventDispatcher.ts");
 
 
 /**
  * The [[Resource]] type allows games built in Excalibur to load generic resources.
  * For any type of remote resource it is recommended to use [[Resource]] for preloading.
  */
-class Resource extends _Class__WEBPACK_IMPORTED_MODULE_0__["Class"] {
+class Resource {
     /**
      * @param path          Path to the remote resource
      * @param responseType  The type to expect as a response: "" | "arraybuffer" | "blob" | "document" | "json" | "text";
      * @param bustCache     Whether or not to cache-bust requests
      */
     constructor(path, responseType, bustCache = true) {
-        super();
         this.path = path;
         this.responseType = responseType;
         this.bustCache = bustCache;
         this.data = null;
-        this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_1__["Logger"].getInstance();
-        this.onprogress = () => {
-            return;
-        };
-        this.oncomplete = () => {
-            return;
-        };
-        this.onerror = () => {
-            return;
-        };
+        this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_0__["Logger"].getInstance();
+        this.events = new _EventDispatcher__WEBPACK_IMPORTED_MODULE_1__["EventDispatcher"](this);
     }
     /**
      * Returns true if the Resource is completely loaded and is ready
@@ -22662,9 +22566,6 @@ class Resource extends _Class__WEBPACK_IMPORTED_MODULE_0__["Class"] {
      */
     isLoaded() {
         return this.data !== null;
-    }
-    wireEngine(_engine) {
-        // override me
     }
     _cacheBust(uri) {
         const query = /\?\w*=\w*/;
@@ -22676,9 +22577,6 @@ class Resource extends _Class__WEBPACK_IMPORTED_MODULE_0__["Class"] {
         }
         return uri;
     }
-    _start() {
-        this.logger.debug('Started loading resource ' + this.path);
-    }
     /**
      * Begin loading the resource and returns a promise to be resolved on completion
      */
@@ -22687,57 +22585,32 @@ class Resource extends _Class__WEBPACK_IMPORTED_MODULE_0__["Class"] {
             // Exit early if we already have data
             if (this.data !== null) {
                 this.logger.debug('Already have data for resource', this.path);
+                this.events.emit('complete', this.data);
                 resolve(this.data);
-                this.oncomplete();
                 return;
             }
             const request = new XMLHttpRequest();
             request.open('GET', this.bustCache ? this._cacheBust(this.path) : this.path, true);
             request.responseType = this.responseType;
-            request.onloadstart = () => {
-                this._start();
-            };
-            request.onprogress = this.onprogress;
-            request.onerror = this.onerror;
-            request.onload = () => {
+            request.addEventListener('loadstart', (e) => this.events.emit('loadstart', e));
+            request.addEventListener('progress', (e) => this.events.emit('progress', e));
+            request.addEventListener('error', (e) => this.events.emit('error', e));
+            request.addEventListener('load', (e) => this.events.emit('load', e));
+            request.addEventListener('load', () => {
                 // XHR on file:// success status is 0, such as with PhantomJS
                 if (request.status !== 0 && request.status !== 200) {
                     this.logger.error('Failed to load resource ', this.path, ' server responded with error code', request.status);
-                    this.onerror(request.response);
+                    this.events.emit('error', request.response);
                     reject(request.response);
                     return;
                 }
-                this.data = this.processData(request.response);
-                this.oncomplete();
+                this.data = request.response;
+                this.events.emit('complete', this.data);
                 this.logger.debug('Completed loading resource', this.path);
                 resolve(this.data);
-            };
+            });
             request.send();
         });
-    }
-    /**
-     * Returns the loaded data once the resource is loaded
-     */
-    getData() {
-        return this.data;
-    }
-    /**
-     * Sets the data for this resource directly
-     */
-    setData(data) {
-        this.data = this.processData(data);
-    }
-    /**
-     * This method is meant to be overridden to handle any additional
-     * processing. Such as decoding downloaded audio bits.
-     */
-    processData(data) {
-        // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseType
-        // Blob requires an object url
-        if (this.responseType === 'blob') {
-            return URL.createObjectURL(data);
-        }
-        return data;
     }
 }
 
@@ -22814,6 +22687,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AudioContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AudioContext */ "./Resources/Sound/AudioContext.ts");
 /* harmony import */ var _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Events/MediaEvents */ "./Events/MediaEvents.ts");
 /* harmony import */ var _Util_Sound__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Util/Sound */ "./Util/Sound.ts");
+/* harmony import */ var _Util_Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Util/Log */ "./Util/Log.ts");
+/* harmony import */ var _Class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Class */ "./Class.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -22829,17 +22704,20 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
+
+
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  */
-class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
+class Sound extends _Class__WEBPACK_IMPORTED_MODULE_7__["Class"] {
     /**
      * @param paths A list of audio sources (clip.wav, clip.mp3, clip.ogg) for this audio clip. This is done for browser compatibility.
      */
     constructor(...paths) {
-        super('', '');
+        super();
+        this.logger = _Util_Log__WEBPACK_IMPORTED_MODULE_6__["Logger"].getInstance();
         this._loop = false;
         this._volume = 1;
         this._duration = undefined;
@@ -22847,12 +22725,9 @@ class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
         this._isPaused = false;
         this._tracks = [];
         this._wasPlayingOnHidden = false;
-        this._processedData = new Promise((resolve) => {
-            this._processedDataResolve = resolve;
-        });
         this._audioContext = _AudioContext__WEBPACK_IMPORTED_MODULE_3__["AudioContextFactory"].create();
-        this.responseType = _Interfaces_AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.arraybuffer;
-        /* Chrome : MP3, WAV, Ogg
+        this._resource = new _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"]('', _Interfaces_AudioImplementation__WEBPACK_IMPORTED_MODULE_0__["ExResponse"].type.arraybuffer);
+        /** Chrome : MP3, WAV, Ogg
          * Firefox : WAV, Ogg,
          * IE : MP3, WAV coming soon
          * Safari MP3, WAV, Ogg
@@ -22902,6 +22777,40 @@ class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
      */
     get instances() {
         return this._tracks;
+    }
+    get path() {
+        return this._resource.path;
+    }
+    set path(val) {
+        this._resource.path = val;
+    }
+    isLoaded() {
+        return !!this.data;
+    }
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.data) {
+                return this.data;
+            }
+            const arraybuffer = yield this._resource.load();
+            const audiobuffer = yield this.decodeAudio(arraybuffer.slice(0));
+            this._duration = typeof audiobuffer === 'object' ? audiobuffer.duration : undefined;
+            this.emit('processed', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundProcessedEvent"](this, audiobuffer));
+            return this.data = audiobuffer;
+        });
+    }
+    decodeAudio(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this._audioContext.decodeAudioData(data.slice(0));
+            }
+            catch (e) {
+                this.logger.error('Unable to decode ' +
+                    ' this browser may not fully support this format, or the file may be corrupt, ' +
+                    'if this is an mp3 try removing id3 tags and album art from the file.');
+                return yield Promise.reject();
+            }
+        });
     }
     wireEngine(engine) {
         if (engine) {
@@ -22986,20 +22895,6 @@ class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
         this._tracks.length = 0;
         this.logger.debug('Stopped all instances of sound', this.path);
     }
-    setData(data) {
-        this.emit('emptied', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this));
-        this.data = data;
-    }
-    processData(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            /**
-             * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
-             */
-            const audioBuffer = yield this._processArrayBufferData(data);
-            this._setProcessedData(audioBuffer);
-            return audioBuffer;
-        });
-    }
     /**
      * Get Id of provided AudioInstance in current trackList
      * @param track [[AudioInstance]] which Id is to be given
@@ -23029,7 +22924,7 @@ class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
      */
     _startPlayback() {
         return __awaiter(this, void 0, void 0, function* () {
-            const track = yield this._createNewTrack();
+            const track = yield this._getTrackInstance(this.data);
             const complete = yield track.play(() => {
                 this.emit('playbackstart', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this, track));
                 this.logger.debug('Playing new instance for sound', this.path);
@@ -23038,35 +22933,6 @@ class Sound extends _Resource__WEBPACK_IMPORTED_MODULE_1__["Resource"] {
             this.emit('playbackend', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundEvent"](this, track));
             this._tracks.splice(this.getTrackId(track), 1);
             return complete;
-        });
-    }
-    _processArrayBufferData(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return this._audioContext.decodeAudioData(data.slice(0));
-            }
-            catch (e) {
-                this.logger.error('Unable to decode ' +
-                    ' this browser may not fully support this format, or the file may be corrupt, ' +
-                    'if this is an mp3 try removing id3 tags and album art from the file.');
-                return undefined;
-            }
-        });
-    }
-    _setProcessedData(processedData) {
-        this._processedDataResolve(processedData);
-        this._duration = typeof processedData === 'object' ? processedData.duration : undefined;
-        this.emit('processed', new _Events_MediaEvents__WEBPACK_IMPORTED_MODULE_4__["NativeSoundProcessedEvent"](this, processedData));
-    }
-    _createNewTrack() {
-        this.processData(this.data);
-        return new Promise((resolve) => {
-            this._processedData.then((processedData) => {
-                resolve(this._getTrackInstance(processedData));
-                return processedData;
-            }, (error) => {
-                this.logger.error(error, 'Cannot create AudioInstance due to wrong processed data.');
-            });
         });
     }
     _getTrackInstance(data) {
@@ -23285,61 +23151,62 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-class Texture extends _Resource__WEBPACK_IMPORTED_MODULE_0__["Resource"] {
+class Texture {
     /**
      * @param path       Path to the image resource or a base64 string representing an image "data:image/png;base64,iVB..."
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path, bustCache = true) {
-        super(path, 'blob', bustCache);
         this.path = path;
         this.bustCache = bustCache;
-        this.loaded = new Promise((resolve) => {
+        this._sprite = null;
+        this.loaded = new Promise(resolve => {
             this._loadedResolve = resolve;
         });
-        this._isLoaded = false;
-        this._sprite = null;
+        this._resource = new _Resource__WEBPACK_IMPORTED_MODULE_0__["Resource"](path, 'blob', bustCache);
         this._sprite = new _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_1__["Sprite"](this, 0, 0, 0, 0);
+    }
+    get image() {
+        return this.data;
     }
     /**
      * Returns true if the Texture is completely loaded and is ready
      * to be drawn.
      */
     isLoaded() {
-        return this._isLoaded;
+        return !!this.data;
     }
     /**
      * Begins loading the texture and returns a promise to be resolved on completion
      */
     load() {
-        const _super = Object.create(null, {
-            load: { get: () => super.load }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            const complete = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this.image = new Image();
-                this.image.addEventListener('load', () => {
-                    this._isLoaded = true;
-                    this.width = this._sprite.width = this.image.naturalWidth;
-                    this.height = this._sprite.height = this.image.naturalHeight;
-                    this._sprite = new _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_1__["Sprite"](this, 0, 0, this.width, this.height);
-                    this._loadedResolve(this.image);
-                    resolve(this.image);
-                });
-                if (this.path.indexOf('data:image/') > -1) {
-                    this.image.src = this.path;
-                    this.oncomplete();
+            try {
+                // Load base64 or blob if needed
+                let url;
+                if (!this.path.includes('data:image/')) {
+                    const blob = yield this._resource.load();
+                    url = URL.createObjectURL(blob);
                 }
                 else {
-                    try {
-                        this.image.src = yield _super.load.call(this);
-                    }
-                    catch (e) {
-                        reject('Error loading texture');
-                    }
+                    url = this.path;
                 }
-            }));
-            return complete;
+                // Decode the image
+                const image = new Image();
+                image.src = url;
+                yield image.decode();
+                // Set results
+                this.data = image;
+                this.width = this._sprite.width = image.naturalWidth;
+                this.height = this._sprite.height = image.naturalHeight;
+                this._sprite = new _Drawing_Sprite__WEBPACK_IMPORTED_MODULE_1__["Sprite"](this, 0, 0, this.width, this.height);
+            }
+            catch (_a) {
+                yield Promise.reject('Error loading texture');
+            }
+            // todo emit complete
+            this._loadedResolve(this.data);
+            return this.data;
         });
     }
     asSprite() {
@@ -25952,7 +25819,7 @@ __decorate([
 /*!***********************!*\
   !*** ./Util/Index.ts ***!
   \***********************/
-/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail, DrawUtil */
+/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail, delay, DrawUtil */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25993,6 +25860,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["Collection"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["fail"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "delay", function() { return _Util__WEBPACK_IMPORTED_MODULE_0__["delay"]; });
 
 /* harmony import */ var _DrawUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawUtil */ "./Util/DrawUtil.ts");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "DrawUtil", function() { return _DrawUtil__WEBPACK_IMPORTED_MODULE_1__; });
@@ -26562,7 +26431,7 @@ function canPlayFile(file) {
 /*!**********************!*\
   !*** ./Util/Util.ts ***!
   \**********************/
-/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail */
+/*! exports provided: TwoPI, extend, base64Encode, nullish, clamp, randomInRange, randomIntInRange, canonicalizeAngle, toDegrees, toRadians, getPosition, addItemToArray, removeItemFromArray, contains, getOppositeSide, getSideFromDirection, Collection, fail, delay */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26585,6 +26454,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSideFromDirection", function() { return getSideFromDirection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return Collection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fail", function() { return fail; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delay", function() { return delay; });
 /* harmony import */ var _Algebra__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Algebra */ "./Algebra.ts");
 /* harmony import */ var _Math_Random__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Math/Random */ "./Math/Random.ts");
 /* harmony import */ var _Collision_Side__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Collision/Side */ "./Collision/Side.ts");
@@ -26967,6 +26837,17 @@ Collection.DefaultSize = 200;
  */
 function fail(message) {
     throw new Error(message);
+}
+/**
+ * Create a promise that resolves after a certain number of milliseconds
+ * @param milliseconds
+ */
+function delay(milliseconds) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    });
 }
 
 
@@ -27461,7 +27342,7 @@ __webpack_require__.r(__webpack_exports__);
  * The current Excalibur version string
  * @description `process.env.__EX_VERSION` gets replaced by Webpack on build
  */
-const EX_VERSION = "0.25.0-alpha.7609+44dbd4f";
+const EX_VERSION = "0.25.0-alpha.7656+9e66a0d";
 
 Object(_Polyfill__WEBPACK_IMPORTED_MODULE_0__["polyfill"])();
 // This file is used as the bundle entry point and exports everything

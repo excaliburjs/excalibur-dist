@@ -13,17 +13,20 @@ import { WebAudioInstance } from './WebAudioInstance';
 import { AudioContextFactory } from './AudioContext';
 import { NativeSoundEvent, NativeSoundProcessedEvent } from '../../Events/MediaEvents';
 import { canPlayFile } from '../../Util/Sound';
+import { Logger } from '../../Util/Log';
+import { Class } from '../../Class';
 /**
  * The [[Sound]] object allows games built in Excalibur to load audio
  * components, from soundtracks to sound effects. [[Sound]] is an [[Loadable]]
  * which means it can be passed to a [[Loader]] to pre-load before a game or level.
  */
-export class Sound extends Resource {
+export class Sound extends Class {
     /**
      * @param paths A list of audio sources (clip.wav, clip.mp3, clip.ogg) for this audio clip. This is done for browser compatibility.
      */
     constructor(...paths) {
-        super('', '');
+        super();
+        this.logger = Logger.getInstance();
         this._loop = false;
         this._volume = 1;
         this._duration = undefined;
@@ -31,12 +34,9 @@ export class Sound extends Resource {
         this._isPaused = false;
         this._tracks = [];
         this._wasPlayingOnHidden = false;
-        this._processedData = new Promise((resolve) => {
-            this._processedDataResolve = resolve;
-        });
         this._audioContext = AudioContextFactory.create();
-        this.responseType = ExResponse.type.arraybuffer;
-        /* Chrome : MP3, WAV, Ogg
+        this._resource = new Resource('', ExResponse.type.arraybuffer);
+        /** Chrome : MP3, WAV, Ogg
          * Firefox : WAV, Ogg,
          * IE : MP3, WAV coming soon
          * Safari MP3, WAV, Ogg
@@ -86,6 +86,40 @@ export class Sound extends Resource {
      */
     get instances() {
         return this._tracks;
+    }
+    get path() {
+        return this._resource.path;
+    }
+    set path(val) {
+        this._resource.path = val;
+    }
+    isLoaded() {
+        return !!this.data;
+    }
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.data) {
+                return this.data;
+            }
+            const arraybuffer = yield this._resource.load();
+            const audiobuffer = yield this.decodeAudio(arraybuffer.slice(0));
+            this._duration = typeof audiobuffer === 'object' ? audiobuffer.duration : undefined;
+            this.emit('processed', new NativeSoundProcessedEvent(this, audiobuffer));
+            return this.data = audiobuffer;
+        });
+    }
+    decodeAudio(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this._audioContext.decodeAudioData(data.slice(0));
+            }
+            catch (e) {
+                this.logger.error('Unable to decode ' +
+                    ' this browser may not fully support this format, or the file may be corrupt, ' +
+                    'if this is an mp3 try removing id3 tags and album art from the file.');
+                return yield Promise.reject();
+            }
+        });
     }
     wireEngine(engine) {
         if (engine) {
@@ -170,20 +204,6 @@ export class Sound extends Resource {
         this._tracks.length = 0;
         this.logger.debug('Stopped all instances of sound', this.path);
     }
-    setData(data) {
-        this.emit('emptied', new NativeSoundEvent(this));
-        this.data = data;
-    }
-    processData(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            /**
-             * Processes raw arraybuffer data and decodes into WebAudio buffer (async).
-             */
-            const audioBuffer = yield this._processArrayBufferData(data);
-            this._setProcessedData(audioBuffer);
-            return audioBuffer;
-        });
-    }
     /**
      * Get Id of provided AudioInstance in current trackList
      * @param track [[AudioInstance]] which Id is to be given
@@ -213,7 +233,7 @@ export class Sound extends Resource {
      */
     _startPlayback() {
         return __awaiter(this, void 0, void 0, function* () {
-            const track = yield this._createNewTrack();
+            const track = yield this._getTrackInstance(this.data);
             const complete = yield track.play(() => {
                 this.emit('playbackstart', new NativeSoundEvent(this, track));
                 this.logger.debug('Playing new instance for sound', this.path);
@@ -222,35 +242,6 @@ export class Sound extends Resource {
             this.emit('playbackend', new NativeSoundEvent(this, track));
             this._tracks.splice(this.getTrackId(track), 1);
             return complete;
-        });
-    }
-    _processArrayBufferData(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return this._audioContext.decodeAudioData(data.slice(0));
-            }
-            catch (e) {
-                this.logger.error('Unable to decode ' +
-                    ' this browser may not fully support this format, or the file may be corrupt, ' +
-                    'if this is an mp3 try removing id3 tags and album art from the file.');
-                return undefined;
-            }
-        });
-    }
-    _setProcessedData(processedData) {
-        this._processedDataResolve(processedData);
-        this._duration = typeof processedData === 'object' ? processedData.duration : undefined;
-        this.emit('processed', new NativeSoundProcessedEvent(this, processedData));
-    }
-    _createNewTrack() {
-        this.processData(this.data);
-        return new Promise((resolve) => {
-            this._processedData.then((processedData) => {
-                resolve(this._getTrackInstance(processedData));
-                return processedData;
-            }, (error) => {
-                this.logger.error(error, 'Cannot create AudioInstance due to wrong processed data.');
-            });
         });
     }
     _getTrackInstance(data) {

@@ -1,7 +1,6 @@
 import { Color } from './Drawing/Color';
 import { Engine } from './Engine';
 import { Loadable } from './Interfaces/Loadable';
-import { CanLoad } from './Interfaces/Loader';
 import { Class } from './Class';
 import { Vector } from './Algebra';
 /**
@@ -69,7 +68,7 @@ import { Vector } from './Algebra';
  * engine.start(loader).then(() => {});
  * ```
  */
-export declare class Loader extends Class implements CanLoad {
+export declare class Loader extends Class implements Loadable<Loadable<any>[]> {
     private _resourceList;
     private _index;
     private _playButtonShown;
@@ -126,18 +125,18 @@ export declare class Loader extends Class implements CanLoad {
     /**
      * @param loadables  Optionally provide the list of resources you want to load at constructor time
      */
-    constructor(loadables?: Loadable[]);
+    constructor(loadables?: Loadable<any>[]);
     wireEngine(engine: Engine): void;
     /**
      * Add a resource to the loader to load
      * @param loadable  Resource to add
      */
-    addResource(loadable: Loadable): void;
+    addResource(loadable: Loadable<any>): void;
     /**
      * Add a list of resources to the loader to load
      * @param loadables  The list of resources to load
      */
-    addResources(loadables: Loadable[]): void;
+    addResources(loadables: Loadable<any>[]): void;
     /**
      * Returns true if the loader has completely loaded all resources
      */
@@ -151,12 +150,13 @@ export declare class Loader extends Class implements CanLoad {
      * Clean up generated elements for the loader
      */
     dispose(): void;
+    update(_engine: Engine, _delta: number): void;
+    data: Loadable<any>[];
     /**
      * Begin loading all of the supplied resources, returning a promise
      * that resolves when loading of all is complete
      */
-    load(): Promise<any>;
-    updateResourceProgress(loadedBytes: number, totalBytes: number): void;
+    load(): Promise<Loadable<any>[]>;
     markResourceComplete(): void;
     /**
      * Returns the progess of the loader as a number between [0, 1] inclusive.
@@ -168,15 +168,4 @@ export declare class Loader extends Class implements CanLoad {
      * to customize the drawing, or just override entire method.
      */
     draw(ctx: CanvasRenderingContext2D): void;
-    /**
-     * Perform any calculations or logic in the `update` method. The default `Loader` does not
-     * do anything in this method so it is safe to override.
-     */
-    update(_engine: Engine, _delta: number): void;
-    getData: () => any;
-    setData: (data: any) => any;
-    processData: (data: any) => any;
-    onprogress: (e: any) => void;
-    oncomplete: () => void;
-    onerror: () => void;
 }

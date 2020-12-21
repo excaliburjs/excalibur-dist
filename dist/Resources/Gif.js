@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { Resource } from './Resource';
 import { Texture } from './Texture';
 import { Color } from '../Drawing/Color';
@@ -7,62 +16,40 @@ import { SpriteSheet } from '../Drawing/SpriteSheet';
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-export class Gif extends Resource {
+export class Gif {
     /**
      * @param path       Path to the image resource
      * @param color      Optionally set the color to treat as transparent the gif, by default [[Color.Magenta]]
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path, color = Color.Magenta, bustCache = true) {
-        super(path, 'arraybuffer', bustCache);
         this.path = path;
         this.color = color;
         this.bustCache = bustCache;
-        /**
-         * A [[Promise]] that resolves when the Texture is loaded.
-         */
-        this.loaded = new Promise((resolve) => {
-            this._loadedResolve = resolve;
-        });
-        this._isLoaded = false;
         this._stream = null;
         this._gif = null;
         this._textures = [];
         this._animation = null;
         this._transparentColor = null;
+        this._resource = new Resource(path, 'arraybuffer', bustCache);
         this._transparentColor = color;
-    }
-    /**
-     * Returns true if the Texture is completely loaded and is ready
-     * to be drawn.
-     */
-    isLoaded() {
-        return this._isLoaded;
     }
     /**
      * Begins loading the texture and returns a promise to be resolved on completion
      */
     load() {
-        const complete = new Promise((resolve, reject) => {
-            return super.load().then(() => {
-                this._stream = new Stream(this.getData());
-                this._gif = new ParseGif(this._stream, this._transparentColor);
-                const promises = [];
-                for (let imageIndex = 0; imageIndex < this._gif.images.length; imageIndex++) {
-                    const texture = new Texture(this._gif.images[imageIndex].src, false);
-                    this._textures.push(texture);
-                    promises.push(texture.load());
-                }
-                return Promise.all(promises).then(() => {
-                    this._isLoaded = true;
-                    this._loadedResolve(this._textures);
-                    resolve(this._textures);
-                });
-            }, () => {
-                reject('Error loading texture.');
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            const arraybuffer = yield this._resource.load();
+            this._stream = new Stream(arraybuffer);
+            this._gif = new ParseGif(this._stream, this._transparentColor);
+            const textures = this._gif.images.map(i => new Texture(i.src, false));
+            // Load all textures
+            yield Promise.all(textures.map(t => t.load()));
+            return this.data = this._textures = textures;
         });
-        return complete;
+    }
+    isLoaded() {
+        return !!this.data;
     }
     asSprite(id = 0) {
         const sprite = this._textures[id].asSprite();

@@ -180,3 +180,8 @@ export declare class Collection<T> {
  * Used for exhaustive checks at compile time
  */
 export declare function fail(message: never): never;
+/**
+ * Create a promise that resolves after a certain number of milliseconds
+ * @param milliseconds
+ */
+export declare function delay(milliseconds: number): Promise<void>;

@@ -14,61 +14,62 @@ import { Sprite } from '../Drawing/Sprite';
  * [[Texture]] is an [[Loadable]] which means it can be passed to a [[Loader]]
  * to pre-load before starting a level or game.
  */
-export class Texture extends Resource {
+export class Texture {
     /**
      * @param path       Path to the image resource or a base64 string representing an image "data:image/png;base64,iVB..."
      * @param bustCache  Optionally load texture with cache busting
      */
     constructor(path, bustCache = true) {
-        super(path, 'blob', bustCache);
         this.path = path;
         this.bustCache = bustCache;
-        this.loaded = new Promise((resolve) => {
+        this._sprite = null;
+        this.loaded = new Promise(resolve => {
             this._loadedResolve = resolve;
         });
-        this._isLoaded = false;
-        this._sprite = null;
+        this._resource = new Resource(path, 'blob', bustCache);
         this._sprite = new Sprite(this, 0, 0, 0, 0);
+    }
+    get image() {
+        return this.data;
     }
     /**
      * Returns true if the Texture is completely loaded and is ready
      * to be drawn.
      */
     isLoaded() {
-        return this._isLoaded;
+        return !!this.data;
     }
     /**
      * Begins loading the texture and returns a promise to be resolved on completion
      */
     load() {
-        const _super = Object.create(null, {
-            load: { get: () => super.load }
-        });
         return __awaiter(this, void 0, void 0, function* () {
-            const complete = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this.image = new Image();
-                this.image.addEventListener('load', () => {
-                    this._isLoaded = true;
-                    this.width = this._sprite.width = this.image.naturalWidth;
-                    this.height = this._sprite.height = this.image.naturalHeight;
-                    this._sprite = new Sprite(this, 0, 0, this.width, this.height);
-                    this._loadedResolve(this.image);
-                    resolve(this.image);
-                });
-                if (this.path.indexOf('data:image/') > -1) {
-                    this.image.src = this.path;
-                    this.oncomplete();
+            try {
+                // Load base64 or blob if needed
+                let url;
+                if (!this.path.includes('data:image/')) {
+                    const blob = yield this._resource.load();
+                    url = URL.createObjectURL(blob);
                 }
                 else {
-                    try {
-                        this.image.src = yield _super.load.call(this);
-                    }
-                    catch (e) {
-                        reject('Error loading texture');
-                    }
+                    url = this.path;
                 }
-            }));
-            return complete;
+                // Decode the image
+                const image = new Image();
+                image.src = url;
+                yield image.decode();
+                // Set results
+                this.data = image;
+                this.width = this._sprite.width = image.naturalWidth;
+                this.height = this._sprite.height = image.naturalHeight;
+                this._sprite = new Sprite(this, 0, 0, this.width, this.height);
+            }
+            catch (_a) {
+                yield Promise.reject('Error loading texture');
+            }
+            // todo emit complete
+            this._loadedResolve(this.data);
+            return this.data;
         });
     }
     asSprite() {

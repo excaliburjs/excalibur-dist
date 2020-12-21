@@ -587,7 +587,7 @@ O|===|* >________________>\n\
         const ctx = this.ctx;
         this._predraw(ctx, delta);
         if (this._isLoading) {
-            this._loader.draw(ctx, delta);
+            this._loader.draw(ctx);
             // Drawing nothing else while loading
             return;
         }

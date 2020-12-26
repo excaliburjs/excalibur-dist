@@ -3,7 +3,7 @@
   "description": "Excalibur.js is a simple JavaScript game engine with TypeScript bindings for making 2D games in HTML5 Canvas. Our mission is to make web game development as simple as possible.",
   "main": "dist/excalibur.min.js",
   "typings": "dist/excalibur.d.ts",
-  "version": "0.25.0-alpha.7657+d37f728",
+  "version": "0.25.0-alpha.7667+68f0aa0",
   "author": "https://github.com/excaliburjs/Excalibur/graphs/contributors",
   "homepage": "https://github.com/excaliburjs/Excalibur",
   "repository": {

@@ -1,4 +1,6 @@
-# Excalibur.js Distribution Repository
+# ⚠ ARCHIVED ⚠ Excalibur.js Distribution Repository
+
+**This repository was originally built for things like bower and rawgit which no longer exist, maintaining this repo is an unnecessary burden. Future releases will be made from the [main repository](https://github.com/excaliburjs/Excalibur). **
 
 You can find the source code in [the Excalibur.js main project](https://github.com/excaliburjs/Excalibur).
 
